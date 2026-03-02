@@ -1,0 +1,718 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>MSP & Integrator Pain Points — Rev.io Pipeline Analysis</title>
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body { font-family: 'Segoe UI', system-ui, sans-serif; background: #0a0e1a; color: #e8eaf0; }
+
+  .slide {
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    padding: 60px 80px;
+    border-bottom: 1px solid rgba(255,255,255,0.06);
+    position: relative;
+    overflow: hidden;
+  }
+
+  .slide::before {
+    content: '';
+    position: absolute;
+    top: -200px; right: -200px;
+    width: 600px; height: 600px;
+    border-radius: 50%;
+    background: radial-gradient(circle, rgba(99,102,241,0.08) 0%, transparent 70%);
+    pointer-events: none;
+  }
+
+  /* TITLE SLIDE */
+  .slide-title {
+    background: linear-gradient(135deg, #0a0e1a 0%, #111827 100%);
+    text-align: center;
+    align-items: center;
+  }
+  .slide-title .eyebrow {
+    font-size: 13px;
+    font-weight: 600;
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    color: #6366f1;
+    margin-bottom: 24px;
+  }
+  .slide-title h1 {
+    font-size: 58px;
+    font-weight: 800;
+    line-height: 1.1;
+    background: linear-gradient(135deg, #fff 0%, #a5b4fc 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    margin-bottom: 24px;
+    max-width: 900px;
+  }
+  .slide-title .subtitle {
+    font-size: 20px;
+    color: #94a3b8;
+    max-width: 600px;
+    line-height: 1.6;
+    margin-bottom: 48px;
+  }
+  .stat-row {
+    display: flex;
+    gap: 48px;
+    margin-top: 16px;
+  }
+  .stat-box {
+    text-align: center;
+  }
+  .stat-box .num {
+    font-size: 52px;
+    font-weight: 800;
+    color: #6366f1;
+    line-height: 1;
+  }
+  .stat-box .label {
+    font-size: 13px;
+    color: #64748b;
+    margin-top: 6px;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+  }
+
+  /* SECTION HEADER */
+  .slide-section {
+    background: linear-gradient(135deg, #0f172a 0%, #1e1b4b 100%);
+  }
+  .slide-section .section-num {
+    font-size: 120px;
+    font-weight: 900;
+    color: rgba(99,102,241,0.12);
+    position: absolute;
+    top: 40px; right: 80px;
+    line-height: 1;
+  }
+  .slide-section h2 {
+    font-size: 48px;
+    font-weight: 800;
+    color: #fff;
+    margin-bottom: 16px;
+  }
+  .slide-section p {
+    font-size: 20px;
+    color: #94a3b8;
+    max-width: 600px;
+    line-height: 1.6;
+  }
+
+  /* THEME SLIDE */
+  .slide-theme h2 {
+    font-size: 36px;
+    font-weight: 800;
+    color: #fff;
+    margin-bottom: 8px;
+  }
+  .theme-badge {
+    display: inline-block;
+    padding: 4px 14px;
+    border-radius: 20px;
+    font-size: 12px;
+    font-weight: 700;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    margin-bottom: 32px;
+  }
+  .badge-critical { background: rgba(239,68,68,0.15); color: #f87171; border: 1px solid rgba(239,68,68,0.3); }
+  .badge-high { background: rgba(245,158,11,0.15); color: #fbbf24; border: 1px solid rgba(245,158,11,0.3); }
+  .badge-medium { background: rgba(99,102,241,0.15); color: #a5b4fc; border: 1px solid rgba(99,102,241,0.3); }
+
+  .theme-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 20px;
+  }
+  .theme-card {
+    background: rgba(255,255,255,0.04);
+    border: 1px solid rgba(255,255,255,0.08);
+    border-radius: 12px;
+    padding: 24px;
+    position: relative;
+  }
+  .theme-card .card-icon {
+    font-size: 28px;
+    margin-bottom: 12px;
+    display: block;
+  }
+  .theme-card h3 {
+    font-size: 17px;
+    font-weight: 700;
+    color: #e2e8f0;
+    margin-bottom: 8px;
+  }
+  .theme-card p {
+    font-size: 14px;
+    color: #94a3b8;
+    line-height: 1.6;
+  }
+  .theme-card .freq {
+    position: absolute;
+    top: 16px; right: 16px;
+    font-size: 22px;
+    font-weight: 800;
+    color: #6366f1;
+  }
+
+  /* BAR CHART SLIDE */
+  .chart-title {
+    font-size: 36px;
+    font-weight: 800;
+    color: #fff;
+    margin-bottom: 8px;
+  }
+  .chart-sub {
+    font-size: 16px;
+    color: #64748b;
+    margin-bottom: 40px;
+  }
+  .bar-row {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    margin-bottom: 14px;
+  }
+  .bar-label {
+    font-size: 14px;
+    font-weight: 600;
+    color: #cbd5e1;
+    width: 220px;
+    flex-shrink: 0;
+    text-align: right;
+  }
+  .bar-track {
+    flex: 1;
+    background: rgba(255,255,255,0.06);
+    border-radius: 4px;
+    height: 32px;
+    position: relative;
+    overflow: hidden;
+  }
+  .bar-fill {
+    height: 100%;
+    border-radius: 4px;
+    display: flex;
+    align-items: center;
+    padding-left: 12px;
+    font-size: 13px;
+    font-weight: 700;
+    color: #fff;
+    transition: width 0.3s;
+  }
+  .bar-pct {
+    font-size: 13px;
+    font-weight: 700;
+    color: #94a3b8;
+    width: 50px;
+    flex-shrink: 0;
+  }
+
+  /* QUOTE SLIDE */
+  .quotes-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    gap: 16px;
+    margin-top: 32px;
+  }
+  .quote-card {
+    background: rgba(255,255,255,0.04);
+    border: 1px solid rgba(255,255,255,0.08);
+    border-left: 3px solid #6366f1;
+    border-radius: 8px;
+    padding: 20px;
+  }
+  .quote-card .q-text {
+    font-size: 13px;
+    color: #cbd5e1;
+    line-height: 1.7;
+    font-style: italic;
+    margin-bottom: 12px;
+  }
+  .quote-card .q-source {
+    font-size: 11px;
+    font-weight: 700;
+    color: #6366f1;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+  }
+
+  /* IMPACT SLIDE */
+  .impact-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 24px;
+    margin-top: 32px;
+  }
+  .impact-card {
+    background: rgba(255,255,255,0.04);
+    border: 1px solid rgba(255,255,255,0.08);
+    border-radius: 12px;
+    padding: 28px;
+    text-align: center;
+  }
+  .impact-card .impact-num {
+    font-size: 42px;
+    font-weight: 900;
+    color: #f87171;
+    line-height: 1;
+    margin-bottom: 8px;
+  }
+  .impact-card h3 {
+    font-size: 16px;
+    font-weight: 700;
+    color: #e2e8f0;
+    margin-bottom: 8px;
+  }
+  .impact-card p {
+    font-size: 13px;
+    color: #64748b;
+    line-height: 1.5;
+  }
+
+  /* CTA SLIDE */
+  .slide-cta {
+    background: linear-gradient(135deg, #1e1b4b 0%, #0a0e1a 100%);
+    text-align: center;
+    align-items: center;
+  }
+  .slide-cta h2 {
+    font-size: 48px;
+    font-weight: 800;
+    color: #fff;
+    margin-bottom: 20px;
+    max-width: 700px;
+  }
+  .slide-cta p {
+    font-size: 20px;
+    color: #94a3b8;
+    max-width: 560px;
+    line-height: 1.6;
+    margin-bottom: 40px;
+  }
+  .pill-list {
+    display: flex;
+    gap: 12px;
+    flex-wrap: wrap;
+    justify-content: center;
+    margin-bottom: 40px;
+  }
+  .pill {
+    background: rgba(99,102,241,0.15);
+    border: 1px solid rgba(99,102,241,0.3);
+    color: #a5b4fc;
+    padding: 8px 20px;
+    border-radius: 20px;
+    font-size: 14px;
+    font-weight: 600;
+  }
+
+  /* FOOTNOTE */
+  .footnote {
+    position: absolute;
+    bottom: 24px;
+    right: 48px;
+    font-size: 11px;
+    color: #334155;
+  }
+</style>
+</head>
+<body>
+
+<!-- SLIDE 1: TITLE -->
+<div class="slide slide-title">
+  <div class="eyebrow">Rev.io Pipeline Intelligence</div>
+  <h1>What MSPs & Integrators Are Really Struggling With</h1>
+  <p class="subtitle">An analysis of pain points captured across 383 active pipeline opportunities</p>
+  <div class="stat-row">
+    <div class="stat-box">
+      <div class="num">383</div>
+      <div class="label">Opportunities Analyzed</div>
+    </div>
+    <div class="stat-box">
+      <div class="num">90+</div>
+      <div class="label">Accounts with Problems Documented</div>
+    </div>
+    <div class="stat-box">
+      <div class="num">8</div>
+      <div class="label">Core Pain Themes</div>
+    </div>
+  </div>
+  <div class="footnote">Source: Rev.io Salesforce CRM — Opportunity.Problems__c field · March 2026</div>
+</div>
+
+<!-- SLIDE 2: THE BIG PICTURE -->
+<div class="slide">
+  <div class="chart-title">The #1 Problem: Fragmented Operations</div>
+  <div class="chart-sub">How often each pain category appears across documented opportunities</div>
+
+  <div style="margin-top: 8px;">
+    <div class="bar-row">
+      <div class="bar-label">Disconnected Systems</div>
+      <div class="bar-track">
+        <div class="bar-fill" style="width:88%; background: linear-gradient(90deg,#6366f1,#8b5cf6);">88%</div>
+      </div>
+      <div class="bar-pct">~80+ accts</div>
+    </div>
+    <div class="bar-row">
+      <div class="bar-label">Manual Processes</div>
+      <div class="bar-track">
+        <div class="bar-fill" style="width:82%; background: linear-gradient(90deg,#f43f5e,#e11d48);">82%</div>
+      </div>
+      <div class="bar-pct">~75+ accts</div>
+    </div>
+    <div class="bar-row">
+      <div class="bar-label">Billing & Revenue Leakage</div>
+      <div class="bar-track">
+        <div class="bar-fill" style="width:72%; background: linear-gradient(90deg,#f97316,#ea580c);">72%</div>
+      </div>
+      <div class="bar-pct">~65+ accts</div>
+    </div>
+    <div class="bar-row">
+      <div class="bar-label">Ticketing Frustrations</div>
+      <div class="bar-track">
+        <div class="bar-fill" style="width:68%; background: linear-gradient(90deg,#eab308,#ca8a04);">68%</div>
+      </div>
+      <div class="bar-pct">~62+ accts</div>
+    </div>
+    <div class="bar-row">
+      <div class="bar-label">Time Tracking Gaps</div>
+      <div class="bar-track">
+        <div class="bar-fill" style="width:62%; background: linear-gradient(90deg,#10b981,#059669);">62%</div>
+      </div>
+      <div class="bar-pct">~56+ accts</div>
+    </div>
+    <div class="bar-row">
+      <div class="bar-label">Quoting & CPQ Pain</div>
+      <div class="bar-track">
+        <div class="bar-fill" style="width:54%; background: linear-gradient(90deg,#06b6d4,#0891b2);">54%</div>
+      </div>
+      <div class="bar-pct">~49+ accts</div>
+    </div>
+    <div class="bar-row">
+      <div class="bar-label">Inventory / Asset Mgmt</div>
+      <div class="bar-track">
+        <div class="bar-fill" style="width:42%; background: linear-gradient(90deg,#a855f7,#9333ea);">42%</div>
+      </div>
+      <div class="bar-pct">~38+ accts</div>
+    </div>
+    <div class="bar-row">
+      <div class="bar-label">Reporting & Visibility</div>
+      <div class="bar-track">
+        <div class="bar-fill" style="width:36%; background: linear-gradient(90deg,#64748b,#475569);">36%</div>
+      </div>
+      <div class="bar-pct">~33+ accts</div>
+    </div>
+  </div>
+  <div class="footnote">Source: Rev.io Salesforce CRM · March 2026</div>
+</div>
+
+<!-- SLIDE 3: PAIN #1 — DISCONNECTED SYSTEMS -->
+<div class="slide slide-theme">
+  <div class="theme-badge badge-critical">Pain #1 · Most Common</div>
+  <h2>🔗 Disconnected Systems & Swivel-Chair Hell</h2>
+  <div class="theme-grid" style="margin-top: 24px;">
+    <div class="theme-card">
+      <span class="card-icon">🔄</span>
+      <div class="freq">80+</div>
+      <h3>Multiple Tools, No Integration</h3>
+      <p>Accounts routinely juggle 3–8+ separate platforms: PSA, billing, CRM, RMM, quoting, and accounting — none of which talk to each other.</p>
+    </div>
+    <div class="theme-card">
+      <span class="card-icon">📋</span>
+      <h3>Manual Re-Entry Everywhere</h3>
+      <p>"Every quote has to be manually copy-pasted into a ticket." Data entered in one system never flows to the next — creating errors and eating hours.</p>
+    </div>
+    <div class="theme-card">
+      <span class="card-icon">🗃️</span>
+      <h3>No Single Source of Truth</h3>
+      <p>Customer data lives in 3 different systems. Nobody knows which one is right. Staff spend more time reconciling data than serving customers.</p>
+    </div>
+    <div class="theme-card">
+      <span class="card-icon">💸</span>
+      <h3>Paying for Redundant Tools</h3>
+      <p>Many accounts pay $1,000–$3,000+/month for platforms they barely use, while still relying on spreadsheets and email for the actual work.</p>
+    </div>
+  </div>
+  <div class="footnote">Source: Rev.io Salesforce CRM · March 2026</div>
+</div>
+
+<!-- SLIDE 4: VOICE OF CUSTOMER — SYSTEMS -->
+<div class="slide">
+  <h2 style="font-size:32px; font-weight:800; color:#fff; margin-bottom:4px;">In Their Own Words</h2>
+  <p style="color:#64748b; font-size:15px; margin-bottom:8px;">Disconnected systems — direct from the pipeline</p>
+  <div class="quotes-grid">
+    <div class="quote-card">
+      <div class="q-text">"Multiple systems increase swivel-chair work and data sync issues. Manual steps from quote acceptance to fulfillment and billing."</div>
+      <div class="q-source">Grid4 Communications</div>
+    </div>
+    <div class="quote-card">
+      <div class="q-text">"Disparate systems — different data lives in different places and then goes there to die."</div>
+      <div class="q-source">4Voice</div>
+    </div>
+    <div class="quote-card">
+      <div class="q-text">"Nobody hardly uses Rev, nobody hardly uses QuickBooks — everybody lives in ConnectWise." Systems exist but nothing is unified.</div>
+      <div class="q-source">Universal Telcom</div>
+    </div>
+    <div class="quote-card">
+      <div class="q-text">"5 platforms to enter data with lack of automation. Too many disconnected tools using Monday.com, BMS, Buildops — all redundant."</div>
+      <div class="q-source">Fountaine Information Systems</div>
+    </div>
+    <div class="quote-card">
+      <div class="q-text">"Tool sprawl across 8+ platforms: CW, Ninja, IT Glue, ScalePad, SmileBack, Movilla, etc. Mobile experience is non-existent."</div>
+      <div class="q-source">Cyber Advisors</div>
+    </div>
+    <div class="quote-card">
+      <div class="q-text">"Separate ticketing (FreshDesk) and billing (Rev.io) systems with no integration. No customer data sync between platforms."</div>
+      <div class="q-source">DataPhone</div>
+    </div>
+  </div>
+  <div class="footnote">Source: Rev.io Salesforce CRM · March 2026</div>
+</div>
+
+<!-- SLIDE 5: PAIN #2 — BILLING & REVENUE LEAKAGE -->
+<div class="slide slide-theme">
+  <div class="theme-badge badge-critical">Pain #2 · High Business Impact</div>
+  <h2>💸 Billing Chaos & Revenue Leakage</h2>
+  <div class="theme-grid" style="margin-top: 24px;">
+    <div class="theme-card">
+      <span class="card-icon">🧾</span>
+      <div class="freq">65+</div>
+      <h3>Manual Invoicing & Billing Shrink</h3>
+      <p>Unbilled hours, missed charges, and manual invoice creation are costing accounts real money every month. "Three or four billing mistakes today" is common.</p>
+    </div>
+    <div class="theme-card">
+      <span class="card-icon">📉</span>
+      <h3>No Consolidated Invoicing</h3>
+      <p>Customers get multiple invoices for the same project. ConnectWise can't combine time, materials, agreements, and projects into one clean invoice.</p>
+    </div>
+    <div class="theme-card">
+      <span class="card-icon">🔁</span>
+      <h3>Manual Recurring Billing</h3>
+      <p>M365 licenses billed every 3 months manually — missing mid-cycle changes. Seat adds/removes require manual invoice recreation every time.</p>
+    </div>
+    <div class="theme-card">
+      <span class="card-icon">⚠️</span>
+      <h3>Quote-to-Bill Disconnect</h3>
+      <p>Equipment ordered before invoicing causes billing shrink. Quotes built in one system never make it cleanly into billing — someone always re-enters them.</p>
+    </div>
+  </div>
+  <div class="footnote">Source: Rev.io Salesforce CRM · March 2026</div>
+</div>
+
+<!-- SLIDE 6: PAIN #3 — TICKETING -->
+<div class="slide slide-theme">
+  <div class="theme-badge badge-high">Pain #3 · Ops Impact</div>
+  <h2>🎫 Broken Ticketing Experiences</h2>
+  <div class="theme-grid" style="margin-top: 24px;">
+    <div class="theme-card">
+      <span class="card-icon">🐢</span>
+      <div class="freq">62+</div>
+      <h3>Clunky, Slow Interfaces</h3>
+      <p>"Too many steps to complete a ticket." Techs abandon the system and fall back to email, spreadsheets, or paper — defeating the purpose entirely.</p>
+    </div>
+    <div class="theme-card">
+      <span class="card-icon">📱</span>
+      <h3>Mobile App Failures</h3>
+      <p>Field techs on iPhones can't enter materials into tickets. Mobile apps don't show ticket info, assignment, or contact details in the field.</p>
+    </div>
+    <div class="theme-card">
+      <span class="card-icon">👁️</span>
+      <h3>No Visibility Into Open Tickets</h3>
+      <p>"No way to see what tickets are open and in what state at any given time." SLAs, prioritization, and assignment are all done manually.</p>
+    </div>
+    <div class="theme-card">
+      <span class="card-icon">🔔</span>
+      <h3>Notification & Workflow Failures</h3>
+      <p>Tickets created automatically have no populated info. Group notifications get missed. Customers call angry because nobody saw the ticket.</p>
+    </div>
+  </div>
+  <div class="footnote">Source: Rev.io Salesforce CRM · March 2026</div>
+</div>
+
+<!-- SLIDE 7: PAIN #4 — TIME TRACKING & QUOTING -->
+<div class="slide">
+  <h2 class="chart-title">Two Pains That Directly Kill Revenue</h2>
+  <div class="chart-sub">Time Tracking gaps and broken Quoting workflows appear together in 50%+ of accounts</div>
+  <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 32px; margin-top: 32px;">
+    <div>
+      <div style="font-size:18px; font-weight:800; color:#fbbf24; margin-bottom:16px;">⏱ Time Tracking Gaps</div>
+      <div style="display: flex; flex-direction: column; gap: 12px;">
+        <div class="theme-card">
+          <h3>Techs Don't Log Hours</h3>
+          <p>Manual time entry leads to forgotten hours — unbilled work that's gone forever.</p>
+        </div>
+        <div class="theme-card">
+          <h3>No Time-on-Ticket</h3>
+          <p>Can't tie labor to a specific ticket or customer. No job costing. No profitability tracking.</p>
+        </div>
+        <div class="theme-card">
+          <h3>Paper & Pen in the Field</h3>
+          <p>"Technicians having difficulty tracking time and materials on jobs — manual process pen and paper."</p>
+        </div>
+      </div>
+    </div>
+    <div>
+      <div style="font-size:18px; font-weight:800; color:#60a5fa; margin-bottom:16px;">📝 Quoting & CPQ Pain</div>
+      <div style="display: flex; flex-direction: column; gap: 12px;">
+        <div class="theme-card">
+          <h3>Quote Systems Don't Connect</h3>
+          <p>Quoting in Quoter, DocuSign, Excel, or email — none integrated into billing or ticketing.</p>
+        </div>
+        <div class="theme-card">
+          <h3>Manual Copy-Paste to Tickets</h3>
+          <p>"All the info they put into a quote has to be manually copy pasted into a ticket."</p>
+        </div>
+        <div class="theme-card">
+          <h3>Lost Deals from Bad Quoting</h3>
+          <p>One account "came close to losing a $1.5M deal because he was quoting out of Excel and it was messy."</p>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="footnote">Source: Rev.io Salesforce CRM · March 2026</div>
+</div>
+
+<!-- SLIDE 8: CONNECTWISE DEFECTION -->
+<div class="slide">
+  <div class="theme-badge badge-critical" style="display:inline-block; margin-bottom:20px;">Competitive Signal</div>
+  <h2 class="chart-title">ConnectWise: The #1 Platform They're Leaving</h2>
+  <div class="chart-sub">CW is the most frequently named incumbent — and the most frequently criticized</div>
+  <div class="quotes-grid" style="margin-top: 24px;">
+    <div class="quote-card" style="border-left-color: #f87171;">
+      <div class="q-text">"Paying ~$3,000/month for ConnectWise PSA plus modules. Facing mandatory ASIO migration with uncertain costs. 28 users locked in."</div>
+      <div class="q-source">Complete Technology Services</div>
+    </div>
+    <div class="quote-card" style="border-left-color: #f87171;">
+      <div class="q-text">"CW ASIO oversold — not ready despite sales promises. $1,100/month cost, minimal value, only 2 meetings with their team since December."</div>
+      <div class="q-source">Bullfrog Group</div>
+    </div>
+    <div class="quote-card" style="border-left-color: #f87171;">
+      <div class="q-text">"8 years of ConnectWise complexity and underutilization despite certification training. Ancient interface limiting productivity."</div>
+      <div class="q-source">True Blue Technology</div>
+    </div>
+    <div class="quote-card" style="border-left-color: #f87171;">
+      <div class="q-text">"Clunky interface — everything is convoluted and only tailored to IT companies. Can't provide a single invoice to customers."</div>
+      <div class="q-source">Class 5 Technologies</div>
+    </div>
+    <div class="quote-card" style="border-left-color: #f87171;">
+      <div class="q-text">"CW modules do not work together cleanly. Billing done in QuickBooks instead, creating manual processes for contracts and recurring billing."</div>
+      <div class="q-source">C1st Technologies</div>
+    </div>
+    <div class="quote-card" style="border-left-color: #f87171;">
+      <div class="q-text">"CW just quoted them 10K more a year for cloud. No integration between billing and ConnectWise today."</div>
+      <div class="q-source">Affiliated Technology Solutions</div>
+    </div>
+  </div>
+  <div class="footnote">Source: Rev.io Salesforce CRM · March 2026</div>
+</div>
+
+<!-- SLIDE 9: BUSINESS IMPACT -->
+<div class="slide">
+  <h2 class="chart-title">The Real Cost of These Problems</h2>
+  <div class="chart-sub">Pain points translate directly into financial and operational damage</div>
+  <div class="impact-grid">
+    <div class="impact-card">
+      <div class="impact-num">$300K</div>
+      <h3>Annual Cost to Maintain Homegrown Systems</h3>
+      <p>One account paying this yearly just to keep a legacy platform alive.</p>
+    </div>
+    <div class="impact-card">
+      <div class="impact-num">$1.5M</div>
+      <h3>Deal Nearly Lost to a Bad Quote</h3>
+      <p>Quoting out of Excel almost cost one account a 7-figure contract.</p>
+    </div>
+    <div class="impact-card">
+      <div class="impact-num">20 Staff</div>
+      <h3>Wasted on Manual Contractor Calls</h3>
+      <p>One account had 20 employees doing 200+ daily check-in calls instead of customer work.</p>
+    </div>
+    <div class="impact-card">
+      <div class="impact-num">8+ Months</div>
+      <h3>"Onboarding Hell" with Kaseya</h3>
+      <p>Slow implementations and broken promises pushing accounts to seek alternatives.</p>
+    </div>
+    <div class="impact-card">
+      <div class="impact-num">$17K/yr</div>
+      <h3>Paying for DeskPro That Doesn't Integrate</h3>
+      <p>High-cost tools that don't connect to the rest of the stack = money wasted.</p>
+    </div>
+    <div class="impact-card">
+      <div class="impact-num">Daily</div>
+      <h3>Revenue Leakage from Missed Billing</h3>
+      <p>"Three or four billing mistakes today" due to manual reconciliation between systems.</p>
+    </div>
+  </div>
+  <div class="footnote">Source: Rev.io Salesforce CRM · March 2026</div>
+</div>
+
+<!-- SLIDE 10: WHAT THEY WANT -->
+<div class="slide">
+  <h2 class="chart-title">What They're Actually Asking For</h2>
+  <div class="chart-sub">Common requests across documented pipeline conversations</div>
+  <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin-top: 32px;">
+    <div class="theme-card">
+      <span class="card-icon">🏠</span>
+      <h3>One Platform for Everything</h3>
+      <p>"Needs a platform that can handle quotes, tickets, scheduling, and invoicing all in one place." Repeated across dozens of accounts.</p>
+    </div>
+    <div class="theme-card">
+      <span class="card-icon">⚡</span>
+      <h3>Real Automation</h3>
+      <p>Workflows that trigger without human intervention — from quote acceptance to ticket creation to invoice generation.</p>
+    </div>
+    <div class="theme-card">
+      <span class="card-icon">📊</span>
+      <h3>Visibility & Reporting</h3>
+      <p>"Issues getting the right customer data at the right time." Custom reports, real-time dashboards, job costing by customer.</p>
+    </div>
+    <div class="theme-card">
+      <span class="card-icon">🧮</span>
+      <h3>Billing That Actually Works</h3>
+      <p>Consolidated invoices, integrated recurring billing, automated tax handling, and quote-to-invoice without re-keying data.</p>
+    </div>
+    <div class="theme-card">
+      <span class="card-icon">📱</span>
+      <h3>Mobile-First Field Experience</h3>
+      <p>Techs need to log time, add materials, and close tickets from the field — without calling the office or coming back to a desktop.</p>
+    </div>
+    <div class="theme-card">
+      <span class="card-icon">🔌</span>
+      <h3>Native Integrations That Work</h3>
+      <p>RMM, accounting, CRM, distributor pricing — not bolted-on APIs that break, but deep integrations that sync automatically.</p>
+    </div>
+  </div>
+  <div class="footnote">Source: Rev.io Salesforce CRM · March 2026</div>
+</div>
+
+<!-- SLIDE 11: REV.IO POSITIONING -->
+<div class="slide slide-cta">
+  <div class="theme-badge badge-medium" style="display:inline-block; margin-bottom:24px;">Rev.io Opportunity</div>
+  <h2>This Is Exactly What Rev.io PSA Is Built to Solve</h2>
+  <p>Every pain in this deck maps directly to a Rev.io capability. The market is ready — accounts are actively looking to escape the fragmented, expensive status quo.</p>
+  <div class="pill-list">
+    <div class="pill">Unified PSA + Billing</div>
+    <div class="pill">Native Time Tracking</div>
+    <div class="pill">Integrated Quoting</div>
+    <div class="pill">Real Automation</div>
+    <div class="pill">Consolidated Invoicing</div>
+    <div class="pill">Mobile-First</div>
+    <div class="pill">Inventory Management</div>
+    <div class="pill">ConnectWise Migration Path</div>
+  </div>
+  <p style="font-size:16px; color:#475569;">383 opportunities. 90+ documented pain points. The signal is clear.</p>
+  <div class="footnote">Rev.io Confidential · March 2026</div>
+</div>
+
+</body>
+</html>
