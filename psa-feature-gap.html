@@ -1,0 +1,212 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Rev.io PSA Web — MSP Feature Gap Analysis</title>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; background: #0f1117; color: #e2e8f0; line-height: 1.6; }
+  .header { background: linear-gradient(135deg, #1a1f2e 0%, #0f1117 100%); border-bottom: 1px solid #2d3748; padding: 48px 40px 40px; }
+  .header h1 { font-size: 2rem; font-weight: 700; color: #fff; margin-bottom: 8px; }
+  .header .subtitle { color: #94a3b8; font-size: 1rem; }
+  .header .meta { display: flex; gap: 24px; margin-top: 20px; flex-wrap: wrap; }
+  .header .meta span { background: #1e2535; border: 1px solid #2d3748; border-radius: 6px; padding: 6px 14px; font-size: 0.8rem; color: #94a3b8; }
+  .header .meta span strong { color: #e2e8f0; }
+
+  .summary-bar { display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 16px; padding: 32px 40px; background: #0f1117; border-bottom: 1px solid #1e2535; }
+  .stat { background: #1a1f2e; border: 1px solid #2d3748; border-radius: 10px; padding: 20px; text-align: center; }
+  .stat .num { font-size: 2rem; font-weight: 700; color: #60a5fa; }
+  .stat .label { font-size: 0.75rem; color: #64748b; text-transform: uppercase; letter-spacing: 0.05em; margin-top: 4px; }
+
+  .section { padding: 40px; max-width: 1100px; margin: 0 auto; }
+  .section-title { font-size: 1.25rem; font-weight: 700; color: #94a3b8; text-transform: uppercase; letter-spacing: 0.08em; margin-bottom: 24px; padding-bottom: 10px; border-bottom: 1px solid #1e2535; }
+
+  .loss-breakdown { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 14px; margin-bottom: 48px; }
+  .loss-card { background: #1a1f2e; border: 1px solid #2d3748; border-radius: 10px; padding: 18px 20px; display: flex; align-items: center; gap: 16px; }
+  .loss-card .bar-wrap { flex: 1; }
+  .loss-card .reason { font-size: 0.85rem; color: #cbd5e1; margin-bottom: 6px; }
+  .loss-card .bar { height: 6px; border-radius: 3px; background: #2d3748; overflow: hidden; }
+  .loss-card .bar-fill { height: 100%; border-radius: 3px; }
+  .loss-card .count { font-size: 1.4rem; font-weight: 700; min-width: 36px; text-align: right; }
+
+  .feature-grid { display: flex; flex-direction: column; gap: 16px; }
+  .feature-item { background: #1a1f2e; border: 1px solid #2d3748; border-radius: 10px; padding: 24px 28px; display: grid; grid-template-columns: 40px 1fr auto; gap: 16px; align-items: start; }
+  .feature-item:hover { border-color: #3d4f6e; }
+  .feature-num { font-size: 1.5rem; font-weight: 800; color: #334155; }
+  .feature-body h3 { font-size: 1rem; font-weight: 700; color: #e2e8f0; margin-bottom: 6px; }
+  .feature-body p { font-size: 0.875rem; color: #94a3b8; line-height: 1.6; }
+  .feature-body .deals { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 10px; }
+  .feature-body .deal-tag { background: #0f1117; border: 1px solid #2d3748; border-radius: 4px; padding: 2px 8px; font-size: 0.72rem; color: #64748b; }
+  .badge { padding: 4px 12px; border-radius: 20px; font-size: 0.72rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.05em; white-space: nowrap; align-self: start; }
+  .badge.critical { background: #7f1d1d; color: #fca5a5; }
+  .badge.high { background: #78350f; color: #fcd34d; }
+  .badge.medium { background: #1e3a5f; color: #93c5fd; }
+
+  .insight-box { background: #1a2535; border: 1px solid #1e3a5f; border-left: 4px solid #3b82f6; border-radius: 10px; padding: 24px 28px; margin-top: 40px; }
+  .insight-box h3 { color: #60a5fa; font-size: 1rem; font-weight: 700; margin-bottom: 10px; }
+  .insight-box p { color: #94a3b8; font-size: 0.9rem; line-height: 1.7; }
+
+  footer { text-align: center; padding: 32px; color: #334155; font-size: 0.8rem; border-top: 1px solid #1e2535; margin-top: 40px; }
+</style>
+</head>
+<body>
+
+<div class="header">
+  <h1>Rev.io PSA Web — MSP Feature Gap Analysis</h1>
+  <div class="subtitle">Closed Lost Opportunity Analysis · What's blocking MSP wins</div>
+  <div class="meta">
+    <span><strong>381</strong> Total Closed Lost Opps</span>
+    <span><strong>60</strong> Lost to Missing Features</span>
+    <span><strong>Q3 2025 – Q1 2026</strong> Date Range</span>
+    <span><strong>Source:</strong> Salesforce Export</span>
+  </div>
+</div>
+
+<div class="summary-bar">
+  <div class="stat"><div class="num">75</div><div class="label">Discovery No-Show</div></div>
+  <div class="stat"><div class="num">75</div><div class="label">Not the Right Time</div></div>
+  <div class="stat"><div class="num">63</div><div class="label">Non-Responsive</div></div>
+  <div class="stat"><div class="num" style="color:#f87171">60</div><div class="label">Missing Capabilities</div></div>
+  <div class="stat"><div class="num">27</div><div class="label">No Business Issue</div></div>
+  <div class="stat"><div class="num">22</div><div class="label">Price</div></div>
+  <div class="stat"><div class="num">9</div><div class="label">In Existing Contract</div></div>
+  <div class="stat"><div class="num">7</div><div class="label">Lost to Competitor</div></div>
+</div>
+
+<div class="section">
+  <div class="section-title">Top Feature Gaps — Ranked by Deal Impact</div>
+  <div class="feature-grid">
+
+    <div class="feature-item">
+      <div class="feature-num">1</div>
+      <div class="feature-body">
+        <h3>Project Management</h3>
+        <p>The #1 deal-killer. MSPs need Gantt charts, task assignment, installation tracking, job costing, and milestone-based billing. Coming from ConnectWise or Autotask, this is table stakes — without it, prospects won't leave their current platform no matter how good everything else is.</p>
+        <div class="deals">
+          <span class="deal-tag">Crown Networks</span><span class="deal-tag">CCI Network Services</span><span class="deal-tag">NetCentra</span><span class="deal-tag">RADEIN Managed Services</span><span class="deal-tag">Grey Matter Technologies</span><span class="deal-tag">Ambit Solutions</span><span class="deal-tag">Hunter Communications</span><span class="deal-tag">Tricom Technology Solutions</span><span class="deal-tag">+8 more</span>
+        </div>
+      </div>
+      <span class="badge critical">~15 deals</span>
+    </div>
+
+    <div class="feature-item">
+      <div class="feature-num">2</div>
+      <div class="feature-body">
+        <h3>NinjaOne / RMM Integrations</h3>
+        <p>NinjaOne is a hard blocker for MSPs using it as their RMM. Also needed: Datto RMM, Acronis, Huntress. Several prospects explicitly said "no Ninja = no deal" and went to HaloPSA or stayed with ConnectWise. IT Glue is also considered table stakes by many.</p>
+        <div class="deals">
+          <span class="deal-tag">IT In Demand</span><span class="deal-tag">Yeti Networks</span><span class="deal-tag">Nero Consulting</span><span class="deal-tag">PROACTIVERISK</span><span class="deal-tag">DefenTec</span><span class="deal-tag">Flux Labs</span><span class="deal-tag">SelectQoS</span><span class="deal-tag">Qoverage</span>
+        </div>
+      </div>
+      <span class="badge critical">~8 deals</span>
+    </div>
+
+    <div class="feature-item">
+      <div class="feature-num">3</div>
+      <div class="feature-body">
+        <h3>Ticket Workflow & Automation</h3>
+        <p>Prospects need round-robin ticket assignment, time-based workflows, SLA enforcement, contract SLAs, queue views showing active work by rep, and HTML in tickets. Coming from Zendesk or Halo, the current ticketing capability feels like a step backward.</p>
+        <div class="deals">
+          <span class="deal-tag">Smart Choice Communications</span><span class="deal-tag">Newcastle Communications</span><span class="deal-tag">Toly Digital Networks</span><span class="deal-tag">CallHarbor</span><span class="deal-tag">SeaGlass Technology</span><span class="deal-tag">Advanced Hosted Services</span>
+        </div>
+      </div>
+      <span class="badge critical">~6 deals</span>
+    </div>
+
+    <div class="feature-item">
+      <div class="feature-num">4</div>
+      <div class="feature-body">
+        <h3>QuickBooks Desktop & Accounting Integrations</h3>
+        <p>QuickBooks Desktop (not just Online) is a requirement for several MSPs, particularly field service and telecom-heavy shops. Xero needed for UK/Australia accounts. Without these, finance teams won't approve the switch.</p>
+        <div class="deals">
+          <span class="deal-tag">Appalachian Network Services</span><span class="deal-tag">CS&M Tele-Systems</span><span class="deal-tag">Tech Solutions Now</span><span class="deal-tag">SelectQoS</span>
+        </div>
+      </div>
+      <span class="badge high">~5 deals</span>
+    </div>
+
+    <div class="feature-item">
+      <div class="feature-num">5</div>
+      <div class="feature-body">
+        <h3>Sales Pipeline / CRM Features</h3>
+        <p>MSPs want opportunity tracking, pipeline stages, and CRM functionality built into PSA — not a separate tool. Several prospects use HubSpot or Salesforce today and need sync or replacement. Without this, PSA feels like just a ticketing tool.</p>
+        <div class="deals">
+          <span class="deal-tag">Open Tier Systems</span><span class="deal-tag">Hunter Communications</span><span class="deal-tag">Atlantech Online</span><span class="deal-tag">RingAlfa</span><span class="deal-tag">Tech Solution</span><span class="deal-tag">SelectQoS</span>
+        </div>
+      </div>
+      <span class="badge high">~5 deals</span>
+    </div>
+
+    <div class="feature-item">
+      <div class="feature-num">6</div>
+      <div class="feature-body">
+        <h3>Progressive / Milestone Billing</h3>
+        <p>MSPs running installation projects need to bill incrementally as work is completed — not just at close. Without progressive billing tied to project milestones, project-heavy MSPs can't replace their current workflow.</p>
+        <div class="deals">
+          <span class="deal-tag">Protection Technologies LLC</span><span class="deal-tag">Red Mountain Technology Solutions</span><span class="deal-tag">Tricom Technology Solutions</span><span class="deal-tag">Binyod</span><span class="deal-tag">BluDog Telecom</span>
+        </div>
+      </div>
+      <span class="badge high">~4 deals</span>
+    </div>
+
+    <div class="feature-item">
+      <div class="feature-num">7</div>
+      <div class="feature-body">
+        <h3>Mobile App for Field Techs</h3>
+        <p>Field service MSPs need technicians to update tickets, log time, and view dispatched jobs on mobile. Without a solid mobile experience, dispatching-heavy shops won't consider a switch.</p>
+        <div class="deals">
+          <span class="deal-tag">CS&M Tele-Systems</span><span class="deal-tag">Hunter Communications</span><span class="deal-tag">NetCentra</span>
+        </div>
+      </div>
+      <span class="badge high">~3 deals</span>
+    </div>
+
+    <div class="feature-item">
+      <div class="feature-num">8</div>
+      <div class="feature-body">
+        <h3>Parent-Child Account Structure</h3>
+        <p>MSPs managing multiple end-customer orgs (or agents managing sub-accounts) need hierarchical account visibility. Also needed: agent portal access with scoped permissions to create tickets and quotes for their own customers.</p>
+        <div class="deals">
+          <span class="deal-tag">Newcastle Communications</span><span class="deal-tag">CRAN-COM</span><span class="deal-tag">IPitomy</span>
+        </div>
+      </div>
+      <span class="badge high">~3 deals</span>
+    </div>
+
+    <div class="feature-item">
+      <div class="feature-num">9</div>
+      <div class="feature-body">
+        <h3>Inventory & PO Management</h3>
+        <p>MSPs that sell and install hardware need inventory tracking, purchase orders, and the ability to attach equipment to service records. Without this, they can't consolidate their back office into one platform.</p>
+        <div class="deals">
+          <span class="deal-tag">Protection Technologies LLC</span><span class="deal-tag">Net Tech</span><span class="deal-tag">RADEIN Managed Services</span><span class="deal-tag">NetCentra</span>
+        </div>
+      </div>
+      <span class="badge medium">~3 deals</span>
+    </div>
+
+    <div class="feature-item">
+      <div class="feature-num">10</div>
+      <div class="feature-body">
+        <h3>Multi-Currency Support</h3>
+        <p>International MSPs (Canada, UK, Australia) can't use a USD-only platform. Two separate lost deals cited this as a hard blocker. Low effort, high impact for international GTM expansion.</p>
+        <div class="deals">
+          <span class="deal-tag">Nebula Cybersecurity Group (x2)</span><span class="deal-tag">SelectQoS</span>
+        </div>
+      </div>
+      <span class="badge medium">~2 deals</span>
+    </div>
+
+  </div>
+
+  <div class="insight-box">
+    <h3>🎯 Bottom Line</h3>
+    <p><strong>Project Management + NinjaOne integration</strong> alone would likely reopen 20+ of the 60 feature-gap losses. These two items appear in more deal notes than anything else, and they're the exact capabilities that ConnectWise and HaloPSA are winning on. The good news: the majority of these prospects said they <em>liked</em> the platform and want to come back — they're timing-sensitive, not lost forever. A targeted re-engagement campaign around the PM/Ninja release would directly convert pipeline that's already warm.</p>
+  </div>
+</div>
+
+<footer>Rev.io PSA Web · Feature Gap Analysis · Generated by Robin 🦸🏻‍♂️ · March 2026</footer>
+
+</body>
+</html>
