@@ -3,175 +3,194 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Rev.io Sales Forecast — March 2026</title>
+<title>Rev.io Forecast — March 2026</title>
 <style>
+  :root {
+    --green: #00ff88;
+    --cyan: #00e5ff;
+    --bg: #020408;
+    --surface: #060d14;
+    --border: #0a2a1a;
+    --border2: #0d1f2d;
+    --text: #c8f0dc;
+    --muted: #2a5a3a;
+  }
   * { margin:0; padding:0; box-sizing:border-box; }
-  body { font-family:'Segoe UI',system-ui,sans-serif; background:#0a0e1a; color:#e8eaf0; }
-  .slide { min-height:100vh; display:flex; flex-direction:column; justify-content:center; padding:48px 70px; border-bottom:1px solid rgba(255,255,255,0.05); position:relative; overflow:hidden; }
-  .slide::before { content:''; position:absolute; top:-150px; right:-150px; width:500px; height:500px; border-radius:50%; background:radial-gradient(circle,rgba(99,102,241,0.05) 0%,transparent 70%); pointer-events:none; }
+  body { font-family:'Segoe UI',system-ui,monospace; background:var(--bg); color:var(--text); }
 
-  /* TITLE */
-  .slide-title { background:linear-gradient(135deg,#0a0e1a 0%,#111827 100%); text-align:center; align-items:center; }
-  .slide-title h1 { font-size:54px; font-weight:900; background:linear-gradient(135deg,#fff 0%,#a5b4fc 100%); -webkit-background-clip:text; -webkit-text-fill-color:transparent; background-clip:text; margin-bottom:8px; }
-  .slide-title .sub { font-size:17px; color:#64748b; margin-bottom:40px; }
-  .summary-grid { display:grid; grid-template-columns:repeat(5,1fr); gap:14px; width:100%; max-width:1000px; margin-bottom:24px; }
-  .sum-card { background:rgba(255,255,255,0.04); border:1px solid rgba(255,255,255,0.08); border-radius:12px; padding:18px 14px; text-align:center; }
-  .sum-card .prod { font-size:11px; font-weight:700; text-transform:uppercase; letter-spacing:1px; margin-bottom:8px; }
-  .sum-card .pipeline { font-size:22px; font-weight:800; color:#fff; margin-bottom:4px; }
-  .sum-card .opps { font-size:11px; color:#64748b; }
-  .total-strip { background:rgba(255,255,255,0.04); border:1px solid rgba(255,255,255,0.08); border-radius:12px; padding:18px 32px; display:flex; gap:40px; align-items:center; max-width:1000px; }
-  .ts-item { text-align:center; }
-  .ts-num { font-size:28px; font-weight:900; color:#6366f1; }
-  .ts-label { font-size:11px; color:#64748b; margin-top:4px; text-transform:uppercase; letter-spacing:1px; }
+  /* GRID LINES */
+  body::before {
+    content:'';
+    position:fixed; top:0; left:0; right:0; bottom:0;
+    background-image:
+      linear-gradient(rgba(0,255,136,0.03) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(0,255,136,0.03) 1px, transparent 1px);
+    background-size: 40px 40px;
+    pointer-events:none; z-index:0;
+  }
 
-  /* PRODUCT */
-  .prod-header { display:flex; align-items:flex-start; justify-content:space-between; margin-bottom:24px; }
-  .prod-header h2 { font-size:34px; font-weight:900; color:#fff; }
-  .month-badge { background:rgba(99,102,241,0.15); border:1px solid rgba(99,102,241,0.3); color:#a5b4fc; padding:6px 16px; border-radius:20px; font-size:13px; font-weight:700; }
-  .live-badge { display:inline-flex; align-items:center; gap:6px; background:rgba(34,197,94,0.1); border:1px solid rgba(34,197,94,0.2); color:#4ade80; padding:3px 10px; border-radius:20px; font-size:11px; font-weight:700; margin-bottom:10px; }
-  .dot { width:6px; height:6px; border-radius:50%; background:#4ade80; animation:pulse 2s infinite; }
+  .container { max-width:1100px; margin:0 auto; padding:24px 32px; position:relative; z-index:1; }
+
+  /* HEADER */
+  .header { border-bottom:1px solid var(--border); padding-bottom:16px; margin-bottom:20px; }
+  .header-top { display:flex; align-items:center; justify-content:space-between; margin-bottom:12px; }
+  .logo { display:flex; align-items:center; gap:10px; }
+  .logo-dot { width:10px; height:10px; background:var(--green); border-radius:50%; box-shadow:0 0 12px var(--green); animation:pulse 2s infinite; }
+  .logo-text { font-size:11px; font-weight:700; letter-spacing:3px; text-transform:uppercase; color:var(--green); }
+  .header-date { font-size:11px; color:var(--muted); letter-spacing:1px; }
+  h1 { font-size:36px; font-weight:900; color:#fff; letter-spacing:-1px; margin-bottom:4px; }
+  h1 span { color:var(--green); text-shadow:0 0 30px var(--green); }
+  .header-sub { font-size:13px; color:var(--muted); }
+
+  /* SUMMARY BAR */
+  .summary-bar { display:grid; grid-template-columns:repeat(6,1fr); gap:8px; margin-bottom:20px; }
+  .sum-item { background:var(--surface); border:1px solid var(--border); border-radius:8px; padding:12px; text-align:center; }
+  .sum-item.highlight { border-color:var(--green); background:rgba(0,255,136,0.04); }
+  .sum-label { font-size:9px; font-weight:700; text-transform:uppercase; letter-spacing:1.5px; color:var(--muted); margin-bottom:4px; }
+  .sum-val { font-size:18px; font-weight:900; color:#fff; }
+  .sum-val.green { color:var(--green); text-shadow:0 0 15px var(--green)66; }
+  .sum-val.yellow { color:#ffd700; }
+  .sum-val.red { color:#ff4444; }
+
+  /* PRODUCT CARDS */
+  .product-section { background:var(--surface); border:1px solid var(--border); border-radius:10px; margin-bottom:10px; overflow:hidden; }
+  .prod-header { display:flex; align-items:center; justify-content:space-between; padding:14px 18px; border-bottom:1px solid var(--border); }
+  .prod-title { display:flex; align-items:center; gap:10px; }
+  .prod-dot { width:8px; height:8px; border-radius:50%; flex-shrink:0; }
+  .prod-title h2 { font-size:18px; font-weight:800; letter-spacing:-0.5px; }
+  .live-dot { width:6px; height:6px; background:var(--green); border-radius:50%; box-shadow:0 0 6px var(--green); animation:pulse 2s infinite; }
+  .prod-meta { display:flex; gap:8px; align-items:center; }
+  .meta-chip { background:rgba(0,255,136,0.06); border:1px solid var(--border); color:#5a8a6a; font-size:11px; padding:3px 10px; border-radius:20px; }
+  .meta-chip strong { color:#aad4bb; }
+  .meta-chip.quota { border-color:rgba(0,255,136,0.2); color:var(--green); }
+
+  /* SCENARIOS */
+  .scenarios-row { display:grid; grid-template-columns:repeat(4,1fr); gap:0; border-bottom:1px solid var(--border); }
+  .scenario { padding:12px 18px; border-right:1px solid var(--border); }
+  .scenario:last-child { border-right:none; }
+  .s-label { font-size:9px; font-weight:700; letter-spacing:2px; text-transform:uppercase; margin-bottom:4px; }
+  .scenario.worst .s-label { color:#ff4444; }
+  .scenario.likely .s-label { color:#ffd700; }
+  .scenario.best .s-label { color:var(--green); }
+  .scenario.closed .s-label { color:var(--cyan); }
+  .s-val { font-size:22px; font-weight:900; color:#fff; margin-bottom:2px; }
+  .scenario.worst .s-val { color:#ff6666; }
+  .scenario.likely .s-val { color:#ffd700; }
+  .scenario.best .s-val { color:var(--green); text-shadow:0 0 15px var(--green)44; }
+  .scenario.closed .s-val { color:var(--cyan); }
+  .s-sub { font-size:10px; color:var(--muted); }
+
+  /* TOGGLE */
+  .opp-toggle { display:flex; justify-content:space-between; align-items:center; padding:8px 18px; cursor:pointer; font-size:12px; color:var(--muted); transition:background 0.15s; user-select:none; }
+  .opp-toggle:hover { background:rgba(0,255,136,0.03); color:var(--green); }
+  .toggle-amt { font-size:11px; }
+
+  /* TABLE */
+  .opp-list { border-top:1px solid var(--border); }
+  .opp-table { width:100%; border-collapse:collapse; }
+  .opp-table thead { background:#030a06; }
+  .opp-table th { font-size:9px; font-weight:700; text-transform:uppercase; letter-spacing:1.5px; color:var(--muted); padding:7px 14px; text-align:left; }
+  .opp-table td { font-size:12px; padding:6px 14px; border-bottom:1px solid rgba(0,255,136,0.04); color:#8ab89a; }
+  .opp-table td:first-child { color:#c8f0dc; font-weight:600; }
+  .opp-table td:nth-child(3) { font-weight:700; color:#fff; }
+  .opp-table tr:last-child td { border-bottom:none; }
+  .opp-table tr:hover td { background:rgba(0,255,136,0.02); }
+
+  /* STAGE PILLS */
+  .stage-pill { font-size:9px; font-weight:700; padding:2px 7px; border-radius:8px; text-transform:uppercase; letter-spacing:0.5px; }
+  .s1 { background:rgba(100,116,139,0.15); color:#64748b; border:1px solid rgba(100,116,139,0.2); }
+  .s2 { background:rgba(0,229,255,0.08); color:#00b4cc; border:1px solid rgba(0,229,255,0.15); }
+  .s3 { background:rgba(191,90,242,0.1); color:#bf5af2; border:1px solid rgba(191,90,242,0.2); }
+  .s4 { background:rgba(255,215,0,0.08); color:#ffd700; border:1px solid rgba(255,215,0,0.2); }
+  .s5 { background:rgba(255,107,53,0.1); color:#ff6b35; border:1px solid rgba(255,107,53,0.2); }
+  .s6 { background:rgba(0,255,136,0.1); color:var(--green); border:1px solid rgba(0,255,136,0.25); }
+  .won { background:rgba(0,255,136,0.2); color:var(--green); border:1px solid rgba(0,255,136,0.4); }
+
+  /* PROB BAR */
+  .pct-wrap { display:flex; align-items:center; gap:6px; font-size:11px; color:var(--muted); }
+  .pct-track { flex:1; height:3px; background:rgba(0,255,136,0.08); border-radius:2px; }
+  .pct-fill { height:100%; border-radius:2px; background:var(--green); box-shadow:0 0 4px var(--green)66; }
+
+  /* FOOTER */
+  .footer { text-align:center; padding:20px; font-size:10px; color:#1a3a2a; letter-spacing:1px; border-top:1px solid var(--border); margin-top:8px; }
+
   @keyframes pulse { 0%,100%{opacity:1}50%{opacity:0.4} }
 
-  .metrics-row { display:grid; grid-template-columns:repeat(6,1fr); gap:12px; margin-bottom:20px; }
-  .metric-card { background:rgba(255,255,255,0.04); border:1px solid rgba(255,255,255,0.08); border-radius:10px; padding:14px; text-align:center; }
-  .metric-card.hl { border-width:2px; }
-  .m-label { font-size:10px; font-weight:700; text-transform:uppercase; letter-spacing:1px; color:#64748b; margin-bottom:5px; }
-  .m-val { font-size:19px; font-weight:800; color:#fff; }
-  .m-sub { font-size:11px; color:#475569; margin-top:2px; }
-
-  .scenarios { display:grid; grid-template-columns:1fr 1fr 1fr; gap:14px; margin-bottom:20px; }
-  .scenario { border-radius:10px; padding:16px 20px; }
-  .scenario.worst { background:rgba(239,68,68,0.08); border:1px solid rgba(239,68,68,0.2); }
-  .scenario.likely { background:rgba(245,158,11,0.08); border:1px solid rgba(245,158,11,0.2); }
-  .scenario.best { background:rgba(34,197,94,0.08); border:1px solid rgba(34,197,94,0.2); }
-  .s-label { font-size:11px; font-weight:700; text-transform:uppercase; letter-spacing:1px; margin-bottom:5px; }
-  .scenario.worst .s-label { color:#f87171; }
-  .scenario.likely .s-label { color:#fbbf24; }
-  .scenario.best .s-label { color:#4ade80; }
-  .s-rev { font-size:28px; font-weight:900; color:#fff; margin-bottom:3px; }
-  .s-desc { font-size:12px; color:#64748b; }
-
-  .opp-section { margin-top:4px; }
-  .opp-toggle { display:flex; justify-content:space-between; align-items:center; background:rgba(255,255,255,0.04); border:1px solid rgba(255,255,255,0.08); border-radius:8px; padding:10px 16px; cursor:pointer; user-select:none; font-size:14px; font-weight:600; color:#94a3b8; transition:background 0.2s; }
-  .opp-toggle:hover { background:rgba(255,255,255,0.07); color:#e2e8f0; }
-  .opp-toggle.open { border-bottom-left-radius:0; border-bottom-right-radius:0; color:#e2e8f0; }
-  .toggle-hint { font-size:11px; color:#475569; }
-  .opp-list { border:1px solid rgba(255,255,255,0.08); border-top:none; border-radius:0 0 8px 8px; overflow:hidden; }
-  .opp-table { width:100%; border-collapse:collapse; }
-  .opp-table th { font-size:11px; font-weight:700; text-transform:uppercase; letter-spacing:1px; color:#475569; padding:8px 12px; text-align:left; background:rgba(255,255,255,0.02); border-bottom:1px solid rgba(255,255,255,0.06); }
-  .opp-table td { font-size:13px; padding:7px 12px; border-bottom:1px solid rgba(255,255,255,0.03); color:#cbd5e1; }
-  .opp-table tr:last-child td { border-bottom:none; }
-  .opp-table tr:hover td { background:rgba(255,255,255,0.02); }
-  .stage-pill { display:inline-block; padding:2px 8px; border-radius:10px; font-size:10px; font-weight:700; white-space:nowrap; }
-  .s1 { background:rgba(100,116,139,0.2); color:#94a3b8; }
-  .s2 { background:rgba(59,130,246,0.15); color:#93c5fd; }
-  .s3 { background:rgba(139,92,246,0.15); color:#c4b5fd; }
-  .s4 { background:rgba(245,158,11,0.15); color:#fcd34d; }
-  .s5 { background:rgba(249,115,22,0.15); color:#fdba74; }
-  .s6 { background:rgba(34,197,94,0.15); color:#86efac; }
-  .won { background:rgba(34,197,94,0.25); color:#4ade80; }
-  .pct-wrap { display:flex; align-items:center; gap:6px; font-size:12px; }
-  .pct-track { flex:1; height:4px; background:rgba(255,255,255,0.08); border-radius:2px; }
-  .pct-fill { height:100%; border-radius:2px; background:#6366f1; }
-  .footnote { position:absolute; bottom:18px; right:48px; font-size:11px; color:#1e293b; }
-  .eyebrow { font-size:12px; font-weight:700; letter-spacing:3px; text-transform:uppercase; color:#6366f1; margin-bottom:16px; }
+  /* SCANLINE EFFECT */
+  .scanline { position:fixed; top:0; left:0; right:0; bottom:0; background:repeating-linear-gradient(0deg, transparent, transparent 2px, rgba(0,0,0,0.03) 2px, rgba(0,0,0,0.03) 4px); pointer-events:none; z-index:0; }
 </style>
 </head>
 <body>
+<div class="scanline"></div>
+<div class="container">
 
-<!-- TITLE SLIDE -->
-<div class="slide slide-title">
-  <div class="eyebrow">Rev.io Sales Leadership</div>
-  <h1>March 2026 Forecast</h1>
-  <p class="sub">Live data pulled from Salesforce · 133 opportunities · Generated March 2, 2026</p>
-  <div class="summary-grid">
-    <div class="sum-card"><div class="prod" style="color:#6366f1">PSA 2.0</div><div class="pipeline">$58,865</div><div class="opps">72 opps</div></div>
-    <div class="sum-card"><div class="prod" style="color:#06b6d4">Billing</div><div class="pipeline">$23,215</div><div class="opps">29 opps</div></div>
-    <div class="sum-card"><div class="prod" style="color:#10b981">Payments</div><div class="pipeline">$4,548</div><div class="opps">23 opps</div></div>
-    <div class="sum-card"><div class="prod" style="color:#f97316">Cyber Protect</div><div class="pipeline">$3,852</div><div class="opps">4 opps</div></div>
-    <div class="sum-card"><div class="prod" style="color:#a855f7">Odin</div><div class="pipeline">$750</div><div class="opps">1 opp</div></div>
+  <div class="header">
+    <div class="header-top">
+      <div class="logo">
+        <div class="logo-dot"></div>
+        <div class="logo-text">Rev.io · Sales Intelligence</div>
+      </div>
+      <div class="header-date">GENERATED MARCH 03, 2026 · LIVE SALESFORCE DATA</div>
+    </div>
+    <h1>March 2026 <span>Forecast</span></h1>
+    <div class="header-sub">133 open opportunities · Pulled live from Salesforce · Worst case = 20% of Stage 3+ pipeline</div>
   </div>
-  <div class="total-strip">
-    <div class="ts-item"><div class="ts-num">$93,306</div><div class="ts-label">Total Pipeline</div></div>
-    <div class="ts-item"><div class="ts-num">133</div><div class="ts-label">Open Opps</div></div>
-    <div class="ts-item"><div class="ts-num">$0</div><div class="ts-label">Closed Won</div></div>
-    <div class="ts-item"><div class="ts-num" style="color:#f87171">$5,628</div><div class="ts-label">Worst Case</div></div>
-    <div class="ts-item"><div class="ts-num" style="color:#fbbf24">$8,070</div><div class="ts-label">Most Likely</div></div>
-    <div class="ts-item"><div class="ts-num" style="color:#4ade80">$21,106</div><div class="ts-label">Best Case</div></div>
+
+  <div class="summary-bar">
+    <div class="sum-item"><div class="sum-label">Total Pipeline</div><div class="sum-val">$93,306</div></div>
+    <div class="sum-item"><div class="sum-label">Open Opps</div><div class="sum-val">133</div></div>
+    <div class="sum-item"><div class="sum-label">Closed Won</div><div class="sum-val">$0</div></div>
+    <div class="sum-item highlight"><div class="sum-label">Worst Case</div><div class="sum-val red">$5,628</div></div>
+    <div class="sum-item highlight"><div class="sum-label">Most Likely</div><div class="sum-val yellow">$8,070</div></div>
+    <div class="sum-item highlight"><div class="sum-label">Best Case</div><div class="sum-val green">$21,106</div></div>
   </div>
-  <div class="footnote">Source: Salesforce · rev-io.my.salesforce.com · March 2, 2026</div>
-</div>
 
-
-<div class="slide" id="slide-2">
+  
+<div class="product-section" id="prod-0">
   <div class="prod-header">
-    <div>
-      <div class="live-badge"><div class="dot"></div> Live Salesforce Data</div>
-      <h2 style="border-left: 4px solid #6366f1; padding-left: 16px;">PSA 2.0 — Sales Forecast</h2>
+    <div class="prod-title">
+      <div class="prod-dot" style="background:#00ff88;box-shadow:0 0 8px #00ff88"></div>
+      <h2 style="color:#00ff88;text-shadow:0 0 20px #00ff8866">PSA 2.0</h2>
+      <div class="live-dot"></div>
     </div>
-    <div class="month-badge">March 2026</div>
-  </div>
-
-  <div class="metrics-row">
-    <div class="metric-card hl" style="border-color:#6366f140; background:#6366f112">
-      <div class="m-label">Closed Won</div>
-      <div class="m-val" style="color:#6366f1">$0</div>
-      <div class="m-sub">this month</div>
-    </div>
-    <div class="metric-card">
-      <div class="m-label">Quota</div>
-      <div class="m-val">$25,000</div>
-      <div class="m-sub">25 opps target</div>
-    </div>
-    <div class="metric-card">
-      <div class="m-label">Attainment</div>
-      <div class="m-val">0%</div>
-      <div class="m-sub">of revenue quota</div>
-    </div>
-    <div class="metric-card">
-      <div class="m-label">Total Pipeline</div>
-      <div class="m-val">$58,865</div>
-      <div class="m-sub">72 opportunities</div>
-    </div>
-    <div class="metric-card">
-      <div class="m-label">Avg Deal</div>
-      <div class="m-val">$818</div>
-      <div class="m-sub">per opportunity</div>
-    </div>
-    <div class="metric-card">
-      <div class="m-label">Weighted</div>
-      <div class="m-val">$2,914</div>
-      <div class="m-sub">most likely close</div>
+    <div class="prod-meta">
+      <span class="meta-chip">Pipeline: <strong>$58,865</strong></span>
+      <span class="meta-chip">72 opps</span>
+      <span class="meta-chip quota">Quota: $25,000</span>
     </div>
   </div>
 
-  <div class="scenarios">
+  <div class="scenarios-row">
     <div class="scenario worst">
-      <div class="s-label">⚠️ Worst Case</div>
-      <div class="s-rev">$2,638</div>
-      <div class="s-desc">20% of Stage 3+ pipeline</div>
+      <div class="s-label">WORST CASE</div>
+      <div class="s-val">$2,638</div>
+      <div class="s-sub">20% of Stage 3+</div>
     </div>
     <div class="scenario likely">
-      <div class="s-label">📊 Most Likely</div>
-      <div class="s-rev">$2,914</div>
-      <div class="s-desc">Weighted Stage 3-6</div>
+      <div class="s-label">MOST LIKELY</div>
+      <div class="s-val">$2,914</div>
+      <div class="s-sub">Weighted Stage 3-6</div>
     </div>
     <div class="scenario best">
-      <div class="s-label">🚀 Best Case</div>
-      <div class="s-rev">$9,892</div>
-      <div class="s-desc">75% of Stage 3+ pipeline</div>
+      <div class="s-label">BEST CASE</div>
+      <div class="s-val">$9,892</div>
+      <div class="s-sub">75% of Stage 3+</div>
+    </div>
+    <div class="scenario closed">
+      <div class="s-label">CLOSED WON</div>
+      <div class="s-val">$0</div>
+      <div class="s-sub">0% of quota</div>
     </div>
   </div>
 
-  <div class="opp-section">
-    <div class="opp-toggle" onclick="toggleOpps('PSA 2.0')">
-      <span>▶ All Opportunities (72)</span>
-      <span class="toggle-hint">Click to expand</span>
-    </div>
-    <div id="opps-PSA 2.0" class="opp-list" style="display:none">
-      <table class="opp-table">
-        <tr><th>Account</th><th>Amount</th><th>Stage</th><th>Owner</th><th>Probability</th></tr>
-        <tr>
+  <div class="opp-toggle" onclick="toggle('PSA 2.0')">
+    <span id="toggle-label-PSA 2.0">▶ Show all 72 opportunities</span>
+    <span class="toggle-amt">$58,865 total</span>
+  </div>
+  <div id="opps-PSA 2.0" class="opp-list" style="display:none">
+    <table class="opp-table">
+      <thead><tr><th>Account</th><th>Amount</th><th>Stage</th><th>Owner</th><th>Prob</th></tr></thead>
+      <tbody><tr>
           <td>Underdog Fire & Security</td>
           <td>$840</td>
           <td><span class="stage-pill s4">Proposal</span></td>
@@ -603,81 +622,55 @@
           <td><span class="stage-pill s1">Scheduled</span></td>
           <td>Jaylin Bender</td>
           <td><div class="pct-wrap">5%<div class="pct-track"><div class="pct-fill" style="width:5%"></div></div></div></td>
-        </tr>
-      </table>
-    </div>
+        </tr></tbody>
+    </table>
   </div>
-  <div class="footnote">Source: Salesforce · March 2, 2026</div>
 </div>
-<div class="slide" id="slide-3">
+<div class="product-section" id="prod-1">
   <div class="prod-header">
-    <div>
-      <div class="live-badge"><div class="dot"></div> Live Salesforce Data</div>
-      <h2 style="border-left: 4px solid #06b6d4; padding-left: 16px;">Billing — Sales Forecast</h2>
+    <div class="prod-title">
+      <div class="prod-dot" style="background:#00e5ff;box-shadow:0 0 8px #00e5ff"></div>
+      <h2 style="color:#00e5ff;text-shadow:0 0 20px #00e5ff66">Billing</h2>
+      <div class="live-dot"></div>
     </div>
-    <div class="month-badge">March 2026</div>
-  </div>
-
-  <div class="metrics-row">
-    <div class="metric-card hl" style="border-color:#06b6d440; background:#06b6d412">
-      <div class="m-label">Closed Won</div>
-      <div class="m-val" style="color:#06b6d4">$0</div>
-      <div class="m-sub">this month</div>
-    </div>
-    <div class="metric-card">
-      <div class="m-label">Quota</div>
-      <div class="m-val">$14,252</div>
-      <div class="m-sub">5 opps target</div>
-    </div>
-    <div class="metric-card">
-      <div class="m-label">Attainment</div>
-      <div class="m-val">0%</div>
-      <div class="m-sub">of revenue quota</div>
-    </div>
-    <div class="metric-card">
-      <div class="m-label">Total Pipeline</div>
-      <div class="m-val">$23,215</div>
-      <div class="m-sub">29 opportunities</div>
-    </div>
-    <div class="metric-card">
-      <div class="m-label">Avg Deal</div>
-      <div class="m-val">$801</div>
-      <div class="m-sub">per opportunity</div>
-    </div>
-    <div class="metric-card">
-      <div class="m-label">Weighted</div>
-      <div class="m-val">$2,592</div>
-      <div class="m-sub">most likely close</div>
+    <div class="prod-meta">
+      <span class="meta-chip">Pipeline: <strong>$23,215</strong></span>
+      <span class="meta-chip">29 opps</span>
+      <span class="meta-chip quota">Quota: $14,252</span>
     </div>
   </div>
 
-  <div class="scenarios">
+  <div class="scenarios-row">
     <div class="scenario worst">
-      <div class="s-label">⚠️ Worst Case</div>
-      <div class="s-rev">$1,603</div>
-      <div class="s-desc">20% of Stage 3+ pipeline</div>
+      <div class="s-label">WORST CASE</div>
+      <div class="s-val">$1,603</div>
+      <div class="s-sub">20% of Stage 3+</div>
     </div>
     <div class="scenario likely">
-      <div class="s-label">📊 Most Likely</div>
-      <div class="s-rev">$2,592</div>
-      <div class="s-desc">Weighted Stage 3-6</div>
+      <div class="s-label">MOST LIKELY</div>
+      <div class="s-val">$2,592</div>
+      <div class="s-sub">Weighted Stage 3-6</div>
     </div>
     <div class="scenario best">
-      <div class="s-label">🚀 Best Case</div>
-      <div class="s-rev">$6,011</div>
-      <div class="s-desc">75% of Stage 3+ pipeline</div>
+      <div class="s-label">BEST CASE</div>
+      <div class="s-val">$6,011</div>
+      <div class="s-sub">75% of Stage 3+</div>
+    </div>
+    <div class="scenario closed">
+      <div class="s-label">CLOSED WON</div>
+      <div class="s-val">$0</div>
+      <div class="s-sub">0% of quota</div>
     </div>
   </div>
 
-  <div class="opp-section">
-    <div class="opp-toggle" onclick="toggleOpps('Billing')">
-      <span>▶ All Opportunities (29)</span>
-      <span class="toggle-hint">Click to expand</span>
-    </div>
-    <div id="opps-Billing" class="opp-list" style="display:none">
-      <table class="opp-table">
-        <tr><th>Account</th><th>Amount</th><th>Stage</th><th>Owner</th><th>Probability</th></tr>
-        <tr>
+  <div class="opp-toggle" onclick="toggle('Billing')">
+    <span id="toggle-label-Billing">▶ Show all 29 opportunities</span>
+    <span class="toggle-amt">$23,215 total</span>
+  </div>
+  <div id="opps-Billing" class="opp-list" style="display:none">
+    <table class="opp-table">
+      <thead><tr><th>Account</th><th>Amount</th><th>Stage</th><th>Owner</th><th>Prob</th></tr></thead>
+      <tbody><tr>
           <td>AltiGen Communications, Inc.</td>
           <td>$500</td>
           <td><span class="stage-pill s6">Verbal Commit</span></td>
@@ -851,81 +844,55 @@
           <td><span class="stage-pill s1">Scheduled</span></td>
           <td>Justin Lee</td>
           <td><div class="pct-wrap">5%<div class="pct-track"><div class="pct-fill" style="width:5%"></div></div></div></td>
-        </tr>
-      </table>
-    </div>
+        </tr></tbody>
+    </table>
   </div>
-  <div class="footnote">Source: Salesforce · March 2, 2026</div>
 </div>
-<div class="slide" id="slide-4">
+<div class="product-section" id="prod-2">
   <div class="prod-header">
-    <div>
-      <div class="live-badge"><div class="dot"></div> Live Salesforce Data</div>
-      <h2 style="border-left: 4px solid #10b981; padding-left: 16px;">Payments — Sales Forecast</h2>
+    <div class="prod-title">
+      <div class="prod-dot" style="background:#00ff88;box-shadow:0 0 8px #00ff88"></div>
+      <h2 style="color:#00ff88;text-shadow:0 0 20px #00ff8866">Payments</h2>
+      <div class="live-dot"></div>
     </div>
-    <div class="month-badge">March 2026</div>
-  </div>
-
-  <div class="metrics-row">
-    <div class="metric-card hl" style="border-color:#10b98140; background:#10b98112">
-      <div class="m-label">Closed Won</div>
-      <div class="m-val" style="color:#10b981">$0</div>
-      <div class="m-sub">this month</div>
-    </div>
-    <div class="metric-card">
-      <div class="m-label">Quota</div>
-      <div class="m-val">$9,660</div>
-      <div class="m-sub">20 opps target</div>
-    </div>
-    <div class="metric-card">
-      <div class="m-label">Attainment</div>
-      <div class="m-val">0%</div>
-      <div class="m-sub">of revenue quota</div>
-    </div>
-    <div class="metric-card">
-      <div class="m-label">Total Pipeline</div>
-      <div class="m-val">$4,548</div>
-      <div class="m-sub">23 opportunities</div>
-    </div>
-    <div class="metric-card">
-      <div class="m-label">Avg Deal</div>
-      <div class="m-val">$198</div>
-      <div class="m-sub">per opportunity</div>
-    </div>
-    <div class="metric-card">
-      <div class="m-label">Weighted</div>
-      <div class="m-val">$935</div>
-      <div class="m-sub">most likely close</div>
+    <div class="prod-meta">
+      <span class="meta-chip">Pipeline: <strong>$4,548</strong></span>
+      <span class="meta-chip">23 opps</span>
+      <span class="meta-chip quota">Quota: $9,660</span>
     </div>
   </div>
 
-  <div class="scenarios">
+  <div class="scenarios-row">
     <div class="scenario worst">
-      <div class="s-label">⚠️ Worst Case</div>
-      <div class="s-rev">$417</div>
-      <div class="s-desc">20% of Stage 3+ pipeline</div>
+      <div class="s-label">WORST CASE</div>
+      <div class="s-val">$417</div>
+      <div class="s-sub">20% of Stage 3+</div>
     </div>
     <div class="scenario likely">
-      <div class="s-label">📊 Most Likely</div>
-      <div class="s-rev">$935</div>
-      <div class="s-desc">Weighted Stage 3-6</div>
+      <div class="s-label">MOST LIKELY</div>
+      <div class="s-val">$935</div>
+      <div class="s-sub">Weighted Stage 3-6</div>
     </div>
     <div class="scenario best">
-      <div class="s-label">🚀 Best Case</div>
-      <div class="s-rev">$1,564</div>
-      <div class="s-desc">75% of Stage 3+ pipeline</div>
+      <div class="s-label">BEST CASE</div>
+      <div class="s-val">$1,564</div>
+      <div class="s-sub">75% of Stage 3+</div>
+    </div>
+    <div class="scenario closed">
+      <div class="s-label">CLOSED WON</div>
+      <div class="s-val">$0</div>
+      <div class="s-sub">0% of quota</div>
     </div>
   </div>
 
-  <div class="opp-section">
-    <div class="opp-toggle" onclick="toggleOpps('Payments AR')">
-      <span>▶ All Opportunities (23)</span>
-      <span class="toggle-hint">Click to expand</span>
-    </div>
-    <div id="opps-Payments AR" class="opp-list" style="display:none">
-      <table class="opp-table">
-        <tr><th>Account</th><th>Amount</th><th>Stage</th><th>Owner</th><th>Probability</th></tr>
-        <tr>
+  <div class="opp-toggle" onclick="toggle('Payments AR')">
+    <span id="toggle-label-Payments AR">▶ Show all 23 opportunities</span>
+    <span class="toggle-amt">$4,548 total</span>
+  </div>
+  <div id="opps-Payments AR" class="opp-list" style="display:none">
+    <table class="opp-table">
+      <thead><tr><th>Account</th><th>Amount</th><th>Stage</th><th>Owner</th><th>Prob</th></tr></thead>
+      <tbody><tr>
           <td>All Secured Security Services</td>
           <td>$1,405</td>
           <td><span class="stage-pill s6">Verbal Commit</span></td>
@@ -1063,81 +1030,55 @@
           <td><span class="stage-pill s1">Scheduled</span></td>
           <td>Justin Lee</td>
           <td><div class="pct-wrap">5%<div class="pct-track"><div class="pct-fill" style="width:5%"></div></div></div></td>
-        </tr>
-      </table>
-    </div>
+        </tr></tbody>
+    </table>
   </div>
-  <div class="footnote">Source: Salesforce · March 2, 2026</div>
 </div>
-<div class="slide" id="slide-5">
+<div class="product-section" id="prod-3">
   <div class="prod-header">
-    <div>
-      <div class="live-badge"><div class="dot"></div> Live Salesforce Data</div>
-      <h2 style="border-left: 4px solid #f97316; padding-left: 16px;">Cyber Protect — Sales Forecast</h2>
+    <div class="prod-title">
+      <div class="prod-dot" style="background:#ff6b35;box-shadow:0 0 8px #ff6b35"></div>
+      <h2 style="color:#ff6b35;text-shadow:0 0 20px #ff6b3566">Cyber Protect</h2>
+      <div class="live-dot"></div>
     </div>
-    <div class="month-badge">March 2026</div>
-  </div>
-
-  <div class="metrics-row">
-    <div class="metric-card hl" style="border-color:#f9731640; background:#f9731612">
-      <div class="m-label">Closed Won</div>
-      <div class="m-val" style="color:#f97316">$0</div>
-      <div class="m-sub">this month</div>
-    </div>
-    <div class="metric-card">
-      <div class="m-label">Quota</div>
-      <div class="m-val">$0</div>
-      <div class="m-sub">0 opps target</div>
-    </div>
-    <div class="metric-card">
-      <div class="m-label">Attainment</div>
-      <div class="m-val">0%</div>
-      <div class="m-sub">of revenue quota</div>
-    </div>
-    <div class="metric-card">
-      <div class="m-label">Total Pipeline</div>
-      <div class="m-val">$3,852</div>
-      <div class="m-sub">4 opportunities</div>
-    </div>
-    <div class="metric-card">
-      <div class="m-label">Avg Deal</div>
-      <div class="m-val">$963</div>
-      <div class="m-sub">per opportunity</div>
-    </div>
-    <div class="metric-card">
-      <div class="m-label">Weighted</div>
-      <div class="m-val">$1,116</div>
-      <div class="m-sub">most likely close</div>
+    <div class="prod-meta">
+      <span class="meta-chip">Pipeline: <strong>$3,852</strong></span>
+      <span class="meta-chip">4 opps</span>
+      
     </div>
   </div>
 
-  <div class="scenarios">
+  <div class="scenarios-row">
     <div class="scenario worst">
-      <div class="s-label">⚠️ Worst Case</div>
-      <div class="s-rev">$720</div>
-      <div class="s-desc">20% of Stage 3+ pipeline</div>
+      <div class="s-label">WORST CASE</div>
+      <div class="s-val">$720</div>
+      <div class="s-sub">20% of Stage 3+</div>
     </div>
     <div class="scenario likely">
-      <div class="s-label">📊 Most Likely</div>
-      <div class="s-rev">$1,116</div>
-      <div class="s-desc">Weighted Stage 3-6</div>
+      <div class="s-label">MOST LIKELY</div>
+      <div class="s-val">$1,116</div>
+      <div class="s-sub">Weighted Stage 3-6</div>
     </div>
     <div class="scenario best">
-      <div class="s-label">🚀 Best Case</div>
-      <div class="s-rev">$2,702</div>
-      <div class="s-desc">75% of Stage 3+ pipeline</div>
+      <div class="s-label">BEST CASE</div>
+      <div class="s-val">$2,702</div>
+      <div class="s-sub">75% of Stage 3+</div>
+    </div>
+    <div class="scenario closed">
+      <div class="s-label">CLOSED WON</div>
+      <div class="s-val">$0</div>
+      <div class="s-sub">New product</div>
     </div>
   </div>
 
-  <div class="opp-section">
-    <div class="opp-toggle" onclick="toggleOpps('Cyber Protect')">
-      <span>▶ All Opportunities (4)</span>
-      <span class="toggle-hint">Click to expand</span>
-    </div>
-    <div id="opps-Cyber Protect" class="opp-list" style="display:none">
-      <table class="opp-table">
-        <tr><th>Account</th><th>Amount</th><th>Stage</th><th>Owner</th><th>Probability</th></tr>
-        <tr>
+  <div class="opp-toggle" onclick="toggle('Cyber Protect')">
+    <span id="toggle-label-Cyber Protect">▶ Show all 4 opportunities</span>
+    <span class="toggle-amt">$3,852 total</span>
+  </div>
+  <div id="opps-Cyber Protect" class="opp-list" style="display:none">
+    <table class="opp-table">
+      <thead><tr><th>Account</th><th>Amount</th><th>Stage</th><th>Owner</th><th>Prob</th></tr></thead>
+      <tbody><tr>
           <td>Positive Technologies Inc</td>
           <td>$1,440</td>
           <td><span class="stage-pill s4">Proposal</span></td>
@@ -1161,161 +1102,109 @@
           <td><span class="stage-pill s1">Scheduled</span></td>
           <td>Justin Lee</td>
           <td><div class="pct-wrap">5%<div class="pct-track"><div class="pct-fill" style="width:5%"></div></div></div></td>
-        </tr>
-      </table>
-    </div>
+        </tr></tbody>
+    </table>
   </div>
-  <div class="footnote">Source: Salesforce · March 2, 2026</div>
 </div>
-<div class="slide" id="slide-6">
+<div class="product-section" id="prod-4">
   <div class="prod-header">
-    <div>
-      <div class="live-badge"><div class="dot"></div> Live Salesforce Data</div>
-      <h2 style="border-left: 4px solid #a855f7; padding-left: 16px;">Odin — Sales Forecast</h2>
+    <div class="prod-title">
+      <div class="prod-dot" style="background:#bf5af2;box-shadow:0 0 8px #bf5af2"></div>
+      <h2 style="color:#bf5af2;text-shadow:0 0 20px #bf5af266">Odin</h2>
+      <div class="live-dot"></div>
     </div>
-    <div class="month-badge">March 2026</div>
-  </div>
-
-  <div class="metrics-row">
-    <div class="metric-card hl" style="border-color:#a855f740; background:#a855f712">
-      <div class="m-label">Closed Won</div>
-      <div class="m-val" style="color:#a855f7">$0</div>
-      <div class="m-sub">this month</div>
-    </div>
-    <div class="metric-card">
-      <div class="m-label">Quota</div>
-      <div class="m-val">$0</div>
-      <div class="m-sub">0 opps target</div>
-    </div>
-    <div class="metric-card">
-      <div class="m-label">Attainment</div>
-      <div class="m-val">0%</div>
-      <div class="m-sub">of revenue quota</div>
-    </div>
-    <div class="metric-card">
-      <div class="m-label">Total Pipeline</div>
-      <div class="m-val">$750</div>
-      <div class="m-sub">1 opportunities</div>
-    </div>
-    <div class="metric-card">
-      <div class="m-label">Avg Deal</div>
-      <div class="m-val">$750</div>
-      <div class="m-sub">per opportunity</div>
-    </div>
-    <div class="metric-card">
-      <div class="m-label">Weighted</div>
-      <div class="m-val">$413</div>
-      <div class="m-sub">most likely close</div>
+    <div class="prod-meta">
+      <span class="meta-chip">Pipeline: <strong>$750</strong></span>
+      <span class="meta-chip">1 opps</span>
+      
     </div>
   </div>
 
-  <div class="scenarios">
+  <div class="scenarios-row">
     <div class="scenario worst">
-      <div class="s-label">⚠️ Worst Case</div>
-      <div class="s-rev">$150</div>
-      <div class="s-desc">20% of Stage 3+ pipeline</div>
+      <div class="s-label">WORST CASE</div>
+      <div class="s-val">$150</div>
+      <div class="s-sub">20% of Stage 3+</div>
     </div>
     <div class="scenario likely">
-      <div class="s-label">📊 Most Likely</div>
-      <div class="s-rev">$413</div>
-      <div class="s-desc">Weighted Stage 3-6</div>
+      <div class="s-label">MOST LIKELY</div>
+      <div class="s-val">$413</div>
+      <div class="s-sub">Weighted Stage 3-6</div>
     </div>
     <div class="scenario best">
-      <div class="s-label">🚀 Best Case</div>
-      <div class="s-rev">$562</div>
-      <div class="s-desc">75% of Stage 3+ pipeline</div>
+      <div class="s-label">BEST CASE</div>
+      <div class="s-val">$562</div>
+      <div class="s-sub">75% of Stage 3+</div>
+    </div>
+    <div class="scenario closed">
+      <div class="s-label">CLOSED WON</div>
+      <div class="s-val">$0</div>
+      <div class="s-sub">New product</div>
     </div>
   </div>
 
-  <div class="opp-section">
-    <div class="opp-toggle" onclick="toggleOpps('Odin')">
-      <span>▶ All Opportunities (1)</span>
-      <span class="toggle-hint">Click to expand</span>
-    </div>
-    <div id="opps-Odin" class="opp-list" style="display:none">
-      <table class="opp-table">
-        <tr><th>Account</th><th>Amount</th><th>Stage</th><th>Owner</th><th>Probability</th></tr>
-        <tr>
+  <div class="opp-toggle" onclick="toggle('Odin')">
+    <span id="toggle-label-Odin">▶ Show all 1 opportunities</span>
+    <span class="toggle-amt">$750 total</span>
+  </div>
+  <div id="opps-Odin" class="opp-list" style="display:none">
+    <table class="opp-table">
+      <thead><tr><th>Account</th><th>Amount</th><th>Stage</th><th>Owner</th><th>Prob</th></tr></thead>
+      <tbody><tr>
           <td>AVC One</td>
           <td>$750</td>
           <td><span class="stage-pill s4">Proposal</span></td>
           <td>Ingrid Beard</td>
           <td><div class="pct-wrap">40%<div class="pct-track"><div class="pct-fill" style="width:40%"></div></div></div></td>
-        </tr>
-      </table>
-    </div>
+        </tr></tbody>
+    </table>
   </div>
-  <div class="footnote">Source: Salesforce · March 2, 2026</div>
 </div>
-<div class="slide" id="slide-7">
+<div class="product-section" id="prod-5">
   <div class="prod-header">
-    <div>
-      <div class="live-badge"><div class="dot"></div> Live Salesforce Data</div>
-      <h2 style="border-left: 4px solid #64748b; padding-left: 16px;">Untagged — Sales Forecast</h2>
+    <div class="prod-title">
+      <div class="prod-dot" style="background:#64748b;box-shadow:0 0 8px #64748b"></div>
+      <h2 style="color:#64748b;text-shadow:0 0 20px #64748b66">Untagged</h2>
+      <div class="live-dot"></div>
     </div>
-    <div class="month-badge">March 2026</div>
-  </div>
-
-  <div class="metrics-row">
-    <div class="metric-card hl" style="border-color:#64748b40; background:#64748b12">
-      <div class="m-label">Closed Won</div>
-      <div class="m-val" style="color:#64748b">$0</div>
-      <div class="m-sub">this month</div>
-    </div>
-    <div class="metric-card">
-      <div class="m-label">Quota</div>
-      <div class="m-val">$0</div>
-      <div class="m-sub">0 opps target</div>
-    </div>
-    <div class="metric-card">
-      <div class="m-label">Attainment</div>
-      <div class="m-val">0%</div>
-      <div class="m-sub">of revenue quota</div>
-    </div>
-    <div class="metric-card">
-      <div class="m-label">Total Pipeline</div>
-      <div class="m-val">$2,075</div>
-      <div class="m-sub">4 opportunities</div>
-    </div>
-    <div class="metric-card">
-      <div class="m-label">Avg Deal</div>
-      <div class="m-val">$519</div>
-      <div class="m-sub">per opportunity</div>
-    </div>
-    <div class="metric-card">
-      <div class="m-label">Weighted</div>
-      <div class="m-val">$100</div>
-      <div class="m-sub">most likely close</div>
+    <div class="prod-meta">
+      <span class="meta-chip">Pipeline: <strong>$2,075</strong></span>
+      <span class="meta-chip">4 opps</span>
+      
     </div>
   </div>
 
-  <div class="scenarios">
+  <div class="scenarios-row">
     <div class="scenario worst">
-      <div class="s-label">⚠️ Worst Case</div>
-      <div class="s-rev">$100</div>
-      <div class="s-desc">20% of Stage 3+ pipeline</div>
+      <div class="s-label">WORST CASE</div>
+      <div class="s-val">$100</div>
+      <div class="s-sub">20% of Stage 3+</div>
     </div>
     <div class="scenario likely">
-      <div class="s-label">📊 Most Likely</div>
-      <div class="s-rev">$100</div>
-      <div class="s-desc">Weighted Stage 3-6</div>
+      <div class="s-label">MOST LIKELY</div>
+      <div class="s-val">$100</div>
+      <div class="s-sub">Weighted Stage 3-6</div>
     </div>
     <div class="scenario best">
-      <div class="s-label">🚀 Best Case</div>
-      <div class="s-rev">$375</div>
-      <div class="s-desc">75% of Stage 3+ pipeline</div>
+      <div class="s-label">BEST CASE</div>
+      <div class="s-val">$375</div>
+      <div class="s-sub">75% of Stage 3+</div>
+    </div>
+    <div class="scenario closed">
+      <div class="s-label">CLOSED WON</div>
+      <div class="s-val">$0</div>
+      <div class="s-sub">New product</div>
     </div>
   </div>
 
-  <div class="opp-section">
-    <div class="opp-toggle" onclick="toggleOpps('None')">
-      <span>▶ All Opportunities (4)</span>
-      <span class="toggle-hint">Click to expand</span>
-    </div>
-    <div id="opps-None" class="opp-list" style="display:none">
-      <table class="opp-table">
-        <tr><th>Account</th><th>Amount</th><th>Stage</th><th>Owner</th><th>Probability</th></tr>
-        <tr>
+  <div class="opp-toggle" onclick="toggle('None')">
+    <span id="toggle-label-None">▶ Show all 4 opportunities</span>
+    <span class="toggle-amt">$2,075 total</span>
+  </div>
+  <div id="opps-None" class="opp-list" style="display:none">
+    <table class="opp-table">
+      <thead><tr><th>Account</th><th>Amount</th><th>Stage</th><th>Owner</th><th>Prob</th></tr></thead>
+      <tbody><tr>
           <td>Numhub</td>
           <td>$500</td>
           <td><span class="stage-pill s3">Demo</span></td>
@@ -1339,27 +1228,25 @@
           <td><span class="stage-pill s1">Scheduled</span></td>
           <td>Jaylin Bender</td>
           <td><div class="pct-wrap">5%<div class="pct-track"><div class="pct-fill" style="width:5%"></div></div></div></td>
-        </tr>
-      </table>
-    </div>
+        </tr></tbody>
+    </table>
   </div>
-  <div class="footnote">Source: Salesforce · March 2, 2026</div>
+</div>
+
+  <div class="footer">REV.IO SALES INTELLIGENCE · ROBIN 🦸🏻‍♂️ · CONFIDENTIAL</div>
 </div>
 
 <script>
-function toggleOpps(pid) {
+function toggle(pid) {
   const el = document.getElementById('opps-' + pid);
-  const toggle = el.previousElementSibling;
+  const lbl = document.getElementById('toggle-label-' + pid);
+  const count = el.querySelectorAll('tbody tr').length;
   if (el.style.display === 'none') {
     el.style.display = 'block';
-    toggle.classList.add('open');
-    toggle.querySelector('span').textContent = '▼ All Opportunities (' + el.querySelectorAll('tbody tr').length + ')';
-    toggle.querySelector('.toggle-hint').textContent = 'Click to collapse';
+    lbl.textContent = '▼ Hide opportunities (' + count + ')';
   } else {
     el.style.display = 'none';
-    toggle.classList.remove('open');
-    toggle.querySelector('span').textContent = '▶ All Opportunities (' + el.querySelectorAll('tbody tr').length + ')';
-    toggle.querySelector('.toggle-hint').textContent = 'Click to expand';
+    lbl.textContent = '▶ Show all ' + count + ' opportunities';
   }
 }
 </script>
