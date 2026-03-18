@@ -1,0 +1,173 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>AE Capacity — Prospect Meetings by Month</title>
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body { background: #0f172a; font-family: 'Segoe UI', system-ui, sans-serif; color: #e2e8f0; min-height: 100vh; padding: 40px 48px; }
+  h1 { font-size: 26px; font-weight: 700; color: #fff; margin-bottom: 6px; }
+  .subtitle { font-size: 14px; color: #94a3b8; margin-bottom: 40px; }
+  .grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 24px; margin-bottom: 40px; }
+  .card { background: #1e293b; border-radius: 12px; padding: 28px 24px; position: relative; overflow: hidden; }
+  .card::before { content: ''; position: absolute; top: 0; left: 0; right: 0; height: 4px; background: var(--accent); }
+  .card.jan { --accent: #38bdf8; }
+  .card.feb { --accent: #a78bfa; }
+  .card.mar { --accent: #34d399; }
+  .month-label { font-size: 11px; font-weight: 700; letter-spacing: 1.5px; text-transform: uppercase; color: #64748b; margin-bottom: 16px; }
+  .meetings-val { font-size: 64px; font-weight: 800; line-height: 1; margin-bottom: 4px; color: var(--accent); }
+  .meetings-label { font-size: 13px; color: #94a3b8; margin-bottom: 24px; }
+  .ae-badge { display: inline-flex; align-items: center; gap: 8px; background: #0f172a; border-radius: 8px; padding: 8px 14px; }
+  .ae-num { font-size: 22px; font-weight: 700; color: #fff; }
+  .ae-text { font-size: 12px; color: #64748b; line-height: 1.3; }
+  .ae-text strong { display: block; color: #94a3b8; }
+  .mtg-per-ae { margin-top: 20px; padding-top: 16px; border-top: 1px solid #1e3a5f; display: flex; justify-content: space-between; align-items: center; }
+  .mpa-val { font-size: 20px; font-weight: 700; color: #fff; }
+  .mpa-label { font-size: 11px; color: #64748b; }
+  .chart-section { background: #1e293b; border-radius: 12px; padding: 28px 24px; }
+  .chart-title { font-size: 13px; font-weight: 700; color: #64748b; letter-spacing: 1px; text-transform: uppercase; margin-bottom: 28px; }
+  .bar-row { display: flex; align-items: center; margin-bottom: 20px; gap: 16px; }
+  .bar-month { font-size: 12px; font-weight: 600; color: #94a3b8; width: 120px; flex-shrink: 0; }
+  .bar-track { flex: 1; background: #0f172a; border-radius: 6px; height: 36px; position: relative; overflow: hidden; display: flex; }
+  .bar-fill-actual { height: 100%; display: flex; align-items: center; padding-left: 12px; font-size: 13px; font-weight: 700; border-radius: 6px 0 0 6px; }
+  .bar-fill-projected { height: 100%; display: flex; align-items: center; padding-left: 8px; font-size: 12px; font-weight: 600; opacity: 0.65; position: relative; border-radius: 0 6px 6px 0; }
+  .bar-fill-projected::after { content: ''; position: absolute; left: 0; top: 4px; bottom: 4px; width: 2px; background: rgba(255,255,255,0.3); }
+  .bar-row.jan .bar-fill-actual { background: #38bdf8; color: #0f172a; }
+  .bar-row.jan .bar-fill-projected { background: #38bdf8; color: #0f172a; }
+  .bar-row.feb .bar-fill-actual { background: #a78bfa; color: #0f172a; }
+  .bar-row.feb .bar-fill-projected { background: #a78bfa; color: #0f172a; }
+  .bar-row.mar .bar-fill-actual { background: #34d399; color: #0f172a; }
+  .bar-row.mar .bar-fill-projected { background: #6ee7b7; color: #064e3b; }
+  .bar-stat { font-size: 12px; color: #64748b; width: 140px; text-align: right; flex-shrink: 0; line-height: 1.5; }
+  .bar-stat strong { color: #cbd5e1; }
+  .legend { display: flex; gap: 24px; margin-bottom: 24px; }
+  .legend-item { display: flex; align-items: center; gap: 8px; font-size: 12px; color: #64748b; }
+  .legend-dot { width: 12px; height: 12px; border-radius: 3px; }
+  .legend-dot.actual { background: #94a3b8; }
+  .legend-dot.projected { background: #94a3b8; opacity: 0.4; }
+  .vs-row { display: flex; gap: 16px; margin-top: 28px; padding-top: 20px; border-top: 1px solid #0f172a; }
+  .vs-chip { flex: 1; background: #0f172a; border-radius: 8px; padding: 12px 16px; text-align: center; }
+  .vs-val { font-size: 20px; font-weight: 700; color: #34d399; }
+  .vs-label { font-size: 11px; color: #64748b; margin-top: 2px; }
+  .note { font-size: 11px; color: #475569; margin-top: 20px; }
+  .rev-badge { position: absolute; top: 28px; right: 48px; font-size: 13px; font-weight: 700; color: #63b3ed; letter-spacing: 0.5px; }
+  .trend-up { color: #34d399; font-size: 11px; }
+  .trend-dn { color: #f87171; font-size: 11px; }
+  .trend-n { color: #94a3b8; font-size: 11px; }
+</style>
+</head>
+<body>
+
+<div style="position:relative">
+  <span class="rev-badge">rev.io</span>
+  <h1>AE Capacity — Prospect Meetings by Month</h1>
+  <p class="subtitle">Total discovery/prospect meetings held by month · 11.0–12.0 per business day avg · Source: Salesforce</p>
+</div>
+
+<!-- Cards -->
+<div class="grid">
+  <div class="card jan">
+    <div class="month-label">January 2026</div>
+    <div class="meetings-val">232</div>
+    <div class="meetings-label">Total Meetings · 21 biz days</div>
+    <div class="ae-badge">
+      <div class="ae-num">12</div>
+      <div class="ae-text"><strong>Active AEs</strong>19.3 meetings / AE</div>
+    </div>
+    <div class="mtg-per-ae">
+      <div><div class="mpa-val">11.0</div><div class="mpa-label">Meetings / biz day</div></div>
+    </div>
+  </div>
+
+  <div class="card feb">
+    <div class="month-label">February 2026</div>
+    <div class="meetings-val">229</div>
+    <div class="meetings-label">Total Meetings · 20 biz days</div>
+    <div class="ae-badge">
+      <div class="ae-num">12</div>
+      <div class="ae-text"><strong>Active AEs</strong>19.1 meetings / AE</div>
+    </div>
+    <div class="mtg-per-ae">
+      <div><div class="mpa-val">11.4</div><div class="mpa-label">Meetings / biz day</div></div>
+      <div class="trend-dn">▼ 3 vs Jan</div>
+    </div>
+  </div>
+
+  <div class="card mar">
+    <div class="month-label">March 2026 (MTD + Projected)</div>
+    <div class="meetings-val">264</div>
+    <div class="meetings-label">Projected Total · 180 actual + 84 projected</div>
+    <div class="ae-badge">
+      <div class="ae-num">9</div>
+      <div class="ae-text"><strong>Active AEs (MTD)</strong>12.0 meetings / biz day</div>
+    </div>
+    <div class="mtg-per-ae">
+      <div><div class="mpa-val">12.0</div><div class="mpa-label">Meetings / biz day (MTD)</div></div>
+      <div class="trend-up">▲ +0.6 vs Feb</div>
+    </div>
+  </div>
+</div>
+
+<!-- Bar Chart -->
+<div class="chart-section">
+  <div class="chart-title">Volume Comparison — Meetings by Month</div>
+
+  <div class="legend">
+    <div class="legend-item"><div class="legend-dot actual"></div> Actual meetings held</div>
+    <div class="legend-item"><div class="legend-dot projected"></div> Projected (7 biz days remaining as of Monday)</div>
+  </div>
+
+  <!-- Jan — all actual -->
+  <div class="bar-row jan">
+    <div class="bar-month">January 2026</div>
+    <div class="bar-track">
+      <div class="bar-fill-actual" style="width:87.9%">232</div>
+    </div>
+    <div class="bar-stat"><strong>232</strong> meetings<br>11.0 / biz day</div>
+  </div>
+
+  <!-- Feb — all actual -->
+  <div class="bar-row feb">
+    <div class="bar-month">February 2026</div>
+    <div class="bar-track">
+      <div class="bar-fill-actual" style="width:86.7%">229</div>
+    </div>
+    <div class="bar-stat"><strong>229</strong> meetings<br>11.4 / biz day</div>
+  </div>
+
+  <!-- Mar — actual + projected split -->
+  <div class="bar-row mar">
+    <div class="bar-month">March 2026</div>
+    <div class="bar-track">
+      <div class="bar-fill-actual" style="width:68.2%">180 actual</div>
+      <div class="bar-fill-projected" style="width:31.8%">+84 proj.</div>
+    </div>
+    <div class="bar-stat"><strong>264</strong> projected<br>12.0 / biz day</div>
+  </div>
+
+  <!-- vs comparison -->
+  <div class="vs-row">
+    <div class="vs-chip">
+      <div class="vs-val">+32</div>
+      <div class="vs-label">vs January (+13.8%)</div>
+    </div>
+    <div class="vs-chip">
+      <div class="vs-val">+35</div>
+      <div class="vs-label">vs February (+15.3%)</div>
+    </div>
+    <div class="vs-chip">
+      <div class="vs-val">12.0</div>
+      <div class="vs-label">Meetings/biz day (best of 3 months)</div>
+    </div>
+    <div class="vs-chip">
+      <div class="vs-val">7</div>
+      <div class="vs-label">Business days remaining</div>
+    </div>
+  </div>
+
+  <p class="note">⚡ March projection assumes 12.0 meetings/biz day (current MTD run rate) × 7 remaining business days (through March 31). Actual through Monday March 23 est. ~180. Source: Salesforce — Total AE Capacity report.</p>
+</div>
+
+</body>
+</html>

@@ -1,0 +1,276 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Robin's Deck Library — Rev.io Sales</title>
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body { background: #0f172a; font-family: 'Segoe UI', system-ui, sans-serif; color: #e2e8f0; min-height: 100vh; }
+  header { background: #1e293b; border-bottom: 1px solid #334155; padding: 24px 48px; display: flex; justify-content: space-between; align-items: center; }
+  header h1 { font-size: 20px; font-weight: 700; color: #fff; }
+  header .meta { font-size: 12px; color: #64748b; }
+  .robin-tag { font-size: 13px; font-weight: 700; color: #63b3ed; }
+  .container { max-width: 1100px; margin: 0 auto; padding: 40px 48px; }
+  .section-title { font-size: 11px; font-weight: 700; letter-spacing: 1.5px; text-transform: uppercase; color: #475569; margin-bottom: 16px; margin-top: 40px; }
+  .section-title:first-child { margin-top: 0; }
+  .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 16px; margin-bottom: 8px; }
+  .card { background: #1e293b; border-radius: 10px; padding: 20px; border: 1px solid #334155; transition: border-color 0.15s, transform 0.15s; text-decoration: none; display: block; position: relative; overflow: hidden; }
+  .card:hover { border-color: var(--accent, #63b3ed); transform: translateY(-2px); }
+  .card::before { content: ''; position: absolute; top: 0; left: 0; right: 0; height: 3px; background: var(--accent, #63b3ed); }
+  .card-icon { font-size: 22px; margin-bottom: 10px; }
+  .card-title { font-size: 14px; font-weight: 700; color: #fff; margin-bottom: 6px; line-height: 1.3; }
+  .card-desc { font-size: 12px; color: #94a3b8; line-height: 1.5; margin-bottom: 12px; }
+  .card-meta { display: flex; gap: 8px; align-items: center; flex-wrap: wrap; }
+  .tag { font-size: 10px; font-weight: 600; padding: 3px 8px; border-radius: 4px; background: #0f172a; color: #64748b; letter-spacing: 0.5px; }
+  .tag.html { background: #1e3a5f; color: #63b3ed; }
+  .tag.pptx { background: #2d1f4e; color: #a78bfa; }
+  .tag.live { background: #064e3b; color: #34d399; }
+  .tag.board { background: #4a1942; color: #f0abfc; }
+  .date { font-size: 10px; color: #475569; margin-left: auto; }
+  .search-bar { width: 100%; background: #1e293b; border: 1px solid #334155; border-radius: 8px; padding: 10px 16px; color: #e2e8f0; font-size: 14px; outline: none; margin-bottom: 32px; }
+  .search-bar::placeholder { color: #475569; }
+  .search-bar:focus { border-color: #63b3ed; }
+  footer { text-align: center; padding: 32px; color: #334155; font-size: 12px; border-top: 1px solid #1e293b; margin-top: 40px; }
+  .empty { display: none; text-align: center; color: #475569; padding: 40px; font-size: 14px; }
+</style>
+</head>
+<body>
+
+<header>
+  <div>
+    <h1>📊 Robin's Deck Library</h1>
+    <div class="meta">Rev.io Sales · Built by Robin 🦸🏻‍♂️ · Auto-updated</div>
+  </div>
+  <div class="robin-tag">rev.io</div>
+</header>
+
+<div class="container">
+  <input class="search-bar" type="text" placeholder="Search decks..." id="search" oninput="filterDecks()">
+
+  <!-- BOARD / EXEC -->
+  <div class="section-title" data-section>Board & Executive</div>
+  <div class="grid" id="board-grid">
+
+    <a class="card" href="ae-capacity-dashboard.html" style="--accent:#34d399" data-tags="board dashboard html salesforce march 2026 meetings capacity ae">
+      <div class="card-icon">📅</div>
+      <div class="card-title">AE Capacity Dashboard</div>
+      <div class="card-desc">Prospect meetings by month (Jan–Mar 2026), business day run rate, March projection for board presentation.</div>
+      <div class="card-meta">
+        <span class="tag html">HTML</span>
+        <span class="tag live">Live SF Data</span>
+        <span class="tag board">Board Prep</span>
+        <span class="date">Mar 18 2026</span>
+      </div>
+    </a>
+
+    <a class="card" href="forecast-march-2026.html" style="--accent:#f0abfc" data-tags="board forecast march 2026 pipeline html executive">
+      <div class="card-icon">📈</div>
+      <div class="card-title">March 2026 Forecast</div>
+      <div class="card-desc">Weekly sales forecast deck — pipeline, worst/most likely/best case, manager summaries.</div>
+      <div class="card-meta">
+        <span class="tag html">HTML</span>
+        <span class="tag board">Board Ready</span>
+        <span class="date">Mar 2026</span>
+      </div>
+    </a>
+
+  </div>
+
+  <!-- SDR PERFORMANCE -->
+  <div class="section-title" data-section>SDR Performance</div>
+  <div class="grid" id="sdr-grid">
+
+    <a class="card" href="SDR-Feb2026-vs-2025.pptx" style="--accent:#38bdf8" data-tags="sdr funnel february 2026 2025 comparison pptx conversion">
+      <div class="card-icon">🔄</div>
+      <div class="card-title">SDR YOY Comparison — Feb 2026 vs 2025</div>
+      <div class="card-desc">Side-by-side funnel comparison. Opp→Meeting +19pp, Demo→Close +9pp. Strong conversion improvement story.</div>
+      <div class="card-meta">
+        <span class="tag pptx">PPTX</span>
+        <span class="tag board">Board Prep</span>
+        <span class="date">Mar 18 2026</span>
+      </div>
+    </a>
+
+    <a class="card" href="SDR-Q1-2026-Funnel.pptx" style="--accent:#38bdf8" data-tags="sdr funnel q1 february 2026 pptx mrr closes demos">
+      <div class="card-icon">🎯</div>
+      <div class="card-title">SDR Q1 2026 Funnel</div>
+      <div class="card-desc">February 2026 funnel snapshot — 58 opps, 42 discoveries, 18 demos, 5 closes / $3,450 MRR.</div>
+      <div class="card-meta">
+        <span class="tag pptx">PPTX</span>
+        <span class="date">Mar 18 2026</span>
+      </div>
+    </a>
+
+    <a class="card" href="SDR-Leader-Playbook.pptx" style="--accent:#38bdf8" data-tags="sdr leader playbook matt salin coaching show rate timezone pptx">
+      <div class="card-icon">📋</div>
+      <div class="card-title">SDR Leader Playbook</div>
+      <div class="card-desc">3-slide playbook for SDR leaders — pipeline quality, call coaching, time block optimization by timezone.</div>
+      <div class="card-meta">
+        <span class="tag pptx">PPTX</span>
+        <span class="date">Feb 25 2026</span>
+      </div>
+    </a>
+
+  </div>
+
+  <!-- AE PERFORMANCE -->
+  <div class="section-title" data-section>AE Performance & Efficiency</div>
+  <div class="grid" id="ae-grid">
+
+    <a class="card" href="AE-Cost-Payback-2025.pptx" style="--accent:#a78bfa" data-tags="ae cost payback roi 2025 full year efficiency pptx board">
+      <div class="card-icon">💰</div>
+      <div class="card-title">AE Cost Payback Analysis — 2025</div>
+      <div class="card-desc">Full year AE ROI. Team 2.64x payback. Individual rep breakdown, MSP vs PSA motion comparison, H1 2026 path.</div>
+      <div class="card-meta">
+        <span class="tag pptx">PPTX</span>
+        <span class="tag board">Board Ready</span>
+        <span class="date">Feb 2026</span>
+      </div>
+    </a>
+
+    <a class="card" href="AE-Efficiency-2025-Full-Year.pptx" style="--accent:#a78bfa" data-tags="ae efficiency 2025 full year pptx performance">
+      <div class="card-icon">⚡</div>
+      <div class="card-title">AE Efficiency — 2025 Full Year</div>
+      <div class="card-desc">Full year AE efficiency analysis across the team.</div>
+      <div class="card-meta">
+        <span class="tag pptx">PPTX</span>
+        <span class="date">2025</span>
+      </div>
+    </a>
+
+    <a class="card" href="AE-Efficiency-Q4-2025-v4.pptx" style="--accent:#a78bfa" data-tags="ae efficiency q4 2025 pptx performance quarterly">
+      <div class="card-icon">📊</div>
+      <div class="card-title">AE Efficiency — Q4 2025</div>
+      <div class="card-desc">Q4 2025 AE efficiency breakdown by rep.</div>
+      <div class="card-meta">
+        <span class="tag pptx">PPTX</span>
+        <span class="date">Q4 2025</span>
+      </div>
+    </a>
+
+    <a class="card" href="Rep-Time-Utilization-2025.pptx" style="--accent:#a78bfa" data-tags="rep time utilization 2025 pptx selling hours admin">
+      <div class="card-icon">⏱️</div>
+      <div class="card-title">Rep Time Utilization — 2025</div>
+      <div class="card-desc">How AEs actually spend their time vs industry benchmarks. Selling hours gap analysis.</div>
+      <div class="card-meta">
+        <span class="tag pptx">PPTX</span>
+        <span class="date">2025</span>
+      </div>
+    </a>
+
+  </div>
+
+  <!-- MARKET & COMPETITIVE -->
+  <div class="section-title" data-section>Market & Competitive</div>
+  <div class="grid" id="market-grid">
+
+    <a class="card" href="Q4-2025-PSA-Industry-Breakdown.pptx" style="--accent:#fb923c" data-tags="psa industry q4 2025 closed won integrator msp pptx">
+      <div class="card-icon">🏭</div>
+      <div class="card-title">PSA Closed Won by Industry — Q4 2025</div>
+      <div class="card-desc">49% Security Integrators, 24% MSP segments. Greenfield vs displacement breakdown.</div>
+      <div class="card-meta">
+        <span class="tag pptx">PPTX</span>
+        <span class="date">Q4 2025</span>
+      </div>
+    </a>
+
+    <a class="card" href="Q4-2025-PSA-Competitors-Displaced.pptx" style="--accent:#fb923c" data-tags="psa competitors displaced q4 2025 connectwise autotask pptx">
+      <div class="card-icon">⚔️</div>
+      <div class="card-title">PSA Competitors Displaced — Q4 2025</div>
+      <div class="card-desc">32% wins from spreadsheets, 18% from QuickBooks. Competitive displacement breakdown.</div>
+      <div class="card-meta">
+        <span class="tag pptx">PPTX</span>
+        <span class="date">Q4 2025</span>
+      </div>
+    </a>
+
+    <a class="card" href="battle-cards.html" style="--accent:#fb923c" data-tags="battle cards competitive connectwise autotask halopsa syncro html">
+      <div class="card-icon">🃏</div>
+      <div class="card-title">PSA Battle Cards</div>
+      <div class="card-desc">Competitive battle cards vs ConnectWise, Autotask, HaloPSA, Syncro, SuperOps.</div>
+      <div class="card-meta">
+        <span class="tag html">HTML</span>
+        <span class="date">2026</span>
+      </div>
+    </a>
+
+    <a class="card" href="msp-problems-deck.html" style="--accent:#fb923c" data-tags="msp problems pain points html prospects deck">
+      <div class="card-icon">🔍</div>
+      <div class="card-title">MSP Problems Deck</div>
+      <div class="card-desc">MSP pain points and how Rev.io solves them. Built for prospect conversations.</div>
+      <div class="card-meta">
+        <span class="tag html">HTML</span>
+        <span class="date">2026</span>
+      </div>
+    </a>
+
+    <a class="card" href="psa-feature-gap.html" style="--accent:#fb923c" data-tags="psa feature gap html product roadmap msp">
+      <div class="card-icon">🗺️</div>
+      <div class="card-title">PSA Feature Gap Analysis</div>
+      <div class="card-desc">MSP segment feature gaps and roadmap priorities for unlocking the MSP market.</div>
+      <div class="card-meta">
+        <span class="tag html">HTML</span>
+        <span class="date">2026</span>
+      </div>
+    </a>
+
+  </div>
+
+  <!-- SALES OPS -->
+  <div class="section-title" data-section>Sales Observations & Strategy</div>
+  <div class="grid" id="ops-grid">
+
+    <a class="card" href="January-2026-Sales-Observations.pptx" style="--accent:#f472b6" data-tags="january 2026 sales observations pe pptx sdr action plan">
+      <div class="card-icon">📝</div>
+      <div class="card-title">January 2026 Sales Observations</div>
+      <div class="card-desc">PE board prep deck — Jan attainment, closed lost analysis, SDR funnel, February action plan. 4 slides.</div>
+      <div class="card-meta">
+        <span class="tag pptx">PPTX</span>
+        <span class="tag board">PE Board</span>
+        <span class="date">Feb 2026</span>
+      </div>
+    </a>
+
+    <a class="card" href="Discovery-Call-TZ-One-Pager.pptx" style="--accent:#f472b6" data-tags="discovery call timezone show rate pptx one pager sdr booking">
+      <div class="card-icon">🕐</div>
+      <div class="card-title">Discovery Call Timezone One-Pager</div>
+      <div class="card-desc">When to book discovery calls by prospect timezone. Best/worst slots. Thu 12PM = 85% show rate.</div>
+      <div class="card-meta">
+        <span class="tag pptx">PPTX</span>
+        <span class="date">2025</span>
+      </div>
+    </a>
+
+  </div>
+
+  <div class="empty" id="empty-state">No decks match your search.</div>
+
+</div>
+
+<footer>Built by Robin 🦸🏻‍♂️ · Auto-updated when new decks are created · rev.io Sales</footer>
+
+<script>
+function filterDecks() {
+  const q = document.getElementById('search').value.toLowerCase();
+  const cards = document.querySelectorAll('.card');
+  let visible = 0;
+  cards.forEach(card => {
+    const text = (card.dataset.tags + ' ' + card.innerText).toLowerCase();
+    const show = !q || text.includes(q);
+    card.style.display = show ? 'block' : 'none';
+    if (show) visible++;
+  });
+  document.getElementById('empty-state').style.display = visible === 0 ? 'block' : 'none';
+  // Hide empty sections
+  document.querySelectorAll('[data-section]').forEach(section => {
+    const grid = section.nextElementSibling;
+    const anyVisible = Array.from(grid.querySelectorAll('.card')).some(c => c.style.display !== 'none');
+    section.style.display = anyVisible || !q ? '' : 'none';
+    grid.style.display = anyVisible || !q ? '' : 'none';
+  });
+}
+</script>
+
+</body>
+</html>
