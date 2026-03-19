@@ -42,7 +42,7 @@ stage_css = {
 }
 product_order = ['PSA 2.0', 'Billing', 'Payments AR', 'Cyber Protect', 'Odin', 'None']
 product_labels = {'PSA 2.0': 'PSA', 'Billing': 'Billing', 'Payments AR': 'Payments', 'Cyber Protect': 'Cyber Protect', 'Odin': 'Odin', 'None': 'Untagged'}
-product_quotas = {'PSA 2.0': (25, 25000), 'Billing': (5, 14252), 'Payments AR': (20, 9660), 'Cyber Protect': (0, 3750), 'Odin': (0, 0), 'None': (0, 0)}
+product_quotas = {'PSA 2.0': (25, 63000), 'Billing': (5, 20588), 'Payments AR': (20, 27740), 'Cyber Protect': (0, 3750), 'Odin': (0, 0), 'None': (0, 0)}
 
 # Manager-inputted scenario overrides from weekly forecast deck
 manager_scenarios = {
