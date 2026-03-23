@@ -25,7 +25,7 @@
   .mtg-per-ae { margin-top: 20px; padding-top: 16px; border-top: 1px solid #1e3a5f; display: flex; justify-content: space-between; align-items: center; }
   .mpa-val { font-size: 20px; font-weight: 700; color: #fff; }
   .mpa-label { font-size: 11px; color: #64748b; }
-  .chart-section { background: #1e293b; border-radius: 12px; padding: 28px 24px; }
+  .chart-section { background: #1e293b; border-radius: 12px; padding: 28px 24px; margin-bottom: 40px; }
   .chart-title { font-size: 13px; font-weight: 700; color: #64748b; letter-spacing: 1px; text-transform: uppercase; margin-bottom: 28px; }
   .bar-row { display: flex; align-items: center; margin-bottom: 20px; gap: 16px; }
   .bar-month { font-size: 12px; font-weight: 600; color: #94a3b8; width: 120px; flex-shrink: 0; }
@@ -34,9 +34,7 @@
   .bar-fill-projected { height: 100%; display: flex; align-items: center; padding-left: 8px; font-size: 12px; font-weight: 600; opacity: 0.65; position: relative; border-radius: 0 6px 6px 0; }
   .bar-fill-projected::after { content: ''; position: absolute; left: 0; top: 4px; bottom: 4px; width: 2px; background: rgba(255,255,255,0.3); }
   .bar-row.jan .bar-fill-actual { background: #38bdf8; color: #0f172a; }
-  .bar-row.jan .bar-fill-projected { background: #38bdf8; color: #0f172a; }
   .bar-row.feb .bar-fill-actual { background: #a78bfa; color: #0f172a; }
-  .bar-row.feb .bar-fill-projected { background: #a78bfa; color: #0f172a; }
   .bar-row.mar .bar-fill-actual { background: #34d399; color: #0f172a; }
   .bar-row.mar .bar-fill-projected { background: #6ee7b7; color: #064e3b; }
   .bar-stat { font-size: 12px; color: #64748b; width: 140px; text-align: right; flex-shrink: 0; line-height: 1.5; }
@@ -55,6 +53,25 @@
   .trend-up { color: #34d399; font-size: 11px; }
   .trend-dn { color: #f87171; font-size: 11px; }
   .trend-n { color: #94a3b8; font-size: 11px; }
+
+  /* AE Detail Table */
+  .table-section { background: #1e293b; border-radius: 12px; padding: 28px 24px; }
+  .table-title { font-size: 13px; font-weight: 700; color: #64748b; letter-spacing: 1px; text-transform: uppercase; margin-bottom: 20px; }
+  table { width: 100%; border-collapse: collapse; }
+  thead th { font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 1px; color: #475569; padding: 8px 12px; text-align: left; border-bottom: 1px solid #0f172a; }
+  tbody tr { border-bottom: 1px solid #0f172a; }
+  tbody tr:last-child { border-bottom: none; }
+  tbody tr:hover { background: #0f172a44; }
+  tbody td { padding: 10px 12px; font-size: 13px; color: #94a3b8; }
+  tbody td:first-child { color: #e2e8f0; font-weight: 600; }
+  .team-badge { display: inline-block; font-size: 10px; font-weight: 700; padding: 2px 7px; border-radius: 4px; letter-spacing: 0.5px; }
+  .team-msp { background: rgba(56,189,248,0.15); color: #38bdf8; }
+  .team-psa { background: rgba(167,139,250,0.15); color: #a78bfa; }
+  .num-up { color: #34d399; font-weight: 700; }
+  .num-dn { color: #f87171; font-weight: 700; }
+  .num-warn { color: #fbbf24; font-weight: 700; }
+  .proj-col { font-weight: 700; }
+  .flag { font-size: 10px; color: #f87171; margin-left: 4px; }
 </style>
 </head>
 <body>
@@ -62,49 +79,49 @@
 <div style="position:relative">
   <span class="rev-badge">rev.io</span>
   <h1>AE Capacity — Prospect Meetings by Month</h1>
-  <p class="subtitle">Total discovery/prospect meetings held by month · 11.0–12.0 per business day avg · Source: Salesforce</p>
+  <p class="subtitle">Discovery calls, demos &amp; prospect meetings · Jan–Mar 2026 · 7 business days remaining in March · Source: Salesforce</p>
 </div>
 
-<!-- Cards -->
+<!-- Summary Cards -->
 <div class="grid">
   <div class="card jan">
     <div class="month-label">January 2026</div>
-    <div class="meetings-val">232</div>
+    <div class="meetings-val">376</div>
     <div class="meetings-label">Total Meetings · 21 biz days</div>
     <div class="ae-badge">
-      <div class="ae-num">12</div>
-      <div class="ae-text"><strong>Active AEs</strong>19.3 meetings / AE</div>
+      <div class="ae-num">14</div>
+      <div class="ae-text"><strong>Active AEs</strong>26.9 meetings / AE</div>
     </div>
     <div class="mtg-per-ae">
-      <div><div class="mpa-val">11.0</div><div class="mpa-label">Meetings / biz day</div></div>
+      <div><div class="mpa-val">17.9</div><div class="mpa-label">Meetings / biz day</div></div>
     </div>
   </div>
 
   <div class="card feb">
     <div class="month-label">February 2026</div>
-    <div class="meetings-val">229</div>
+    <div class="meetings-val">422</div>
     <div class="meetings-label">Total Meetings · 20 biz days</div>
     <div class="ae-badge">
-      <div class="ae-num">12</div>
-      <div class="ae-text"><strong>Active AEs</strong>19.1 meetings / AE</div>
+      <div class="ae-num">15</div>
+      <div class="ae-text"><strong>Active AEs</strong>28.1 meetings / AE</div>
     </div>
     <div class="mtg-per-ae">
-      <div><div class="mpa-val">11.4</div><div class="mpa-label">Meetings / biz day</div></div>
-      <div class="trend-dn">▼ 3 vs Jan</div>
+      <div><div class="mpa-val">21.1</div><div class="mpa-label">Meetings / biz day</div></div>
+      <div class="trend-up">▲ +46 vs Jan</div>
     </div>
   </div>
 
   <div class="card mar">
     <div class="month-label">March 2026 (MTD + Projected)</div>
-    <div class="meetings-val">264</div>
-    <div class="meetings-label">Projected Total · 180 actual + 84 projected</div>
+    <div class="meetings-val">508</div>
+    <div class="meetings-label">Projected Total · 362 actual + 146 projected</div>
     <div class="ae-badge">
-      <div class="ae-num">9</div>
-      <div class="ae-text"><strong>Active AEs (MTD)</strong>12.0 meetings / biz day</div>
+      <div class="ae-num">13</div>
+      <div class="ae-text"><strong>Active AEs (MTD)</strong>22.6 meetings / biz day</div>
     </div>
     <div class="mtg-per-ae">
-      <div><div class="mpa-val">12.0</div><div class="mpa-label">Meetings / biz day (MTD)</div></div>
-      <div class="trend-up">▲ +0.6 vs Feb</div>
+      <div><div class="mpa-val">22.6</div><div class="mpa-label">Meetings / biz day (MTD)</div></div>
+      <div class="trend-up">▲ +1.5 vs Feb</div>
     </div>
   </div>
 </div>
@@ -115,49 +132,49 @@
 
   <div class="legend">
     <div class="legend-item"><div class="legend-dot actual"></div> Actual meetings held</div>
-    <div class="legend-item"><div class="legend-dot projected"></div> Projected (7 biz days remaining as of Monday)</div>
+    <div class="legend-item"><div class="legend-dot projected"></div> Projected (7 biz days remaining)</div>
   </div>
 
   <!-- Jan — all actual -->
   <div class="bar-row jan">
     <div class="bar-month">January 2026</div>
     <div class="bar-track">
-      <div class="bar-fill-actual" style="width:87.9%">232</div>
+      <div class="bar-fill-actual" style="width:73.9%">376</div>
     </div>
-    <div class="bar-stat"><strong>232</strong> meetings<br>11.0 / biz day</div>
+    <div class="bar-stat"><strong>376</strong> meetings<br>17.9 / biz day</div>
   </div>
 
   <!-- Feb — all actual -->
   <div class="bar-row feb">
     <div class="bar-month">February 2026</div>
     <div class="bar-track">
-      <div class="bar-fill-actual" style="width:86.7%">229</div>
+      <div class="bar-fill-actual" style="width:83.1%">422</div>
     </div>
-    <div class="bar-stat"><strong>229</strong> meetings<br>11.4 / biz day</div>
+    <div class="bar-stat"><strong>422</strong> meetings<br>21.1 / biz day</div>
   </div>
 
-  <!-- Mar — actual + projected split -->
+  <!-- Mar — actual + projected -->
   <div class="bar-row mar">
     <div class="bar-month">March 2026</div>
     <div class="bar-track">
-      <div class="bar-fill-actual" style="width:68.2%">180 actual</div>
-      <div class="bar-fill-projected" style="width:31.8%">+84 proj.</div>
+      <div class="bar-fill-actual" style="width:71.3%">362 actual</div>
+      <div class="bar-fill-projected" style="width:28.7%">+146 proj.</div>
     </div>
-    <div class="bar-stat"><strong>264</strong> projected<br>12.0 / biz day</div>
+    <div class="bar-stat"><strong>508</strong> projected<br>22.6 / biz day</div>
   </div>
 
   <!-- vs comparison -->
   <div class="vs-row">
     <div class="vs-chip">
-      <div class="vs-val">+32</div>
-      <div class="vs-label">vs January (+13.8%)</div>
+      <div class="vs-val">+132</div>
+      <div class="vs-label">vs January (+35.1%)</div>
     </div>
     <div class="vs-chip">
-      <div class="vs-val">+35</div>
-      <div class="vs-label">vs February (+15.3%)</div>
+      <div class="vs-val">+86</div>
+      <div class="vs-label">vs February (+20.4%)</div>
     </div>
     <div class="vs-chip">
-      <div class="vs-val">12.0</div>
+      <div class="vs-val">22.6</div>
       <div class="vs-label">Meetings/biz day (best of 3 months)</div>
     </div>
     <div class="vs-chip">
@@ -166,7 +183,148 @@
     </div>
   </div>
 
-  <p class="note">⚡ March projection assumes 12.0 meetings/biz day (current MTD run rate) × 7 remaining business days (through March 31). Actual through Monday March 23 est. ~180. Source: Salesforce — Total AE Capacity report.</p>
+  <p class="note">⚡ March projection assumes 22.6 meetings/biz day (current MTD run rate) × 7 remaining business days (through March 31). Actuals through March 23, 2026 = 362. Source: Salesforce — Discovery calls, demos &amp; prospect meetings (excludes internal/training).</p>
+</div>
+
+<!-- AE Detail Table -->
+<div class="table-section">
+  <div class="table-title">AE Detail — Meetings by Month (sorted by March MTD)</div>
+  <table>
+    <thead>
+      <tr>
+        <th>AE</th>
+        <th>Team</th>
+        <th>Jan</th>
+        <th>Feb</th>
+        <th>Mar MTD</th>
+        <th>Mar Projected</th>
+        <th>Trend</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td>Andy Whisenant</td>
+        <td><span class="team-badge team-msp">MSP</span></td>
+        <td>23</td><td>43</td>
+        <td class="num-up">55</td>
+        <td class="proj-col num-up">72</td>
+        <td class="trend-up">▲ +67% vs Jan</td>
+      </tr>
+      <tr>
+        <td>Patrick Davies</td>
+        <td><span class="team-badge team-psa">PSA</span></td>
+        <td>32</td><td>41</td>
+        <td class="num-up">45</td>
+        <td class="proj-col num-up">59</td>
+        <td class="trend-up">▲ +44% vs Jan</td>
+      </tr>
+      <tr>
+        <td>Connor Flynn</td>
+        <td><span class="team-badge team-psa">PSA</span></td>
+        <td>39</td><td>42</td>
+        <td class="num-up">43</td>
+        <td class="proj-col num-up">56</td>
+        <td class="trend-up">▲ +33% vs Feb pace</td>
+      </tr>
+      <tr>
+        <td>Joseph Abarno</td>
+        <td><span class="team-badge team-msp">MSP</span></td>
+        <td>33</td><td>38</td>
+        <td class="num-up">41</td>
+        <td class="proj-col num-up">54</td>
+        <td class="trend-up">▲ +42% vs Jan</td>
+      </tr>
+      <tr>
+        <td>Jaylin Bender</td>
+        <td><span class="team-badge team-psa">PSA</span></td>
+        <td>37</td><td>31</td>
+        <td class="num-up">40</td>
+        <td class="proj-col num-up">53</td>
+        <td class="trend-up">▲ best month</td>
+      </tr>
+      <tr>
+        <td>Jamie Butler</td>
+        <td><span class="team-badge team-msp">MSP</span></td>
+        <td>26</td><td>36</td>
+        <td class="num-up">38</td>
+        <td class="proj-col num-up">50</td>
+        <td class="trend-up">▲ +92% vs Jan</td>
+      </tr>
+      <tr>
+        <td>Jake Borah</td>
+        <td><span class="team-badge team-psa">PSA</span></td>
+        <td>30</td><td>26</td>
+        <td>28</td>
+        <td class="proj-col">37</td>
+        <td class="trend-n">→ steady</td>
+      </tr>
+      <tr>
+        <td>Davis Herndon</td>
+        <td><span class="team-badge team-psa">PSA</span></td>
+        <td>17</td><td>42</td>
+        <td class="num-warn">22</td>
+        <td class="proj-col num-warn">29</td>
+        <td class="trend-dn">▼ -48% vs Feb</td>
+      </tr>
+      <tr>
+        <td>Husam Zalmiyar</td>
+        <td><span class="team-badge team-psa">PSA</span></td>
+        <td>23</td><td>22</td>
+        <td class="num-warn">22</td>
+        <td class="proj-col num-warn">29</td>
+        <td class="trend-n">→ flat</td>
+      </tr>
+      <tr>
+        <td>Jake Mitchell</td>
+        <td><span class="team-badge team-psa">PSA</span></td>
+        <td>45</td><td>27</td>
+        <td class="num-warn">17</td>
+        <td class="proj-col num-warn">22</td>
+        <td class="trend-dn">▼ -62% vs Jan</td>
+      </tr>
+      <tr>
+        <td>Justin Lee</td>
+        <td><span class="team-badge team-msp">MSP</span></td>
+        <td>11</td><td>10</td>
+        <td class="num-warn">5</td>
+        <td class="proj-col num-warn">7</td>
+        <td class="trend-dn">▼ low volume</td>
+      </tr>
+      <tr>
+        <td>Ingrid Beard</td>
+        <td><span class="team-badge team-psa">PSA</span></td>
+        <td>14</td><td>7</td>
+        <td class="num-warn">4</td>
+        <td class="proj-col num-warn">5</td>
+        <td class="trend-dn">▼ declining</td>
+      </tr>
+      <tr>
+        <td>Patrick Dahlstrom</td>
+        <td><span class="team-badge team-msp">MSP</span></td>
+        <td>28</td><td>34</td>
+        <td class="num-dn">1</td>
+        <td class="proj-col num-dn">1</td>
+        <td class="trend-dn">⚠ verify data <span class="flag">?</span></td>
+      </tr>
+      <tr>
+        <td>Usman Zahoor</td>
+        <td><span class="team-badge team-psa">PSA</span></td>
+        <td>11</td><td>17</td>
+        <td class="num-dn">1</td>
+        <td class="proj-col num-dn">1</td>
+        <td class="trend-dn">⚠ verify data <span class="flag">?</span></td>
+      </tr>
+      <tr>
+        <td>Nassim Filoso</td>
+        <td><span class="team-badge team-psa">PSA</span></td>
+        <td>7</td><td>6</td>
+        <td class="num-dn">0</td>
+        <td class="proj-col num-dn">0</td>
+        <td class="trend-dn">⚠ no activity</td>
+      </tr>
+    </tbody>
+  </table>
+  <p class="note" style="margin-top:16px">⚠ Dahlstrom, Zahoor, and Filoso showing near-zero March activity despite strong prior months — verify before using for coaching/planning. May reflect logging gap, leave, or role change.</p>
 </div>
 
 </body>
