@@ -12,9 +12,7 @@
   .grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 24px; margin-bottom: 40px; }
   .card { background: #1e293b; border-radius: 12px; padding: 28px 24px; position: relative; overflow: hidden; }
   .card::before { content: ''; position: absolute; top: 0; left: 0; right: 0; height: 4px; background: var(--accent); }
-  .card.jan { --accent: #38bdf8; }
-  .card.feb { --accent: #a78bfa; }
-  .card.mar { --accent: #34d399; }
+  .card.jan { --accent: #38bdf8; } .card.feb { --accent: #a78bfa; } .card.mar { --accent: #34d399; }
   .month-label { font-size: 11px; font-weight: 700; letter-spacing: 1.5px; text-transform: uppercase; color: #64748b; margin-bottom: 16px; }
   .meetings-val { font-size: 64px; font-weight: 800; line-height: 1; margin-bottom: 4px; color: var(--accent); }
   .meetings-label { font-size: 13px; color: #94a3b8; margin-bottom: 24px; }
@@ -41,233 +39,168 @@
   .bar-stat strong { color: #cbd5e1; }
   .legend { display: flex; gap: 24px; margin-bottom: 24px; }
   .legend-item { display: flex; align-items: center; gap: 8px; font-size: 12px; color: #64748b; }
-  .legend-dot { width: 12px; height: 12px; border-radius: 3px; }
-  .legend-dot.actual { background: #94a3b8; }
-  .legend-dot.projected { background: #94a3b8; opacity: 0.4; }
+  .legend-dot { width: 12px; height: 12px; border-radius: 3px; background: #94a3b8; }
+  .legend-dot.projected { opacity: 0.4; }
   .vs-row { display: flex; gap: 16px; margin-top: 28px; padding-top: 20px; border-top: 1px solid #0f172a; }
   .vs-chip { flex: 1; background: #0f172a; border-radius: 8px; padding: 12px 16px; text-align: center; }
   .vs-val { font-size: 20px; font-weight: 700; color: #34d399; }
   .vs-label { font-size: 11px; color: #64748b; margin-top: 2px; }
   .note { font-size: 11px; color: #475569; margin-top: 20px; }
-  .rev-badge { position: absolute; top: 28px; right: 48px; font-size: 13px; font-weight: 700; color: #63b3ed; letter-spacing: 0.5px; }
-  .trend-up { color: #34d399; font-size: 11px; }
-  .trend-dn { color: #f87171; font-size: 11px; }
-  .trend-n { color: #94a3b8; font-size: 11px; }
+  .rev-badge { position: absolute; top: 28px; right: 48px; font-size: 13px; font-weight: 700; color: #63b3ed; }
+  .trend-up { color: #34d399; font-size: 11px; } .trend-dn { color: #f87171; font-size: 11px; } .trend-n { color: #94a3b8; font-size: 11px; }
   .table-section { background: #1e293b; border-radius: 12px; padding: 28px 24px; }
   .table-title { font-size: 13px; font-weight: 700; color: #64748b; letter-spacing: 1px; text-transform: uppercase; margin-bottom: 20px; }
   table { width: 100%; border-collapse: collapse; }
   thead th { font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 1px; color: #475569; padding: 8px 12px; text-align: left; border-bottom: 1px solid #0f172a; }
-  tbody tr { border-bottom: 1px solid #0f172a; }
-  tbody tr:last-child { border-bottom: none; }
+  tbody tr { border-bottom: 1px solid #0f172a; } tbody tr:last-child { border-bottom: none; }
   tbody tr:hover { background: #0f172a44; }
   tbody td { padding: 10px 12px; font-size: 13px; color: #94a3b8; }
   tbody td:first-child { color: #e2e8f0; font-weight: 600; }
   .team-badge { display: inline-block; font-size: 10px; font-weight: 700; padding: 2px 7px; border-radius: 4px; letter-spacing: 0.5px; }
   .team-msp { background: rgba(56,189,248,0.15); color: #38bdf8; }
   .team-int { background: rgba(167,139,250,0.15); color: #a78bfa; }
-  .num-up { color: #34d399; font-weight: 700; }
-  .num-dn { color: #f87171; font-weight: 700; }
-  .num-warn { color: #fbbf24; font-weight: 700; }
+  .num-up { color: #34d399; font-weight: 700; } .num-dn { color: #f87171; font-weight: 700; } .num-warn { color: #fbbf24; font-weight: 700; }
   .proj-col { font-weight: 700; }
 </style>
 </head>
 <body>
-
 <div style="position:relative">
   <span class="rev-badge">rev.io</span>
   <h1>AE Capacity — Prospect Meetings by Month</h1>
-  <p class="subtitle">MSP Sales + Integrator Sales AEs · Completed discovery calls, initial demos, follow-up demos &amp; pricing/negotiation calls · 7 business days remaining in March · Source: Salesforce</p>
+  <p class="subtitle">MSP Sales + Integrator Sales AEs · Completed discovery calls, initial demos, follow-up demos &amp; pricing/negotiation calls · 5 business days remaining in March · Updated March 23, 2026 · Source: Salesforce</p>
 </div>
-
 <div class="grid">
   <div class="card jan">
     <div class="month-label">January 2026</div>
-    <div class="meetings-val">232</div>
+    <div class="meetings-val">169</div>
     <div class="meetings-label">Completed Meetings · 21 biz days</div>
-    <div class="ae-badge">
-      <div class="ae-num">13</div>
-      <div class="ae-text"><strong>Active AEs</strong>17.8 meetings / AE</div>
-    </div>
-    <div class="mtg-per-ae">
-      <div><div class="mpa-val">0.85</div><div class="mpa-label">Meetings / AE / biz day  (4.2/wk)</div></div>
-    </div>
+    <div class="ae-badge"><div class="ae-num">13</div><div class="ae-text"><strong>Active AEs</strong>13.0 meetings / AE</div></div>
+    <div class="mtg-per-ae"><div><div class="mpa-val">0.62</div><div class="mpa-label">Meetings / AE / biz day  (3.1/wk)</div></div></div>
   </div>
-
   <div class="card feb">
     <div class="month-label">February 2026</div>
-    <div class="meetings-val">229</div>
+    <div class="meetings-val">189</div>
     <div class="meetings-label">Completed Meetings · 20 biz days</div>
-    <div class="ae-badge">
-      <div class="ae-num">12</div>
-      <div class="ae-text"><strong>Active AEs</strong>19.1 meetings / AE</div>
-    </div>
-    <div class="mtg-per-ae">
-      <div><div class="mpa-val">0.95</div><div class="mpa-label">Meetings / AE / biz day  (4.8/wk)</div></div>
-      <div class="trend-dn">▼ -3 vs Jan</div>
-    </div>
+    <div class="ae-badge"><div class="ae-num">12</div><div class="ae-text"><strong>Active AEs</strong>15.8 meetings / AE</div></div>
+    <div class="mtg-per-ae"><div><div class="mpa-val">0.79</div><div class="mpa-label">Meetings / AE / biz day  (3.9/wk)</div></div></div>
   </div>
-
   <div class="card mar">
     <div class="month-label">March 2026 (MTD + Projected)</div>
-    <div class="meetings-val">253</div>
-    <div class="meetings-label">Projected Total · 176 actual + 77 projected</div>
-    <div class="ae-badge">
-      <div class="ae-num">9</div>
-      <div class="ae-text"><strong>Active AEs</strong>28 meetings / AE projected</div>
-    </div>
-    <div class="mtg-per-ae">
-      <div><div class="mpa-val">1.22</div><div class="mpa-label">Meetings / AE / biz day  (6.1/wk)</div></div>
-      <div class="trend-up">▲ +0.27 vs Feb</div>
-    </div>
+    <div class="meetings-val">230</div>
+    <div class="meetings-label">Projected Total · 175 actual + 55 projected</div>
+    <div class="ae-badge"><div class="ae-num">9</div><div class="ae-text"><strong>Active AEs</strong>26 meetings / AE projected</div></div>
+    <div class="mtg-per-ae"><div><div class="mpa-val">1.22</div><div class="mpa-label">Meetings / AE / biz day  (6.1/wk)</div></div></div>
   </div>
 </div>
-
 <div class="chart-section">
   <div class="chart-title">Volume Comparison — Completed Meetings by Month</div>
-
   <div class="legend">
-    <div class="legend-item"><div class="legend-dot actual"></div> Actual completed meetings</div>
-    <div class="legend-item"><div class="legend-dot projected"></div> Projected (7 biz days remaining at current pace)</div>
+    <div class="legend-item"><div class="legend-dot"></div> Actual completed meetings</div>
+    <div class="legend-item"><div class="legend-dot projected"></div> Projected (5 biz days remaining)</div>
   </div>
-
   <div class="bar-row jan">
     <div class="bar-month">January 2026</div>
-    <div class="bar-track">
-      <div class="bar-fill-actual" style="width:91.7%">232</div>
-    </div>
-    <div class="bar-stat"><strong>232</strong> meetings<br>0.85 / AE / day</div>
+    <div class="bar-track"><div class="bar-fill-actual" style="width:73.5%">169</div></div>
+    <div class="bar-stat"><strong>169</strong> meetings<br>0.62 / AE / day</div>
   </div>
-
   <div class="bar-row feb">
     <div class="bar-month">February 2026</div>
-    <div class="bar-track">
-      <div class="bar-fill-actual" style="width:90.5%">229</div>
-    </div>
-    <div class="bar-stat"><strong>229</strong> meetings<br>0.95 / AE / day</div>
+    <div class="bar-track"><div class="bar-fill-actual" style="width:82.2%">189</div></div>
+    <div class="bar-stat"><strong>189</strong> meetings<br>0.79 / AE / day</div>
   </div>
-
   <div class="bar-row mar">
     <div class="bar-month">March 2026</div>
     <div class="bar-track">
-      <div class="bar-fill-actual" style="width:69.6%">176 actual</div>
-      <div class="bar-fill-projected" style="width:30.4%">+77 proj.</div>
+      <div class="bar-fill-actual" style="width:76.1%">175 actual</div>
+      <div class="bar-fill-projected" style="width:23.9%">+55 proj.</div>
     </div>
-    <div class="bar-stat"><strong>253</strong> projected<br>1.22 / AE / day</div>
+    <div class="bar-stat"><strong>230</strong> projected<br>1.22 / AE / day</div>
   </div>
-
   <div class="vs-row">
-    <div class="vs-chip">
-      <div class="vs-val">+21</div>
-      <div class="vs-label">vs January (+9.1%)</div>
-    </div>
-    <div class="vs-chip">
-      <div class="vs-val">+24</div>
-      <div class="vs-label">vs February (+10.5%)</div>
-    </div>
-    <div class="vs-chip">
-      <div class="vs-val">6.1/wk</div>
-      <div class="vs-label">Avg meetings / AE / week (Mar pace)</div>
-    </div>
-    <div class="vs-chip">
-      <div class="vs-val">7</div>
-      <div class="vs-label">Business days remaining</div>
-    </div>
+    <div class="vs-chip"><div class="vs-val">+61</div><div class="vs-label">vs January (+36.1%)</div></div>
+    <div class="vs-chip"><div class="vs-val">+41</div><div class="vs-label">vs February (+21.7%)</div></div>
+    <div class="vs-chip"><div class="vs-val">6.1/wk</div><div class="vs-label">Avg meetings / AE / week (Mar pace)</div></div>
+    <div class="vs-chip"><div class="vs-val">5</div><div class="vs-label">Business days remaining</div></div>
   </div>
-
-  <p class="note">⚡ Matches Salesforce "Prospect Meetings Complete" report. Completed meetings only (Appointment Status = Completed). Event types: Discovery Call · Initial Product Demo · Follow Up Prospect Demo / Meeting · Pricing / Negotiation Call. March projection: 176 actual ÷ 16 biz days × 7 remaining = +77. Active AEs: 13 Jan · 12 Feb · 9 Mar.</p>
+  <p class="note">⚡ Completed meetings only (Appointment Status = Completed). March projection: 175 MTD ÷ 16 biz days × 5 remaining = +55. Active AEs: 13 Jan · 12 Feb · 9 Mar. Event types: Discovery Call · Initial Demo · Follow-Up Demo · Pricing/Negotiation Call. Updated March 23, 2026.</p>
 </div>
-
 <div class="table-section">
   <div class="table-title">AE Detail — Completed Prospect Meetings by Month (sorted by March MTD)</div>
   <table>
-    <thead>
-      <tr>
-        <th>AE</th>
-        <th>Role</th>
-        <th>Jan</th>
-        <th>Feb</th>
-        <th>Mar MTD</th>
-        <th>Mar Projected</th>
-        <th>Trend</th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr>
-        <td>Andy Whisenant</td>
-        <td><span class="team-badge team-msp">MSP Sales</span></td>
-        <td>15</td><td>29</td>
-        <td class="num-up">35</td>
-        <td class="proj-col num-up">46</td>
-        <td class="trend-up">▲ Best month</td>
-      </tr>
-      <tr>
-        <td>Patrick Davies</td>
-        <td><span class="team-badge team-int">Integrator</span></td>
-        <td>23</td><td>24</td>
-        <td class="num-up">26</td>
-        <td class="proj-col num-up">34</td>
-        <td class="trend-up">▲ Consistent</td>
-      </tr>
-      <tr>
-        <td>Joseph Abarno</td>
-        <td><span class="team-badge team-msp">MSP Sales</span></td>
-        <td>22</td><td>22</td>
-        <td>24</td>
-        <td class="proj-col">31</td>
-        <td class="trend-up">▲ Slight uptick</td>
-      </tr>
-      <tr>
-        <td>Jamie Butler</td>
-        <td><span class="team-badge team-msp">MSP Sales</span></td>
-        <td>22</td><td>22</td>
-        <td>23</td>
-        <td class="proj-col">30</td>
-        <td class="trend-n">→ Steady</td>
-      </tr>
-      <tr>
-        <td>Connor Flynn</td>
-        <td><span class="team-badge team-msp">MSP Sales</span></td>
-        <td>25</td><td>31</td>
-        <td class="num-warn">21</td>
-        <td class="proj-col num-warn">28</td>
-        <td class="trend-dn">▼ -32% vs Feb</td>
-      </tr>
-      <tr>
-        <td>Jaylin Bender</td>
-        <td><span class="team-badge team-int">Integrator</span></td>
-        <td>22</td><td>12</td>
-        <td class="num-up">17</td>
-        <td class="proj-col num-up">22</td>
-        <td class="trend-up">▲ Recovering</td>
-      </tr>
-      <tr>
-        <td>Jake Borah</td>
-        <td><span class="team-badge team-int">Integrator</span></td>
-        <td>16</td><td>14</td>
-        <td class="num-warn">11</td>
-        <td class="proj-col num-warn">14</td>
-        <td class="trend-dn">▼ Low volume</td>
-      </tr>
-      <tr>
-        <td>Husam Zalmiyar</td>
-        <td><span class="team-badge team-int">Integrator</span></td>
-        <td>14</td><td>13</td>
-        <td class="num-warn">10</td>
-        <td class="proj-col num-warn">13</td>
-        <td class="trend-n">→ Flat</td>
-      </tr>
-      <tr>
-        <td>Davis Herndon</td>
-        <td><span class="team-badge team-int">Integrator</span></td>
-        <td>10</td><td>22</td>
-        <td class="num-dn">8</td>
-        <td class="proj-col num-dn">11</td>
-        <td class="trend-dn">▼ -64% vs Feb</td>
-      </tr>
-    </tbody>
+    <thead><tr><th>AE</th><th>Role</th><th>Jan</th><th>Feb</th><th>Mar MTD</th><th>Mar Projected</th><th>Trend</th></tr></thead>
+    <tbody><tr>
+          <td>Andy Whisenant</td>
+          <td><span class="team-badge team-msp">MSP Sales</span></td>
+          <td>15</td><td>29</td>
+          <td class="num-up">35</td>
+          <td class="proj-col num-up">46</td>
+          <td><span class="trend-up">▲ Best pace</span></td>
+        </tr>
+<tr>
+          <td>Patrick Davies</td>
+          <td><span class="team-badge team-int">Integrator</span></td>
+          <td>23</td><td>24</td>
+          <td class="num-up">26</td>
+          <td class="proj-col num-up">34</td>
+          <td><span class="trend-up">▲ Best pace</span></td>
+        </tr>
+<tr>
+          <td>Joseph Abarno</td>
+          <td><span class="team-badge team-msp">MSP Sales</span></td>
+          <td>22</td><td>22</td>
+          <td class="num-up">24</td>
+          <td class="proj-col num-up">32</td>
+          <td><span class="trend-up">▲ Best pace</span></td>
+        </tr>
+<tr>
+          <td>Jamie Butler</td>
+          <td><span class="team-badge team-msp">MSP Sales</span></td>
+          <td>22</td><td>22</td>
+          <td class="num-up">23</td>
+          <td class="proj-col num-up">30</td>
+          <td><span class="trend-up">▲ Best pace</span></td>
+        </tr>
+<tr>
+          <td>Connor Flynn</td>
+          <td><span class="team-badge team-msp">MSP Sales</span></td>
+          <td>25</td><td>31</td>
+          <td class="num-up">21</td>
+          <td class="proj-col num-up">28</td>
+          <td><span class="trend-n">→ Steady</span></td>
+        </tr>
+<tr>
+          <td>Jaylin Bender</td>
+          <td><span class="team-badge team-int">Integrator</span></td>
+          <td>22</td><td>12</td>
+          <td class="num-warn">17</td>
+          <td class="proj-col num-warn">22</td>
+          <td><span class="trend-up">▲ Best pace</span></td>
+        </tr>
+<tr>
+          <td>Jake Borah</td>
+          <td><span class="team-badge team-int">Integrator</span></td>
+          <td>16</td><td>14</td>
+          <td class="num-warn">11</td>
+          <td class="proj-col num-dn">14</td>
+          <td><span class="trend-n">→ Steady</span></td>
+        </tr>
+<tr>
+          <td>Husam Zalmiyar</td>
+          <td><span class="team-badge team-int">Integrator</span></td>
+          <td>14</td><td>13</td>
+          <td class="num-warn">10</td>
+          <td class="proj-col num-dn">13</td>
+          <td><span class="trend-n">→ Steady</span></td>
+        </tr>
+<tr>
+          <td>Davis Herndon</td>
+          <td><span class="team-badge team-int">Integrator</span></td>
+          <td>10</td><td>22</td>
+          <td class="num-dn">8</td>
+          <td class="proj-col num-dn">10</td>
+          <td><span class="trend-dn">▼ -12 vs Feb</span></td>
+        </tr></tbody>
   </table>
-  <p class="note" style="margin-top:16px">Totals match Salesforce "Prospect Meetings Complete" report. Individual AE counts pulled via API — minor timing differences may occur as reps update status throughout the day.</p>
+  <p class="note" style="margin-top:16px">Completed meetings only — excludes canceled, no-shows, and future scheduled events.</p>
 </div>
-
-</body>
-</html>
+</body></html>
