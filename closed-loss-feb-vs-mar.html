@@ -1,0 +1,306 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Closed Loss Analysis — Feb vs March 2026</title>
+<style>
+  :root {
+    --green: #00ff88;
+    --red: #ff4444;
+    --yellow: #ffd700;
+    --purple: #a855f7;
+    --cyan: #00e5ff;
+    --bg: #020408;
+    --surface: #060d14;
+    --border: #0a2a1a;
+    --text: #c8f0dc;
+    --muted: #2a5a3a;
+  }
+  * { margin:0; padding:0; box-sizing:border-box; }
+  body { font-family:'Segoe UI',system-ui,monospace; background:var(--bg); color:var(--text); }
+  body::before {
+    content:'';
+    position:fixed; top:0; left:0; right:0; bottom:0;
+    background-image:
+      linear-gradient(rgba(0,255,136,0.22) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(0,255,136,0.22) 1px, transparent 1px);
+    background-size:40px 40px;
+    pointer-events:none; z-index:0;
+  }
+  .scanline {
+    position:fixed; top:0; left:0; right:0; bottom:0;
+    background:repeating-linear-gradient(0deg, transparent, transparent 2px, rgba(0,0,0,0.03) 2px, rgba(0,0,0,0.03) 4px);
+    pointer-events:none; z-index:0;
+  }
+  .container { max-width:1100px; margin:0 auto; padding:24px 32px; position:relative; z-index:1; }
+
+  /* HEADER */
+  .header { border-bottom:1px solid var(--border); padding-bottom:16px; margin-bottom:24px; }
+  .header-top { display:flex; align-items:center; justify-content:space-between; margin-bottom:10px; }
+  .logo { display:flex; align-items:center; gap:10px; }
+  .logo-dot { width:10px; height:10px; background:var(--red); border-radius:50%; box-shadow:0 0 12px var(--red); animation:pulse 2s infinite; }
+  .logo-text { font-size:11px; font-weight:700; letter-spacing:3px; text-transform:uppercase; color:var(--red); }
+  .header-date { font-size:11px; color:var(--muted); letter-spacing:1px; }
+  h1 { font-size:32px; font-weight:900; color:#fff; letter-spacing:-1px; margin-bottom:4px; }
+  h1 span { color:var(--red); text-shadow:0 0 30px var(--red); }
+  .header-sub { font-size:13px; color:var(--muted); }
+
+  /* SUMMARY CARDS */
+  .summary-bar { display:grid; grid-template-columns:repeat(4,1fr); gap:10px; margin-bottom:24px; }
+  .sum-item { background:var(--surface); border:1px solid var(--border); border-radius:8px; padding:14px; text-align:center; }
+  .sum-label { font-size:9px; font-weight:700; text-transform:uppercase; letter-spacing:1.5px; color:var(--muted); margin-bottom:6px; }
+  .sum-val { font-size:24px; font-weight:900; color:#fff; }
+  .sum-sub { font-size:11px; color:var(--muted); margin-top:4px; }
+  .sum-item.down .sum-val { color:var(--green); }
+  .sum-item.up .sum-val { color:var(--red); }
+  .sum-item.neutral .sum-val { color:var(--yellow); }
+
+  /* MAIN GRID */
+  .main-grid { display:grid; grid-template-columns:1fr 1fr; gap:16px; margin-bottom:16px; }
+
+  /* REASON TABLE */
+  .card { background:var(--surface); border:1px solid var(--border); border-radius:10px; overflow:hidden; }
+  .card-header { padding:14px 18px; border-bottom:1px solid var(--border); display:flex; justify-content:space-between; align-items:center; }
+  .card-title { font-size:13px; font-weight:800; letter-spacing:1px; text-transform:uppercase; }
+  .card-count { font-size:11px; color:var(--muted); }
+
+  .reason-table { width:100%; border-collapse:collapse; }
+  .reason-table th { font-size:9px; font-weight:700; text-transform:uppercase; letter-spacing:1.5px; color:var(--muted); padding:8px 14px; text-align:left; border-bottom:1px solid var(--border); }
+  .reason-table td { font-size:12px; padding:7px 14px; border-bottom:1px solid rgba(0,255,136,0.04); color:#8ab89a; }
+  .reason-table td:first-child { color:#c8f0dc; font-weight:600; }
+  .reason-table tr:last-child td { border-bottom:none; }
+
+  .bar-cell { display:flex; align-items:center; gap:8px; }
+  .bar-track { flex:1; height:4px; background:rgba(255,255,255,0.06); border-radius:2px; }
+  .bar-fill { height:100%; border-radius:2px; }
+
+  /* VARIANCE SECTION */
+  .variance-card { background:var(--surface); border:1px solid var(--border); border-radius:10px; overflow:hidden; margin-bottom:16px; }
+  .variance-table { width:100%; border-collapse:collapse; }
+  .variance-table th { font-size:9px; font-weight:700; text-transform:uppercase; letter-spacing:1.5px; color:var(--muted); padding:8px 16px; text-align:left; border-bottom:1px solid var(--border); background:#030a06; }
+  .variance-table td { font-size:12px; padding:8px 16px; border-bottom:1px solid rgba(0,255,136,0.04); color:#8ab89a; }
+  .variance-table td:first-child { color:#c8f0dc; font-weight:700; font-size:13px; }
+  .variance-table tr:last-child td { border-bottom:none; }
+  .variance-table tr:hover td { background:rgba(0,255,136,0.02); }
+
+  .pct-chip { font-size:10px; font-weight:700; padding:2px 7px; border-radius:4px; }
+  .up   { background:rgba(255,68,68,0.15); color:#ff6666; }
+  .down { background:rgba(0,255,136,0.1); color:#00ff88; }
+  .same { background:rgba(255,215,0,0.1); color:#ffd700; }
+
+  .delta-bar { display:inline-flex; align-items:center; gap:6px; font-size:11px; }
+
+  /* DETAIL SECTION */
+  .detail-card { background:var(--surface); border:1px solid var(--border); border-radius:10px; overflow:hidden; }
+  .detail-table { width:100%; border-collapse:collapse; }
+  .detail-table th { font-size:9px; font-weight:700; text-transform:uppercase; letter-spacing:1.5px; color:var(--muted); padding:8px 14px; text-align:left; border-bottom:1px solid var(--border); background:#030a06; }
+  .detail-table td { font-size:11px; padding:6px 14px; border-bottom:1px solid rgba(0,255,136,0.03); color:#8ab89a; vertical-align:top; }
+  .detail-table td:first-child { color:#c8f0dc; font-weight:600; white-space:nowrap; }
+  .detail-table tr:last-child td { border-bottom:none; }
+  .detail-note { font-size:10px; color:#2a5a3a; font-style:italic; }
+
+  .footer { text-align:center; padding:20px; font-size:10px; color:#1a3a2a; letter-spacing:1px; border-top:1px solid var(--border); margin-top:8px; }
+  @keyframes pulse { 0%,100%{opacity:1}50%{opacity:0.4} }
+</style>
+</head>
+<body>
+<div class="scanline"></div>
+<div class="container">
+
+  <div class="header">
+    <div class="header-top">
+      <div class="logo">
+        <div class="logo-dot"></div>
+        <div class="logo-text">Rev.io · Loss Analysis</div>
+      </div>
+      <div class="header-date">MARCH 23, 2026 · LIVE SALESFORCE DATA</div>
+    </div>
+    <h1>Closed Loss <span>Feb vs March</span> 2026</h1>
+    <div class="header-sub">210 losses in February · 165 losses in March · Reason breakdown + variance</div>
+  </div>
+
+  <!-- SUMMARY CARDS -->
+  <div class="summary-bar">
+    <div class="sum-item down">
+      <div class="sum-label">Total Losses</div>
+      <div class="sum-val">↓ 45</div>
+      <div class="sum-sub">210 Feb → 165 Mar</div>
+    </div>
+    <div class="sum-item down">
+      <div class="sum-label">No-Show Rate</div>
+      <div class="sum-val">↓ 46%</div>
+      <div class="sum-sub">69 Feb → 38 Mar</div>
+    </div>
+    <div class="sum-item up">
+      <div class="sum-label">Price / Capabilities</div>
+      <div class="sum-val">↑ Mixed</div>
+      <div class="sum-sub">Both categories up in Mar</div>
+    </div>
+    <div class="sum-item neutral">
+      <div class="sum-label">No Decision</div>
+      <div class="sum-val">— Gone</div>
+      <div class="sum-sub">32 Feb → 0 Mar</div>
+    </div>
+  </div>
+
+  <!-- VARIANCE TABLE -->
+  <div class="variance-card" style="margin-bottom:16px">
+    <div class="card-header">
+      <div class="card-title" style="color:var(--yellow)">📊 Loss Reason Variance — Feb vs March</div>
+      <div class="card-count">% of total losses per month</div>
+    </div>
+    <table class="variance-table">
+      <thead>
+        <tr>
+          <th>Loss Reason</th>
+          <th>Feb Count</th>
+          <th>Feb %</th>
+          <th>Mar Count</th>
+          <th>Mar %</th>
+          <th>% Point Change</th>
+          <th>Trend</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>Discovery No Show</td>
+          <td>69</td>
+          <td>32.9%</td>
+          <td>38</td>
+          <td>23.0%</td>
+          <td><span class="pct-chip down">▼ 9.9 pts</span></td>
+          <td style="color:#00ff88">Improving ✓</td>
+        </tr>
+        <tr>
+          <td>Not the Right Time</td>
+          <td>29</td>
+          <td>13.8%</td>
+          <td>30</td>
+          <td>18.2%</td>
+          <td><span class="pct-chip up">▲ 4.4 pts</span></td>
+          <td style="color:#ff6666">Watch</td>
+        </tr>
+        <tr>
+          <td>Software Missing Capabilities</td>
+          <td>18</td>
+          <td>8.6%</td>
+          <td>25</td>
+          <td>15.2%</td>
+          <td><span class="pct-chip up">▲ 6.6 pts</span></td>
+          <td style="color:#ff4444">⚠ Escalating</td>
+        </tr>
+        <tr>
+          <td>Price</td>
+          <td>11</td>
+          <td>5.2%</td>
+          <td>21</td>
+          <td>12.7%</td>
+          <td><span class="pct-chip up">▲ 7.5 pts</span></td>
+          <td style="color:#ff4444">⚠ Escalating</td>
+        </tr>
+        <tr>
+          <td>No Business Issue</td>
+          <td>18</td>
+          <td>8.6%</td>
+          <td>21</td>
+          <td>12.7%</td>
+          <td><span class="pct-chip up">▲ 4.1 pts</span></td>
+          <td style="color:#ff6666">Watch</td>
+        </tr>
+        <tr>
+          <td>Lack of Decision Maker</td>
+          <td>12</td>
+          <td>5.7%</td>
+          <td>18</td>
+          <td>10.9%</td>
+          <td><span class="pct-chip up">▲ 5.2 pts</span></td>
+          <td style="color:#ff4444">⚠ Escalating</td>
+        </tr>
+        <tr>
+          <td>No Decision / Non-Responsive</td>
+          <td>32</td>
+          <td>15.2%</td>
+          <td>0</td>
+          <td>0%</td>
+          <td><span class="pct-chip down">▼ 15.2 pts</span></td>
+          <td style="color:#00ff88">Resolved ✓</td>
+        </tr>
+        <tr>
+          <td>In Existing Contract</td>
+          <td>8</td>
+          <td>3.8%</td>
+          <td>8</td>
+          <td>4.8%</td>
+          <td><span class="pct-chip same">▲ 1.0 pts</span></td>
+          <td style="color:#ffd700">Stable</td>
+        </tr>
+        <tr>
+          <td>Not Right Customer Type</td>
+          <td>7</td>
+          <td>3.3%</td>
+          <td>3</td>
+          <td>1.8%</td>
+          <td><span class="pct-chip down">▼ 1.5 pts</span></td>
+          <td style="color:#00ff88">Improving ✓</td>
+        </tr>
+        <tr>
+          <td>Lost to Competitor</td>
+          <td>6</td>
+          <td>2.9%</td>
+          <td>1</td>
+          <td>0.6%</td>
+          <td><span class="pct-chip down">▼ 2.3 pts</span></td>
+          <td style="color:#00ff88">Improving ✓</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <!-- DETAIL SECTION -->
+  <div class="detail-card">
+    <div class="card-header">
+      <div class="card-title" style="color:var(--red)">🔍 Closed Loss Reason Detail — Key Insights</div>
+    </div>
+    <table class="detail-table">
+      <thead>
+        <tr>
+          <th>Category</th>
+          <th>What It Means</th>
+          <th>Coaching Action</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>⚠ Price (↑ 7.5 pts)</td>
+          <td>Biggest mover. Price objections nearly doubled from 11 → 21. Likely tied to reps not establishing ROI/value early enough in discovery — prospects reaching price conversation without sufficient pain established.</td>
+          <td>Reinforce value-based selling in discovery. Reps must quantify the cost of inaction before price is ever discussed. If price comes up early, use reframe: "Compared to what staying on your current system costs you?"</td>
+        </tr>
+        <tr>
+          <td>⚠ Missing Capabilities (↑ 6.6 pts)</td>
+          <td>18 → 25. Could indicate reps are pitching to poor-fit prospects, or product gaps are surfacing more in demos. Worth cross-referencing with product feedback — are these real gaps or positioning failures?</td>
+          <td>Audit these losses for product vs. positioning. If reps are losing on capabilities that exist, it's a training issue. If it's real product gaps, escalate to product team with specifics.</td>
+        </tr>
+        <tr>
+          <td>⚠ Lack of DM (↑ 5.2 pts)</td>
+          <td>12 → 18. Reps are advancing deals without confirming decision-maker involvement. Classic qualification failure — spending time with influencers who can't say yes.</td>
+          <td>Hard rule: no demo without identifying the economic buyer. Add "Who signs off on a decision like this?" as a required discovery question. This is a direct coaching target.</td>
+        </tr>
+        <tr>
+          <td>✓ No-Show (↓ 9.9 pts)</td>
+          <td>69 → 38. Big improvement. Still the #1 loss reason but trending the right direction. Likely a reflection of better pre-call prep or improved sequencing.</td>
+          <td>Keep doing what's working. Consider documenting what changed — was it reminder cadence? Better confirmation workflows? Lock it in as a repeatable process.</td>
+        </tr>
+        <tr>
+          <td>✓ Non-Responsive (↓ 15.2 pts)</td>
+          <td>32 → 0. The "No Decision / Non-Responsive" category disappeared entirely in March. Either the category was reclassified, or reps cleaned up their pipeline significantly.</td>
+          <td>Verify if this is a data/category change or a real behavior shift. If real, understand what drove it and replicate it.</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="footer">REV.IO SALES INTELLIGENCE · ROBIN 🦸🏻‍♂️ · CONFIDENTIAL</div>
+</div>
+</body>
+</html>
