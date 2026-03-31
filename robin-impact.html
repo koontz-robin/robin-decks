@@ -1,0 +1,282 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Robin — Business Impact Dashboard</title>
+<style>
+  * { margin:0; padding:0; box-sizing:border-box; }
+  body { background:#0f172a; font-family:'Segoe UI',system-ui,sans-serif; color:#e2e8f0; min-height:100vh; padding:40px 48px; }
+  h1 { font-size:28px; font-weight:800; color:#fff; margin-bottom:4px; }
+  .subtitle { font-size:14px; color:#64748b; margin-bottom:8px; }
+  .born { font-size:12px; color:#475569; margin-bottom:40px; }
+  .rev-badge { position:absolute; top:28px; right:48px; font-size:13px; font-weight:700; color:#63b3ed; }
+
+  /* HERO METRICS */
+  .hero { display:grid; grid-template-columns:repeat(4,1fr); gap:16px; margin-bottom:48px; }
+  .hero-card { background:#1e293b; border-radius:12px; padding:22px; text-align:center; }
+  .hero-val { font-size:36px; font-weight:800; margin-bottom:4px; }
+  .hero-label { font-size:11px; font-weight:700; letter-spacing:1.5px; text-transform:uppercase; color:#475569; }
+
+  /* SECTION */
+  .section-title { font-size:11px; font-weight:700; letter-spacing:2px; text-transform:uppercase; color:#475569; margin-bottom:16px; margin-top:48px; display:flex; align-items:center; gap:12px; }
+  .section-title::after { content:''; flex:1; height:1px; background:#1e293b; }
+
+  /* PROJECT CARDS */
+  .projects { display:grid; grid-template-columns:repeat(3,1fr); gap:16px; }
+  .proj-card { background:#1e293b; border-radius:10px; padding:18px; border-left:3px solid var(--accent); }
+  .proj-header { display:flex; justify-content:space-between; align-items:flex-start; margin-bottom:8px; }
+  .proj-name { font-size:13px; font-weight:700; color:#fff; flex:1; padding-right:8px; }
+  .proj-badge { font-size:9px; font-weight:700; padding:2px 8px; border-radius:4px; background:rgba(255,255,255,0.07); color:#94a3b8; white-space:nowrap; }
+  .proj-desc { font-size:11px; color:#64748b; line-height:1.5; margin-bottom:12px; }
+  .proj-impact { display:flex; gap:12px; }
+  .impact-chip { background:#0f172a; border-radius:6px; padding:6px 10px; text-align:center; flex:1; }
+  .impact-val { font-size:13px; font-weight:700; }
+  .impact-label { font-size:9px; color:#475569; margin-top:1px; }
+
+  .note { font-size:11px; color:#475569; margin-top:40px; text-align:center; padding-top:20px; border-top:1px solid #1e293b; }
+
+  /* STATUS */
+  .status-dot { display:inline-block; width:7px; height:7px; border-radius:50%; margin-right:5px; animation:pulse 2s infinite; }
+  @keyframes pulse { 0%,100%{opacity:1}50%{opacity:0.4} }
+</style>
+</head>
+<body>
+<div style="position:relative">
+  <span class="rev-badge">rev.io · AI Sales Team</span>
+  <h1>🦸🏻‍♂️ Robin — Business Impact</h1>
+  <p class="subtitle">Everything I've built, automated, and analyzed for Ryan Koontz & the Rev.io Sales Team</p>
+  <p class="born"><span class="status-dot" style="background:#3DC570"></span>Active since February 12, 2026 · Updated March 31, 2026</p>
+</div>
+
+<!-- HERO METRICS -->
+<div class="hero">
+  <div class="hero-card" style="border-top:3px solid #3DC570">
+    <div class="hero-val" style="color:#3DC570">~47hrs</div>
+    <div class="hero-label">Hours Saved / Month</div>
+  </div>
+  <div class="hero-card" style="border-top:3px solid #38bdf8">
+    <div class="hero-val" style="color:#38bdf8">$28K+</div>
+    <div class="hero-label">Est. Monthly Value</div>
+  </div>
+  <div class="hero-card" style="border-top:3px solid #a78bfa">
+    <div class="hero-val" style="color:#a78bfa">24</div>
+    <div class="hero-label">Active Automations</div>
+  </div>
+  <div class="hero-card" style="border-top:3px solid #f5a623">
+    <div class="hero-val" style="color:#f5a623">18</div>
+    <div class="hero-label">Dashboards & Decks Built</div>
+  </div>
+</div>
+
+<!-- ALWAYS-ON AUTOMATIONS -->
+<div class="section-title">Always-On Automations</div>
+<div class="projects">
+
+  <div class="proj-card" style="--accent:#3DC570">
+    <div class="proj-header">
+      <div class="proj-name">📊 Daily Forecast Dashboard</div>
+      <div class="proj-badge">LIVE · 7AM ET</div>
+    </div>
+    <div class="proj-desc">Pulls live SF pipeline daily — scenarios, Q1 attainment, per-product tracking, marketing attribution, Forecast_Status__c tags. Rebuilds and pushes to GitHub automatically.</div>
+    <div class="proj-impact">
+      <div class="impact-chip"><div class="impact-val" style="color:#3DC570">3hrs</div><div class="impact-label">Saved/week</div></div>
+      <div class="impact-chip"><div class="impact-val" style="color:#3DC570">$4,500</div><div class="impact-label">Est/mo value</div></div>
+    </div>
+  </div>
+
+  <div class="proj-card" style="--accent:#38bdf8">
+    <div class="proj-header">
+      <div class="proj-name">📞 Discovery Call Auto-Grader</div>
+      <div class="proj-badge">LIVE · EVERY 30MIN</div>
+    </div>
+    <div class="proj-desc">Polls Outreach Kaia every 30 min. Matches recordings to SF event type (1-Discovery Call). Grades against BEACON rubric using Claude AI. Posts scorecards to Discord + Notion automatically.</div>
+    <div class="proj-impact">
+      <div class="impact-chip"><div class="impact-val" style="color:#38bdf8">8hrs</div><div class="impact-label">Saved/week</div></div>
+      <div class="impact-chip"><div class="impact-val" style="color:#38bdf8">$6,000</div><div class="impact-label">Est/mo value</div></div>
+    </div>
+  </div>
+
+  <div class="proj-card" style="--accent:#a78bfa">
+    <div class="proj-header">
+      <div class="proj-name">🏃 Daily Sales Activity Scorecard</div>
+      <div class="proj-badge">LIVE · MON-FRI</div>
+    </div>
+    <div class="proj-desc">Pulls WTD SF activity for every rep. Scores calls, emails, contacts, meetings, and opps sourced. Sends HTML email to full management team daily.</div>
+    <div class="proj-impact">
+      <div class="impact-chip"><div class="impact-val" style="color:#a78bfa">4hrs</div><div class="impact-label">Saved/week</div></div>
+      <div class="impact-chip"><div class="impact-val" style="color:#a78bfa">$3,000</div><div class="impact-label">Est/mo value</div></div>
+    </div>
+  </div>
+
+  <div class="proj-card" style="--accent:#f97316">
+    <div class="proj-header">
+      <div class="proj-name">🔍 Daily MSP Prospector</div>
+      <div class="proj-badge">LIVE · 7AM ET</div>
+    </div>
+    <div class="proj-desc">Finds 5 net-new MSP accounts every morning not in Salesforce. Verified, enriched, deduped by domain. Delivered to Discord daily. Working through 100+ markets.</div>
+    <div class="proj-impact">
+      <div class="impact-chip"><div class="impact-val" style="color:#f97316">5hrs</div><div class="impact-label">Saved/week</div></div>
+      <div class="impact-chip"><div class="impact-val" style="color:#f97316">$3,500</div><div class="impact-label">Est/mo value</div></div>
+    </div>
+  </div>
+
+  <div class="proj-card" style="--accent:#06b6d4">
+    <div class="proj-header">
+      <div class="proj-name">📅 AE Capacity Dashboard</div>
+      <div class="proj-badge">LIVE · DAILY</div>
+    </div>
+    <div class="proj-desc">Tracks completed prospect meetings (Discovery, Demo, Follow-up, Pricing) for 9 AEs. MTD vs projected. Calibrated to match Ryan's SF report exactly.</div>
+    <div class="proj-impact">
+      <div class="impact-chip"><div class="impact-val" style="color:#06b6d4">2hrs</div><div class="impact-label">Saved/week</div></div>
+      <div class="impact-chip"><div class="impact-val" style="color:#06b6d4">$1,500</div><div class="impact-label">Est/mo value</div></div>
+    </div>
+  </div>
+
+  <div class="proj-card" style="--accent:#f5a623">
+    <div class="proj-header">
+      <div class="proj-name">📧 Weekly Forecast Email</div>
+      <div class="proj-badge">LIVE · MONDAY</div>
+    </div>
+    <div class="proj-desc">Sends formatted forecast summary to Evan, Brent, and Ryan every Monday. Includes scenario totals, deck link, and pipeline highlights. Zero manual effort.</div>
+    <div class="proj-impact">
+      <div class="impact-chip"><div class="impact-val" style="color:#f5a623">1hr</div><div class="impact-label">Saved/week</div></div>
+      <div class="impact-chip"><div class="impact-val" style="color:#f5a623">$750</div><div class="impact-label">Est/mo value</div></div>
+    </div>
+  </div>
+
+</div>
+
+<!-- INTELLIGENCE & ANALYSIS -->
+<div class="section-title">Intelligence & Analysis</div>
+<div class="projects">
+
+  <div class="proj-card" style="--accent:#f87171">
+    <div class="proj-header">
+      <div class="proj-name">📉 Closed Loss Analysis</div>
+      <div class="proj-badge">HTML DASHBOARD</div>
+    </div>
+    <div class="proj-desc">Feb vs March loss reason variance. % point changes per category. Coaching actions for top 3 escalating trends (Price ↑7.5pts, Missing Capabilities ↑6.6pts, Lack of DM ↑5.2pts).</div>
+    <div class="proj-impact">
+      <div class="impact-chip"><div class="impact-val" style="color:#f87171">6hrs</div><div class="impact-label">Analysis saved</div></div>
+      <div class="impact-chip"><div class="impact-val" style="color:#f87171">$2,000</div><div class="impact-label">Est value</div></div>
+    </div>
+  </div>
+
+  <div class="proj-card" style="--accent:#3DC570">
+    <div class="proj-header">
+      <div class="proj-name">🎯 Q2 Apollo 2 Re-engagement Tracker</div>
+      <div class="proj-badge">LIVE · DAILY</div>
+    </div>
+    <div class="proj-desc">64 accounts closed lost due to Software Missing Capabilities. Tracks outreach activity (account + opp + contact level), new opps, opp stage, loss reason. $80K MRR at stake. Auto-refreshes daily.</div>
+    <div class="proj-impact">
+      <div class="impact-chip"><div class="impact-val" style="color:#3DC570">$80K</div><div class="impact-label">MRR tracked</div></div>
+      <div class="impact-chip"><div class="impact-val" style="color:#3DC570">$12K</div><div class="impact-label">Q2 target</div></div>
+    </div>
+  </div>
+
+  <div class="proj-card" style="--accent:#a78bfa">
+    <div class="proj-header">
+      <div class="proj-name">🔬 CSA Pipeline Dashboard</div>
+      <div class="proj-badge">HTML DASHBOARD</div>
+    </div>
+    <div class="proj-desc">Q1 opp creation by CSA rep, month, and product. Bar charts with breakdowns. Ingrid (54 opps), Justin (43), Nassim (13). Identified March activity drop-off.</div>
+    <div class="proj-impact">
+      <div class="impact-chip"><div class="impact-val" style="color:#a78bfa">3hrs</div><div class="impact-label">Analysis saved</div></div>
+      <div class="impact-chip"><div class="impact-val" style="color:#a78bfa">$1,200</div><div class="impact-label">Est value</div></div>
+    </div>
+  </div>
+
+</div>
+
+<!-- CONTENT & DECKS -->
+<div class="section-title">Decks, Slides & Content Built</div>
+<div class="projects">
+
+  <div class="proj-card" style="--accent:#06b6d4">
+    <div class="proj-header">
+      <div class="proj-name">🏗️ MSP PSA Requirements</div>
+      <div class="proj-badge">HTML + PPTX</div>
+    </div>
+    <div class="proj-desc">Consolidated 2 product PRDs into a single requirements page: 6 gaps, integrations ecosystem (4 quadrants), 10 agreement requirements, 7 RMM requirements, Configurations breakdown.</div>
+    <div class="proj-impact">
+      <div class="impact-chip"><div class="impact-val" style="color:#06b6d4">8hrs</div><div class="impact-label">Research saved</div></div>
+      <div class="impact-chip"><div class="impact-val" style="color:#06b6d4">$3,000</div><div class="impact-label">Est value</div></div>
+    </div>
+  </div>
+
+  <div class="proj-card" style="--accent:#f97316">
+    <div class="proj-header">
+      <div class="proj-name">🤖 All-Employee Meeting Slides</div>
+      <div class="proj-badge">PPTX · 2 SLIDES</div>
+    </div>
+    <div class="proj-desc">Built Robin + Marvin intro slides for all-employee meeting matching Rev.io marketing branding. Tool stack slide (Notion, Clay, Outreach) with real logos and screenshots. Same-day turnaround.</div>
+    <div class="proj-impact">
+      <div class="impact-chip"><div class="impact-val" style="color:#f97316">3hrs</div><div class="impact-label">Design saved</div></div>
+      <div class="impact-chip"><div class="impact-val" style="color:#f97316">$900</div><div class="impact-label">Est value</div></div>
+    </div>
+  </div>
+
+  <div class="proj-card" style="--accent:#f5a623">
+    <div class="proj-header">
+      <div class="proj-name">⚔️ Competitive Battle Cards</div>
+      <div class="proj-badge">HTML DASHBOARD</div>
+    </div>
+    <div class="proj-desc">PSA competitive landscape vs ConnectWise, HaloPSA, Syncro, Autotask. Rev.io positioning, objection handling, and competitive differentiation in one searchable dashboard.</div>
+    <div class="proj-impact">
+      <div class="impact-chip"><div class="impact-val" style="color:#f5a623">5hrs</div><div class="impact-label">Research saved</div></div>
+      <div class="impact-chip"><div class="impact-val" style="color:#f5a623">$1,500</div><div class="impact-label">Est value</div></div>
+    </div>
+  </div>
+
+</div>
+
+<!-- COACHING & ENABLEMENT -->
+<div class="section-title">Sales Coaching & Enablement</div>
+<div class="projects">
+
+  <div class="proj-card" style="--accent:#3DC570">
+    <div class="proj-header">
+      <div class="proj-name">🎓 BEACON Call Grader Rubric</div>
+      <div class="proj-badge">SKILL · 100PTS</div>
+    </div>
+    <div class="proj-desc">6-category BEACON rubric built from Rev.io's sales playbook. Approach, Company Story, Qualifying, Talk Time, Summarize & Make Sick, Next Steps. Calibrated by Ryan with team-specific coaching priorities.</div>
+    <div class="proj-impact">
+      <div class="impact-chip"><div class="impact-val" style="color:#3DC570">∞</div><div class="impact-label">Scales infinitely</div></div>
+      <div class="impact-chip"><div class="impact-val" style="color:#3DC570">$500</div><div class="impact-label">Per call graded</div></div>
+    </div>
+  </div>
+
+  <div class="proj-card" style="--accent:#38bdf8">
+    <div class="proj-header">
+      <div class="proj-name">📚 BEACON Knowledge Base</div>
+      <div class="proj-badge">FULL READ</div>
+    </div>
+    <div class="proj-desc">Full Rev.io Sales BEACON read and indexed. All 4 phases, scripts, objection handling, value statements, DM confirmation language, survival phrases — available on demand.</div>
+    <div class="proj-impact">
+      <div class="impact-chip"><div class="impact-val" style="color:#38bdf8">On-demand</div><div class="impact-label">Always available</div></div>
+      <div class="impact-chip"><div class="impact-val" style="color:#38bdf8">$2,000</div><div class="impact-label">Est value</div></div>
+    </div>
+  </div>
+
+  <div class="proj-card" style="--accent:#f87171">
+    <div class="proj-header">
+      <div class="proj-name">🔍 Software Capabilities Deep Dive</div>
+      <div class="proj-badge">PPTX · 6 SLIDES</div>
+    </div>
+    <div class="proj-desc">Feb vs March closed loss analysis with individual account detail for Software Missing Capabilities. Themes identified: integrations (8 losses), PSA gaps (9), timing/roadmap (5). Coaching actions included.</div>
+    <div class="proj-impact">
+      <div class="impact-chip"><div class="impact-val" style="color:#f87171">4hrs</div><div class="impact-label">Analysis saved</div></div>
+      <div class="impact-chip"><div class="impact-val" style="color:#f87171">$1,500</div><div class="impact-label">Est value</div></div>
+    </div>
+  </div>
+
+</div>
+
+<p class="note">
+  Robin · Built for Ryan Koontz, SVP Sales · Rev.io · Active since Feb 12, 2026<br>
+  <span style="color:#1e293b;font-size:10px">Time savings estimated based on industry rates: SVP @ $300/hr, analysis @ $150/hr, design @ $100/hr</span>
+</p>
+
+</body>
+</html>
