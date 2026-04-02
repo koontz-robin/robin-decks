@@ -132,6 +132,12 @@
     header h1 { font-size: 15px; }
     .nav-tabs { padding: 12px 16px 0; }
   }
+
+  .seg-btn { background:transparent; border:1px solid #0a2a1a; color:#2a5a3a; padding:6px 20px; border-radius:20px; cursor:pointer; font-size:12px; font-weight:700; letter-spacing:1px; text-transform:uppercase; transition:all 0.2s; margin-bottom:10px; }
+  .seg-btn:hover { border-color:#00ff88; color:#c8f0dc; }
+  .seg-btn.active { background:rgba(0,255,136,0.1); border-color:#00ff88; color:#00ff88; }
+  .nav-tab.hidden { display:none !important; }
+
 </style>
 </head>
 <body>
@@ -147,14 +153,20 @@
   <div style="font-size:11px;padding:4px 12px;border:1px solid #00ff88;border-radius:20px;color:#00ff88;letter-spacing:1px;background:rgba(0,255,136,0.05)">SALES INTEL</div>
 </header>
 
-<div class="nav-tabs">
-  <button class="nav-tab active" onclick="showTab('connectwise')">ConnectWise</button>
-  <button class="nav-tab" onclick="showTab('autotask')">Autotask</button>
-  <button class="nav-tab" onclick="showTab('halo')">HaloPSA</button>
-  <button class="nav-tab" onclick="showTab('syncro')">Syncro</button>
-  <button class="nav-tab" onclick="showTab('superops')">SuperOps</button>
-  <button class="nav-tab" onclick="showTab('integrators')">Integrators</button>
-  <button class="nav-tab" onclick="showTab('quickref')">Quick Reference</button>
+<div id="segment-bar" style="background:#020408;border-bottom:1px solid #0a2a1a;padding:12px 30px 0;display:flex;gap:8px;align-items:center;position:sticky;top:73px;z-index:100">
+  <span style="font-size:11px;color:#2a5a3a;letter-spacing:2px;text-transform:uppercase;margin-right:4px">Segment:</span>
+  <button id="seg-msp" class="seg-btn active" onclick="filterSegment('msp')">MSP</button>
+  <button id="seg-integrator" class="seg-btn" onclick="filterSegment('integrator')">Integrator</button>
+  <button id="seg-all" class="seg-btn" onclick="filterSegment('all')">All</button>
+</div>
+<div class="nav-tabs" style="top:110px">
+  <button class="nav-tab active" data-segment="msp" onclick="showTab('connectwise')">ConnectWise</button>
+  <button class="nav-tab" data-segment="msp" onclick="showTab('autotask')">Autotask</button>
+  <button class="nav-tab" data-segment="msp" onclick="showTab('halo')">HaloPSA</button>
+  <button class="nav-tab" data-segment="msp" onclick="showTab('syncro')">Syncro</button>
+  <button class="nav-tab" data-segment="msp" onclick="showTab('superops')">SuperOps</button>
+  <button class="nav-tab" data-segment="integrator" onclick="showTab('integrators')">Integrators</button>
+  <button class="nav-tab" data-segment="both" onclick="showTab('quickref')">Quick Reference</button>
 </div>
 
 <main>
@@ -932,5 +944,16 @@ function showTab(id) {
   event.target.classList.add('active');
 }
 </script>
+
+<script>
+// Initialize MSP segment on load
+document.addEventListener('DOMContentLoaded', function() {
+  filterSegment('msp');
+  // Show first MSP tab
+  const firstMsp = document.querySelector('.nav-tab[data-segment="msp"]');
+  if (firstMsp) firstMsp.click();
+});
+</script>
+
 </body>
 </html>
