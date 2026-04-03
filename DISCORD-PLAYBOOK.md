@@ -1,225 +1,175 @@
-# Discord as Your AI Sales Team Hub — A Replication Playbook
+# Setting Up an AI Bot for Your Team in Discord
 
-This document explains how Rev.io's sales team uses Discord as the primary collaboration surface between AI agents (Robin, Marvin) and the human team. Use this as a blueprint to replicate the setup for any sales org.
+This document explains how to give your entire team access to an AI agent through Discord — the same way Rev.io's sales and channel teams use Robin and Marvin today. Use this as a blueprint to replicate the setup for any team.
 
 ---
 
-## Why Discord Over Slack or Teams?
+## Why Discord?
 
-- **Real-time, always-on** — agents post scorecards, dashboards, and alerts the moment they're ready
+- **Always-on access** — the bot is available 24/7, responds in real time, and works from any device
+- **No new tools** — if your team already uses Discord, there's nothing new to install or learn
 - **Bots as first-class citizens** — Discord's bot API is mature, well-documented, and free at scale
-- **File attachments** — PowerPoints, audio files, HTML previews all work natively
-- **Threads** — every call scorecard gets its own thread for discussion without cluttering the channel
-- **Mobile-first** — the team reads and responds from their phones
+- **File attachments** — the bot can send documents, images, audio files, and links natively
+- **Threads** — keeps detailed responses organized without cluttering the main channel
+- **Mobile-first** — team members can ask questions and get answers from their phones
 
 ---
 
-## Channel Architecture
+## Step 1 — Create a Discord Server
 
-Start simple. Add channels as the team adopts each capability.
+If you don't have one already:
 
-```
-📁 Management / Intel
-  #general          — main hub, direct agent access, ad-hoc requests
-  #forecasts         — daily forecast drops, pipeline updates
-  #alerts            — time-sensitive notifications (deals at risk, key emails)
-
-📁 Coaching
-  #meeting-scorecards — auto-graded discovery call scorecards
-  #call-blitz        — live blitz standings and results
-
-📁 Prospecting
-  #prospecting       — daily net-new MSP account drops
-  #re-engagement     — Apollo 2 / closed-lost re-engagement alerts
-```
+1. Open Discord → click the **+** icon in the left sidebar
+2. Select **Create My Own** → **For a club or community** (or just "For me and my friends")
+3. Give it a name (e.g. "Acme AI Hub" or your team name)
+4. You now have a server — you'll see a default **#general** channel
 
 ---
 
-## Agent Setup (OpenClaw)
+## Step 2 — Set Up Your AI Bot
+
+Your AI bot runs on **OpenClaw** — an agent runtime that connects Claude/GPT to your tools and channels.
 
 ### What you need
-- [OpenClaw](https://openclaw.ai) installed on a server/VM
-- A Discord bot application (discord.com/developers/applications)
-- Salesforce connected app credentials (client_credentials flow)
-- Outreach OAuth tokens (for call grading)
-- Anthropic API key (for Claude-powered grading)
+- [OpenClaw](https://openclaw.ai) installed on a server, VM, or local machine
+- A Discord bot application (free at discord.com/developers)
 
-### Bot permissions required
-In the Discord Developer Portal, your bot needs:
-- `Send Messages`
-- `Read Message History`
-- `Attach Files`
-- `Embed Links`
-- `Add Reactions`
-- `Create Public Threads`
-- `Send Messages in Threads`
-- `Manage Channels` (optional — allows Robin to create channels)
+### Create the Discord bot
+1. Go to [discord.com/developers/applications](https://discord.com/developers/applications)
+2. Click **New Application** → give it a name (this becomes the bot's name)
+3. Click **Bot** in the left sidebar → **Add Bot**
+4. Under **Token**, click **Reset Token** and copy it — this is your bot token
+5. Scroll down and enable:
+   - **Server Members Intent**
+   - **Message Content Intent**
+6. Go to **OAuth2 → URL Generator**:
+   - Scopes: check `bot`
+   - Bot Permissions: check `Send Messages`, `Read Message History`, `Attach Files`, `Embed Links`, `Add Reactions`, `Create Public Threads`, `Send Messages in Threads`
+7. Copy the generated URL, open it in a browser, and select your server to invite the bot
 
-### openclaw.json key settings
+### Connect to OpenClaw
+In your `openclaw.json` config file:
 ```json
 {
   "channels": {
     "discord": {
       "token": "YOUR_BOT_TOKEN",
       "guildId": "YOUR_SERVER_ID",
-      "defaultChannel": "YOUR_GENERAL_CHANNEL_ID"
+      "defaultChannel": "YOUR_CHANNEL_ID"
     }
   }
 }
 ```
 
----
-
-## Automations Running Daily
-
-### 1. Daily Forecast Dashboard (7 AM ET)
-**What it does:** Pulls live Salesforce pipeline, rebuilds the forecast HTML deck, pushes to GitHub Pages.
-
-**Key components:**
-- `refresh_forecast.py` — SF auth, pipeline query, HTML build, git push
-- Cron: `0 11 * * 1-5` (UTC)
-- Output: HTML dashboard with worst/likely/best scenarios, per-product Q2 tracking, marketing attribution
-
-**SF fields required:**
-- `Forecast_Status__c` (custom) — tags opps as Worst Case / Most Likely / Best Case
-- `Lead_Direction__c` (custom) — Marketing Generated vs Sales Generated
-- `Product_Type__c` (custom) — product line per opp
-
-**Scenario math:**
-```
-Worst  = March CW + Worst-tagged open opps
-Likely = March CW + Worst + Most Likely-tagged
-Best   = March CW + Worst + Most Likely + Best-tagged
-```
+To find your server ID and channel ID: enable Developer Mode in Discord (Settings → Advanced → Developer Mode), then right-click your server or channel and select **Copy ID**.
 
 ---
 
-### 2. Discovery Call Auto-Grader (every 30 min)
-**What it does:** Polls Outreach Kaia for completed meetings. Matches to SF event type `1-Discovery Call`. Grades transcript with Claude against the BEACON rubric. Posts scorecard to Discord + Notion.
+## Step 3 — Set Up Your Channels
 
-**Key components:**
-- `grade_discovery_calls.py`
-- Outreach Kaia API: `kaiaRecordings` endpoint
-- State file: `grader-state.json` (tracks already-graded IDs)
-- Scoring: 6 categories, 100 pts — Approach, Company Story, Qualifying, Talk Time, Summarize & Make Sick, Next Steps
+Start simple. Add channels as the team adopts each capability.
 
-**BEACON Rubric weights:**
-| Category | Points |
+A good starting structure:
+
+```
+#general         — main hub, everyone can ask the bot anything
+#alerts          — bot posts proactive updates and notifications
+#reports         — automated reports and dashboards
+```
+
+You can add more specific channels later (e.g. `#coaching`, `#prospecting`, `#forecasts`) as you figure out what the team actually uses.
+
+---
+
+## Step 4 — Give Your Team Access
+
+### Invite team members to the server
+1. Click your server name → **Invite People**
+2. Generate an invite link and share it with your team via Slack, email, or text
+3. Set the invite to "Never expire" if you want a permanent link
+
+### Set permissions so everyone can talk to the bot
+By default everyone in the server can message in channels. If you want to restrict who can access certain channels:
+
+1. Go to **Server Settings → Roles**
+2. Create roles (e.g. "Sales Team", "Leadership") and assign them
+3. On each channel → **Edit Channel → Permissions** → control which roles can read/write
+
+### DM access (optional)
+If you want team members to be able to DM the bot directly (not just in channels), configure OpenClaw's DM policy:
+
+```json
+{
+  "channels": {
+    "discord": {
+      "dmPolicy": "open"  // or "allowlist" for specific users only
+    }
+  }
+}
+```
+
+For `allowlist`, add trusted user IDs:
+```json
+{
+  "dmAllowFrom": ["USER_ID_1", "USER_ID_2"]
+}
+```
+
+To find a user's ID: right-click their name in Discord → **Copy User ID** (requires Developer Mode enabled).
+
+---
+
+## Step 5 — Tell Your Team How to Use It
+
+The bot responds to messages in any channel it has access to. Basic usage:
+
+- **Ask anything in #general** — "What's our pipeline this week?" / "Summarize this doc" / "Help me draft an email to..."
+- **@mention the bot** — in channels with multiple people, mention the bot to get its attention: `@Robin can you...`
+- **Upload files** — drop a PDF, spreadsheet, or transcript and ask the bot to analyze it
+- **Request reports** — "Pull the latest forecast" / "Show me this week's activity scores"
+
+The bot remembers context within a session. For tasks that need to persist (reminders, recurring reports), ask it to set up a cron job.
+
+---
+
+## Step 6 — Automate Proactive Updates
+
+The real power is the bot posting to your team *without being asked*. Common patterns:
+
+| Automation | Frequency | Channel |
+|---|---|---|
+| Daily briefing / status update | Every morning | #general or #alerts |
+| Automated reports (pipeline, metrics) | Daily or weekly | #reports |
+| Alerts on key events (deal closed, email received) | Real-time | #alerts |
+| Coaching / feedback posts | After each qualifying event | #coaching |
+
+To set up a recurring task, ask the bot: *"Post our pipeline summary to #reports every Monday at 9 AM."*
+
+---
+
+## Tips for Adoption
+
+**Start with one power user.** Don't roll it out to the whole team at once. Have one person use it heavily for a week, figure out what's actually useful, then share those specific use cases with the team.
+
+**Make the first value obvious.** The fastest way to get adoption is one thing that saves everyone 20 minutes. Figure out what that is for your team and lead with it.
+
+**Use threads.** When the bot gives a long response, it creates a thread. Encourage the team to continue the conversation there so the main channel stays clean.
+
+**Name the bot something memorable.** "Robin", "Marvin", "Atlas" — a name makes it feel like a teammate, not a tool. People talk to it differently.
+
+**It gets smarter as you use it.** The bot builds memory over time. The more context you give it about your team, processes, and preferences, the better it gets.
+
+---
+
+## Troubleshooting
+
+| Issue | Fix |
 |---|---|
-| The Approach | 20 |
-| Company Story | 10 |
-| Qualifying / Needs Assessment | 30 |
-| Talk Time Ratio | 15 |
-| Summarize & Make Sick | 15 |
-| Next Steps / Setting the Demo | 10 |
-
-**Discord output:** Summary card with thread containing full scorecard. Tagged to rep if Notion user ID is known.
-
-**Notion output:** Creates page in Sales Meeting Coaching DB with all scores, coaching points, Robin's Take.
+| Bot not responding | Check the bot token in openclaw.json, confirm Message Content Intent is enabled |
+| Bot can't see messages | Confirm the channel allows the bot role to read messages |
+| Can't DM the bot | Check dmPolicy in openclaw.json, confirm user is on allowlist if using allowlist mode |
+| Bot not in server | Re-run the OAuth invite URL from the developer portal |
 
 ---
 
-### 3. Daily Sales Activity Scorecard (9 AM ET, Mon-Fri)
-**What it does:** Pulls week-to-date SF activity for every rep. Scores calls, emails, contacts, meetings, opps sourced. Sends HTML email to management team.
-
-**Key components:**
-- `scorecard.py`
-- SF event/task queries by rep
-- Cron: `0 14 * * 1,2,3,4,5` (UTC)
-
-**Scoring logic:**
-- SDRs: Calls (1pt) + Emails (1pt, capped 100) + Contacts (2pt) + Opps Sourced (10pt)
-- AEs: Calls + Emails + Contacts + Meetings (20pt, completed events)
-- Weekly target: 500 pts
-
----
-
-### 4. Daily MSP Prospector (7 AM ET)
-**What it does:** Picks a random city from a priority list. Finds 5 MSPs not in Salesforce (deduped by domain). Posts to Discord with company info.
-
-**Key components:**
-- `skills/msp-prospector/scripts/prospect_msps.py`
-- Brave Search API for discovery
-- SF Account.Website dedup check
-
----
-
-### 5. AE Capacity Dashboard (7 AM ET)
-**What it does:** Pulls completed prospect meetings (Discovery, Demo, Follow-up, Pricing/Negotiation) for active AEs. Shows MTD vs projected. Published to GitHub Pages.
-
-**Key components:**
-- Built into `refresh_forecast.py` as `refresh_ae_capacity()`
-- Event types: `1-Discovery Call`, `2-Initial DEMO`, `3-Follow Up DEMO / Meeting`, `4-Pricing / Negotiation Call`
-- Filter: `Appointment_Status__c = 'Completed'`
-- Totals pulled from all users (no AE filter) to match SF report
-- Per-AE breakdown uses 7 active AEs only
-
----
-
-## GitHub Pages Setup
-
-All dashboards publish to a public GitHub repo via SSH push.
-
-```bash
-# Push pattern used in all scripts
-GIT_SSH_COMMAND="ssh -i /path/to/id_ed25519 -o StrictHostKeyChecking=no" \
-  git push origin master
-```
-
-View via htmlpreview.github.io:
-```
-https://htmlpreview.github.io/?https://github.com/YOUR_ORG/YOUR_REPO/blob/master/dashboard.html
-```
-
----
-
-## Notion Integration
-
-Used for call scorecard storage and historic trend tracking.
-
-**DB: Sales Meeting Coaching**
-- Properties: Meeting Title, Prospect/Account, Meeting Date, Sales Rep (People), Overall Score, Approach, Company Story, Qualifying, Talk Time, Summarize, Next Steps, Top Coaching Point, Robin's Take, Recording URL
-- Token type: Integration with read-write access
-- Reps tagged via Notion user IDs matched to SF owner names
-
----
-
-## Key Principles That Make It Work
-
-1. **Agents respond in the channel they're messaged** — no need to go to a separate tool
-2. **Everything links back to GitHub Pages** — one URL per dashboard, always current
-3. **Live SF data, not exports** — dashboards rebuild from source every day
-4. **Scoring is objective** — BEACON rubric removes subjectivity from call feedback
-5. **Discord threads keep channels clean** — full scorecards in threads, summaries in channel
-6. **Daily end-of-day summary** — agent writes a thorough daily note before backup, so context survives session restarts
-
----
-
-## Files to Replicate
-
-| File | Purpose |
-|---|---|
-| `refresh_forecast.py` | Forecast + AE capacity daily refresh |
-| `build_forecast_april.py` | Current month forecast builder |
-| `grade_discovery_calls.py` | Outreach Kaia call grader |
-| `scorecard.py` | Daily activity scorecard emailer |
-| `skills/msp-prospector/` | Daily prospecting automation |
-| `grader-state.json` | Tracks graded call IDs |
-| `apollo2_accounts.json` | Re-engagement target account list |
-| `build_q2_apollo2.py` | Re-engagement tracker builder |
-
----
-
-## What to Customize Per Org
-
-- Product names and quotas in forecast builder
-- BEACON rubric weights (adjust per coaching philosophy)
-- AE list and roles
-- Scorecard recipients and scoring weights
-- Discord channel IDs
-- Notion database IDs and property names
-- GitHub repo for dashboard hosting
-
----
-
-*Built by Robin for Rev.io Sales — April 2026*
+*Built by Robin for Rev.io — April 2026*
