@@ -944,18 +944,44 @@
 function showTab(id) {
   document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
   document.querySelectorAll('.nav-tab').forEach(t => t.classList.remove('active'));
-  document.getElementById(id).classList.add('active');
-  event.target.classList.add('active');
+  var section = document.getElementById(id);
+  if (section) section.classList.add('active');
+  // Mark the clicked tab active
+  var tab = document.querySelector('.nav-tab[onclick*="' + id + '"]');
+  if (tab) tab.classList.add('active');
 }
-</script>
 
-<script>
-// Initialize MSP segment on load
+function filterSegment(seg) {
+  // Update segment button styles
+  document.querySelectorAll('.seg-btn').forEach(b => b.classList.remove('active'));
+  var btn = document.getElementById('seg-' + seg);
+  if (btn) btn.classList.add('active');
+
+  // Show/hide tabs based on segment
+  var tabs = document.querySelectorAll('.nav-tab[data-segment]');
+  tabs.forEach(function(t) {
+    var ts = t.getAttribute('data-segment');
+    if (seg === 'all' || ts === seg || ts === 'both') {
+      t.classList.remove('hidden');
+    } else {
+      t.classList.add('hidden');
+    }
+  });
+
+  // Switch to first visible tab in the new segment
+  var firstVisible = document.querySelector('.nav-tab[data-segment="' + seg + '"]:not(.hidden)');
+  if (!firstVisible) firstVisible = document.querySelector('.nav-tab:not(.hidden)');
+  if (firstVisible) {
+    var onclickAttr = firstVisible.getAttribute('onclick');
+    var match = onclickAttr && onclickAttr.match(/showTab\(['"]([^'"]+)['"]\)/);
+    if (match) showTab(match[1]);
+    document.querySelectorAll('.nav-tab').forEach(t => t.classList.remove('active'));
+    firstVisible.classList.add('active');
+  }
+}
+
 document.addEventListener('DOMContentLoaded', function() {
   filterSegment('msp');
-  // Show first MSP tab
-  const firstMsp = document.querySelector('.nav-tab[data-segment="msp"]');
-  if (firstMsp) firstMsp.click();
 });
 </script>
 
