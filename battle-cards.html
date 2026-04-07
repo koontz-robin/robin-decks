@@ -41,10 +41,10 @@
   header .badge { background: #0a2a1a; border: 1px solid var(--green); color: var(--green); padding: 4px 12px; border-radius: 4px; font-size: 11px; text-transform: uppercase; letter-spacing: 1px; }
 
   /* NAV TABS */
-  .nav-tabs { display: flex; gap: 6px; padding: 16px 30px 0; background: #020408; border-bottom: 1px solid var(--border); overflow-x: auto; flex-wrap: nowrap; position:sticky;top:73px;z-index:99; }
-  .nav-tab { background: transparent; border: 1px solid #0a2a1a; color: #2a5a3a; padding: 8px 18px; border-radius: 6px 6px 0 0; cursor: pointer; font-size: 12px; font-weight: 700; letter-spacing:0.5px; white-space: nowrap; transition: all 0.2s; border-bottom: none; text-transform:uppercase; }
-  .nav-tab:hover { color: #c8f0dc; border-color: #00ff88; }
-  .nav-tab.active { background: #060d14; color: #00ff88; border-color: #00ff88; border-bottom: 2px solid #060d14; margin-bottom: -1px; }
+  .nav-tabs { display: flex; gap: 6px; padding: 16px 30px 0; background: #000; border-bottom: 1px solid #1e293b; overflow-x: auto; flex-wrap: nowrap; position:sticky;top:73px;z-index:99; }
+  .nav-tab { background: transparent; border: 1px solid #1e293b; color: #64748b; padding: 8px 18px; border-radius: 6px 6px 0 0; cursor: pointer; font-size: 12px; font-weight: 700; letter-spacing:0.5px; white-space: nowrap; transition: all 0.2s; border-bottom: none; text-transform:uppercase; }
+  .nav-tab:hover { color: #e2e8f0; border-color: #38bdf8; }
+  .nav-tab.active { background: #1e293b; color: #38bdf8; border-color: #38bdf8; border-bottom: 2px solid #1e293b; margin-bottom: -1px; }
 
   /* MAIN */
   main { padding: 30px; max-width: 1200px; margin: 0 auto; position:relative;z-index:1; }
@@ -58,12 +58,12 @@
   .overview-item .value { font-size: 14px; color: var(--text); font-weight: 500; }
 
   /* SECTION HEADERS */
-  .section-title { font-size: 13px; text-transform: uppercase; letter-spacing: 2px; color: var(--green); border-bottom: 1px solid var(--border); padding-bottom: 8px; margin: 24px 0 14px; }
+  .section-title { font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 2px; color: #64748b; border-bottom: 1px solid #0f172a; padding-bottom: 8px; margin: 24px 0 14px; }
 
   /* SW TABLE (strengths/weaknesses) */
     /* SW TABLE — AE capacity style */
   .sw-table { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-bottom: 20px; }
-  .sw-col { background: #0f1a10; border-radius: 12px; padding: 20px; position:relative; overflow:hidden; }
+  .sw-col { background: #0f172a; border-radius: 12px; padding: 20px; position:relative; overflow:hidden; }
   .sw-col::before { content:''; position:absolute; top:0; left:0; right:0; height:4px; }
   .sw-col.strengths::before { background: var(--green); }
   .sw-col.weaknesses::before { background: var(--red); }
@@ -79,11 +79,11 @@
 
   /* CAPABILITY TABLE */
   .cap-table { width: 100%; border-collapse: collapse; background: var(--card); border-radius: 8px; overflow: hidden; margin-bottom: 8px; }
-  .cap-table th { background: #060d14; color: var(--green); font-size: 12px; text-transform: uppercase; letter-spacing: 1px; padding: 10px 14px; text-align: left; }
+  .cap-table th { background: #0f172a; color: #38bdf8; font-size: 12px; text-transform: uppercase; letter-spacing: 1px; padding: 10px 14px; text-align: left; }
   .cap-table th:first-child { width: 40%; }
-  .cap-table td { padding: 9px 14px; border-bottom: 1px solid #0a1a10; font-size: 13px; vertical-align: top; }
+  .cap-table td { padding: 9px 14px; border-bottom: 1px solid #0f172a; font-size: 13px; vertical-align: top; }
   .cap-table tr:last-child td { border-bottom: none; }
-  .cap-table tr:hover td { background: #0a1a0e; }
+  .cap-table tr:hover td { background: #0f172a44; }
   .cap-table td:first-child { color: var(--muted); }
   .win-cell { color: var(--green); }
   .lose-cell { color: var(--red); }
@@ -91,13 +91,13 @@
 
   /* DISCOVERY QUESTIONS */
   .questions-list { list-style: none; counter-reset: q; }
-  .questions-list li { counter-increment: q; display: flex; gap: 12px; padding: 10px 14px; background: var(--card); border-left: 3px solid var(--accent); border-radius: 0 6px 6px 0; margin-bottom: 8px; font-size: 13px; }
+  .questions-list li { counter-increment: q; display: flex; gap: 12px; padding: 10px 14px; background: var(--card); border-left: 3px solid #38bdf8; border-radius: 0 6px 6px 0; margin-bottom: 8px; font-size: 13px; }
   .questions-list li::before { content: counter(q); color: var(--green); font-weight: 700; font-size: 13px; min-width: 16px; }
 
   /* WIN/LOSE */
   .win-lose-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 8px; }
-  .win-col { background: var(--win); border: 1px solid #00ff8840; border-radius: 8px; padding: 14px; }
-  .lose-col { background: var(--lose); border: 1px solid #ff446640; border-radius: 8px; padding: 14px; }
+  .win-col { background: var(--win); border: 1px solid #34d39940; border-radius: 8px; padding: 14px; }
+  .lose-col { background: var(--lose); border: 1px solid #f8717140; border-radius: 8px; padding: 14px; }
   .win-col h4 { color: var(--green); font-size: 12px; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 8px; }
   .lose-col h4 { color: var(--red); font-size: 12px; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 8px; }
   .win-col ul, .lose-col ul { list-style: none; }
@@ -111,13 +111,13 @@
   .objection .a { color: var(--text); font-size: 13px; padding-left: 12px; border-left: 2px solid var(--accent); }
 
   /* VOICE OF CUSTOMER */
-  .voc-card { background: #060d14; border: 1px solid var(--green); border-radius: 8px; padding: 14px; margin-bottom: 10px; }
+  .voc-card { background: #1e293b; border: 1px solid var(--green); border-radius: 8px; padding: 14px; margin-bottom: 10px; }
   .voc-quote { font-style: italic; color: var(--text); font-size: 14px; margin-bottom: 6px; }
   .voc-attr { color: var(--muted); font-size: 12px; text-align: right; }
 
   /* QUICK REF TABLE */
   .quick-table { width: 100%; border-collapse: collapse; background: var(--card); border-radius: 8px; overflow: hidden; }
-  .quick-table th { background: #060d14; color: var(--green); font-size: 12px; text-transform: uppercase; letter-spacing: 1px; padding: 10px 14px; text-align: left; }
+  .quick-table th { background: #1e293b; color: var(--green); font-size: 12px; text-transform: uppercase; letter-spacing: 1px; padding: 10px 14px; text-align: left; }
   .quick-table td { padding: 10px 14px; border-bottom: 1px solid #0a1a10; font-size: 13px; }
   .quick-table tr:last-child td { border-bottom: none; }
   .quick-table tr:hover td { background: #0a1a0e; }
@@ -134,27 +134,27 @@
     .nav-tabs { padding: 12px 16px 0; }
   }
 
-  .seg-btn { background:transparent; border:1px solid #0a2a1a; color:#2a5a3a; padding:6px 20px; border-radius:20px; cursor:pointer; font-size:12px; font-weight:700; letter-spacing:1px; text-transform:uppercase; transition:all 0.2s; margin-bottom:10px; }
-  .seg-btn:hover { border-color:#00ff88; color:#c8f0dc; }
-  .seg-btn.active { background:rgba(0,255,136,0.1); border-color:#00ff88; color:#00ff88; }
+  .seg-btn { background:transparent; border:1px solid #1e293b; color:#64748b; padding:6px 20px; border-radius:20px; cursor:pointer; font-size:12px; font-weight:700; letter-spacing:1px; text-transform:uppercase; transition:all 0.2s; margin-bottom:10px; }
+  .seg-btn:hover { border-color:#38bdf8; color:#e2e8f0; }
+  .seg-btn.active { background:rgba(56,189,248,0.1); border-color:#38bdf8; color:#38bdf8; }
   .nav-tab.hidden { display:none !important; }
 
 </style>
 </head>
 <body>
 
-<header style="background:linear-gradient(135deg,#020408 0%,#060d14 50%,#020408 100%);border-bottom:2px solid #00ff88;padding:18px 32px;display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;z-index:100;backdrop-filter:blur(8px)">
+<header style="background:linear-gradient(135deg,#000000 0%,#0f172a 50%,#000000 100%);border-bottom:2px solid #38bdf8;padding:18px 32px;display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;z-index:100;backdrop-filter:blur(8px)">
   <div style="display:flex;align-items:center;gap:16px">
     <img src="https://raw.githubusercontent.com/koontz-robin/robin-decks/master/revio-logo.png" style="height:36px;opacity:0.95" alt="rev.io">
     <div>
-      <div style="font-size:11px;font-weight:700;letter-spacing:3px;text-transform:uppercase;color:#00ff88">COMPETITOR BATTLE CARDS</div>
+      <div style="font-size:11px;font-weight:700;letter-spacing:3px;text-transform:uppercase;color:#34d399">COMPETITOR BATTLE CARDS</div>
       <div style="font-size:11px;color:#2a5a3a;letter-spacing:1px;margin-top:2px">REV.IO PSA · INTERNAL USE ONLY</div>
     </div>
   </div>
-  <div style="font-size:11px;padding:4px 12px;border:1px solid #00ff88;border-radius:20px;color:#00ff88;letter-spacing:1px;background:rgba(0,255,136,0.05)">SALES INTEL</div>
+  <div style="font-size:11px;padding:4px 12px;border:1px solid #38bdf8;border-radius:20px;color:#38bdf8;letter-spacing:1px;background:rgba(56,189,248,0.05)">SALES INTEL</div>
 </header>
 
-<div id="segment-bar" style="background:#020408;border-bottom:1px solid #0a2a1a;padding:12px 30px 0;display:flex;gap:8px;align-items:center;position:sticky;top:73px;z-index:100">
+<div id="segment-bar" style="background:#000;border-bottom:1px solid #1e293b;padding:12px 30px 0;display:flex;gap:8px;align-items:center;position:sticky;top:73px;z-index:100">
   <span style="font-size:11px;color:#2a5a3a;letter-spacing:2px;text-transform:uppercase;margin-right:4px">Segment:</span>
   <button id="seg-msp" class="seg-btn active" onclick="filterSegment('msp')">MSP</button>
   <button id="seg-integrator" class="seg-btn" onclick="filterSegment('integrator')">Integrator</button>
@@ -183,11 +183,11 @@
 
 <!-- FIELD_INTEL_START:ConnectWise updated:2026-04-07 -->
 <div class="section-title">🎙️ Field Intelligence — What Prospects Say (5 raw mentions)</div>
-<div style="margin-bottom:8px"><div style="font-size:11px;color:#ff4466;text-transform:uppercase;letter-spacing:1px;margin-bottom:8px">Key Pain Points</div><div style="background:#1a0808;border-left:3px solid #ff4466;padding:10px 12px;border-radius:4px;margin-bottom:8px">
+<div style="margin-bottom:8px"><div style="font-size:11px;color:#f87171;text-transform:uppercase;letter-spacing:1px;margin-bottom:8px">Key Pain Points</div><div style="background:#1f0f0f;border-left:3px solid #f87171;padding:10px 12px;border-radius:4px;margin-bottom:8px">
           <div style="font-size:13px;color:#e2e8f0">Prospects describe ConnectWise as a 'dinosaur' with a legacy foundation and outdated backend that feels inflexible and overly complex.</div>
-        </div><div style="background:#1a0808;border-left:3px solid #ff4466;padding:10px 12px;border-radius:4px;margin-bottom:8px">
+        </div><div style="background:#1f0f0f;border-left:3px solid #f87171;padding:10px 12px;border-radius:4px;margin-bottom:8px">
           <div style="font-size:13px;color:#e2e8f0">MSPs are frustrated with ConnectWise's acquisition strategy of buying and bolting on companies, resulting in a fragmented experience that isn't seamless.</div>
-        </div><div style="background:#1a0808;border-left:3px solid #ff4466;padding:10px 12px;border-radius:4px;margin-bottom:8px">
+        </div><div style="background:#1f0f0f;border-left:3px solid #f87171;padding:10px 12px;border-radius:4px;margin-bottom:8px">
           <div style="font-size:13px;color:#e2e8f0">Core functionality like quoting requires separate paid modules (CPQ), adding cost and complexity to what should be standard PSA capabilities.</div>
         </div></div>
 
@@ -300,9 +300,9 @@
 
 <!-- FIELD_INTEL_START:Autotask updated:2026-04-07 -->
 <div class="section-title">🎙️ Field Intelligence — What Prospects Say (3 raw mentions)</div>
-<div style="margin-bottom:8px"><div style="font-size:11px;color:#ff4466;text-transform:uppercase;letter-spacing:1px;margin-bottom:8px">Key Pain Points</div><div style="background:#1a0808;border-left:3px solid #ff4466;padding:10px 12px;border-radius:4px;margin-bottom:8px">
+<div style="margin-bottom:8px"><div style="font-size:11px;color:#f87171;text-transform:uppercase;letter-spacing:1px;margin-bottom:8px">Key Pain Points</div><div style="background:#1f0f0f;border-left:3px solid #f87171;padding:10px 12px;border-radius:4px;margin-bottom:8px">
           <div style="font-size:13px;color:#e2e8f0">Techs find Autotask clunky and frustrating to use for core daily tasks like ticketing and time entry.</div>
-        </div><div style="background:#1a0808;border-left:3px solid #ff4466;padding:10px 12px;border-radius:4px;margin-bottom:8px">
+        </div><div style="background:#1f0f0f;border-left:3px solid #f87171;padding:10px 12px;border-radius:4px;margin-bottom:8px">
           <div style="font-size:13px;color:#e2e8f0">Bolt-on module pricing model forces additional payments rather than providing an all-in-one solution, adding cost and complexity.</div>
         </div></div>
 
@@ -886,7 +886,7 @@
   </table>
 
   <div class="section-title" style="margin-top: 32px;">The Universal Close</div>
-  <div style="background: #060d14; border: 1px solid var(--green); border-radius: 8px; padding: 20px; font-size: 15px; line-height: 1.7; color: var(--text);">
+  <div style="background: #1e293b; border: 1px solid var(--green); border-radius: 8px; padding: 20px; font-size: 15px; line-height: 1.7; color: var(--text);">
     <p style="color:var(--muted); font-size:11px; text-transform:uppercase; letter-spacing:1px; margin-bottom:8px;">Use against any competitor</p>
     "Every PSA on this list was built for pure managed IT. Rev.io was built from the ground up for companies that sell <em>more</em> — IT, VoIP, internet, cloud, security — and need one platform to quote, bill, and collect for all of it. When you're ready to stop duct-taping systems together, that's when you call us."
   </div>
@@ -902,11 +902,11 @@
 
 <!-- FIELD_INTEL_START:Service Fusion updated:2026-04-07 -->
 <div class="section-title">🎙️ Field Intelligence — What Prospects Say (6 raw mentions)</div>
-<div style="margin-bottom:8px"><div style="font-size:11px;color:#ff4466;text-transform:uppercase;letter-spacing:1px;margin-bottom:8px">Key Pain Points</div><div style="background:#1a0808;border-left:3px solid #ff4466;padding:10px 12px;border-radius:4px;margin-bottom:8px">
+<div style="margin-bottom:8px"><div style="font-size:11px;color:#f87171;text-transform:uppercase;letter-spacing:1px;margin-bottom:8px">Key Pain Points</div><div style="background:#1f0f0f;border-left:3px solid #f87171;padding:10px 12px;border-radius:4px;margin-bottom:8px">
           <div style="font-size:13px;color:#e2e8f0">Multi-location inventory tracking is weak — Service Fusion doesn't handle truck stock or warehouse inventory well, making it difficult for companies managing parts across multiple locations.</div>
-        </div><div style="background:#1a0808;border-left:3px solid #ff4466;padding:10px 12px;border-radius:4px;margin-bottom:8px">
+        </div><div style="background:#1f0f0f;border-left:3px solid #f87171;padding:10px 12px;border-radius:4px;margin-bottom:8px">
           <div style="font-size:13px;color:#e2e8f0">Multi-technician ticket management is frustrating — when multiple techs are on a job, everyone has to close out the ticket or it gets 'left out in the void,' creating operational headaches.</div>
-        </div><div style="background:#1a0808;border-left:3px solid #ff4466;padding:10px 12px;border-radius:4px;margin-bottom:8px">
+        </div><div style="background:#1f0f0f;border-left:3px solid #f87171;padding:10px 12px;border-radius:4px;margin-bottom:8px">
           <div style="font-size:13px;color:#e2e8f0">No native integration with construction/accounting platforms — users report having to double-enter jobs in both Service Fusion and systems like Spectrum, creating redundant data entry.</div>
         </div></div>
 
@@ -922,11 +922,11 @@
 
 <!-- FIELD_INTEL_START:AlarmBiller updated:2026-04-07 -->
 <div class="section-title">🎙️ Field Intelligence — What Prospects Say (5 raw mentions)</div>
-<div style="margin-bottom:8px"><div style="font-size:11px;color:#ff4466;text-transform:uppercase;letter-spacing:1px;margin-bottom:8px">Key Pain Points</div><div style="background:#1a0808;border-left:3px solid #ff4466;padding:10px 12px;border-radius:4px;margin-bottom:8px">
+<div style="margin-bottom:8px"><div style="font-size:11px;color:#f87171;text-transform:uppercase;letter-spacing:1px;margin-bottom:8px">Key Pain Points</div><div style="background:#1f0f0f;border-left:3px solid #f87171;padding:10px 12px;border-radius:4px;margin-bottom:8px">
           <div style="font-size:13px;color:#e2e8f0">Competitors lack dedicated mobile apps, forcing users to access billing through clunky mobile browser experiences.</div>
-        </div><div style="background:#1a0808;border-left:3px solid #ff4466;padding:10px 12px;border-radius:4px;margin-bottom:8px">
+        </div><div style="background:#1f0f0f;border-left:3px solid #f87171;padding:10px 12px;border-radius:4px;margin-bottom:8px">
           <div style="font-size:13px;color:#e2e8f0">Prospects are paying for full-featured platforms but only utilizing ~50% of capabilities, creating frustration over wasted spend.</div>
-        </div><div style="background:#1a0808;border-left:3px solid #ff4466;padding:10px 12px;border-radius:4px;margin-bottom:8px">
+        </div><div style="background:#1f0f0f;border-left:3px solid #f87171;padding:10px 12px;border-radius:4px;margin-bottom:8px">
           <div style="font-size:13px;color:#e2e8f0">Legacy competitors are abandoning their existing products and pushing forced migrations to newer systems, leaving customers unsupported.</div>
         </div></div>
 
@@ -942,12 +942,12 @@
 
 <!-- FIELD_INTEL_START:Jetbuilt updated:2026-04-07 -->
 <div class="section-title">🎙️ Field Intelligence — What Prospects Say (3 raw mentions)</div>
-<div style="margin-bottom:8px"><div style="font-size:11px;color:#ff4466;text-transform:uppercase;letter-spacing:1px;margin-bottom:8px">Key Pain Points</div><div style="background:#1a0808;border-left:3px solid #ff4466;padding:10px 12px;border-radius:4px;margin-bottom:8px">
+<div style="margin-bottom:8px"><div style="font-size:11px;color:#f87171;text-transform:uppercase;letter-spacing:1px;margin-bottom:8px">Key Pain Points</div><div style="background:#1f0f0f;border-left:3px solid #f87171;padding:10px 12px;border-radius:4px;margin-bottom:8px">
           <div style="font-size:13px;color:#e2e8f0">Inventory tracking lacks depth and doesn't adequately support service contract management, leaving users without confidence to scale that part of their business.</div>
-        </div><div style="background:#1a0808;border-left:3px solid #ff4466;padding:10px 12px;border-radius:4px;margin-bottom:8px">
+        </div><div style="background:#1f0f0f;border-left:3px solid #f87171;padding:10px 12px;border-radius:4px;margin-bottom:8px">
           <div style="font-size:13px;color:#e2e8f0">Feature requests go unaddressed for years — the company appears more focused on expanding into new areas than improving existing functionality.</div>
         </div></div>
-<div><div style="font-size:11px;color:#00ff88;text-transform:uppercase;letter-spacing:1px;margin-bottom:8px">Genuine Strengths</div><div style="background:#081a08;border-left:3px solid #00ff88;padding:10px 12px;border-radius:4px;margin-bottom:8px">
+<div><div style="font-size:11px;color:#34d399;text-transform:uppercase;letter-spacing:1px;margin-bottom:8px">Genuine Strengths</div><div style="background:#0f1f10;border-left:3px solid #34d399;padding:10px 12px;border-radius:4px;margin-bottom:8px">
           <div style="font-size:13px;color:#e2e8f0">Proposal output is visually polished and generates compliments from clients.</div>
         </div></div>
 <!-- FIELD_INTEL_END:Jetbuilt -->
@@ -961,12 +961,12 @@
 
 <!-- FIELD_INTEL_START:ServiceNow updated:2026-04-07 -->
 <div class="section-title">🎙️ Field Intelligence — What Prospects Say (2 raw mentions)</div>
-<div style="margin-bottom:8px"><div style="font-size:11px;color:#ff4466;text-transform:uppercase;letter-spacing:1px;margin-bottom:8px">Key Pain Points</div><div style="background:#1a0808;border-left:3px solid #ff4466;padding:10px 12px;border-radius:4px;margin-bottom:8px">
+<div style="margin-bottom:8px"><div style="font-size:11px;color:#f87171;text-transform:uppercase;letter-spacing:1px;margin-bottom:8px">Key Pain Points</div><div style="background:#1f0f0f;border-left:3px solid #f87171;padding:10px 12px;border-radius:4px;margin-bottom:8px">
           <div style="font-size:13px;color:#e2e8f0">ServiceNow is perceived as built for large enterprises, making smaller companies feel it's oversized and unnecessary for their needs.</div>
-        </div><div style="background:#1a0808;border-left:3px solid #ff4466;padding:10px 12px;border-radius:4px;margin-bottom:8px">
+        </div><div style="background:#1f0f0f;border-left:3px solid #f87171;padding:10px 12px;border-radius:4px;margin-bottom:8px">
           <div style="font-size:13px;color:#e2e8f0">The platform's pricing is prohibitively expensive, causing prospects to abandon evaluation even when the functionality (like GPS tracking) meets their requirements.</div>
         </div></div>
-<div><div style="font-size:11px;color:#00ff88;text-transform:uppercase;letter-spacing:1px;margin-bottom:8px">Genuine Strengths</div><div style="background:#081a08;border-left:3px solid #00ff88;padding:10px 12px;border-radius:4px;margin-bottom:8px">
+<div><div style="font-size:11px;color:#34d399;text-transform:uppercase;letter-spacing:1px;margin-bottom:8px">Genuine Strengths</div><div style="background:#0f1f10;border-left:3px solid #34d399;padding:10px 12px;border-radius:4px;margin-bottom:8px">
           <div style="font-size:13px;color:#e2e8f0">ServiceNow is recognized as an industry-standard platform that major enterprises consistently choose, giving it strong market credibility.</div>
         </div></div>
 <!-- FIELD_INTEL_END:ServiceNow -->
@@ -991,7 +991,7 @@
 <!-- FIELD_INTEL_START:Housecall Pro updated:2026-04-07 -->
 <div class="section-title">🎙️ Field Intelligence — What Prospects Say (2 raw mentions)</div>
 
-<div><div style="font-size:11px;color:#00ff88;text-transform:uppercase;letter-spacing:1px;margin-bottom:8px">Genuine Strengths</div><div style="background:#081a08;border-left:3px solid #00ff88;padding:10px 12px;border-radius:4px;margin-bottom:8px">
+<div><div style="font-size:11px;color:#34d399;text-transform:uppercase;letter-spacing:1px;margin-bottom:8px">Genuine Strengths</div><div style="background:#0f1f10;border-left:3px solid #34d399;padding:10px 12px;border-radius:4px;margin-bottom:8px">
           <div style="font-size:13px;color:#e2e8f0">Prospects find Housecall Pro fairly simple to use for core workflows including quoting, scheduling, dispatch, payments, and mobile field work with seamless QuickBooks integration.</div>
         </div></div>
 <!-- FIELD_INTEL_END:Housecall Pro -->
