@@ -1,0 +1,257 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Rev.io BEACON Discovery Call Grading Rubric</title>
+<style>
+  @media print {
+    body { margin: 0; }
+    .no-print { display: none; }
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { font-family: 'Segoe UI', Arial, sans-serif; font-size: 13px; color: #1a1a2e; background: #fff; padding: 32px 40px; max-width: 900px; margin: 0 auto; }
+  .header { display: flex; align-items: center; justify-content: space-between; border-bottom: 3px solid #00c875; padding-bottom: 16px; margin-bottom: 24px; }
+  .header-left h1 { font-size: 22px; font-weight: 800; color: #1a1a2e; }
+  .header-left p { font-size: 12px; color: #666; margin-top: 4px; }
+  .logo { font-size: 18px; font-weight: 800; color: #00c875; letter-spacing: 1px; }
+  .summary-bar { display: flex; gap: 12px; margin-bottom: 24px; flex-wrap: wrap; }
+  .summary-chip { background: #f4f4f8; border-radius: 8px; padding: 10px 16px; flex: 1; min-width: 120px; text-align: center; border-top: 3px solid var(--color); }
+  .summary-chip .pts { font-size: 22px; font-weight: 800; color: var(--color); }
+  .summary-chip .lbl { font-size: 11px; color: #666; margin-top: 2px; }
+  .section { margin-bottom: 20px; border: 1px solid #e8e8f0; border-radius: 10px; overflow: hidden; }
+  .section-header { background: var(--color); color: #fff; padding: 10px 16px; display: flex; justify-content: space-between; align-items: center; }
+  .section-header .title { font-size: 14px; font-weight: 700; }
+  .section-header .pts-badge { background: rgba(255,255,255,0.25); padding: 3px 10px; border-radius: 12px; font-size: 13px; font-weight: 700; }
+  .section-body { padding: 14px 16px; }
+  .section-body ul { list-style: none; padding: 0; margin-bottom: 10px; }
+  .section-body ul li { padding: 3px 0; padding-left: 16px; position: relative; color: #333; line-height: 1.5; }
+  .section-body ul li::before { content: '•'; position: absolute; left: 0; color: var(--color); font-weight: 700; }
+  .score-table { width: 100%; border-collapse: collapse; margin-top: 8px; }
+  .score-table th { background: #f4f4f8; text-align: left; padding: 6px 10px; font-size: 11px; text-transform: uppercase; letter-spacing: 0.5px; color: #555; }
+  .score-table td { padding: 6px 10px; border-top: 1px solid #eee; font-size: 12px; vertical-align: top; }
+  .score-table td:first-child { font-weight: 700; color: var(--color); white-space: nowrap; width: 80px; }
+  .qualifying-sub { margin-bottom: 12px; }
+  .qualifying-sub h4 { font-size: 12px; font-weight: 700; color: #333; margin-bottom: 6px; border-bottom: 1px solid #eee; padding-bottom: 4px; }
+  .grade-bar { margin-top: 20px; }
+  .grade-bar h3 { font-size: 13px; font-weight: 700; color: #1a1a2e; margin-bottom: 10px; text-align: center; text-transform: uppercase; letter-spacing: 1px; }
+  .grades { display: flex; gap: 8px; }
+  .grade { flex: 1; text-align: center; padding: 10px 8px; border-radius: 8px; }
+  .grade .range { font-size: 15px; font-weight: 800; }
+  .grade .label { font-size: 11px; margin-top: 3px; font-weight: 600; }
+  .grade .desc { font-size: 10px; margin-top: 2px; color: rgba(255,255,255,0.8); }
+  .footer-note { margin-top: 24px; padding: 12px 16px; background: #f8f8fc; border-left: 4px solid #00c875; border-radius: 4px; font-size: 12px; color: #444; line-height: 1.6; }
+  .print-btn { display: block; text-align: center; margin-bottom: 20px; }
+  .print-btn button { background: #00c875; color: white; border: none; padding: 10px 28px; border-radius: 6px; font-size: 14px; font-weight: 600; cursor: pointer; }
+</style>
+</head>
+<body>
+
+<div class="print-btn no-print">
+  <button onclick="window.print()">⬇ Download / Print as PDF</button>
+</div>
+
+<div class="header">
+  <div class="header-left">
+    <h1>BEACON Discovery Call Grading Rubric</h1>
+    <p>Rev.io Sales Methodology · 100 Points Total · Updated April 2026</p>
+  </div>
+  <div class="logo">rev.io</div>
+</div>
+
+<!-- Summary bar -->
+<div class="summary-bar">
+  <div class="summary-chip" style="--color:#4f46e5">
+    <div class="pts">15</div><div class="lbl">The Approach</div>
+  </div>
+  <div class="summary-chip" style="--color:#0891b2">
+    <div class="pts">15</div><div class="lbl">Company Story</div>
+  </div>
+  <div class="summary-chip" style="--color:#059669">
+    <div class="pts">40</div><div class="lbl">Qualifying</div>
+  </div>
+  <div class="summary-chip" style="--color:#d97706">
+    <div class="pts">20</div><div class="lbl">Summarize & Make Sick</div>
+  </div>
+  <div class="summary-chip" style="--color:#dc2626">
+    <div class="pts">15</div><div class="lbl">Next Steps / Demo</div>
+  </div>
+  <div class="summary-chip" style="--color:#1a1a2e">
+    <div class="pts">100</div><div class="lbl">Total Points</div>
+  </div>
+</div>
+
+<!-- Section 1 -->
+<div class="section" style="--color:#4f46e5">
+  <div class="section-header">
+    <span class="title">1. The Approach</span>
+    <span class="pts-badge">15 pts</span>
+  </div>
+  <div class="section-body">
+    <ul>
+      <li>Warm-up — found the "hot button," prospect relaxed and spoke freely</li>
+      <li>Confirmed DM using <strong>multiple angles</strong>: paperwork question, who else is involved, post-demo readiness, follow-up when stakeholders are mentioned</li>
+      <li>Set 3-part agenda: tell about Rev.io → learn about your needs → if fit, schedule demo</li>
+    </ul>
+    <table class="score-table">
+      <tr><th>Score</th><th>Description</th></tr>
+      <tr><td>13–15</td><td>All elements present — warm-up, hot button found, DM confirmed multiple ways, clean agenda</td></tr>
+      <tr><td>9–12</td><td>DM confirmed once, agenda set, warm-up present but thin</td></tr>
+      <tr><td>5–8</td><td>DM asked once but not followed up; warm-up rushed; agenda incomplete</td></tr>
+      <tr><td>0–4</td><td>No warm-up, DM never confirmed, no agenda set</td></tr>
+    </table>
+  </div>
+</div>
+
+<!-- Section 2 -->
+<div class="section" style="--color:#0891b2">
+  <div class="section-header">
+    <span class="title">2. Company Story</span>
+    <span class="pts-badge">15 pts</span>
+  </div>
+  <div class="section-body">
+    <ul>
+      <li>Energetic, confident Rev.io pitch</li>
+      <li>Tie-downs after key points ("Does that make sense?")</li>
+      <li>Credibility tie-down, then clean transition to questionnaire</li>
+    </ul>
+    <table class="score-table">
+      <tr><th>Score</th><th>Description</th></tr>
+      <tr><td>13–15</td><td>Energetic delivery, tie-downs used, clean transition to discovery</td></tr>
+      <tr><td>9–12</td><td>Covered but flat; missing tie-downs</td></tr>
+      <tr><td>5–8</td><td>Too brief or too long; no tie-downs</td></tr>
+      <tr><td>0–4</td><td>Skipped or left doubt about Rev.io's value</td></tr>
+    </table>
+  </div>
+</div>
+
+<!-- Section 3 -->
+<div class="section" style="--color:#059669">
+  <div class="section-header">
+    <span class="title">3. Qualifying / Needs Assessment</span>
+    <span class="pts-badge">40 pts — COUNTED, not judged</span>
+  </div>
+  <div class="section-body">
+
+    <div class="qualifying-sub">
+      <h4>A. Open-Ended Questions Asked &nbsp;(15 pts)</h4>
+      <p style="color:#555;margin-bottom:6px;font-size:12px">Count distinct open-ended discovery questions (not yes/no, not feature-related):</p>
+      <table class="score-table">
+        <tr><th>Count</th><th>Points</th></tr>
+        <tr><td>8+</td><td>15 pts</td></tr>
+        <tr><td>6–7</td><td>12 pts</td></tr>
+        <tr><td>4–5</td><td>8 pts</td></tr>
+        <tr><td>2–3</td><td>4 pts</td></tr>
+        <tr><td>0–1</td><td>0 pts</td></tr>
+      </table>
+    </div>
+
+    <div class="qualifying-sub">
+      <h4>B. DBMs (Dominant Buying Motives) Uncovered &nbsp;(15 pts)</h4>
+      <p style="color:#555;margin-bottom:6px;font-size:12px">Count distinct pain points the prospect acknowledged:</p>
+      <table class="score-table">
+        <tr><th>Count</th><th>Points</th></tr>
+        <tr><td>5+</td><td>15 pts</td></tr>
+        <tr><td>4</td><td>12 pts</td></tr>
+        <tr><td>3</td><td>9 pts</td></tr>
+        <tr><td>2</td><td>6 pts</td></tr>
+        <tr><td>1</td><td>3 pts</td></tr>
+        <tr><td>0</td><td>0 pts</td></tr>
+      </table>
+    </div>
+
+    <div class="qualifying-sub">
+      <h4>C. Effect Probes &nbsp;(10 pts)</h4>
+      <p style="color:#555;margin-bottom:6px;font-size:12px">Examples: "How much does that cost you?", "What happens if you don't fix it?", "How long has this been going on?"</p>
+      <table class="score-table">
+        <tr><th>Count</th><th>Points</th></tr>
+        <tr><td>3+</td><td>10 pts</td></tr>
+        <tr><td>1–2</td><td>5 pts</td></tr>
+        <tr><td>0</td><td>0 pts</td></tr>
+      </table>
+    </div>
+
+    <p style="font-size:11px;color:#059669;font-style:italic;margin-top:4px">📊 Every scorecard shows: Open-ended questions: X | DBMs: X | Effect probes: X</p>
+  </div>
+</div>
+
+<!-- Section 4 -->
+<div class="section" style="--color:#d97706">
+  <div class="section-header">
+    <span class="title">4. Summarize &amp; Make Sick</span>
+    <span class="pts-badge">20 pts</span>
+  </div>
+  <div class="section-body">
+    <ul>
+      <li>Used "Let's review your current situation..." or similar</li>
+      <li>Recapped 3+ DBMs back to the prospect by name</li>
+      <li>Recapped multiple business facts learned during discovery</li>
+      <li>Asked confirming question: "Does that sound accurate?" or "Did I miss anything?"</li>
+      <li>Prospect acknowledged and agreed</li>
+    </ul>
+    <table class="score-table">
+      <tr><th>Score</th><th>Description</th></tr>
+      <tr><td>18–20</td><td>3+ DBMs named back, facts recapped, confirmation asked, prospect agreed</td></tr>
+      <tr><td>14–17</td><td>2 DBMs summarized + some facts, asked for confirmation OR prospect acknowledged</td></tr>
+      <tr><td>8–13</td><td>1–2 DBMs or facts, skipped confirmation question</td></tr>
+      <tr><td>4–7</td><td>Brief mention of a problem, no structured summary</td></tr>
+      <tr><td>0–3</td><td>No summary — jumped straight to demo or next steps</td></tr>
+    </table>
+  </div>
+</div>
+
+<!-- Section 5 -->
+<div class="section" style="--color:#dc2626">
+  <div class="section-header">
+    <span class="title">5. Next Steps / Setting the Demo</span>
+    <span class="pts-badge">15 pts</span>
+  </div>
+  <div class="section-body">
+    <ul>
+      <li>Trial closed before asking for demo</li>
+      <li>Demo ask tied to specific DBMs discovered on the call</li>
+      <li>Booked LIVE with date and time confirmed</li>
+      <li>Asked who else should be on the demo</li>
+    </ul>
+    <table class="score-table">
+      <tr><th>Score</th><th>Description</th></tr>
+      <tr><td>13–15</td><td>Trial close + booked live + stakeholders confirmed</td></tr>
+      <tr><td>9–12</td><td>Demo booked but generic framing; missing stakeholder ask</td></tr>
+      <tr><td>5–8</td><td>Weak close; "I'll send info" or no live booking</td></tr>
+      <tr><td>0–4</td><td>No close attempt — call ended without a committed next step</td></tr>
+    </table>
+  </div>
+</div>
+
+<!-- Grade thresholds -->
+<div class="grade-bar">
+  <h3>Grade Thresholds</h3>
+  <div class="grades">
+    <div class="grade" style="background:#16a34a">
+      <div class="range" style="color:#fff">90–100</div>
+      <div class="label" style="color:#fff">🟢 Elite</div>
+    </div>
+    <div class="grade" style="background:#2563eb">
+      <div class="range" style="color:#fff">80–89</div>
+      <div class="label" style="color:#fff">🔵 Strong</div>
+    </div>
+    <div class="grade" style="background:#ca8a04">
+      <div class="range" style="color:#fff">65–79</div>
+      <div class="label" style="color:#fff">🟡 Solid</div>
+    </div>
+    <div class="grade" style="background:#ea580c">
+      <div class="range" style="color:#fff">50–64</div>
+      <div class="label" style="color:#fff">🟠 Needs Work</div>
+    </div>
+    <div class="grade" style="background:#dc2626">
+      <div class="range" style="color:#fff">&lt;50</div>
+      <div class="label" style="color:#fff">🔴 Coaching Required</div>
+    </div>
+  </div>
+</div>
+
+<div class="footer-note">
+  <strong>How scoring works:</strong> Every discovery call over 20 minutes recorded in Outreach Kaia is automatically graded by Robin against this rubric. Scorecards post to <strong>#meeting-scorecards</strong> in the Rev.io Sales Team Discord within 30 minutes of the call ending. Each scorecard includes raw counts for open-ended questions, DBMs, and effect probes so coaching is specific and objective.
+</div>
+
+</body>
+</html>
