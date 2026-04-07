@@ -61,19 +61,20 @@
   .section-title { font-size: 13px; text-transform: uppercase; letter-spacing: 2px; color: var(--green); border-bottom: 1px solid var(--border); padding-bottom: 8px; margin: 24px 0 14px; }
 
   /* SW TABLE (strengths/weaknesses) */
-  .sw-table { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 8px; }
-  .sw-col { background: var(--card); border-radius: 8px; padding: 16px; }
-  .sw-col.strengths { border-left: 3px solid var(--green); }
-  .sw-col.weaknesses { border-left: 3px solid var(--red); }
-  .sw-col h4 { font-size: 12px; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 10px; }
+    /* SW TABLE — AE capacity style */
+  .sw-table { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-bottom: 20px; }
+  .sw-col { background: #0f1a10; border-radius: 12px; padding: 20px; position:relative; overflow:hidden; }
+  .sw-col::before { content:''; position:absolute; top:0; left:0; right:0; height:4px; }
+  .sw-col.strengths::before { background: var(--green); }
+  .sw-col.weaknesses::before { background: var(--red); }
+  .sw-col h4 { font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 1.5px; margin-bottom: 14px; }
   .sw-col.strengths h4 { color: var(--green); }
   .sw-col.weaknesses h4 { color: var(--red); }
   .sw-col ul { list-style: none; }
-  .sw-col ul li { padding: 5px 0; border-bottom: 1px solid #0a1a10; font-size: 13px; color: var(--text); }
+  .sw-col ul li { padding: 7px 0; border-bottom: 1px solid rgba(0,255,136,0.06); font-size: 13px; color: #c8f0dc; display:flex; gap:8px; align-items:flex-start; line-height:1.45; }
   .sw-col ul li:last-child { border-bottom: none; }
-  .sw-col ul li::before { margin-right: 6px; }
-  .sw-col.strengths ul li::before { content: '✓'; color: var(--green); }
-  .sw-col.weaknesses ul li::before { content: '✗'; color: var(--red); }
+  .sw-col.strengths ul li::before { content: '✓'; color: var(--green); font-weight:700; flex-shrink:0; }
+  .sw-col.weaknesses ul li::before { content: '✗'; color: var(--red); font-weight:700; flex-shrink:0; }
   .sw-col ul li strong { color: var(--yellow); }
 
   /* CAPABILITY TABLE */
@@ -191,15 +192,7 @@
         </div></div>
 
 <!-- FIELD_INTEL_END:ConnectWise -->
-  <div class="overview-grid">
-    <div class="overview-item"><div class="label">Competitor</div><div class="value">ConnectWise PSA</div></div>
-    <div class="overview-item"><div class="label">Founded</div><div class="value">1982</div></div>
-    <div class="overview-item"><div class="label">HQ</div><div class="value">Tampa, FL</div></div>
-    <div class="overview-item"><div class="label">Target Market</div><div class="value">SMB–mid-market MSPs (15–100+ techs)</div></div>
-    <div class="overview-item"><div class="label">Pricing</div><div class="value">~$89–$125/user/mo (quote-based)</div></div>
-    <div class="overview-item"><div class="label">Customers</div><div class="value">~40,000+ MSP partners globally</div></div>
-  </div>
-  <p style="color:var(--muted); font-size:13px; margin-bottom:20px;">The 800-lb gorilla of the MSP PSA market. Comprehensive platform with deep ecosystem of integrations. Acquired by Thoma Bravo (PE) in 2019. Known for breadth but also complexity, aggressive contracts, and slow innovation.</p>
+
 
   <div class="section-title">Strengths vs. Weaknesses</div>
   <div class="sw-table">
@@ -291,6 +284,16 @@
   <div class="objection"><div class="q">ConnectWise PSA is the industry standard</div><div class="a">It's the standard for pure-play managed IT. But you're not just doing managed IT anymore. When you add VoIP, internet, or cloud services, you need a platform built for that complexity. ConnectWise wasn't.</div></div>
 </div>
 
+  <div class="overview-grid">
+    <div class="overview-item"><div class="label">Competitor</div><div class="value">ConnectWise PSA</div></div>
+    <div class="overview-item"><div class="label">Founded</div><div class="value">1982</div></div>
+    <div class="overview-item"><div class="label">HQ</div><div class="value">Tampa, FL</div></div>
+    <div class="overview-item"><div class="label">Target Market</div><div class="value">SMB–mid-market MSPs (15–100+ techs)</div></div>
+    <div class="overview-item"><div class="label">Pricing</div><div class="value">~$89–$125/user/mo (quote-based)</div></div>
+    <div class="overview-item"><div class="label">Customers</div><div class="value">~40,000+ MSP partners globally</div></div>
+  </div>
+  <p style="color:var(--muted); font-size:13px; margin-bottom:20px;">The 800-lb gorilla of the MSP PSA market. Comprehensive platform with deep ecosystem of integrations. Acquired by Thoma Bravo (PE) in 2019. Known for breadth but also complexity, aggressive contracts, and slow innovation.</p>
+
 <!-- ===== AUTOTASK ===== -->
 <div class="section" id="autotask">
 
@@ -304,15 +307,7 @@
         </div></div>
 
 <!-- FIELD_INTEL_END:Autotask -->
-  <div class="overview-grid">
-    <div class="overview-item"><div class="label">Competitor</div><div class="value">Datto Autotask PSA (Kaseya)</div></div>
-    <div class="overview-item"><div class="label">Founded</div><div class="value">2001 (Autotask); Kaseya acq. 2022</div></div>
-    <div class="overview-item"><div class="label">HQ</div><div class="value">Miami, FL (Kaseya)</div></div>
-    <div class="overview-item"><div class="label">Target Market</div><div class="value">SMB MSPs (10–75 techs), pure managed IT</div></div>
-    <div class="overview-item"><div class="label">Pricing</div><div class="value">~$65–$125/user/mo (not public)</div></div>
-    <div class="overview-item"><div class="label">Customers</div><div class="value">~10,000+ MSP partners</div></div>
-  </div>
-  <p style="color:var(--muted); font-size:13px; margin-bottom:20px;">Cloud-native PSA built for MSPs. Acquired by Datto (2019), then Kaseya (2022) for $6.2B. Under Kaseya, focus has shifted to bundling and aggressive sales tactics. Support quality widely reported to have declined.</p>
+
 
   <div class="section-title">Strengths vs. Weaknesses</div>
   <div class="sw-table">
@@ -380,6 +375,16 @@
   <div class="objection"><div class="q">Datto RMM integration is critical for us</div><div class="a">Rev.io integrates with leading RMM tools. You don't have to give up your RMM — you gain a billing and payments engine that Autotask will never have.</div></div>
 </div>
 
+  <div class="overview-grid">
+    <div class="overview-item"><div class="label">Competitor</div><div class="value">Datto Autotask PSA (Kaseya)</div></div>
+    <div class="overview-item"><div class="label">Founded</div><div class="value">2001 (Autotask); Kaseya acq. 2022</div></div>
+    <div class="overview-item"><div class="label">HQ</div><div class="value">Miami, FL (Kaseya)</div></div>
+    <div class="overview-item"><div class="label">Target Market</div><div class="value">SMB MSPs (10–75 techs), pure managed IT</div></div>
+    <div class="overview-item"><div class="label">Pricing</div><div class="value">~$65–$125/user/mo (not public)</div></div>
+    <div class="overview-item"><div class="label">Customers</div><div class="value">~10,000+ MSP partners</div></div>
+  </div>
+  <p style="color:var(--muted); font-size:13px; margin-bottom:20px;">Cloud-native PSA built for MSPs. Acquired by Datto (2019), then Kaseya (2022) for $6.2B. Under Kaseya, focus has shifted to bundling and aggressive sales tactics. Support quality widely reported to have declined.</p>
+
 <!-- ===== HALO ===== -->
 <div class="section" id="halo">
   <div class="overview-grid">
@@ -391,6 +396,7 @@
     <div class="overview-item"><div class="label">Customers</div><div class="value">~3,000–5,000 MSPs (fast growing)</div></div>
   </div>
   <p style="color:var(--muted); font-size:13px; margin-bottom:20px;">UK-based PSA gaining significant traction as a modern alternative. All-inclusive pricing, clean UI, rapid development. Popular "anti-ConnectWise" option — but no complex billing engine for multi-service providers.</p>
+
 
   <div class="section-title">Strengths vs. Weaknesses</div>
   <div class="sw-table">
@@ -461,6 +467,7 @@
   <div class="objection"><div class="q">We just switched to HaloPSA from ConnectWise</div><div class="a">Smart move for ticketing. But as you add VoIP or cloud services, you'll hit the same billing wall. Rev.io can be your billing and revenue engine alongside or replacing HaloPSA when you're ready.</div></div>
 </div>
 
+
 <!-- ===== SYNCRO ===== -->
 <div class="section" id="syncro">
   <div class="overview-grid">
@@ -472,6 +479,7 @@
     <div class="overview-item"><div class="label">Customers</div><div class="value">~5,000–8,000 MSPs</div></div>
   </div>
   <p style="color:var(--muted); font-size:13px; margin-bottom:20px;">Combined RMM + PSA platform designed for small MSPs. Known for simple, transparent pricing and ease of use. Good for smaller MSPs but MSPs typically outgrow it at 20–30 techs when they start adding service lines.</p>
+
 
   <div class="section-title">Strengths vs. Weaknesses</div>
   <div class="sw-table">
@@ -542,6 +550,7 @@
   <div class="objection"><div class="q">We don't want to switch — too much effort</div><div class="a">The cost of staying on a platform you've outgrown is higher than the cost of switching. How much revenue are you leaving on the table because you can't easily bill for new services?</div></div>
 </div>
 
+
 <!-- ===== SUPEROPS ===== -->
 <div class="section" id="superops">
   <div class="overview-grid">
@@ -553,6 +562,7 @@
     <div class="overview-item"><div class="label">Customers</div><div class="value">~1,500–3,000 MSPs (growing fast)</div></div>
   </div>
   <p style="color:var(--muted); font-size:13px; margin-bottom:20px;">AI-first, modern PSA+RMM platform built from scratch by ex-Zoho engineers. Unified platform with Monica AI assistant. Growing fast but still early-stage. No complex billing or payment processing.</p>
+
 
   <div class="section-title">Strengths vs. Weaknesses</div>
   <div class="sw-table">
@@ -624,6 +634,7 @@
   <div class="objection"><div class="q">SuperOps includes RMM and PSA in one platform</div><div class="a">So you get monitoring and ticketing together — great. But what about billing, payments, and multi-service quoting? Those are separate systems you still need. Rev.io consolidates the revenue side.</div></div>
   <div class="objection"><div class="q">SuperOps is the future — modern and AI-first</div><div class="a">Modern UI is great, but your business runs on revenue. Can SuperOps bill for VoIP usage, process payments, and give you a single invoice for IT + telecom + cloud? Rev.io can — and we've been doing complex billing for years, not months.</div></div>
 </div>
+
 
 <!-- ===== INTEGRATORS ===== -->
 <div class="section" id="integrators">
