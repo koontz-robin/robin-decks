@@ -1,0 +1,765 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Rev.io Sales BEACON</title>
+<style>
+  :root {
+    --bg: #0f172a;
+    --surface: #1e293b;
+    --surface2: #131f35;
+    --border: #1e3a5f;
+    --blue: #1667CC;
+    --green: #3DC570;
+    --cyan: #06b6d4;
+    --text: #e2e8f0;
+    --muted: #64748b;
+    --accent: #f97316;
+  }
+  * { margin:0; padding:0; box-sizing:border-box; }
+  body { background:var(--bg); font-family:'Segoe UI',system-ui,sans-serif; color:var(--text); display:flex; min-height:100vh; }
+
+  /* SIDEBAR */
+  .sidebar { width:260px; background:var(--surface2); border-right:1px solid var(--border); position:fixed; top:0; left:0; height:100vh; overflow-y:auto; padding:24px 0; flex-shrink:0; z-index:10; }
+  .sidebar-logo { padding:0 20px 20px; border-bottom:1px solid var(--border); margin-bottom:16px; }
+  .sidebar-logo img { height:32px; }
+  .sidebar-logo .title { font-size:11px; font-weight:700; letter-spacing:2px; text-transform:uppercase; color:var(--green); margin-top:8px; }
+  .nav-section { padding:0 12px; margin-bottom:4px; }
+  .nav-label { font-size:9px; font-weight:700; letter-spacing:2px; text-transform:uppercase; color:var(--muted); padding:8px 8px 4px; }
+  .nav-item { display:block; padding:7px 10px; border-radius:6px; font-size:13px; color:var(--muted); text-decoration:none; cursor:pointer; transition:all 0.15s; }
+  .nav-item:hover, .nav-item.active { background:rgba(22,103,204,0.12); color:var(--text); }
+  .nav-item.active { color:var(--cyan); }
+  .nav-sub { display:block; padding:5px 10px 5px 22px; border-radius:6px; font-size:12px; color:var(--muted); text-decoration:none; cursor:pointer; transition:all 0.15s; }
+  .nav-sub:hover { color:var(--text); }
+
+  /* MAIN CONTENT */
+  .main { margin-left:260px; flex:1; padding:48px 64px; max-width:900px; }
+  
+  /* HERO */
+  .hero { margin-bottom:48px; padding-bottom:32px; border-bottom:1px solid var(--border); }
+  .hero-tag { font-size:10px; font-weight:700; letter-spacing:2px; text-transform:uppercase; color:var(--green); margin-bottom:12px; }
+  .hero h1 { font-size:40px; font-weight:800; color:#fff; line-height:1.1; margin-bottom:12px; }
+  .hero h1 span { color:var(--cyan); }
+  .hero p { font-size:15px; color:var(--muted); line-height:1.7; max-width:640px; }
+  .beacon-acronym { display:flex; gap:8px; flex-wrap:wrap; margin-top:24px; }
+  .beacon-letter { background:var(--surface); border:1px solid var(--border); border-radius:8px; padding:10px 14px; text-align:center; min-width:80px; }
+  .beacon-letter .letter { font-size:22px; font-weight:800; color:var(--cyan); }
+  .beacon-letter .word { font-size:10px; font-weight:700; text-transform:uppercase; color:var(--muted); margin-top:2px; letter-spacing:1px; }
+
+  /* SECTION */
+  .section { display:none; }
+  .section.active { display:block; }
+  .section-header { margin-bottom:32px; }
+  .section-tag { font-size:10px; font-weight:700; letter-spacing:2px; text-transform:uppercase; color:var(--accent); margin-bottom:8px; }
+  .section h2 { font-size:28px; font-weight:800; color:#fff; margin-bottom:8px; }
+  .section .lead { font-size:15px; color:var(--muted); line-height:1.7; }
+
+  /* CONTENT BLOCKS */
+  h3 { font-size:18px; font-weight:700; color:#fff; margin:28px 0 10px; }
+  h4 { font-size:14px; font-weight:700; color:var(--cyan); text-transform:uppercase; letter-spacing:1px; margin:20px 0 8px; }
+  p { font-size:14px; color:#94a3b8; line-height:1.8; margin-bottom:14px; }
+  strong { color:var(--text); }
+  em { color:var(--green); font-style:normal; font-weight:600; }
+
+  /* CARDS */
+  .card-grid { display:grid; grid-template-columns:repeat(2,1fr); gap:16px; margin:20px 0; }
+  .card-grid.three { grid-template-columns:repeat(3,1fr); }
+  .card { background:var(--surface); border:1px solid var(--border); border-radius:10px; padding:18px; }
+  .card-num { font-size:28px; font-weight:800; color:var(--cyan); line-height:1; margin-bottom:6px; }
+  .card-label { font-size:10px; font-weight:700; letter-spacing:1.5px; text-transform:uppercase; color:var(--muted); margin-bottom:8px; }
+  .card p { margin:0; font-size:13px; }
+
+  /* CALLOUT */
+  .callout { background:rgba(22,103,204,0.08); border:1px solid rgba(22,103,204,0.25); border-radius:10px; padding:16px 20px; margin:20px 0; }
+  .callout.green { background:rgba(61,197,112,0.06); border-color:rgba(61,197,112,0.2); }
+  .callout.orange { background:rgba(249,115,22,0.06); border-color:rgba(249,115,22,0.2); }
+  .callout p { margin:0; font-size:13px; color:var(--text); }
+  .callout-label { font-size:9px; font-weight:700; letter-spacing:2px; text-transform:uppercase; color:var(--cyan); margin-bottom:6px; }
+  .callout.green .callout-label { color:var(--green); }
+  .callout.orange .callout-label { color:var(--accent); }
+
+  /* SCRIPT BOX */
+  .script { background:#000; border:1px solid var(--border); border-left:3px solid var(--green); border-radius:8px; padding:16px 20px; margin:16px 0; font-family:monospace; font-size:13px; color:#a8d8b0; line-height:1.8; white-space:pre-wrap; }
+
+  /* TABLE */
+  table { width:100%; border-collapse:collapse; margin:16px 0; }
+  th { font-size:10px; font-weight:700; text-transform:uppercase; letter-spacing:1px; color:var(--muted); padding:10px 14px; text-align:left; background:var(--surface2); border-bottom:1px solid var(--border); }
+  td { padding:10px 14px; font-size:13px; color:#94a3b8; border-bottom:1px solid #0f172a; }
+  td:first-child { color:var(--text); font-weight:600; }
+
+  /* LIST */
+  ul, ol { padding-left:20px; margin:12px 0 16px; }
+  li { font-size:14px; color:#94a3b8; line-height:1.8; margin-bottom:4px; }
+  li strong { color:var(--text); }
+
+  /* DIVIDER */
+  hr { border:none; border-top:1px solid var(--border); margin:32px 0; }
+
+  /* STEP BADGE */
+  .step-badge { display:inline-flex; align-items:center; gap:8px; background:rgba(6,182,212,0.1); border:1px solid rgba(6,182,212,0.2); border-radius:20px; padding:4px 12px; margin-bottom:16px; }
+  .step-badge span { font-size:10px; font-weight:700; letter-spacing:1px; text-transform:uppercase; color:var(--cyan); }
+
+  /* PROGRESS */
+  .phase-indicator { display:flex; gap:8px; margin-bottom:32px; flex-wrap:wrap; }
+  .phase-chip { padding:6px 14px; border-radius:20px; font-size:11px; font-weight:700; cursor:pointer; transition:all 0.15s; border:1px solid var(--border); color:var(--muted); }
+  .phase-chip:hover { border-color:var(--cyan); color:var(--cyan); }
+  .phase-chip.active { background:var(--blue); border-color:var(--blue); color:#fff; }
+</style>
+</head>
+<body>
+
+<!-- SIDEBAR -->
+<nav class="sidebar">
+  <div class="sidebar-logo">
+    <img src="https://raw.githubusercontent.com/koontz-robin/robin-decks/master/revio-logo.png" alt="rev.io">
+    <div class="title">Sales BEACON</div>
+  </div>
+  <div class="nav-section">
+    <div class="nav-label">Overview</div>
+    <a class="nav-item active" onclick="show('welcome')">Welcome</a>
+    <a class="nav-item" onclick="show('mission')">Mission & Values</a>
+    <a class="nav-item" onclick="show('intro')">Introduction to BEACON</a>
+  </div>
+  <div class="nav-section">
+    <div class="nav-label">Phase 1</div>
+    <a class="nav-item" onclick="show('preparation')">🎯 Preparation</a>
+    <a class="nav-sub" onclick="show('attributes')">Sales Attributes</a>
+    <a class="nav-sub" onclick="show('goals')">Goal Setting</a>
+    <a class="nav-sub" onclick="show('planning')">Planning & Time Mgmt</a>
+    <a class="nav-sub" onclick="show('habits')">Forming Good Habits</a>
+  </div>
+  <div class="nav-section">
+    <div class="nav-label">Phase 2</div>
+    <a class="nav-item" onclick="show('prospecting')">🔍 Prospecting</a>
+    <a class="nav-sub" onclick="show('territory')">Territory Management</a>
+    <a class="nav-sub" onclick="show('farming')">Farming & Outreach</a>
+    <a class="nav-sub" onclick="show('objections_prosp')">Handling Objections</a>
+  </div>
+  <div class="nav-section">
+    <div class="nav-label">Phase 3</div>
+    <a class="nav-item" onclick="show('presentation')">📋 Presentation</a>
+    <a class="nav-sub" onclick="show('approach')">The Approach</a>
+    <a class="nav-sub" onclick="show('company_story')">Company Story</a>
+    <a class="nav-sub" onclick="show('discovery')">Discovery & DBMs</a>
+    <a class="nav-sub" onclick="show('summarize')">Summarize & Make Sick</a>
+    <a class="nav-sub" onclick="show('next_steps')">Next Steps</a>
+  </div>
+  <div class="nav-section">
+    <div class="nav-label">Phase 4</div>
+    <a class="nav-item" onclick="show('partnership')">🤝 Partnership</a>
+  </div>
+  <div class="nav-section">
+    <div class="nav-label">Resources</div>
+    <a class="nav-item" onclick="show('forecasting')">Forecasting Accurately</a>
+    <a class="nav-item" onclick="show('scripts')">Key Scripts</a>
+  </div>
+</nav>
+
+<!-- MAIN -->
+<main class="main">
+
+  <!-- WELCOME -->
+  <div id="welcome" class="section active">
+    <div class="hero">
+      <div class="hero-tag">Rev.io Sales Playbook</div>
+      <h1>The Rev.io Sales <span>BEACON</span></h1>
+      <p>Your complete guide to sales success at Rev.io. Follow this proven methodology and you'll never get lost in the sales jungle. The BEACON, coupled with a great attitude, is all you need.</p>
+      <div class="beacon-acronym">
+        <div class="beacon-letter"><div class="letter">B</div><div class="word">Belief</div></div>
+        <div class="beacon-letter"><div class="letter">E</div><div class="word">Effort</div></div>
+        <div class="beacon-letter"><div class="letter">A</div><div class="word">Attitude</div></div>
+        <div class="beacon-letter"><div class="letter">C</div><div class="word">Create</div></div>
+        <div class="beacon-letter"><div class="letter">O</div><div class="word">Opportunities</div></div>
+        <div class="beacon-letter"><div class="letter">N</div><div class="word">Necessary</div></div>
+      </div>
+    </div>
+    <h3>Welcome to Rev.io</h3>
+    <p>You have joined the best billing and back-office company in the world. Rev.io will provide you with the products, technology, training, and support you need to achieve sales excellence.</p>
+    <p>We put the customer first, we embrace technology, and we achieve results. As a Rev.io sales professional, you have unlimited personal and professional opportunity. <strong>Set your goals high.</strong></p>
+    <div class="callout green">
+      <div class="callout-label">The BEACON Framework</div>
+      <p>The four steps of the Sales BEACON are <strong>Preparation, Prospecting, Presentation, and Partnership.</strong> These steps encompass the whole of the sales cycle. Embrace and hone these skills.</p>
+    </div>
+    <div class="card-grid">
+      <div class="card" style="border-top:3px solid #1667CC;cursor:pointer" onclick="show('preparation')">
+        <div class="card-num" style="color:#1667CC">01</div>
+        <div class="card-label">Phase 1</div>
+        <h4 style="margin-top:0">Preparation</h4>
+        <p>Attributes, goal setting, planning, and time management. Everything before the first call.</p>
+      </div>
+      <div class="card" style="border-top:3px solid #06b6d4;cursor:pointer" onclick="show('prospecting')">
+        <div class="card-num" style="color:#06b6d4">02</div>
+        <div class="card-label">Phase 2</div>
+        <h4 style="margin-top:0">Prospecting</h4>
+        <p>Territory management, outreach, getting past gatekeepers, and warming up decision makers.</p>
+      </div>
+      <div class="card" style="border-top:3px solid #3DC570;cursor:pointer" onclick="show('presentation')">
+        <div class="card-num" style="color:#3DC570">03</div>
+        <div class="card-label">Phase 3</div>
+        <h4 style="margin-top:0">Presentation</h4>
+        <p>The approach, company story, discovery, DBMs, summarization, and booking the demo.</p>
+      </div>
+      <div class="card" style="border-top:3px solid #f97316;cursor:pointer" onclick="show('partnership')">
+        <div class="card-num" style="color:#f97316">04</div>
+        <div class="card-label">Phase 4</div>
+        <h4 style="margin-top:0">Partnership</h4>
+        <p>Post-sale activities, client success, referrals, and building long-term relationships.</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- MISSION -->
+  <div id="mission" class="section">
+    <div class="section-header">
+      <div class="section-tag">Rev.io Sales Organization</div>
+      <h2>Mission, Vision & Values</h2>
+    </div>
+    <div class="card-grid three">
+      <div class="card" style="border-top:3px solid var(--blue)">
+        <div class="card-label">Our Mission</div>
+        <p style="font-size:15px;color:var(--text);font-weight:600">To help clients grow revenue efficiently</p>
+      </div>
+      <div class="card" style="border-top:3px solid var(--cyan);grid-column:span 2">
+        <div class="card-label">Our Vision</div>
+        <p style="font-size:15px;color:var(--text);font-weight:600">To be the best billing and back-office software company in the world by providing innovative solutions and extraordinary service to our clients and end users.</p>
+      </div>
+    </div>
+    <h3>Our Values</h3>
+    <ul>
+      <li><strong>Achieving</strong> Extraordinary Results</li>
+      <li><strong>Caring for</strong> Employees, Clients & Community</li>
+      <li><strong>Take</strong> Responsibility / Act Like an Owner</li>
+      <li><strong>Transparent</strong> Leadership</li>
+      <li><strong>Opportunity</strong> to Make a Positive Difference</li>
+      <li><strong>Passion</strong> for Innovation</li>
+    </ul>
+  </div>
+
+  <!-- INTRO -->
+  <div id="intro" class="section">
+    <div class="section-header">
+      <div class="section-tag">Overview</div>
+      <h2>Introduction to the BEACON</h2>
+      <p class="lead">The Rev.io Sales BEACON is your guide to sales success. Selling is both a science and an art — the BEACON maps the science. Your implementation and repetition perfects the art.</p>
+    </div>
+    <div class="callout">
+      <div class="callout-label">Key Principle</div>
+      <p>Sales is either the highest paid hard work or the lowest paid easy work. Your success depends on your attitude, ability, and work ethic. <strong>The choice is yours.</strong></p>
+    </div>
+    <h3>Why Role-Play Matters</h3>
+    <p>Professional athletes practice their basic skills repeatedly before taking the field. Salespeople must do the same. Mistakes in role-play are quickly corrected — the same mistakes with a real prospect cost you money.</p>
+    <ul>
+      <li>Role-play with your manager and fellow salespeople regularly</li>
+      <li>Don't wait for scheduled sessions — brief informal role-plays work too</li>
+      <li>Read the BEACON regularly — you'll find new insights each time</li>
+    </ul>
+  </div>
+
+  <!-- PREPARATION -->
+  <div id="preparation" class="section">
+    <div class="step-badge"><span>Phase 1 — Preparation</span></div>
+    <div class="section-header">
+      <h2>Preparation</h2>
+      <p class="lead">Everything that occurs before you engage a prospect. Get this right and you'll be properly prepared to meet any challenge.</p>
+    </div>
+    <div class="phase-indicator">
+      <div class="phase-chip active" onclick="show('attributes')">Sales Attributes</div>
+      <div class="phase-chip" onclick="show('goals')">Goal Setting</div>
+      <div class="phase-chip" onclick="show('planning')">Planning</div>
+      <div class="phase-chip" onclick="show('habits')">Good Habits</div>
+    </div>
+    <p>Professional football teams don't set foot on the field without a game plan. They have practiced repeatedly and addressed every scenario. Sales professionals must be the same.</p>
+  </div>
+
+  <!-- ATTRIBUTES -->
+  <div id="attributes" class="section">
+    <div class="step-badge"><span>Phase 1 — Preparation</span></div>
+    <div class="section-header">
+      <h2>Sales Attributes for Success</h2>
+      <p class="lead">Three attributes drive sales success. All three are necessary — but they are not equally weighted.</p>
+    </div>
+    <table>
+      <thead><tr><th>Attribute</th><th>Weight</th><th>What It Means</th></tr></thead>
+      <tbody>
+        <tr><td>Attitude</td><td style="color:#3DC570;font-weight:700">65%</td><td>The dominant factor. Positive, resilient, coachable.</td></tr>
+        <tr><td>Selling Skills</td><td style="color:#06b6d4;font-weight:700">20%</td><td>Presentation, questioning, listening, closing.</td></tr>
+        <tr><td>Product Knowledge</td><td style="color:#64748b;font-weight:700">15%</td><td>Understanding what you're selling and for whom.</td></tr>
+      </tbody>
+    </table>
+    <h3>The Key Attributes</h3>
+    <h4>Presentation Skills</h4>
+    <p>People buy from people. Rev.io salespeople make presentations that are compelling, interesting, entertaining, and effective. They help clients visualize benefits and know how to make clients smile, nod, and engage. <strong>If the client doesn't buy the salesperson, they won't buy the solution.</strong></p>
+    <h4>Creativity</h4>
+    <p>Never give a "canned" presentation. Find ways to involve the client in the sales process. Pick up on prospect interests and personal values to create a personalized experience.</p>
+    <h4>Competitive Knowledge</h4>
+    <p>Know your competition — both their strengths and weaknesses. Don't disparage competitors. Show how Rev.io provides a better solution for the client's specific needs. Let client references do the separating.</p>
+    <h4>GRIT</h4>
+    <div class="callout orange">
+      <div class="callout-label">Angela Lee Duckworth on Grit</div>
+      <p>"Perseverance and passion for long-term goals." Grit has a bigger impact on success than IQ or talent. The tenacity to keep fighting through adversity is what separates good from great. Even the best salespeople have down months — putting your ego aside and selling through it is the difference.</p>
+    </div>
+  </div>
+
+  <!-- GOALS -->
+  <div id="goals" class="section">
+    <div class="step-badge"><span>Phase 1 — Preparation</span></div>
+    <div class="section-header">
+      <h2>Goal Setting</h2>
+      <p class="lead">People who set good goals earn more and lead more productive lives. A goal is not a goal until it is committed in writing.</p>
+    </div>
+    <h3>SMART Goals</h3>
+    <div class="card-grid">
+      <div class="card"><div class="card-label">Specific</div><p>"I will increase my income by 20% in the next 60 days" — not "I will increase my income."</p></div>
+      <div class="card"><div class="card-label">Measurable</div><p>"I will close XX deals over the next 6 weeks" — not "I will increase my sales."</p></div>
+      <div class="card"><div class="card-label">Attainable</div><p>Challenging but achievable. Hitting your annual quota in Q1 is a great ambition — give yourself time to execute.</p></div>
+      <div class="card"><div class="card-label">Realistic</div><p>Your goal must be believable to you. If you don't believe it, you won't strive for it.</p></div>
+    </div>
+    <h4>Time Bound</h4>
+    <p>Goals cannot be open-ended. Attach a realistic timeframe to every goal — short or long term.</p>
+    <div class="callout green">
+      <div class="callout-label">Goals vs. Systems (Atomic Habits)</div>
+      <p>Achieving a goal only changes your life for the moment. Fix the <strong>inputs</strong> and the outputs will fix themselves. True long-term thinking is goal-less thinking — it's about the cycle of endless refinement. <em>Commit to the process.</em></p>
+    </div>
+    <h3>Goal Setting Tips</h3>
+    <ul>
+      <li>Limit short-term goals — focus beats volume</li>
+      <li>Set goals in all areas — professional <em>and</em> personal</li>
+      <li>Set process goals — not just outcomes</li>
+      <li>Write goals in the positive</li>
+      <li><strong>Start now</strong> — write a goal before you close this page</li>
+    </ul>
+  </div>
+
+  <!-- PLANNING -->
+  <div id="planning" class="section">
+    <div class="step-badge"><span>Phase 1 — Preparation</span></div>
+    <div class="section-header">
+      <h2>Planning & Time Management</h2>
+      <p class="lead">Failing to plan is planning to fail. Successful salespeople plan multiple days in advance — they don't take each day as it comes.</p>
+    </div>
+    <h3>The 100-Point Rule</h3>
+    <p>Every day you must accumulate at least <strong>100 points</strong> through sales activities.</p>
+    <table>
+      <thead><tr><th>Activity</th><th>Points</th></tr></thead>
+      <tbody>
+        <tr><td>Phone call (cold, follow-up, referral, existing client)</td><td>1</td></tr>
+        <tr><td>Outbound email (not replies)</td><td>1</td></tr>
+        <tr><td>New contact added to existing account</td><td>1</td></tr>
+        <tr><td>New lead created</td><td>2</td></tr>
+        <tr><td>Contact (speaking with DM or influential employee)</td><td>2</td></tr>
+        <tr><td>Completed appointment (discovery, follow-up, partner meeting)</td><td>10</td></tr>
+        <tr><td>SDR-sourced opportunity</td><td>10</td></tr>
+        <tr><td>Completed Initial Demo</td><td>20</td></tr>
+      </tbody>
+    </table>
+    <h3>Daily Planning Questions</h3>
+    <ul>
+      <li>How many meetings do I need to hit my goals?</li>
+      <li>What appointments are confirmed for this week?</li>
+      <li>When will I block time to prospect?</li>
+      <li>Who can I ask for referrals today?</li>
+    </ul>
+    <h3>Pipeline Coverage</h3>
+    <table>
+      <thead><tr><th>Metric</th><th>Target</th></tr></thead>
+      <tbody>
+        <tr><td>Call-to-Contact Conversion Rate</td><td>10–15%+</td></tr>
+        <tr><td>Contact-to-Discovery Meeting Set</td><td>23%+</td></tr>
+        <tr><td>Discovery Meeting Set to Complete</td><td>82%+</td></tr>
+        <tr><td>Discovery to Initial Demo</td><td>54%+</td></tr>
+        <tr><td>Pipeline Coverage</td><td>600%+</td></tr>
+        <tr><td>Opportunity Win Rate (New Client)</td><td>25%+</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <!-- HABITS -->
+  <div id="habits" class="section">
+    <div class="step-badge"><span>Phase 1 — Preparation</span></div>
+    <div class="section-header">
+      <h2>Forming Good Habits</h2>
+      <p class="lead">The habits you build become your automatic daily routine. Some take effort to form — the repetition is the point.</p>
+    </div>
+    <ul>
+      <li><strong>Record keeping / CRM hygiene</strong> — log every interaction in Salesforce</li>
+      <li><strong>Disciplined prospecting</strong> — always looking for the next sale</li>
+      <li><strong>Ask for referrals daily</strong> — from clients, partners, and prospects</li>
+      <li><strong>Phone script memorization</strong> — deliver conversationally, smile while speaking</li>
+      <li><strong>Phone organization</strong> — 50-minute rapid-fire calling blocks, 5–10 minute breaks</li>
+      <li><strong>Do what you fear most</strong> — face the uncomfortable activities head-on</li>
+    </ul>
+  </div>
+
+  <!-- PROSPECTING -->
+  <div id="prospecting" class="section">
+    <div class="step-badge"><span>Phase 2 — Prospecting</span></div>
+    <div class="section-header">
+      <h2>Prospecting</h2>
+      <p class="lead">All sales activities leading up to a presentation with a true Decision Maker. Your territory is your business — treat it like a CEO.</p>
+    </div>
+    <div class="phase-indicator">
+      <div class="phase-chip active" onclick="show('territory')">Territory</div>
+      <div class="phase-chip" onclick="show('farming')">Farming</div>
+      <div class="phase-chip" onclick="show('objections_prosp')">Objections</div>
+    </div>
+    <p>The purpose of every prospecting call: set an appointment, identify the DM, gather information, and build your network. Every single interaction is an asset — develop it accordingly.</p>
+  </div>
+
+  <!-- TERRITORY -->
+  <div id="territory" class="section">
+    <div class="step-badge"><span>Phase 2 — Prospecting</span></div>
+    <div class="section-header">
+      <h2>Territory Management</h2>
+      <p class="lead">"Your Territory = Your Business." Adopt a CEO mindset. Take complete ownership and accountability for every account in your territory.</p>
+    </div>
+    <h3>Rev.io Ideal Customer Profile</h3>
+    <ul>
+      <li>Product meets customer needs</li>
+      <li>Sales cycle syncs with purchasing behavior</li>
+      <li>Pricing strategy fits customer budget</li>
+    </ul>
+    <h4>Common Business Issues (Why Now?)</h4>
+    <ul>
+      <li>Product or market expansion</li>
+      <li>Single points of failure</li>
+      <li>Change in leadership structure</li>
+      <li>Strategic technology investment</li>
+      <li>Mergers and acquisitions</li>
+      <li>Preparing for rapid growth</li>
+      <li>Broken relationship with a competitor</li>
+    </ul>
+    <h3>The Ramp Trap — Avoid This</h3>
+    <div class="callout orange">
+      <div class="callout-label">Warning</div>
+      <p>Heavy prospecting → pipeline fills → focus shifts to closing → prospecting drops → pipeline empties → back to heavy prospecting. This cycle of peaks and valleys is the most common mistake new reps make. <strong>Prospect every single day, regardless of where you are in your pipeline.</strong></p>
+    </div>
+  </div>
+
+  <!-- FARMING -->
+  <div id="farming" class="section">
+    <div class="step-badge"><span>Phase 2 — Prospecting</span></div>
+    <div class="section-header">
+      <h2>Outreach & Gatekeeper Scripts</h2>
+    </div>
+    <h3>Getting Past the Gatekeeper</h3>
+    <p>Short, sweet answers. Don't volunteer unnecessary information. Say "thanks" after each response to maintain control.</p>
+    <div class="script">Gatekeeper: "Good morning, ABC Company."
+You: "Hi… Steve, please."
+Gatekeeper: "Who should I say is calling?"
+You: "Bernard. Thank you."
+Gatekeeper: "What is this in reference to?"
+You: "Your billing services. Thanks."</div>
+
+    <h3>6-Step DM Script</h3>
+    <ol style="margin-bottom:16px">
+      <li>Introduce yourself and your company</li>
+      <li>Reason for the call (separation — show you've done your homework)</li>
+      <li>Benefit / value statement</li>
+      <li>Close for the appointment (alternate time close)</li>
+      <li>Cement the appointment</li>
+    </ol>
+    <div class="script">"Hi [Name], this is [Your Name] with Rev.io. How've you been?
+I noticed you're leveraging [their platform/tech] as your switch.
+We're a billing and customer management solution for [their type of company] and 
+we're currently working with over [X] companies like yours.
+I know I'm calling out of the blue — let's coordinate a few minutes to walk 
+you through how we're helping [specific outcome].
+I have an opening [Day] at [Time 1] or [Time 2] — which works better for you?
+Great, I'll send a calendar invite right now. What's the best email?"</div>
+
+    <h3>Cementing Questions</h3>
+    <ul>
+      <li>What platform are you currently using for billing?</li>
+      <li>How much total revenue do you bill each month?</li>
+      <li>What's your mobile number so I can text a reminder?</li>
+      <li>Who else should be on the call?</li>
+    </ul>
+  </div>
+
+  <!-- PROSPECTING OBJECTIONS -->
+  <div id="objections_prosp" class="section">
+    <div class="step-badge"><span>Phase 2 — Prospecting</span></div>
+    <div class="section-header">
+      <h2>Handling Prospecting Objections</h2>
+      <p class="lead">The objection handling cycle: Empathy → "But first…" → Separation → Value Statement → Close for the appointment.</p>
+    </div>
+    <h4>Not the Right Time</h4>
+    <div class="script">"I totally understand — a big software change requires resources. But from my experience, the evaluation process alone takes months, plus 3–6 months to migrate and train. Let's get the conversation started now so you're ready when the time is right."</div>
+    <h4>Send Me Information</h4>
+    <div class="script">"Makes total sense. But without knowing your specific situation, I'd be sending you generic materials that may not be relevant. What's your biggest challenge with your current platform? That way I can send you exactly what matters."</div>
+    <h4>Happy with Competitor</h4>
+    <div class="script">"I totally expected you'd have something in place — everything must be working perfectly or you wouldn't have waited for my call. Help me understand: why would you never be open to an alternative?"</div>
+    <h4>Not Interested</h4>
+    <div class="script">Option 1: "I didn't expect you to be interested — you don't know enough about Rev.io yet. Can I bounce a quick idea off you?"
+
+Option 2: "Many people tell me the same thing. But as they learn more about the impact we have on efficiency and revenue, they're usually open to a few minutes."</div>
+  </div>
+
+  <!-- PRESENTATION -->
+  <div id="presentation" class="section">
+    <div class="step-badge"><span>Phase 3 — Presentation</span></div>
+    <div class="section-header">
+      <h2>Presentation</h2>
+      <p class="lead">The six steps of the discovery presentation. Master these in sequence and you will sell Rev.io consistently.</p>
+    </div>
+    <div class="phase-indicator">
+      <div class="phase-chip active" onclick="show('approach')">1. Approach</div>
+      <div class="phase-chip" onclick="show('company_story')">2. Company Story</div>
+      <div class="phase-chip" onclick="show('discovery')">3. Discovery</div>
+      <div class="phase-chip" onclick="show('summarize')">4. Summarize</div>
+      <div class="phase-chip" onclick="show('next_steps')">5. Next Steps</div>
+    </div>
+    <table>
+      <thead><tr><th>Step</th><th>Purpose</th></tr></thead>
+      <tbody>
+        <tr><td>1. The Approach</td><td>Warm up, confirm DM, set agenda</td></tr>
+        <tr><td>2. Company Story</td><td>Build credibility and confidence in Rev.io</td></tr>
+        <tr><td>3. Needs Assessment</td><td>Uncover Business Issue and DBMs</td></tr>
+        <tr><td>4. Summarize & Make Sick</td><td>Reflect pain back, create urgency</td></tr>
+        <tr><td>5. Trial Close</td><td>Gain agreement before asking for the demo</td></tr>
+        <tr><td>6. Schedule Demo</td><td>Book the next step with the right people</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <!-- APPROACH -->
+  <div id="approach" class="section">
+    <div class="step-badge"><span>Phase 3 — Step 1</span></div>
+    <div class="section-header">
+      <h2>The Approach</h2>
+      <p class="lead">The opening sets the tone for everything that follows. Find the hot button, confirm the DM, and set the agenda before touching product.</p>
+    </div>
+    <h3>4 Parts of the Approach</h3>
+    <ol>
+      <li><strong>Thank the prospect</strong> for their time</li>
+      <li><strong>Find the Hot Button</strong> — get them relaxed and talking freely</li>
+      <li><strong>Confirm the DM</strong> — "Last time a change was made, you were the one who signed?"</li>
+      <li><strong>Set the 3-Part Agenda</strong> — "Tell you about us → learn about you → if there's a fit, schedule a demo. Does that sound fair?"</li>
+    </ol>
+    <h4>Survival Phrase</h4>
+    <div class="script">If prospect says "Just tell me what you've got":
+
+"What I'm offering is a comprehensive billing solution. But first, I have a few 
+questions to help me understand your business needs."</div>
+    <h4>Confirming the Decision Maker</h4>
+    <div class="script">"Out of respect for your time — is there anyone else involved in the 
+decision-making process?
+
+And last time there was a change made, you were the person who signed the 
+paperwork — so you don't need to pass this on to anyone else?"</div>
+  </div>
+
+  <!-- COMPANY STORY -->
+  <div id="company_story" class="section">
+    <div class="step-badge"><span>Phase 3 — Step 2</span></div>
+    <div class="section-header">
+      <h2>Company Story</h2>
+      <p class="lead">Sell yourself, sell your company, sell your product — in that order. The prospect must like and trust you before they'll trust Rev.io.</p>
+    </div>
+    <p>Be energetic, excited, and knowledgeable. Weave in what you know about the prospect's business to keep them engaged. Use tie-downs after each key point to confirm engagement.</p>
+    <h4>Tie-Down to End the Story</h4>
+    <div class="script">"Now that you know about our company and our services — do you feel 
+confident that Rev.io can handle your back-office needs?"</div>
+    <h4>Transition to Discovery</h4>
+    <div class="script">"Now that you're comfortable with Rev.io, I'd like to find out more 
+about your company and your needs."</div>
+    <h3>Rev.io Value Statements</h3>
+    <ul>
+      <li>"Using Rev.io as an extension of their team, a client with less than 5 employees grew from $40K to $250K in two years without adding overhead."</li>
+      <li>"Since implementing Rev.io, Spectrotel reduced their back-office staff of 8 down to 2 — even while growing from 48 to 80+ employees."</li>
+      <li>"One client eliminated multiple systems and gained over 1% in revenue leakage — saving $4K/month by enabling usage-based pricing."</li>
+    </ul>
+  </div>
+
+  <!-- DISCOVERY -->
+  <div id="discovery" class="section">
+    <div class="step-badge"><span>Phase 3 — Step 3</span></div>
+    <div class="section-header">
+      <h2>Discovery & Identifying DBMs</h2>
+      <p class="lead">The most important part of the call. The prospect must talk at least 50% of the time from here onward. Your job is to ask, listen, and dig deeper.</p>
+    </div>
+    <h3>Business First Questions</h3>
+    <ul>
+      <li>What's the background of the company — how did you get started?</li>
+      <li>Who are your competitors and how do you differentiate?</li>
+      <li>What are your top 2–3 initiatives for the next year?</li>
+      <li>How many clients do you have / how much revenue?</li>
+      <li>What's your revenue target for next year?</li>
+    </ul>
+    <h3>Finding DBMs (Dominant Buying Motives)</h3>
+    <div class="callout">
+      <div class="callout-label">The DBM Formula</div>
+      <p><strong>Overview</strong> → ask general questions → <strong>Problem</strong> → listen for pain → <strong>Effect</strong> → ask how this affects the business. <em>Don't stop at the problem. The effect leads you to the DBM.</em></p>
+    </div>
+    <h4>Effect Probing Questions</h4>
+    <ul>
+      <li>"How much time does that cost you?"</li>
+      <li>"What does that cost you in dollars?"</li>
+      <li>"What would happen if you don't fix this?"</li>
+      <li>"How do you feel about that?"</li>
+      <li>"Tell me more about that."</li>
+      <li>"Give me an example of when this happened and how it affected the business."</li>
+    </ul>
+    <h4>When You're Stuck</h4>
+    <div class="script">"Tell me more about that." 
+
+"Please give me an example of a time when this situation occurred and 
+how it affected your business."
+
+"What would be your idea for a better solution?"</div>
+    <div class="callout orange">
+      <div class="callout-label">Rule</div>
+      <p>If the CEO/CTO is not doing at least <strong>50% of the talking</strong> from the start of discovery onward, you are pitching — not discovering. The more DBMs you uncover, the more likely you are to close.</p>
+    </div>
+  </div>
+
+  <!-- SUMMARIZE -->
+  <div id="summarize" class="section">
+    <div class="step-badge"><span>Phase 3 — Step 4</span></div>
+    <div class="section-header">
+      <h2>Summarize & Make Sick</h2>
+      <p class="lead">Reflect the prospect's pain back to them with consequence. Don't just recap — make them feel the cost of inaction.</p>
+    </div>
+    <h3>The Formula</h3>
+    <ol>
+      <li><strong>Transition:</strong> "Great. Let's review your current situation…"</li>
+      <li><strong>Summary:</strong> Restate the key facts they told you</li>
+      <li><strong>DBM + Make Sick:</strong> Connect each pain to its cost or consequence — then pause</li>
+      <li>Repeat for each DBM</li>
+    </ol>
+    <h4>Example</h4>
+    <div class="script">"Great. Let's review your current situation…
+
+You have TigerPaw for your CRM and your billing was built in-house. You offer 
+some lines priced by the minute and others at a flat rate — but you can't mix 
+and match because of your billing platform. [pause]
+
+You process about 22 million CDRs a month…
+
+And you said you can only offer month-to-month plans because your CRM can't 
+track contract dates or ETF charges? [pause — let it land]"</div>
+    <div class="callout green">
+      <div class="callout-label">Key Principle</div>
+      <p>The prospect should acknowledge the pain with "Yeah, that's exactly right" or "It's honestly a nightmare." If you don't get that reaction, you haven't made them sick enough yet.</p>
+    </div>
+  </div>
+
+  <!-- NEXT STEPS -->
+  <div id="next_steps" class="section">
+    <div class="step-badge"><span>Phase 3 — Steps 5 & 6</span></div>
+    <div class="section-header">
+      <h2>Trial Close & Scheduling the Demo</h2>
+      <p class="lead">Never leave a discovery call without a demo booked live. "I'll follow up" is not a next step.</p>
+    </div>
+    <h3>Trial Close First</h3>
+    <div class="script">"Based on what you've shared about [specific pain], does it make sense 
+for us to show you exactly how Rev.io handles that?"</div>
+    <h3>Ask for the Demo</h3>
+    <div class="script">"Let's schedule 45 minutes — I want to tailor the demo specifically 
+to [DBM 1] and [DBM 2] you mentioned. Does [day] at [time] work?"</div>
+    <h3>Book It Live</h3>
+    <div class="script">"Let me send you a calendar invite right now before we hang up."</div>
+    <h3>Who Else Belongs on the Demo?</h3>
+    <div class="script">"Who else should be on that call to see this? Anyone who would feel 
+left out if they weren't included?"</div>
+    <div class="callout orange">
+      <div class="callout-label">Rule</div>
+      <p>No demo scheduled without the Decision Maker identified and invited. If the DM won't commit to attending — pause and re-qualify the opportunity.</p>
+    </div>
+  </div>
+
+  <!-- PARTNERSHIP -->
+  <div id="partnership" class="section">
+    <div class="step-badge"><span>Phase 4 — Partnership</span></div>
+    <div class="section-header">
+      <h2>Partnership</h2>
+      <p class="lead">Sales success results in clients who refer. Post-sale activities ensure happy long-term clients who become your best prospecting tool.</p>
+    </div>
+    <h3>Post-Sale Activities</h3>
+    <ul>
+      <li>Complete and submit paperwork accurately and promptly</li>
+      <li>Send a thank-you note within 24 hours</li>
+      <li>Schedule follow-up check-ins at 30, 60, and 90 days</li>
+      <li>Ask for referrals — specifically and by name</li>
+      <li>Identify expansion opportunities within the account</li>
+    </ul>
+    <div class="callout green">
+      <div class="callout-label">The Referral Ask</div>
+      <p>The best time to ask for a referral is when a client has just experienced something positive. Be specific: <em>"Who in your network is in a similar situation to where you were 6 months ago?"</em></p>
+    </div>
+  </div>
+
+  <!-- FORECASTING -->
+  <div id="forecasting" class="section">
+    <div class="section-header">
+      <div class="section-tag">Resource</div>
+      <h2>Forecasting Accurately</h2>
+      <p class="lead">Remove emotion from forecasting. Use these four signals to determine if an opportunity is real.</p>
+    </div>
+    <table>
+      <thead><tr><th>Signal</th><th>What to Look For</th></tr></thead>
+      <tbody>
+        <tr><td>Timeline</td><td>Has the DM agreed to a close date and is holding to it?</td></tr>
+        <tr><td>Buyer Reciprocation</td><td>Are they responding to calls/emails, showing up on time, returning favors?</td></tr>
+        <tr><td>DM Engagement</td><td>Is the decision maker actively involved in the process?</td></tr>
+        <tr><td>Contract Feedback</td><td>Has the DM given feedback on pricing and T&Cs? Feedback = serious buying signal.</td></tr>
+      </tbody>
+    </table>
+    <div class="callout orange">
+      <div class="callout-label">War Room Criteria (Stage 3+)</div>
+      <p>To be a War Room opportunity: Timeline given, initial demo presented, DM involved, pricing reviewed. If any of these are missing — it's Stage 2, not War Room.</p>
+    </div>
+  </div>
+
+  <!-- SCRIPTS -->
+  <div id="scripts" class="section">
+    <div class="section-header">
+      <div class="section-tag">Quick Reference</div>
+      <h2>Key Scripts</h2>
+    </div>
+    <h3>Gatekeeper</h3>
+    <div class="script">Gatekeeper: "Who should I say is calling?"
+You: "[First name]. Thank you."
+Gatekeeper: "What is this in reference to?"
+You: "Your billing services. Thanks."</div>
+    <h3>DM Opening</h3>
+    <div class="script">"Hi [Name], this is [You] with Rev.io. I know I'm calling out of the blue — 
+we work with [X] companies like yours and I wanted to coordinate a few minutes 
+to show you what we're doing for them. I have an opening [Day] at [Time 1] 
+or [Time 2] — which works better?"</div>
+    <h3>Warm-Up Survival Phrase</h3>
+    <div class="script">"What I'm offering is a comprehensive billing solution. But first, I have 
+a few questions to help me understand your business needs."</div>
+    <h3>Confirm DM</h3>
+    <div class="script">"Out of respect for your time — is there anyone other than yourself 
+involved in the decision-making process? And last time a change was made, 
+you were the one who signed the paperwork?"</div>
+    <h3>Set the Agenda</h3>
+    <div class="script">"Here's how I'd like to use our time today: First, I'll tell you a bit 
+about Rev.io. Then I'd like to learn about your business and your needs. 
+And if we both agree there's a fit, we'll schedule a demo as the next step. 
+Does that sound fair?"</div>
+    <h3>Trial Close</h3>
+    <div class="script">"Based on what you've shared, does it make sense to show you exactly 
+how Rev.io handles [specific pain]?"</div>
+  </div>
+
+</main>
+
+<script>
+function show(id) {
+  document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
+  document.querySelectorAll('.nav-item, .nav-sub').forEach(n => n.classList.remove('active'));
+  document.getElementById(id).classList.add('active');
+  const navLinks = document.querySelectorAll('.nav-item, .nav-sub');
+  navLinks.forEach(link => {
+    if (link.getAttribute('onclick') && link.getAttribute('onclick').includes("'" + id + "'")) {
+      link.classList.add('active');
+    }
+  });
+  window.scrollTo(0,0);
+}
+</script>
+</body>
+</html>
