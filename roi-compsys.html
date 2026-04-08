@@ -1,0 +1,269 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Rev.io ROI Analysis — Compsys</title>
+<style>
+  :root { --bg:#0a0f1e; --surface:#111827; --surface2:#0d1525; --border:#1e2d45; --blue:#1667CC; --green:#3DC570; --cyan:#06b6d4; --red:#f87171; --yellow:#f5a623; --text:#e2e8f0; --muted:#64748b; }
+  * { margin:0; padding:0; box-sizing:border-box; }
+  body { background:var(--bg); font-family:'Segoe UI',system-ui,sans-serif; color:var(--text); }
+  .cover { background:linear-gradient(135deg,#0a0f1e,#0d1b35,#0a1628); padding:80px; border-bottom:1px solid var(--border); position:relative; overflow:hidden; }
+  .cover::before { content:''; position:absolute; top:-100px; right:-100px; width:500px; height:500px; background:radial-gradient(circle,rgba(22,103,204,0.08),transparent 70%); }
+  .cover-logo { margin-bottom:48px; }
+  .cover-logo img { height:40px; opacity:0.9; }
+  .cover-tag { font-size:11px; font-weight:700; letter-spacing:3px; text-transform:uppercase; color:var(--cyan); margin-bottom:16px; }
+  .cover h1 { font-size:42px; font-weight:800; color:#fff; line-height:1.15; margin-bottom:8px; }
+  .cover h1 span { color:var(--cyan); }
+  .cover-sub { font-size:16px; color:var(--muted); margin-bottom:48px; }
+  .cover-meta { display:flex; gap:40px; flex-wrap:wrap; }
+  .meta-label { font-size:10px; font-weight:700; letter-spacing:1.5px; text-transform:uppercase; color:var(--muted); margin-bottom:4px; }
+  .meta-val { font-size:14px; color:var(--text); font-weight:600; }
+  .section { padding:64px 80px; border-bottom:1px solid var(--border); }
+  .section:last-child { border-bottom:none; }
+  .section-tag { font-size:10px; font-weight:700; letter-spacing:3px; text-transform:uppercase; color:var(--blue); margin-bottom:12px; }
+  .section h2 { font-size:28px; font-weight:800; color:#fff; margin-bottom:8px; }
+  .section .lead { font-size:15px; color:var(--muted); line-height:1.7; max-width:700px; margin-bottom:40px; }
+  .pain-grid { display:grid; grid-template-columns:repeat(3,1fr); gap:16px; margin-bottom:40px; }
+  .pain-card { background:var(--surface); border:1px solid var(--border); border-top:3px solid var(--red); border-radius:10px; padding:20px; }
+  .pain-card h4 { font-size:13px; font-weight:700; color:#fff; margin-bottom:8px; }
+  .pain-card p { font-size:12px; color:var(--muted); line-height:1.6; }
+  .pain-quote { font-size:11px; color:var(--yellow); font-style:italic; margin-top:10px; border-left:2px solid var(--yellow); padding-left:10px; }
+  .roi-table { width:100%; border-collapse:collapse; margin-bottom:24px; }
+  .roi-table thead th { font-size:10px; font-weight:700; text-transform:uppercase; letter-spacing:1px; color:var(--muted); padding:12px 16px; text-align:left; background:var(--surface2); border-bottom:1px solid var(--border); }
+  .roi-table tbody td { padding:14px 16px; font-size:13px; color:#94a3b8; border-bottom:1px solid #0a0f1e; vertical-align:top; }
+  .roi-table tbody td:first-child { color:var(--text); font-weight:600; }
+  .roi-table .total-row td { background:rgba(61,197,112,0.06); color:var(--green); font-weight:700; font-size:14px; border-top:1px solid rgba(61,197,112,0.2); }
+  .math { font-size:11px; color:var(--muted); font-style:italic; margin-top:4px; }
+  .summary-grid { display:grid; grid-template-columns:repeat(4,1fr); gap:16px; margin:32px 0; }
+  .sum-card { background:var(--surface); border-radius:12px; padding:22px; text-align:center; }
+  .sum-val { font-size:28px; font-weight:800; margin-bottom:4px; }
+  .sum-label { font-size:10px; font-weight:700; letter-spacing:1.5px; text-transform:uppercase; color:var(--muted); }
+  .compare { display:grid; grid-template-columns:1fr auto 1fr; gap:24px; align-items:center; margin:32px 0; }
+  .compare-box { background:var(--surface); border-radius:12px; padding:28px; }
+  .compare-box.today { border-top:3px solid var(--red); }
+  .compare-box.tomorrow { border-top:3px solid var(--green); }
+  .compare-label { font-size:10px; font-weight:700; letter-spacing:2px; text-transform:uppercase; margin-bottom:16px; }
+  .compare-box.today .compare-label { color:var(--red); }
+  .compare-box.tomorrow .compare-label { color:var(--green); }
+  .compare-line { font-size:13px; color:#94a3b8; padding:6px 0; border-bottom:1px solid var(--border); }
+  .compare-line:last-child { border-bottom:none; }
+  .compare-line strong { color:var(--text); }
+  .vs { font-size:24px; font-weight:800; color:var(--muted); text-align:center; }
+  .next-step { display:flex; gap:16px; align-items:flex-start; padding:16px 0; border-bottom:1px solid var(--border); }
+  .next-step:last-child { border-bottom:none; }
+  .step-num { width:32px; height:32px; background:var(--blue); border-radius:50%; display:flex; align-items:center; justify-content:center; font-size:13px; font-weight:800; color:#fff; flex-shrink:0; }
+  .step-content h4 { font-size:14px; font-weight:700; color:#fff; margin-bottom:4px; }
+  .step-content p { font-size:13px; color:var(--muted); }
+  .highlight-box { background:rgba(61,197,112,0.06); border:1px solid rgba(61,197,112,0.2); border-radius:10px; padding:20px 24px; margin-top:8px; }
+  .highlight-label { font-size:10px; font-weight:700; letter-spacing:2px; text-transform:uppercase; color:var(--green); margin-bottom:8px; }
+  .disclaimer { font-size:11px; color:#334155; text-align:center; padding:24px 80px; line-height:1.6; }
+</style>
+</head>
+<body>
+
+<div class="cover">
+  <div class="cover-logo"><img src="https://raw.githubusercontent.com/koontz-robin/robin-decks/master/revio-logo.png" alt="rev.io"></div>
+  <div class="cover-tag">Business Value Assessment</div>
+  <h1>ROI Analysis for<br><span>Compsys</span></h1>
+  <p class="cover-sub">Prepared by Andy Whisenant &amp; Cam Sharpe, Rev.io &nbsp;·&nbsp; April 2026</p>
+  <div class="cover-meta">
+    <div><div class="meta-label">Company</div><div class="meta-val">Compsys</div></div>
+    <div><div class="meta-label">Team Size</div><div class="meta-val">28 employees</div></div>
+    <div><div class="meta-label">Monthly Revenue</div><div class="meta-val">~$200–300K MRR</div></div>
+    <div><div class="meta-label">Industry</div><div class="meta-val">Telecom + MSP (VoIP + Managed Services)</div></div>
+    <div><div class="meta-label">Solution</div><div class="meta-val">Rev.io PSA + Billing</div></div>
+  </div>
+</div>
+
+<div class="section">
+  <div class="section-tag">Section 1</div>
+  <h2>What We Heard</h2>
+  <p class="lead">JD put it best: <em>"We kept old methods and plopped new methods on top — we need to go out from the root and restructure."</em> Here are the specific challenges your team described.</p>
+  <div class="pain-grid">
+    <div class="pain-card">
+      <h4>Tool Sprawl — 7+ Systems</h4>
+      <p>ConnectWise, Cordial, QuickBooks Desktop, Bill.com, Enable, Screen Connect, Gradient, and PAX 8 all operating in parallel — each requiring manual handoffs to the next.</p>
+      <div class="pain-quote">"Keep adding tools to fix one issue"</div>
+    </div>
+    <div class="pain-card">
+      <h4>Billing Department Overwhelmed</h4>
+      <p>Manual billing processes consume Cynthia's team. Syncing errors between ConnectWise, QuickBooks, and Gradient require constant troubleshooting and reconciliation.</p>
+      <div class="pain-quote">"Billing accuracy and syncing issues causing team to waste time troubleshooting"</div>
+    </div>
+    <div class="pain-card">
+      <h4>Commission Tracking in Excel</h4>
+      <p>10% MRR commissions calculated manually every month. Error-prone, time-consuming, and a recurring source of frustration for the sales team.</p>
+      <div class="pain-quote">"Manual commission tracking via Excel spreadsheets"</div>
+    </div>
+    <div class="pain-card">
+      <h4>Custom-Built Quoting Tool</h4>
+      <p>Sales built a custom quoting system with a programmer because ConnectWise quoting didn't work. Now maintaining bespoke software that creates tech debt and another integration point.</p>
+      <div class="pain-quote">"Sales building custom quoting system with programmer help"</div>
+    </div>
+    <div class="pain-card">
+      <h4>No Single Source of Truth</h4>
+      <p>With 7+ systems holding overlapping data, the team doesn't know which has the accurate version. Gradient adds complexity instead of eliminating it.</p>
+      <div class="pain-quote">"Don't know which system has accurate data"</div>
+    </div>
+    <div class="pain-card">
+      <h4>Growth Held Back by Systems</h4>
+      <p>Current infrastructure can't scale cleanly. Adding clients means adding manual process. The team wants to restructure before scaling — not after.</p>
+      <div class="pain-quote">"Growth being held back by system inefficiencies"</div>
+    </div>
+  </div>
+</div>
+
+<div class="section">
+  <div class="section-tag">Section 2</div>
+  <h2>The Cost of Today</h2>
+  <p class="lead">Conservative estimates based on 28 employees at $70,000 fully loaded ($33.65/hr). We only model what you told us — no assumptions beyond your own words.</p>
+  <table class="roi-table">
+    <thead><tr><th style="width:30%">Pain Point</th><th>Conservative Assumption</th><th style="text-align:right">Annual Cost</th></tr></thead>
+    <tbody>
+      <tr>
+        <td>Billing dept manual reconciliation<div class="math">5 hrs/week × $33.65/hr × 52 weeks</div></td>
+        <td>Cynthia's team managing billing accuracy issues and syncing between ConnectWise, QuickBooks, and Gradient — 5 hrs/week is conservative given 7 systems</td>
+        <td style="text-align:right;color:var(--red);font-weight:700">$8,749</td>
+      </tr>
+      <tr>
+        <td>Manual commission tracking<div class="math">3 hrs/month × $33.65/hr × 12 months</div></td>
+        <td>Excel commission calculations for 10% MRR — monthly reconciliation, error-checking, and dispute resolution</td>
+        <td style="text-align:right;color:var(--red);font-weight:700">$1,211</td>
+      </tr>
+      <tr>
+        <td>Custom quoting system maintenance<div class="math">2 hrs/month × $75 blended dev rate × 12</div></td>
+        <td>Ongoing programmer maintenance for a custom quoting tool built to compensate for ConnectWise limitations</td>
+        <td style="text-align:right;color:var(--red);font-weight:700">$1,800</td>
+      </tr>
+      <tr>
+        <td>Gradient + redundant tool costs<div class="math">Est. Gradient SaaS + underutilized Bill.com</div></td>
+        <td>Paying for a sync layer (Gradient) that a unified platform makes unnecessary</td>
+        <td style="text-align:right;color:var(--red);font-weight:700">$3,600</td>
+      </tr>
+      <tr>
+        <td>Admin overhead from disconnected data<div class="math">3 hrs/week across ops team × $33.65 × 52</div></td>
+        <td>Cross-system lookups, data re-entry, and troubleshooting when systems disagree on the truth</td>
+        <td style="text-align:right;color:var(--red);font-weight:700">$5,249</td>
+      </tr>
+      <tr class="total-row">
+        <td>Total Estimated Annual Cost of Current State</td>
+        <td>Conservative — excludes: revenue leakage from billing errors, cost of data inaccuracy, and growth capacity lost to admin</td>
+        <td style="text-align:right">$20,609 / year</td>
+      </tr>
+    </tbody>
+  </table>
+</div>
+
+<div class="section">
+  <div class="section-tag">Section 3</div>
+  <h2>What Changes with Rev.io</h2>
+  <p class="lead">One platform replacing the core of your stack. Not another tool layered on top — a foundation to rebuild from, the way JD described.</p>
+  <div class="compare">
+    <div class="compare-box today">
+      <div class="compare-label">Today — 7+ Disconnected Tools</div>
+      <div class="compare-line"><strong>PSA:</strong> ConnectWise (limited API, poor integrations)</div>
+      <div class="compare-line"><strong>Billing:</strong> QuickBooks Desktop (manual sync required)</div>
+      <div class="compare-line"><strong>Quoting:</strong> Custom-built tool (programmer maintained)</div>
+      <div class="compare-line"><strong>Commissions:</strong> Excel (manual monthly process)</div>
+      <div class="compare-line"><strong>Syncing:</strong> Gradient (adds complexity)</div>
+      <div class="compare-line"><strong>Payments:</strong> Bill.com (underutilized)</div>
+      <div class="compare-line"><strong>Procurement:</strong> PAX 8 (manual re-entry into CW)</div>
+    </div>
+    <div class="vs">→</div>
+    <div class="compare-box tomorrow">
+      <div class="compare-label">With Rev.io — One Unified Platform</div>
+      <div class="compare-line"><strong>PSA:</strong> Rev.io PSA — ticketing, time, dispatch, mobile app</div>
+      <div class="compare-line"><strong>Billing:</strong> Native automated billing — telecom + MRR + usage</div>
+      <div class="compare-line"><strong>Quoting:</strong> Embedded quoting → e-sign → job automatically</div>
+      <div class="compare-line"><strong>Commissions:</strong> Automated 10% rules by product — monthly report</div>
+      <div class="compare-line"><strong>Syncing:</strong> PSA and Billing share one database — no sync needed</div>
+      <div class="compare-line"><strong>Payments:</strong> Rev.io as processor — better rates, ACH + CC</div>
+      <div class="compare-line"><strong>Procurement:</strong> PAX 8 native integration (Rob Ray on board)</div>
+    </div>
+  </div>
+</div>
+
+<div class="section">
+  <div class="section-tag">Section 4</div>
+  <h2>The Numbers</h2>
+  <p class="lead">Year 1 ROI — conservative, defensible, built entirely from what you told us.</p>
+  <div class="summary-grid">
+    <div class="sum-card" style="border-top:3px solid var(--red)">
+      <div class="sum-val" style="color:var(--red)">$20,609</div>
+      <div class="sum-label">Annual Cost of Current State</div>
+    </div>
+    <div class="sum-card" style="border-top:3px solid var(--blue)">
+      <div class="sum-val" style="color:var(--blue)">~$65K</div>
+      <div class="sum-label">Est. Annual Rev.io Cost<br><span style="font-size:9px;color:var(--muted)">PSA ~$2.4K/mo + Billing ~$3K/mo</span></div>
+    </div>
+    <div class="sum-card" style="border-top:3px solid var(--cyan)">
+      <div class="sum-val" style="color:var(--cyan)">~32%</div>
+      <div class="sum-label">Year 1 Offset<br><span style="font-size:9px;color:var(--muted)">Savings offset ~$20K of investment</span></div>
+    </div>
+    <div class="sum-card" style="border-top:3px solid var(--yellow)">
+      <div class="sum-val" style="color:var(--yellow)">Year 2+</div>
+      <div class="sum-label">ROI accelerates as Gradient, CW, and QB overhead is eliminated</div>
+    </div>
+  </div>
+  <div class="highlight-box">
+    <div class="highlight-label">The Real Business Case</div>
+    <p style="font-size:14px;color:var(--text);line-height:1.7">The numbers above only capture <strong>direct labor and tool costs</strong>. The bigger value is what JD described: the ability to scale without adding manual process. At $200–300K MRR, billing accuracy improvements flow directly to the bottom line. Automated commissions improve sales team trust and retention. And when your data lives in one system, every decision you make is based on facts — not guesswork between seven sources of truth.</p>
+  </div>
+</div>
+
+<div class="section">
+  <div class="section-tag">Section 5</div>
+  <h2>Building Internal Alignment</h2>
+  <p class="lead">The path to Robert runs through your department heads. Here's what each stakeholder cares about.</p>
+  <table class="roi-table">
+    <thead><tr><th>Stakeholder</th><th>Role</th><th>What Matters to Them</th></tr></thead>
+    <tbody>
+      <tr><td>Robert Williams</td><td>CEO / Final Decision Maker</td><td>ROI, growth enablement, cost consolidation — needs a unified recommendation from the team</td></tr>
+      <tr><td>Tim</td><td>CSO (met with Rev.io Oct 2024)</td><td>Sales productivity, commission accuracy, faster quoting — has seen Rev.io before</td></tr>
+      <tr><td>Cynthia</td><td>Accounts Payable</td><td>Billing accuracy, less manual reconciliation, payment processing savings vs Bill.com</td></tr>
+      <tr><td>Jonah</td><td>Help Desk Lead (10+ yrs)</td><td>Ticket workflow, mobile app, system stability — knows every system inside out</td></tr>
+      <tr><td>JD Sanders</td><td>Account Manager / Champion</td><td>Easier quoting, cleaner data, able to fight for change internally with a business case</td></tr>
+    </tbody>
+  </table>
+</div>
+
+<div class="section">
+  <div class="section-tag">Section 6</div>
+  <h2>What Happens Next</h2>
+  <div class="next-step">
+    <div class="step-num">1</div>
+    <div class="step-content">
+      <h4>Demo for Cynthia &amp; Jonah</h4>
+      <p>Tailored walkthrough: Cordial CDR integration, automated 10% commission reporting, QuickBooks sync, customer payment portal — the specifics your team asked about.</p>
+    </div>
+  </div>
+  <div class="next-step">
+    <div class="step-num">2</div>
+    <div class="step-content">
+      <h4>Payment processing comparison</h4>
+      <p>We'll run a comparative analysis on your last 3 months of merchant statements vs. Rev.io's blended rates — potential savings over Bill.com and current CC fees.</p>
+    </div>
+  </div>
+  <div class="next-step">
+    <div class="step-num">3</div>
+    <div class="step-content">
+      <h4>Gradient replacement roadmap</h4>
+      <p>We'll map exactly what Gradient is doing today and show how Rev.io's native integrations eliminate the need for it — one less tool, one less failure point.</p>
+    </div>
+  </div>
+  <div class="next-step">
+    <div class="step-num">4</div>
+    <div class="step-content">
+      <h4>Unified recommendation to Robert</h4>
+      <p>Once Cynthia, Jonah, and Tim are aligned, you'll have a team-backed business case to take to the CEO. We'll help you build it.</p>
+    </div>
+  </div>
+</div>
+
+<div class="disclaimer">
+  This analysis is based on information shared by Compsys during our discovery conversation on February 4, 2026. All estimates use conservative assumptions and a fully-loaded employee cost of $70,000/year ($33.65/hr). Actual savings will vary based on implementation and adoption. Rev.io makes no guarantees of specific financial outcomes.<br><br>
+  Prepared by Rev.io Sales · Confidential · April 2026
+</div>
+</body>
+</html>
