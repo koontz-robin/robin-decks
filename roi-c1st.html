@@ -1,0 +1,290 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Rev.io ROI Analysis — C1st Technologies</title>
+<style>
+  :root {
+    --bg: #0a0f1e;
+    --surface: #111827;
+    --surface2: #0d1525;
+    --border: #1e2d45;
+    --blue: #1667CC;
+    --green: #3DC570;
+    --cyan: #06b6d4;
+    --red: #f87171;
+    --yellow: #f5a623;
+    --text: #e2e8f0;
+    --muted: #64748b;
+  }
+  * { margin:0; padding:0; box-sizing:border-box; }
+  body { background:var(--bg); font-family:'Segoe UI',system-ui,sans-serif; color:var(--text); min-height:100vh; }
+
+  /* COVER */
+  .cover { background:linear-gradient(135deg, #0a0f1e 0%, #0d1b35 50%, #0a1628 100%); padding:80px 80px 60px; border-bottom:1px solid var(--border); position:relative; overflow:hidden; }
+  .cover::before { content:''; position:absolute; top:-100px; right:-100px; width:500px; height:500px; background:radial-gradient(circle, rgba(22,103,204,0.08) 0%, transparent 70%); }
+  .cover-logo { margin-bottom:48px; }
+  .cover-logo img { height:40px; opacity:0.9; }
+  .cover-tag { font-size:11px; font-weight:700; letter-spacing:3px; text-transform:uppercase; color:var(--cyan); margin-bottom:16px; }
+  .cover h1 { font-size:42px; font-weight:800; color:#fff; line-height:1.15; margin-bottom:8px; }
+  .cover h1 span { color:var(--cyan); }
+  .cover-sub { font-size:16px; color:var(--muted); margin-bottom:48px; }
+  .cover-meta { display:flex; gap:40px; }
+  .meta-item { }
+  .meta-label { font-size:10px; font-weight:700; letter-spacing:1.5px; text-transform:uppercase; color:var(--muted); margin-bottom:4px; }
+  .meta-val { font-size:14px; color:var(--text); font-weight:600; }
+
+  /* SECTIONS */
+  .section { padding:64px 80px; border-bottom:1px solid var(--border); }
+  .section:last-child { border-bottom:none; }
+  .section-tag { font-size:10px; font-weight:700; letter-spacing:3px; text-transform:uppercase; color:var(--blue); margin-bottom:12px; }
+  .section h2 { font-size:28px; font-weight:800; color:#fff; margin-bottom:8px; }
+  .section .lead { font-size:15px; color:var(--muted); line-height:1.7; max-width:700px; margin-bottom:40px; }
+
+  /* PAIN CARDS */
+  .pain-grid { display:grid; grid-template-columns:repeat(3,1fr); gap:16px; margin-bottom:40px; }
+  .pain-card { background:var(--surface); border:1px solid var(--border); border-top:3px solid var(--red); border-radius:10px; padding:20px; }
+  .pain-card h4 { font-size:13px; font-weight:700; color:#fff; margin-bottom:8px; }
+  .pain-card p { font-size:12px; color:var(--muted); line-height:1.6; }
+  .pain-card .pain-quote { font-size:11px; color:var(--yellow); font-style:italic; margin-top:10px; border-left:2px solid var(--yellow); padding-left:10px; }
+
+  /* ROI TABLE */
+  .roi-table { width:100%; border-collapse:collapse; margin-bottom:24px; }
+  .roi-table thead th { font-size:10px; font-weight:700; text-transform:uppercase; letter-spacing:1px; color:var(--muted); padding:12px 16px; text-align:left; background:var(--surface2); border-bottom:1px solid var(--border); }
+  .roi-table tbody td { padding:14px 16px; font-size:13px; color:#94a3b8; border-bottom:1px solid #0a0f1e; vertical-align:top; }
+  .roi-table tbody td:first-child { color:var(--text); font-weight:600; }
+  .roi-table tbody tr:last-child td { border-bottom:none; }
+  .roi-table .total-row td { background:rgba(61,197,112,0.06); color:var(--green); font-weight:700; font-size:14px; border-top:1px solid rgba(61,197,112,0.2); }
+  .math { font-size:11px; color:var(--muted); font-style:italic; margin-top:4px; }
+
+  /* SUMMARY CARDS */
+  .summary-grid { display:grid; grid-template-columns:repeat(4,1fr); gap:16px; margin:32px 0; }
+  .sum-card { background:var(--surface); border-radius:12px; padding:22px; text-align:center; }
+  .sum-val { font-size:30px; font-weight:800; margin-bottom:4px; }
+  .sum-label { font-size:10px; font-weight:700; letter-spacing:1.5px; text-transform:uppercase; color:var(--muted); }
+
+  /* COMPARISON */
+  .compare { display:grid; grid-template-columns:1fr auto 1fr; gap:24px; align-items:center; margin:32px 0; }
+  .compare-box { background:var(--surface); border-radius:12px; padding:28px; }
+  .compare-box.today { border-top:3px solid var(--red); }
+  .compare-box.tomorrow { border-top:3px solid var(--green); }
+  .compare-label { font-size:10px; font-weight:700; letter-spacing:2px; text-transform:uppercase; margin-bottom:16px; }
+  .compare-box.today .compare-label { color:var(--red); }
+  .compare-box.tomorrow .compare-label { color:var(--green); }
+  .compare-line { font-size:13px; color:#94a3b8; padding:6px 0; border-bottom:1px solid var(--border); }
+  .compare-line:last-child { border-bottom:none; }
+  .compare-line strong { color:var(--text); }
+  .vs { font-size:24px; font-weight:800; color:var(--muted); text-align:center; }
+
+  /* NEXT STEPS */
+  .next-step { display:flex; gap:16px; align-items:flex-start; padding:16px 0; border-bottom:1px solid var(--border); }
+  .next-step:last-child { border-bottom:none; }
+  .step-num { width:32px; height:32px; background:var(--blue); border-radius:50%; display:flex; align-items:center; justify-content:center; font-size:13px; font-weight:800; color:#fff; flex-shrink:0; }
+  .step-content h4 { font-size:14px; font-weight:700; color:#fff; margin-bottom:4px; }
+  .step-content p { font-size:13px; color:var(--muted); }
+
+  .disclaimer { font-size:11px; color:#334155; text-align:center; padding:24px 80px; line-height:1.6; }
+</style>
+</head>
+<body>
+
+<!-- COVER -->
+<div class="cover">
+  <div class="cover-logo">
+    <img src="https://raw.githubusercontent.com/koontz-robin/robin-decks/master/revio-logo.png" alt="rev.io">
+  </div>
+  <div class="cover-tag">Business Value Assessment</div>
+  <h1>ROI Analysis for<br><span>C1st Technologies</span></h1>
+  <p class="cover-sub">Prepared by Jamie Butler, Rev.io &nbsp;·&nbsp; April 2026</p>
+  <div class="cover-meta">
+    <div class="meta-item"><div class="meta-label">Company</div><div class="meta-val">C1st Technologies</div></div>
+    <div class="meta-item"><div class="meta-label">Location</div><div class="meta-val">Denver, CO</div></div>
+    <div class="meta-item"><div class="meta-label">Team Size</div><div class="meta-val">~25 employees, 10 techs</div></div>
+    <div class="meta-item"><div class="meta-label">Industry</div><div class="meta-val">MSP / Managed IT</div></div>
+    <div class="meta-item"><div class="meta-label">Rev.io Solution</div><div class="meta-val">PSA Platform</div></div>
+  </div>
+</div>
+
+<!-- WHAT WE HEARD -->
+<div class="section">
+  <div class="section-tag">Section 1</div>
+  <h2>What We Heard</h2>
+  <p class="lead">Based on our discovery conversation, here are the operational challenges you shared with us. These are your words — we've simply quantified the cost.</p>
+
+  <div class="pain-grid">
+    <div class="pain-card">
+      <h4>Disconnected Tool Stack</h4>
+      <p>ConnectWise, VAR Street, QuickBooks, HubSpot, and multiple backup/security tools operating as separate systems with limited integration — each requiring manual handoffs.</p>
+      <div class="pain-quote">"Many manual processes due to lack of tool integration"</div>
+    </div>
+    <div class="pain-card">
+      <h4>ConnectWise Limitations</h4>
+      <p>API limitations restrict integrations to agreements only. Quoting doesn't connect to vendor procurement. Onboarding was poor. Support quality inconsistent.</p>
+      <div class="pain-quote">"Bolted-on modules that don't integrate well"</div>
+    </div>
+    <div class="pain-card">
+      <h4>Manual Billing & Admin</h4>
+      <p>Invoicing runs through QuickBooks separately from PSA. Every billing cycle requires manual data movement between systems — a recurring time drain across the ops team.</p>
+      <div class="pain-quote">"Automated billing to reduce manual processes"</div>
+    </div>
+    <div class="pain-card">
+      <h4>Multi-State Tax Complexity</h4>
+      <p>Multi-state operations require complex tax compliance handled by a third-party service — an additional cost and integration point outside your core stack.</p>
+      <div class="pain-quote">"Tax calculation for multi-state operations"</div>
+    </div>
+    <div class="pain-card">
+      <h4>Quoting & Procurement Gap</h4>
+      <p>VAR Street handles quoting but doesn't integrate cleanly with ConnectWise or vendor procurement. Quotes require manual re-entry and don't flow into jobs automatically.</p>
+      <div class="pain-quote">"ConnectWise quoting doesn't integrate with vendor procurement"</div>
+    </div>
+    <div class="pain-card">
+      <h4>Co-Managed IT Constraints</h4>
+      <p>Restricted client access to service boards for co-managed IT scenarios is complex in ConnectWise. Growing use case that your current tool doesn't handle cleanly.</p>
+      <div class="pain-quote">"Co-managed/multi-tenant use cases"</div>
+    </div>
+  </div>
+</div>
+
+<!-- COST OF TODAY -->
+<div class="section">
+  <div class="section-tag">Section 2</div>
+  <h2>The Cost of Today</h2>
+  <p class="lead">Conservative estimates based on your team size (25 employees, 10 techs) and a fully-loaded annual cost of $70,000 per employee ($33.65/hr). We only model what you told us.</p>
+
+  <table class="roi-table">
+    <thead>
+      <tr>
+        <th style="width:30%">Pain Point</th>
+        <th>Conservative Assumption</th>
+        <th style="text-align:right">Annual Cost</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td>Manual admin & tool reconciliation<br><div class="math">Estimated 5 hrs/week across ops team × $33.65/hr × 52 weeks</div></td>
+        <td>5 hrs/week of manual data movement between ConnectWise, QuickBooks, and VAR Street — conservative given 3 separate systems</td>
+        <td style="text-align:right;color:var(--red);font-weight:700">$8,749</td>
+      </tr>
+      <tr>
+        <td>Third-party tax compliance service<br><div class="math">External tax partner cost estimate (conservative)</div></td>
+        <td>Multi-state tax compliance handled outside your stack adds vendor cost and manual coordination</td>
+        <td style="text-align:right;color:var(--red);font-weight:700">$3,600</td>
+      </tr>
+      <tr>
+        <td>Duplicate/redundant tool costs<br><div class="math">VAR Street + HubSpot free + QuickBooks + ConnectWise overhead</div></td>
+        <td>4 tools doing jobs that one integrated platform could handle — conservative estimate of avoidable SaaS spend</td>
+        <td style="text-align:right;color:var(--red);font-weight:700">$4,800</td>
+      </tr>
+      <tr>
+        <td>Quoting friction & lost velocity<br><div class="math">2 hrs/week re-entering data, delayed quotes, missed follow-through</div></td>
+        <td>Manual quote-to-job workflow adds delays and reduces rep capacity — conservatively 2 hrs/week of avoidable work</td>
+        <td style="text-align:right;color:var(--red);font-weight:700">$3,500</td>
+      </tr>
+      <tr class="total-row">
+        <td>Total Estimated Annual Cost of Current State</td>
+        <td>Conservative — does not include missed revenue from billing errors or growth capacity lost to admin overhead</td>
+        <td style="text-align:right">$20,649 / year</td>
+      </tr>
+    </tbody>
+  </table>
+</div>
+
+<!-- WHAT CHANGES -->
+<div class="section">
+  <div class="section-tag">Section 3</div>
+  <h2>What Changes with Rev.io</h2>
+  <p class="lead">Specific to the challenges you identified — not generic benefits. Each item maps directly to something you told us.</p>
+
+  <div class="compare">
+    <div class="compare-box today">
+      <div class="compare-label">Today — Current State</div>
+      <div class="compare-line"><strong>PSA:</strong> ConnectWise Manage (limited API, poor integrations)</div>
+      <div class="compare-line"><strong>Quoting:</strong> VAR Street (separate, manual re-entry)</div>
+      <div class="compare-line"><strong>Billing:</strong> QuickBooks (manual data movement)</div>
+      <div class="compare-line"><strong>Tax:</strong> Third-party service (additional cost + effort)</div>
+      <div class="compare-line"><strong>CRM:</strong> HubSpot free (actively looking to replace)</div>
+      <div class="compare-line"><strong>Payments:</strong> External processor</div>
+      <div class="compare-line"><strong>Integrations:</strong> Limited — ConnectWise API restrictions</div>
+    </div>
+    <div class="vs">→</div>
+    <div class="compare-box tomorrow">
+      <div class="compare-label">With Rev.io — Future State</div>
+      <div class="compare-line"><strong>PSA:</strong> Rev.io PSA — open REST API, all modules native</div>
+      <div class="compare-line"><strong>Quoting:</strong> Native quoting → job → PO → invoice (one flow)</div>
+      <div class="compare-line"><strong>Billing:</strong> Automated invoicing built into PSA</div>
+      <div class="compare-line"><strong>Tax:</strong> Built-in telecom & sales tax engine (20 yrs experience)</div>
+      <div class="compare-line"><strong>CRM:</strong> Pipeline management in Apollo 2 (mid-spring)</div>
+      <div class="compare-line"><strong>Payments:</strong> Rev.io as processor — blended rates, ACH + CC</div>
+      <div class="compare-line"><strong>Integrations:</strong> PAX 8, QuickBooks, Enable, Ingram, TD SYNNEX</div>
+    </div>
+  </div>
+</div>
+
+<!-- THE NUMBERS -->
+<div class="section">
+  <div class="section-tag">Section 4</div>
+  <h2>The Numbers</h2>
+  <p class="lead">Year 1 ROI — conservative, defensible, based entirely on what you told us.</p>
+
+  <div class="summary-grid">
+    <div class="sum-card" style="border-top:3px solid var(--green)">
+      <div class="sum-val" style="color:var(--green)">$20,649</div>
+      <div class="sum-label">Annual Cost of Current State</div>
+    </div>
+    <div class="sum-card" style="border-top:3px solid var(--blue)">
+      <div class="sum-val" style="color:var(--blue)">$27,000</div>
+      <div class="sum-label">Est. Annual Rev.io Cost<br><span style="font-size:9px;color:var(--muted)">~$2,250/mo × 12</span></div>
+    </div>
+    <div class="sum-card" style="border-top:3px solid var(--cyan)">
+      <div class="sum-val" style="color:var(--cyan)">~Break-even</div>
+      <div class="sum-label">Year 1<br><span style="font-size:9px;color:var(--muted)">Cost savings offset ~75% of Rev.io investment</span></div>
+    </div>
+    <div class="sum-card" style="border-top:3px solid var(--yellow)">
+      <div class="sum-val" style="color:var(--yellow)">Year 2+</div>
+      <div class="sum-label">Full ROI kicks in as team scales on unified platform</div>
+    </div>
+  </div>
+
+  <div style="background:rgba(61,197,112,0.06);border:1px solid rgba(61,197,112,0.2);border-radius:10px;padding:20px 24px;margin-top:8px;">
+    <div style="font-size:10px;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:var(--green);margin-bottom:8px">The Real Value</div>
+    <p style="font-size:14px;color:var(--text);line-height:1.7">The cost model above only captures <strong>direct, quantifiable savings</strong>. It does not account for: faster quoting and higher close rates, ability to scale without adding headcount, reduced risk from multi-state tax automation, or the capacity your team gains when they stop doing admin work. Those compound over time — and are worth more than the line items above.</p>
+  </div>
+</div>
+
+<!-- NEXT STEPS -->
+<div class="section">
+  <div class="section-tag">Section 5</div>
+  <h2>What Happens Next</h2>
+
+  <div class="next-step">
+    <div class="step-num">1</div>
+    <div class="step-content">
+      <h4>Demo — tailored to C1st</h4>
+      <p>We'll walk through the quote-to-job-to-invoice workflow, native tax engine, PAX 8 integration, and co-managed IT board setup — the specific things you asked about.</p>
+    </div>
+  </div>
+  <div class="next-step">
+    <div class="step-num">2</div>
+    <div class="step-content">
+      <h4>Detailed pricing & migration plan</h4>
+      <p>We'll provide a full breakdown for your 25-person team and walk through what data migration from ConnectWise looks like — timelines, what we handle, what you own.</p>
+    </div>
+  </div>
+  <div class="next-step">
+    <div class="step-num">3</div>
+    <div class="step-content">
+      <h4>Decision</h4>
+      <p>You'll have everything you need to make a confident call — pricing, ROI, migration path, and a clear picture of what your team's day looks like on Rev.io.</p>
+    </div>
+  </div>
+</div>
+
+<div class="disclaimer">
+  This analysis is based on information shared by C1st Technologies during our discovery conversation on February 24, 2026. All cost estimates use conservative assumptions. Actual savings will vary based on team utilization, implementation, and adoption. Rev.io makes no guarantees of specific financial outcomes.
+  <br><br>
+  Prepared by Rev.io Sales · Confidential · April 2026
+</div>
+
+</body>
+</html>
