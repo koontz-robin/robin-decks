@@ -5,534 +5,467 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Rev.io — Built for PC Quest Technologies</title>
 <style>
-  :root {
-    --bg:#0a0f1e; --surface:#111827; --surface2:#0d1525;
-    --border:#1e2d45; --blue:#1667CC; --green:#3DC570;
-    --cyan:#06b6d4; --red:#f87171; --yellow:#f5a623;
-    --text:#e2e8f0; --muted:#64748b;
-  }
-  * { margin:0; padding:0; box-sizing:border-box; }
-  body { background:var(--bg); font-family:'Segoe UI',system-ui,sans-serif; color:var(--text); }
-
-  /* Cover */
-  .cover { background:linear-gradient(135deg,#0a0f1e,#0d1b35,#0a1628); padding:80px; border-bottom:1px solid var(--border); position:relative; overflow:hidden; }
-  .cover::before { content:''; position:absolute; top:-100px; right:-100px; width:500px; height:500px; background:radial-gradient(circle,rgba(22,103,204,0.08),transparent 70%); }
-  .cover-logo { margin-bottom:48px; }
-  .cover-logo img { height:40px; opacity:0.9; }
-  .cover-tag { font-size:11px; font-weight:700; letter-spacing:3px; text-transform:uppercase; color:var(--cyan); margin-bottom:16px; }
-  .cover h1 { font-size:42px; font-weight:800; color:#fff; line-height:1.15; margin-bottom:8px; }
-  .cover h1 span { color:var(--cyan); }
-  .cover-tagline { font-size:18px; font-weight:700; color:var(--cyan); margin-bottom:8px; letter-spacing:0.5px; }
-  .cover-sub { font-size:14px; color:var(--muted); margin-bottom:48px; }
-  .cover-meta { display:flex; gap:40px; flex-wrap:wrap; }
-  .meta-label { font-size:10px; font-weight:700; letter-spacing:1.5px; text-transform:uppercase; color:var(--muted); margin-bottom:4px; }
-  .meta-val { font-size:14px; color:var(--text); font-weight:600; }
-
-  /* Sections */
-  .section { padding:64px 80px; border-bottom:1px solid var(--border); }
-  .section:last-child { border-bottom:none; }
-  .section-tag { font-size:10px; font-weight:700; letter-spacing:3px; text-transform:uppercase; color:var(--blue); margin-bottom:12px; }
-  .section h2 { font-size:28px; font-weight:800; color:#fff; margin-bottom:8px; }
-  .section .lead { font-size:15px; color:var(--muted); line-height:1.7; max-width:700px; margin-bottom:40px; }
-
-  /* Service tags */
-  .services-row { display:flex; gap:8px; flex-wrap:wrap; margin-bottom:32px; }
-  .service-tag { font-size:11px; font-weight:700; letter-spacing:1px; text-transform:uppercase; background:rgba(22,103,204,0.12); border:1px solid rgba(22,103,204,0.3); color:#93c5fd; border-radius:4px; padding:4px 10px; }
-
-  /* Company credibility */
-  .cred-grid { display:grid; grid-template-columns:repeat(4,1fr); gap:16px; margin:32px 0; }
-  .cred-card { background:var(--surface); border-radius:12px; padding:22px; text-align:center; border:1px solid var(--border); }
-  .cred-val { font-size:26px; font-weight:800; color:var(--cyan); margin-bottom:6px; }
-  .cred-label { font-size:11px; font-weight:700; letter-spacing:1px; text-transform:uppercase; color:var(--muted); }
-
-  /* Feature grid */
-  .feature-grid { display:grid; grid-template-columns:repeat(3,1fr); gap:16px; margin:32px 0; }
-  .feature-card { background:var(--surface); border:1px solid var(--border); border-top:3px solid var(--blue); border-radius:10px; padding:20px; }
-  .feature-card h4 { font-size:13px; font-weight:700; color:#fff; margin-bottom:8px; }
+  :root { --bg:#0a0f1e; --surface:#111827; --surface2:#0d1525; --border:#1e2d45; --blue:#1667CC; --green:#3DC570; --cyan:#06b6d4; --red:#f87171; --yellow:#f5a623; --text:#e2e8f0; --muted:#64748b; }
+  *, *::before, *::after { margin:0; padding:0; box-sizing:border-box; }
+  html, body { height:100%; overflow:hidden; background:var(--bg); font-family:'Segoe UI',system-ui,sans-serif; color:var(--text); }
+  .deck { width:100vw; height:100vh; position:relative; overflow:hidden; }
+  .slide { position:absolute; inset:0; opacity:0; pointer-events:none; transition:opacity 0.4s ease; }
+  .slide.active { opacity:1; pointer-events:all; }
+  .slide-inner { width:100%; height:100%; display:flex; flex-direction:column; justify-content:center; padding:48px 80px; overflow-y:auto; }
+  .nav-btn { position:fixed; top:50%; transform:translateY(-50%); z-index:100; background:rgba(255,255,255,0.07); border:1px solid var(--border); color:var(--text); width:44px; height:44px; border-radius:50%; display:flex; align-items:center; justify-content:center; cursor:pointer; font-size:20px; transition:background 0.2s; user-select:none; }
+  .nav-btn:hover { background:rgba(255,255,255,0.15); }
+  .nav-prev { left:16px; }
+  .nav-next { right:16px; }
+  .slide-counter { position:fixed; bottom:20px; right:80px; font-size:12px; color:var(--muted); z-index:100; }
+  .dots { position:fixed; bottom:20px; left:50%; transform:translateX(-50%); display:flex; gap:8px; z-index:100; }
+  .dot-nav { width:7px; height:7px; border-radius:50%; background:var(--muted); cursor:pointer; transition:background 0.2s,transform 0.2s; }
+  .dot-nav.active { background:var(--cyan); transform:scale(1.3); }
+  .kb-hint { position:fixed; bottom:20px; left:80px; font-size:11px; color:#334155; z-index:100; }
+  .cover-slide { background:linear-gradient(135deg,#0a0f1e,#0d1b35,#0a1628); position:relative; overflow:hidden; justify-content:flex-end; padding-bottom:72px; }
+  .cover-bg { position:absolute; top:-100px; right:-100px; width:600px; height:600px; background:radial-gradient(circle,rgba(22,103,204,0.12),transparent 70%); pointer-events:none; }
+  .cover-content { position:relative; z-index:1; max-width:800px; }
+  .cover-logo { height:36px; margin-bottom:36px; opacity:0.9; }
+  .cover-sub { font-size:14px; color:var(--muted); margin-bottom:36px; }
+  .cover-meta { display:flex; gap:48px; flex-wrap:wrap; }
+  .meta-item .meta-label { font-size:10px; font-weight:700; letter-spacing:1.5px; text-transform:uppercase; color:var(--muted); margin-bottom:4px; }
+  .meta-item .meta-val { font-size:14px; color:var(--text); font-weight:600; }
+  h1 { font-size:50px; font-weight:800; color:#fff; line-height:1.1; margin-bottom:8px; }
+  .tagline { font-size:18px; font-weight:700; color:var(--cyan); margin-bottom:8px; }
+  .content-slide { background:var(--bg); }
+  .eyebrow { font-size:10px; font-weight:700; letter-spacing:3px; text-transform:uppercase; color:var(--blue); margin-bottom:10px; }
+  h2 { font-size:30px; font-weight:800; color:#fff; margin-bottom:10px; }
+  .lead { font-size:15px; color:var(--muted); line-height:1.7; max-width:750px; margin-bottom:24px; }
+  .cyan { color:var(--cyan); } .blue { color:var(--blue); } .green { color:var(--green); } .red { color:var(--red); }
+  .muted { color:var(--muted); font-size:12px; }
+  .tags-row { display:flex; gap:8px; flex-wrap:wrap; margin-bottom:10px; }
+  .tag { font-size:11px; font-weight:700; letter-spacing:1px; text-transform:uppercase; background:rgba(22,103,204,0.12); border:1px solid rgba(22,103,204,0.3); color:#93c5fd; border-radius:4px; padding:4px 10px; }
+  .markets-row { font-size:12px; color:var(--muted); margin-bottom:20px; }
+  .stats-grid { display:grid; grid-template-columns:repeat(4,1fr); gap:12px; margin:20px 0; }
+  .stat-card { background:var(--surface); border:1px solid var(--border); border-radius:12px; padding:18px; text-align:center; }
+  .stat-val { font-size:28px; font-weight:800; margin-bottom:5px; }
+  .stat-label { font-size:11px; font-weight:700; letter-spacing:1px; text-transform:uppercase; color:var(--muted); line-height:1.4; }
+  .stat-label small { display:block; font-size:11px; font-weight:400; text-transform:none; letter-spacing:0; color:var(--text); margin-top:3px; }
+  .blue-top { border-top:3px solid var(--blue); } .cyan-top { border-top:3px solid var(--cyan); } .green-top { border-top:3px solid var(--green); }
+  .callout { border-radius:10px; padding:16px 20px; }
+  .callout.green { background:rgba(61,197,112,0.06); border:1px solid rgba(61,197,112,0.2); }
+  .callout.blue { background:rgba(22,103,204,0.08); border:1px solid rgba(22,103,204,0.25); }
+  .callout-label { font-size:10px; font-weight:700; letter-spacing:2px; text-transform:uppercase; margin-bottom:5px; }
+  .callout.green .callout-label { color:var(--green); } .callout.blue .callout-label { color:var(--cyan); }
+  .callout p { font-size:14px; color:var(--text); line-height:1.6; }
+  .two-col { display:grid; grid-template-columns:1fr 1fr; gap:14px; }
+  .three-col { display:grid; grid-template-columns:repeat(3,1fr); gap:12px; margin:20px 0; }
+  .feature-card { background:var(--surface); border:1px solid var(--border); border-top:3px solid var(--blue); border-radius:10px; padding:18px; }
+  .feature-card.compact { padding:12px 16px; }
+  .card-icon { font-size:22px; margin-bottom:8px; }
+  .feature-card h4 { font-size:13px; font-weight:700; color:#fff; margin-bottom:6px; }
   .feature-card p { font-size:12px; color:var(--muted); line-height:1.6; }
-  .feature-card ul { padding-left:16px; margin-top:6px; }
-  .feature-card ul li { font-size:12px; color:var(--muted); line-height:1.8; }
-
-  /* Spotlight */
-  .spotlight-grid { display:grid; grid-template-columns:repeat(3,1fr); gap:16px; margin:32px 0; }
-  .spotlight-card { background:var(--surface); border:1px solid var(--border); border-radius:10px; padding:24px; }
-  .spotlight-icon { font-size:28px; margin-bottom:12px; }
-  .spotlight-card h4 { font-size:14px; font-weight:700; color:#fff; margin-bottom:8px; }
-  .spotlight-card p { font-size:13px; color:var(--muted); line-height:1.6; }
-
-  /* Compare */
-  .compare { display:grid; grid-template-columns:1fr auto 1fr; gap:24px; align-items:center; margin:32px 0; }
-  .compare-box { background:var(--surface); border-radius:12px; padding:28px; border:1px solid var(--border); }
-  .compare-box.today { border-top:3px solid var(--red); }
-  .compare-box.tomorrow { border-top:3px solid var(--green); }
-  .compare-label { font-size:10px; font-weight:700; letter-spacing:2px; text-transform:uppercase; margin-bottom:16px; }
-  .compare-box.today .compare-label { color:var(--red); }
-  .compare-box.tomorrow .compare-label { color:var(--green); }
-  .compare-line { font-size:13px; color:#94a3b8; padding:6px 0; border-bottom:1px solid var(--border); }
-  .compare-line:last-child { border-bottom:none; }
-  .compare-line strong { color:var(--text); }
-  .vs { font-size:24px; font-weight:800; color:var(--muted); text-align:center; }
-
-  /* Release notes */
-  .release-grid { display:grid; grid-template-columns:1fr 1fr; gap:32px; margin:32px 0; }
-  .release-box { background:var(--surface); border:1px solid var(--border); border-radius:12px; padding:28px; }
-  .release-header { display:flex; align-items:center; gap:12px; margin-bottom:20px; }
-  .release-badge { font-size:10px; font-weight:700; letter-spacing:2px; text-transform:uppercase; padding:4px 10px; border-radius:4px; }
-  .release-badge.apollo1 { background:rgba(22,103,204,0.2); color:#93c5fd; }
-  .release-badge.apollo2 { background:rgba(61,197,112,0.15); color:#86efac; }
+  .badge-row { margin-top:16px; display:flex; gap:16px; align-items:center; }
+  .badge-img { height:48px; object-fit:contain; }
+  .screenshot-container { border-radius:10px; overflow:hidden; border:1px solid var(--border); margin:12px 0; background:var(--surface2); }
+  .screenshot-img { width:100%; max-height:300px; object-fit:cover; object-position:top; display:block; }
+  .feature-img { width:100%; max-height:340px; object-fit:contain; display:block; padding:8px; }
+  .integration-img { width:100%; max-height:160px; object-fit:contain; display:block; padding:8px; }
+  .img-caption { font-size:11px; color:var(--muted); text-align:center; margin-top:4px; }
+  .compare-grid { display:grid; grid-template-columns:1fr 40px 1fr; gap:14px; align-items:center; margin:16px 0; }
+  .compare-box { background:var(--surface); border-radius:12px; padding:20px; border:1px solid var(--border); }
+  .red-top { border-top:3px solid var(--red); } .green-top { border-top:3px solid var(--green); }
+  .compare-label { font-size:10px; font-weight:700; letter-spacing:2px; text-transform:uppercase; margin-bottom:12px; }
+  .compare-arrow { font-size:22px; font-weight:800; color:var(--muted); text-align:center; }
+  .stack-item { display:flex; align-items:center; gap:10px; font-size:13px; color:#94a3b8; padding:5px 0; border-bottom:1px solid var(--border); }
+  .stack-item:last-child { border-bottom:none; }
+  .x { color:var(--red); font-weight:700; } .check { color:var(--green); font-weight:700; }
+  .release-box { background:var(--surface); border:1px solid var(--border); border-radius:12px; padding:20px; }
+  .release-header { display:flex; align-items:center; gap:12px; margin-bottom:14px; }
+  .release-badge { font-size:10px; font-weight:700; letter-spacing:2px; text-transform:uppercase; padding:3px 9px; border-radius:4px; }
+  .blue-badge { background:rgba(22,103,204,0.2); color:#93c5fd; }
+  .green-badge { background:rgba(61,197,112,0.15); color:#86efac; }
   .release-date { font-size:12px; color:var(--muted); }
-  .release-item { display:flex; gap:12px; align-items:flex-start; padding:8px 0; border-bottom:1px solid var(--border); }
+  .release-item { display:flex; gap:10px; align-items:flex-start; padding:6px 0; border-bottom:1px solid var(--border); }
   .release-item:last-child { border-bottom:none; }
-  .release-dot { width:8px; height:8px; border-radius:50%; background:var(--blue); flex-shrink:0; margin-top:5px; }
-  .release-dot.apollo2 { background:var(--green); }
-  .release-item strong { font-size:13px; color:var(--text); display:block; margin-bottom:2px; }
-  .release-desc { font-size:12px; color:var(--muted); }
-
-  /* Highlight box */
-  .highlight-box { background:rgba(61,197,112,0.06); border:1px solid rgba(61,197,112,0.2); border-radius:10px; padding:20px 24px; margin-top:8px; }
-  .highlight-label { font-size:10px; font-weight:700; letter-spacing:2px; text-transform:uppercase; color:var(--green); margin-bottom:8px; }
-
-  /* Integration logos row */
-  .integration-row { display:flex; gap:12px; flex-wrap:wrap; margin:24px 0; }
-  .int-badge { font-size:12px; font-weight:600; background:var(--surface); border:1px solid var(--border); color:var(--text); border-radius:6px; padding:8px 16px; }
-
-  /* Next steps */
-  .next-step { display:flex; gap:16px; align-items:flex-start; padding:16px 0; border-bottom:1px solid var(--border); }
-  .next-step:last-child { border-bottom:none; }
+  .dot { width:7px; height:7px; border-radius:50%; flex-shrink:0; margin-top:5px; }
+  .blue-dot { background:var(--blue); } .green-dot { background:var(--green); }
+  .release-item strong { font-size:13px; color:var(--text); display:block; margin-bottom:1px; }
+  .int-badges { display:flex; gap:8px; flex-wrap:wrap; margin-top:10px; }
+  .int-badge { font-size:12px; font-weight:600; background:var(--surface); border:1px solid var(--border); color:var(--text); border-radius:6px; padding:6px 14px; }
+  .events-table { width:100%; border-collapse:collapse; margin-top:16px; }
+  .events-table thead th { font-size:10px; font-weight:700; text-transform:uppercase; letter-spacing:1px; color:var(--muted); padding:10px 16px; text-align:left; background:var(--surface2); border-bottom:1px solid var(--border); }
+  .events-table tbody td { padding:10px 16px; font-size:13px; color:#94a3b8; border-bottom:1px solid var(--border); }
+  .events-table tbody td:nth-child(2) { color:var(--text); font-weight:600; }
+  .steps-list { margin:16px 0; }
+  .step-row { display:flex; gap:16px; align-items:flex-start; padding:12px 0; border-bottom:1px solid var(--border); }
+  .step-row:last-child { border-bottom:none; }
   .step-num { width:32px; height:32px; background:var(--blue); border-radius:50%; display:flex; align-items:center; justify-content:center; font-size:13px; font-weight:800; color:#fff; flex-shrink:0; }
-  .step-content h4 { font-size:14px; font-weight:700; color:#fff; margin-bottom:4px; }
-  .step-content p { font-size:13px; color:var(--muted); }
-
-  .disclaimer { font-size:11px; color:#334155; text-align:center; padding:24px 80px; line-height:1.6; }
+  .step-body h4 { font-size:14px; font-weight:700; color:#fff; margin-bottom:3px; }
+  .step-body p { font-size:13px; color:var(--muted); line-height:1.6; }
+  .disclaimer-text { font-size:11px; color:#334155; text-align:center; margin-top:24px; line-height:1.6; }
 </style>
 </head>
 <body>
+<div class="deck">
 
-<!-- COVER -->
-<div class="cover">
-  <div class="cover-logo">
-    <img src="https://raw.githubusercontent.com/koontz-robin/robin-decks/master/revio-logo.png" alt="rev.io">
-  </div>
-  <div class="cover-tag">Company Overview</div>
-  <h1>Built for<br><span>PC Quest Technologies</span></h1>
-  <p class="cover-tagline">AI native. All in one. Built for what&#39;s next.</p>
-  <p class="cover-sub">Prepared by Your Rev.io Rep, Rev.io &nbsp;·&nbsp; April 2026</p>
-  <div class="cover-meta">
-    <div><div class="meta-label">Prepared For</div><div class="meta-val">PC Quest Technologies</div></div>
-    <div><div class="meta-label">Location</div><div class="meta-val">Evansville, IN & Owensboro, KY</div></div>
-    <div><div class="meta-label">Services</div><div class="meta-val">Managed IT Services, VoIP Phone Systems, Network Security, Cloud Computing, Backup & Recovery, Email Security</div></div>
-    <div><div class="meta-label">Rev.io Solutions</div><div class="meta-val">PSA Platform · Communications Billing · Payments · Cyber Protect</div></div>
-  </div>
-</div>
-
-<!-- ABOUT PC QUEST / WHO THEY ARE -->
-<div class="section">
-  <div class="section-tag">About PC Quest Technologies</div>
-  <h2>We Know Your Business</h2>
-  <p class="lead">PC Quest Technologies has been the go-to IT partner in the Evansville, IN and Tri-State area for 20+ years. They deliver managed IT, VoIP (via Sangoma), network security, cloud, and backup to SMBs across healthcare, manufacturing, financial services, and more — with a reputation built on client happiness and cost-effective service.</p>
-  <div class="services-row">
-    <div class="service-tag">Managed IT Services</div>
-<div class="service-tag">VoIP Phone Systems</div>
-<div class="service-tag">Network Security</div>
-<div class="service-tag">Cloud Computing</div>
-<div class="service-tag">Backup & Recovery</div>
-<div class="service-tag">Email Security</div>
-
-  </div>
-  <div class="highlight-box">
-    <div class="highlight-label">Why This Matters</div>
-    <p style="font-size:14px;color:var(--text);line-height:1.7">
-      Rev.io was built for exactly the kind of business you run — a multi-service provider delivering managed IT, connectivity, and communications to local businesses.
-      Our platform was designed to handle the complexity of billing, ticketing, and operations for companies like yours. Not retrofitted. Built for it.
-    </p>
-  </div>
-</div>
-
-<!-- WHO IS REV.IO -->
-<div class="section">
-  <div class="section-tag">Section 1</div>
-  <h2>Who Is Rev.io?</h2>
-  <p class="lead">We're the all-in-one platform for modern managed service providers — built to replace the stack of disconnected tools slowing you down.</p>
-  <div class="cred-grid">
-    <div class="cred-card">
-      <div class="cred-val">180+</div>
-      <div class="cred-label">US-Based Employees</div>
-    </div>
-    <div class="cred-card">
-      <div class="cred-val">40+</div>
-      <div class="cred-label">Years Industry Experience</div>
-    </div>
-    <div class="cred-card">
-      <div class="cred-val">9×</div>
-      <div class="cred-label">Inc. 5000 Recipient</div>
-    </div>
-    <div class="cred-card">
-      <div class="cred-val">1,000+</div>
-      <div class="cred-label">Service Providers Trust Rev.io</div>
-    </div>
-  </div>
-  <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-top:24px;">
-    <div class="highlight-box">
-      <div class="highlight-label">Our Mission</div>
-      <p style="font-size:14px;color:var(--text);line-height:1.7">To help clients grow revenue efficiently.</p>
-    </div>
-    <div class="highlight-box" style="background:rgba(22,103,204,0.06);border-color:rgba(22,103,204,0.2);">
-      <div class="highlight-label" style="color:var(--cyan);">Our Vision</div>
-      <p style="font-size:14px;color:var(--text);line-height:1.7">To be the best billing and back-office software company in the world — providing innovative solutions and extraordinary service to our clients &amp; end users.</p>
+<div class="slide active" id="slide-1">
+  <div class="slide-inner cover-slide">
+    <div class="cover-bg"></div>
+    <div class="cover-content">
+      <img src="https://raw.githubusercontent.com/koontz-robin/robin-decks/master/revio-logo.png" class="cover-logo" alt="rev.io">
+      <div class="eyebrow">Company Overview</div>
+      <h1>Built for<br><span class="cyan">PC Quest Technologies</span></h1>
+      <p class="tagline">AI native. All in one. Built for what&#39;s next.</p>
+      <p class="cover-sub">Prepared by Your Rev.io Rep, Rev.io &nbsp;·&nbsp; April 2026</p>
+      <div class="cover-meta">
+        <div class="meta-item"><div class="meta-label">Prepared For</div><div class="meta-val">PC Quest Technologies</div></div>
+        <div class="meta-item"><div class="meta-label">Location</div><div class="meta-val">Evansville, IN &amp; Owensboro, KY</div></div>
+        <div class="meta-item"><div class="meta-label">Rev.io Solutions</div><div class="meta-val">PSA · Comms Billing · Payments · Cyber</div></div>
+      </div>
     </div>
   </div>
 </div>
 
-<!-- PLATFORM OVERVIEW -->
-<div class="section">
-  <div class="section-tag">Section 2</div>
-  <h2>Everything You Need to Run a Modern MSP</h2>
-  <p class="lead">One platform. One database. No syncing headaches. Rev.io PSA brings your service desk, billing, quoting, scheduling, inventory, and AI analytics into a single system of record.</p>
-  <div class="feature-grid">
-    <div class="feature-card">
-      <h4>🎫 Service Desk</h4>
-      <ul>
-        <li>Ticketing &amp; SLA Management</li>
-        <li>Recurring Tickets &amp; Ticket Merging</li>
-        <li>Assign to Teams, Notifications</li>
-        <li>Multi-POP3 Email Management</li>
-      </ul>
-    </div>
-    <div class="feature-card">
-      <h4>💰 Billing &amp; Payments</h4>
-      <ul>
-        <li>Invoice Automation &amp; Tax Calculators</li>
-        <li>Payments Processing (card, ACH, text-to-pay)</li>
-        <li>Metered Usage Billing</li>
-        <li>Flexible Recurring Service Billing</li>
-      </ul>
-    </div>
-    <div class="feature-card">
-      <h4>📋 Quoting &amp; Proposals</h4>
-      <ul>
-        <li>Quotes &amp; Proposals</li>
-        <li>Customizable Templates</li>
-        <li>Electronic Signatures</li>
-        <li>Auto-convert to jobs</li>
-      </ul>
-    </div>
-    <div class="feature-card">
-      <h4>📅 Scheduling &amp; Dispatch</h4>
-      <ul>
-        <li>User &amp; Group Calendars</li>
-        <li>Dispatch Board</li>
-        <li>Checklist &amp; Task Automation</li>
-        <li>Weekly Dispatch Views</li>
-      </ul>
-    </div>
-    <div class="feature-card">
-      <h4>📦 Inventory &amp; Asset Management</h4>
-      <ul>
-        <li>Purchase Orders</li>
-        <li>Multi-location Warehouses</li>
-        <li>Asset Tracking &amp; Serial Number Search</li>
-        <li>Attribute-Based Product Catalog</li>
-      </ul>
-    </div>
-    <div class="feature-card">
-      <h4>🤖 AI &amp; Analytics (Rev.ii)</h4>
-      <ul>
-        <li>Embedded BI Reports</li>
-        <li>Customizable Dashboards</li>
-        <li>Rev.ii AI for Mobile</li>
-        <li>Job Costing &amp; Profitability</li>
-      </ul>
+
+<div class="slide" id="slide-2">
+  <div class="slide-inner content-slide">
+    <div class="eyebrow">About PC Quest Technologies</div>
+    <h2>We Know Your Business</h2>
+    <p class="lead">PC Quest Technologies has been the go-to IT partner in the Evansville, IN and Tri-State area for 20+ years — delivering managed IT, VoIP (via Sangoma), network security, cloud, and backup to SMBs. A reputation built on client happiness and cost-effective service.</p>
+    <div class="tags-row"><span class="tag">Managed IT Services</span><span class="tag">VoIP Phone Systems</span><span class="tag">Network Security</span><span class="tag">Cloud Computing</span><span class="tag">Backup &amp; Recovery</span><span class="tag">Email Security</span></div>
+    <div class="markets-row">Serving: Healthcare · Manufacturing · Financial Services · Hospitality · Education</div>
+    <div class="callout green">
+      <div class="callout-label">Why This Matters</div>
+      <p>Rev.io was built for exactly this kind of business — a multi-service provider delivering managed IT, connectivity, and communications to local businesses. Not retrofitted. Built for it.</p>
     </div>
   </div>
 </div>
 
-<!-- STACK COMPARISON -->
-<div class="section">
-  <div class="section-tag">Section 3</div>
-  <h2>Your World Today vs. With Rev.io</h2>
-  <p class="lead">You've built a solid business on the tools you have. Rev.io isn't another tool — it's the platform that replaces the complexity underneath.</p>
-  <div class="compare">
-    <div class="compare-box today">
-      <div class="compare-label">Today — Current Stack</div>
-      <div class="compare-line"><strong>Sangoma (VoIP)</strong></div>
-<div class="compare-line"><strong>Separate PSA/ticketing tool</strong></div>
-<div class="compare-line"><strong>Disconnected billing system</strong></div>
-<div class="compare-line"><strong>3rd-party payment processing</strong></div>
 
+<div class="slide" id="slide-3">
+  <div class="slide-inner content-slide">
+    <div class="eyebrow">Section 1</div>
+    <h2>Who Is Rev.io?</h2>
+    <p class="lead">The all-in-one platform for modern managed service providers — built to replace the stack of disconnected tools slowing you down.</p>
+    <div class="stats-grid">
+      <div class="stat-card"><div class="stat-val cyan">180+</div><div class="stat-label">US-Based Employees</div></div>
+      <div class="stat-card"><div class="stat-val cyan">40+</div><div class="stat-label">Years Industry Experience</div></div>
+      <div class="stat-card"><div class="stat-val cyan">9x</div><div class="stat-label">Inc. 5000 Recipient</div></div>
+      <div class="stat-card"><div class="stat-val cyan">1,000+</div><div class="stat-label">Service Providers Trust Rev.io</div></div>
     </div>
-    <div class="vs">→</div>
-    <div class="compare-box tomorrow">
-      <div class="compare-label">With Rev.io — Unified Platform</div>
-      <div class="compare-line">One shared database — no syncing</div>
-      <div class="compare-line">Native billing automation built in</div>
-      <div class="compare-line">Quoting → e-sign → job automatically</div>
-      <div class="compare-line">Open REST API — connect anything</div>
-      <div class="compare-line">QBO, NinjaOne, N-Able integrations native</div>
-      <div class="compare-line">Payments built in — no 3rd-party processor</div>
-      <div class="compare-line">Communications billing for VoIP built in</div>
+    <div class="two-col" style="margin-top:24px;">
+      <div class="callout green">
+        <div class="callout-label">Mission</div>
+        <p>To help clients grow revenue efficiently.</p>
+      </div>
+      <div class="callout blue">
+        <div class="callout-label">Vision</div>
+        <p>To be the best billing and back-office software company in the world — providing innovative solutions and extraordinary service.</p>
+      </div>
+    </div>
+    <div class="badge-row">
+      <img src="https://raw.githubusercontent.com/koontz-robin/robin-decks/master/cs-badge-inc5000.png" class="badge-img" alt="Inc 5000">
     </div>
   </div>
 </div>
 
-<!-- SPOTLIGHT SECTIONS (conditional) -->
 
-  <div class="section">
-    <div class="section-tag">Spotlight</div>
+<div class="slide" id="slide-4">
+  <div class="slide-inner content-slide">
+    <div class="eyebrow">Section 2</div>
+    <h2>Everything You Need to Run a Modern MSP</h2>
+    <p class="lead">One platform. One database. No syncing headaches — service desk, billing, quoting, scheduling, inventory, and AI analytics in one system of record.</p>
+    <div class="screenshot-container">
+      <img src="https://raw.githubusercontent.com/koontz-robin/robin-decks/master/cs-feature-grid.png" class="feature-img" alt="Rev.io feature modules">
+    </div>
+    <p class="img-caption">PSA · Time Tracking · Quoting · Projects · AI Analytics · Scheduling · Mobile · Billing · Assets · RMM · Sales Opp Management</p>
+  </div>
+</div>
+
+
+<div class="slide" id="slide-5">
+  <div class="slide-inner content-slide">
+    <div class="eyebrow">Platform</div>
+    <h2>The PSA Your Techs Will Actually Use</h2>
+    <p class="lead">Real-time ticket management, time tracking, AI assist (Rev.ii), customer data, billing — all in one screen. No tab-switching, no copying data between systems.</p>
+    <div class="screenshot-container">
+      <img src="https://raw.githubusercontent.com/koontz-robin/robin-decks/master/cs-screenshot-psa.png" class="screenshot-img" alt="Rev.io PSA Dashboard">
+    </div>
+  </div>
+</div>
+
+
+<div class="slide" id="slide-6">
+  <div class="slide-inner content-slide">
+    <div class="eyebrow">Platform</div>
+    <h2>Billing That Actually Closes the Books</h2>
+    <p class="lead">Customer accounts, invoices, payment status, and collections — all visible in one place. No reconciling between your PSA and your billing system. They are the same system.</p>
+    <div class="screenshot-container">
+      <img src="https://raw.githubusercontent.com/koontz-robin/robin-decks/master/cs-screenshot-billing.png" class="screenshot-img" alt="Rev.io Billing UI">
+    </div>
+  </div>
+</div>
+
+
+<div class="slide" id="slide-7">
+  <div class="slide-inner content-slide">
+    <div class="eyebrow">Section 3</div>
+    <h2>Your World Today vs. With Rev.io</h2>
+    <p class="lead">You have built a solid business on the tools you have. Rev.io is not another tool — it is the platform that replaces the complexity underneath.</p>
+    <div class="compare-grid">
+      <div class="compare-box red-top">
+        <div class="compare-label red">Today — Current Stack</div>
+        <div class="stack-item"><span class="x">✕</span>Sangoma (VoIP)</div><div class="stack-item"><span class="x">✕</span>Separate PSA / ticketing tool</div><div class="stack-item"><span class="x">✕</span>Disconnected billing system</div><div class="stack-item"><span class="x">✕</span>3rd-party payment processing</div>
+      </div>
+      <div class="compare-arrow">→</div>
+      <div class="compare-box green-top">
+        <div class="compare-label green">With Rev.io — Unified Platform</div>
+        <div class="stack-item"><span class="check">✓</span>One shared database — no syncing</div>
+        <div class="stack-item"><span class="check">✓</span>Native billing automation built in</div>
+        <div class="stack-item"><span class="check">✓</span>Quoting to e-sign to job automatically</div>
+        <div class="stack-item"><span class="check">✓</span>Payments built in — no 3rd-party processor</div>
+        <div class="stack-item"><span class="check">✓</span>Communications billing for VoIP built in</div>
+        <div class="stack-item"><span class="check">✓</span>Open REST API — connect anything</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+<div class="slide" id="slide-8">
+  <div class="slide-inner content-slide">
+    <div class="eyebrow">Spotlight · VoIP</div>
     <h2>Built for VoIP &amp; Communications Billing</h2>
-    <p class="lead">You resell VoIP today. Most PSA platforms treat it as an afterthought — Rev.io was built by a billing company first. Complex telecom billing is in our DNA.</p>
-    <div class="spotlight-grid">
-      <div class="spotlight-card">
-        <div class="spotlight-icon">📡</div>
+    <p class="lead">You resell VoIP today via Sangoma. Most PSA platforms treat it as an afterthought — Rev.io was built by a billing company first. Telecom billing is in our DNA.</p>
+    <div class="three-col">
+      <div class="feature-card">
+        <div class="card-icon">📡</div>
         <h4>Telecom Taxation</h4>
-        <p>Integrate with top tax databases. Automatically calculate and apply taxes based on customer location — no spreadsheets, no manual lookup.</p>
+        <p>Integrate with top tax databases. Auto-calculate taxes by customer location — no spreadsheets, no manual lookup.</p>
       </div>
-      <div class="spotlight-card">
-        <div class="spotlight-icon">📊</div>
+      <div class="feature-card">
+        <div class="card-icon">📊</div>
         <h4>Usage Rating &amp; Billing</h4>
-        <p>Ingest usage data from Sangoma or any carrier. Configure usage plans, rate tiers, and bill customers automatically each cycle.</p>
+        <p>Ingest usage data from Sangoma or any carrier. Configure usage plans and bill customers automatically each cycle.</p>
       </div>
-      <div class="spotlight-card">
-        <div class="spotlight-icon">🤝</div>
+      <div class="feature-card">
+        <div class="card-icon">🤝</div>
         <h4>Agent &amp; Commission Management</h4>
-        <p>Automate commission calculations for your team or referral agents. Give partners their own portal — reduce your admin burden and improve partner relationships.</p>
+        <p>Automate commission calculations. Give referral partners their own portal — reduce admin burden, improve relationships.</p>
       </div>
     </div>
   </div>
+</div>
 
-  <div class="section">
-    <div class="section-tag">Spotlight</div>
-    <h2>Cyber Protect — RMM, EDR &amp; Backup in One</h2>
-    <p class="lead">Stop stitching together separate RMM, security, and backup vendors. Rev.io brings them together — with everything surfaced inside your PSA.</p>
-    <div class="spotlight-grid">
-      <div class="spotlight-card">
-        <div class="spotlight-icon">🖥️</div>
-        <h4>Remote Monitoring &amp; Management</h4>
-        <p>Identify performance issues before your clients do. Automate patching, deploy software remotely, and support from anywhere — all from one console.</p>
+
+<div class="slide" id="slide-9">
+  <div class="slide-inner content-slide">
+    <div class="eyebrow">Spotlight · Cyber Protect</div>
+    <h2>RMM, EDR &amp; Backup — All in One</h2>
+    <p class="lead">Stop stitching together separate RMM, security, and backup vendors. Rev.io brings them together with everything surfaced inside your PSA.</p>
+    <div class="screenshot-container" style="margin-bottom:16px;">
+      <img src="https://raw.githubusercontent.com/koontz-robin/robin-decks/master/cs-screenshot-rmm.png" class="screenshot-img" alt="Rev.io RMM Patches">
+    </div>
+    <div class="three-col">
+      <div class="feature-card compact">
+        <div class="card-icon">🖥️</div>
+        <h4>RMM</h4>
+        <p>Proactive monitoring, automated patching, remote support — from one console.</p>
       </div>
-      <div class="spotlight-card">
-        <div class="spotlight-icon">🛡️</div>
-        <h4>Endpoint Detection &amp; Response</h4>
-        <p>Block malware and detect zero-day attacks before they become incidents. Built-in backup integration means you can recover fast when it matters.</p>
+      <div class="feature-card compact">
+        <div class="card-icon">🛡️</div>
+        <h4>EDR</h4>
+        <p>Block malware, detect zero-day attacks, recover fast with built-in backup integration.</p>
       </div>
-      <div class="spotlight-card">
-        <div class="spotlight-icon">☁️</div>
+      <div class="feature-card compact">
+        <div class="card-icon">☁️</div>
         <h4>Cloud Backup</h4>
-        <p>Ransomware-resistant backup for endpoints, servers, and cloud data. Rev.io Cyber Protect (via Acronis) — one vendor, one bill, one support call.</p>
+        <p>Ransomware-resistant backup for endpoints, servers, and cloud data via Acronis.</p>
       </div>
     </div>
   </div>
+</div>
 
-  <div class="section">
-    <div class="section-tag">Spotlight</div>
+
+<div class="slide" id="slide-10">
+  <div class="slide-inner content-slide">
+    <div class="eyebrow">Spotlight · Payments</div>
     <h2>Payments — Keep Cash Moving</h2>
     <p class="lead">Rev.io includes a full payment processing platform (TRX Services) built directly into your billing. No separate merchant account, no clunky integrations.</p>
-    <div class="spotlight-grid">
-      <div class="spotlight-card">
-        <div class="spotlight-icon">💳</div>
+    <div class="three-col">
+      <div class="feature-card">
+        <div class="card-icon">💳</div>
         <h4>Accept Cards &amp; ACH</h4>
-        <p>Process inside your CRM, at point-of-sale, or online. Offer mobile and text-to-pay. Offset fees with surcharging — reduce your cost to collect.</p>
+        <p>Process in your CRM, at POS, or online. Mobile and text-to-pay. Offset fees with surcharging.</p>
       </div>
-      <div class="spotlight-card">
-        <div class="spotlight-icon">🔄</div>
+      <div class="feature-card">
+        <div class="card-icon">🔄</div>
         <h4>Automated Recurring Billing</h4>
-        <p>Set it and forget it. Recurring billing, collections, and payment retries run automatically — your team focuses on clients, not chasing invoices.</p>
+        <p>Recurring billing, collections, and retries run automatically. Your team focuses on clients.</p>
       </div>
-      <div class="spotlight-card">
-        <div class="spotlight-icon">💰</div>
+      <div class="feature-card">
+        <div class="card-icon">💰</div>
         <h4>Vendor Payments &amp; Cashback</h4>
-        <p>Pay vendors via ACH and virtual cards. Earn cashback on eligible spend, eliminate manual check runs, and get full visibility into cash out.</p>
+        <p>Pay vendors via ACH and virtual cards. Earn cashback. Eliminate manual check runs.</p>
       </div>
     </div>
   </div>
+</div>
 
 
-<!-- APOLLO RELEASES -->
-<div class="section">
-  <div class="section-tag">Section 4</div>
-  <h2>We Ship Fast</h2>
-  <p class="lead">Rev.io released two major updates in Q1 2026 alone. Here's what's new — and what you'd get access to on day one.</p>
-  <div class="release-grid">
-    <div class="release-box">
-      <div class="release-header">
-        <span class="release-badge apollo1">Apollo 1</span>
-        <span class="release-date">February 1, 2026</span>
+<div class="slide" id="slide-11">
+  <div class="slide-inner content-slide">
+    <div class="eyebrow">Section 4</div>
+    <h2>We Ship Fast</h2>
+    <p class="lead">Two major platform releases in Q1 2026 alone. Here is what is new — and what you would get access to on day one.</p>
+    <div class="two-col">
+      <div class="release-box">
+        <div class="release-header">
+          <span class="release-badge blue-badge">Apollo 1</span>
+          <span class="release-date">February 1, 2026</span>
+        </div>
+        <div class="release-item"><div class="dot blue-dot"></div><div><strong>Project Management</strong><br><span class="muted">Milestones, billing, job costing</span></div></div>
+        <div class="release-item"><div class="dot blue-dot"></div><div><strong>Rev.io Mobile App</strong><br><span class="muted">GPS, offline mode, AI assist</span></div></div>
+        <div class="release-item"><div class="dot blue-dot"></div><div><strong>Recurring Service Contracts</strong><br><span class="muted">Automate recurring billing</span></div></div>
+        <div class="release-item"><div class="dot blue-dot"></div><div><strong>Job Costing for Tickets</strong><br><span class="muted">Real-time profitability per ticket</span></div></div>
+        <div class="release-item"><div class="dot blue-dot"></div><div><strong>Advanced Reporting</strong><br><span class="muted">Intelligent BI dashboards</span></div></div>
       </div>
-      
-        <div class="release-item">
-          <div class="release-dot"></div>
-          <div><strong>Project Management</strong><br><span class="release-desc">Full project tracking with milestones, billing, and job costing</span></div>
+      <div class="release-box">
+        <div class="release-header">
+          <span class="release-badge green-badge">Apollo 2</span>
+          <span class="release-date">April 1, 2026</span>
         </div>
-        <div class="release-item">
-          <div class="release-dot"></div>
-          <div><strong>Rev.io Mobile App</strong><br><span class="release-desc">Field tech app with GPS, offline mode, and AI assist</span></div>
-        </div>
-        <div class="release-item">
-          <div class="release-dot"></div>
-          <div><strong>Recurring Service Contracts</strong><br><span class="release-desc">Automate recurring billing from service agreements</span></div>
-        </div>
-        <div class="release-item">
-          <div class="release-dot"></div>
-          <div><strong>Job Costing for Tickets</strong><br><span class="release-desc">Track profitability per ticket in real time</span></div>
-        </div>
-        <div class="release-item">
-          <div class="release-dot"></div>
-          <div><strong>Advanced Reporting & Analytics</strong><br><span class="release-desc">Customizable dashboards and intelligent BI reports</span></div>
-        </div>
-    </div>
-    <div class="release-box">
-      <div class="release-header">
-        <span class="release-badge apollo2">Apollo 2</span>
-        <span class="release-date">April 1, 2026</span>
+        <div class="release-item"><div class="dot green-dot"></div><div><strong>Sales Opportunity Management</strong><br><span class="muted">Pipeline tracking inside PSA</span></div></div>
+        <div class="release-item"><div class="dot green-dot"></div><div><strong>NinjaOne &amp; N-Able Integration</strong><br><span class="muted">Native RMM sync — no middleware</span></div></div>
+        <div class="release-item"><div class="dot green-dot"></div><div><strong>Rev.ii AI for Mobile</strong><br><span class="muted">AI-powered field ops</span></div></div>
+        <div class="release-item"><div class="dot green-dot"></div><div><strong>GPS Tracking for Mobile</strong><br><span class="muted">Real-time tech location and dispatch</span></div></div>
+        <div class="release-item"><div class="dot green-dot"></div><div><strong>Acronis Alerts &amp; Assets</strong><br><span class="muted">Cyber events surfaced in PSA</span></div></div>
       </div>
-      
-        <div class="release-item">
-          <div class="release-dot apollo2"></div>
-          <div><strong>Sales Opportunity Management</strong><br><span class="release-desc">Track deals and pipeline directly inside your PSA</span></div>
-        </div>
-        <div class="release-item">
-          <div class="release-dot apollo2"></div>
-          <div><strong>NinjaOne & N-Able Integration</strong><br><span class="release-desc">Sync RMM data natively — no middleware needed</span></div>
-        </div>
-        <div class="release-item">
-          <div class="release-dot apollo2"></div>
-          <div><strong>Rev.ii AI for Mobile</strong><br><span class="release-desc">AI-powered field ops from your technician's phone</span></div>
-        </div>
-        <div class="release-item">
-          <div class="release-dot apollo2"></div>
-          <div><strong>GPS Tracking for Mobile</strong><br><span class="release-desc">Real-time tech location and dispatch optimization</span></div>
-        </div>
-        <div class="release-item">
-          <div class="release-dot apollo2"></div>
-          <div><strong>Job Costing & Profitability</strong><br><span class="release-desc">Full margin visibility per ticket, project, and client</span></div>
-        </div>
-        <div class="release-item">
-          <div class="release-dot apollo2"></div>
-          <div><strong>Flexible Recurring Service Billing</strong><br><span class="release-desc">Bill VoIP and usage services automatically</span></div>
-        </div>
-        <div class="release-item">
-          <div class="release-dot apollo2"></div>
-          <div><strong>Acronis Alerts, Products & Assets</strong><br><span class="release-desc">Cyber events and backups surfaced inside PSA</span></div>
-        </div>
     </div>
-  </div>
-  <div class="highlight-box">
-    <div class="highlight-label">No Migration Fees</div>
-    <p style="font-size:14px;color:var(--text);line-height:1.7">
-      Moving from an existing PSA? Rev.io charges <strong>no migration fees</strong>. We include onboarding support to get your data moved and your team trained — without an invoice for it.
-    </p>
-  </div>
-</div>
-
-<!-- INTEGRATIONS -->
-<div class="section">
-  <div class="section-tag">Section 5</div>
-  <h2>Connects to the Tools You Already Use</h2>
-  <p class="lead">Rev.io's open ecosystem means you keep what's working. Our integrations are native — not middleware patches.</p>
-  <div class="integration-row">
-    <div class="int-badge">QuickBooks Online</div>
-    <div class="int-badge">NinjaOne</div>
-    <div class="int-badge">N-Able</div>
-    <div class="int-badge">Acronis</div>
-    <div class="int-badge">Pax8</div>
-    <div class="int-badge">HubSpot</div>
-    <div class="int-badge">NetSuite</div>
-    <div class="int-badge">Sangoma</div>
-    <div class="int-badge">COPS</div>
-    <div class="int-badge">Open REST API</div>
-  </div>
-  <p class="lead" style="margin-top:16px;margin-bottom:0">Don't see a tool you use? Our open REST API means your team or ours can build it.</p>
-</div>
-
-<!-- NEXT STEPS -->
-<div class="section">
-  <div class="section-tag">Section 6</div>
-  <h2>What Happens Next</h2>
-  <p class="lead">We're not here to sell you on a demo you didn't ask for. Here's how we typically move forward with companies like PC Quest Technologies.</p>
-  <div class="next-step">
-    <div class="step-num">1</div>
-    <div class="step-content">
-      <h4>Discovery Deep Dive</h4>
-      <p>We spend time understanding your current stack, billing workflows, and growth goals. No assumptions — we want to hear it from you.</p>
-    </div>
-  </div>
-  <div class="next-step">
-    <div class="step-num">2</div>
-    <div class="step-content">
-      <h4>Tailored Demo</h4>
-      <p>We show you only what's relevant to you. No 90-minute feature tours — a focused walkthrough of what solves your specific problems.</p>
-    </div>
-  </div>
-  <div class="next-step">
-    <div class="step-num">3</div>
-    <div class="step-content">
-      <h4>ROI Analysis</h4>
-      <p>We model the cost of your current state and what changes with Rev.io — in dollars. No vague "efficiency gains," real numbers.</p>
-    </div>
-  </div>
-  <div class="next-step">
-    <div class="step-num">4</div>
-    <div class="step-content">
-      <h4>Trial &amp; Onboarding</h4>
-      <p>Start with a hands-on trial. Our onboarding team migrates your data and trains your team — no migration fees, no surprises.</p>
+    <div class="callout green" style="margin-top:20px;">
+      <div class="callout-label">No Migration Fees</div>
+      <p>Moving from an existing PSA? Rev.io charges $0 in migration fees. Onboarding support included — data moved, team trained, no surprise invoice.</p>
     </div>
   </div>
 </div>
 
-<!-- PRICING -->
-<div class="section">
-  <div class="section-tag">Pricing</div>
-  <h2>Simple, Transparent Pricing</h2>
-  <p class="lead">No migration fees from your existing PSA. No surprises.</p>
-  <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:16px;margin:32px 0;">
-    <div class="cred-card" style="border-top:3px solid var(--blue);">
-      <div class="cred-val" style="color:var(--blue);">$115</div>
-      <div class="cred-label">Per User / Month<br><span style="color:var(--text);font-size:12px;font-weight:400;text-transform:none;">Full PSA access</span></div>
+
+<div class="slide" id="slide-12">
+  <div class="slide-inner content-slide">
+    <div class="eyebrow">Section 5</div>
+    <h2>Connects to the Tools You Already Use</h2>
+    <p class="lead">Rev.io open ecosystem means you keep what is working. Integrations are native — not middleware patches.</p>
+    <div class="screenshot-container">
+      <img src="https://raw.githubusercontent.com/koontz-robin/robin-decks/master/cs-integrations.png" class="integration-img" alt="Rev.io Integrations">
     </div>
-    <div class="cred-card" style="border-top:3px solid var(--cyan);">
-      <div class="cred-val" style="color:var(--cyan);">$30</div>
-      <div class="cred-label">Limited Field Users<br><span style="color:var(--text);font-size:12px;font-weight:400;text-transform:none;">Tiered discount pricing available</span></div>
-    </div>
-    <div class="cred-card" style="border-top:3px solid var(--green);">
-      <div class="cred-val" style="color:var(--green);">$0</div>
-      <div class="cred-label">Migration Fees<br><span style="color:var(--text);font-size:12px;font-weight:400;text-transform:none;">5-user minimum · Communications billing add-on available</span></div>
+    <div class="int-badges">
+      <span class="int-badge">QuickBooks Online</span>
+      <span class="int-badge">NinjaOne</span>
+      <span class="int-badge">N-Able</span>
+      <span class="int-badge">Acronis</span>
+      <span class="int-badge">Pax8</span>
+      <span class="int-badge">HubSpot</span>
+      <span class="int-badge">NetSuite</span>
+      <span class="int-badge">Sangoma</span>
+      <span class="int-badge">Verizon / AT&amp;T / T-Mobile</span>
+      <span class="int-badge">DocuSign</span>
+      <span class="int-badge">Avalara</span>
+      <span class="int-badge">Open REST API</span>
     </div>
   </div>
-  <div class="highlight-box">
-    <div class="highlight-label">Integrations Included</div>
-    <p style="font-size:14px;color:var(--text);line-height:1.7">QuickBooks Online and more included. Communications billing (for VoIP resellers) available as an add-on. Additional tiered-user pricing discounts apply at volume.</p>
+</div>
+
+
+<div class="slide" id="slide-13">
+  <div class="slide-inner content-slide">
+    <div class="eyebrow">Pricing</div>
+    <h2>Simple, Transparent Pricing</h2>
+    <p class="lead">No migration fees from your existing PSA. No surprises. QBO and more included.</p>
+    <div class="stats-grid">
+      <div class="stat-card blue-top"><div class="stat-val blue">$115</div><div class="stat-label">Per User / Month<small>Full PSA access</small></div></div>
+      <div class="stat-card cyan-top"><div class="stat-val cyan">$30</div><div class="stat-label">Limited Field Users<small>Tiered discounts available</small></div></div>
+      <div class="stat-card green-top"><div class="stat-val green">$0</div><div class="stat-label">Migration Fees<small>5-user minimum</small></div></div>
+    </div>
+    <div class="callout blue" style="margin-top:28px;">
+      <div class="callout-label">Add-On Available</div>
+      <p>Communications billing for VoIP resellers available as add-on. Additional tiered-user pricing discounts apply at volume. Payments processing via TRX Services available separately.</p>
+    </div>
   </div>
 </div>
 
-<!-- WHERE TO FIND US -->
-<div class="section">
-  <div class="section-tag">Rev.io On the Road</div>
-  <h2>Come Find Us</h2>
-  <p class="lead">We're active in the MSP and telecom channel. If you're heading to any of these events, let's meet in person.</p>
-  <table style="width:100%;border-collapse:collapse;">
-    <thead>
-      <tr>
-        <th style="font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:1px;color:var(--muted);padding:10px 16px;text-align:left;background:var(--surface2);border-bottom:1px solid var(--border);">Dates</th>
-        <th style="font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:1px;color:var(--muted);padding:10px 16px;text-align:left;background:var(--surface2);border-bottom:1px solid var(--border);">Event</th>
-        <th style="font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:1px;color:var(--muted);padding:10px 16px;text-align:left;background:var(--surface2);border-bottom:1px solid var(--border);">Location</th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr><td style="padding:12px 16px;font-size:13px;color:var(--muted);border-bottom:1px solid var(--border);">Apr 7–9</td><td style="padding:12px 16px;font-size:13px;color:var(--text);border-bottom:1px solid var(--border);">Boot Camp (Kaseya)</td><td style="padding:12px 16px;font-size:13px;color:var(--muted);border-bottom:1px solid var(--border);">Dallas, TX</td></tr>
-      <tr><td style="padding:12px 16px;font-size:13px;color:var(--muted);border-bottom:1px solid var(--border);">Apr 13–14</td><td style="padding:12px 16px;font-size:13px;color:var(--text);border-bottom:1px solid var(--border);">MSP Summit (part of CP)</td><td style="padding:12px 16px;font-size:13px;color:var(--muted);border-bottom:1px solid var(--border);">Las Vegas, NV</td></tr>
-      <tr><td style="padding:12px 16px;font-size:13px;color:var(--muted);border-bottom:1px solid var(--border);">Apr 14–16</td><td style="padding:12px 16px;font-size:13px;color:var(--text);border-bottom:1px solid var(--border);">Channel Partners Conference</td><td style="padding:12px 16px;font-size:13px;color:var(--muted);border-bottom:1px solid var(--border);">Las Vegas, NV</td></tr>
-      <tr><td style="padding:12px 16px;font-size:13px;color:var(--muted);border-bottom:1px solid var(--border);">Apr 26–29</td><td style="padding:12px 16px;font-size:13px;color:var(--text);border-bottom:1px solid var(--border);">SkySwitch Vectors</td><td style="padding:12px 16px;font-size:13px;color:var(--muted);border-bottom:1px solid var(--border);">Orlando, FL</td></tr>
-      <tr><td style="padding:12px 16px;font-size:13px;color:var(--muted);border-bottom:1px solid var(--border);">Apr 27–30</td><td style="padding:12px 16px;font-size:13px;color:var(--text);border-bottom:1px solid var(--border);">Kaseya Connect</td><td style="padding:12px 16px;font-size:13px;color:var(--muted);border-bottom:1px solid var(--border);">Las Vegas, NV</td></tr>
-      <tr><td style="padding:12px 16px;font-size:13px;color:var(--muted);border-bottom:1px solid var(--border);">Jun 1–4</td><td style="padding:12px 16px;font-size:13px;color:var(--text);border-bottom:1px solid var(--border);">ESX (Electronic Security Expo)</td><td style="padding:12px 16px;font-size:13px;color:var(--muted);border-bottom:1px solid var(--border);">Irving, TX</td></tr>
-      <tr><td style="padding:12px 16px;font-size:13px;color:var(--muted);border-bottom:1px solid var(--border);">Jun 7–9</td><td style="padding:12px 16px;font-size:13px;color:var(--text);border-bottom:1px solid var(--border);">Pax8 Beyond</td><td style="padding:12px 16px;font-size:13px;color:var(--muted);border-bottom:1px solid var(--border);">Salt Lake City, UT</td></tr>
-      <tr><td style="padding:12px 16px;font-size:13px;color:var(--muted);border-bottom:1px solid var(--border);">Jun 17–19</td><td style="padding:12px 16px;font-size:13px;color:var(--text);border-bottom:1px solid var(--border);">InfoComm</td><td style="padding:12px 16px;font-size:13px;color:var(--muted);border-bottom:1px solid var(--border);">Las Vegas, NV</td></tr>
-    </tbody>
-  </table>
+
+<div class="slide" id="slide-14">
+  <div class="slide-inner content-slide">
+    <div class="eyebrow">Rev.io On the Road</div>
+    <h2>Come Find Us</h2>
+    <p class="lead">We are active in the MSP and telecom channel. Heading to any of these? Let us meet in person.</p>
+    <table class="events-table">
+      <thead><tr><th>Dates</th><th>Event</th><th>Location</th></tr></thead>
+      <tbody>
+        <tr><td>Apr 7-9</td><td>Boot Camp (Kaseya)</td><td>Dallas, TX</td></tr>
+        <tr><td>Apr 13-14</td><td>MSP Summit</td><td>Las Vegas, NV</td></tr>
+        <tr><td>Apr 14-16</td><td>Channel Partners Conference</td><td>Las Vegas, NV</td></tr>
+        <tr><td>Apr 26-29</td><td>SkySwitch Vectors</td><td>Orlando, FL</td></tr>
+        <tr><td>Apr 27-30</td><td>Kaseya Connect</td><td>Las Vegas, NV</td></tr>
+        <tr><td>Jun 1-4</td><td>ESX (Electronic Security Expo)</td><td>Irving, TX</td></tr>
+        <tr><td>Jun 7-9</td><td>Pax8 Beyond</td><td>Salt Lake City, UT</td></tr>
+        <tr><td>Jun 17-19</td><td>InfoComm</td><td>Las Vegas, NV</td></tr>
+      </tbody>
+    </table>
+  </div>
 </div>
 
-<div class="disclaimer">
-  Prepared exclusively for PC Quest Technologies by Your Rev.io Rep · Rev.io · April 2026<br>
-  This presentation is confidential and intended solely for the recipient. Pricing and features subject to change.
+
+<div class="slide" id="slide-15">
+  <div class="slide-inner content-slide">
+    <div class="eyebrow">Section 6</div>
+    <h2>What Happens Next</h2>
+    <p class="lead">We are not here to sell you on a demo you did not ask for. Here is how we move forward.</p>
+    <div class="steps-list">
+      <div class="step-row">
+        <div class="step-num">1</div>
+        <div class="step-body"><h4>Discovery Deep Dive</h4><p>We understand your current stack, billing workflows, and growth goals. No assumptions — we want to hear it from you.</p></div>
+      </div>
+      <div class="step-row">
+        <div class="step-num">2</div>
+        <div class="step-body"><h4>Tailored Demo</h4><p>A focused walkthrough of what solves your specific problems. No 90-minute feature tours.</p></div>
+      </div>
+      <div class="step-row">
+        <div class="step-num">3</div>
+        <div class="step-body"><h4>ROI Analysis</h4><p>We model the cost of your current state and what changes with Rev.io — in real dollars, not vague efficiency gains.</p></div>
+      </div>
+      <div class="step-row">
+        <div class="step-num">4</div>
+        <div class="step-body"><h4>Trial &amp; Onboarding</h4><p>Start with a hands-on trial. We migrate your data and train your team — no migration fees, no surprises.</p></div>
+      </div>
+    </div>
+    <p class="disclaimer-text">Prepared exclusively for PC Quest Technologies by Your Rev.io Rep &middot; Rev.io &middot; April 2026<br>This presentation is confidential. Pricing and features subject to change.</p>
+  </div>
 </div>
 
+</div>
+<div class="nav-btn nav-prev" onclick="changeSlide(-1)">&#8592;</div>
+<div class="nav-btn nav-next" onclick="changeSlide(1)">&#8594;</div>
+<div class="slide-counter"><span id="current-slide">1</span> / 15</div>
+<div class="dots"><div class="dot-nav active" onclick="goToSlide(1)"></div><div class="dot-nav " onclick="goToSlide(2)"></div><div class="dot-nav " onclick="goToSlide(3)"></div><div class="dot-nav " onclick="goToSlide(4)"></div><div class="dot-nav " onclick="goToSlide(5)"></div><div class="dot-nav " onclick="goToSlide(6)"></div><div class="dot-nav " onclick="goToSlide(7)"></div><div class="dot-nav " onclick="goToSlide(8)"></div><div class="dot-nav " onclick="goToSlide(9)"></div><div class="dot-nav " onclick="goToSlide(10)"></div><div class="dot-nav " onclick="goToSlide(11)"></div><div class="dot-nav " onclick="goToSlide(12)"></div><div class="dot-nav " onclick="goToSlide(13)"></div><div class="dot-nav " onclick="goToSlide(14)"></div><div class="dot-nav " onclick="goToSlide(15)"></div></div>
+<div class="kb-hint">&#8592; &#8594; arrow keys to navigate</div>
+<script>
+  let current = 1;
+  const total = 15;
+  function goToSlide(n) {
+    document.querySelector('.slide.active').classList.remove('active');
+    document.querySelectorAll('.dot-nav')[current-1].classList.remove('active');
+    current = Math.max(1, Math.min(total, n));
+    document.getElementById('slide-' + current).classList.add('active');
+    document.querySelectorAll('.dot-nav')[current-1].classList.add('active');
+    document.getElementById('current-slide').textContent = current;
+  }
+  function changeSlide(dir) { goToSlide(current + dir); }
+  document.addEventListener('keydown', e => {
+    if (e.key === 'ArrowRight' || e.key === 'ArrowDown' || e.key === ' ') changeSlide(1);
+    if (e.key === 'ArrowLeft' || e.key === 'ArrowUp') changeSlide(-1);
+  });
+  let touchStartX = 0;
+  document.addEventListener('touchstart', e => { touchStartX = e.touches[0].clientX; });
+  document.addEventListener('touchend', e => {
+    const dx = e.changedTouches[0].clientX - touchStartX;
+    if (Math.abs(dx) > 50) changeSlide(dx < 0 ? 1 : -1);
+  });
+</script>
 </body>
 </html>
