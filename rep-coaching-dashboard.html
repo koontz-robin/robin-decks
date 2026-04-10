@@ -1,0 +1,295 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Rep Coaching Dashboard</title>
+<style>
+  * { margin:0; padding:0; box-sizing:border-box; }
+  body { background:#000; font-family:'Segoe UI',system-ui,sans-serif; color:#e2e8f0; min-height:100vh; padding:36px 48px; }
+  h1 { font-size:26px; font-weight:700; color:#fff; margin-bottom:4px; }
+  .sub { font-size:13px; color:#475569; margin-bottom:28px; }
+  .grid { display:grid; grid-template-columns:repeat(2,1fr); gap:20px; }
+  @media(max-width:900px) { .grid { grid-template-columns:1fr; } }
+  .footer { font-size:11px; color:#334155; margin-top:28px; text-align:center; }
+</style>
+</head>
+<body>
+<div style="position:relative">
+  <img src="https://raw.githubusercontent.com/koontz-robin/robin-decks/master/revio-logo.png" style="position:absolute;top:0;right:0;height:44px;opacity:0.95" alt="rev.io">
+  <h1>Rep Coaching Dashboard</h1>
+  <p class="sub">AI-synthesized coaching priorities from 46 graded calls · April 10, 2026 · For leadership 1-on-1 use</p>
+</div>
+
+<!-- KPI row -->
+<div style="display:flex;gap:16px;margin-bottom:28px;flex-wrap:wrap">
+  <div style="background:#1e293b;border-radius:10px;padding:18px 20px;flex:1;min-width:140px;position:relative;overflow:hidden">
+    <div style="position:absolute;top:0;left:0;right:0;height:3px;background:#38bdf8"></div>
+    <div style="font-size:10px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;color:#64748b;margin-bottom:6px">Reps Tracked</div>
+    <div style="font-size:42px;font-weight:800;color:#38bdf8;line-height:1">8</div>
+  </div>
+  <div style="background:#1e293b;border-radius:10px;padding:18px 20px;flex:1;min-width:140px;position:relative;overflow:hidden">
+    <div style="position:absolute;top:0;left:0;right:0;height:3px;background:#34d399"></div>
+    <div style="font-size:10px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;color:#64748b;margin-bottom:6px">Total Calls Graded</div>
+    <div style="font-size:42px;font-weight:800;color:#34d399;line-height:1">46</div>
+  </div>
+  <div style="background:#1e293b;border-radius:10px;padding:18px 20px;flex:1;min-width:140px;position:relative;overflow:hidden">
+    <div style="position:absolute;top:0;left:0;right:0;height:3px;background:#fbbf24"></div>
+    <div style="font-size:10px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;color:#64748b;margin-bottom:6px">Team Avg Score</div>
+    <div style="font-size:42px;font-weight:800;color:#fbbf24;line-height:1">50</div>
+  </div>
+  <div style="background:#1e293b;border-radius:10px;padding:18px 20px;flex:1;min-width:140px;position:relative;overflow:hidden">
+    <div style="position:absolute;top:0;left:0;right:0;height:3px;background:#f87171"></div>
+    <div style="font-size:10px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;color:#64748b;margin-bottom:6px">Coaching Required</div>
+    <div style="font-size:42px;font-weight:800;color:#f87171;line-height:1">4</div>
+    <div style="font-size:11px;color:#475569;margin-top:4px">avg score &lt;50</div>
+  </div>
+</div>
+
+<div class="grid">
+
+<div style="background:#1e293b;border-radius:12px;overflow:hidden;border:1px solid #0f172a">
+  <!-- Header -->
+  <div style="background:#0f172a;padding:16px 20px;display:flex;justify-content:space-between;align-items:center;border-bottom:2px solid #f87171">
+    <div>
+      <div style="font-size:16px;font-weight:700;color:#e2e8f0">Joseph Abarno</div>
+      <div style="font-size:11px;color:#64748b;margin-top:2px">3 graded calls · 🔴 Coaching Required</div>
+    </div>
+    <div style="text-align:right">
+      <div style="font-size:36px;font-weight:800;color:#f87171;line-height:1">36</div>
+      <div style="font-size:10px;color:#64748b">avg score</div>
+    </div>
+  </div>
+  <div style="display:grid;grid-template-columns:1fr 1fr;gap:0">
+    <!-- Left: Category breakdown -->
+    <div style="padding:16px 18px;border-right:1px solid #0f172a">
+      <div style="font-size:10px;font-weight:700;color:#64748b;letter-spacing:1.5px;text-transform:uppercase;margin-bottom:10px">Category Averages</div>
+      <div style="margin-bottom:6px"><div style="display:flex;justify-content:space-between;margin-bottom:2px"><span style="font-size:11px;color:#64748b">Approach</span><span style="font-size:11px;color:#94a3b8">0/15</span></div><div style="background:#0f172a;border-radius:3px;height:5px"><div style="width:0%;height:100%;background:#f87171;border-radius:3px"></div></div></div><div style="margin-bottom:6px"><div style="display:flex;justify-content:space-between;margin-bottom:2px"><span style="font-size:11px;color:#64748b">Co. Story</span><span style="font-size:11px;color:#94a3b8">0/15</span></div><div style="background:#0f172a;border-radius:3px;height:5px"><div style="width:0%;height:100%;background:#f87171;border-radius:3px"></div></div></div><div style="margin-bottom:6px"><div style="display:flex;justify-content:space-between;margin-bottom:2px"><span style="font-size:11px;color:#64748b">Qualifying</span><span style="font-size:11px;color:#94a3b8">0/40</span></div><div style="background:#0f172a;border-radius:3px;height:5px"><div style="width:0%;height:100%;background:#f87171;border-radius:3px"></div></div></div><div style="margin-bottom:6px"><div style="display:flex;justify-content:space-between;margin-bottom:2px"><span style="font-size:11px;color:#64748b">Summarize</span><span style="font-size:11px;color:#94a3b8">0/20</span></div><div style="background:#0f172a;border-radius:3px;height:5px"><div style="width:0%;height:100%;background:#f87171;border-radius:3px"></div></div></div><div style="margin-bottom:6px"><div style="display:flex;justify-content:space-between;margin-bottom:2px"><span style="font-size:11px;color:#64748b">Next Steps</span><span style="font-size:11px;color:#94a3b8">0/15</span></div><div style="background:#0f172a;border-radius:3px;height:5px"><div style="width:0%;height:100%;background:#f87171;border-radius:3px"></div></div></div>
+    </div>
+    <!-- Right: Recent calls -->
+    <div style="padding:16px 18px">
+      <div style="font-size:10px;font-weight:700;color:#64748b;letter-spacing:1.5px;text-transform:uppercase;margin-bottom:10px">Recent Calls</div>
+      <div style="display:flex;justify-content:space-between;align-items:center;padding:5px 0;border-bottom:1px solid #1e293b"><span style="font-size:12px;color:#94a3b8">Innovative IOT</span><span style="font-size:12px;font-weight:700;color:#f87171">38</span></div><div style="display:flex;justify-content:space-between;align-items:center;padding:5px 0;border-bottom:1px solid #1e293b"><span style="font-size:12px;color:#94a3b8">Organ Mountain Cabling and Technology L.L.C.</span><span style="font-size:12px;font-weight:700;color:#f87171">42</span></div><div style="display:flex;justify-content:space-between;align-items:center;padding:5px 0;border-bottom:1px solid #1e293b"><span style="font-size:12px;color:#94a3b8">Liberty Latin America</span><span style="font-size:12px;font-weight:700;color:#f87171">28</span></div>
+    </div>
+  </div>
+  <!-- Coaching priorities -->
+  <div style="padding:16px 20px;border-top:1px solid #0f172a">
+    <div style="font-size:10px;font-weight:700;color:#64748b;letter-spacing:1.5px;text-transform:uppercase;margin-bottom:10px">🎯 Top 3 1-on-1 Coaching Priorities</div>
+    <div style="background:#0f172a;border-left:3px solid #f87171;border-radius:4px;padding:10px 12px;margin-bottom:8px"><div style="font-size:12px;color:#c8f0dc;line-height:1.5"># TOP 3 Coaching Priorities for Joseph Abarno</div></div><div style="background:#0f172a;border-left:3px solid #f87171;border-radius:4px;padding:10px 12px;margin-bottom:8px"><div style="font-size:12px;color:#c8f0dc;line-height:1.5">**Control the Call with an Upfront Agenda** — You're letting prospects hijack calls early (pricing questions, wrong DM situations). Start every call by setting a clear agenda and getting buy-in: "Here's what I'd like to cover... does that work for you?" This gives you permission to redirect when they go off-track.</div></div><div style="background:#0f172a;border-left:3px solid #f87171;border-radius:4px;padding:10px 12px;margin-bottom:8px"><div style="font-size:12px;color:#c8f0dc;line-height:1.5">**Discovery BEFORE Demo, Every Time** — You're presenting for 15+ minutes before asking meaningful questions. Flip the structure completely: no product discussion until you've uncovered their pain, current state, and what success looks like. If they push for a demo early, say "I want to make sure I show you the right things — can I ask a few questions first?"</div></div><div style="background:#0f172a;border-left:3px solid #f87171;border-radius:4px;padding:10px 12px;margin-bottom:8px"><div style="font-size:12px;color:#c8f0dc;line-height:1.5">**Qualify the Decision-Maker in the First 2 Minutes** — You burned an entire call presenting to someone who told you upfront they weren't the right person. Before any discovery or demo, confirm: "Are you the one who would ultimately make this decision, or should we loop someone else in?" If they're not the DM, pivot to a strategy call to identify who is.</div></div><div style="background:#0f172a;border-left:3px solid #f87171;border-radius:4px;padding:10px 12px;margin-bottom:8px"><div style="font-size:12px;color:#c8f0dc;line-height:1.5">**Pattern Summary:** Joseph is skipping foundational qualifying steps and rushing to present, which is why Approach, Qualifying, and Summarize scores are at zero. Slow down the front of the call.</div></div>
+  </div>
+</div>
+<div style="background:#1e293b;border-radius:12px;overflow:hidden;border:1px solid #0f172a">
+  <!-- Header -->
+  <div style="background:#0f172a;padding:16px 20px;display:flex;justify-content:space-between;align-items:center;border-bottom:2px solid #f87171">
+    <div>
+      <div style="font-size:16px;font-weight:700;color:#e2e8f0">Andrew Whisenant</div>
+      <div style="font-size:11px;color:#64748b;margin-top:2px">6 graded calls · 🔴 Coaching Required</div>
+    </div>
+    <div style="text-align:right">
+      <div style="font-size:36px;font-weight:800;color:#f87171;line-height:1">45</div>
+      <div style="font-size:10px;color:#64748b">avg score</div>
+    </div>
+  </div>
+  <div style="display:grid;grid-template-columns:1fr 1fr;gap:0">
+    <!-- Left: Category breakdown -->
+    <div style="padding:16px 18px;border-right:1px solid #0f172a">
+      <div style="font-size:10px;font-weight:700;color:#64748b;letter-spacing:1.5px;text-transform:uppercase;margin-bottom:10px">Category Averages</div>
+      <div style="margin-bottom:6px"><div style="display:flex;justify-content:space-between;margin-bottom:2px"><span style="font-size:11px;color:#64748b">Approach</span><span style="font-size:11px;color:#94a3b8">0/15</span></div><div style="background:#0f172a;border-radius:3px;height:5px"><div style="width:0%;height:100%;background:#f87171;border-radius:3px"></div></div></div><div style="margin-bottom:6px"><div style="display:flex;justify-content:space-between;margin-bottom:2px"><span style="font-size:11px;color:#64748b">Co. Story</span><span style="font-size:11px;color:#94a3b8">0/15</span></div><div style="background:#0f172a;border-radius:3px;height:5px"><div style="width:0%;height:100%;background:#f87171;border-radius:3px"></div></div></div><div style="margin-bottom:6px"><div style="display:flex;justify-content:space-between;margin-bottom:2px"><span style="font-size:11px;color:#64748b">Qualifying</span><span style="font-size:11px;color:#94a3b8">0/40</span></div><div style="background:#0f172a;border-radius:3px;height:5px"><div style="width:0%;height:100%;background:#f87171;border-radius:3px"></div></div></div><div style="margin-bottom:6px"><div style="display:flex;justify-content:space-between;margin-bottom:2px"><span style="font-size:11px;color:#64748b">Summarize</span><span style="font-size:11px;color:#94a3b8">0/20</span></div><div style="background:#0f172a;border-radius:3px;height:5px"><div style="width:0%;height:100%;background:#f87171;border-radius:3px"></div></div></div><div style="margin-bottom:6px"><div style="display:flex;justify-content:space-between;margin-bottom:2px"><span style="font-size:11px;color:#64748b">Next Steps</span><span style="font-size:11px;color:#94a3b8">4/15</span></div><div style="background:#0f172a;border-radius:3px;height:5px"><div style="width:30%;height:100%;background:#f87171;border-radius:3px"></div></div></div>
+    </div>
+    <!-- Right: Recent calls -->
+    <div style="padding:16px 18px">
+      <div style="font-size:10px;font-weight:700;color:#64748b;letter-spacing:1.5px;text-transform:uppercase;margin-bottom:10px">Recent Calls</div>
+      <div style="display:flex;justify-content:space-between;align-items:center;padding:5px 0;border-bottom:1px solid #1e293b"><span style="font-size:12px;color:#94a3b8">NetCentra</span><span style="font-size:12px;font-weight:700;color:#fbbf24">52</span></div><div style="display:flex;justify-content:space-between;align-items:center;padding:5px 0;border-bottom:1px solid #1e293b"><span style="font-size:12px;color:#94a3b8">Amazing7</span><span style="font-size:12px;font-weight:700;color:#f87171">44</span></div><div style="display:flex;justify-content:space-between;align-items:center;padding:5px 0;border-bottom:1px solid #1e293b"><span style="font-size:12px;color:#94a3b8">RWA</span><span style="font-size:12px;font-weight:700;color:#fbbf24">52</span></div><div style="display:flex;justify-content:space-between;align-items:center;padding:5px 0;border-bottom:1px solid #1e293b"><span style="font-size:12px;color:#94a3b8">Innovative IOT</span><span style="font-size:12px;font-weight:700;color:#f87171">31</span></div>
+    </div>
+  </div>
+  <!-- Coaching priorities -->
+  <div style="padding:16px 20px;border-top:1px solid #0f172a">
+    <div style="font-size:10px;font-weight:700;color:#64748b;letter-spacing:1.5px;text-transform:uppercase;margin-bottom:10px">🎯 Top 3 1-on-1 Coaching Priorities</div>
+    <div style="background:#0f172a;border-left:3px solid #f87171;border-radius:4px;padding:10px 12px;margin-bottom:8px"><div style="font-size:12px;color:#c8f0dc;line-height:1.5"># TOP 3 Coaching Priorities for Andrew Whisenant</div></div><div style="background:#0f172a;border-left:3px solid #f87171;border-radius:4px;padding:10px 12px;margin-bottom:8px"><div style="font-size:12px;color:#c8f0dc;line-height:1.5">**Summarize & Amplify Pain Before Next Steps** — You're uncovering 4-6 solid DBMs per call but never consolidating them. Before transitioning to next steps, pause and say: "Let me make sure I captured this correctly..." then play back their pain points to create urgency and confirm alignment.</div></div><div style="background:#0f172a;border-left:3px solid #f87171;border-radius:4px;padding:10px 12px;margin-bottom:8px"><div style="font-size:12px;color:#c8f0dc;line-height:1.5">**Flip the Ratio: Discovery Before Presenting** — You're consistently spending 15-25 minutes on product education before meaningful discovery, causing prospects to check out. Limit your company story to 2-3 minutes max, then immediately pivot to questions. The prospect should be talking 70% of the call.</div></div><div style="background:#0f172a;border-left:3px solid #f87171;border-radius:4px;padding:10px 12px;margin-bottom:8px"><div style="font-size:12px;color:#c8f0dc;line-height:1.5">**Set a Firm Agenda and Control the Call** — Prospects are hijacking calls early (pricing, tangents). Within the first 60 seconds, establish a clear 3-part agenda: "Here's what I'd like to cover today..." This gives you permission to redirect when conversations go off track and positions you as a trusted advisor, not an order-taker.</div></div>
+  </div>
+</div>
+<div style="background:#1e293b;border-radius:12px;overflow:hidden;border:1px solid #0f172a">
+  <!-- Header -->
+  <div style="background:#0f172a;padding:16px 20px;display:flex;justify-content:space-between;align-items:center;border-bottom:2px solid #f87171">
+    <div>
+      <div style="font-size:16px;font-weight:700;color:#e2e8f0">Jaylin Bender</div>
+      <div style="font-size:11px;color:#64748b;margin-top:2px">4 graded calls · 🔴 Coaching Required</div>
+    </div>
+    <div style="text-align:right">
+      <div style="font-size:36px;font-weight:800;color:#f87171;line-height:1">45</div>
+      <div style="font-size:10px;color:#64748b">avg score</div>
+    </div>
+  </div>
+  <div style="display:grid;grid-template-columns:1fr 1fr;gap:0">
+    <!-- Left: Category breakdown -->
+    <div style="padding:16px 18px;border-right:1px solid #0f172a">
+      <div style="font-size:10px;font-weight:700;color:#64748b;letter-spacing:1.5px;text-transform:uppercase;margin-bottom:10px">Category Averages</div>
+      <div style="margin-bottom:6px"><div style="display:flex;justify-content:space-between;margin-bottom:2px"><span style="font-size:11px;color:#64748b">Approach</span><span style="font-size:11px;color:#94a3b8">0/15</span></div><div style="background:#0f172a;border-radius:3px;height:5px"><div style="width:0%;height:100%;background:#f87171;border-radius:3px"></div></div></div><div style="margin-bottom:6px"><div style="display:flex;justify-content:space-between;margin-bottom:2px"><span style="font-size:11px;color:#64748b">Co. Story</span><span style="font-size:11px;color:#94a3b8">0/15</span></div><div style="background:#0f172a;border-radius:3px;height:5px"><div style="width:0%;height:100%;background:#f87171;border-radius:3px"></div></div></div><div style="margin-bottom:6px"><div style="display:flex;justify-content:space-between;margin-bottom:2px"><span style="font-size:11px;color:#64748b">Qualifying</span><span style="font-size:11px;color:#94a3b8">0/40</span></div><div style="background:#0f172a;border-radius:3px;height:5px"><div style="width:0%;height:100%;background:#f87171;border-radius:3px"></div></div></div><div style="margin-bottom:6px"><div style="display:flex;justify-content:space-between;margin-bottom:2px"><span style="font-size:11px;color:#64748b">Summarize</span><span style="font-size:11px;color:#94a3b8">0/20</span></div><div style="background:#0f172a;border-radius:3px;height:5px"><div style="width:0%;height:100%;background:#f87171;border-radius:3px"></div></div></div><div style="margin-bottom:6px"><div style="display:flex;justify-content:space-between;margin-bottom:2px"><span style="font-size:11px;color:#64748b">Next Steps</span><span style="font-size:11px;color:#94a3b8">0/15</span></div><div style="background:#0f172a;border-radius:3px;height:5px"><div style="width:0%;height:100%;background:#f87171;border-radius:3px"></div></div></div>
+    </div>
+    <!-- Right: Recent calls -->
+    <div style="padding:16px 18px">
+      <div style="font-size:10px;font-weight:700;color:#64748b;letter-spacing:1.5px;text-transform:uppercase;margin-bottom:10px">Recent Calls</div>
+      <div style="display:flex;justify-content:space-between;align-items:center;padding:5px 0;border-bottom:1px solid #1e293b"><span style="font-size:12px;color:#94a3b8">Delmi Training Institute</span><span style="font-size:12px;font-weight:700;color:#fbbf24">52</span></div><div style="display:flex;justify-content:space-between;align-items:center;padding:5px 0;border-bottom:1px solid #1e293b"><span style="font-size:12px;color:#94a3b8">Delmi Training Institute</span><span style="font-size:12px;font-weight:700;color:#fbbf24">52</span></div><div style="display:flex;justify-content:space-between;align-items:center;padding:5px 0;border-bottom:1px solid #1e293b"><span style="font-size:12px;color:#94a3b8">Showns Security</span><span style="font-size:12px;font-weight:700;color:#f87171">38</span></div><div style="display:flex;justify-content:space-between;align-items:center;padding:5px 0;border-bottom:1px solid #1e293b"><span style="font-size:12px;color:#94a3b8">Showns Security</span><span style="font-size:12px;font-weight:700;color:#f87171">38</span></div>
+    </div>
+  </div>
+  <!-- Coaching priorities -->
+  <div style="padding:16px 20px;border-top:1px solid #0f172a">
+    <div style="font-size:10px;font-weight:700;color:#64748b;letter-spacing:1.5px;text-transform:uppercase;margin-bottom:10px">🎯 Top 3 1-on-1 Coaching Priorities</div>
+    <div style="background:#0f172a;border-left:3px solid #f87171;border-radius:4px;padding:10px 12px;margin-bottom:8px"><div style="font-size:12px;color:#c8f0dc;line-height:1.5">Based on the patterns in Jaylin Bender's recent calls, here are the TOP 3 coaching priorities:</div></div><div style="background:#0f172a;border-left:3px solid #f87171;border-radius:4px;padding:10px 12px;margin-bottom:8px"><div style="font-size:12px;color:#c8f0dc;line-height:1.5">**Dig Deeper on Pain Points** — When prospects mention friction (like "a little bit of work" or managing paper notes), don't let it slide. Ask follow-up questions like "How much time does that cost you weekly?" or "What happens when something falls through the cracks?" to quantify the pain and make it real.</div></div><div style="background:#0f172a;border-left:3px solid #f87171;border-radius:4px;padding:10px 12px;margin-bottom:8px"><div style="font-size:12px;color:#c8f0dc;line-height:1.5">**Control the Call Structure** — Stop letting prospects run discovery on you. When someone like Roland starts presenting their requirements, redirect with "I want to make sure I understand your situation first—can I ask a few questions?" Own the flow so you can qualify properly.</div></div><div style="background:#0f172a;border-left:3px solid #f87171;border-radius:4px;padding:10px 12px;margin-bottom:8px"><div style="font-size:12px;color:#c8f0dc;line-height:1.5">**Book the Next Step Live, Every Time** — Ending calls with "I'll take this feedback" or "reach out if interested" is a dead lead. Before hanging up, lock in a specific date/time: "Let's get 15 minutes on the calendar Thursday at 2pm to show you exactly how this solves X." No calendar hold = no deal progression.</div></div>
+  </div>
+</div>
+<div style="background:#1e293b;border-radius:12px;overflow:hidden;border:1px solid #0f172a">
+  <!-- Header -->
+  <div style="background:#0f172a;padding:16px 20px;display:flex;justify-content:space-between;align-items:center;border-bottom:2px solid #f87171">
+    <div>
+      <div style="font-size:16px;font-weight:700;color:#e2e8f0">Connor Flynn</div>
+      <div style="font-size:11px;color:#64748b;margin-top:2px">3 graded calls · 🔴 Coaching Required</div>
+    </div>
+    <div style="text-align:right">
+      <div style="font-size:36px;font-weight:800;color:#f87171;line-height:1">47</div>
+      <div style="font-size:10px;color:#64748b">avg score</div>
+    </div>
+  </div>
+  <div style="display:grid;grid-template-columns:1fr 1fr;gap:0">
+    <!-- Left: Category breakdown -->
+    <div style="padding:16px 18px;border-right:1px solid #0f172a">
+      <div style="font-size:10px;font-weight:700;color:#64748b;letter-spacing:1.5px;text-transform:uppercase;margin-bottom:10px">Category Averages</div>
+      <div style="margin-bottom:6px"><div style="display:flex;justify-content:space-between;margin-bottom:2px"><span style="font-size:11px;color:#64748b">Approach</span><span style="font-size:11px;color:#94a3b8">0/15</span></div><div style="background:#0f172a;border-radius:3px;height:5px"><div style="width:0%;height:100%;background:#f87171;border-radius:3px"></div></div></div><div style="margin-bottom:6px"><div style="display:flex;justify-content:space-between;margin-bottom:2px"><span style="font-size:11px;color:#64748b">Co. Story</span><span style="font-size:11px;color:#94a3b8">0/15</span></div><div style="background:#0f172a;border-radius:3px;height:5px"><div style="width:0%;height:100%;background:#f87171;border-radius:3px"></div></div></div><div style="margin-bottom:6px"><div style="display:flex;justify-content:space-between;margin-bottom:2px"><span style="font-size:11px;color:#64748b">Qualifying</span><span style="font-size:11px;color:#94a3b8">13/40</span></div><div style="background:#0f172a;border-radius:3px;height:5px"><div style="width:33%;height:100%;background:#f87171;border-radius:3px"></div></div></div><div style="margin-bottom:6px"><div style="display:flex;justify-content:space-between;margin-bottom:2px"><span style="font-size:11px;color:#64748b">Summarize</span><span style="font-size:11px;color:#94a3b8">2/20</span></div><div style="background:#0f172a;border-radius:3px;height:5px"><div style="width:10%;height:100%;background:#f87171;border-radius:3px"></div></div></div><div style="margin-bottom:6px"><div style="display:flex;justify-content:space-between;margin-bottom:2px"><span style="font-size:11px;color:#64748b">Next Steps</span><span style="font-size:11px;color:#94a3b8">5/15</span></div><div style="background:#0f172a;border-radius:3px;height:5px"><div style="width:33%;height:100%;background:#f87171;border-radius:3px"></div></div></div>
+    </div>
+    <!-- Right: Recent calls -->
+    <div style="padding:16px 18px">
+      <div style="font-size:10px;font-weight:700;color:#64748b;letter-spacing:1.5px;text-transform:uppercase;margin-bottom:10px">Recent Calls</div>
+      <div style="display:flex;justify-content:space-between;align-items:center;padding:5px 0;border-bottom:1px solid #1e293b"><span style="font-size:12px;color:#94a3b8">Celerius & Rev.io</span><span style="font-size:12px;font-weight:700;color:#fbbf24">52</span></div><div style="display:flex;justify-content:space-between;align-items:center;padding:5px 0;border-bottom:1px solid #1e293b"><span style="font-size:12px;color:#94a3b8">KeyCom & Rev.io</span><span style="font-size:12px;font-weight:700;color:#fbbf24">52</span></div><div style="display:flex;justify-content:space-between;align-items:center;padding:5px 0;border-bottom:1px solid #1e293b"><span style="font-size:12px;color:#94a3b8">VoIP International</span><span style="font-size:12px;font-weight:700;color:#f87171">38</span></div>
+    </div>
+  </div>
+  <!-- Coaching priorities -->
+  <div style="padding:16px 20px;border-top:1px solid #0f172a">
+    <div style="font-size:10px;font-weight:700;color:#64748b;letter-spacing:1.5px;text-transform:uppercase;margin-bottom:10px">🎯 Top 3 1-on-1 Coaching Priorities</div>
+    <div style="background:#0f172a;border-left:3px solid #f87171;border-radius:4px;padding:10px 12px;margin-bottom:8px"><div style="font-size:12px;color:#c8f0dc;line-height:1.5">Based on Connor's scorecard data and coaching notes, here are the TOP 3 coaching priorities:</div></div><div style="background:#0f172a;border-left:3px solid #f87171;border-radius:4px;padding:10px 12px;margin-bottom:8px"><div style="font-size:12px;color:#c8f0dc;line-height:1.5">**Call Control & Redirection** — Connor is consistently losing control of calls to prospects (Woody, Brian, Robert across all 3 calls). Practice using pattern interrupts like "I appreciate that—let me pause you there" or "Great context—can I ask what's driving that?" to reclaim the conversation without being abrasive.</div></div><div style="background:#0f172a;border-left:3px solid #f87171;border-radius:4px;padding:10px 12px;margin-bottom:8px"><div style="font-size:12px;color:#c8f0dc;line-height:1.5">**Structured Discovery Ownership** — Connor is allowing prospects to dictate the flow through product comparisons and tangents instead of leading with his own framework. Before each call, commit to a specific discovery sequence and use verbal signposts ("I'd like to start by understanding X, then we'll cover Y") to anchor the conversation.</div></div><div style="background:#0f172a;border-left:3px solid #f87171;border-radius:4px;padding:10px 12px;margin-bottom:8px"><div style="font-size:12px;color:#c8f0dc;line-height:1.5">**Summarize & Make Sick Execution** — At 2.0 pts, Connor isn't landing the pain or creating urgency after discovery. After uncovering a problem, stop and reflect it back with impact: "So right now you're dealing with [pain], which means [consequence]—do I have that right?" This builds commitment before moving forward.</div></div><div style="background:#0f172a;border-left:3px solid #f87171;border-radius:4px;padding:10px 12px;margin-bottom:8px"><div style="font-size:12px;color:#c8f0dc;line-height:1.5">**Root cause:** Connor is gathering information but not *owning* the call. The common thread is passivity—he needs to shift from participant to facilitator.</div></div>
+  </div>
+</div>
+<div style="background:#1e293b;border-radius:12px;overflow:hidden;border:1px solid #0f172a">
+  <!-- Header -->
+  <div style="background:#0f172a;padding:16px 20px;display:flex;justify-content:space-between;align-items:center;border-bottom:2px solid #fbbf24">
+    <div>
+      <div style="font-size:16px;font-weight:700;color:#e2e8f0">Jamie Butler</div>
+      <div style="font-size:11px;color:#64748b;margin-top:2px">9 graded calls · 🟠 Needs Work</div>
+    </div>
+    <div style="text-align:right">
+      <div style="font-size:36px;font-weight:800;color:#fbbf24;line-height:1">54</div>
+      <div style="font-size:10px;color:#64748b">avg score</div>
+    </div>
+  </div>
+  <div style="display:grid;grid-template-columns:1fr 1fr;gap:0">
+    <!-- Left: Category breakdown -->
+    <div style="padding:16px 18px;border-right:1px solid #0f172a">
+      <div style="font-size:10px;font-weight:700;color:#64748b;letter-spacing:1.5px;text-transform:uppercase;margin-bottom:10px">Category Averages</div>
+      <div style="margin-bottom:6px"><div style="display:flex;justify-content:space-between;margin-bottom:2px"><span style="font-size:11px;color:#64748b">Approach</span><span style="font-size:11px;color:#94a3b8">0/15</span></div><div style="background:#0f172a;border-radius:3px;height:5px"><div style="width:0%;height:100%;background:#f87171;border-radius:3px"></div></div></div><div style="margin-bottom:6px"><div style="display:flex;justify-content:space-between;margin-bottom:2px"><span style="font-size:11px;color:#64748b">Co. Story</span><span style="font-size:11px;color:#94a3b8">0/15</span></div><div style="background:#0f172a;border-radius:3px;height:5px"><div style="width:0%;height:100%;background:#f87171;border-radius:3px"></div></div></div><div style="margin-bottom:6px"><div style="display:flex;justify-content:space-between;margin-bottom:2px"><span style="font-size:11px;color:#64748b">Qualifying</span><span style="font-size:11px;color:#94a3b8">0/40</span></div><div style="background:#0f172a;border-radius:3px;height:5px"><div style="width:0%;height:100%;background:#f87171;border-radius:3px"></div></div></div><div style="margin-bottom:6px"><div style="display:flex;justify-content:space-between;margin-bottom:2px"><span style="font-size:11px;color:#64748b">Summarize</span><span style="font-size:11px;color:#94a3b8">0/20</span></div><div style="background:#0f172a;border-radius:3px;height:5px"><div style="width:0%;height:100%;background:#f87171;border-radius:3px"></div></div></div><div style="margin-bottom:6px"><div style="display:flex;justify-content:space-between;margin-bottom:2px"><span style="font-size:11px;color:#64748b">Next Steps</span><span style="font-size:11px;color:#94a3b8">0/15</span></div><div style="background:#0f172a;border-radius:3px;height:5px"><div style="width:0%;height:100%;background:#f87171;border-radius:3px"></div></div></div>
+    </div>
+    <!-- Right: Recent calls -->
+    <div style="padding:16px 18px">
+      <div style="font-size:10px;font-weight:700;color:#64748b;letter-spacing:1.5px;text-transform:uppercase;margin-bottom:10px">Recent Calls</div>
+      <div style="display:flex;justify-content:space-between;align-items:center;padding:5px 0;border-bottom:1px solid #1e293b"><span style="font-size:12px;color:#94a3b8">The Tech Consultants</span><span style="font-size:12px;font-weight:700;color:#fbbf24">52</span></div><div style="display:flex;justify-content:space-between;align-items:center;padding:5px 0;border-bottom:1px solid #1e293b"><span style="font-size:12px;color:#94a3b8">The Tech Consultants</span><span style="font-size:12px;font-weight:700;color:#fbbf24">52</span></div><div style="display:flex;justify-content:space-between;align-items:center;padding:5px 0;border-bottom:1px solid #1e293b"><span style="font-size:12px;color:#94a3b8">Merrill & Associates</span><span style="font-size:12px;font-weight:700;color:#fbbf24">58</span></div><div style="display:flex;justify-content:space-between;align-items:center;padding:5px 0;border-bottom:1px solid #1e293b"><span style="font-size:12px;color:#94a3b8">HEDnorth</span><span style="font-size:12px;font-weight:700;color:#fbbf24">52</span></div>
+    </div>
+  </div>
+  <!-- Coaching priorities -->
+  <div style="padding:16px 20px;border-top:1px solid #0f172a">
+    <div style="font-size:10px;font-weight:700;color:#64748b;letter-spacing:1.5px;text-transform:uppercase;margin-bottom:10px">🎯 Top 3 1-on-1 Coaching Priorities</div>
+    <div style="background:#0f172a;border-left:3px solid #fbbf24;border-radius:4px;padding:10px 12px;margin-bottom:8px"><div style="font-size:12px;color:#c8f0dc;line-height:1.5">Based on the patterns across Jamie's recent calls, here are the **TOP 3 coaching priorities:**</div></div><div style="background:#0f172a;border-left:3px solid #fbbf24;border-radius:4px;padding:10px 12px;margin-bottom:8px"><div style="font-size:12px;color:#c8f0dc;line-height:1.5">**Take Control of Discovery with Prepared Open-Ended Questions** — Jamie is consistently letting prospects volunteer information instead of leading the conversation. Come to every call with 8-10 pre-written open-ended questions and aim for an 8:1 question-to-presentation ratio before pitching anything.</div></div><div style="background:#0f172a;border-left:3px solid #fbbf24;border-radius:4px;padding:10px 12px;margin-bottom:8px"><div style="font-size:12px;color:#c8f0dc;line-height:1.5">**Probe for Impact When Pain Surfaces** — When prospects mention pain points (manual processes, data silos, capacity issues), Jamie moves on without digging deeper. Practice the follow-up habit: every time pain is mentioned, ask "What effect does that have on [time/revenue/team]?" before continuing.</div></div><div style="background:#0f172a;border-left:3px solid #fbbf24;border-radius:4px;padding:10px 12px;margin-bottom:8px"><div style="font-size:12px;color:#c8f0dc;line-height:1.5">**Confirm Decision-Maker Authority Early and Explicitly** — Jamie is not verifying who makes the buying decision or who else needs to be involved. Within the first 10 minutes, ask: "Walk me through how a decision like this typically gets made at your company" and "Who else would need to weigh in before moving forward?"</div></div>
+  </div>
+</div>
+<div style="background:#1e293b;border-radius:12px;overflow:hidden;border:1px solid #0f172a">
+  <!-- Header -->
+  <div style="background:#0f172a;padding:16px 20px;display:flex;justify-content:space-between;align-items:center;border-bottom:2px solid #fbbf24">
+    <div>
+      <div style="font-size:16px;font-weight:700;color:#e2e8f0">Husam Zalmiyar</div>
+      <div style="font-size:11px;color:#64748b;margin-top:2px">9 graded calls · 🟠 Needs Work</div>
+    </div>
+    <div style="text-align:right">
+      <div style="font-size:36px;font-weight:800;color:#fbbf24;line-height:1">54</div>
+      <div style="font-size:10px;color:#64748b">avg score</div>
+    </div>
+  </div>
+  <div style="display:grid;grid-template-columns:1fr 1fr;gap:0">
+    <!-- Left: Category breakdown -->
+    <div style="padding:16px 18px;border-right:1px solid #0f172a">
+      <div style="font-size:10px;font-weight:700;color:#64748b;letter-spacing:1.5px;text-transform:uppercase;margin-bottom:10px">Category Averages</div>
+      <div style="margin-bottom:6px"><div style="display:flex;justify-content:space-between;margin-bottom:2px"><span style="font-size:11px;color:#64748b">Approach</span><span style="font-size:11px;color:#94a3b8">10/15</span></div><div style="background:#0f172a;border-radius:3px;height:5px"><div style="width:68%;height:100%;background:#fbbf24;border-radius:3px"></div></div></div><div style="margin-bottom:6px"><div style="display:flex;justify-content:space-between;margin-bottom:2px"><span style="font-size:11px;color:#64748b">Co. Story</span><span style="font-size:11px;color:#94a3b8">11/15</span></div><div style="background:#0f172a;border-radius:3px;height:5px"><div style="width:72%;height:100%;background:#34d399;border-radius:3px"></div></div></div><div style="margin-bottom:6px"><div style="display:flex;justify-content:space-between;margin-bottom:2px"><span style="font-size:11px;color:#64748b">Qualifying</span><span style="font-size:11px;color:#94a3b8">16/40</span></div><div style="background:#0f172a;border-radius:3px;height:5px"><div style="width:40%;height:100%;background:#f87171;border-radius:3px"></div></div></div><div style="margin-bottom:6px"><div style="display:flex;justify-content:space-between;margin-bottom:2px"><span style="font-size:11px;color:#64748b">Summarize</span><span style="font-size:11px;color:#94a3b8">13/20</span></div><div style="background:#0f172a;border-radius:3px;height:5px"><div style="width:64%;height:100%;background:#fbbf24;border-radius:3px"></div></div></div><div style="margin-bottom:6px"><div style="display:flex;justify-content:space-between;margin-bottom:2px"><span style="font-size:11px;color:#64748b">Next Steps</span><span style="font-size:11px;color:#94a3b8">6/15</span></div><div style="background:#0f172a;border-radius:3px;height:5px"><div style="width:39%;height:100%;background:#f87171;border-radius:3px"></div></div></div>
+    </div>
+    <!-- Right: Recent calls -->
+    <div style="padding:16px 18px">
+      <div style="font-size:10px;font-weight:700;color:#64748b;letter-spacing:1.5px;text-transform:uppercase;margin-bottom:10px">Recent Calls</div>
+      <div style="display:flex;justify-content:space-between;align-items:center;padding:5px 0;border-bottom:1px solid #1e293b"><span style="font-size:12px;color:#94a3b8">Chicago Business VoIP</span><span style="font-size:12px;font-weight:700;color:#fbbf24">62</span></div><div style="display:flex;justify-content:space-between;align-items:center;padding:5px 0;border-bottom:1px solid #1e293b"><span style="font-size:12px;color:#94a3b8">Crexendo Business Solutions</span><span style="font-size:12px;font-weight:700;color:#38bdf8">72</span></div><div style="display:flex;justify-content:space-between;align-items:center;padding:5px 0;border-bottom:1px solid #1e293b"><span style="font-size:12px;color:#94a3b8">Crexendo Business Solutions</span><span style="font-size:12px;font-weight:700;color:#fbbf24">62</span></div><div style="display:flex;justify-content:space-between;align-items:center;padding:5px 0;border-bottom:1px solid #1e293b"><span style="font-size:12px;color:#94a3b8">Virtual Guardians</span><span style="font-size:12px;font-weight:700;color:#f87171">31</span></div>
+    </div>
+  </div>
+  <!-- Coaching priorities -->
+  <div style="padding:16px 20px;border-top:1px solid #0f172a">
+    <div style="font-size:10px;font-weight:700;color:#64748b;letter-spacing:1.5px;text-transform:uppercase;margin-bottom:10px">🎯 Top 3 1-on-1 Coaching Priorities</div>
+    <div style="background:#0f172a;border-left:3px solid #fbbf24;border-radius:4px;padding:10px 12px;margin-bottom:8px"><div style="font-size:12px;color:#c8f0dc;line-height:1.5"># TOP 3 Coaching Priorities for Husam Zalmiyar</div></div><div style="background:#0f172a;border-left:3px solid #fbbf24;border-radius:4px;padding:10px 12px;margin-bottom:8px"><div style="font-size:12px;color:#c8f0dc;line-height:1.5">**Quantify and Amplify Pain Before Moving On** — When prospects reveal pain (e.g., "losing money," "employees might walk out," "can't scale"), immediately ask "What does that cost you?" or "How long has this been happening?" Husam is hearing golden pain statements but failing to probe deeper before either offering solutions or tabling the conversation. This directly impacts the weak Summarize & Make Sick score (12.8).</div></div><div style="background:#0f172a;border-left:3px solid #fbbf24;border-radius:4px;padding:10px 12px;margin-bottom:8px"><div style="font-size:12px;color:#c8f0dc;line-height:1.5">**Set and Control the Agenda from the Start** — Multiple calls are wandering off-track or being driven entirely by the prospect. Open every call with: "Here's what I'd like to cover today… does that work for you?" This creates structure, establishes authority, and prevents 15-minute tangents on personal topics.</div></div><div style="background:#0f172a;border-left:3px solid #fbbf24;border-radius:4px;padding:10px 12px;margin-bottom:8px"><div style="font-size:12px;color:#c8f0dc;line-height:1.5">**Confirm Decision-Makers Early and Get Them on the Call** — Husam is consistently presenting to influencers while the real decision-makers (Joe, Ron, Gene) are absent or their authority is assumed, not verified. Before any demo or solution discussion, ask: "Who else needs to be part of this decision?" and reschedule if necessary. This is killing Next Steps (5.8) because commitments can't be made.</div></div>
+  </div>
+</div>
+<div style="background:#1e293b;border-radius:12px;overflow:hidden;border:1px solid #0f172a">
+  <!-- Header -->
+  <div style="background:#0f172a;padding:16px 20px;display:flex;justify-content:space-between;align-items:center;border-bottom:2px solid #fbbf24">
+    <div>
+      <div style="font-size:16px;font-weight:700;color:#e2e8f0">Patrick Davies</div>
+      <div style="font-size:11px;color:#64748b;margin-top:2px">9 graded calls · 🟠 Needs Work</div>
+    </div>
+    <div style="text-align:right">
+      <div style="font-size:36px;font-weight:800;color:#fbbf24;line-height:1">56</div>
+      <div style="font-size:10px;color:#64748b">avg score</div>
+    </div>
+  </div>
+  <div style="display:grid;grid-template-columns:1fr 1fr;gap:0">
+    <!-- Left: Category breakdown -->
+    <div style="padding:16px 18px;border-right:1px solid #0f172a">
+      <div style="font-size:10px;font-weight:700;color:#64748b;letter-spacing:1.5px;text-transform:uppercase;margin-bottom:10px">Category Averages</div>
+      <div style="margin-bottom:6px"><div style="display:flex;justify-content:space-between;margin-bottom:2px"><span style="font-size:11px;color:#64748b">Approach</span><span style="font-size:11px;color:#94a3b8">0/15</span></div><div style="background:#0f172a;border-radius:3px;height:5px"><div style="width:0%;height:100%;background:#f87171;border-radius:3px"></div></div></div><div style="margin-bottom:6px"><div style="display:flex;justify-content:space-between;margin-bottom:2px"><span style="font-size:11px;color:#64748b">Co. Story</span><span style="font-size:11px;color:#94a3b8">0/15</span></div><div style="background:#0f172a;border-radius:3px;height:5px"><div style="width:0%;height:100%;background:#f87171;border-radius:3px"></div></div></div><div style="margin-bottom:6px"><div style="display:flex;justify-content:space-between;margin-bottom:2px"><span style="font-size:11px;color:#64748b">Qualifying</span><span style="font-size:11px;color:#94a3b8">18/40</span></div><div style="background:#0f172a;border-radius:3px;height:5px"><div style="width:46%;height:100%;background:#f87171;border-radius:3px"></div></div></div><div style="margin-bottom:6px"><div style="display:flex;justify-content:space-between;margin-bottom:2px"><span style="font-size:11px;color:#64748b">Summarize</span><span style="font-size:11px;color:#94a3b8">7/20</span></div><div style="background:#0f172a;border-radius:3px;height:5px"><div style="width:35%;height:100%;background:#f87171;border-radius:3px"></div></div></div><div style="margin-bottom:6px"><div style="display:flex;justify-content:space-between;margin-bottom:2px"><span style="font-size:11px;color:#64748b">Next Steps</span><span style="font-size:11px;color:#94a3b8">8/15</span></div><div style="background:#0f172a;border-radius:3px;height:5px"><div style="width:50%;height:100%;background:#fbbf24;border-radius:3px"></div></div></div>
+    </div>
+    <!-- Right: Recent calls -->
+    <div style="padding:16px 18px">
+      <div style="font-size:10px;font-weight:700;color:#64748b;letter-spacing:1.5px;text-transform:uppercase;margin-bottom:10px">Recent Calls</div>
+      <div style="display:flex;justify-content:space-between;align-items:center;padding:5px 0;border-bottom:1px solid #1e293b"><span style="font-size:12px;color:#94a3b8">EKC Enterprises</span><span style="font-size:12px;font-weight:700;color:#fbbf24">62</span></div><div style="display:flex;justify-content:space-between;align-items:center;padding:5px 0;border-bottom:1px solid #1e293b"><span style="font-size:12px;color:#94a3b8">Omaha Security Cameras</span><span style="font-size:12px;font-weight:700;color:#fbbf24">52</span></div><div style="display:flex;justify-content:space-between;align-items:center;padding:5px 0;border-bottom:1px solid #1e293b"><span style="font-size:12px;color:#94a3b8">Alliance Communication & Technologies</span><span style="font-size:12px;font-weight:700;color:#fbbf24">54</span></div><div style="display:flex;justify-content:space-between;align-items:center;padding:5px 0;border-bottom:1px solid #1e293b"><span style="font-size:12px;color:#94a3b8">Lion AVL</span><span style="font-size:12px;font-weight:700;color:#f87171">38</span></div>
+    </div>
+  </div>
+  <!-- Coaching priorities -->
+  <div style="padding:16px 20px;border-top:1px solid #0f172a">
+    <div style="font-size:10px;font-weight:700;color:#64748b;letter-spacing:1.5px;text-transform:uppercase;margin-bottom:10px">🎯 Top 3 1-on-1 Coaching Priorities</div>
+    <div style="background:#0f172a;border-left:3px solid #fbbf24;border-radius:4px;padding:10px 12px;margin-bottom:8px"><div style="font-size:12px;color:#c8f0dc;line-height:1.5">Based on the patterns across Patrick's calls, here are the TOP 3 coaching priorities:</div></div><div style="background:#0f172a;border-left:3px solid #fbbf24;border-radius:4px;padding:10px 12px;margin-bottom:8px"><div style="font-size:12px;color:#c8f0dc;line-height:1.5">**Probe for Effect on Every Pain Point** — This is Patrick's #1 gap. When prospects hand him gold (e.g., "$100K every time," "$400K AR problem," "broken reporting"), he's moving on instead of asking "What does that cost you?" or "How is that affecting the business?" Every pain point needs a dollar amount or emotional weight attached before moving forward.</div></div><div style="background:#0f172a;border-left:3px solid #fbbf24;border-radius:4px;padding:10px 12px;margin-bottom:8px"><div style="font-size:12px;color:#c8f0dc;line-height:1.5">**Summarize & Make Sick Before Transitioning** — Patrick is uncovering strong pain but not weaponizing it. Before moving to demos, pricing, or next steps, he needs to pause and stack the pain back: "So you've got $400K stuck in AR, work falling through the cracks daily, and you're running on paper while trying to grow — did I get that right?" This is showing up in his low 7.0 Summarize score.</div></div><div style="background:#0f172a;border-left:3px solid #fbbf24;border-radius:4px;padding:10px 12px;margin-bottom:8px"><div style="font-size:12px;color:#c8f0dc;line-height:1.5">**Stop Showing Pricing Before Discovery is Complete** — The Lion AVL call exposed a critical mistake: leading with price before building enough value. Patrick needs to hold pricing until he's fully quantified the pain and created urgency. When price objections come, he has to fight back using the pain he uncovered — not fold.</div></div>
+  </div>
+</div>
+<div style="background:#1e293b;border-radius:12px;overflow:hidden;border:1px solid #0f172a">
+  <!-- Header -->
+  <div style="background:#0f172a;padding:16px 20px;display:flex;justify-content:space-between;align-items:center;border-bottom:2px solid #fbbf24">
+    <div>
+      <div style="font-size:16px;font-weight:700;color:#e2e8f0">Jake Borah</div>
+      <div style="font-size:11px;color:#64748b;margin-top:2px">3 graded calls · 🟠 Needs Work</div>
+    </div>
+    <div style="text-align:right">
+      <div style="font-size:36px;font-weight:800;color:#fbbf24;line-height:1">61</div>
+      <div style="font-size:10px;color:#64748b">avg score</div>
+    </div>
+  </div>
+  <div style="display:grid;grid-template-columns:1fr 1fr;gap:0">
+    <!-- Left: Category breakdown -->
+    <div style="padding:16px 18px;border-right:1px solid #0f172a">
+      <div style="font-size:10px;font-weight:700;color:#64748b;letter-spacing:1.5px;text-transform:uppercase;margin-bottom:10px">Category Averages</div>
+      <div style="margin-bottom:6px"><div style="display:flex;justify-content:space-between;margin-bottom:2px"><span style="font-size:11px;color:#64748b">Approach</span><span style="font-size:11px;color:#94a3b8">0/15</span></div><div style="background:#0f172a;border-radius:3px;height:5px"><div style="width:0%;height:100%;background:#f87171;border-radius:3px"></div></div></div><div style="margin-bottom:6px"><div style="display:flex;justify-content:space-between;margin-bottom:2px"><span style="font-size:11px;color:#64748b">Co. Story</span><span style="font-size:11px;color:#94a3b8">0/15</span></div><div style="background:#0f172a;border-radius:3px;height:5px"><div style="width:0%;height:100%;background:#f87171;border-radius:3px"></div></div></div><div style="margin-bottom:6px"><div style="display:flex;justify-content:space-between;margin-bottom:2px"><span style="font-size:11px;color:#64748b">Qualifying</span><span style="font-size:11px;color:#94a3b8">18/40</span></div><div style="background:#0f172a;border-radius:3px;height:5px"><div style="width:44%;height:100%;background:#f87171;border-radius:3px"></div></div></div><div style="margin-bottom:6px"><div style="display:flex;justify-content:space-between;margin-bottom:2px"><span style="font-size:11px;color:#64748b">Summarize</span><span style="font-size:11px;color:#94a3b8">6/20</span></div><div style="background:#0f172a;border-radius:3px;height:5px"><div style="width:30%;height:100%;background:#f87171;border-radius:3px"></div></div></div><div style="margin-bottom:6px"><div style="display:flex;justify-content:space-between;margin-bottom:2px"><span style="font-size:11px;color:#64748b">Next Steps</span><span style="font-size:11px;color:#94a3b8">7/15</span></div><div style="background:#0f172a;border-radius:3px;height:5px"><div style="width:44%;height:100%;background:#f87171;border-radius:3px"></div></div></div>
+    </div>
+    <!-- Right: Recent calls -->
+    <div style="padding:16px 18px">
+      <div style="font-size:10px;font-weight:700;color:#64748b;letter-spacing:1.5px;text-transform:uppercase;margin-bottom:10px">Recent Calls</div>
+      <div style="display:flex;justify-content:space-between;align-items:center;padding:5px 0;border-bottom:1px solid #1e293b"><span style="font-size:12px;color:#94a3b8">Briggs Electric</span><span style="font-size:12px;font-weight:700;color:#38bdf8">68</span></div><div style="display:flex;justify-content:space-between;align-items:center;padding:5px 0;border-bottom:1px solid #1e293b"><span style="font-size:12px;color:#94a3b8">Alscan</span><span style="font-size:12px;font-weight:700;color:#fbbf24">62</span></div><div style="display:flex;justify-content:space-between;align-items:center;padding:5px 0;border-bottom:1px solid #1e293b"><span style="font-size:12px;color:#94a3b8">Mesa Alarm Systems, Inc</span><span style="font-size:12px;font-weight:700;color:#fbbf24">52</span></div>
+    </div>
+  </div>
+  <!-- Coaching priorities -->
+  <div style="padding:16px 20px;border-top:1px solid #0f172a">
+    <div style="font-size:10px;font-weight:700;color:#64748b;letter-spacing:1.5px;text-transform:uppercase;margin-bottom:10px">🎯 Top 3 1-on-1 Coaching Priorities</div>
+    <div style="background:#0f172a;border-left:3px solid #fbbf24;border-radius:4px;padding:10px 12px;margin-bottom:8px"><div style="font-size:12px;color:#c8f0dc;line-height:1.5">Based on the patterns in Jake's scorecards, here are the TOP 3 coaching priorities:</div></div><div style="background:#0f172a;border-left:3px solid #fbbf24;border-radius:4px;padding:10px 12px;margin-bottom:8px"><div style="font-size:12px;color:#c8f0dc;line-height:1.5">**Probe for EFFECT on Every Pain Point** — Jake consistently uncovers pain but stops short of exploring the downstream impact. When a prospect shares a problem, he needs to immediately follow with "What does that cost you?" or "How does that affect [revenue/time/team]?" to quantify the pain.</div></div><div style="background:#0f172a;border-left:3px solid #fbbf24;border-radius:4px;padding:10px 12px;margin-bottom:8px"><div style="font-size:12px;color:#c8f0dc;line-height:1.5">**Quantify the Pain in Dollars or Time** — Across all three calls, prospects gave vague metrics ("half his day," "couple days a month," "3 extra steps") and Jake accepted them without pushing for hard numbers. Train him to ask "What's that worth annually?" or "If we cut that in half, what would that mean to your bottom line?"</div></div><div style="background:#0f172a;border-left:3px solid #fbbf24;border-radius:4px;padding:10px 12px;margin-bottom:8px"><div style="font-size:12px;color:#c8f0dc;line-height:1.5">**Strengthen the Summarize & Make Sick Section** — With only 6.0 pts in this category, Jake isn't leveraging the pain he uncovers. Coach him to pause before next steps and reflect back the full cost of inaction: "So you're losing X hours/month, which costs roughly $Y, and it's causing Z — did I get that right?"</div></div>
+  </div>
+</div>
+</div>
+
+<div class="footer">Rev.io Sales · Rep Coaching Dashboard · Auto-generated by Robin · April 10, 2026</div>
+</body>
+</html>
