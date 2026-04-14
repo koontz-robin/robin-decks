@@ -5,250 +5,1256 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Rev.io Forecast — April 2026</title>
 <style>
+  :root {
+    --green: #00ff88;
+    --cyan: #00e5ff;
+    --bg: #020408;
+    --surface: #060d14;
+    --border: #0a2a1a;
+    --text: #c8f0dc;
+    --muted: #2a5a3a;
+  }
   * { margin:0; padding:0; box-sizing:border-box; }
-  body { background:#000; font-family:'Segoe UI',system-ui,sans-serif; color:#e2e8f0; min-height:100vh; padding:40px 48px; }
-  h1 { font-size:28px; font-weight:800; color:#fff; margin-bottom:4px; }
-  .sub { font-size:13px; color:#475569; margin-bottom:28px; }
+  body { font-family:'Segoe UI',system-ui,monospace; background:var(--bg); color:var(--text); }
+  body::before {
+    content:'';
+    position:fixed; top:0; left:0; right:0; bottom:0;
+    background-image:
+      linear-gradient(rgba(0,255,136,0.10) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(0,255,136,0.10) 1px, transparent 1px);
+    background-size: 40px 40px;
+    pointer-events:none; z-index:0;
+  }
+  .scanline { position:fixed; top:0; left:0; right:0; bottom:0; background:repeating-linear-gradient(0deg, transparent, transparent 2px, rgba(0,0,0,0.03) 2px, rgba(0,0,0,0.03) 4px); pointer-events:none; z-index:0; }
+  .container { max-width:1100px; margin:0 auto; padding:24px 32px; position:relative; z-index:1; }
+  .header { border-bottom:1px solid var(--border); padding-bottom:16px; margin-bottom:20px; position:relative; }
+  .header-top { display:flex; align-items:center; justify-content:space-between; margin-bottom:12px; }
+  .logo { display:flex; align-items:center; gap:10px; }
+  .logo-dot { width:10px; height:10px; background:var(--green); border-radius:50%; box-shadow:0 0 12px var(--green); animation:pulse 2s infinite; }
+  .logo-text { font-size:11px; font-weight:700; letter-spacing:3px; text-transform:uppercase; color:var(--green); }
+  .header-date { font-size:11px; color:var(--muted); letter-spacing:1px; }
+  h1 { font-size:36px; font-weight:900; color:#fff; letter-spacing:-1px; margin-bottom:4px; }
+  h1 span { color:var(--green); text-shadow:0 0 30px var(--green); }
+  .header-sub { font-size:13px; color:var(--muted); }
+
+  /* Q2 Progress bar */
+  .q2-bar-section { background:var(--surface); border:1px solid rgba(0,255,136,0.25); border-radius:10px; padding:16px 22px; margin-bottom:16px; }
+  .q2-bar-title { font-size:9px; font-weight:700; letter-spacing:2px; text-transform:uppercase; color:var(--muted); margin-bottom:10px; }
+  .q2-products { display:grid; grid-template-columns:repeat(6,1fr); gap:8px; }
+  .q2-prod { text-align:center; }
+  .q2-prod-label { font-size:9px; color:var(--muted); font-weight:700; text-transform:uppercase; letter-spacing:0.5px; margin-bottom:4px; }
+  .q2-prod-bar-track { height:5px; background:rgba(0,255,136,0.06); border-radius:3px; margin-bottom:4px; overflow:hidden; }
+  .q2-prod-bar-fill { height:100%; border-radius:3px; }
+  .q2-prod-cw { font-size:13px; font-weight:900; color:var(--cyan); }
+  .q2-prod-target { font-size:9px; color:var(--muted); }
+
+  /* Summary bar */
+  .summary-bar { display:grid; grid-template-columns:repeat(6,1fr); gap:8px; margin-bottom:20px; }
+  .sum-item { background:var(--surface); border:1px solid var(--border); border-radius:8px; padding:12px; text-align:center; }
+  .sum-item.highlight { border-color:var(--green); background:rgba(0,255,136,0.04); }
+  .sum-label { font-size:9px; font-weight:700; text-transform:uppercase; letter-spacing:1.5px; color:var(--muted); margin-bottom:4px; }
+  .sum-val { font-size:18px; font-weight:900; color:#fff; }
+  .sum-val.green { color:var(--green); text-shadow:0 0 15px rgba(0,255,136,0.4); }
+  .sum-val.yellow { color:#ffd700; }
+  .sum-val.red { color:#ff4444; }
+
+  /* Product cards */
+  .product-section { background:var(--surface); border:1px solid var(--border); border-radius:10px; margin-bottom:10px; overflow:hidden; }
+  .prod-header { display:flex; align-items:center; justify-content:space-between; padding:14px 18px; border-bottom:1px solid var(--border); }
+  .prod-title { display:flex; align-items:center; gap:10px; }
+  .prod-dot { width:8px; height:8px; border-radius:50%; flex-shrink:0; }
+  .prod-title h2 { font-size:18px; font-weight:800; letter-spacing:-0.5px; }
+  .live-dot { width:6px; height:6px; background:var(--green); border-radius:50%; box-shadow:0 0 6px var(--green); animation:pulse 2s infinite; }
+  .prod-meta { display:flex; gap:8px; align-items:center; flex-wrap:wrap; }
+  .meta-chip { background:rgba(0,255,136,0.06); border:1px solid var(--border); color:#5a8a6a; font-size:11px; padding:3px 10px; border-radius:20px; }
+  .meta-chip strong { color:#aad4bb; }
+  .meta-chip.quota { border-color:rgba(0,255,136,0.2); color:var(--green); }
+  .scenarios-row { display:grid; grid-template-columns:repeat(4,1fr); gap:0; border-bottom:1px solid var(--border); }
+  .scenario { padding:12px 18px; border-right:1px solid var(--border); }
+  .scenario:last-child { border-right:none; }
+  .s-label { font-size:9px; font-weight:700; letter-spacing:2px; text-transform:uppercase; margin-bottom:4px; }
+  .scenario.worst .s-label { color:#ff4444; }
+  .scenario.likely .s-label { color:#ffd700; }
+  .scenario.best .s-label { color:var(--green); }
+  .scenario.closed .s-label { color:var(--cyan); }
+  .s-val { font-size:22px; font-weight:900; margin-bottom:2px; }
+  .scenario.worst .s-val { color:#ff6666; }
+  .scenario.likely .s-val { color:#ffd700; }
+  .scenario.best .s-val { color:var(--green); text-shadow:0 0 15px rgba(0,255,136,0.3); }
+  .scenario.closed .s-val { color:var(--cyan); }
+  .s-sub { font-size:10px; color:var(--muted); }
+  .quota-bar-wrap { padding:12px 18px; border-bottom:1px solid var(--border); }
+  .quota-bar-header { display:flex; justify-content:space-between; align-items:center; margin-bottom:7px; }
+  .quota-bar-label { font-size:9px; font-weight:700; letter-spacing:2px; text-transform:uppercase; color:var(--muted); }
+  .quota-bar-vals { font-size:12px; }
+  .quota-track { height:6px; background:rgba(0,255,136,0.06); border-radius:4px; position:relative; overflow:visible; }
+  .quota-fill { height:100%; border-radius:4px; transition:width 0.5s ease; }
+  .quota-likely-marker { position:absolute; top:-3px; width:2px; height:12px; background:#ffd700; border-radius:2px; box-shadow:0 0 6px #ffd700; }
+  .quota-bar-footer { margin-top:5px; }
+  .opp-toggle { display:flex; justify-content:space-between; align-items:center; padding:8px 18px; cursor:pointer; font-size:12px; color:var(--muted); transition:background 0.15s; user-select:none; }
+  .opp-toggle:hover { background:rgba(0,255,136,0.03); color:var(--green); }
+  .toggle-amt { font-size:11px; }
+  .opp-list { border-top:1px solid var(--border); }
+  .opp-table { width:100%; border-collapse:collapse; }
+  .opp-table thead { background:#030a06; }
+  .opp-table th { font-size:9px; font-weight:700; text-transform:uppercase; letter-spacing:1.5px; color:var(--muted); padding:7px 14px; text-align:left; }
+  .opp-table td { font-size:12px; padding:6px 14px; border-bottom:1px solid rgba(0,255,136,0.04); color:#8ab89a; }
+  .opp-table td:first-child { color:#c8f0dc; font-weight:600; }
+  .opp-table tr:last-child td { border-bottom:none; }
+  .opp-table tr:hover td { background:rgba(0,255,136,0.02); }
+  .stage-pill { font-size:9px; font-weight:700; padding:2px 7px; border-radius:8px; text-transform:uppercase; letter-spacing:0.5px; }
+  .s1 { background:rgba(100,116,139,0.15); color:#64748b; border:1px solid rgba(100,116,139,0.2); }
+  .s2 { background:rgba(0,229,255,0.08); color:#00b4cc; border:1px solid rgba(0,229,255,0.15); }
+  .s3 { background:rgba(191,90,242,0.1); color:#bf5af2; border:1px solid rgba(191,90,242,0.2); }
+  .s4 { background:rgba(255,215,0,0.08); color:#ffd700; border:1px solid rgba(255,215,0,0.2); }
+  .s5 { background:rgba(255,107,53,0.1); color:#ff6b35; border:1px solid rgba(255,107,53,0.2); }
+  .s6 { background:rgba(0,255,136,0.1); color:var(--green); border:1px solid rgba(0,255,136,0.25); }
+  .won { background:rgba(0,255,136,0.2); color:var(--green); border:1px solid rgba(0,255,136,0.4); }
+  .pct-wrap { display:flex; align-items:center; gap:6px; font-size:11px; color:var(--muted); }
+  .pct-track { flex:1; height:3px; background:rgba(0,255,136,0.08); border-radius:2px; }
+  .pct-fill { height:100%; border-radius:2px; }
+  .badge-mkt { font-size:8px; font-weight:700; padding:1px 5px; border-radius:4px; background:rgba(0,229,255,0.15); color:var(--cyan); border:1px solid rgba(0,229,255,0.2); margin-left:5px; letter-spacing:0.5px; }
+  .footer { text-align:center; padding:20px; font-size:10px; color:#1a3a2a; letter-spacing:1px; border-top:1px solid var(--border); margin-top:8px; }
+  @keyframes pulse { 0%,100%{opacity:1}50%{opacity:0.4} }
 </style>
 </head>
 <body>
-<div style="position:relative">
-  <img src="https://raw.githubusercontent.com/koontz-robin/robin-decks/master/revio-logo.png" style="position:absolute;top:0;right:0;height:44px;opacity:0.95" alt="rev.io">
-  <h1>Rev.io Forecast — April 2026</h1>
-  <p class="sub">Live from Salesforce · 103 open opps · 9 closed won · Updated April 13, 2026</p>
-</div>
+<div class="scanline"></div>
+<div class="container">
 
-<!-- Summary KPIs -->
-<div style="display:flex;gap:16px;margin-bottom:28px;flex-wrap:wrap">
-  <div style="background:#1e293b;border-radius:10px;padding:20px 22px;flex:1;min-width:140px;position:relative;overflow:hidden">
-    <div style="position:absolute;top:0;left:0;right:0;height:3px;background:#38bdf8"></div>
-    <div style="font-size:10px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;color:#64748b;margin-bottom:6px">Closed Won MTD</div>
-    <div style="font-size:38px;font-weight:800;color:#38bdf8;line-height:1">$3,199</div>
+  <div class="header">
+    <div class="header-top">
+      <div class="logo">
+        <div class="logo-dot"></div>
+        <div class="logo-text">Rev.io · Sales Intelligence</div>
+      </div>
+      <div class="header-date">GENERATED APRIL 14, 2026 · LIVE SALESFORCE DATA</div>
+      <img src="https://raw.githubusercontent.com/koontz-robin/robin-decks/master/execute.png"
+           style="position:absolute;top:24px;right:32px;height:56px;opacity:0.9;border-radius:8px;z-index:10;" alt="Execute">
+    </div>
+    <h1>April 2026 <span>Forecast</span></h1>
+    <div class="header-sub">109 open opportunities · Live Salesforce data · Tagged via Forecast_Status__c field</div>
   </div>
-  <div style="background:#1e293b;border-radius:10px;padding:20px 22px;flex:1;min-width:140px;position:relative;overflow:hidden">
-    <div style="position:absolute;top:0;left:0;right:0;height:3px;background:#f87171"></div>
-    <div style="font-size:10px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;color:#64748b;margin-bottom:6px">Worst Case</div>
-    <div style="font-size:38px;font-weight:800;color:#f87171;line-height:1">$15,108</div>
-  </div>
-  <div style="background:#1e293b;border-radius:10px;padding:20px 22px;flex:1;min-width:140px;position:relative;overflow:hidden">
-    <div style="position:absolute;top:0;left:0;right:0;height:3px;background:#fbbf24"></div>
-    <div style="font-size:10px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;color:#64748b;margin-bottom:6px">Most Likely</div>
-    <div style="font-size:38px;font-weight:800;color:#fbbf24;line-height:1">$19,791</div>
-  </div>
-  <div style="background:#1e293b;border-radius:10px;padding:20px 22px;flex:1;min-width:140px;position:relative;overflow:hidden">
-    <div style="position:absolute;top:0;left:0;right:0;height:3px;background:#34d399"></div>
-    <div style="font-size:10px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;color:#64748b;margin-bottom:6px">Best Case</div>
-    <div style="font-size:38px;font-weight:800;color:#34d399;line-height:1">$34,256</div>
-  </div>
-  <div style="background:#1e293b;border-radius:10px;padding:20px 22px;flex:1;min-width:140px;position:relative;overflow:hidden">
-    <div style="position:absolute;top:0;left:0;right:0;height:3px;background:#94a3b8"></div>
-    <div style="font-size:10px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;color:#64748b;margin-bottom:6px">Total Quota</div>
-    <div style="font-size:38px;font-weight:800;color:#94a3b8;line-height:1">$56,959</div>
-    <div style="font-size:11px;color:#475569;margin-top:4px">Likely: <span style="color:#fbbf24;font-weight:700">34%</span> attained</div>
-  </div>
-</div>
 
-<!-- Product breakdown -->
-<div style="font-size:11px;font-weight:700;color:#64748b;letter-spacing:2px;text-transform:uppercase;margin-bottom:14px">By Product Line</div>
-<div style="display:grid;grid-template-columns:repeat(2,1fr);gap:14px;margin-bottom:28px">
+  <!-- Q2 Progress Bar -->
+  <div class="q2-bar-section">
+    <div class="q2-bar-title">Q2 2026 CLOSED WON — 2.1% of $180,225 target ($3,819 closed)</div>
+    <div class="q2-products">
+      <div class="q2-prod">
+      <div class="q2-prod-label">PSA 2.0</div>
+      <div class="q2-prod-bar-track">
+        <div class="q2-prod-bar-fill" style="width:3.6%;background:#00ff88;box-shadow:0 0 6px #00ff8866"></div>
+      </div>
+      <div class="q2-prod-cw">$3,280</div>
+      <div class="q2-prod-target">/ $90,000</div>
+    </div><div class="q2-prod">
+      <div class="q2-prod-label">Billing</div>
+      <div class="q2-prod-bar-track">
+        <div class="q2-prod-bar-fill" style="width:0.0%;background:#00e5ff;box-shadow:0 0 6px #00e5ff66"></div>
+      </div>
+      <div class="q2-prod-cw">$0</div>
+      <div class="q2-prod-target">/ $30,756</div>
+    </div><div class="q2-prod">
+      <div class="q2-prod-label">Payments AR</div>
+      <div class="q2-prod-bar-track">
+        <div class="q2-prod-bar-fill" style="width:1.7%;background:#7c3aed;box-shadow:0 0 6px #7c3aed66"></div>
+      </div>
+      <div class="q2-prod-cw">$539</div>
+      <div class="q2-prod-target">/ $31,620</div>
+    </div><div class="q2-prod">
+      <div class="q2-prod-label">Cyber Protect</div>
+      <div class="q2-prod-bar-track">
+        <div class="q2-prod-bar-fill" style="width:0.0%;background:#ff6b35;box-shadow:0 0 6px #ff6b3566"></div>
+      </div>
+      <div class="q2-prod-cw">$0</div>
+      <div class="q2-prod-target">/ $13,500</div>
+    </div><div class="q2-prod">
+      <div class="q2-prod-label">Odin</div>
+      <div class="q2-prod-bar-track">
+        <div class="q2-prod-bar-fill" style="width:0.0%;background:#bf5af2;box-shadow:0 0 6px #bf5af266"></div>
+      </div>
+      <div class="q2-prod-cw">$0</div>
+      <div class="q2-prod-target">/ $9,348</div>
+    </div><div class="q2-prod">
+      <div class="q2-prod-label">CommerceHub</div>
+      <div class="q2-prod-bar-track">
+        <div class="q2-prod-bar-fill" style="width:0.0%;background:#ffd700;box-shadow:0 0 6px #ffd70066"></div>
+      </div>
+      <div class="q2-prod-cw">$0</div>
+      <div class="q2-prod-target">/ $5,001</div>
+    </div>
+    </div>
+  </div>
 
-<div style="background:#1e293b;border-radius:10px;padding:20px 22px;border-left:4px solid #38bdf8">
-  <div style="display:flex;justify-content:space-between;align-items:baseline;margin-bottom:14px">
-    <div style="font-size:13px;font-weight:700;color:#e2e8f0">PSA 2.0</div>
-    <div style="font-size:11px;color:#64748b">Quota: $30,000</div>
+  <!-- Summary Bar -->
+  <div class="summary-bar">
+    <div class="sum-item"><div class="sum-label">April Pipeline</div><div class="sum-val">$87,266</div></div>
+    <div class="sum-item"><div class="sum-label">Open Opps</div><div class="sum-val">109</div></div>
+    <div class="sum-item"><div class="sum-label">April CW</div><div class="sum-val">$3,819</div></div>
+    <div class="sum-item highlight"><div class="sum-label">Worst Case</div><div class="sum-val red">$13,478</div></div>
+    <div class="sum-item highlight"><div class="sum-label">Most Likely</div><div class="sum-val yellow">$18,161</div></div>
+    <div class="sum-item highlight"><div class="sum-label">Best Case</div><div class="sum-val green">$30,321</div></div>
   </div>
-  <!-- Progress bar -->
-  <div style="background:#0f172a;border-radius:4px;height:8px;margin-bottom:12px;overflow:hidden;display:flex">
-    <div style="width:3%;background:#38bdf8;opacity:1"></div>
-    <div style="width:25%;background:#38bdf8;opacity:0.5"></div>
-    <div style="width:13%;background:#38bdf8;opacity:0.3"></div>
-    <div style="width:26%;background:#38bdf8;opacity:0.15"></div>
-  </div>
-  <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:8px">
-    <div style="text-align:center">
-      <div style="font-size:16px;font-weight:800;color:#38bdf8">$1,030</div>
-      <div style="font-size:10px;color:#64748b;margin-top:2px;text-transform:uppercase;letter-spacing:0.5px">Closed Won</div>
-    </div>
-    <div style="text-align:center">
-      <div style="font-size:16px;font-weight:700;color:#f87171">$8,540</div>
-      <div style="font-size:10px;color:#64748b;margin-top:2px;text-transform:uppercase;letter-spacing:0.5px">Worst</div>
-    </div>
-    <div style="text-align:center">
-      <div style="font-size:16px;font-weight:700;color:#fbbf24">$12,715</div>
-      <div style="font-size:10px;color:#64748b;margin-top:2px;text-transform:uppercase;letter-spacing:0.5px">Most Likely</div>
-    </div>
-    <div style="text-align:center">
-      <div style="font-size:16px;font-weight:700;color:#34d399">$20,680</div>
-      <div style="font-size:10px;color:#64748b;margin-top:2px;text-transform:uppercase;letter-spacing:0.5px">Best Case</div>
-    </div>
-  </div>
-  <div style="margin-top:10px;font-size:11px;color:#475569">Likely attainment: <span style="color:#38bdf8;font-weight:700">42%</span> of $30,000 quota</div>
-</div>
-<div style="background:#1e293b;border-radius:10px;padding:20px 22px;border-left:4px solid #a78bfa">
-  <div style="display:flex;justify-content:space-between;align-items:baseline;margin-bottom:14px">
-    <div style="font-size:13px;font-weight:700;color:#e2e8f0">Billing</div>
-    <div style="font-size:11px;color:#64748b">Quota: $10,252</div>
-  </div>
-  <!-- Progress bar -->
-  <div style="background:#0f172a;border-radius:4px;height:8px;margin-bottom:12px;overflow:hidden;display:flex">
-    <div style="width:11%;background:#a78bfa;opacity:1"></div>
-    <div style="width:34%;background:#a78bfa;opacity:0.5"></div>
-    <div style="width:0%;background:#a78bfa;opacity:0.3"></div>
-    <div style="width:60%;background:#a78bfa;opacity:0.15"></div>
-  </div>
-  <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:8px">
-    <div style="text-align:center">
-      <div style="font-size:16px;font-weight:800;color:#a78bfa">$1,130</div>
-      <div style="font-size:10px;color:#64748b;margin-top:2px;text-transform:uppercase;letter-spacing:0.5px">Closed Won</div>
-    </div>
-    <div style="text-align:center">
-      <div style="font-size:16px;font-weight:700;color:#f87171">$4,660</div>
-      <div style="font-size:10px;color:#64748b;margin-top:2px;text-transform:uppercase;letter-spacing:0.5px">Worst</div>
-    </div>
-    <div style="text-align:center">
-      <div style="font-size:16px;font-weight:700;color:#fbbf24">$4,660</div>
-      <div style="font-size:10px;color:#64748b;margin-top:2px;text-transform:uppercase;letter-spacing:0.5px">Most Likely</div>
-    </div>
-    <div style="text-align:center">
-      <div style="font-size:16px;font-weight:700;color:#34d399">$10,860</div>
-      <div style="font-size:10px;color:#64748b;margin-top:2px;text-transform:uppercase;letter-spacing:0.5px">Best Case</div>
-    </div>
-  </div>
-  <div style="margin-top:10px;font-size:11px;color:#475569">Likely attainment: <span style="color:#a78bfa;font-weight:700">45%</span> of $10,252 quota</div>
-</div>
-<div style="background:#1e293b;border-radius:10px;padding:20px 22px;border-left:4px solid #34d399">
-  <div style="display:flex;justify-content:space-between;align-items:baseline;margin-bottom:14px">
-    <div style="font-size:13px;font-weight:700;color:#e2e8f0">Payments AR</div>
-    <div style="font-size:11px;color:#64748b">Quota: $10,540</div>
-  </div>
-  <!-- Progress bar -->
-  <div style="background:#0f172a;border-radius:4px;height:8px;margin-bottom:12px;overflow:hidden;display:flex">
-    <div style="width:5%;background:#34d399;opacity:1"></div>
-    <div style="width:8%;background:#34d399;opacity:0.5"></div>
-    <div style="width:4%;background:#34d399;opacity:0.3"></div>
-    <div style="width:0%;background:#34d399;opacity:0.15"></div>
-  </div>
-  <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:8px">
-    <div style="text-align:center">
-      <div style="font-size:16px;font-weight:800;color:#34d399">$539</div>
-      <div style="font-size:10px;color:#64748b;margin-top:2px;text-transform:uppercase;letter-spacing:0.5px">Closed Won</div>
-    </div>
-    <div style="text-align:center">
-      <div style="font-size:16px;font-weight:700;color:#f87171">$1,408</div>
-      <div style="font-size:10px;color:#64748b;margin-top:2px;text-transform:uppercase;letter-spacing:0.5px">Worst</div>
-    </div>
-    <div style="text-align:center">
-      <div style="font-size:16px;font-weight:700;color:#fbbf24">$1,916</div>
-      <div style="font-size:10px;color:#64748b;margin-top:2px;text-transform:uppercase;letter-spacing:0.5px">Most Likely</div>
-    </div>
-    <div style="text-align:center">
-      <div style="font-size:16px;font-weight:700;color:#34d399">$2,016</div>
-      <div style="font-size:10px;color:#64748b;margin-top:2px;text-transform:uppercase;letter-spacing:0.5px">Best Case</div>
-    </div>
-  </div>
-  <div style="margin-top:10px;font-size:11px;color:#475569">Likely attainment: <span style="color:#34d399;font-weight:700">18%</span> of $10,540 quota</div>
-</div>
-<div style="background:#1e293b;border-radius:10px;padding:20px 22px;border-left:4px solid #f97316">
-  <div style="display:flex;justify-content:space-between;align-items:baseline;margin-bottom:14px">
-    <div style="font-size:13px;font-weight:700;color:#e2e8f0">Cyber Protect</div>
-    <div style="font-size:11px;color:#64748b">Quota: $4,500</div>
-  </div>
-  <!-- Progress bar -->
-  <div style="background:#0f172a;border-radius:4px;height:8px;margin-bottom:12px;overflow:hidden;display:flex">
-    <div style="width:0%;background:#f97316;opacity:1"></div>
-    <div style="width:0%;background:#f97316;opacity:0.5"></div>
-    <div style="width:0%;background:#f97316;opacity:0.3"></div>
-    <div style="width:0%;background:#f97316;opacity:0.15"></div>
-  </div>
-  <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:8px">
-    <div style="text-align:center">
-      <div style="font-size:16px;font-weight:800;color:#f97316">$0</div>
-      <div style="font-size:10px;color:#64748b;margin-top:2px;text-transform:uppercase;letter-spacing:0.5px">Closed Won</div>
-    </div>
-    <div style="text-align:center">
-      <div style="font-size:16px;font-weight:700;color:#f87171">$0</div>
-      <div style="font-size:10px;color:#64748b;margin-top:2px;text-transform:uppercase;letter-spacing:0.5px">Worst</div>
-    </div>
-    <div style="text-align:center">
-      <div style="font-size:16px;font-weight:700;color:#fbbf24">$0</div>
-      <div style="font-size:10px;color:#64748b;margin-top:2px;text-transform:uppercase;letter-spacing:0.5px">Most Likely</div>
-    </div>
-    <div style="text-align:center">
-      <div style="font-size:16px;font-weight:700;color:#34d399">$0</div>
-      <div style="font-size:10px;color:#64748b;margin-top:2px;text-transform:uppercase;letter-spacing:0.5px">Best Case</div>
-    </div>
-  </div>
-  <div style="margin-top:10px;font-size:11px;color:#475569">Likely attainment: <span style="color:#f97316;font-weight:700">0%</span> of $4,500 quota</div>
-</div>
-<div style="background:#1e293b;border-radius:10px;padding:20px 22px;border-left:4px solid #fbbf24">
-  <div style="display:flex;justify-content:space-between;align-items:baseline;margin-bottom:14px">
-    <div style="font-size:13px;font-weight:700;color:#e2e8f0">Odin</div>
-    
-  </div>
-  <!-- Progress bar -->
+
   
-  <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:8px">
-    <div style="text-align:center">
-      <div style="font-size:16px;font-weight:800;color:#fbbf24">$0</div>
-      <div style="font-size:10px;color:#64748b;margin-top:2px;text-transform:uppercase;letter-spacing:0.5px">Closed Won</div>
+<div class="product-section" id="prod-0">
+  <div class="prod-header">
+    <div class="prod-title">
+      <div class="prod-dot" style="background:#00ff88;box-shadow:0 0 8px #00ff88"></div>
+      <h2 style="color:#00ff88;text-shadow:0 0 20px #00ff8866">PSA 2.0</h2>
+      <div class="live-dot"></div>
     </div>
-    <div style="text-align:center">
-      <div style="font-size:16px;font-weight:700;color:#f87171">$0</div>
-      <div style="font-size:10px;color:#64748b;margin-top:2px;text-transform:uppercase;letter-spacing:0.5px">Worst</div>
-    </div>
-    <div style="text-align:center">
-      <div style="font-size:16px;font-weight:700;color:#fbbf24">$0</div>
-      <div style="font-size:10px;color:#64748b;margin-top:2px;text-transform:uppercase;letter-spacing:0.5px">Most Likely</div>
-    </div>
-    <div style="text-align:center">
-      <div style="font-size:16px;font-weight:700;color:#34d399">$0</div>
-      <div style="font-size:10px;color:#64748b;margin-top:2px;text-transform:uppercase;letter-spacing:0.5px">Best Case</div>
+    <div class="prod-meta">
+      <span class="meta-chip">Pipeline: <strong>$72,270</strong></span>
+      <span class="meta-chip">68 opps</span>
+      <span class="meta-chip">20 tagged</span>
+      <span class="meta-chip quota">Quota: $30,000</span>
     </div>
   </div>
+
+  <div class="scenarios-row">
+    <div class="scenario worst">
+      <div class="s-label">WORST CASE</div>
+      <div class="s-val">$8,540</div>
+    </div>
+    <div class="scenario likely">
+      <div class="s-label">MOST LIKELY</div>
+      <div class="s-val">$12,715</div>
+    </div>
+    <div class="scenario best">
+      <div class="s-label">BEST CASE</div>
+      <div class="s-val">$18,575</div>
+    </div>
+    <div class="scenario closed">
+      <div class="s-label">APRIL CLOSED WON</div>
+      <div class="s-val">$3,280</div>
+      <div class="s-sub">11% of quota</div>
+    </div>
+  </div>
+
+  <div class="quota-bar-wrap">
+    <div class="quota-bar-header">
+      <span class="quota-bar-label">APRIL QUOTA ATTAINMENT</span>
+      <span class="quota-bar-vals">
+        <strong style="color:#00ff88;font-size:18px">10.9%</strong>
+        <span style="color:#555;font-size:12px"> &nbsp;·&nbsp; $3,280 / $30,000 target</span>
+      </span>
+    </div>
+    <div class="quota-track">
+      <div class="quota-fill" style="width:10.9%;background:#00ff88;box-shadow:0 0 10px #00ff8888"></div>
+      <div class="quota-likely-marker" style="left:42.4%" title="Most Likely"></div>
+    </div>
+    <div class="quota-bar-footer">
+      <span style="color:#555;font-size:11px">
+        🔴 Worst: <strong style="color:#ff6666">28.5%</strong>
+        &nbsp;·&nbsp; 🟡 Most Likely: <strong style="color:#ffd700">42.4%</strong>
+        &nbsp;·&nbsp; 🟢 Best Case: <strong style="color:#00ff88">61.9%</strong>
+        &nbsp;·&nbsp; Target: $30,000
+      </span>
+    </div>
+  </div>
+
+  <div class="opp-toggle" onclick="toggle('PSA 2.0')">
+    <span id="toggle-label-PSA 2.0">▶ Show all 68 opportunities</span>
+    <span class="toggle-amt">$72,270 total</span>
+  </div>
+  <div id="opps-PSA 2.0" class="opp-list" style="display:none">
+    <table class="opp-table">
+      <thead><tr><th>Account</th><th>Amount</th><th>Stage</th><th>Owner</th><th>Prob</th></tr></thead>
+      <tbody><tr style="background:rgba(255,68,68,0.05)">
+          <td>C1st Technologies<span style="font-size:9px;font-weight:700;padding:1px 6px;border-radius:4px;background:rgba(255,68,68,0.15);color:#ff4444;letter-spacing:0.5px;margin-left:6px">WORST CASE</span><span class="badge-mkt">MKT</span></td>
+          <td style="color:#ff4444;font-weight:700">$2,250</td>
+          <td><span class="stage-pill won">Closed Won</span></td>
+          <td>Jamie Butler</td>
+          <td><div class="pct-wrap">100%<div class="pct-track"><div class="pct-fill" style="width:100%;background:#ff4444"></div></div></div></td>
+        </tr><tr style="background:rgba(255,68,68,0.05)">
+          <td>DMC Systems<span style="font-size:9px;font-weight:700;padding:1px 6px;border-radius:4px;background:rgba(255,68,68,0.15);color:#ff4444;letter-spacing:0.5px;margin-left:6px">WORST CASE</span><span class="badge-mkt">MKT</span></td>
+          <td style="color:#ff4444;font-weight:700">$530</td>
+          <td><span class="stage-pill won">Closed Won</span></td>
+          <td>Patrick Davies</td>
+          <td><div class="pct-wrap">100%<div class="pct-track"><div class="pct-fill" style="width:100%;background:#ff4444"></div></div></div></td>
+        </tr><tr style="background:rgba(255,68,68,0.05)">
+          <td>Custom Electronic Consultants<span style="font-size:9px;font-weight:700;padding:1px 6px;border-radius:4px;background:rgba(255,68,68,0.15);color:#ff4444;letter-spacing:0.5px;margin-left:6px">WORST CASE</span><span class="badge-mkt">MKT</span></td>
+          <td style="color:#ff4444;font-weight:700">$500</td>
+          <td><span class="stage-pill won">Closed Won</span></td>
+          <td>Patrick Davies</td>
+          <td><div class="pct-wrap">100%<div class="pct-track"><div class="pct-fill" style="width:100%;background:#ff4444"></div></div></div></td>
+        </tr><tr style="background:rgba(255,68,68,0.05)">
+          <td>Front Row AV<span style="font-size:9px;font-weight:700;padding:1px 6px;border-radius:4px;background:rgba(255,68,68,0.15);color:#ff4444;letter-spacing:0.5px;margin-left:6px">WORST CASE</span></td>
+          <td style="color:#ff4444;font-weight:700">$605</td>
+          <td><span class="stage-pill s6">Verbal Commit</span></td>
+          <td>Jake Borah</td>
+          <td><div class="pct-wrap">80%<div class="pct-track"><div class="pct-fill" style="width:80%;background:#ff4444"></div></div></div></td>
+        </tr><tr style="background:rgba(255,68,68,0.05)">
+          <td>Lifestyle Electronics<span style="font-size:9px;font-weight:700;padding:1px 6px;border-radius:4px;background:rgba(255,68,68,0.15);color:#ff4444;letter-spacing:0.5px;margin-left:6px">WORST CASE</span><span class="badge-mkt">MKT</span></td>
+          <td style="color:#ff4444;font-weight:700">$2,000</td>
+          <td><span class="stage-pill s4">Proposal</span></td>
+          <td>Jaylin Bender</td>
+          <td><div class="pct-wrap">40%<div class="pct-track"><div class="pct-fill" style="width:40%;background:#ff4444"></div></div></div></td>
+        </tr><tr style="background:rgba(255,68,68,0.05)">
+          <td>VIA Technology<span style="font-size:9px;font-weight:700;padding:1px 6px;border-radius:4px;background:rgba(255,68,68,0.15);color:#ff4444;letter-spacing:0.5px;margin-left:6px">WORST CASE</span></td>
+          <td style="color:#ff4444;font-weight:700">$1,270</td>
+          <td><span class="stage-pill s4">Proposal</span></td>
+          <td>Jake Borah</td>
+          <td><div class="pct-wrap">40%<div class="pct-track"><div class="pct-fill" style="width:40%;background:#ff4444"></div></div></div></td>
+        </tr><tr style="background:rgba(0,255,136,0.06)">
+          <td>Larryslockandsafe<span style="font-size:9px;font-weight:700;padding:1px 6px;border-radius:4px;background:rgba(0,255,136,0.15);color:#00ff88;letter-spacing:0.5px;margin-left:6px">BEST CASE</span><span class="badge-mkt">MKT</span></td>
+          <td style="color:#00ff88;font-weight:700">$850</td>
+          <td><span class="stage-pill s4">Proposal</span></td>
+          <td>Patrick Davies</td>
+          <td><div class="pct-wrap">40%<div class="pct-track"><div class="pct-fill" style="width:40%;background:#00ff88"></div></div></div></td>
+        </tr><tr style="">
+          <td>Ardit Test</td>
+          <td style="color:#8ab89a;font-weight:700">$700</td>
+          <td><span class="stage-pill s4">Proposal</span></td>
+          <td>Ardit Berdyna</td>
+          <td><div class="pct-wrap">40%<div class="pct-track"><div class="pct-fill" style="width:40%;background:var(--green)"></div></div></div></td>
+        </tr><tr style="background:rgba(255,215,0,0.05)">
+          <td>Dempsey Alarms<span style="font-size:9px;font-weight:700;padding:1px 6px;border-radius:4px;background:rgba(255,215,0,0.15);color:#ffd700;letter-spacing:0.5px;margin-left:6px">MOST LIKELY</span><span class="badge-mkt">MKT</span></td>
+          <td style="color:#ffd700;font-weight:700">$575</td>
+          <td><span class="stage-pill s4">Proposal</span></td>
+          <td>Patrick Davies</td>
+          <td><div class="pct-wrap">40%<div class="pct-track"><div class="pct-fill" style="width:40%;background:#ffd700"></div></div></div></td>
+        </tr><tr style="background:rgba(255,215,0,0.05)">
+          <td>EM Business Solutions<span style="font-size:9px;font-weight:700;padding:1px 6px;border-radius:4px;background:rgba(255,215,0,0.15);color:#ffd700;letter-spacing:0.5px;margin-left:6px">MOST LIKELY</span><span class="badge-mkt">MKT</span></td>
+          <td style="color:#ffd700;font-weight:700">$575</td>
+          <td><span class="stage-pill s4">Proposal</span></td>
+          <td>Jamie Butler</td>
+          <td><div class="pct-wrap">40%<div class="pct-track"><div class="pct-fill" style="width:40%;background:#ffd700"></div></div></div></td>
+        </tr><tr style="background:rgba(255,68,68,0.05)">
+          <td>MaiaEdge<span style="font-size:9px;font-weight:700;padding:1px 6px;border-radius:4px;background:rgba(255,68,68,0.15);color:#ff4444;letter-spacing:0.5px;margin-left:6px">WORST CASE</span><span class="badge-mkt">MKT</span></td>
+          <td style="color:#ff4444;font-weight:700">$575</td>
+          <td><span class="stage-pill s4">Proposal</span></td>
+          <td>Jamie Butler</td>
+          <td><div class="pct-wrap">40%<div class="pct-track"><div class="pct-fill" style="width:40%;background:#ff4444"></div></div></div></td>
+        </tr><tr style="background:rgba(0,255,136,0.06)">
+          <td>Integrated Installations<span style="font-size:9px;font-weight:700;padding:1px 6px;border-radius:4px;background:rgba(0,255,136,0.15);color:#00ff88;letter-spacing:0.5px;margin-left:6px">BEST CASE</span></td>
+          <td style="color:#00ff88;font-weight:700">$575</td>
+          <td><span class="stage-pill s4">Proposal</span></td>
+          <td>Jaylin Bender</td>
+          <td><div class="pct-wrap">40%<div class="pct-track"><div class="pct-fill" style="width:40%;background:#00ff88"></div></div></div></td>
+        </tr><tr style="">
+          <td>Compsys</td>
+          <td style="color:#8ab89a;font-weight:700">$2,800</td>
+          <td><span class="stage-pill s3">Demo</span></td>
+          <td>Andy Whisenant</td>
+          <td><div class="pct-wrap">25%<div class="pct-track"><div class="pct-fill" style="width:25%;background:var(--green)"></div></div></div></td>
+        </tr><tr style="">
+          <td>Pathwayz Communications<span class="badge-mkt">MKT</span></td>
+          <td style="color:#8ab89a;font-weight:700">$1,680</td>
+          <td><span class="stage-pill s3">Demo</span></td>
+          <td>Andy Whisenant</td>
+          <td><div class="pct-wrap">25%<div class="pct-track"><div class="pct-fill" style="width:25%;background:var(--green)"></div></div></div></td>
+        </tr><tr style="background:rgba(255,215,0,0.05)">
+          <td>Xact Communications<span style="font-size:9px;font-weight:700;padding:1px 6px;border-radius:4px;background:rgba(255,215,0,0.15);color:#ffd700;letter-spacing:0.5px;margin-left:6px">MOST LIKELY</span></td>
+          <td style="color:#ffd700;font-weight:700">$1,650</td>
+          <td><span class="stage-pill s3">Demo</span></td>
+          <td>Connor Flynn</td>
+          <td><div class="pct-wrap">25%<div class="pct-track"><div class="pct-fill" style="width:25%;background:#ffd700"></div></div></div></td>
+        </tr><tr style="background:rgba(0,255,136,0.06)">
+          <td>KeyCom<span style="font-size:9px;font-weight:700;padding:1px 6px;border-radius:4px;background:rgba(0,255,136,0.15);color:#00ff88;letter-spacing:0.5px;margin-left:6px">BEST CASE</span></td>
+          <td style="color:#00ff88;font-weight:700">$1,200</td>
+          <td><span class="stage-pill s3">Demo</span></td>
+          <td>Connor Flynn</td>
+          <td><div class="pct-wrap">25%<div class="pct-track"><div class="pct-fill" style="width:25%;background:#00ff88"></div></div></div></td>
+        </tr><tr style="background:rgba(0,255,136,0.06)">
+          <td>Cine Audio Visual<span style="font-size:9px;font-weight:700;padding:1px 6px;border-radius:4px;background:rgba(0,255,136,0.15);color:#00ff88;letter-spacing:0.5px;margin-left:6px">BEST CASE</span></td>
+          <td style="color:#00ff88;font-weight:700">$1,180</td>
+          <td><span class="stage-pill s3">Demo</span></td>
+          <td>Patrick Davies</td>
+          <td><div class="pct-wrap">25%<div class="pct-track"><div class="pct-fill" style="width:25%;background:#00ff88"></div></div></div></td>
+        </tr><tr style="background:rgba(255,68,68,0.05)">
+          <td>Celerius<span style="font-size:9px;font-weight:700;padding:1px 6px;border-radius:4px;background:rgba(255,68,68,0.15);color:#ff4444;letter-spacing:0.5px;margin-left:6px">WORST CASE</span></td>
+          <td style="color:#ff4444;font-weight:700">$810</td>
+          <td><span class="stage-pill s3">Demo</span></td>
+          <td>Connor Flynn</td>
+          <td><div class="pct-wrap">25%<div class="pct-track"><div class="pct-fill" style="width:25%;background:#ff4444"></div></div></div></td>
+        </tr><tr style="background:rgba(0,255,136,0.06)">
+          <td>Silent Knight Security<span style="font-size:9px;font-weight:700;padding:1px 6px;border-radius:4px;background:rgba(0,255,136,0.15);color:#00ff88;letter-spacing:0.5px;margin-left:6px">BEST CASE</span></td>
+          <td style="color:#00ff88;font-weight:700">$785</td>
+          <td><span class="stage-pill s3">Demo</span></td>
+          <td>Patrick Davies</td>
+          <td><div class="pct-wrap">25%<div class="pct-track"><div class="pct-fill" style="width:25%;background:#00ff88"></div></div></div></td>
+        </tr><tr style="background:rgba(0,255,136,0.06)">
+          <td>Snouffer's Fire & Safety<span style="font-size:9px;font-weight:700;padding:1px 6px;border-radius:4px;background:rgba(0,255,136,0.15);color:#00ff88;letter-spacing:0.5px;margin-left:6px">BEST CASE</span></td>
+          <td style="color:#00ff88;font-weight:700">$695</td>
+          <td><span class="stage-pill s3">Demo</span></td>
+          <td>Patrick Davies</td>
+          <td><div class="pct-wrap">25%<div class="pct-track"><div class="pct-fill" style="width:25%;background:#00ff88"></div></div></div></td>
+        </tr><tr style="">
+          <td>Alliance Communication & Technologies</td>
+          <td style="color:#8ab89a;font-weight:700">$695</td>
+          <td><span class="stage-pill s3">Demo</span></td>
+          <td>Patrick Davies</td>
+          <td><div class="pct-wrap">25%<div class="pct-track"><div class="pct-fill" style="width:25%;background:var(--green)"></div></div></div></td>
+        </tr><tr style="background:rgba(255,215,0,0.05)">
+          <td>Sage Security Solutions<span style="font-size:9px;font-weight:700;padding:1px 6px;border-radius:4px;background:rgba(255,215,0,0.15);color:#ffd700;letter-spacing:0.5px;margin-left:6px">MOST LIKELY</span></td>
+          <td style="color:#ffd700;font-weight:700">$650</td>
+          <td><span class="stage-pill s3">Demo</span></td>
+          <td>Jaylin Bender</td>
+          <td><div class="pct-wrap">25%<div class="pct-track"><div class="pct-fill" style="width:25%;background:#ffd700"></div></div></div></td>
+        </tr><tr style="background:rgba(0,255,136,0.06)">
+          <td>TPG Security Tech<span style="font-size:9px;font-weight:700;padding:1px 6px;border-radius:4px;background:rgba(0,255,136,0.15);color:#00ff88;letter-spacing:0.5px;margin-left:6px">BEST CASE</span></td>
+          <td style="color:#00ff88;font-weight:700">$575</td>
+          <td><span class="stage-pill s3">Demo</span></td>
+          <td>Patrick Davies</td>
+          <td><div class="pct-wrap">25%<div class="pct-track"><div class="pct-fill" style="width:25%;background:#00ff88"></div></div></div></td>
+        </tr><tr style="">
+          <td>E2E Technology, LLC<span class="badge-mkt">MKT</span></td>
+          <td style="color:#8ab89a;font-weight:700">$575</td>
+          <td><span class="stage-pill s3">Demo</span></td>
+          <td>Andy Whisenant</td>
+          <td><div class="pct-wrap">25%<div class="pct-track"><div class="pct-fill" style="width:25%;background:var(--green)"></div></div></div></td>
+        </tr><tr style="">
+          <td>EKC Enterprises</td>
+          <td style="color:#8ab89a;font-weight:700">$6,000</td>
+          <td><span class="stage-pill s2">Discovery</span></td>
+          <td>Patrick Davies</td>
+          <td><div class="pct-wrap">10%<div class="pct-track"><div class="pct-fill" style="width:10%;background:var(--green)"></div></div></div></td>
+        </tr><tr style="">
+          <td>Alscan<span class="badge-mkt">MKT</span></td>
+          <td style="color:#8ab89a;font-weight:700">$2,700</td>
+          <td><span class="stage-pill s2">Discovery</span></td>
+          <td>Jake Borah</td>
+          <td><div class="pct-wrap">10%<div class="pct-track"><div class="pct-fill" style="width:10%;background:var(--green)"></div></div></div></td>
+        </tr><tr style="">
+          <td>Briggs Electric<span class="badge-mkt">MKT</span></td>
+          <td style="color:#8ab89a;font-weight:700">$1,610</td>
+          <td><span class="stage-pill s2">Discovery</span></td>
+          <td>Jake Borah</td>
+          <td><div class="pct-wrap">10%<div class="pct-track"><div class="pct-fill" style="width:10%;background:var(--green)"></div></div></div></td>
+        </tr><tr style="">
+          <td>Xchange Telecom / Skywire Networks</td>
+          <td style="color:#8ab89a;font-weight:700">$1,575</td>
+          <td><span class="stage-pill s2">Discovery</span></td>
+          <td>Jamie Butler</td>
+          <td><div class="pct-wrap">10%<div class="pct-track"><div class="pct-fill" style="width:10%;background:var(--green)"></div></div></div></td>
+        </tr><tr style="">
+          <td>AE Security<span class="badge-mkt">MKT</span></td>
+          <td style="color:#8ab89a;font-weight:700">$1,250</td>
+          <td><span class="stage-pill s2">Discovery</span></td>
+          <td>Patrick Davies</td>
+          <td><div class="pct-wrap">10%<div class="pct-track"><div class="pct-fill" style="width:10%;background:var(--green)"></div></div></div></td>
+        </tr><tr style="">
+          <td>Innova Global Technology Inc.<span class="badge-mkt">MKT</span></td>
+          <td style="color:#8ab89a;font-weight:700">$1,250</td>
+          <td><span class="stage-pill s2">Discovery</span></td>
+          <td>Husam Zalmiyar</td>
+          <td><div class="pct-wrap">10%<div class="pct-track"><div class="pct-fill" style="width:10%;background:var(--green)"></div></div></div></td>
+        </tr><tr style="">
+          <td>ABCom<span class="badge-mkt">MKT</span></td>
+          <td style="color:#8ab89a;font-weight:700">$1,050</td>
+          <td><span class="stage-pill s2">Discovery</span></td>
+          <td>Patrick Davies</td>
+          <td><div class="pct-wrap">10%<div class="pct-track"><div class="pct-fill" style="width:10%;background:var(--green)"></div></div></div></td>
+        </tr><tr style="">
+          <td>Native Smart Properties</td>
+          <td style="color:#8ab89a;font-weight:700">$990</td>
+          <td><span class="stage-pill s2">Discovery</span></td>
+          <td>Jake Borah</td>
+          <td><div class="pct-wrap">10%<div class="pct-track"><div class="pct-fill" style="width:10%;background:var(--green)"></div></div></div></td>
+        </tr><tr style="">
+          <td>Fortress Lock, Safe, & Security</td>
+          <td style="color:#8ab89a;font-weight:700">$875</td>
+          <td><span class="stage-pill s2">Discovery</span></td>
+          <td>Jake Borah</td>
+          <td><div class="pct-wrap">10%<div class="pct-track"><div class="pct-fill" style="width:10%;background:var(--green)"></div></div></div></td>
+        </tr><tr style="">
+          <td>Sparrow Technologies</td>
+          <td style="color:#8ab89a;font-weight:700">$770</td>
+          <td><span class="stage-pill s2">Discovery</span></td>
+          <td>Connor Flynn</td>
+          <td><div class="pct-wrap">10%<div class="pct-track"><div class="pct-fill" style="width:10%;background:var(--green)"></div></div></div></td>
+        </tr><tr style="">
+          <td>Masterpiece Audio Video</td>
+          <td style="color:#8ab89a;font-weight:700">$725</td>
+          <td><span class="stage-pill s2">Discovery</span></td>
+          <td>Patrick Davies</td>
+          <td><div class="pct-wrap">10%<div class="pct-track"><div class="pct-fill" style="width:10%;background:var(--green)"></div></div></div></td>
+        </tr><tr style="">
+          <td>Delmi Training Institute<span class="badge-mkt">MKT</span></td>
+          <td style="color:#8ab89a;font-weight:700">$725</td>
+          <td><span class="stage-pill s2">Discovery</span></td>
+          <td>Jaylin Bender</td>
+          <td><div class="pct-wrap">10%<div class="pct-track"><div class="pct-fill" style="width:10%;background:var(--green)"></div></div></div></td>
+        </tr><tr style="">
+          <td>Modern Wave Systems<span class="badge-mkt">MKT</span></td>
+          <td style="color:#8ab89a;font-weight:700">$700</td>
+          <td><span class="stage-pill s2">Discovery</span></td>
+          <td>Husam Zalmiyar</td>
+          <td><div class="pct-wrap">10%<div class="pct-track"><div class="pct-fill" style="width:10%;background:var(--green)"></div></div></div></td>
+        </tr><tr style="">
+          <td>Merrill & Associates<span class="badge-mkt">MKT</span></td>
+          <td style="color:#8ab89a;font-weight:700">$700</td>
+          <td><span class="stage-pill s2">Discovery</span></td>
+          <td>Jamie Butler</td>
+          <td><div class="pct-wrap">10%<div class="pct-track"><div class="pct-fill" style="width:10%;background:var(--green)"></div></div></div></td>
+        </tr><tr style="">
+          <td>Innovative Media Systems</td>
+          <td style="color:#8ab89a;font-weight:700">$575</td>
+          <td><span class="stage-pill s2">Discovery</span></td>
+          <td>Husam Zalmiyar</td>
+          <td><div class="pct-wrap">10%<div class="pct-track"><div class="pct-fill" style="width:10%;background:var(--green)"></div></div></div></td>
+        </tr><tr style="">
+          <td>Smart Choice Communications</td>
+          <td style="color:#8ab89a;font-weight:700">$575</td>
+          <td><span class="stage-pill s2">Discovery</span></td>
+          <td>Jamie Butler</td>
+          <td><div class="pct-wrap">10%<div class="pct-track"><div class="pct-fill" style="width:10%;background:var(--green)"></div></div></div></td>
+        </tr><tr style="">
+          <td>Omaha Security Cameras</td>
+          <td style="color:#8ab89a;font-weight:700">$500</td>
+          <td><span class="stage-pill s2">Discovery</span></td>
+          <td>Patrick Davies</td>
+          <td><div class="pct-wrap">10%<div class="pct-track"><div class="pct-fill" style="width:10%;background:var(--green)"></div></div></div></td>
+        </tr><tr style="">
+          <td>Meretalk<span class="badge-mkt">MKT</span></td>
+          <td style="color:#8ab89a;font-weight:700">$500</td>
+          <td><span class="stage-pill s2">Discovery</span></td>
+          <td>Jamie Butler</td>
+          <td><div class="pct-wrap">10%<div class="pct-track"><div class="pct-fill" style="width:10%;background:var(--green)"></div></div></div></td>
+        </tr><tr style="">
+          <td>Aaron's Lock & Security</td>
+          <td style="color:#8ab89a;font-weight:700">$0</td>
+          <td><span class="stage-pill s2">Discovery</span></td>
+          <td>Jaylin Bender</td>
+          <td><div class="pct-wrap">10%<div class="pct-track"><div class="pct-fill" style="width:10%;background:var(--green)"></div></div></div></td>
+        </tr><tr style="">
+          <td>Qovo Solutions Inc<span class="badge-mkt">MKT</span></td>
+          <td style="color:#8ab89a;font-weight:700">$2,100</td>
+          <td><span class="stage-pill s1">Scheduled</span></td>
+          <td>Andy Whisenant</td>
+          <td><div class="pct-wrap">5%<div class="pct-track"><div class="pct-fill" style="width:5%;background:var(--green)"></div></div></div></td>
+        </tr><tr style="">
+          <td>Security Specialists<span class="badge-mkt">MKT</span></td>
+          <td style="color:#8ab89a;font-weight:700">$2,025</td>
+          <td><span class="stage-pill s1">Scheduled</span></td>
+          <td>Husam Zalmiyar</td>
+          <td><div class="pct-wrap">5%<div class="pct-track"><div class="pct-fill" style="width:5%;background:var(--green)"></div></div></div></td>
+        </tr><tr style="">
+          <td>Kinetix<span class="badge-mkt">MKT</span></td>
+          <td style="color:#8ab89a;font-weight:700">$1,785</td>
+          <td><span class="stage-pill s1">Scheduled</span></td>
+          <td>Andy Whisenant</td>
+          <td><div class="pct-wrap">5%<div class="pct-track"><div class="pct-fill" style="width:5%;background:var(--green)"></div></div></div></td>
+        </tr><tr style="">
+          <td>Business Communication Systems</td>
+          <td style="color:#8ab89a;font-weight:700">$1,575</td>
+          <td><span class="stage-pill s1">Scheduled</span></td>
+          <td>Connor Flynn</td>
+          <td><div class="pct-wrap">5%<div class="pct-track"><div class="pct-fill" style="width:5%;background:var(--green)"></div></div></div></td>
+        </tr><tr style="">
+          <td>Brightside<span class="badge-mkt">MKT</span></td>
+          <td style="color:#8ab89a;font-weight:700">$1,470</td>
+          <td><span class="stage-pill s1">Scheduled</span></td>
+          <td>Andy Whisenant</td>
+          <td><div class="pct-wrap">5%<div class="pct-track"><div class="pct-fill" style="width:5%;background:var(--green)"></div></div></div></td>
+        </tr><tr style="">
+          <td>Executive Communications Group</td>
+          <td style="color:#8ab89a;font-weight:700">$1,300</td>
+          <td><span class="stage-pill s1">Scheduled</span></td>
+          <td>Jaylin Bender</td>
+          <td><div class="pct-wrap">5%<div class="pct-track"><div class="pct-fill" style="width:5%;background:var(--green)"></div></div></div></td>
+        </tr><tr style="">
+          <td>American Eagle Security Systems<span class="badge-mkt">MKT</span></td>
+          <td style="color:#8ab89a;font-weight:700">$1,250</td>
+          <td><span class="stage-pill s1">Scheduled</span></td>
+          <td>Husam Zalmiyar</td>
+          <td><div class="pct-wrap">5%<div class="pct-track"><div class="pct-fill" style="width:5%;background:var(--green)"></div></div></div></td>
+        </tr><tr style="">
+          <td>Atlantic Security Automation Partners</td>
+          <td style="color:#8ab89a;font-weight:700">$1,175</td>
+          <td><span class="stage-pill s1">Scheduled</span></td>
+          <td>Patrick Davies</td>
+          <td><div class="pct-wrap">5%<div class="pct-track"><div class="pct-fill" style="width:5%;background:var(--green)"></div></div></div></td>
+        </tr><tr style="">
+          <td>Powers Protection</td>
+          <td style="color:#8ab89a;font-weight:700">$1,035</td>
+          <td><span class="stage-pill s1">Scheduled</span></td>
+          <td>Jaylin Bender</td>
+          <td><div class="pct-wrap">5%<div class="pct-track"><div class="pct-fill" style="width:5%;background:var(--green)"></div></div></div></td>
+        </tr><tr style="">
+          <td>D&S Security<span class="badge-mkt">MKT</span></td>
+          <td style="color:#8ab89a;font-weight:700">$1,010</td>
+          <td><span class="stage-pill s1">Scheduled</span></td>
+          <td>Patrick Davies</td>
+          <td><div class="pct-wrap">5%<div class="pct-track"><div class="pct-fill" style="width:5%;background:var(--green)"></div></div></div></td>
+        </tr><tr style="">
+          <td>NetCentra<span class="badge-mkt">MKT</span></td>
+          <td style="color:#8ab89a;font-weight:700">$935</td>
+          <td><span class="stage-pill s1">Scheduled</span></td>
+          <td>Andy Whisenant</td>
+          <td><div class="pct-wrap">5%<div class="pct-track"><div class="pct-fill" style="width:5%;background:var(--green)"></div></div></div></td>
+        </tr><tr style="background:rgba(255,215,0,0.05)">
+          <td>Underdog Fire & Security<span style="font-size:9px;font-weight:700;padding:1px 6px;border-radius:4px;background:rgba(255,215,0,0.15);color:#ffd700;letter-spacing:0.5px;margin-left:6px">MOST LIKELY</span><span class="badge-mkt">MKT</span></td>
+          <td style="color:#ffd700;font-weight:700">$725</td>
+          <td><span class="stage-pill s1">Scheduled</span></td>
+          <td>Husam Zalmiyar</td>
+          <td><div class="pct-wrap">5%<div class="pct-track"><div class="pct-fill" style="width:5%;background:#ffd700"></div></div></div></td>
+        </tr><tr style="">
+          <td>Padgett Networks<span class="badge-mkt">MKT</span></td>
+          <td style="color:#8ab89a;font-weight:700">$700</td>
+          <td><span class="stage-pill s1">Scheduled</span></td>
+          <td>Connor Flynn</td>
+          <td><div class="pct-wrap">5%<div class="pct-track"><div class="pct-fill" style="width:5%;background:var(--green)"></div></div></div></td>
+        </tr><tr style="">
+          <td>SIP Oasis<span class="badge-mkt">MKT</span></td>
+          <td style="color:#8ab89a;font-weight:700">$700</td>
+          <td><span class="stage-pill s1">Scheduled</span></td>
+          <td>Connor Flynn</td>
+          <td><div class="pct-wrap">5%<div class="pct-track"><div class="pct-fill" style="width:5%;background:var(--green)"></div></div></div></td>
+        </tr><tr style="">
+          <td>Beetoobi IT Solutions<span class="badge-mkt">MKT</span></td>
+          <td style="color:#8ab89a;font-weight:700">$700</td>
+          <td><span class="stage-pill s1">Scheduled</span></td>
+          <td>Connor Flynn</td>
+          <td><div class="pct-wrap">5%<div class="pct-track"><div class="pct-fill" style="width:5%;background:var(--green)"></div></div></div></td>
+        </tr><tr style="">
+          <td>ECM Security Systems<span class="badge-mkt">MKT</span></td>
+          <td style="color:#8ab89a;font-weight:700">$700</td>
+          <td><span class="stage-pill s1">Scheduled</span></td>
+          <td>Husam Zalmiyar</td>
+          <td><div class="pct-wrap">5%<div class="pct-track"><div class="pct-fill" style="width:5%;background:var(--green)"></div></div></div></td>
+        </tr><tr style="">
+          <td>BSN Security<span class="badge-mkt">MKT</span></td>
+          <td style="color:#8ab89a;font-weight:700">$700</td>
+          <td><span class="stage-pill s1">Scheduled</span></td>
+          <td>Jaylin Bender</td>
+          <td><div class="pct-wrap">5%<div class="pct-track"><div class="pct-fill" style="width:5%;background:var(--green)"></div></div></div></td>
+        </tr><tr style="">
+          <td>Premier Security<span class="badge-mkt">MKT</span></td>
+          <td style="color:#8ab89a;font-weight:700">$700</td>
+          <td><span class="stage-pill s1">Scheduled</span></td>
+          <td>Jaylin Bender</td>
+          <td><div class="pct-wrap">5%<div class="pct-track"><div class="pct-fill" style="width:5%;background:var(--green)"></div></div></div></td>
+        </tr><tr style="">
+          <td>Security Solutions Integration</td>
+          <td style="color:#8ab89a;font-weight:700">$695</td>
+          <td><span class="stage-pill s1">Scheduled</span></td>
+          <td>Jaylin Bender</td>
+          <td><div class="pct-wrap">5%<div class="pct-track"><div class="pct-fill" style="width:5%;background:var(--green)"></div></div></div></td>
+        </tr><tr style="">
+          <td>Voigt Enterprises</td>
+          <td style="color:#8ab89a;font-weight:700">$660</td>
+          <td><span class="stage-pill s1">Scheduled</span></td>
+          <td>Husam Zalmiyar</td>
+          <td><div class="pct-wrap">5%<div class="pct-track"><div class="pct-fill" style="width:5%;background:var(--green)"></div></div></div></td>
+        </tr><tr style="">
+          <td>MCG, Inc.</td>
+          <td style="color:#8ab89a;font-weight:700">$660</td>
+          <td><span class="stage-pill s1">Scheduled</span></td>
+          <td>Connor Flynn</td>
+          <td><div class="pct-wrap">5%<div class="pct-track"><div class="pct-fill" style="width:5%;background:var(--green)"></div></div></div></td>
+        </tr><tr style="">
+          <td>OTSworx<span class="badge-mkt">MKT</span></td>
+          <td style="color:#8ab89a;font-weight:700">$575</td>
+          <td><span class="stage-pill s1">Scheduled</span></td>
+          <td>Andy Whisenant</td>
+          <td><div class="pct-wrap">5%<div class="pct-track"><div class="pct-fill" style="width:5%;background:var(--green)"></div></div></div></td>
+        </tr><tr style="">
+          <td>IT Business Solutions</td>
+          <td style="color:#8ab89a;font-weight:700">$575</td>
+          <td><span class="stage-pill s1">Scheduled</span></td>
+          <td>Connor Flynn</td>
+          <td><div class="pct-wrap">5%<div class="pct-track"><div class="pct-fill" style="width:5%;background:var(--green)"></div></div></div></td>
+        </tr><tr style="">
+          <td>AVSS</td>
+          <td style="color:#8ab89a;font-weight:700">$575</td>
+          <td><span class="stage-pill s1">Scheduled</span></td>
+          <td>Jake Borah</td>
+          <td><div class="pct-wrap">5%<div class="pct-track"><div class="pct-fill" style="width:5%;background:var(--green)"></div></div></div></td>
+        </tr><tr style="">
+          <td>Interactive Control Systems</td>
+          <td style="color:#8ab89a;font-weight:700">$575</td>
+          <td><span class="stage-pill s1">Scheduled</span></td>
+          <td>Husam Zalmiyar</td>
+          <td><div class="pct-wrap">5%<div class="pct-track"><div class="pct-fill" style="width:5%;background:var(--green)"></div></div></div></td>
+        </tr></tbody>
+    </table>
+  </div>
+</div>
+<div class="product-section" id="prod-1">
+  <div class="prod-header">
+    <div class="prod-title">
+      <div class="prod-dot" style="background:#00e5ff;box-shadow:0 0 8px #00e5ff"></div>
+      <h2 style="color:#00e5ff;text-shadow:0 0 20px #00e5ff66">Billing</h2>
+      <div class="live-dot"></div>
+    </div>
+    <div class="prod-meta">
+      <span class="meta-chip">Pipeline: <strong>$12,230</strong></span>
+      <span class="meta-chip">13 opps</span>
+      <span class="meta-chip">6 tagged</span>
+      <span class="meta-chip quota">Quota: $10,252</span>
+    </div>
+  </div>
+
+  <div class="scenarios-row">
+    <div class="scenario worst">
+      <div class="s-label">WORST CASE</div>
+      <div class="s-val">$3,530</div>
+    </div>
+    <div class="scenario likely">
+      <div class="s-label">MOST LIKELY</div>
+      <div class="s-val">$3,530</div>
+    </div>
+    <div class="scenario best">
+      <div class="s-label">BEST CASE</div>
+      <div class="s-val">$9,730</div>
+    </div>
+    <div class="scenario closed">
+      <div class="s-label">APRIL CLOSED WON</div>
+      <div class="s-val">$0</div>
+      <div class="s-sub">0% of quota</div>
+    </div>
+  </div>
+
+  <div class="quota-bar-wrap">
+    <div class="quota-bar-header">
+      <span class="quota-bar-label">APRIL QUOTA ATTAINMENT</span>
+      <span class="quota-bar-vals">
+        <strong style="color:#00e5ff;font-size:18px">0.0%</strong>
+        <span style="color:#555;font-size:12px"> &nbsp;·&nbsp; $0 / $10,252 target</span>
+      </span>
+    </div>
+    <div class="quota-track">
+      <div class="quota-fill" style="width:0.0%;background:#00e5ff;box-shadow:0 0 10px #00e5ff88"></div>
+      <div class="quota-likely-marker" style="left:34.4%" title="Most Likely"></div>
+    </div>
+    <div class="quota-bar-footer">
+      <span style="color:#555;font-size:11px">
+        🔴 Worst: <strong style="color:#ff6666">34.4%</strong>
+        &nbsp;·&nbsp; 🟡 Most Likely: <strong style="color:#ffd700">34.4%</strong>
+        &nbsp;·&nbsp; 🟢 Best Case: <strong style="color:#00ff88">94.9%</strong>
+        &nbsp;·&nbsp; Target: $10,252
+      </span>
+    </div>
+  </div>
+
+  <div class="opp-toggle" onclick="toggle('Billing')">
+    <span id="toggle-label-Billing">▶ Show all 13 opportunities</span>
+    <span class="toggle-amt">$12,230 total</span>
+  </div>
+  <div id="opps-Billing" class="opp-list" style="display:none">
+    <table class="opp-table">
+      <thead><tr><th>Account</th><th>Amount</th><th>Stage</th><th>Owner</th><th>Prob</th></tr></thead>
+      <tbody><tr style="">
+          <td>Vested Networks</td>
+          <td style="color:#8ab89a;font-weight:700">$0</td>
+          <td><span class="stage-pill won">Closed Won</span></td>
+          <td>Ryan Burton</td>
+          <td><div class="pct-wrap">100%<div class="pct-track"><div class="pct-fill" style="width:100%;background:var(--green)"></div></div></div></td>
+        </tr><tr style="background:rgba(255,68,68,0.05)">
+          <td>Xact Communications<span style="font-size:9px;font-weight:700;padding:1px 6px;border-radius:4px;background:rgba(255,68,68,0.15);color:#ff4444;letter-spacing:0.5px;margin-left:6px">WORST CASE</span></td>
+          <td style="color:#ff4444;font-weight:700">$2,930</td>
+          <td><span class="stage-pill s6">Verbal Commit</span></td>
+          <td>Justin Lee</td>
+          <td><div class="pct-wrap">80%<div class="pct-track"><div class="pct-fill" style="width:80%;background:#ff4444"></div></div></div></td>
+        </tr><tr style="background:rgba(255,68,68,0.05)">
+          <td>Devera Technologies<span style="font-size:9px;font-weight:700;padding:1px 6px;border-radius:4px;background:rgba(255,68,68,0.15);color:#ff4444;letter-spacing:0.5px;margin-left:6px">WORST CASE</span><span class="badge-mkt">MKT</span></td>
+          <td style="color:#ff4444;font-weight:700">$600</td>
+          <td><span class="stage-pill s4">Proposal</span></td>
+          <td>Jamie Butler</td>
+          <td><div class="pct-wrap">40%<div class="pct-track"><div class="pct-fill" style="width:40%;background:#ff4444"></div></div></div></td>
+        </tr><tr style="">
+          <td>FluentStream</td>
+          <td style="color:#8ab89a;font-weight:700">$0</td>
+          <td><span class="stage-pill s4">Proposal</span></td>
+          <td>Rachael Buchtan</td>
+          <td><div class="pct-wrap">40%<div class="pct-track"><div class="pct-fill" style="width:40%;background:var(--green)"></div></div></div></td>
+        </tr><tr style="background:rgba(0,255,136,0.06)">
+          <td>Pathwayz Communications<span style="font-size:9px;font-weight:700;padding:1px 6px;border-radius:4px;background:rgba(0,255,136,0.15);color:#00ff88;letter-spacing:0.5px;margin-left:6px">BEST CASE</span><span class="badge-mkt">MKT</span></td>
+          <td style="color:#00ff88;font-weight:700">$3,000</td>
+          <td><span class="stage-pill s3">Demo</span></td>
+          <td>Andy Whisenant</td>
+          <td><div class="pct-wrap">25%<div class="pct-track"><div class="pct-fill" style="width:25%;background:#00ff88"></div></div></div></td>
+        </tr><tr style="background:rgba(0,255,136,0.06)">
+          <td>Amiba<span style="font-size:9px;font-weight:700;padding:1px 6px;border-radius:4px;background:rgba(0,255,136,0.15);color:#00ff88;letter-spacing:0.5px;margin-left:6px">BEST CASE</span></td>
+          <td style="color:#00ff88;font-weight:700">$1,500</td>
+          <td><span class="stage-pill s3">Demo</span></td>
+          <td>Connor Flynn</td>
+          <td><div class="pct-wrap">25%<div class="pct-track"><div class="pct-fill" style="width:25%;background:#00ff88"></div></div></div></td>
+        </tr><tr style="background:rgba(0,255,136,0.06)">
+          <td>Compsys<span style="font-size:9px;font-weight:700;padding:1px 6px;border-radius:4px;background:rgba(0,255,136,0.15);color:#00ff88;letter-spacing:0.5px;margin-left:6px">BEST CASE</span></td>
+          <td style="color:#00ff88;font-weight:700">$1,500</td>
+          <td><span class="stage-pill s3">Demo</span></td>
+          <td>Andy Whisenant</td>
+          <td><div class="pct-wrap">25%<div class="pct-track"><div class="pct-fill" style="width:25%;background:#00ff88"></div></div></div></td>
+        </tr><tr style="">
+          <td>VoIP.ms<span class="badge-mkt">MKT</span></td>
+          <td style="color:#8ab89a;font-weight:700">$0</td>
+          <td><span class="stage-pill s3">Demo</span></td>
+          <td>Usman Zahoor</td>
+          <td><div class="pct-wrap">25%<div class="pct-track"><div class="pct-fill" style="width:25%;background:var(--green)"></div></div></div></td>
+        </tr><tr style="background:rgba(0,255,136,0.06)">
+          <td>GymPhone<span style="font-size:9px;font-weight:700;padding:1px 6px;border-radius:4px;background:rgba(0,255,136,0.15);color:#00ff88;letter-spacing:0.5px;margin-left:6px">BEST CASE</span></td>
+          <td style="color:#00ff88;font-weight:700">$200</td>
+          <td><span class="stage-pill s2">Discovery</span></td>
+          <td>Ingrid Beard</td>
+          <td><div class="pct-wrap">10%<div class="pct-track"><div class="pct-fill" style="width:10%;background:#00ff88"></div></div></div></td>
+        </tr><tr style="">
+          <td>Unified Global Solutions LLC</td>
+          <td style="color:#8ab89a;font-weight:700">$0</td>
+          <td><span class="stage-pill s2">Discovery</span></td>
+          <td>Ryan Burton</td>
+          <td><div class="pct-wrap">10%<div class="pct-track"><div class="pct-fill" style="width:10%;background:var(--green)"></div></div></div></td>
+        </tr><tr style="">
+          <td>NAV Systems</td>
+          <td style="color:#8ab89a;font-weight:700">$1,500</td>
+          <td><span class="stage-pill s1">Scheduled</span></td>
+          <td>Connor Flynn</td>
+          <td><div class="pct-wrap">5%<div class="pct-track"><div class="pct-fill" style="width:5%;background:var(--green)"></div></div></div></td>
+        </tr><tr style="">
+          <td>Teletech Communications</td>
+          <td style="color:#8ab89a;font-weight:700">$500</td>
+          <td><span class="stage-pill s1">Scheduled</span></td>
+          <td>Jamie Butler</td>
+          <td><div class="pct-wrap">5%<div class="pct-track"><div class="pct-fill" style="width:5%;background:var(--green)"></div></div></div></td>
+        </tr><tr style="">
+          <td>Stay Ready Tech<span class="badge-mkt">MKT</span></td>
+          <td style="color:#8ab89a;font-weight:700">$500</td>
+          <td><span class="stage-pill s1">Scheduled</span></td>
+          <td>Andy Whisenant</td>
+          <td><div class="pct-wrap">5%<div class="pct-track"><div class="pct-fill" style="width:5%;background:var(--green)"></div></div></div></td>
+        </tr></tbody>
+    </table>
+  </div>
+</div>
+<div class="product-section" id="prod-2">
+  <div class="prod-header">
+    <div class="prod-title">
+      <div class="prod-dot" style="background:#7c3aed;box-shadow:0 0 8px #7c3aed"></div>
+      <h2 style="color:#7c3aed;text-shadow:0 0 20px #7c3aed66">Payments AR</h2>
+      <div class="live-dot"></div>
+    </div>
+    <div class="prod-meta">
+      <span class="meta-chip">Pipeline: <strong>$2,366</strong></span>
+      <span class="meta-chip">16 opps</span>
+      <span class="meta-chip">8 tagged</span>
+      <span class="meta-chip quota">Quota: $10,540</span>
+    </div>
+  </div>
+
+  <div class="scenarios-row">
+    <div class="scenario worst">
+      <div class="s-label">WORST CASE</div>
+      <div class="s-val">$1,408</div>
+    </div>
+    <div class="scenario likely">
+      <div class="s-label">MOST LIKELY</div>
+      <div class="s-val">$1,916</div>
+    </div>
+    <div class="scenario best">
+      <div class="s-label">BEST CASE</div>
+      <div class="s-val">$2,016</div>
+    </div>
+    <div class="scenario closed">
+      <div class="s-label">APRIL CLOSED WON</div>
+      <div class="s-val">$539</div>
+      <div class="s-sub">5% of quota</div>
+    </div>
+  </div>
+
+  <div class="quota-bar-wrap">
+    <div class="quota-bar-header">
+      <span class="quota-bar-label">APRIL QUOTA ATTAINMENT</span>
+      <span class="quota-bar-vals">
+        <strong style="color:#7c3aed;font-size:18px">5.1%</strong>
+        <span style="color:#555;font-size:12px"> &nbsp;·&nbsp; $539 / $10,540 target</span>
+      </span>
+    </div>
+    <div class="quota-track">
+      <div class="quota-fill" style="width:5.1%;background:#7c3aed;box-shadow:0 0 10px #7c3aed88"></div>
+      <div class="quota-likely-marker" style="left:18.2%" title="Most Likely"></div>
+    </div>
+    <div class="quota-bar-footer">
+      <span style="color:#555;font-size:11px">
+        🔴 Worst: <strong style="color:#ff6666">13.4%</strong>
+        &nbsp;·&nbsp; 🟡 Most Likely: <strong style="color:#ffd700">18.2%</strong>
+        &nbsp;·&nbsp; 🟢 Best Case: <strong style="color:#00ff88">19.1%</strong>
+        &nbsp;·&nbsp; Target: $10,540
+      </span>
+    </div>
+  </div>
+
+  <div class="opp-toggle" onclick="toggle('Payments AR')">
+    <span id="toggle-label-Payments AR">▶ Show all 16 opportunities</span>
+    <span class="toggle-amt">$2,366 total</span>
+  </div>
+  <div id="opps-Payments AR" class="opp-list" style="display:none">
+    <table class="opp-table">
+      <thead><tr><th>Account</th><th>Amount</th><th>Stage</th><th>Owner</th><th>Prob</th></tr></thead>
+      <tbody><tr style="background:rgba(0,255,136,0.06)">
+          <td>Kloud 7<span style="font-size:9px;font-weight:700;padding:1px 6px;border-radius:4px;background:rgba(0,255,136,0.15);color:#00ff88;letter-spacing:0.5px;margin-left:6px">BEST CASE</span></td>
+          <td style="color:#00ff88;font-weight:700">$539</td>
+          <td><span class="stage-pill won">Closed Won</span></td>
+          <td>Ingrid Beard</td>
+          <td><div class="pct-wrap">100%<div class="pct-track"><div class="pct-fill" style="width:100%;background:#00ff88"></div></div></div></td>
+        </tr><tr style="background:rgba(255,68,68,0.05)">
+          <td>POPP Communications<span style="font-size:9px;font-weight:700;padding:1px 6px;border-radius:4px;background:rgba(255,68,68,0.15);color:#ff4444;letter-spacing:0.5px;margin-left:6px">WORST CASE</span></td>
+          <td style="color:#ff4444;font-weight:700">$795</td>
+          <td><span class="stage-pill s6">Verbal Commit</span></td>
+          <td>Ingrid Beard</td>
+          <td><div class="pct-wrap">80%<div class="pct-track"><div class="pct-fill" style="width:80%;background:#ff4444"></div></div></div></td>
+        </tr><tr style="background:rgba(255,215,0,0.05)">
+          <td>Exabar Telecom<span style="font-size:9px;font-weight:700;padding:1px 6px;border-radius:4px;background:rgba(255,215,0,0.15);color:#ffd700;letter-spacing:0.5px;margin-left:6px">MOST LIKELY</span></td>
+          <td style="color:#ffd700;font-weight:700">$50</td>
+          <td><span class="stage-pill s6">Verbal Commit</span></td>
+          <td>Ingrid Beard</td>
+          <td><div class="pct-wrap">80%<div class="pct-track"><div class="pct-fill" style="width:80%;background:#ffd700"></div></div></div></td>
+        </tr><tr style="background:rgba(255,68,68,0.05)">
+          <td>Blue Water Networks<span style="font-size:9px;font-weight:700;padding:1px 6px;border-radius:4px;background:rgba(255,68,68,0.15);color:#ff4444;letter-spacing:0.5px;margin-left:6px">WORST CASE</span><span class="badge-mkt">MKT</span></td>
+          <td style="color:#ff4444;font-weight:700">$24</td>
+          <td><span class="stage-pill s6">Verbal Commit</span></td>
+          <td>Ingrid Beard</td>
+          <td><div class="pct-wrap">80%<div class="pct-track"><div class="pct-fill" style="width:80%;background:#ff4444"></div></div></div></td>
+        </tr><tr style="background:rgba(255,215,0,0.05)">
+          <td>Viking Lock<span style="font-size:9px;font-weight:700;padding:1px 6px;border-radius:4px;background:rgba(255,215,0,0.15);color:#ffd700;letter-spacing:0.5px;margin-left:6px">MOST LIKELY</span></td>
+          <td style="color:#ffd700;font-weight:700">$458</td>
+          <td><span class="stage-pill s5">Validated</span></td>
+          <td>Ingrid Beard</td>
+          <td><div class="pct-wrap">60%<div class="pct-track"><div class="pct-fill" style="width:60%;background:#ffd700"></div></div></div></td>
+        </tr><tr style="background:rgba(0,255,136,0.06)">
+          <td>Mule Security & Electric<span style="font-size:9px;font-weight:700;padding:1px 6px;border-radius:4px;background:rgba(0,255,136,0.15);color:#00ff88;letter-spacing:0.5px;margin-left:6px">BEST CASE</span></td>
+          <td style="color:#00ff88;font-weight:700">$50</td>
+          <td><span class="stage-pill s5">Validated</span></td>
+          <td>Justin Lee</td>
+          <td><div class="pct-wrap">60%<div class="pct-track"><div class="pct-fill" style="width:60%;background:#00ff88"></div></div></div></td>
+        </tr><tr style="background:rgba(0,255,136,0.06)">
+          <td>NetWatch<span style="font-size:9px;font-weight:700;padding:1px 6px;border-radius:4px;background:rgba(0,255,136,0.15);color:#00ff88;letter-spacing:0.5px;margin-left:6px">BEST CASE</span></td>
+          <td style="color:#00ff88;font-weight:700">$50</td>
+          <td><span class="stage-pill s2">Discovery</span></td>
+          <td>Ingrid Beard</td>
+          <td><div class="pct-wrap">10%<div class="pct-track"><div class="pct-fill" style="width:10%;background:#00ff88"></div></div></div></td>
+        </tr><tr style="">
+          <td>DFW Security</td>
+          <td style="color:#8ab89a;font-weight:700">$50</td>
+          <td><span class="stage-pill s2">Discovery</span></td>
+          <td>Ingrid Beard</td>
+          <td><div class="pct-wrap">10%<div class="pct-track"><div class="pct-fill" style="width:10%;background:var(--green)"></div></div></div></td>
+        </tr><tr style="">
+          <td>Custom Electronic Consultants</td>
+          <td style="color:#8ab89a;font-weight:700">$50</td>
+          <td><span class="stage-pill s2">Discovery</span></td>
+          <td>Ingrid Beard</td>
+          <td><div class="pct-wrap">10%<div class="pct-track"><div class="pct-fill" style="width:10%;background:var(--green)"></div></div></div></td>
+        </tr><tr style="">
+          <td>ITR-Systems<span class="badge-mkt">MKT</span></td>
+          <td style="color:#8ab89a;font-weight:700">$50</td>
+          <td><span class="stage-pill s2">Discovery</span></td>
+          <td>Ingrid Beard</td>
+          <td><div class="pct-wrap">10%<div class="pct-track"><div class="pct-fill" style="width:10%;background:var(--green)"></div></div></div></td>
+        </tr><tr style="background:rgba(255,68,68,0.05)">
+          <td>Northwest IT Services<span style="font-size:9px;font-weight:700;padding:1px 6px;border-radius:4px;background:rgba(255,68,68,0.15);color:#ff4444;letter-spacing:0.5px;margin-left:6px">WORST CASE</span><span class="badge-mkt">MKT</span></td>
+          <td style="color:#ff4444;font-weight:700">$50</td>
+          <td><span class="stage-pill s2">Discovery</span></td>
+          <td>Ingrid Beard</td>
+          <td><div class="pct-wrap">10%<div class="pct-track"><div class="pct-fill" style="width:10%;background:#ff4444"></div></div></div></td>
+        </tr><tr style="">
+          <td>Southern Telecom</td>
+          <td style="color:#8ab89a;font-weight:700">$50</td>
+          <td><span class="stage-pill s2">Discovery</span></td>
+          <td>Justin Lee</td>
+          <td><div class="pct-wrap">10%<div class="pct-track"><div class="pct-fill" style="width:10%;background:var(--green)"></div></div></div></td>
+        </tr><tr style="">
+          <td>POS Innovation<span class="badge-mkt">MKT</span></td>
+          <td style="color:#8ab89a;font-weight:700">$50</td>
+          <td><span class="stage-pill s2">Discovery</span></td>
+          <td>Ingrid Beard</td>
+          <td><div class="pct-wrap">10%<div class="pct-track"><div class="pct-fill" style="width:10%;background:var(--green)"></div></div></div></td>
+        </tr><tr style="">
+          <td>Frontline Security</td>
+          <td style="color:#8ab89a;font-weight:700">$0</td>
+          <td><span class="stage-pill s2">Discovery</span></td>
+          <td>Ingrid Beard</td>
+          <td><div class="pct-wrap">10%<div class="pct-track"><div class="pct-fill" style="width:10%;background:var(--green)"></div></div></div></td>
+        </tr><tr style="">
+          <td>Compu-Tech, Inc.</td>
+          <td style="color:#8ab89a;font-weight:700">$50</td>
+          <td><span class="stage-pill s1">Scheduled</span></td>
+          <td>Justin Lee</td>
+          <td><div class="pct-wrap">5%<div class="pct-track"><div class="pct-fill" style="width:5%;background:var(--green)"></div></div></div></td>
+        </tr><tr style="">
+          <td>Alarm & Security Cameras, LLC<span class="badge-mkt">MKT</span></td>
+          <td style="color:#8ab89a;font-weight:700">$50</td>
+          <td><span class="stage-pill s1">Scheduled</span></td>
+          <td>Ingrid Beard</td>
+          <td><div class="pct-wrap">5%<div class="pct-track"><div class="pct-fill" style="width:5%;background:var(--green)"></div></div></div></td>
+        </tr></tbody>
+    </table>
+  </div>
+</div>
+<div class="product-section" id="prod-3">
+  <div class="prod-header">
+    <div class="prod-title">
+      <div class="prod-dot" style="background:#ff6b35;box-shadow:0 0 8px #ff6b35"></div>
+      <h2 style="color:#ff6b35;text-shadow:0 0 20px #ff6b3566">Cyber Protect</h2>
+      <div class="live-dot"></div>
+    </div>
+    <div class="prod-meta">
+      <span class="meta-chip">Pipeline: <strong>$400</strong></span>
+      <span class="meta-chip">1 opps</span>
+      <span class="meta-chip">0 tagged</span>
+      <span class="meta-chip quota">Quota: $4,500</span>
+    </div>
+  </div>
+
+  <div class="scenarios-row">
+    <div class="scenario worst">
+      <div class="s-label">WORST CASE</div>
+      <div class="s-val">$0</div>
+    </div>
+    <div class="scenario likely">
+      <div class="s-label">MOST LIKELY</div>
+      <div class="s-val">$0</div>
+    </div>
+    <div class="scenario best">
+      <div class="s-label">BEST CASE</div>
+      <div class="s-val">$0</div>
+    </div>
+    <div class="scenario closed">
+      <div class="s-label">APRIL CLOSED WON</div>
+      <div class="s-val">$0</div>
+      <div class="s-sub">0% of quota</div>
+    </div>
+  </div>
+
+  <div class="quota-bar-wrap">
+    <div class="quota-bar-header">
+      <span class="quota-bar-label">APRIL QUOTA ATTAINMENT</span>
+      <span class="quota-bar-vals">
+        <strong style="color:#ff6b35;font-size:18px">0.0%</strong>
+        <span style="color:#555;font-size:12px"> &nbsp;·&nbsp; $0 / $4,500 target</span>
+      </span>
+    </div>
+    <div class="quota-track">
+      <div class="quota-fill" style="width:0.0%;background:#ff6b35;box-shadow:0 0 10px #ff6b3588"></div>
+      <div class="quota-likely-marker" style="left:0.0%" title="Most Likely"></div>
+    </div>
+    <div class="quota-bar-footer">
+      <span style="color:#555;font-size:11px">
+        🔴 Worst: <strong style="color:#ff6666">0.0%</strong>
+        &nbsp;·&nbsp; 🟡 Most Likely: <strong style="color:#ffd700">0.0%</strong>
+        &nbsp;·&nbsp; 🟢 Best Case: <strong style="color:#00ff88">0.0%</strong>
+        &nbsp;·&nbsp; Target: $4,500
+      </span>
+    </div>
+  </div>
+
+  <div class="opp-toggle" onclick="toggle('Cyber Protect')">
+    <span id="toggle-label-Cyber Protect">▶ Show all 1 opportunities</span>
+    <span class="toggle-amt">$400 total</span>
+  </div>
+  <div id="opps-Cyber Protect" class="opp-list" style="display:none">
+    <table class="opp-table">
+      <thead><tr><th>Account</th><th>Amount</th><th>Stage</th><th>Owner</th><th>Prob</th></tr></thead>
+      <tbody><tr style="">
+          <td>Advanced Hosted Services<span class="badge-mkt">MKT</span></td>
+          <td style="color:#8ab89a;font-weight:700">$400</td>
+          <td><span class="stage-pill s3">Demo</span></td>
+          <td>Ingrid Beard</td>
+          <td><div class="pct-wrap">25%<div class="pct-track"><div class="pct-fill" style="width:25%;background:var(--green)"></div></div></div></td>
+        </tr></tbody>
+    </table>
+  </div>
+</div>
+<div class="product-section" id="prod-5">
+  <div class="prod-header">
+    <div class="prod-title">
+      <div class="prod-dot" style="background:#ffd700;box-shadow:0 0 8px #ffd700"></div>
+      <h2 style="color:#ffd700;text-shadow:0 0 20px #ffd70066">CommerceHub</h2>
+      <div class="live-dot"></div>
+    </div>
+    <div class="prod-meta">
+      <span class="meta-chip">Pipeline: <strong>$0</strong></span>
+      <span class="meta-chip">6 opps</span>
+      <span class="meta-chip">0 tagged</span>
+      <span class="meta-chip quota">Quota: $1,667</span>
+    </div>
+  </div>
+
+  <div class="scenarios-row">
+    <div class="scenario worst">
+      <div class="s-label">WORST CASE</div>
+      <div class="s-val">$0</div>
+    </div>
+    <div class="scenario likely">
+      <div class="s-label">MOST LIKELY</div>
+      <div class="s-val">$0</div>
+    </div>
+    <div class="scenario best">
+      <div class="s-label">BEST CASE</div>
+      <div class="s-val">$0</div>
+    </div>
+    <div class="scenario closed">
+      <div class="s-label">APRIL CLOSED WON</div>
+      <div class="s-val">$0</div>
+      <div class="s-sub">0% of quota</div>
+    </div>
+  </div>
+
+  <div class="quota-bar-wrap">
+    <div class="quota-bar-header">
+      <span class="quota-bar-label">APRIL QUOTA ATTAINMENT</span>
+      <span class="quota-bar-vals">
+        <strong style="color:#ffd700;font-size:18px">0.0%</strong>
+        <span style="color:#555;font-size:12px"> &nbsp;·&nbsp; $0 / $1,667 target</span>
+      </span>
+    </div>
+    <div class="quota-track">
+      <div class="quota-fill" style="width:0.0%;background:#ffd700;box-shadow:0 0 10px #ffd70088"></div>
+      <div class="quota-likely-marker" style="left:0.0%" title="Most Likely"></div>
+    </div>
+    <div class="quota-bar-footer">
+      <span style="color:#555;font-size:11px">
+        🔴 Worst: <strong style="color:#ff6666">0.0%</strong>
+        &nbsp;·&nbsp; 🟡 Most Likely: <strong style="color:#ffd700">0.0%</strong>
+        &nbsp;·&nbsp; 🟢 Best Case: <strong style="color:#00ff88">0.0%</strong>
+        &nbsp;·&nbsp; Target: $1,667
+      </span>
+    </div>
+  </div>
+
+  <div class="opp-toggle" onclick="toggle('CommerceHub')">
+    <span id="toggle-label-CommerceHub">▶ Show all 6 opportunities</span>
+    <span class="toggle-amt">$0 total</span>
+  </div>
+  <div id="opps-CommerceHub" class="opp-list" style="display:none">
+    <table class="opp-table">
+      <thead><tr><th>Account</th><th>Amount</th><th>Stage</th><th>Owner</th><th>Prob</th></tr></thead>
+      <tbody><tr style="">
+          <td>Prompt Voice<span class="badge-mkt">MKT</span></td>
+          <td style="color:#8ab89a;font-weight:700">$0</td>
+          <td><span class="stage-pill s2">Discovery</span></td>
+          <td>Usman Zahoor</td>
+          <td><div class="pct-wrap">10%<div class="pct-track"><div class="pct-fill" style="width:10%;background:var(--green)"></div></div></div></td>
+        </tr><tr style="">
+          <td>Capchase</td>
+          <td style="color:#8ab89a;font-weight:700">$0</td>
+          <td><span class="stage-pill s2">Discovery</span></td>
+          <td>Usman Zahoor</td>
+          <td><div class="pct-wrap">10%<div class="pct-track"><div class="pct-fill" style="width:10%;background:var(--green)"></div></div></div></td>
+        </tr><tr style="">
+          <td>Connectbase</td>
+          <td style="color:#8ab89a;font-weight:700">$0</td>
+          <td><span class="stage-pill s2">Discovery</span></td>
+          <td>Usman Zahoor</td>
+          <td><div class="pct-wrap">10%<div class="pct-track"><div class="pct-fill" style="width:10%;background:var(--green)"></div></div></div></td>
+        </tr><tr style="">
+          <td>Authvia</td>
+          <td style="color:#8ab89a;font-weight:700">$0</td>
+          <td><span class="stage-pill s2">Discovery</span></td>
+          <td>Usman Zahoor</td>
+          <td><div class="pct-wrap">10%<div class="pct-track"><div class="pct-fill" style="width:10%;background:var(--green)"></div></div></div></td>
+        </tr><tr style="">
+          <td>Sabrhub</td>
+          <td style="color:#8ab89a;font-weight:700">$0</td>
+          <td><span class="stage-pill s1">Scheduled</span></td>
+          <td>Usman Zahoor</td>
+          <td><div class="pct-wrap">5%<div class="pct-track"><div class="pct-fill" style="width:5%;background:var(--green)"></div></div></div></td>
+        </tr><tr style="">
+          <td>Spectrotel</td>
+          <td style="color:#8ab89a;font-weight:700">$0</td>
+          <td><span class="stage-pill s1">Scheduled</span></td>
+          <td>Usman Zahoor</td>
+          <td><div class="pct-wrap">5%<div class="pct-track"><div class="pct-fill" style="width:5%;background:var(--green)"></div></div></div></td>
+        </tr></tbody>
+    </table>
+  </div>
+</div>
+<div class="product-section" id="prod-6">
+  <div class="prod-header">
+    <div class="prod-title">
+      <div class="prod-dot" style="background:#64748b;box-shadow:0 0 8px #64748b"></div>
+      <h2 style="color:#64748b;text-shadow:0 0 20px #64748b66">Untagged</h2>
+      <div class="live-dot"></div>
+    </div>
+    <div class="prod-meta">
+      <span class="meta-chip">Pipeline: <strong>$0</strong></span>
+      <span class="meta-chip">5 opps</span>
+      <span class="meta-chip">0 tagged</span>
+      
+    </div>
+  </div>
+
+  <div class="scenarios-row">
+    <div class="scenario worst">
+      <div class="s-label">WORST CASE</div>
+      <div class="s-val">$0</div>
+    </div>
+    <div class="scenario likely">
+      <div class="s-label">MOST LIKELY</div>
+      <div class="s-val">$0</div>
+    </div>
+    <div class="scenario best">
+      <div class="s-label">BEST CASE</div>
+      <div class="s-val">$0</div>
+    </div>
+    <div class="scenario closed">
+      <div class="s-label">APRIL CLOSED WON</div>
+      <div class="s-val">$0</div>
+      <div class="s-sub"></div>
+    </div>
+  </div>
+
   
-</div>
-<div style="background:#1e293b;border-radius:10px;padding:20px 22px;border-left:4px solid #f59e0b">
-  <div style="display:flex;justify-content:space-between;align-items:baseline;margin-bottom:14px">
-    <div style="font-size:13px;font-weight:700;color:#e2e8f0">CommerceHub</div>
-    <div style="font-size:11px;color:#64748b">Quota: $1,667</div>
+
+  <div class="opp-toggle" onclick="toggle('None')">
+    <span id="toggle-label-None">▶ Show all 5 opportunities</span>
+    <span class="toggle-amt">$0 total</span>
   </div>
-  <!-- Progress bar -->
-  <div style="background:#0f172a;border-radius:4px;height:8px;margin-bottom:12px;overflow:hidden;display:flex">
-    <div style="width:0%;background:#f59e0b;opacity:1"></div>
-    <div style="width:0%;background:#f59e0b;opacity:0.5"></div>
-    <div style="width:0%;background:#f59e0b;opacity:0.3"></div>
-    <div style="width:0%;background:#f59e0b;opacity:0.15"></div>
+  <div id="opps-None" class="opp-list" style="display:none">
+    <table class="opp-table">
+      <thead><tr><th>Account</th><th>Amount</th><th>Stage</th><th>Owner</th><th>Prob</th></tr></thead>
+      <tbody><tr style="">
+          <td>Fire Team Security, Inc<span class="badge-mkt">MKT</span></td>
+          <td style="color:#8ab89a;font-weight:700">$0</td>
+          <td><span class="stage-pill won">Closed Won</span></td>
+          <td>Olivia Sandefur</td>
+          <td><div class="pct-wrap">100%<div class="pct-track"><div class="pct-fill" style="width:100%;background:var(--green)"></div></div></div></td>
+        </tr><tr style="">
+          <td>Rel Comm Inc</td>
+          <td style="color:#8ab89a;font-weight:700">$0</td>
+          <td><span class="stage-pill won">Closed Won</span></td>
+          <td>Olivia Sandefur</td>
+          <td><div class="pct-wrap">100%<div class="pct-track"><div class="pct-fill" style="width:100%;background:var(--green)"></div></div></div></td>
+        </tr><tr style="">
+          <td>Compu-Tech, Inc.<span class="badge-mkt">MKT</span></td>
+          <td style="color:#8ab89a;font-weight:700">$0</td>
+          <td><span class="stage-pill won">Closed Won</span></td>
+          <td>Olivia Sandefur</td>
+          <td><div class="pct-wrap">100%<div class="pct-track"><div class="pct-fill" style="width:100%;background:var(--green)"></div></div></div></td>
+        </tr><tr style="">
+          <td>Rave Systems, LLC dba Reference Audio Video & Security</td>
+          <td style="color:#8ab89a;font-weight:700">$0</td>
+          <td><span class="stage-pill s4">Proposal</span></td>
+          <td>Blaine Villafuerte</td>
+          <td><div class="pct-wrap">40%<div class="pct-track"><div class="pct-fill" style="width:40%;background:var(--green)"></div></div></div></td>
+        </tr><tr style="">
+          <td>Rave Systems, LLC dba Reference Audio Video & Security</td>
+          <td style="color:#8ab89a;font-weight:700">$0</td>
+          <td><span class="stage-pill s3">Demo</span></td>
+          <td>Blaine Villafuerte</td>
+          <td><div class="pct-wrap">25%<div class="pct-track"><div class="pct-fill" style="width:25%;background:var(--green)"></div></div></div></td>
+        </tr></tbody>
+    </table>
   </div>
-  <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:8px">
-    <div style="text-align:center">
-      <div style="font-size:16px;font-weight:800;color:#f59e0b">$0</div>
-      <div style="font-size:10px;color:#64748b;margin-top:2px;text-transform:uppercase;letter-spacing:0.5px">Closed Won</div>
-    </div>
-    <div style="text-align:center">
-      <div style="font-size:16px;font-weight:700;color:#f87171">$0</div>
-      <div style="font-size:10px;color:#64748b;margin-top:2px;text-transform:uppercase;letter-spacing:0.5px">Worst</div>
-    </div>
-    <div style="text-align:center">
-      <div style="font-size:16px;font-weight:700;color:#fbbf24">$0</div>
-      <div style="font-size:10px;color:#64748b;margin-top:2px;text-transform:uppercase;letter-spacing:0.5px">Most Likely</div>
-    </div>
-    <div style="text-align:center">
-      <div style="font-size:16px;font-weight:700;color:#34d399">$0</div>
-      <div style="font-size:10px;color:#64748b;margin-top:2px;text-transform:uppercase;letter-spacing:0.5px">Best Case</div>
-    </div>
-  </div>
-  <div style="margin-top:10px;font-size:11px;color:#475569">Likely attainment: <span style="color:#f59e0b;font-weight:700">0%</span> of $1,667 quota</div>
-</div>
 </div>
 
-<!-- Legend -->
-<div style="display:flex;gap:20px;font-size:12px;color:#475569;margin-top:8px;flex-wrap:wrap">
-  <div style="display:flex;align-items:center;gap:6px"><div style="width:12px;height:12px;background:#38bdf8;border-radius:2px;opacity:1"></div>Closed Won (floor)</div>
-  <div style="display:flex;align-items:center;gap:6px"><div style="width:12px;height:12px;background:#94a3b8;border-radius:2px;opacity:0.5"></div>+ Worst Case tagged</div>
-  <div style="display:flex;align-items:center;gap:6px"><div style="width:12px;height:12px;background:#94a3b8;border-radius:2px;opacity:0.3"></div>+ Most Likely tagged</div>
-  <div style="display:flex;align-items:center;gap:6px"><div style="width:12px;height:12px;background:#94a3b8;border-radius:2px;opacity:0.15"></div>+ Best Case tagged</div>
+  <div class="footer">REV.IO SALES INTELLIGENCE · ROBIN 🦸🏻‍♂️ · CONFIDENTIAL · GENERATED APRIL 14, 2026</div>
 </div>
-
-<div style="font-size:11px;color:#334155;margin-top:28px;text-align:center">Rev.io Sales · April 2026 Forecast · Live from Salesforce · April 13, 2026</div>
+<script>
+function toggle(pid) {
+  const el = document.getElementById('opps-' + pid);
+  const lbl = document.getElementById('toggle-label-' + pid);
+  const count = el.querySelectorAll('tbody tr').length;
+  if (el.style.display === 'none') {
+    el.style.display = 'block';
+    lbl.textContent = '▼ Hide opportunities (' + count + ')';
+  } else {
+    el.style.display = 'none';
+    lbl.textContent = '▶ Show all ' + count + ' opportunities';
+  }
+}
+</script>
 </body>
 </html>
