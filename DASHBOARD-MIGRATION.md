@@ -1,4 +1,6 @@
-# Dashboard Link Migration — GitHub Pages
+# Roamer — Dashboard Link Migration Guide
+
+> **Attention Roamer:** Your dashboard links are outdated and being flagged as malicious by enterprise email security tools. Read this document in full and update all links immediately.
 
 ## Summary
 
