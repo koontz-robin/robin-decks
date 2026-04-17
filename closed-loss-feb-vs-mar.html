@@ -2,187 +2,133 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Closed Loss Analysis — Feb vs March 2026</title>
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>Rev.io Closed Loss — Jan–Apr 2026</title>
 <style>
-  * { margin: 0; padding: 0; box-sizing: border-box; }
-  body { background: #0f172a; font-family: 'Segoe UI', system-ui, sans-serif; color: #e2e8f0; min-height: 100vh; padding: 40px 48px; }
-  h1 { font-size: 26px; font-weight: 700; color: #fff; margin-bottom: 6px; }
-  .subtitle { font-size: 14px; color: #94a3b8; margin-bottom: 40px; }
-  .rev-badge { position: absolute; top: 28px; right: 48px; font-size: 13px; font-weight: 700; color: #63b3ed; }
-  .grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 16px; margin-bottom: 40px; }
-  .card { background: #1e293b; border-radius: 12px; padding: 20px; }
-  .card-label { font-size: 10px; font-weight: 700; letter-spacing: 1.5px; text-transform: uppercase; color: #475569; margin-bottom: 8px; }
-  .card-val { font-size: 28px; font-weight: 800; margin-bottom: 4px; }
-  .card-sub { font-size: 12px; color: #475569; }
-  .section-title { font-size: 11px; font-weight: 700; letter-spacing: 2px; text-transform: uppercase; color: #475569; margin-bottom: 16px; margin-top: 40px; display: flex; align-items: center; gap: 12px; }
-  .section-title::after { content: ''; flex: 1; height: 1px; background: #1e293b; }
-  table { width: 100%; border-collapse: collapse; background: #1e293b; border-radius: 10px; overflow: hidden; }
-  thead th { font-size: 10px; font-weight: 700; text-transform: uppercase; letter-spacing: 1px; color: #475569; padding: 10px 14px; text-align: left; background: #131f35; }
-  thead th:not(:first-child) { text-align: center; }
-  tbody td { padding: 9px 14px; font-size: 12px; color: #94a3b8; border-bottom: 1px solid #0f172a; }
-  tbody td:first-child { color: #e2e8f0; font-weight: 600; }
-  tbody td:not(:first-child) { text-align: center; }
-  tbody tr:nth-child(even) td { background: #131f35; }
-  .coaching-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; }
-  .coaching-card { background: #1e293b; border-radius: 10px; padding: 18px; }
-  .coaching-label { font-size: 9px; font-weight: 700; letter-spacing: 1.5px; text-transform: uppercase; margin-bottom: 8px; }
-  .coaching-card h3 { font-size: 13px; font-weight: 700; margin-bottom: 8px; }
-  .coaching-card p { font-size: 11px; color: #64748b; line-height: 1.6; margin-bottom: 8px; }
-  .coaching-action { font-size: 11px; color: #e2e8f0; line-height: 1.6; padding: 8px 10px; background: #0f172a; border-radius: 6px; }
-  .win-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; }
-  .note { font-size: 11px; color: #475569; margin-top: 32px; text-align: center; }
-  .green { color: #3DC570; } .red { color: #f87171; } .yellow { color: #f5a623; }
+  :root { --bg:#020408; --surface:#060d14; --border:#0a2a1a; --text:#c8f0dc; --muted:#2a5a3a; --green:#00ff88; --cyan:#00e5ff; --red:#ff4444; }
+  * { margin:0; padding:0; box-sizing:border-box; }
+  body { font-family:'Segoe UI',system-ui,sans-serif; background:var(--bg); color:var(--text); }
+  body::before { content:''; position:fixed; inset:0; background-image:linear-gradient(rgba(0,255,136,0.07) 1px,transparent 1px),linear-gradient(90deg,rgba(0,255,136,0.07) 1px,transparent 1px); background-size:40px 40px; pointer-events:none; z-index:0; }
+  .container { max-width:1100px; margin:0 auto; padding:28px 32px; position:relative; z-index:1; }
+  .header { border-bottom:1px solid var(--border); padding-bottom:16px; margin-bottom:24px; }
+  .logo-row { display:flex; align-items:center; justify-content:space-between; margin-bottom:10px; }
+  .logo { display:flex; align-items:center; gap:8px; }
+  .logo-dot { width:9px; height:9px; background:var(--red); border-radius:50%; box-shadow:0 0 10px var(--red); animation:pulse 2s infinite; }
+  .logo-text { font-size:11px; font-weight:700; letter-spacing:3px; text-transform:uppercase; color:var(--red); }
+  .header-date { font-size:11px; color:var(--muted); letter-spacing:1px; }
+  h1 { font-size:34px; font-weight:900; color:#fff; letter-spacing:-1px; }
+  h1 span { color:var(--red); text-shadow:0 0 24px var(--red); }
+  .sub { font-size:13px; color:var(--muted); margin-top:4px; }
+  .card { background:var(--surface); border:1px solid var(--border); border-radius:10px; padding:22px 26px; margin-bottom:16px; }
+  .card-title { font-size:10px; font-weight:700; letter-spacing:2px; text-transform:uppercase; color:var(--muted); margin-bottom:16px; }
+  .stat-grid { display:grid; grid-template-columns:repeat(4,1fr); gap:10px; margin-bottom:16px; }
+  .stat { background:var(--surface); border:1px solid var(--border); border-radius:8px; padding:14px; text-align:center; }
+  .stat-label { font-size:9px; font-weight:700; text-transform:uppercase; letter-spacing:1.5px; color:var(--muted); margin-bottom:4px; }
+  .stat-val { font-size:24px; font-weight:900; }
+  table { width:100%; border-collapse:collapse; font-size:13px; }
+  thead { background:#030a06; }
+  th { font-size:9px; font-weight:700; text-transform:uppercase; letter-spacing:1.5px; color:var(--muted); padding:8px 14px; text-align:left; }
+  th.center { text-align:center; }
+  td { padding:6px 14px; border-bottom:1px solid rgba(0,255,136,0.04); }
+  tr:last-child td { border-bottom:none; }
+  tr:hover td { background:rgba(0,255,136,0.02); }
+  .footer { text-align:center; padding:20px; font-size:10px; color:#1a3a2a; letter-spacing:1px; border-top:1px solid var(--border); margin-top:8px; }
+  @keyframes pulse { 0%,100%{opacity:1}50%{opacity:0.4} }
 </style>
 </head>
 <body>
-<div style="position:relative">
-  <span class="rev-badge">rev.io</span>
-  <h1>Closed Loss Analysis — Feb vs March 2026</h1>
-  <p class="subtitle">208 losses in February &nbsp;·&nbsp; 208 losses in March &nbsp;·&nbsp; Reason breakdown + % variance &nbsp;·&nbsp; Updated March 26, 2026</p>
+<div class="container">
+
+  <div class="header">
+    <div class="logo-row">
+      <div class="logo">
+        <div class="logo-dot"></div>
+        <div class="logo-text">Rev.io · Closed Loss Analysis</div>
+      </div>
+      <div class="header-date">UPDATED APRIL 17, 2026 · LIVE SALESFORCE DATA</div>
+    </div>
+    <h1>Closed Loss <span>Trends</span></h1>
+    <div class="sub">782 total losses Jan–Apr 2026 · Breakdown by reason, product, and month</div>
+  </div>
+
+  <!-- Summary Stats -->
+  <div class="stat-grid">
+    <div class="stat"><div class="stat-label">Jan 2026</div><div class="stat-val" style="color:#ff4444">286</div></div><div class="stat"><div class="stat-label">Feb 2026</div><div class="stat-val" style="color:#ff6b35">208</div></div><div class="stat"><div class="stat-label">Mar 2026</div><div class="stat-val" style="color:#ffd700">208</div></div><div class="stat"><div class="stat-label">Apr 2026</div><div class="stat-val" style="color:#00e5ff">80</div></div>
+  </div>
+
+  <!-- Bar Chart -->
+  <div class="card">
+    <div class="card-title">Monthly Loss Volume — Jan through Apr 2026</div>
+    <div style="display:flex;gap:12px;align-items:flex-end;padding:0 20px 0;margin-bottom:12px">
+      <div style="text-align:center;flex:1">
+      <div style="font-size:22px;font-weight:900;color:#ff4444;margin-bottom:6px">286</div>
+      <div style="height:80px;display:flex;align-items:flex-end;justify-content:center;margin-bottom:8px">
+        <div style="width:40px;background:#ff4444;border-radius:4px 4px 0 0;height:100%;box-shadow:0 0 12px #ff444466;min-height:4px"></div>
+      </div>
+      <div style="font-size:12px;font-weight:700;color:#64748b;letter-spacing:1px">Jan</div>
+    </div><div style="text-align:center;flex:1">
+      <div style="font-size:22px;font-weight:900;color:#ff6b35;margin-bottom:6px">208</div>
+      <div style="height:80px;display:flex;align-items:flex-end;justify-content:center;margin-bottom:8px">
+        <div style="width:40px;background:#ff6b35;border-radius:4px 4px 0 0;height:73%;box-shadow:0 0 12px #ff6b3566;min-height:4px"></div>
+      </div>
+      <div style="font-size:12px;font-weight:700;color:#64748b;letter-spacing:1px">Feb</div>
+    </div><div style="text-align:center;flex:1">
+      <div style="font-size:22px;font-weight:900;color:#ffd700;margin-bottom:6px">208</div>
+      <div style="height:80px;display:flex;align-items:flex-end;justify-content:center;margin-bottom:8px">
+        <div style="width:40px;background:#ffd700;border-radius:4px 4px 0 0;height:73%;box-shadow:0 0 12px #ffd70066;min-height:4px"></div>
+      </div>
+      <div style="font-size:12px;font-weight:700;color:#64748b;letter-spacing:1px">Mar</div>
+    </div><div style="text-align:center;flex:1">
+      <div style="font-size:22px;font-weight:900;color:#00e5ff;margin-bottom:6px">80</div>
+      <div style="height:80px;display:flex;align-items:flex-end;justify-content:center;margin-bottom:8px">
+        <div style="width:40px;background:#00e5ff;border-radius:4px 4px 0 0;height:28%;box-shadow:0 0 12px #00e5ff66;min-height:4px"></div>
+      </div>
+      <div style="font-size:12px;font-weight:700;color:#64748b;letter-spacing:1px">Apr</div>
+    </div>
+    </div>
+    <div style="display:flex;gap:12px;padding:0 20px">
+      <div style="flex:1"></div>
+      <div style="flex:1"></div><div style="text-align:center;flex:1;font-size:13px;font-weight:700"><span style="color:#00ff88">▼ -78</span></div><div style="text-align:center;flex:1;font-size:13px;font-weight:700"><span style="color:#64748b">— 0</span></div><div style="text-align:center;flex:1;font-size:13px;font-weight:700"><span style="color:#00ff88">▼ -128</span></div>
+    </div>
+    <div style="font-size:10px;color:var(--muted);text-align:center;margin-top:8px;letter-spacing:1px">MOM CHANGE</div>
+  </div>
+
+  <!-- Loss Reasons Table -->
+  <div class="card">
+    <div class="card-title">Top Loss Reasons by Month</div>
+    <table>
+      <thead><tr>
+        <th>Reason</th>
+        <th class="center">Jan</th><th class="center">Feb</th><th class="center">Mar</th><th class="center">Apr</th>
+        <th class="center">Total</th>
+      </tr></thead>
+      <tbody><tr><td style="padding:7px 14px;color:#e2e8f0;font-weight:600">Discovery No Show</td><td style="text-align:center;color:#ff6666;font-weight:700">68</td><td style="text-align:center;color:#ff6666;font-weight:700">68</td><td style="text-align:center;color:#ff6666;font-weight:700">49</td><td style="text-align:center;color:#ffd700;font-weight:700">18</td><td style="text-align:center;color:#64748b;font-weight:700">203</td></tr><tr><td style="padding:7px 14px;color:#e2e8f0;font-weight:600">Not the Right Time</td><td style="text-align:center;color:#ff6666;font-weight:700">43</td><td style="text-align:center;color:#ff6666;font-weight:700">28</td><td style="text-align:center;color:#ff6666;font-weight:700">35</td><td style="text-align:center;color:#ffd700;font-weight:700">17</td><td style="text-align:center;color:#64748b;font-weight:700">123</td></tr><tr><td style="padding:7px 14px;color:#e2e8f0;font-weight:600">Software Missing Capabilities</td><td style="text-align:center;color:#ffd700;font-weight:700">19</td><td style="text-align:center;color:#ffd700;font-weight:700">18</td><td style="text-align:center;color:#ff6666;font-weight:700">32</td><td style="text-align:center;color:#ffd700;font-weight:700">13</td><td style="text-align:center;color:#64748b;font-weight:700">82</td></tr><tr><td style="padding:7px 14px;color:#e2e8f0;font-weight:600">No Decision / Non-Responsive</td><td style="text-align:center;color:#ff6666;font-weight:700">38</td><td style="text-align:center;color:#ff6666;font-weight:700">32</td><td style="text-align:center;color:#2a3a4a;font-weight:400">—</td><td style="text-align:center;color:#2a3a4a;font-weight:400">—</td><td style="text-align:center;color:#64748b;font-weight:700">70</td></tr><tr><td style="padding:7px 14px;color:#e2e8f0;font-weight:600">No Business Issue</td><td style="text-align:center;color:#ffd700;font-weight:700">12</td><td style="text-align:center;color:#ffd700;font-weight:700">18</td><td style="text-align:center;color:#ff6666;font-weight:700">30</td><td style="text-align:center;color:#e2e8f0;font-weight:700">10</td><td style="text-align:center;color:#64748b;font-weight:700">70</td></tr><tr><td style="padding:7px 14px;color:#e2e8f0;font-weight:600">Unknown</td><td style="text-align:center;color:#ff6666;font-weight:700">66</td><td style="text-align:center;color:#2a3a4a;font-weight:400">—</td><td style="text-align:center;color:#2a3a4a;font-weight:400">—</td><td style="text-align:center;color:#2a3a4a;font-weight:400">—</td><td style="text-align:center;color:#64748b;font-weight:700">66</td></tr><tr><td style="padding:7px 14px;color:#e2e8f0;font-weight:600">Price</td><td style="text-align:center;color:#ffd700;font-weight:700">13</td><td style="text-align:center;color:#ffd700;font-weight:700">11</td><td style="text-align:center;color:#ff6666;font-weight:700">26</td><td style="text-align:center;color:#e2e8f0;font-weight:700">5</td><td style="text-align:center;color:#64748b;font-weight:700">55</td></tr><tr><td style="padding:7px 14px;color:#e2e8f0;font-weight:600">Lack of Decision Maker Involvement</td><td style="text-align:center;color:#e2e8f0;font-weight:700">8</td><td style="text-align:center;color:#ffd700;font-weight:700">12</td><td style="text-align:center;color:#ff6666;font-weight:700">22</td><td style="text-align:center;color:#e2e8f0;font-weight:700">10</td><td style="text-align:center;color:#64748b;font-weight:700">52</td></tr><tr><td style="padding:7px 14px;color:#e2e8f0;font-weight:600">Not Right Customer Type</td><td style="text-align:center;color:#ffd700;font-weight:700">14</td><td style="text-align:center;color:#e2e8f0;font-weight:700">7</td><td style="text-align:center;color:#e2e8f0;font-weight:700">5</td><td style="text-align:center;color:#2a3a4a;font-weight:400">—</td><td style="text-align:center;color:#64748b;font-weight:700">26</td></tr><tr><td style="padding:7px 14px;color:#e2e8f0;font-weight:600">In existing contract</td><td style="text-align:center;color:#e2e8f0;font-weight:700">3</td><td style="text-align:center;color:#e2e8f0;font-weight:700">8</td><td style="text-align:center;color:#e2e8f0;font-weight:700">8</td><td style="text-align:center;color:#e2e8f0;font-weight:700">6</td><td style="text-align:center;color:#64748b;font-weight:700">25</td></tr></tbody>
+    </table>
+  </div>
+
+  <!-- Trend Sparklines -->
+  <div class="card">
+    <div class="card-title">Reason Trends (Jan → Apr) — direction matters</div>
+    <table>
+      <thead><tr><th>Reason</th><th>Jan → Apr Trend</th><th class="center">Change</th></tr></thead>
+      <tbody><tr><td style="padding:6px 14px;color:#e2e8f0;font-weight:600">Discovery No Show</td><td><svg width="100" height="40" style="vertical-align:middle"><polyline points="0,5 33,5 66,15 99,31" fill="none" stroke="#00ff88" stroke-width="2"/></svg></td><td style="text-align:center;color:#00ff88;font-weight:700">-50</td></tr><tr><td style="padding:6px 14px;color:#e2e8f0;font-weight:600">Not the Right Time</td><td><svg width="100" height="40" style="vertical-align:middle"><polyline points="0,5 33,18 66,12 99,27" fill="none" stroke="#00ff88" stroke-width="2"/></svg></td><td style="text-align:center;color:#00ff88;font-weight:700">-26</td></tr><tr><td style="padding:6px 14px;color:#e2e8f0;font-weight:600">Software Missing Capabilities</td><td><svg width="100" height="40" style="vertical-align:middle"><polyline points="0,20 33,21 66,5 99,26" fill="none" stroke="#00ff88" stroke-width="2"/></svg></td><td style="text-align:center;color:#00ff88;font-weight:700">-6</td></tr><tr><td style="padding:6px 14px;color:#e2e8f0;font-weight:600">No Decision / Non-Responsive</td><td><svg width="100" height="40" style="vertical-align:middle"><polyline points="0,5 33,11 66,40 99,40" fill="none" stroke="#00ff88" stroke-width="2"/></svg></td><td style="text-align:center;color:#00ff88;font-weight:700">-38</td></tr><tr><td style="padding:6px 14px;color:#e2e8f0;font-weight:600">No Business Issue</td><td><svg width="100" height="40" style="vertical-align:middle"><polyline points="0,26 33,19 66,5 99,29" fill="none" stroke="#00ff88" stroke-width="2"/></svg></td><td style="text-align:center;color:#ffd700;font-weight:700">-2</td></tr><tr><td style="padding:6px 14px;color:#e2e8f0;font-weight:600">Unknown</td><td><svg width="100" height="40" style="vertical-align:middle"><polyline points="0,5 33,40 66,40 99,40" fill="none" stroke="#00ff88" stroke-width="2"/></svg></td><td style="text-align:center;color:#00ff88;font-weight:700">-66</td></tr><tr><td style="padding:6px 14px;color:#e2e8f0;font-weight:600">Price</td><td><svg width="100" height="40" style="vertical-align:middle"><polyline points="0,23 33,26 66,5 99,34" fill="none" stroke="#00ff88" stroke-width="2"/></svg></td><td style="text-align:center;color:#00ff88;font-weight:700">-8</td></tr><tr><td style="padding:6px 14px;color:#e2e8f0;font-weight:600">Lack of Decision Maker Involvement</td><td><svg width="100" height="40" style="vertical-align:middle"><polyline points="0,28 33,21 66,5 99,25" fill="none" stroke="#ff4444" stroke-width="2"/></svg></td><td style="text-align:center;color:#ffd700;font-weight:700">+2</td></tr></tbody>
+    </table>
+  </div>
+
+  <!-- Product Breakdown -->
+  <div class="card">
+    <div class="card-title">Losses by Product Line</div>
+    <table>
+      <thead><tr>
+        <th>Product</th>
+        <th class="center">Jan</th><th class="center">Feb</th><th class="center">Mar</th><th class="center">Apr</th>
+        <th class="center">Total</th>
+      </tr></thead>
+      <tbody><tr><td style="padding:7px 14px;color:#00ff88;font-weight:700">PSA 2.0</td><td style="text-align:center;color:#00ff88;font-weight:700">217</td><td style="text-align:center;color:#00ff88;font-weight:700">150</td><td style="text-align:center;color:#00ff88;font-weight:700">138</td><td style="text-align:center;color:#00ff88;font-weight:700">63</td><td style="text-align:center;color:#64748b;font-weight:700">568</td></tr><tr><td style="padding:7px 14px;color:#00e5ff;font-weight:700">Billing / Odin</td><td style="text-align:center;color:#00e5ff;font-weight:700">36</td><td style="text-align:center;color:#00e5ff;font-weight:700">26</td><td style="text-align:center;color:#00e5ff;font-weight:700">45</td><td style="text-align:center;color:#00e5ff;font-weight:700">13</td><td style="text-align:center;color:#64748b;font-weight:700">120</td></tr><tr><td style="padding:7px 14px;color:#7c3aed;font-weight:700">Payments</td><td style="text-align:center;color:#7c3aed;font-weight:700">22</td><td style="text-align:center;color:#7c3aed;font-weight:700">16</td><td style="text-align:center;color:#7c3aed;font-weight:700">16</td><td style="text-align:center;color:#7c3aed;font-weight:700">3</td><td style="text-align:center;color:#64748b;font-weight:700">57</td></tr><tr><td style="padding:7px 14px;color:#ff6b35;font-weight:700">Cyber Protect</td><td style="text-align:center;color:#ff6b35;font-weight:700">9</td><td style="text-align:center;color:#ff6b35;font-weight:700">9</td><td style="text-align:center;color:#ff6b35;font-weight:700">7</td><td style="text-align:center;color:#ff6b35;font-weight:700">1</td><td style="text-align:center;color:#64748b;font-weight:700">26</td></tr><tr><td style="padding:7px 14px;color:#64748b;font-weight:700">Other</td><td style="text-align:center;color:#64748b;font-weight:700">2</td><td style="text-align:center;color:#64748b;font-weight:700">7</td><td style="text-align:center;color:#64748b;font-weight:700">2</td><td style="text-align:center;color:#64748b;font-weight:400">—</td><td style="text-align:center;color:#64748b;font-weight:700">11</td></tr></tbody>
+    </table>
+  </div>
+
+  <div class="footer">REV.IO SALES INTELLIGENCE · ROBIN 🦸🏻‍♂️ · CONFIDENTIAL · APRIL 17, 2026</div>
 </div>
-
-<div class="grid">
-  <div class="card" style="border-top:3px solid #3DC570">
-    <div class="card-label">Total Losses</div>
-    <div class="card-val green">↓ 0</div>
-    <div class="card-sub">208 Feb → 208 Mar</div>
-  </div>
-  <div class="card" style="border-top:3px solid #3DC570">
-    <div class="card-label">No-Show Rate</div>
-    <div class="card-val green">↓ 19</div>
-    <div class="card-sub">68 Feb → 49 Mar</div>
-  </div>
-  <div class="card" style="border-top:3px solid #f87171">
-    <div class="card-label">Price / Capabilities</div>
-    <div class="card-val red">↑ Mixed</div>
-    <div class="card-sub">Both categories up in Mar</div>
-  </div>
-  <div class="card" style="border-top:3px solid #3DC570">
-    <div class="card-label">No Decision</div>
-    <div class="card-val green">— Gone</div>
-    <div class="card-sub">32 Feb → 0 Mar</div>
-  </div>
-</div>
-
-<div class="section-title">Loss Reason Variance — Feb vs March</div>
-<table>
-  <thead>
-    <tr>
-      <th>Loss Reason</th>
-      <th>Feb #</th><th>Feb %</th>
-      <th>Mar #</th><th>Mar %</th>
-      <th>% Pt Change</th>
-      <th>Trend</th>
-    </tr>
-  </thead>
-  <tbody><tr>
-      <td>Discovery No Show</td>
-      <td>68</td><td>32.7%</td>
-      <td>49</td><td>23.6%</td>
-      <td style="color:#3DC570;font-weight:700">▼ -9.1 pts</td>
-      <td><span style="color:#3DC570">Improving ✓</span></td>
-    </tr><tr>
-      <td>Not the Right Time</td>
-      <td>28</td><td>13.5%</td>
-      <td>35</td><td>16.8%</td>
-      <td style="color:#f87171;font-weight:700">▲ +3.4 pts</td>
-      <td><span style="color:#f87171">⚠ Escalating</span></td>
-    </tr><tr>
-      <td>Software Missing Capabilities</td>
-      <td>18</td><td>8.7%</td>
-      <td>32</td><td>15.4%</td>
-      <td style="color:#f87171;font-weight:700">▲ +6.7 pts</td>
-      <td><span style="color:#f87171">⚠ Escalating</span></td>
-    </tr><tr>
-      <td>Price</td>
-      <td>11</td><td>5.3%</td>
-      <td>26</td><td>12.5%</td>
-      <td style="color:#f87171;font-weight:700">▲ +7.2 pts</td>
-      <td><span style="color:#f87171">⚠ Escalating</span></td>
-    </tr><tr>
-      <td>No Business Issue</td>
-      <td>18</td><td>8.7%</td>
-      <td>30</td><td>14.4%</td>
-      <td style="color:#f87171;font-weight:700">▲ +5.8 pts</td>
-      <td><span style="color:#f87171">⚠ Escalating</span></td>
-    </tr><tr>
-      <td>Lack of Decision Maker Involvement</td>
-      <td>12</td><td>5.8%</td>
-      <td>22</td><td>10.6%</td>
-      <td style="color:#f87171;font-weight:700">▲ +4.8 pts</td>
-      <td><span style="color:#f87171">⚠ Escalating</span></td>
-    </tr><tr>
-      <td>No Decision / Non-Responsive</td>
-      <td>32</td><td>15.4%</td>
-      <td>0</td><td>0.0%</td>
-      <td style="color:#3DC570;font-weight:700">▼ -15.4 pts</td>
-      <td><span style="color:#3DC570">Resolved ✓</span></td>
-    </tr><tr>
-      <td>In existing contract</td>
-      <td>8</td><td>3.8%</td>
-      <td>8</td><td>3.8%</td>
-      <td style="color:#f5a623;font-weight:700">→ 0.0 pts</td>
-      <td><span style="color:#94a3b8">Stable</span></td>
-    </tr><tr>
-      <td>Lost to Competitor</td>
-      <td>6</td><td>2.9%</td>
-      <td>1</td><td>0.5%</td>
-      <td style="color:#3DC570;font-weight:700">▼ -2.4 pts</td>
-      <td><span style="color:#3DC570">Improving ✓</span></td>
-    </tr><tr>
-      <td>Not Right Customer Type</td>
-      <td>7</td><td>3.4%</td>
-      <td>5</td><td>2.4%</td>
-      <td style="color:#f5a623;font-weight:700">→ -1.0 pts</td>
-      <td><span style="color:#94a3b8">Stable</span></td>
-    </tr></tbody>
-</table>
-
-<div class="section-title">Coaching Actions — Top Escalating Categories</div>
-<div class="coaching-grid">
-  <div class="coaching-card" style="border-top:3px solid #f87171">
-    <div class="coaching-label" style="color:#f87171">⚠ Escalating</div>
-    <h3 style="color:#f87171">Price ↑15 (5.3% → 12.5%)</h3>
-    <p>Reps reaching price before establishing value. Prospects don't see ROI so they default to cost.</p>
-    <div class="coaching-action">Require cost-of-inaction discussion in discovery before any pricing conversation. "What is staying on your current system actually costing you?"</div>
-  </div>
-  <div class="coaching-card" style="border-top:3px solid #f87171">
-    <div class="coaching-label" style="color:#f87171">⚠ Escalating</div>
-    <h3 style="color:#f87171">Missing Capabilities ↑14 (8.7% → 15.4%)</h3>
-    <p>Real product gaps OR reps pitching poor-fit prospects and hitting feature walls mid-cycle.</p>
-    <div class="coaching-action">Audit loss records for specific capability mentions. Separate positioning failures from real gaps. Escalate genuine gaps with customer quotes.</div>
-  </div>
-  <div class="coaching-card" style="border-top:3px solid #f87171">
-    <div class="coaching-label" style="color:#f87171">⚠ Escalating</div>
-    <h3 style="color:#f87171">Lack of DM ↑10 (5.8% → 10.6%)</h3>
-    <p>Reps advancing deals without the economic buyer. Stalls when the real DM gets looped in late.</p>
-    <div class="coaching-action">"Who signs off on this?" is a required discovery question. No demo without DM identified. If DM won't join — pause and re-qualify.</div>
-  </div>
-</div>
-
-<div class="section-title">Wins to Reinforce</div>
-<div class="win-grid">
-  <div class="coaching-card" style="border-top:3px solid #3DC570">
-    <div class="coaching-label" style="color:#3DC570">✓ Improving</div>
-    <h3 style="color:#3DC570">Discovery No-Show ↓19 (32.7% → 23.6%)</h3>
-    <p>68 → 49. Biggest single category trending right.</p>
-    <div class="coaching-action">Document what changed — reminder cadence, confirmation workflow — and make it standard across all reps.</div>
-  </div>
-  <div class="coaching-card" style="border-top:3px solid #3DC570">
-    <div class="coaching-label" style="color:#3DC570">✓ Resolved</div>
-    <h3 style="color:#3DC570">No Decision / Non-Responsive ↓32 (→ 0 in Mar)</h3>
-    <p>32 losses in Feb dropped to 0 in March.</p>
-    <div class="coaching-action">Verify if real behavior change or reclassification. If real — identify driver and replicate. If reclassified — find where these are now logged.</div>
-  </div>
-  <div class="coaching-card" style="border-top:3px solid #3DC570">
-    <div class="coaching-label" style="color:#3DC570">✓ Improving</div>
-    <h3 style="color:#3DC570">Lost to Competitor Near Zero (6 → 1)</h3>
-    <p>Competitive losses nearly gone. Strong positioning signal.</p>
-    <div class="coaching-action">Keep reinforcing battle cards. Pull competitor names from the "If Lost to Competitor" field for a monthly competitive breakdown.</div>
-  </div>
-</div>
-
-<p class="note">Rev.io Sales Intelligence &nbsp;·&nbsp; Data as of March 26, 2026 &nbsp;·&nbsp; Source: Salesforce</p>
 </body>
 </html>
