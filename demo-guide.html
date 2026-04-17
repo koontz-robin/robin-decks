@@ -36,7 +36,7 @@
   .nav-item.active .nav-step { background:rgba(6,182,212,0.15); border-color:var(--cyan); color:var(--cyan); }
 
   /* MAIN */
-  .main { margin-left:260px; flex:1; padding:48px 64px; max-width:900px; }
+  .main { margin-left:260px; flex:1; padding:48px 64px; max-width:960px; }
 
   /* HERO */
   .hero { margin-bottom:48px; padding-bottom:32px; border-bottom:1px solid var(--border); }
@@ -44,8 +44,6 @@
   .hero h1 { font-size:40px; font-weight:800; color:#fff; line-height:1.1; margin-bottom:12px; }
   .hero h1 span { color:var(--cyan); }
   .hero p { font-size:15px; color:var(--muted); line-height:1.7; max-width:680px; }
-
-  /* FLOW PILLS */
   .flow { display:flex; flex-wrap:wrap; gap:6px; margin-top:24px; align-items:center; }
   .flow-pill { background:var(--surface); border:1px solid var(--border); border-radius:20px; padding:5px 12px; font-size:11px; font-weight:600; color:var(--muted); }
   .flow-arrow { color:var(--border); font-size:14px; }
@@ -83,13 +81,15 @@
   .callout.green { background:rgba(61,197,112,0.06); border-color:rgba(61,197,112,0.2); }
   .callout.orange { background:rgba(249,115,22,0.06); border-color:rgba(249,115,22,0.2); }
   .callout.red { background:rgba(239,68,68,0.06); border-color:rgba(239,68,68,0.2); }
+  .callout.yellow { background:rgba(234,179,8,0.06); border-color:rgba(234,179,8,0.2); }
   .callout p { margin:0; font-size:13px; color:var(--text); }
   .callout-label { font-size:9px; font-weight:700; letter-spacing:2px; text-transform:uppercase; color:var(--cyan); margin-bottom:6px; }
   .callout.green .callout-label { color:var(--green); }
   .callout.orange .callout-label { color:var(--accent); }
   .callout.red .callout-label { color:var(--red); }
+  .callout.yellow .callout-label { color:var(--yellow); }
 
-  /* HIGHLIGHT LIST */
+  /* LIST */
   ul { padding-left:0; margin:12px 0 18px; list-style:none; }
   ul li { font-size:14px; color:#94a3b8; line-height:1.8; margin-bottom:6px; padding-left:20px; position:relative; }
   ul li::before { content:'→'; position:absolute; left:0; color:var(--cyan); font-size:12px; }
@@ -102,6 +102,11 @@
   .card-label { font-size:10px; font-weight:700; letter-spacing:1.5px; text-transform:uppercase; color:var(--muted); margin-bottom:8px; }
   .card p { margin:0; font-size:13px; }
 
+  /* SCREENSHOT */
+  .screenshot-wrap { margin:20px 0; border-radius:10px; overflow:hidden; border:1px solid var(--border); box-shadow:0 4px 24px rgba(0,0,0,0.4); }
+  .screenshot-wrap img { width:100%; display:block; }
+  .screenshot-caption { background:var(--surface2); padding:8px 14px; font-size:11px; color:var(--muted); border-top:1px solid var(--border); }
+
   /* NAV BUTTONS */
   .nav-buttons { display:flex; justify-content:space-between; margin-top:48px; padding-top:24px; border-top:1px solid var(--border); }
   .btn { display:inline-flex; align-items:center; gap:8px; padding:9px 18px; border-radius:8px; font-size:13px; font-weight:600; cursor:pointer; border:1px solid var(--border); background:var(--surface); color:var(--muted); transition:all 0.15s; }
@@ -109,15 +114,9 @@
   .btn.primary { background:var(--blue); border-color:var(--blue); color:#fff; }
   .btn.primary:hover { background:#1a7aee; }
   .btn-spacer { flex:1; }
-
   hr { border:none; border-top:1px solid var(--border); margin:32px 0; }
 
-  /* SCREENSHOT PLACEHOLDER */
-  .screenshot { background:var(--surface); border:1px dashed var(--border); border-radius:8px; padding:20px; margin:16px 0; text-align:center; }
-  .screenshot-label { font-size:10px; font-weight:700; letter-spacing:2px; text-transform:uppercase; color:var(--muted); margin-bottom:4px; }
-  .screenshot p { margin:0; font-size:12px; color:var(--muted); }
-
-  /* STEP OVERVIEW TABLE */
+  /* TABLE */
   table { width:100%; border-collapse:collapse; margin:16px 0; }
   th { font-size:10px; font-weight:700; text-transform:uppercase; letter-spacing:1px; color:var(--muted); padding:10px 14px; text-align:left; background:var(--surface2); border-bottom:1px solid var(--border); }
   td { padding:10px 14px; font-size:13px; color:#94a3b8; border-bottom:1px solid #0f172a; vertical-align:top; }
@@ -130,29 +129,29 @@
 <!-- SIDEBAR -->
 <nav class="sidebar">
   <div class="sidebar-logo">
-    <img src="https://koontz-robin.github.io/robin-decks/revio-logo.png" alt="rev.io">
+    <img src="https://raw.githubusercontent.com/koontz-robin/robin-decks/master/revio-logo.png" alt="rev.io">
     <div class="title">Demo Guide</div>
   </div>
   <div class="nav-section">
     <div class="nav-label">Overview</div>
-    <a class="nav-item active" onclick="show('overview')">
-      <span class="nav-step">⚡</span> Quote-to-Cash Flow
-    </a>
+    <a class="nav-item active" onclick="show('overview')"><span class="nav-step">⚡</span> Quote-to-Cash Flow</a>
   </div>
   <div class="nav-section">
     <div class="nav-label">The Demo</div>
     <a class="nav-item" onclick="show('step1')"><span class="nav-step">1</span> Dashboard Overview</a>
     <a class="nav-item" onclick="show('step2')"><span class="nav-step">2</span> Customer List</a>
-    <a class="nav-item" onclick="show('step3')"><span class="nav-step">3</span> Customer View</a>
-    <a class="nav-item" onclick="show('step4')"><span class="nav-step">4</span> Opportunities & Quotes</a>
-    <a class="nav-item" onclick="show('step5')"><span class="nav-step">5</span> Service Tab & Ticket View</a>
-    <a class="nav-item" onclick="show('step6')"><span class="nav-step">6</span> Service View</a>
-    <a class="nav-item" onclick="show('step7')"><span class="nav-step">7</span> Activity Tab & Rev.iize</a>
-    <a class="nav-item" onclick="show('step8')"><span class="nav-step">8</span> Parts, Labor & Scheduling</a>
-    <a class="nav-item" onclick="show('step9')"><span class="nav-step">9</span> Dispatch Board</a>
-    <a class="nav-item" onclick="show('step10')"><span class="nav-step">10</span> Tech Workflow & Time Logging</a>
-    <a class="nav-item" onclick="show('step11')"><span class="nav-step">11</span> Billing Notification & Review</a>
-    <a class="nav-item" onclick="show('step12')"><span class="nav-step">12</span> Customer Portal</a>
+    <a class="nav-item" onclick="show('step3')"><span class="nav-step">3</span> Customer View &amp; Rev.ii</a>
+    <a class="nav-item" onclick="show('step4')"><span class="nav-step">4</span> Opportunities &amp; Funnel</a>
+    <a class="nav-item" onclick="show('step5')"><span class="nav-step">5</span> Opportunity Detail &amp; Quote</a>
+    <a class="nav-item" onclick="show('step6')"><span class="nav-step">6</span> Quote Walkthrough</a>
+    <a class="nav-item" onclick="show('step7')"><span class="nav-step">7</span> Service Tab — Quote → Ticket</a>
+    <a class="nav-item" onclick="show('step8')"><span class="nav-step">8</span> Ticket View &amp; Activity</a>
+    <a class="nav-item" onclick="show('step9')"><span class="nav-step">9</span> Rev.iize &amp; AI Notes</a>
+    <a class="nav-item" onclick="show('step10')"><span class="nav-step">10</span> Parts, Labor &amp; Inventory</a>
+    <a class="nav-item" onclick="show('step11')"><span class="nav-step">11</span> Dispatch Board</a>
+    <a class="nav-item" onclick="show('step12')"><span class="nav-step">12</span> Tech Workflow &amp; Time Logging</a>
+    <a class="nav-item" onclick="show('step13')"><span class="nav-step">13</span> Billing &amp; Review</a>
+    <a class="nav-item" onclick="show('step14')"><span class="nav-step">14</span> Customer Portal</a>
     <a class="nav-item" onclick="show('wrap')"><span class="nav-step">✓</span> Wrap-Up Close</a>
   </div>
 </nav>
@@ -165,11 +164,13 @@
     <div class="hero">
       <div class="hero-tag">Rev.io PSA</div>
       <h1>Quote-to-<span>Cash</span> Demo Guide</h1>
-      <p>A step-by-step guide for delivering a compelling end-to-end demo — from initial customer engagement all the way to final billing. Follow each step in sequence for maximum impact.</p>
+      <p>A step-by-step script for delivering a compelling end-to-end demo. Follow this flow to take prospects from the dashboard all the way through to billing — without breaking stride.</p>
       <div class="flow">
         <span class="flow-pill highlight">Dashboard</span>
         <span class="flow-arrow">→</span>
         <span class="flow-pill">Customer</span>
+        <span class="flow-arrow">→</span>
+        <span class="flow-pill">Opportunities</span>
         <span class="flow-arrow">→</span>
         <span class="flow-pill">Quote</span>
         <span class="flow-arrow">→</span>
@@ -182,31 +183,30 @@
         <span class="flow-pill highlight">Billing</span>
       </div>
     </div>
-
     <h3>Demo at a Glance</h3>
     <table>
       <thead><tr><th>Step</th><th>Area</th><th>Key Message</th></tr></thead>
       <tbody>
-        <tr><td>1</td><td>Dashboard Overview</td><td>Real-time visibility into your entire operation</td></tr>
+        <tr><td>1</td><td>Dashboard</td><td>Real-time visibility into the entire operation</td></tr>
         <tr><td>2</td><td>Customer List</td><td>Fast, searchable customer management</td></tr>
-        <tr><td>3</td><td>Customer View</td><td>Tags, contacts, portal, AI-powered journal summaries</td></tr>
-        <tr><td>4</td><td>Opportunities & Quotes</td><td>Quote creation, e-signature, quote acceptance automation</td></tr>
-        <tr><td>5</td><td>Service Tab & Ticket View</td><td>Quotes flow directly into service tickets</td></tr>
-        <tr><td>6</td><td>Service View</td><td>Ticket details, work requested, activity log</td></tr>
-        <tr><td>7</td><td>Activity Tab & Rev.iize</td><td>AI note formatting, ticket history summarization</td></tr>
-        <tr><td>8</td><td>Parts, Labor & Scheduling</td><td>Inventory management and purchase orders from tickets</td></tr>
-        <tr><td>9</td><td>Dispatch Board</td><td>Drag-and-drop scheduling, calendar sync</td></tr>
-        <tr><td>10</td><td>Tech Workflow & Time Logging</td><td>Timer-based billing automation, Rev.ii voice tickets</td></tr>
-        <tr><td>11</td><td>Billing Notification & Review</td><td>Automated billing queue, invoice creation</td></tr>
-        <tr><td>12</td><td>Customer Portal</td><td>Self-service payments, invoices, ticket submission</td></tr>
+        <tr><td>3</td><td>Customer View</td><td>Tags, contacts, AI-powered 90-day journal summary</td></tr>
+        <tr><td>4</td><td>Opportunities &amp; Funnel</td><td>Pipeline visibility with the funnel view; work your deals from one screen</td></tr>
+        <tr><td>5</td><td>Opportunity Detail &amp; Quote</td><td>Navigate into an opportunity with a pre-built quote attached</td></tr>
+        <tr><td>6</td><td>Quote Walkthrough</td><td>Recurring vs. one-time items, proposals — everything pre-built for demo speed</td></tr>
+        <tr><td>7</td><td>Service Tab — Quote → Ticket</td><td>Accepted quote flows into a service ticket automatically</td></tr>
+        <tr><td>8</td><td>Ticket View &amp; Activity</td><td>Full ticket detail, work requested, SLA timers, activity feed</td></tr>
+        <tr><td>9</td><td>Rev.iize &amp; AI Notes</td><td>AI transforms rough notes into professional documentation instantly</td></tr>
+        <tr><td>10</td><td>Parts, Labor &amp; Inventory</td><td>Quote items on the ticket, inventory reservation, purchase orders</td></tr>
+        <tr><td>11</td><td>Dispatch Board</td><td>Drag-and-drop scheduling, calendar sync</td></tr>
+        <tr><td>12</td><td>Tech Workflow &amp; Time Logging</td><td>Timer automation, Rev.ii voice tickets, ready-for-billing flow</td></tr>
+        <tr><td>13</td><td>Billing &amp; Review</td><td>Billing queue, invoice creation — describe, don't click</td></tr>
+        <tr><td>14</td><td>Customer Portal</td><td>Self-service invoices, payments, ticket submission</td></tr>
       </tbody>
     </table>
-
     <div class="callout green">
-      <div class="callout-label">The Through-Line</div>
-      <p>Every step connects to the next. The story is: <strong>one platform handles the entire workflow</strong> — no manual handoffs, no disconnected tools, no re-keying data. Let that theme build from step 1 to the close.</p>
+      <div class="callout-label">The Story</div>
+      <p><strong>Everything is pre-built for the demo.</strong> You are not creating quotes, signing proposals, or converting tickets live — you're showing the result of each step and narrating what happened. This keeps the demo tight and focused on value, not clicks.</p>
     </div>
-
     <div class="nav-buttons">
       <span class="btn-spacer"></span>
       <button class="btn primary" onclick="show('step1')">Start Demo → Step 1</button>
@@ -215,32 +215,33 @@
 
   <!-- STEP 1 -->
   <div id="step1" class="section">
-    <div class="step-badge"><span>Step 1 of 12</span></div>
+    <div class="step-badge"><span>Step 1</span></div>
     <div class="section-header">
       <div class="section-tag">Getting Started</div>
       <h2>Dashboard Overview</h2>
-      <p class="lead">Set the stage. Show prospects that Rev.io gives them real-time visibility into their entire business at a glance.</p>
+      <p class="lead">Open with the command center. Show the prospect that Rev.io gives managers and techs a real-time pulse on the business before they touch a single ticket.</p>
     </div>
     <div class="purpose">
       <div class="purpose-label">Purpose</div>
-      <p>Demonstrate how users monitor their business at a glance. Highlight open tickets, customer sentiment, and overall performance. Emphasize real-time visibility and actionable insights.</p>
+      <p>Demonstrate real-time business visibility — SLA performance, open tickets, revenue trends, and team productivity all in one view.</p>
     </div>
-    <h4>What to Show</h4>
+    <h4>What to Highlight</h4>
     <ul>
-      <li>Open tickets and queue status</li>
-      <li>Customer sentiment indicators</li>
-      <li>Overall performance metrics</li>
-      <li>Actionable insights at a glance</li>
+      <li><strong>SLA Performance gauge</strong> — 83% tickets closed, showing contract compliance at a glance</li>
+      <li><strong>Tickets breaching SLA in next 24 hours</strong> — proactive alerts before things go wrong</li>
+      <li><strong>Ticket by Type week-over-week</strong> — spot trends in workload</li>
+      <li><strong>Profit by Technician</strong> — see who's driving margin</li>
+      <li><strong>Year-to-Date Revenue Analysis</strong> — MRC vs. NRC breakdown</li>
     </ul>
+    <div class="screenshot-wrap">
+      <img src="demo-step1-dashboard.png" alt="Service Dashboard">
+      <div class="screenshot-caption">Service Dashboard — SLA performance, ticket queue, profit by tech, and YTD revenue</div>
+    </div>
     <div class="script-label">Transition Line</div>
-    <div class="script">"We can show these compelling reports because we're tracking everything through our platform."</div>
+    <div class="script">"We can show these compelling reports because we're tracking everything through our platform — let me show you where it all comes from."</div>
     <div class="callout orange">
       <div class="callout-label">Demo Tip</div>
-      <p>If the Dashboard doesn't load, begin with the <strong>Calendar View</strong> instead — then circle back to the dashboard once it's available.</p>
-    </div>
-    <div class="screenshot">
-      <div class="screenshot-label">Screenshot Reference</div>
-      <p>Dashboard view</p>
+      <p>If the Dashboard doesn't load, start with the <strong>Calendar View</strong> and circle back. Never stall on a loading screen.</p>
     </div>
     <div class="nav-buttons">
       <button class="btn" onclick="show('overview')">← Overview</button>
@@ -250,24 +251,26 @@
 
   <!-- STEP 2 -->
   <div id="step2" class="section">
-    <div class="step-badge"><span>Step 2 of 12</span></div>
+    <div class="step-badge"><span>Step 2</span></div>
     <div class="section-header">
       <div class="section-tag">Customers</div>
       <h2>Customer List</h2>
-      <p class="lead">Show how effortless it is to find and manage the entire customer base in one place.</p>
+      <p class="lead">Show how fast and clean the customer database is. One search bar, all your accounts.</p>
     </div>
     <div class="purpose">
       <div class="purpose-label">Purpose</div>
-      <p>Show how easy it is to find and manage customers.</p>
+      <p>Demonstrate how easy it is to find and manage customers from a single searchable list.</p>
     </div>
     <h4>What to Show</h4>
     <ul>
-      <li>Navigate to the Customer List</li>
-      <li>Use the <strong>search bar</strong> to locate a specific customer — demonstrate speed</li>
+      <li>Navigate to the <strong>Customer List</strong></li>
+      <li>Use the <strong>search bar</strong> — show how fast it filters (223 accounts, finds in seconds)</li>
+      <li>Point out <strong>Tags</strong> — VIP, Stage 2 - Quoting, Managed Services — versatile labels visible right on the list</li>
+      <li>Note the account types, statuses, and primary contacts all visible without clicking in</li>
     </ul>
-    <div class="screenshot">
-      <div class="screenshot-label">Screenshot Reference</div>
-      <p>Customer List with search bar</p>
+    <div class="screenshot-wrap">
+      <img src="demo-step2-customer-list.png" alt="Customer List">
+      <div class="screenshot-caption">Customer List — searchable, filterable, with tags visible inline</div>
     </div>
     <div class="nav-buttons">
       <button class="btn" onclick="show('step1')">← Step 1</button>
@@ -277,273 +280,343 @@
 
   <!-- STEP 3 -->
   <div id="step3" class="section">
-    <div class="step-badge"><span>Step 3 of 12</span></div>
+    <div class="step-badge"><span>Step 3</span></div>
     <div class="section-header">
       <div class="section-tag">Customers</div>
-      <h2>Customer View</h2>
-      <p class="lead">Showcase the depth of customer data and the power of AI-assisted prep before any client interaction.</p>
+      <h2>Customer View &amp; Rev.ii</h2>
+      <p class="lead">Dive into a customer account and show the depth of information available — plus the AI-powered prep that makes every client interaction faster.</p>
     </div>
     <div class="purpose">
       <div class="purpose-label">Purpose</div>
-      <p>Showcase customer details and engagement tools.</p>
+      <p>Showcase customer details, smart tags, and Rev.ii's 90-day journal summary capability.</p>
     </div>
     <h4>What to Show</h4>
     <ul>
-      <li><strong>TAGS</strong> — highlight their versatility: track industries, verticals, and Hot Notes you don't want others to miss</li>
-      <li><strong>Contacts section</strong> — key people on the account</li>
-      <li><strong>Customer Portal</strong> — introduce self-service capabilities</li>
-      <li><strong>Journal tab</strong> — full history of interactions</li>
-      <li><strong>Rev.ii AI Summary</strong> — summarize the last 90 days of Journal Notes instantly</li>
+      <li><strong>Tags</strong> — VIP, Security, TOM, scheduling notes ("Only available 9AM–5PM CST") — these are <em>hot notes</em> the whole team sees instantly</li>
+      <li><strong>Contacts section</strong> — who to call, their email and phone right on the header</li>
+      <li><strong>Recent Invoice + Default Recurring Contract</strong> in the right-hand panel — billing status at a glance</li>
+      <li><strong>Ask Rev.ii → Ninety Day Ticket Activity Summary</strong> — show the AI-generated summary of the last 90 days of activity so a rep can prep for a call in seconds</li>
+      <li><strong>Journal tab</strong> — the full history of every interaction</li>
     </ul>
+    <div class="screenshot-wrap">
+      <img src="demo-step3-customer-view.png" alt="Customer View">
+      <div class="screenshot-caption">VaultCube Technologies — customer header with tags, Rev.ii 90-day summary panel open</div>
+    </div>
     <div class="callout green">
       <div class="callout-label">AI Moment</div>
-      <p>Use <strong>Rev.ii</strong> to quickly summarize the last 90 days of Journal Notes — show how a rep can prep for a call in seconds without reading through pages of history.</p>
-    </div>
-    <div class="screenshot">
-      <div class="screenshot-label">Screenshot Reference</div>
-      <p>Customer Detail – Overview</p>
+      <p>The Rev.ii panel is already open and showing the 90-day summary. Walk through it — "Before any client call, a rep can pull up this summary and be fully briefed in 10 seconds. No digging through notes."</p>
     </div>
     <div class="nav-buttons">
       <button class="btn" onclick="show('step2')">← Step 2</button>
-      <button class="btn primary" onclick="show('step4')">Step 4: Opportunities & Quotes →</button>
+      <button class="btn primary" onclick="show('step4')">Step 4: Opportunities & Funnel →</button>
     </div>
   </div>
 
   <!-- STEP 4 -->
   <div id="step4" class="section">
-    <div class="step-badge"><span>Step 4 of 12</span></div>
+    <div class="step-badge"><span>Step 4</span></div>
     <div class="section-header">
-      <div class="section-tag">Sales</div>
-      <h2>Opportunities & Quotes</h2>
-      <p class="lead">Show how quoting is built directly into the workflow — no separate tool, no manual handoff.</p>
+      <div class="section-tag">Sales Pipeline</div>
+      <h2>Opportunities &amp; Funnel View</h2>
+      <p class="lead">Show how the sales team manages their pipeline — with the funnel visualization showing exactly where deals stand and how much revenue is at each stage.</p>
     </div>
     <div class="purpose">
       <div class="purpose-label">Purpose</div>
-      <p>Demonstrate quote creation and customization.</p>
+      <p>Demonstrate pipeline visibility with the funnel view. Show how reps can work all their opportunities from one screen — no Salesforce required.</p>
     </div>
     <h4>What to Show</h4>
     <ul>
-      <li>Open a created <strong>Quote</strong></li>
-      <li>Walk through customization options: <strong>Recurring vs. non-recurring items</strong></li>
-      <li>Show <strong>Signature capture</strong></li>
-      <li>Explain what happens when a Quote is accepted</li>
+      <li><strong>Funnel visualization</strong> — Qualification ($50.9k, 10 deals) down to Verbal Agreement ($10.3k, 3 deals)</li>
+      <li><strong>Pipeline metrics</strong> — 30 opportunities, $215k total pipeline value, $7.1k avg deal size</li>
+      <li><strong>Opportunity list</strong> — sortable by stage, owner, close date, forecast category</li>
+      <li>Show how a rep can <strong>see all their deals in one view</strong> and prioritize without switching tools</li>
     </ul>
+    <div class="screenshot-wrap">
+      <img src="demo-step4-opportunities-funnel.png" alt="Opportunities Funnel">
+      <div class="screenshot-caption">Opportunities list with funnel visualization — 30 deals, $215k pipeline across 6 stages</div>
+    </div>
     <div class="callout">
-      <div class="callout-label">What Happens on Acceptance</div>
-      <p><strong>Non-recurring items</strong> automatically become tickets. <strong>Recurring items</strong> go to recurring services. Both are immediately visible in the Service tab — zero re-keying.</p>
+      <div class="callout-label">Key Message</div>
+      <p>Salespeople want to see their pipeline clearly and work their deals fast. The funnel view gives them that at a glance — then they can drill into any opportunity from the same screen.</p>
     </div>
     <div class="script-label">Transition Line</div>
-    <div class="script">"Once accepted, non-recurring items become tickets, and recurring items go to recurring services — all visible in the Service tab."</div>
-    <div class="screenshot">
-      <div class="screenshot-label">Screenshot Reference</div>
-      <p>Quote with item breakdown</p>
-    </div>
+    <div class="script">"Let me click into one of these opportunities so you can see how a quote gets built and attached directly to the deal."</div>
     <div class="nav-buttons">
       <button class="btn" onclick="show('step3')">← Step 3</button>
-      <button class="btn primary" onclick="show('step5')">Step 5: Service Tab →</button>
+      <button class="btn primary" onclick="show('step5')">Step 5: Opportunity Detail & Quote →</button>
     </div>
   </div>
 
   <!-- STEP 5 -->
   <div id="step5" class="section">
-    <div class="step-badge"><span>Step 5 of 12</span></div>
+    <div class="step-badge"><span>Step 5</span></div>
     <div class="section-header">
-      <div class="section-tag">Service</div>
-      <h2>Service Tab & Ticket View</h2>
-      <p class="lead">Close the loop between the quote and the work order — everything flows automatically.</p>
+      <div class="section-tag">Sales Pipeline</div>
+      <h2>Opportunity Detail &amp; Attached Quote</h2>
+      <p class="lead">Open the opportunity and show how a quote is linked directly to the deal — everything in one place.</p>
     </div>
     <div class="purpose">
       <div class="purpose-label">Purpose</div>
-      <p>Connect quotes to service execution — show that no manual ticket creation is needed.</p>
+      <p>Show the opportunity detail view and how an existing quote is attached. Navigate into the quote from here.</p>
     </div>
     <h4>What to Show</h4>
     <ul>
-      <li>Navigate to the <strong>Service tab</strong></li>
-      <li>Click the <strong>Ticket that matches the Quote</strong> from Step 4</li>
-      <li>Show that line items carried over automatically</li>
+      <li>The <strong>stage pipeline bar</strong> at the top — Qualification → Discovery → Solution Development → Proposal Presented → Negotiation → Verbal Agreement</li>
+      <li>Opportunity details: customer, owner, expected amount ($2,500), close date, source, next step</li>
+      <li>The <strong>Quotes tab</strong> — Quote #142, Security Upgrade, Open, created Apr 10</li>
+      <li>Click into <strong>Quote #142</strong> to open it</li>
     </ul>
-    <div class="screenshot">
-      <div class="screenshot-label">Screenshot Reference</div>
-      <p>Service Tab with Ticket selected</p>
+    <div class="screenshot-wrap">
+      <img src="demo-step5-opportunity-detail.png" alt="Opportunity Detail">
+      <div class="screenshot-caption">Security Upgrade opportunity — Stage 3 (Solution Development), Quote #142 attached on the Quotes tab</div>
+    </div>
+    <div class="callout yellow">
+      <div class="callout-label">⚠️ Rep Note — Picking the Right Opportunity</div>
+      <p>Make sure you select <strong>"Security Upgrade" (Customer: Apex Technologies)</strong> from the list — this is the opportunity that already has Quote #142 attached. Clicking into an opportunity without a quote will break the flow. The list shows "Create Quote" in the Next Step column for others — avoid those.</p>
     </div>
     <div class="nav-buttons">
       <button class="btn" onclick="show('step4')">← Step 4</button>
-      <button class="btn primary" onclick="show('step6')">Step 6: Service View →</button>
+      <button class="btn primary" onclick="show('step6')">Step 6: Quote Walkthrough →</button>
     </div>
   </div>
 
   <!-- STEP 6 -->
   <div id="step6" class="section">
-    <div class="step-badge"><span>Step 6 of 12</span></div>
+    <div class="step-badge"><span>Step 6</span></div>
     <div class="section-header">
-      <div class="section-tag">Service</div>
-      <h2>Service View</h2>
-      <p class="lead">Dive into the ticket — show the full context a tech or manager has available in one screen.</p>
+      <div class="section-tag">Quoting</div>
+      <h2>Quote Walkthrough</h2>
+      <p class="lead">Walk through the quote structure — products, recurring vs. one-time items, and the proposal section. Everything here is pre-built. You're narrating, not clicking through forms.</p>
     </div>
     <div class="purpose">
       <div class="purpose-label">Purpose</div>
-      <p>Dive into ticket details and introduce the Activity section.</p>
+      <p>Show how a quote is structured — recurring and non-recurring items, product packages, and how the total breaks down. Introduce proposals.</p>
     </div>
     <h4>What to Show</h4>
     <ul>
-      <li><strong>Description</strong> and <strong>Work Requested</strong> fields — what the customer asked for</li>
-      <li><strong>Activity section</strong> — all interactions, notes, and updates in one feed</li>
-      <li>Edit Ticket functionality</li>
+      <li><strong>Header totals</strong> — Monthly Recurring $35, One-Time $303, Tax $2.66, Total $340.66</li>
+      <li><strong>Products and Services section</strong> — "Lobby" service package at 5929 Baker Road, 3 products, $338</li>
+      <li><strong>Individual products</strong> — Hikvision 4K Camera (One-Time, $265), Honeywell Motion Sensor (One-Time, $38), Commercial Monitoring System (Recurring, $35)</li>
+      <li>Point out the <strong>Recurring vs. One-Time distinction</strong> — recurring becomes a billing service, one-time becomes a ticket line item</li>
+      <li>Scroll down to <strong>Proposals section</strong> — where the customer-facing proposal and signature capture live</li>
     </ul>
-    <div class="screenshot">
-      <div class="screenshot-label">Screenshot Reference</div>
-      <p>Service View with Edit Ticket and Activity section</p>
+    <div class="screenshot-wrap">
+      <img src="demo-step6-quote.png" alt="Quote #142">
+      <div class="screenshot-caption">Quote #142 — Security Upgrade for Apex Technologies, $340.66 total with recurring and one-time items</div>
     </div>
+    <div class="callout green">
+      <div class="callout-label">Demo Speed Note</div>
+      <p><strong>Everything here is pre-built.</strong> You are not approving the quote or sending the proposal during the demo. Describe what would happen: "Once the customer signs, non-recurring items automatically create a service ticket and recurring items are added to their billing profile — let me show you what that looks like."</p>
+    </div>
+    <div class="script-label">Transition Line</div>
+    <div class="script">"Once accepted, the non-recurring items become tickets and the recurring items go to recurring services — all visible in the Service tab. Let me show you the ticket that was created from this quote."</div>
     <div class="nav-buttons">
       <button class="btn" onclick="show('step5')">← Step 5</button>
-      <button class="btn primary" onclick="show('step7')">Step 7: Activity & Rev.iize →</button>
+      <button class="btn primary" onclick="show('step7')">Step 7: Service Tab — Quote → Ticket →</button>
     </div>
   </div>
 
   <!-- STEP 7 -->
   <div id="step7" class="section">
-    <div class="step-badge"><span>Step 7 of 12</span></div>
+    <div class="step-badge"><span>Step 7</span></div>
     <div class="section-header">
-      <div class="section-tag">AI & Collaboration</div>
-      <h2>Activity Tab & Rev.iize</h2>
-      <p class="lead">This is where Rev.io's AI really shines. Show how techs communicate, collaborate, and let the system do the heavy lifting on documentation.</p>
+      <div class="section-tag">Service</div>
+      <h2>Service Tab — Quote → Ticket</h2>
+      <p class="lead">Navigate to the customer's Service tab and find the ticket that was automatically created when the quote was accepted. This is the handoff from sales to ops — zero manual steps.</p>
     </div>
     <div class="purpose">
       <div class="purpose-label">Purpose</div>
-      <p>Highlight collaboration tools and AI-powered note summarization.</p>
+      <p>Close the loop between the quote and service execution. Show the ticket that was auto-created from the quote.</p>
     </div>
     <h4>What to Show</h4>
     <ul>
-      <li><strong>Public Notes</strong> — customer-facing updates</li>
-      <li><strong>Email Public Notes</strong> — send directly from the ticket</li>
-      <li><strong>Internal Notes</strong> — team-only context</li>
-      <li><strong>Ask Rev.ii</strong> — summarizes long ticket histories instantly</li>
-      <li><strong>Stage section</strong> — time tracking, calendar quickview, customer info panel</li>
+      <li>Navigate to <strong>Apex Technologies → Servicing tab</strong></li>
+      <li>Find and highlight <strong>Ticket #663 — "Quote Signed: Security Upgrade"</strong> (highlighted in red border in the screenshot)</li>
+      <li>Point out the status: <strong>Open</strong>, Priority: High, Billing Status: Not Sent</li>
+      <li>Note the other tickets visible — shows a real, active account with ongoing work</li>
     </ul>
-    <div class="callout green">
-      <div class="callout-label">AI Moment — Auto-Format Notes</div>
-      <p>A technician can jot down a brief, rough description of their actions — and <strong>Rev.iize</strong> automatically converts it into professional, clean documentation. No more inconsistent ticket notes.</p>
+    <div class="screenshot-wrap">
+      <img src="demo-step7-service-tab.png" alt="Service Tab">
+      <div class="screenshot-caption">Apex Technologies — Servicing tab showing Ticket #663 "Quote Signed: Security Upgrade" auto-created from the quote</div>
     </div>
-    <div class="screenshot">
-      <div class="screenshot-label">Screenshot Reference</div>
-      <p>Rev.iize Text Window</p>
+    <div class="callout">
+      <div class="callout-label">The Connection</div>
+      <p>This ticket didn't need to be manually created. The moment the quote was accepted, Rev.io created it automatically — with the description, line items, and customer info already populated. <strong>No re-keying, no handoff email, no dropped balls.</strong></p>
     </div>
     <div class="nav-buttons">
       <button class="btn" onclick="show('step6')">← Step 6</button>
-      <button class="btn primary" onclick="show('step8')">Step 8: Parts & Labor →</button>
+      <button class="btn primary" onclick="show('step8')">Step 8: Ticket View & Activity →</button>
     </div>
   </div>
 
   <!-- STEP 8 -->
   <div id="step8" class="section">
-    <div class="step-badge"><span>Step 8 of 12</span></div>
+    <div class="step-badge"><span>Step 8</span></div>
     <div class="section-header">
-      <div class="section-tag">Operations</div>
-      <h2>Parts, Labor & Scheduling</h2>
-      <p class="lead">Show how everything from the quote flows through to actual service execution — parts, inventory, and scheduling all in one place.</p>
+      <div class="section-tag">Service</div>
+      <h2>Ticket View &amp; Activity</h2>
+      <p class="lead">Click into the ticket and show everything a technician and manager have available — SLA timers, work requested, the full activity feed, and the stage panel.</p>
     </div>
     <div class="purpose">
       <div class="purpose-label">Purpose</div>
-      <p>Show how quotes translate to service execution, and how inventory connects to the ticket workflow.</p>
+      <p>Dive into ticket details — SLA tracking, work description, activity log, and the stage panel showing time tracking, customer info, and billing status.</p>
     </div>
     <h4>What to Show</h4>
     <ul>
-      <li><strong>Parts & Labor tab</strong> — quote line items carried over automatically</li>
-      <li><strong>Inventory Management</strong> — view current stock levels, add items to purchase orders</li>
-      <li>Monitor the ordering process directly from the ticket</li>
+      <li><strong>SLA Response Timer</strong> — live countdown (currently breached at -02:45:32 in red), <strong>SLA Resolution Timer</strong> — 31:36:32 remaining in green</li>
+      <li><strong>AI Ticket Summary</strong> banner — "Ticket #663 Open — Server outage response; two pending tasks scheduled, but no work sta…" — instant AI context</li>
+      <li><strong>Work Requested</strong> — detailed security upgrade scope, AI-generated from the quote description</li>
+      <li><strong>Activity tab</strong> — Public Notes, Internal Notes, Email — collaboration hub</li>
+      <li><strong>Stage panel</strong> — Time Tracking (start/stop timer), Calendar Quickview, Transaction Details (Send to Billing button), Recurring Contract, Job Costing</li>
+      <li><strong>Capture Signature</strong> button — in-field signature capture on the ticket</li>
     </ul>
-    <div class="script-label">Transition Line</div>
-    <div class="script">"Once items have been allocated, it's time to schedule this ticket — we can easily do that from our Dispatch Board."</div>
-    <div class="screenshot">
-      <div class="screenshot-label">Screenshot Reference</div>
-      <p>Ticket view with Parts & Labor</p>
+    <div class="screenshot-wrap">
+      <img src="demo-step8-ticket-view.png" alt="Ticket View">
+      <div class="screenshot-caption">Ticket #663 — Quote Signed: Security Upgrade — SLA timers, work description, activity feed, and stage panel</div>
     </div>
     <div class="nav-buttons">
       <button class="btn" onclick="show('step7')">← Step 7</button>
-      <button class="btn primary" onclick="show('step9')">Step 9: Dispatch Board →</button>
+      <button class="btn primary" onclick="show('step9')">Step 9: Rev.iize & AI Notes →</button>
     </div>
   </div>
 
   <!-- STEP 9 -->
   <div id="step9" class="section">
-    <div class="step-badge"><span>Step 9 of 12</span></div>
+    <div class="step-badge"><span>Step 9</span></div>
     <div class="section-header">
-      <div class="section-tag">Scheduling</div>
-      <h2>Dispatch Board</h2>
-      <p class="lead">Show how fast and visual scheduling is — no spreadsheets, no phone tag with techs.</p>
+      <div class="section-tag">AI</div>
+      <h2>Rev.iize &amp; AI Note Formatting</h2>
+      <p class="lead">Show how Rev.io's AI transforms rough technician notes into polished, professional documentation — instantly, on the ticket.</p>
     </div>
     <div class="purpose">
       <div class="purpose-label">Purpose</div>
-      <p>Schedule work efficiently and show real-time calendar sync.</p>
+      <p>Demonstrate Rev.iize — the AI tool that converts informal tech notes into customer-ready documentation with one click.</p>
     </div>
     <h4>What to Show</h4>
     <ul>
-      <li>Layout and <strong>filtering by tech groups</strong></li>
-      <li><strong>Drag and drop</strong> a ticket to schedule it</li>
-      <li>Fill out the task details and Save</li>
-      <li>Confirm sync with <strong>Rev.io Calendar and Outlook/Google</strong></li>
+      <li>In the Activity tab, a tech typed: <strong>"Assessed current security setup"</strong> — rough, minimal</li>
+      <li>Click <strong>Rev.iize</strong> — the modal opens showing Original Text vs. Reviized Text side-by-side</li>
+      <li>Reviized output: <em>"Reviewed the existing security measures to identify strengths and areas for improvement within our current protection framework."</em></li>
+      <li>Show the <strong>Improvements Made</strong> list: spelling/grammar, abbreviations expanded, structured sentences, professional tone, maintained accuracy</li>
+      <li>One click: <strong>Accept Changes</strong> — done</li>
     </ul>
-    <div class="callout">
-      <div class="callout-label">Key Moment</div>
-      <p>After saving — emphasize that the tech can now <strong>link back to the full ticket from their scheduled task</strong>. The context travels with them.</p>
+    <div class="screenshot-wrap">
+      <img src="demo-step9-reviize.png" alt="Rev.iize">
+      <div class="screenshot-caption">Rev.iize modal — "Assessed current security setup" transformed into professional documentation in one click</div>
     </div>
-    <div class="script-label">Transition Line</div>
-    <div class="script">"Now the tech can link back to the ticket from their scheduled task."</div>
-    <div class="screenshot">
-      <div class="screenshot-label">Screenshot Reference</div>
-      <p>Dispatch Board with drag-and-drop action</p>
+    <div class="callout green">
+      <div class="callout-label">AI Moment</div>
+      <p>Every technician writes notes differently. Rev.iize standardizes the output automatically — consistent documentation, faster billing, better customer communication. <strong>No training required.</strong></p>
     </div>
     <div class="nav-buttons">
       <button class="btn" onclick="show('step8')">← Step 8</button>
-      <button class="btn primary" onclick="show('step10')">Step 10: Tech Workflow →</button>
+      <button class="btn primary" onclick="show('step10')">Step 10: Parts, Labor & Inventory →</button>
     </div>
   </div>
 
   <!-- STEP 10 -->
   <div id="step10" class="section">
-    <div class="step-badge"><span>Step 10 of 12</span></div>
+    <div class="step-badge"><span>Step 10</span></div>
     <div class="section-header">
-      <div class="section-tag">Field Tech Experience</div>
-      <h2>Tech Workflow & Time Logging</h2>
-      <p class="lead">Show the technician's experience — and how time tracking flows directly into billing with zero manual steps.</p>
+      <div class="section-tag">Operations</div>
+      <h2>Parts, Labor &amp; Inventory</h2>
+      <p class="lead">Show how the quote's products are already on the ticket — and how inventory management connects directly to the work order.</p>
     </div>
     <div class="purpose">
       <div class="purpose-label">Purpose</div>
-      <p>Show technician experience and billing automation through time logging.</p>
+      <p>Show Parts & Labor tab with quote items carried over, inventory reservation, and purchase order creation from the ticket.</p>
     </div>
     <h4>What to Show</h4>
     <ul>
-      <li>Tech clicks <strong>Start Timer</strong></li>
-      <li>Timer visibility on the <strong>top ribbon</strong> — always visible across the app</li>
-      <li>Tech stops timer and <strong>logs work</strong></li>
-      <li>Time log <strong>auto-bills</strong> — no manual billing entry</li>
-      <li>Tech marks ticket <strong>Ready for Billing</strong> and moves to next</li>
+      <li><strong>Parts & Labor tab</strong> — Hikvision 4K Camera ($265) and Honeywell Motion Sensor ($38) already populated from the quote</li>
+      <li><strong>Inventory reservation dropdown</strong> — "Main Warehouse (Qty Available: 4)" and "Truck 03 (Qty Available: 1)" — see exactly where stock is</li>
+      <li><strong>Job Costing panel</strong> (right side) — Material Sales $303, Costs $159, Difference $144 margin — real-time profitability on the ticket</li>
+      <li>Explain: reserve from warehouse or truck stock, or create a PO if not in inventory</li>
     </ul>
-    <div class="callout green">
-      <div class="callout-label">AI Moment — Forgot to Start Timer?</div>
-      <p>If a tech forgets to start a timer, they can ask <strong>Rev.ii</strong> to add the time entry — just specify the reason code, start time, and end time in plain language. The system handles the rest. <em>No lost billable hours.</em></p>
+    <div class="screenshot-wrap">
+      <img src="demo-step10-parts-labor.png" alt="Parts and Labor">
+      <div class="screenshot-caption">Parts & Labor tab — quote items carried over, inventory reservation showing warehouse and truck stock availability</div>
     </div>
-    <div class="callout">
-      <div class="callout-label">Story to Tell</div>
-      <p>Walk through this scenario: <em>Another customer calls while you're working on a ticket.</em> Navigate to their details, open Ask Rev.ii, and <strong>create a new ticket by voice</strong> — say "Open a ticket with 'Network Down' as the issue, priority set to High, status as Needs to be Scheduled." Show the ticket appear. That's Rev.ii's capabilities in 10 seconds.</p>
-    </div>
-    <div class="screenshot">
-      <div class="screenshot-label">Screenshot Reference</div>
-      <p>Timer and Time Log entry</p>
-    </div>
+    <div class="script-label">Transition Line</div>
+    <div class="script">"Once items have been allocated, it's time to schedule this ticket — we can do that right from the Dispatch Board."</div>
     <div class="nav-buttons">
       <button class="btn" onclick="show('step9')">← Step 9</button>
-      <button class="btn primary" onclick="show('step11')">Step 11: Billing →</button>
+      <button class="btn primary" onclick="show('step11')">Step 11: Dispatch Board →</button>
     </div>
   </div>
 
   <!-- STEP 11 -->
   <div id="step11" class="section">
-    <div class="step-badge"><span>Step 11 of 12</span></div>
+    <div class="step-badge"><span>Step 11</span></div>
+    <div class="section-header">
+      <div class="section-tag">Scheduling</div>
+      <h2>Dispatch Board</h2>
+      <p class="lead">Show how fast and visual scheduling is — drag a ticket, assign a tech, done.</p>
+    </div>
+    <div class="purpose">
+      <div class="purpose-label">Purpose</div>
+      <p>Schedule work efficiently and show calendar sync with Outlook/Google.</p>
+    </div>
+    <h4>What to Show</h4>
+    <ul>
+      <li>Layout and <strong>filtering by tech groups</strong></li>
+      <li><strong>Drag and drop</strong> the ticket to a tech's time slot</li>
+      <li>Fill out the task details and Save</li>
+      <li>Confirm sync with <strong>Rev.io Calendar and Outlook/Google</strong></li>
+      <li>Tech can <strong>link back to the full ticket</strong> from their scheduled task — the context travels with them</li>
+    </ul>
+    <div class="script-label">Transition Line</div>
+    <div class="script">"Now the tech can link back to the ticket from their scheduled task — and when they're on-site, here's what their workflow looks like."</div>
+    <div class="callout orange">
+      <div class="callout-label">Demo Tip</div>
+      <p>Screenshots for the Dispatch Board are coming in the next batch. In the meantime, walk through the UI live or describe the drag-and-drop flow verbally.</p>
+    </div>
+    <div class="nav-buttons">
+      <button class="btn" onclick="show('step10')">← Step 10</button>
+      <button class="btn primary" onclick="show('step12')">Step 12: Tech Workflow →</button>
+    </div>
+  </div>
+
+  <!-- STEP 12 -->
+  <div id="step12" class="section">
+    <div class="step-badge"><span>Step 12</span></div>
+    <div class="section-header">
+      <div class="section-tag">Field Tech Experience</div>
+      <h2>Tech Workflow &amp; Time Logging</h2>
+      <p class="lead">Show the technician's experience — and how time tracking flows directly into billing automatically.</p>
+    </div>
+    <div class="purpose">
+      <div class="purpose-label">Purpose</div>
+      <p>Demonstrate timer-based billing automation and Rev.ii voice ticket creation.</p>
+    </div>
+    <h4>What to Show</h4>
+    <ul>
+      <li>Tech clicks <strong>Start Timer</strong> — timer visible on top ribbon across the whole app</li>
+      <li>Tech stops timer and <strong>logs work</strong> — time entry auto-populates</li>
+      <li>Time log <strong>auto-bills</strong> — no manual billing entry needed</li>
+      <li>Tech marks ticket <strong>Ready for Billing</strong> and moves to next</li>
+    </ul>
+    <div class="callout green">
+      <div class="callout-label">AI Story — Forgot the Timer?</div>
+      <p>If a tech forgot to start the timer, they ask Rev.ii to add the time — specify reason code, start and end time in plain language. <strong>No lost billable hours.</strong></p>
+    </div>
+    <div class="callout">
+      <div class="callout-label">Voice Ticket Story</div>
+      <p>While working a ticket, another customer calls. Navigate to their profile, open Ask Rev.ii, and say: <em>"Open a ticket with 'Network Down' as the issue, priority High, status Needs to be Scheduled."</em> Ticket appears instantly. That's the full Rev.ii capability in 10 seconds.</p>
+    </div>
+    <div class="nav-buttons">
+      <button class="btn" onclick="show('step11')">← Step 11</button>
+      <button class="btn primary" onclick="show('step13')">Step 13: Billing →</button>
+    </div>
+  </div>
+
+  <!-- STEP 13 -->
+  <div id="step13" class="section">
+    <div class="step-badge"><span>Step 13</span></div>
     <div class="section-header">
       <div class="section-tag">Billing</div>
-      <h2>Billing Notification & Review</h2>
-      <p class="lead">Show the billing team's experience — automated notifications, a clear queue, and one-click invoice creation.</p>
+      <h2>Billing Notification &amp; Review</h2>
+      <p class="lead">Show the billing team's side — automated notifications, a clear queue, and one-click invoice creation. Narrate this step; do not execute it live.</p>
     </div>
     <div class="purpose">
       <div class="purpose-label">Purpose</div>
@@ -551,56 +624,47 @@
     </div>
     <h4>What to Show</h4>
     <ul>
-      <li>Billing team receives <strong>notification</strong> (email + in-app bell)</li>
+      <li>Billing team gets <strong>notification</strong> — email + in-app bell</li>
       <li>Filter Ticket List for <strong>Ready for Billing</strong></li>
-      <li>Review the ticket and all charges</li>
-      <li>Point to the <strong>Send to Billing</strong> button — <em>explain but do not click</em></li>
-      <li>Show the <strong>Billing Tab</strong> with Unposted charges</li>
-      <li>Describe how to check items and create invoices from this view</li>
+      <li>Review ticket and all charges</li>
+      <li>Point to <strong>Send to Billing</strong> button — describe what it does, <em>do not click</em></li>
+      <li>Show <strong>Billing Tab with Unposted charges</strong> — explain invoice creation from here</li>
     </ul>
     <div class="callout red">
-      <div class="callout-label">⚠️ Important — Do Not Click</div>
-      <p><strong>Do not click "Send to Billing" or create invoices during the demo.</strong> Walk through the UI and explain what would happen — describe the process without executing it on your demo environment.</p>
-    </div>
-    <div class="screenshot">
-      <div class="screenshot-label">Screenshot Reference</div>
-      <p>Ticket List with billing filter + Billing Tab with Unposted charges</p>
+      <div class="callout-label">⚠️ Do Not Click</div>
+      <p><strong>Do not click "Send to Billing" or create invoices during the demo.</strong> Walk the UI, describe the workflow. Executing this on the demo environment will cause issues.</p>
     </div>
     <div class="nav-buttons">
-      <button class="btn" onclick="show('step10')">← Step 10</button>
-      <button class="btn primary" onclick="show('step12')">Step 12: Customer Portal →</button>
+      <button class="btn" onclick="show('step12')">← Step 12</button>
+      <button class="btn primary" onclick="show('step14')">Step 14: Customer Portal →</button>
     </div>
   </div>
 
-  <!-- STEP 12 -->
-  <div id="step12" class="section">
-    <div class="step-badge"><span>Step 12 of 12</span></div>
+  <!-- STEP 14 -->
+  <div id="step14" class="section">
+    <div class="step-badge"><span>Step 14</span></div>
     <div class="section-header">
       <div class="section-tag">Customer Experience</div>
       <h2>Customer Portal</h2>
-      <p class="lead">Finish strong — show the experience your client's customers will have. Self-service is a competitive differentiator.</p>
+      <p class="lead">Finish strong — show your prospect what their customers will see. Self-service is a competitive differentiator.</p>
     </div>
     <div class="purpose">
       <div class="purpose-label">Purpose</div>
-      <p>Show customer self-service and payment options.</p>
+      <p>Show customer self-service: invoices, payments, ticket submission, and public note visibility.</p>
     </div>
-    <h4>What Customers Can Do in the Portal</h4>
+    <h4>What Customers Can Do</h4>
     <ul>
-      <li><strong>Edit payment info</strong> — update cards or bank accounts on their own</li>
-      <li><strong>View and pay invoices</strong> — no phone calls to your billing team</li>
-      <li><strong>Submit new tickets</strong> — direct into your service queue</li>
-      <li><strong>See public notes</strong> on their active tickets — full transparency</li>
+      <li><strong>Edit payment info</strong> — update cards/bank on their own, no calls to your billing team</li>
+      <li><strong>View and pay invoices</strong> — faster collections, less inbound calls</li>
+      <li><strong>Submit new tickets</strong> — directly into your service queue</li>
+      <li><strong>See public notes</strong> on active tickets — full transparency</li>
     </ul>
     <div class="callout green">
-      <div class="callout-label">Why This Matters</div>
-      <p>The Customer Portal reduces inbound calls to your ops team, speeds up collections, and gives end customers the transparency they expect in 2026. <strong>It's a value-add you can sell to your customers.</strong></p>
-    </div>
-    <div class="screenshot">
-      <div class="screenshot-label">Screenshot Reference</div>
-      <p>Customer Portal dashboard</p>
+      <div class="callout-label">Why It Matters</div>
+      <p>The portal reduces inbound ops calls, speeds up collections, and gives end customers the transparency they expect. <strong>It's a value-add you can sell to your own customers.</strong></p>
     </div>
     <div class="nav-buttons">
-      <button class="btn" onclick="show('step11')">← Step 11</button>
+      <button class="btn" onclick="show('step13')">← Step 13</button>
       <button class="btn primary" onclick="show('wrap')">Wrap-Up Close →</button>
     </div>
   </div>
@@ -611,46 +675,42 @@
     <div class="section-header">
       <div class="section-tag">Closing</div>
       <h2>Wrap-Up Close</h2>
-      <p class="lead">Land the plane. Tie it all back to their pain, confirm the story, and move to next steps.</p>
+      <p class="lead">Land the plane. Tie it back to their pain and move to next steps before you hang up.</p>
     </div>
     <div class="script-label">Closing Line</div>
     <div class="script">"And that's a full Quote-to-Cash demo — showing how our platform streamlines every step from customer engagement to payment."</div>
-
     <h3>What You Just Showed</h3>
     <div class="card-grid">
       <div class="card" style="border-top:3px solid var(--blue)">
         <div class="card-label">One Platform</div>
-        <p>Quote → Ticket → Dispatch → Time Log → Billing. No disconnected tools, no re-keying data.</p>
+        <p>Dashboard → Customer → Opportunity → Quote → Ticket → Dispatch → Billing. No disconnected tools.</p>
       </div>
       <div class="card" style="border-top:3px solid var(--cyan)">
         <div class="card-label">AI Throughout</div>
         <p>Rev.ii summarizes history, formats notes, creates tickets by voice, and corrects time entries.</p>
       </div>
       <div class="card" style="border-top:3px solid var(--green)">
-        <div class="card-label">Tech Efficiency</div>
-        <p>Timer-to-billing automation means zero lost hours and no manual billing entry for technicians.</p>
+        <div class="card-label">Quote → Ticket Auto-Flow</div>
+        <p>Accepted quotes automatically create tickets with line items populated. Zero re-keying.</p>
       </div>
       <div class="card" style="border-top:3px solid var(--accent)">
         <div class="card-label">Customer Experience</div>
         <p>The Portal gives end customers visibility, self-service payments, and direct ticket submission.</p>
       </div>
     </div>
-
     <h3>Next Steps</h3>
     <ul>
       <li>Tie each module back to the specific DBMs uncovered in discovery</li>
       <li>Confirm the Decision Maker was present for the full demo</li>
       <li>Ask: <em>"Based on what you saw today — does this solve the problems you walked us through?"</em></li>
-      <li>Move to pricing discussion or schedule a technical deep-dive</li>
+      <li>Book next step <strong>live</strong> before you hang up — pricing discussion, technical deep-dive, or contract review</li>
     </ul>
-
     <div class="callout orange">
       <div class="callout-label">Rule — Never Leave Without a Next Step</div>
-      <p>"I'll follow up" is not a next step. Book the next meeting live before you hang up. Reference a specific DBM when you do: <em>"Let's schedule 30 minutes to walk through pricing specifically around the contract management piece you mentioned."</em></p>
+      <p>"I'll follow up" is not a next step. Reference a DBM when booking: <em>"Let's schedule 30 minutes to walk through pricing specifically around the contract management piece you mentioned."</em></p>
     </div>
-
     <div class="nav-buttons">
-      <button class="btn" onclick="show('step12')">← Step 12</button>
+      <button class="btn" onclick="show('step14')">← Step 14</button>
       <button class="btn primary" onclick="show('overview')">↩ Back to Overview</button>
     </div>
   </div>
@@ -658,8 +718,6 @@
 </main>
 
 <script>
-const steps = ['overview','step1','step2','step3','step4','step5','step6','step7','step8','step9','step10','step11','step12','wrap'];
-
 function show(id) {
   document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
   document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
