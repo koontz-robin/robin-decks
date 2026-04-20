@@ -1,0 +1,421 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Rev.io ROI Analysis — Intermedia</title>
+<style>
+  :root {
+    --bg: #0a0f1e;
+    --surface: #111827;
+    --surface2: #0d1525;
+    --border: #1e2d45;
+    --blue: #1667CC;
+    --green: #3DC570;
+    --cyan: #06b6d4;
+    --red: #f87171;
+    --yellow: #f5a623;
+    --text: #e2e8f0;
+    --muted: #64748b;
+  }
+  * { margin:0; padding:0; box-sizing:border-box; }
+  body { background:var(--bg); font-family:'Segoe UI',system-ui,sans-serif; color:var(--text); min-height:100vh; }
+
+  .cover { background:linear-gradient(135deg, #0a0f1e 0%, #0d1b35 50%, #0a1628 100%); padding:80px 80px 60px; border-bottom:1px solid var(--border); position:relative; overflow:hidden; }
+  .cover::before { content:''; position:absolute; top:-100px; right:-100px; width:500px; height:500px; background:radial-gradient(circle, rgba(22,103,204,0.08) 0%, transparent 70%); }
+  .cover-logo { margin-bottom:48px; }
+  .cover-logo img { height:40px; opacity:0.9; }
+  .cover-tag { font-size:11px; font-weight:700; letter-spacing:3px; text-transform:uppercase; color:var(--cyan); margin-bottom:16px; }
+  .cover h1 { font-size:42px; font-weight:800; color:#fff; line-height:1.15; margin-bottom:8px; }
+  .cover h1 span { color:var(--cyan); }
+  .cover-sub { font-size:16px; color:var(--muted); margin-bottom:48px; }
+  .cover-meta { display:flex; gap:40px; flex-wrap:wrap; }
+  .meta-label { font-size:10px; font-weight:700; letter-spacing:1.5px; text-transform:uppercase; color:var(--muted); margin-bottom:4px; }
+  .meta-val { font-size:14px; color:var(--text); font-weight:600; }
+
+  .section { padding:64px 80px; border-bottom:1px solid var(--border); }
+  .section:last-child { border-bottom:none; }
+  .section-tag { font-size:10px; font-weight:700; letter-spacing:3px; text-transform:uppercase; color:var(--blue); margin-bottom:12px; }
+  .section h2 { font-size:28px; font-weight:800; color:#fff; margin-bottom:8px; }
+  .section .lead { font-size:15px; color:var(--muted); line-height:1.7; max-width:740px; margin-bottom:40px; }
+
+  .pain-grid { display:grid; grid-template-columns:repeat(3,1fr); gap:16px; margin-bottom:40px; }
+  .pain-card { background:var(--surface); border:1px solid var(--border); border-top:3px solid var(--red); border-radius:10px; padding:20px; }
+  .pain-card h4 { font-size:13px; font-weight:700; color:#fff; margin-bottom:8px; }
+  .pain-card p { font-size:12px; color:var(--muted); line-height:1.6; }
+  .pain-card .pain-quote { font-size:11px; color:var(--yellow); font-style:italic; margin-top:10px; border-left:2px solid var(--yellow); padding-left:10px; }
+
+  .roi-table { width:100%; border-collapse:collapse; margin-bottom:24px; }
+  .roi-table thead th { font-size:10px; font-weight:700; text-transform:uppercase; letter-spacing:1px; color:var(--muted); padding:12px 16px; text-align:left; background:var(--surface2); border-bottom:1px solid var(--border); }
+  .roi-table tbody td { padding:14px 16px; font-size:13px; color:#94a3b8; border-bottom:1px solid #0a0f1e; vertical-align:top; }
+  .roi-table tbody td:first-child { color:var(--text); font-weight:600; }
+  .roi-table tbody tr:last-child td { border-bottom:none; }
+  .roi-table .total-row td { background:rgba(61,197,112,0.06); color:var(--green); font-weight:700; font-size:14px; border-top:1px solid rgba(61,197,112,0.2); }
+  .math { font-size:11px; color:var(--muted); font-style:italic; margin-top:4px; }
+
+  .summary-grid { display:grid; grid-template-columns:repeat(4,1fr); gap:16px; margin:32px 0; }
+  .sum-card { background:var(--surface); border-radius:12px; padding:22px; text-align:center; }
+  .sum-val { font-size:28px; font-weight:800; margin-bottom:4px; }
+  .sum-label { font-size:10px; font-weight:700; letter-spacing:1.5px; text-transform:uppercase; color:var(--muted); line-height:1.4; }
+
+  .compare { display:grid; grid-template-columns:1fr auto 1fr; gap:24px; align-items:start; margin:32px 0; }
+  .compare-box { background:var(--surface); border-radius:12px; padding:28px; }
+  .compare-box.today { border-top:3px solid var(--red); }
+  .compare-box.tomorrow { border-top:3px solid var(--green); }
+  .compare-label { font-size:10px; font-weight:700; letter-spacing:2px; text-transform:uppercase; margin-bottom:16px; }
+  .compare-box.today .compare-label { color:var(--red); }
+  .compare-box.tomorrow .compare-label { color:var(--green); }
+  .compare-line { font-size:13px; color:#94a3b8; padding:7px 0; border-bottom:1px solid var(--border); line-height:1.4; }
+  .compare-line:last-child { border-bottom:none; }
+  .compare-line strong { color:var(--text); }
+  .vs { font-size:24px; font-weight:800; color:var(--muted); text-align:center; padding-top:60px; }
+
+  /* ARCH DIAGRAM */
+  .arch-grid { display:grid; grid-template-columns:1fr 60px 1fr; gap:0; align-items:center; margin:32px 0; }
+  .arch-box { background:var(--surface); border:1px solid var(--border); border-radius:12px; padding:24px; }
+  .arch-box.legacy { border-top:3px solid var(--red); }
+  .arch-box.revio-arch { border-top:3px solid var(--green); }
+  .arch-title { font-size:11px; font-weight:700; letter-spacing:1.5px; text-transform:uppercase; margin-bottom:16px; }
+  .arch-box.legacy .arch-title { color:var(--red); }
+  .arch-box.revio-arch .arch-title { color:var(--green); }
+  .arch-item { display:flex; align-items:center; gap:10px; padding:8px 0; border-bottom:1px solid var(--border); font-size:13px; color:#94a3b8; }
+  .arch-item:last-child { border-bottom:none; }
+  .arch-item .dot { width:8px; height:8px; border-radius:50%; flex-shrink:0; }
+  .arch-item .dot.red { background:var(--red); }
+  .arch-item .dot.green { background:var(--green); }
+  .arch-item .dot.yellow { background:var(--yellow); }
+  .arch-item .dot.blue { background:var(--blue); }
+  .arch-item strong { color:var(--text); }
+  .arch-arrow { text-align:center; font-size:28px; color:var(--muted); }
+
+  .next-step { display:flex; gap:16px; align-items:flex-start; padding:16px 0; border-bottom:1px solid var(--border); }
+  .next-step:last-child { border-bottom:none; }
+  .step-num { width:32px; height:32px; background:var(--blue); border-radius:50%; display:flex; align-items:center; justify-content:center; font-size:13px; font-weight:800; color:#fff; flex-shrink:0; margin-top:2px; }
+  .step-content h4 { font-size:14px; font-weight:700; color:#fff; margin-bottom:4px; }
+  .step-content p { font-size:13px; color:var(--muted); line-height:1.5; }
+
+  .callout { background:rgba(61,197,112,0.06); border:1px solid rgba(61,197,112,0.2); border-radius:10px; padding:20px 24px; margin-top:8px; }
+  .callout-label { font-size:10px; font-weight:700; letter-spacing:2px; text-transform:uppercase; color:var(--green); margin-bottom:8px; }
+  .callout p { font-size:14px; color:var(--text); line-height:1.7; }
+
+  .gap-table { width:100%; border-collapse:collapse; margin-top:24px; }
+  .gap-table th { font-size:10px; font-weight:700; text-transform:uppercase; letter-spacing:1px; color:var(--muted); padding:10px 14px; text-align:left; background:var(--surface2); border-bottom:1px solid var(--border); }
+  .gap-table td { padding:12px 14px; font-size:12.5px; border-bottom:1px solid #0a0f1e; vertical-align:top; color:#94a3b8; }
+  .gap-table td:first-child { color:var(--text); font-weight:600; }
+  .gap-table .solvable { color:var(--green); font-weight:600; }
+  .gap-table .partial { color:var(--yellow); font-weight:600; }
+  .gap-table .open { color:var(--red); font-style:italic; }
+
+  .disclaimer { font-size:11px; color:#334155; text-align:center; padding:24px 80px; line-height:1.6; }
+</style>
+</head>
+<body>
+
+<!-- COVER -->
+<div class="cover">
+  <div class="cover-logo">
+    <img src="https://koontz-robin.github.io/robin-decks/revio-logo.png" alt="rev.io">
+  </div>
+  <div class="cover-tag">Business Value Assessment</div>
+  <h1>ROI Analysis for<br><span>Intermedia</span></h1>
+  <p class="cover-sub">Prepared by Jamie Butler, Rev.io &nbsp;·&nbsp; April 2026</p>
+  <div class="cover-meta">
+    <div class="meta-item"><div class="meta-label">Company</div><div class="meta-val">Intermedia.net</div></div>
+    <div class="meta-item"><div class="meta-label">Location</div><div class="meta-val">Sunnyvale, CA</div></div>
+    <div class="meta-item"><div class="meta-label">Industry</div><div class="meta-val">Legacy Telecom / UCaaS / CCaaS</div></div>
+    <div class="meta-item"><div class="meta-label">Deal Stage</div><div class="meta-val">Stage 2 — Discovery Completed</div></div>
+    <div class="meta-item"><div class="meta-label">Rev.io Solution</div><div class="meta-val">Billing Platform Replacement</div></div>
+    <div class="meta-item"><div class="meta-label">Est. Deal Value</div><div class="meta-val">$30,000+ / year</div></div>
+  </div>
+</div>
+
+<!-- WHAT WE HEARD -->
+<div class="section">
+  <div class="section-tag">Section 1</div>
+  <h2>What We Heard</h2>
+  <p class="lead">Intermedia is running three separate billing systems — two of which are end-of-life — and the manual overhead of keeping them in sync is costing real developer time and creating operational risk. These aren't hypothetical problems. They're your team's daily reality.</p>
+
+  <div class="pain-grid">
+    <div class="pain-card">
+      <h4>Three Billing Systems, Zero Integration</h4>
+      <p>Atlas (legacy provisioning/billing — acquired), BRM (Oracle Billing &amp; Revenue Management — UCaaS/CCaaS), and HostPilot (invoicing, payments, customer portal) must all stay in sync. Every transaction passes through multiple systems before it reaches a customer.</p>
+      <div class="pain-quote">"Convoluted billing process — transactions pass through and reconcile three separate systems, two inherited and legacy."</div>
+    </div>
+    <div class="pain-card">
+      <h4>Developer Time Burned on Legacy Maintenance</h4>
+      <p>Atlas and BRM are effectively end-of-life. Developers are actively maintaining two systems that Intermedia wants to decommission — time that should go toward product and growth, not keeping legacy software alive.</p>
+      <div class="pain-quote">"Rev.io will eliminate the need to maintain three separate billing platforms and save developer time on end-of-life maintenance."</div>
+    </div>
+    <div class="pain-card">
+      <h4>Complex Multi-Tier Channel Billing</h4>
+      <p>Intermedia bills direct customers (A/A1), reseller partners (D), and distributors (B) across a three-tier pricing structure — distributor pays $9, sells to reseller at $13, reseller bills customer at $16. Each tier needs its own invoice format (wholesale vs. retail pricing on a single EOC).</p>
+      <div class="pain-quote">"Biggest gap is representing the hierarchy on invoices — wholesale vs. retail pricing breakout that partners need to see."</div>
+    </div>
+    <div class="pain-card">
+      <h4>CDR Rating &amp; Usage Complexity</h4>
+      <p>PSTN calls generate billable CDRs; OnNet calls do not. Intermedia needs an FTP-based CDR loading process, usage allowances with overage billing, and potentially two separate rating environments — one for wholesale distributor billing, one for retail end-customer billing.</p>
+      <div class="pain-quote">"Set up FTP site where Intermedia dumps CDR files for Rev.io processing."</div>
+    </div>
+    <div class="pain-card">
+      <h4>~1,000 SKU Product Catalog</h4>
+      <p>Product catalog complexity requires approximately 1,000 SKUs to represent different representations of how they bill each service — with products needing separate currency handling, billing time elements, and quick launch/update capability via CPQ.</p>
+      <div class="pain-quote">"Need ~1,000 SKUs for different representations. CPQ: quickly launch new SKUs, price point updates, pricing modifications."</div>
+    </div>
+    <div class="pain-card">
+      <h4>AI &amp; Reporting as Strategic Priority</h4>
+      <p>Leadership has identified AI as a major initiative. The current fragmented systems cannot deliver the revenue leakage detection, LLM-based reporting, or analytics capabilities that Intermedia's leadership is asking for. A modern billing platform is a prerequisite.</p>
+      <div class="pain-quote">"Leadership indicated AI as major initiative — revenue leakage detection, LLM/reporting capabilities. Implementation likely needs PSA rather than legacy billing."</div>
+    </div>
+  </div>
+</div>
+
+<!-- CURRENT ARCHITECTURE -->
+<div class="section">
+  <div class="section-tag">Section 2</div>
+  <h2>Current Architecture vs. Proposed State</h2>
+  <p class="lead">Today, Intermedia operates a three-system billing architecture where Atlas and BRM feed HostPilot for invoice generation and payments. Rev.io replaces the charge generation and CDR processing layer entirely — with HostPilot remaining as the customer-facing invoice and payment surface.</p>
+
+  <div class="arch-grid">
+    <div class="arch-box legacy">
+      <div class="arch-title">Today — Three Systems, Manual Reconciliation</div>
+      <div class="arch-item"><span class="dot red"></span><strong>Atlas</strong> — Legacy provisioning + billing (acquired, end-of-life). Hardware provisioning, legacy VoIP/SIPT billing, invoice generation for legacy products.</div>
+      <div class="arch-item"><span class="dot red"></span><strong>BRM (Oracle)</strong> — UCaaS/CCaaS billing, quote/tax integration, usage buckets, channel pricing. Feeds to and from Atlas. End-of-life maintenance burden.</div>
+      <div class="arch-item"><span class="dot yellow"></span><strong>HostPilot</strong> — Intermedia's in-house platform. Manages invoices, payments, customer portal, and BCA/data services billing. <em>Stays in place.</em></div>
+      <div class="arch-item"><span class="dot red"></span><strong>Manual syncing</strong> between all three systems — semi-automated at best, prone to reconciliation errors and developer overhead.</div>
+    </div>
+    <div class="arch-arrow">→</div>
+    <div class="arch-box revio-arch">
+      <div class="arch-title">With Rev.io — Simplified, Single Billing Engine</div>
+      <div class="arch-item"><span class="dot green"></span><strong>Rev.io Billing</strong> — Replaces Atlas + BRM as the single charge generation and CDR processing engine. Handles all usage rating, channel pricing, recurring billing, and invoice data generation.</div>
+      <div class="arch-item"><span class="dot green"></span><strong>CDR Processing</strong> — FTP-based CDR intake from Intermedia's SBC/upstream providers. PSTN calls rated, OnNet excluded. Usage allowances + overage billing automated.</div>
+      <div class="arch-item"><span class="dot yellow"></span><strong>HostPilot (remains)</strong> — Consumes invoice XML from Rev.io. Invoices customers and processes payments. Payments flow back to Rev.io via API for balance reconciliation.</div>
+      <div class="arch-item"><span class="dot blue"></span><strong>Avalara tax integration</strong> — Rev.io continues feeding Intermedia's existing Avalara setup for telecom tax compliance.</div>
+      <div class="arch-item"><span class="dot green"></span><strong>Atlas (provisioning only)</strong> — May remain as provisioning system if needed, decoupled from billing logic.</div>
+    </div>
+  </div>
+</div>
+
+<!-- COST OF TODAY -->
+<div class="section">
+  <div class="section-tag">Section 3</div>
+  <h2>The Cost of Today</h2>
+  <p class="lead">Conservative estimates based on Intermedia's size, two end-of-life billing systems requiring active maintenance, and manual reconciliation across three platforms. We use a fully-loaded developer cost of $150,000/year ($72.12/hr) — below market for a Sunnyvale-based telecom engineering team.</p>
+
+  <table class="roi-table">
+    <thead>
+      <tr>
+        <th style="width:30%">Pain Point</th>
+        <th>Conservative Assumption</th>
+        <th style="text-align:right">Annual Cost</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td>Developer time — Atlas end-of-life maintenance<br><div class="math">1 developer × 5 hrs/week × 52 weeks × $72.12/hr</div></td>
+        <td>Conservative estimate: 1 developer spending ~5 hrs/week keeping Atlas alive — bug fixes, patches, reconciliation logic. Likely higher.</td>
+        <td style="text-align:right;color:var(--red);font-weight:700">$18,751</td>
+      </tr>
+      <tr>
+        <td>Developer time — BRM (Oracle) maintenance<br><div class="math">1 developer × 4 hrs/week × 52 weeks × $72.12/hr</div></td>
+        <td>Oracle BRM is complex, expensive to maintain, and requires specialized developer knowledge. Conservative 4 hrs/week of ongoing maintenance burden.</td>
+        <td style="text-align:right;color:var(--red);font-weight:700">$15,001</td>
+      </tr>
+      <tr>
+        <td>Cross-system reconciliation overhead<br><div class="math">2 FTEs × 3 hrs/week × 52 weeks × $72.12/hr</div></td>
+        <td>Billing data flowing between Atlas, BRM, and HostPilot requires regular reconciliation to catch sync errors. Conservative 3 hrs/week across 2 people.</td>
+        <td style="text-align:right;color:var(--red);font-weight:700">$22,501</td>
+      </tr>
+      <tr>
+        <td>Oracle BRM licensing &amp; support costs<br><div class="math">Conservative estimate — Oracle enterprise software is notoriously expensive</div></td>
+        <td>Oracle BRM licensing and annual support for a telecom-scale deployment. Actual cost likely significantly higher — conservatively estimated.</td>
+        <td style="text-align:right;color:var(--red);font-weight:700">$50,000</td>
+      </tr>
+      <tr>
+        <td>Revenue leakage from reconciliation errors<br><div class="math">Conservative: 0.1% of estimated $10M+ ARR lost to billing errors</div></td>
+        <td>"Semi-automated processes relied on data across systems" — even a 0.1% leakage rate on a carrier billing operation represents material revenue loss.</td>
+        <td style="text-align:right;color:var(--red);font-weight:700">$10,000+</td>
+      </tr>
+      <tr class="total-row">
+        <td>Total Estimated Annual Cost of Current State</td>
+        <td>Conservative. Does not include opportunity cost of developer time that could go to product rather than legacy maintenance, or full Oracle licensing costs.</td>
+        <td style="text-align:right">$116,253+ / year</td>
+      </tr>
+    </tbody>
+  </table>
+</div>
+
+<!-- WHAT CHANGES -->
+<div class="section">
+  <div class="section-tag">Section 4</div>
+  <h2>What Changes with Rev.io</h2>
+  <p class="lead">Rev.io replaces Atlas and BRM as Intermedia's charge generation and CDR processing engine — without requiring Intermedia to change its HostPilot-facing customer experience or payment processing architecture.</p>
+
+  <div class="compare">
+    <div class="compare-box today">
+      <div class="compare-label">Today — Three Systems</div>
+      <div class="compare-line"><strong>Charge Generation:</strong> Split between Atlas (legacy) + BRM (UCaaS/CCaaS)</div>
+      <div class="compare-line"><strong>CDR Processing:</strong> Handled within BRM — complex Oracle configuration</div>
+      <div class="compare-line"><strong>Channel Billing:</strong> Multi-tier pricing logic spread across Atlas + BRM — fragile</div>
+      <div class="compare-line"><strong>Invoice Generation:</strong> Data flows from Atlas/BRM into HostPilot — manual sync required</div>
+      <div class="compare-line"><strong>Tax:</strong> Avalara integration via BRM — risk if BRM is decommissioned</div>
+      <div class="compare-line"><strong>AI / Reporting:</strong> Impossible across 3 disconnected systems</div>
+      <div class="compare-line"><strong>Developer overhead:</strong> Active maintenance on 2 EOL platforms</div>
+      <div class="compare-line"><strong>SKU Management:</strong> Slow — changes require BRM configuration</div>
+    </div>
+    <div class="vs">→</div>
+    <div class="compare-box tomorrow">
+      <div class="compare-label">With Rev.io — Single Engine</div>
+      <div class="compare-line"><strong>Charge Generation:</strong> Rev.io as single billing engine — one system for all product lines</div>
+      <div class="compare-line"><strong>CDR Processing:</strong> FTP-based CDR intake, usage rating, overage billing — natively supported</div>
+      <div class="compare-line"><strong>Channel Billing:</strong> Parent-child hierarchy for distributor/reseller/end-customer tiers, wholesale + retail pricing on single EOC</div>
+      <div class="compare-line"><strong>Invoice Generation:</strong> Rev.io generates invoice XML → HostPilot consumes via API — automated, no manual sync</div>
+      <div class="compare-line"><strong>Tax:</strong> Avalara integration maintained through Rev.io — no disruption</div>
+      <div class="compare-line"><strong>AI / Reporting:</strong> Single dataset enables revenue leakage detection, LLM reporting, trend analytics</div>
+      <div class="compare-line"><strong>Developer overhead:</strong> Atlas + BRM maintenance eliminated — developers freed for product work</div>
+      <div class="compare-line"><strong>SKU Management:</strong> CPQ for rapid SKU launches, price point updates, promotional logic</div>
+    </div>
+  </div>
+</div>
+
+<!-- OPEN ITEMS -->
+<div class="section">
+  <div class="section-tag">Section 5</div>
+  <h2>Open Items &amp; Known Gaps</h2>
+  <p class="lead">We believe Rev.io solves the core billing consolidation problem for Intermedia. The following items were flagged during discovery as requiring additional clarification or product team review before a full demo.</p>
+
+  <table class="gap-table">
+    <thead>
+      <tr>
+        <th style="width:28%">Item</th>
+        <th>Status</th>
+        <th>Notes</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td>Multi-tier distributor billing (B-tier invoice structure)</td>
+        <td><span class="partial">Likely solvable — needs demo confirmation</span></td>
+        <td>Agent/parent-child model in Rev.io may handle disty relationship. Key question: is Intermedia tracking pricing between disty and reseller, or just wholesale-to-disty? Needs clarification with Kuldeep before full demo.</td>
+      </tr>
+      <tr>
+        <td>Wholesale + retail pricing on single partner EOC invoice</td>
+        <td><span class="partial">Flagged as primary gap — product team input needed</span></td>
+        <td>Partners need to see both what they pay Intermedia (wholesale) and what they bill end customers (retail) on one invoice. Product team to confirm if supported or if workaround exists.</td>
+      </tr>
+      <tr>
+        <td>Two CDR rating environments (wholesale + retail)</td>
+        <td><span class="partial">Architecture discussion needed</span></td>
+        <td>May require two Rev.io instances — one rating wholesale for Intermedia-to-distributor billing, one rating retail for end-customer billing. FTP CDR intake is supported natively.</td>
+      </tr>
+      <tr>
+        <td>Anniversary billing (proration from order date +7 days)</td>
+        <td><span class="solvable">Likely supported — needs verification</span></td>
+        <td>Prorated start with billing cycle beginning the week after order completion. Rev.io supports anniversary billing — specific cycle offset to be confirmed with product team.</td>
+      </tr>
+      <tr>
+        <td>Conditional billing logic (DID suspension)</td>
+        <td><span class="partial">May require manual intervention</span></td>
+        <td>System may not automatically suspend billing when DID becomes primary number for UC license. Product team to review whether this can be automated.</td>
+      </tr>
+      <tr>
+        <td>Promotional pricing logic (first unit free/discounted)</td>
+        <td><span class="partial">Needs product team review</span></td>
+        <td>First unit free or discounted promotional logic — not confirmed as supported. Flagged for product input before demo.</td>
+      </tr>
+      <tr>
+        <td>GDPR &amp; international data residency</td>
+        <td><span class="open">Known gap — payment processing stays in HostPilot</span></td>
+        <td>All data currently in US. International data sovereignty requirements cannot be fully supported today. Payment processing staying in HostPilot removes the international payment gap — data residency for non-payment data to be confirmed.</td>
+      </tr>
+      <tr>
+        <td>~1,000 SKU product catalog</td>
+        <td><span class="solvable">Supported — CPQ handles rapid SKU management</span></td>
+        <td>Rev.io CPQ supports large catalogs with quick SKU launches and price point updates. Separate products per currency to be confirmed for international product lines.</td>
+      </tr>
+    </tbody>
+  </table>
+</div>
+
+<!-- THE NUMBERS -->
+<div class="section">
+  <div class="section-tag">Section 6</div>
+  <h2>The Numbers</h2>
+  <p class="lead">Year 1 ROI — conservative, based entirely on documented discovery inputs. Does not include the strategic value of freeing developer capacity or enabling AI/reporting initiatives that leadership has already identified as priorities.</p>
+
+  <div class="summary-grid">
+    <div class="sum-card" style="border-top:3px solid var(--red)">
+      <div class="sum-val" style="color:var(--red)">$116K+</div>
+      <div class="sum-label">Annual Cost of<br>Current State</div>
+    </div>
+    <div class="sum-card" style="border-top:3px solid var(--blue)">
+      <div class="sum-val" style="color:var(--blue)">~$30K</div>
+      <div class="sum-label">Est. Annual<br>Rev.io Investment</div>
+    </div>
+    <div class="sum-card" style="border-top:3px solid var(--green)">
+      <div class="sum-val" style="color:var(--green)">~$86K+</div>
+      <div class="sum-label">Est. Year 1<br>Net Savings</div>
+    </div>
+    <div class="sum-card" style="border-top:3px solid var(--yellow)">
+      <div class="sum-val" style="color:var(--yellow)">&lt; 6 mo</div>
+      <div class="sum-label">Estimated<br>Payback Period</div>
+    </div>
+  </div>
+
+  <div class="callout">
+    <div class="callout-label">The Real Value — Beyond the Line Items</div>
+    <p>The ROI model above captures direct, quantifiable costs. It does not capture: <strong>developer capacity returned to product work</strong> when Atlas and BRM maintenance is eliminated; <strong>AI and reporting capabilities unlocked</strong> once billing data lives in a single, queryable system; or <strong>revenue leakage elimination</strong> from automated charge generation replacing manual cross-system reconciliation. For a company at Intermedia's scale, those are the numbers that matter most — and they compound over time.</p>
+  </div>
+</div>
+
+<!-- NEXT STEPS -->
+<div class="section">
+  <div class="section-tag">Section 7</div>
+  <h2>What Happens Next</h2>
+
+  <div class="next-step">
+    <div class="step-num">1</div>
+    <div class="step-content">
+      <h4>Pre-demo alignment call with Kuldeep</h4>
+      <p>Before bringing the full team together, get 30 minutes with Kuldeep to confirm the distributor billing model, clarify the HostPilot invoice flow, and align on the open product questions — so the demo is targeted, not exploratory.</p>
+    </div>
+  </div>
+  <div class="next-step">
+    <div class="step-num">2</div>
+    <div class="step-content">
+      <h4>Product team input on identified gaps</h4>
+      <p>Get Rev.io's product team to review: wholesale/retail EOC invoice structure, conditional DID billing logic, promotional pricing, and anniversary billing offset. Return with clear answers before the broader demo.</p>
+    </div>
+  </div>
+  <div class="next-step">
+    <div class="step-num">3</div>
+    <div class="step-content">
+      <h4>Tailored demo — CDR rating, channel billing, and HostPilot integration</h4>
+      <p>Build 1–2 bill profiles and demo examples showing: FTP CDR intake and usage rating, multi-tier channel billing (direct + reseller + distributor), XML invoice output to HostPilot, and CPQ for rapid SKU management.</p>
+    </div>
+  </div>
+  <div class="next-step">
+    <div class="step-num">4</div>
+    <div class="step-content">
+      <h4>Full team demo + decision</h4>
+      <p>Bring in Michael Gold (CEO), Irene Brienza (Sr. Director, Financial Systems), Kuldeep, and the technical stakeholders. Present the solution with answers to all open questions and a clear migration path from Atlas + BRM.</p>
+    </div>
+  </div>
+  <div class="next-step">
+    <div class="step-num">5</div>
+    <div class="step-content">
+      <h4>Target: Q3 close, onboarding in billing + PSA roadmap</h4>
+      <p>Per discovery, Intermedia is ready to move forward. Ideal close in Q3 with onboarding primarily in billing — PSA capabilities as a natural expansion as Rev.io's platform grows. This is a $30K+ logo opportunity with significant upsell potential.</p>
+    </div>
+  </div>
+</div>
+
+<div class="disclaimer">
+  This analysis is based on information shared by Intermedia during discovery conversations documented in Notion (February–April 2026) and Salesforce opportunity data. All cost estimates use conservative assumptions and a below-market developer rate of $150,000/year fully loaded. Actual savings will vary based on team size, current licensing costs, and implementation. Rev.io makes no guarantees of specific financial outcomes.
+  <br><br>
+  Key contacts: Michael Gold (CEO) · Irene Brienza (Sr. Director, Financial Systems) · Kuldeep (Technical/Requirements Lead)
+  <br><br>
+  Prepared by Rev.io Sales · Jamie Butler · Confidential · April 2026
+</div>
+
+</body>
+</html>
