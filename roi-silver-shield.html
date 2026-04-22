@@ -1,0 +1,292 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Rev.io ROI Analysis — Silver Shield Security</title>
+<style>
+  :root {
+    --bg: #0a0f1e;
+    --surface: #111827;
+    --surface2: #0d1525;
+    --border: #1e2d45;
+    --blue: #1667CC;
+    --green: #3DC570;
+    --cyan: #06b6d4;
+    --red: #f87171;
+    --yellow: #f5a623;
+    --text: #e2e8f0;
+    --muted: #64748b;
+  }
+  * { margin:0; padding:0; box-sizing:border-box; }
+  body { background:var(--bg); font-family:'Segoe UI',system-ui,sans-serif; color:var(--text); min-height:100vh; }
+
+  .cover { background:linear-gradient(135deg, #0a0f1e 0%, #0d1b35 50%, #0a1628 100%); padding:80px 80px 60px; border-bottom:1px solid var(--border); position:relative; overflow:hidden; }
+  .cover::before { content:''; position:absolute; top:-100px; right:-100px; width:500px; height:500px; background:radial-gradient(circle, rgba(22,103,204,0.08) 0%, transparent 70%); }
+  .cover-logo { margin-bottom:48px; }
+  .cover-logo img { height:40px; opacity:0.9; }
+  .cover-tag { font-size:11px; font-weight:700; letter-spacing:3px; text-transform:uppercase; color:var(--cyan); margin-bottom:16px; }
+  .cover h1 { font-size:42px; font-weight:800; color:#fff; line-height:1.15; margin-bottom:8px; }
+  .cover h1 span { color:var(--cyan); }
+  .cover-sub { font-size:16px; color:var(--muted); margin-bottom:0; }
+
+  .section { padding:64px 80px; border-bottom:1px solid var(--border); }
+  .section:last-child { border-bottom:none; }
+  .section-tag { font-size:10px; font-weight:700; letter-spacing:3px; text-transform:uppercase; color:var(--blue); margin-bottom:12px; }
+  .section h2 { font-size:28px; font-weight:800; color:#fff; margin-bottom:8px; }
+  .section .lead { font-size:15px; color:var(--muted); line-height:1.7; max-width:740px; margin-bottom:40px; }
+
+  .pain-grid { display:grid; grid-template-columns:repeat(3,1fr); gap:16px; margin-bottom:40px; }
+  .pain-card { background:var(--surface); border:1px solid var(--border); border-top:3px solid var(--red); border-radius:10px; padding:20px; }
+  .pain-card h4 { font-size:13px; font-weight:700; color:#fff; margin-bottom:8px; }
+  .pain-card p { font-size:12px; color:var(--muted); line-height:1.6; }
+  .pain-card .pain-quote { font-size:11px; color:var(--yellow); font-style:italic; margin-top:10px; border-left:2px solid var(--yellow); padding-left:10px; }
+
+  .roi-table { width:100%; border-collapse:collapse; margin-bottom:24px; }
+  .roi-table thead th { font-size:10px; font-weight:700; text-transform:uppercase; letter-spacing:1px; color:var(--muted); padding:12px 16px; text-align:left; background:var(--surface2); border-bottom:1px solid var(--border); }
+  .roi-table tbody td { padding:14px 16px; font-size:13px; color:#94a3b8; border-bottom:1px solid #0a0f1e; vertical-align:top; }
+  .roi-table tbody td:first-child { color:var(--text); font-weight:600; }
+  .roi-table tbody tr:last-child td { border-bottom:none; }
+  .roi-table .total-row td { background:rgba(61,197,112,0.06); color:var(--green); font-weight:700; font-size:14px; border-top:1px solid rgba(61,197,112,0.2); }
+  .math { font-size:11px; color:var(--muted); font-style:italic; margin-top:4px; }
+
+  .summary-grid { display:grid; grid-template-columns:repeat(4,1fr); gap:16px; margin:32px 0; }
+  .sum-card { background:var(--surface); border-radius:12px; padding:22px; text-align:center; }
+  .sum-val { font-size:30px; font-weight:800; margin-bottom:4px; }
+  .sum-label { font-size:10px; font-weight:700; letter-spacing:1.5px; text-transform:uppercase; color:var(--muted); line-height:1.4; }
+
+  .compare { display:grid; grid-template-columns:1fr auto 1fr; gap:24px; align-items:start; margin:32px 0; }
+  .compare-box { background:var(--surface); border-radius:12px; padding:28px; }
+  .compare-box.today { border-top:3px solid var(--red); }
+  .compare-box.tomorrow { border-top:3px solid var(--green); }
+  .compare-label { font-size:10px; font-weight:700; letter-spacing:2px; text-transform:uppercase; margin-bottom:16px; }
+  .compare-box.today .compare-label { color:var(--red); }
+  .compare-box.tomorrow .compare-label { color:var(--green); }
+  .compare-line { font-size:13px; color:#94a3b8; padding:7px 0; border-bottom:1px solid var(--border); line-height:1.4; }
+  .compare-line:last-child { border-bottom:none; }
+  .compare-line strong { color:var(--text); }
+  .vs { font-size:24px; font-weight:800; color:var(--muted); text-align:center; padding-top:60px; }
+
+  .callout { background:rgba(61,197,112,0.06); border:1px solid rgba(61,197,112,0.2); border-radius:10px; padding:20px 24px; margin-top:24px; }
+  .callout-label { font-size:10px; font-weight:700; letter-spacing:2px; text-transform:uppercase; color:var(--green); margin-bottom:8px; }
+  .callout p { font-size:14px; color:var(--text); line-height:1.7; }
+
+  .next-step { display:flex; gap:16px; align-items:flex-start; padding:16px 0; border-bottom:1px solid var(--border); }
+  .next-step:last-child { border-bottom:none; }
+  .step-num { width:32px; height:32px; background:var(--blue); border-radius:50%; display:flex; align-items:center; justify-content:center; font-size:13px; font-weight:800; color:#fff; flex-shrink:0; margin-top:2px; }
+  .step-content h4 { font-size:14px; font-weight:700; color:#fff; margin-bottom:4px; }
+  .step-content p { font-size:13px; color:var(--muted); line-height:1.5; }
+
+  .disclaimer { font-size:11px; color:#334155; text-align:center; padding:24px 80px; line-height:1.6; }
+</style>
+</head>
+<body>
+
+<!-- COVER -->
+<div class="cover">
+  <div class="cover-logo">
+    <img src="https://koontz-robin.github.io/robin-decks/revio-logo.png" alt="rev.io">
+  </div>
+  <div class="cover-tag">Business Value Assessment</div>
+  <h1>ROI Analysis for<br><span>Silver Shield Security</span></h1>
+  <p class="cover-sub">Prepared by Jaylin Bender, Rev.io &nbsp;·&nbsp; April 2026</p>
+</div>
+
+<!-- WHAT WE HEARD -->
+<div class="section">
+  <div class="section-tag">Section 1</div>
+  <h2>What We Heard</h2>
+  <p class="lead">Silver Shield Security is a residential and commercial security and home automation company serving the Carolinas out of Charlotte, NC. Currently running Workhorse as the PSA, the business is growing — and the operational infrastructure needs to grow with it. These are the challenges we identified together.</p>
+
+  <div class="pain-grid">
+    <div class="pain-card">
+      <h4>Workhorse Is Holding You Back</h4>
+      <p>Workhorse is a basic field service tool — it was built for smaller operations and lacks the depth needed as Silver Shield grows. Ticketing, project management, quoting, and invoicing are all limited, meaning your team works around the platform rather than through it.</p>
+      <div class="pain-quote">Current PSA: Workhorse — limited scalability for a growing residential and commercial security operation.</div>
+    </div>
+    <div class="pain-card">
+      <h4>No True Quote-to-Cash Workflow</h4>
+      <p>Security and home automation projects require detailed proposals — equipment, labor, installation, and recurring monitoring fees. Without a seamless quote-to-job-to-invoice flow, every project requires manual handoffs that slow your team down and create opportunities for billing errors.</p>
+      <div class="pain-quote">Every job that starts as a quote requires manual re-entry to become a ticket and an invoice.</div>
+    </div>
+    <div class="pain-card">
+      <h4>Recurring Monitoring Billing Is Manual</h4>
+      <p>Recurring monthly monitoring revenue — your most predictable income stream — requires ongoing manual oversight to ensure every customer is billed correctly. Missed or wrong billing on monitoring contracts is revenue you've already earned walking out the door.</p>
+      <div class="pain-quote">Recurring billing for monitoring contracts needs to run automatically — not require manual intervention each month.</div>
+    </div>
+    <div class="pain-card">
+      <h4>Scheduling & Dispatch Disconnected from Operations</h4>
+      <p>Coordinating technicians across residential and commercial jobs in the Carolinas requires clear visibility into who's available, where they are, and what the job requires. Without a connected dispatch board, scheduling is reactive rather than optimized.</p>
+      <div class="pain-quote">Field team coordination across residential and commercial jobs requires a unified dispatch view.</div>
+    </div>
+    <div class="pain-card">
+      <h4>No Single View of the Business</h4>
+      <p>With shareholders, an operations manager, a CFO, and field techs all touching the business, there's no unified platform where leadership can see job status, revenue, outstanding invoices, and team performance in one place. Decisions get made on incomplete information.</p>
+      <div class="pain-quote">Leadership needs visibility across jobs, billing, and team performance without pulling from multiple sources.</div>
+    </div>
+    <div class="pain-card">
+      <h4>Growth Is Straining the Current Setup</h4>
+      <p>Silver Shield offers no-contract and no-credit-check options — a model designed to win volume. As that volume grows, a platform that doesn't automate billing, scheduling, and job management will require proportionally more headcount to keep up. That math doesn't work at scale.</p>
+      <div class="pain-quote">Growth model requires automation — adding customers shouldn't mean adding proportional admin overhead.</div>
+    </div>
+  </div>
+</div>
+
+<!-- COST OF TODAY -->
+<div class="section">
+  <div class="section-tag">Section 2</div>
+  <h2>The Cost of Today</h2>
+  <p class="lead">Conservative estimates based on Silver Shield's current operations — a growing security and home automation company where manual workflows compound as the customer base scales. We use a fully-loaded cost of $55,000/year per employee ($26.44/hr).</p>
+
+  <table class="roi-table">
+    <thead>
+      <tr>
+        <th style="width:30%">Pain Point</th>
+        <th>Conservative Assumption</th>
+        <th style="text-align:right">Annual Cost</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td>Manual quote-to-job-to-invoice re-entry<br><div class="math">3 hrs/week × $26.44/hr × 52 weeks</div></td>
+        <td>Conservative 3 hrs/week across the team re-entering quote data into tickets and invoices — every project that starts as a proposal requires multiple manual touchpoints.</td>
+        <td style="text-align:right;color:var(--red);font-weight:700">$4,125</td>
+      </tr>
+      <tr>
+        <td>Recurring monitoring billing oversight<br><div class="math">2 hrs/week × $26.44/hr × 52 weeks</div></td>
+        <td>Manual monitoring of recurring billing each month to catch errors, missed charges, and cancelled customers. Conservative 2 hrs/week of operations or admin time.</td>
+        <td style="text-align:right;color:var(--red);font-weight:700">$2,750</td>
+      </tr>
+      <tr>
+        <td>Scheduling & dispatch inefficiency<br><div class="math">2 hrs/week × $26.44/hr × 52 weeks</div></td>
+        <td>Time lost coordinating field techs across residential and commercial jobs without a unified dispatch board — phone calls, texts, and manual schedule updates.</td>
+        <td style="text-align:right;color:var(--red);font-weight:700">$2,750</td>
+      </tr>
+      <tr>
+        <td>Revenue leakage from billing errors<br><div class="math">Conservative: 1.5% of estimated $200K ARR unbilled or billed incorrectly</div></td>
+        <td>Monitoring contracts billed incorrectly or missed due to manual processes. 1.5% leakage on recurring revenue is conservative for a manual billing workflow.</td>
+        <td style="text-align:right;color:var(--red);font-weight:700">$3,000</td>
+      </tr>
+      <tr>
+        <td>Admin overhead scaling with customer volume<br><div class="math">Estimated cost of admin work that grows linearly with customer count</div></td>
+        <td>Without automation, every new customer adds proportional admin work. Conservative estimate of current overhead that doesn't need to exist with the right platform.</td>
+        <td style="text-align:right;color:var(--red);font-weight:700">$2,500</td>
+      </tr>
+      <tr class="total-row">
+        <td>Total Estimated Annual Cost of Current State</td>
+        <td>Conservative. Does not account for growth — as Silver Shield scales its no-contract model, manual overhead compounds faster than revenue without automation.</td>
+        <td style="text-align:right">$15,125 / year</td>
+      </tr>
+    </tbody>
+  </table>
+</div>
+
+<!-- WHAT CHANGES -->
+<div class="section">
+  <div class="section-tag">Section 3</div>
+  <h2>What Changes with Rev.io PSA</h2>
+  <p class="lead">Rev.io PSA is built for exactly what Silver Shield does — field service, security, home automation, recurring billing, and growing volume. Here's what your operation looks like after implementation.</p>
+
+  <div class="compare">
+    <div class="compare-box today">
+      <div class="compare-label">Today — Workhorse + Manual Workflows</div>
+      <div class="compare-line"><strong>PSA:</strong> Workhorse — limited feature set, no growth path</div>
+      <div class="compare-line"><strong>Quoting:</strong> Manual process, separate from ticketing</div>
+      <div class="compare-line"><strong>Scheduling:</strong> Manual coordination across field techs</div>
+      <div class="compare-line"><strong>Recurring Billing:</strong> Manual oversight required each month</div>
+      <div class="compare-line"><strong>Invoicing:</strong> Manual entry, disconnected from job completion</div>
+      <div class="compare-line"><strong>Payments:</strong> External or manual collection</div>
+      <div class="compare-line"><strong>Reporting:</strong> No unified view of jobs, billing, and performance</div>
+      <div class="compare-line"><strong>E-Signature:</strong> Separate tool or paper-based</div>
+    </div>
+    <div class="vs">→</div>
+    <div class="compare-box tomorrow">
+      <div class="compare-label">With Rev.io PSA — Unified Platform</div>
+      <div class="compare-line"><strong>PSA:</strong> Rev.io PSA — ticketing, projects, dispatch, invoicing in one platform</div>
+      <div class="compare-line"><strong>Quoting:</strong> Built-in quoting with e-signature — auto-generates job ticket on approval</div>
+      <div class="compare-line"><strong>Scheduling:</strong> Visual dispatch board with real-time tech tracking and mobile app</div>
+      <div class="compare-line"><strong>Recurring Billing:</strong> Fully automated — monitoring contracts bill themselves</div>
+      <div class="compare-line"><strong>Invoicing:</strong> Auto-generated at job completion — no manual entry</div>
+      <div class="compare-line"><strong>Payments:</strong> Built-in processing — customers pay in the field or online</div>
+      <div class="compare-line"><strong>Reporting:</strong> Single dashboard for leadership — jobs, revenue, team performance</div>
+      <div class="compare-line"><strong>E-Signature:</strong> Native — built into every proposal, no add-on cost</div>
+    </div>
+  </div>
+</div>
+
+<!-- THE NUMBERS -->
+<div class="section">
+  <div class="section-tag">Section 4</div>
+  <h2>The Numbers</h2>
+  <p class="lead">Year 1 ROI — conservative, based on Silver Shield's current operations and growth trajectory.</p>
+
+  <div class="summary-grid">
+    <div class="sum-card" style="border-top:3px solid var(--red)">
+      <div class="sum-val" style="color:var(--red)">$15,125</div>
+      <div class="sum-label">Annual Cost of<br>Current State</div>
+    </div>
+    <div class="sum-card" style="border-top:3px solid var(--blue)">
+      <div class="sum-val" style="color:var(--blue)">~$8,340</div>
+      <div class="sum-label">Est. Annual Rev.io Cost<br><span style="font-size:9px;color:var(--muted)">~$695/mo × 12</span></div>
+    </div>
+    <div class="sum-card" style="border-top:3px solid var(--green)">
+      <div class="sum-val" style="color:var(--green)">~$6,785</div>
+      <div class="sum-label">Est. Year 1<br>Net Savings</div>
+    </div>
+    <div class="sum-card" style="border-top:3px solid var(--yellow)">
+      <div class="sum-val" style="color:var(--yellow)">Year 2+</div>
+      <div class="sum-label">Full ROI compounds as volume grows without adding admin headcount</div>
+    </div>
+  </div>
+
+  <div class="callout">
+    <div class="callout-label">The Real Value — Scaling Without Scaling Your Overhead</div>
+    <p>Silver Shield's no-contract, no-credit-check model is built to win volume. But every new customer on a manual platform adds more admin work — more scheduling, more billing oversight, more follow-up. <strong>Rev.io PSA breaks that relationship.</strong> You can double your monitoring contract base without doubling your operational workload. That's where the real return lives — not just in Year 1 savings, but in the margin you protect as you grow.</p>
+  </div>
+</div>
+
+<!-- NEXT STEPS -->
+<div class="section">
+  <div class="section-tag">Section 5</div>
+  <h2>What Happens Next</h2>
+
+  <div class="next-step">
+    <div class="step-num">1</div>
+    <div class="step-content">
+      <h4>Shareholder follow-up — April 22</h4>
+      <p>Scheduled follow-up with shareholders today. Walk through the ROI, confirm alignment across Jenell, Durlandhy, and Brandon, and address any remaining questions before moving to contract.</p>
+    </div>
+  </div>
+  <div class="next-step">
+    <div class="step-num">2</div>
+    <div class="step-content">
+      <h4>Contract &amp; signature</h4>
+      <p>Month-to-month flexibility means no long-term commitment risk. Silver Shield can start on Rev.io PSA without being locked in — making the decision easy to say yes to.</p>
+    </div>
+  </div>
+  <div class="next-step">
+    <div class="step-num">3</div>
+    <div class="step-content">
+      <h4>Onboarding — dedicated analyst, unlimited support until live</h4>
+      <p>A dedicated onboarding analyst works with Taja (Operations Manager) to configure the platform — recurring billing setup, dispatch board, quoting templates, and payment processing. Weekly calls and unlimited support until you're fully live.</p>
+    </div>
+  </div>
+  <div class="next-step">
+    <div class="step-num">4</div>
+    <div class="step-content">
+      <h4>Migration from Workhorse</h4>
+      <p>We'll guide the team through migrating customer records, active jobs, and recurring contracts from Workhorse — so nothing falls through the cracks during the transition.</p>
+    </div>
+  </div>
+</div>
+
+<div class="disclaimer">
+  This analysis is based on information shared by Silver Shield Security during conversations with Jaylin Bender at Rev.io. All cost estimates use conservative assumptions and a fully-loaded employee cost of $55,000/year ($26.44/hr). Actual savings will vary based on team size, implementation, and adoption. Rev.io makes no guarantees of specific financial outcomes.
+  <br><br>
+  Key contacts: Jenell Jackson (CEO) · Durlandhy Barrios (Owner) · Brandon (CFO) · Taja Jackson (Operations Manager)
+  <br><br>
+  Prepared by Rev.io Sales · Jaylin Bender · Confidential · April 2026
+</div>
+
+</body>
+</html>
