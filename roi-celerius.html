@@ -71,11 +71,30 @@
   .callout-label { font-size:10px; font-weight:700; letter-spacing:2px; text-transform:uppercase; color:var(--green); margin-bottom:8px; }
   .callout p { font-size:14px; color:var(--text); line-height:1.7; }
 
+  .callout-blue { background:rgba(22,103,204,0.08); border:1px solid rgba(22,103,204,0.25); border-radius:10px; padding:20px 24px; margin-top:16px; }
+  .callout-blue .callout-label { color:var(--cyan); }
+  .callout-blue p { font-size:14px; color:var(--text); line-height:1.7; }
+
   .next-step { display:flex; gap:16px; align-items:flex-start; padding:16px 0; border-bottom:1px solid var(--border); }
   .next-step:last-child { border-bottom:none; }
   .step-num { width:32px; height:32px; background:var(--blue); border-radius:50%; display:flex; align-items:center; justify-content:center; font-size:13px; font-weight:800; color:#fff; flex-shrink:0; margin-top:2px; }
   .step-content h4 { font-size:14px; font-weight:700; color:#fff; margin-bottom:4px; }
   .step-content p { font-size:13px; color:var(--muted); line-height:1.5; }
+
+  .roadmap-grid { display:grid; grid-template-columns:repeat(3,1fr); gap:16px; margin-top:32px; }
+  .roadmap-card { background:var(--surface); border-radius:10px; padding:20px; border:1px solid var(--border); }
+  .roadmap-card.live { border-top:3px solid var(--green); }
+  .roadmap-card.soon { border-top:3px solid var(--yellow); }
+  .roadmap-card.coming { border-top:3px solid var(--cyan); }
+  .roadmap-badge { font-size:9px; font-weight:700; letter-spacing:1px; text-transform:uppercase; margin-bottom:10px; }
+  .roadmap-card.live .roadmap-badge { color:var(--green); }
+  .roadmap-card.soon .roadmap-badge { color:var(--yellow); }
+  .roadmap-card.coming .roadmap-badge { color:var(--cyan); }
+  .roadmap-card h4 { font-size:13px; font-weight:700; color:#fff; margin-bottom:8px; }
+  .roadmap-card ul { list-style:none; padding:0; }
+  .roadmap-card ul li { font-size:12px; color:var(--muted); padding:4px 0; border-bottom:1px solid var(--border); }
+  .roadmap-card ul li:last-child { border-bottom:none; }
+  .roadmap-card ul li::before { content:'• '; color:var(--blue); }
 
   .disclaimer { font-size:11px; color:#334155; text-align:center; padding:24px 80px; line-height:1.6; }
 </style>
@@ -96,38 +115,38 @@
 <div class="section">
   <div class="section-tag">Section 1</div>
   <h2>What We Heard</h2>
-  <p class="lead">Based on our discovery conversations, here are the operational challenges you shared with us. Celerius is a 9-person MSP north of Baltimore currently on Autotask — with a contract expiring August 2026. These are the problems you told us about. We've simply quantified the cost.</p>
+  <p class="lead">Over four discovery calls in April 2026, Woody and Tim walked us through exactly how Celerius operates today. You're a 9-person MSP north of Baltimore on Autotask — migrated just eight months ago — and already identifying the gaps. These are your words, not ours.</p>
 
   <div class="pain-grid">
     <div class="pain-card">
-      <h4>Manual License Syncing — Your #1 Time Drain</h4>
-      <p>License syncing with Sophos, Cove, and Microsoft (via TD SYNNEX) is the single most time-consuming task at Celerius — all done manually. Every time a customer adds or removes a license, someone on your team has to catch it, reconcile it, and make sure it gets billed correctly.</p>
-      <div class="pain-quote">"License syncing with vendors is the most time-consuming task — all done manually."</div>
+      <h4>License Syncing Is Your Biggest Time Drain</h4>
+      <p>Syncing vendor licenses — Sophos, Cove, Microsoft M365 via TD SYNNEX, Duo, and others — is done entirely manually. Every time a customer adds or removes a license, someone has to catch it, reconcile it, and make sure billing reflects it. No automation, no alerts, no safety net.</p>
+      <div class="pain-quote">"License syncing is the most time-consuming thing." — Tim</div>
     </div>
     <div class="pain-card">
-      <h4>Separate Quoting Tool Creating Double Entry</h4>
-      <p>Kaseya Quote Manager lives outside your PSA. Every quote that converts requires manual re-entry into Autotask — creating duplicate work, introducing errors, and slowing down the quote-to-job flow for your team.</p>
-      <div class="pain-quote">"Manual entry required for projects and tickets due to separate quoting platform."</div>
+      <h4>Kaseya Quote Manager Creates Constant Double Entry</h4>
+      <p>Every quote built in Kaseya Quote Manager has to be manually re-entered into Autotask to become a ticket and an agreement. There's no automation between the two — meaning every sale generates duplicate work before service delivery even starts.</p>
+      <div class="pain-quote">"Manual entry required for projects and tickets due to the separate quoting platform."</div>
     </div>
     <div class="pain-card">
-      <h4>Accounting Manager Buried in Billing Workflows</h4>
-      <p>Your accounting manager spends significant time on manual billing workflows and vendor invoice processing. Recurring billing requires manual oversight because the QuickBooks integration is finicky — meaning billing isn't truly automated, it's just partially assisted.</p>
-      <div class="pain-quote">"Accounting manager spends significant time on billing workflows and vendor invoice processing."</div>
+      <h4>Payroll Requires a Manual Report Process</h4>
+      <p>Tim tracks payroll by pulling ticket time entries from Autotask and building a manual report every pay period. Autotask doesn't separate payroll time from billable time, so the whole process requires customization and reconciliation. Celerius was actively considering paying ADP separately for timekeeping to solve this.</p>
+      <div class="pain-quote">"We'd been looking at using ADP for timekeeping. This does make it easier." — Woody</div>
     </div>
     <div class="pain-card">
-      <h4>Complex Maryland Tax Environment</h4>
-      <p>Maryland's tax structure — sales tax, digital tax, and IT tech tax — isn't handled well in your current setup. Multi-tax scenarios require manual attention and create compliance risk that compounds as you grow.</p>
-      <div class="pain-quote">"Complex Maryland tax environment (sales tax, digital tax, IT tech tax) not handled well in current setup."</div>
+      <h4>Updating Agreement Pricing Is a Nightmare</h4>
+      <p>When pricing needs to change — even a 3% annual increase — someone has to go into every single agreement individually to update it. With hundreds of active contracts, this is a massive time sink that discourages pricing discipline and costs real money in margin erosion.</p>
+      <div class="pain-quote">"Global changes to agreements and prices — that's one of the bigger things for us." — Woody</div>
     </div>
     <div class="pain-card">
-      <h4>No Payroll Clock-In / Clock-Out</h4>
-      <p>Your current PSA has no payroll clock-in/clock-out functionality. Time tracking for payroll requires a separate process or workaround — another manual step that costs your team time and creates data inconsistency between your PSA and payroll.</p>
-      <div class="pain-quote">"No payroll clock-in/clock-out functionality in current PSA."</div>
+      <h4>Maryland Tax Complexity Is Handled Manually</h4>
+      <p>Maryland has three separate tax rates — sales tax, digital tax, and IT tech tax — each applying differently depending on the service type. The current setup requires manual tax code assignment and oversight, creating compliance risk and billing errors.</p>
+      <div class="pain-quote">"We have sales tax, digital tax, and IT tech tax. Based on what it is, it gets taxed differently." — Woody</div>
     </div>
     <div class="pain-card">
-      <h4>Revenue Leakage from License Mismatches</h4>
-      <p>When customers add or remove licenses and the sync doesn't happen in time — or at all — you either overbill (creating churn risk) or underbill (leaving money on the table). Without automated license reconciliation, this leakage is invisible until someone manually catches it.</p>
-      <div class="pain-quote">"License reconciliation to prevent revenue leakage when customers add/remove licenses."</div>
+      <h4>Co-Managed IT Pricing Is a Roadblock</h4>
+      <p>Celerius has 5-6 in-house IT people at client locations who need to create and work tickets. Autotask's co-manage pricing equals a full technician license — $25+ more per user than what was originally quoted — making the feature economically unviable to deploy.</p>
+      <div class="pain-quote">"The price for co-manage is the same as a full technician license. That doesn't work." — Woody</div>
     </div>
   </div>
 </div>
@@ -136,7 +155,7 @@
 <div class="section">
   <div class="section-tag">Section 2</div>
   <h2>The Cost of Today</h2>
-  <p class="lead">Conservative estimates based on your team size (9 people), a fully-loaded annual cost of $65,000 per employee ($31.25/hr), and the specific workflows you described. We only model what you told us.</p>
+  <p class="lead">Conservative estimates based on your team of 9, the specific workflows you described across four discovery calls, and a fully-loaded employee cost of $65,000/year ($31.25/hr). We only model what you told us.</p>
 
   <table class="roi-table">
     <thead>
@@ -148,34 +167,39 @@
     </thead>
     <tbody>
       <tr>
-        <td>Manual license syncing (Sophos, Cove, M365)<br><div class="math">5 hrs/week × $31.25/hr × 52 weeks</div></td>
-        <td>Conservative 5 hrs/week across your team spent on manual vendor license reconciliation — your own words called this your most time-consuming task.</td>
+        <td>Manual license syncing (Sophos, Cove, M365, Duo)<br><div class="math">5 hrs/week × $31.25/hr × 52 weeks</div></td>
+        <td>Tim called this the most time-consuming task in the business. Conservative 5 hrs/week across the team — likely higher given the number of vendors.</td>
         <td style="text-align:right;color:var(--red);font-weight:700">$8,125</td>
       </tr>
       <tr>
-        <td>Accounting manager billing overhead<br><div class="math">4 hrs/week × $31.25/hr × 52 weeks</div></td>
-        <td>Conservative 4 hrs/week of accounting manager time on manual billing workflows, vendor invoice processing, and QuickBooks reconciliation.</td>
-        <td style="text-align:right;color:var(--red);font-weight:700">$6,500</td>
+        <td>Quote-to-ticket double entry (Kaseya Quote Manager)<br><div class="math">2.5 hrs/week × $31.25/hr × 52 weeks</div></td>
+        <td>Every approved quote requires manual re-entry into Autotask to generate tickets and agreements. Conservative 2.5 hrs/week across the sales and ops team.</td>
+        <td style="text-align:right;color:var(--red);font-weight:700">$4,063</td>
       </tr>
       <tr>
-        <td>Quote-to-job double entry (Kaseya Quote Manager)<br><div class="math">2 hrs/week × $31.25/hr × 52 weeks</div></td>
-        <td>Manual re-entry of every converted quote into Autotask. Conservative 2 hrs/week — likely higher during busy project periods.</td>
-        <td style="text-align:right;color:var(--red);font-weight:700">$3,250</td>
+        <td>Payroll report building (would-be ADP timekeeping cost)<br><div class="math">ADP Time &amp; Attendance: ~$4/employee/mo × 9 × 12 + manual report time</div></td>
+        <td>Celerius was actively evaluating ADP timekeeping as a paid solution. We're modeling both the avoided third-party cost and the manual report time Tim spends each pay period.</td>
+        <td style="text-align:right;color:var(--red);font-weight:700">$2,832</td>
       </tr>
       <tr>
-        <td>Revenue leakage from license mismatches<br><div class="math">Conservative: 1% of estimated $300K ARR unbilled due to sync lag</div></td>
-        <td>Even a 1% leakage rate from delayed or missed license syncing represents $3,000/year in unbilled revenue — conservative for a manual process with no automated reconciliation.</td>
+        <td>Agreement price update overhead<br><div class="math">Estimated annual time to update pricing across all active contracts manually</div></td>
+        <td>Going contract by contract for even a 3% annual price increase across hundreds of agreements. Conservative estimate of hours spent per pricing review cycle.</td>
+        <td style="text-align:right;color:var(--red);font-weight:700">$2,500</td>
+      </tr>
+      <tr>
+        <td>Revenue leakage from license mismatches<br><div class="math">Conservative: 1% of estimated $300K ARR lost to delayed or missed license billing</div></td>
+        <td>Customers adding or removing licenses without automated reconciliation means you're either underbilling (lost revenue) or overbilling (churn risk). 1% is conservative for a fully manual process.</td>
         <td style="text-align:right;color:var(--red);font-weight:700">$3,000</td>
       </tr>
       <tr>
-        <td>Tax compliance risk &amp; manual handling<br><div class="math">Estimated cost of manual tax research + error risk in MD multi-tax environment</div></td>
-        <td>Maryland's three-layer tax structure requires ongoing manual attention. Conservative estimate of time cost + error risk — does not include potential penalties.</td>
-        <td style="text-align:right;color:var(--red);font-weight:700">$2,400</td>
+        <td>Maryland tax compliance risk<br><div class="math">Manual tax code management across 3 rate structures + error exposure</div></td>
+        <td>Sales tax, digital tax, and IT tech tax applied manually creates ongoing compliance risk. Conservative estimate of time cost and error exposure — does not include potential penalties.</td>
+        <td style="text-align:right;color:var(--red);font-weight:700">$1,800</td>
       </tr>
       <tr class="total-row">
         <td>Total Estimated Annual Cost of Current State</td>
-        <td>Conservative. Does not include the opportunity cost of team capacity lost to admin work, or the risk exposure from undetected billing errors.</td>
-        <td style="text-align:right">$23,275 / year</td>
+        <td>Conservative. Does not include the cost of staying on Autotask ($650-700/mo) which Rev.io replaces, or the co-managed IT licensing premium you can't currently afford.</td>
+        <td style="text-align:right">$22,320 / year</td>
       </tr>
     </tbody>
   </table>
@@ -185,52 +209,111 @@
 <div class="section">
   <div class="section-tag">Section 3</div>
   <h2>What Changes with Rev.io PSA</h2>
-  <p class="lead">Specific to the challenges Celerius identified — not generic benefits. Each item maps directly to something you told us in discovery.</p>
+  <p class="lead">Every item below maps directly to something Woody or Tim described in your discovery calls. This isn't a features list — it's a response to your specific environment.</p>
 
   <div class="compare">
     <div class="compare-box today">
       <div class="compare-label">Today — Autotask + Fragmented Stack</div>
-      <div class="compare-line"><strong>PSA:</strong> Autotask (contract expires Aug 2026)</div>
-      <div class="compare-line"><strong>Quoting:</strong> Kaseya Quote Manager — separate tool, manual re-entry</div>
-      <div class="compare-line"><strong>Billing:</strong> QuickBooks — finicky integration, manual oversight required</div>
-      <div class="compare-line"><strong>License Syncing:</strong> All manual — Sophos, Cove, M365 via TD SYNNEX</div>
-      <div class="compare-line"><strong>Tax:</strong> Not handled well — Maryland multi-tax environment manual</div>
-      <div class="compare-line"><strong>Time Tracking:</strong> No clock-in/clock-out for payroll</div>
-      <div class="compare-line"><strong>E-Signature:</strong> Separate tool or manual process</div>
-      <div class="compare-line"><strong>Payments:</strong> External processor, no auto-surcharging</div>
+      <div class="compare-line"><strong>PSA:</strong> Autotask — migrated Aug 2025, contract expiring Aug 2026</div>
+      <div class="compare-line"><strong>Quoting:</strong> Kaseya Quote Manager — separate tool, manual re-entry into Autotask</div>
+      <div class="compare-line"><strong>Payroll:</strong> Manual report from ticket time entries — considering ADP timekeeping add-on</div>
+      <div class="compare-line"><strong>License Sync:</strong> All manual — Sophos, Cove, M365, Duo via TD SYNNEX</div>
+      <div class="compare-line"><strong>Agreement Updates:</strong> Every contract updated individually — no global price cascade</div>
+      <div class="compare-line"><strong>Tax:</strong> Manual tax code assignment for MD's 3-rate structure</div>
+      <div class="compare-line"><strong>Co-Manage:</strong> Full license price ($25+ more/user) — not deployed</div>
+      <div class="compare-line"><strong>Billing:</strong> QuickBooks integration finicky — manual oversight each cycle</div>
+      <div class="compare-line"><strong>E-Signature:</strong> Separate tool or process</div>
+      <div class="compare-line"><strong>Migration history:</strong> 3 months, done manually, no vendor help</div>
     </div>
     <div class="vs">→</div>
     <div class="compare-box tomorrow">
-      <div class="compare-label">With Rev.io PSA — Unified Platform</div>
-      <div class="compare-line"><strong>PSA:</strong> Rev.io PSA — CRM, ticketing, projects, invoicing all native</div>
-      <div class="compare-line"><strong>Quoting:</strong> Built-in quoting with e-signature — auto-generates tickets on approval</div>
-      <div class="compare-line"><strong>Billing:</strong> Two-way QuickBooks Online sync + automated recurring billing</div>
-      <div class="compare-line"><strong>License Syncing:</strong> Pax8 live today; TD SYNNEX (M365) coming June 2026 — automated reconciliation prevents leakage</div>
-      <div class="compare-line"><strong>Tax:</strong> SureTax engine handles Maryland's multi-tax scenarios automatically by location</div>
-      <div class="compare-line"><strong>Time Tracking:</strong> Clock-in/clock-out with payroll reporting + ADP integration in progress</div>
-      <div class="compare-line"><strong>E-Signature:</strong> Built in — no add-on cost, no separate tool</div>
-      <div class="compare-line"><strong>Payments:</strong> Built-in processing with auto-surcharging and collections automation</div>
+      <div class="compare-label">With Rev.io PSA — One Platform</div>
+      <div class="compare-line"><strong>PSA:</strong> Rev.io PSA — everything native, month-to-month, no lock-in</div>
+      <div class="compare-line"><strong>Quoting:</strong> Built-in — approved quote auto-creates recurring services + tickets. No re-entry.</div>
+      <div class="compare-line"><strong>Payroll:</strong> Clock-in/clock-out separate from billable time — exports directly for payroll. No ADP timekeeping needed.</div>
+      <div class="compare-line"><strong>License Sync:</strong> Pax8 live today; TD SYNNEX (M365) live June 2026 — automated reconciliation</div>
+      <div class="compare-line"><strong>Agreement Updates:</strong> Change one pricing rule, cascade to all agreements in seconds (Apollo 3, May 31)</div>
+      <div class="compare-line"><strong>Tax:</strong> SureTax engine — Maryland's 3-rate structure handled automatically by product type</div>
+      <div class="compare-line"><strong>Co-Manage:</strong> On roadmap — priced closer to mobile user licenses, not full license</div>
+      <div class="compare-line"><strong>Billing:</strong> Two-way QuickBooks sync + automated recurring billing with configurable rules</div>
+      <div class="compare-line"><strong>E-Signature:</strong> Built in — no limits, no DocuSign, certificate of signature included</div>
+      <div class="compare-line"><strong>Migration:</strong> Rev.io handles extraction + import with your API credentials. Free. You provide access, we do the work.</div>
     </div>
+  </div>
+</div>
+
+<!-- ROADMAP ITEMS SPECIFIC TO CELERIUS -->
+<div class="section">
+  <div class="section-tag">Section 4</div>
+  <h2>The Rev.io Roadmap — What's Coming for Celerius</h2>
+  <p class="lead">Several items on your list are actively in development and shipping before your Autotask contract expires in August. Here's the timeline.</p>
+
+  <div class="roadmap-grid">
+    <div class="roadmap-card live">
+      <div class="roadmap-badge">✓ Live Today</div>
+      <h4>Available Now</h4>
+      <ul>
+        <li>Clock-in/clock-out payroll tracking</li>
+        <li>SureTax engine (multi-rate Maryland tax)</li>
+        <li>Built-in e-signature (no envelope limits)</li>
+        <li>Quote → ticket → agreement automation</li>
+        <li>Two-way QuickBooks sync</li>
+        <li>Pax8 license integration</li>
+        <li>Mobile app (iOS + Android, offline mode)</li>
+        <li>Revii AI throughout platform</li>
+        <li>Role-based access control (150+ permissions)</li>
+      </ul>
+    </div>
+    <div class="roadmap-card soon">
+      <div class="roadmap-badge">⚡ May 31 — Apollo 3</div>
+      <h4>Ships Before Your Autotask Contract Expires</h4>
+      <ul>
+        <li>Global agreement pricing updates — cascade one change to all contracts</li>
+        <li>Agreements with mixed billing frequencies (monthly + quarterly in one)</li>
+        <li>Block time, overage tracking, carryover rules</li>
+        <li>Separate initial term end + agreement expiration dates</li>
+        <li>Margin analytics + AI pricing recommendations per agreement</li>
+        <li>Contract renewal notifications (pop-up alerts + auto-ticket)</li>
+        <li>One-button contract cancellation that definitively stops all billing</li>
+      </ul>
+    </div>
+    <div class="roadmap-card coming">
+      <div class="roadmap-badge">→ June 2026</div>
+      <h4>Before Autotask Expires</h4>
+      <ul>
+        <li>TD SYNNEX integration — M365 licensing automated</li>
+        <li>License reconciliation to prevent revenue leakage</li>
+        <li>Ingram Micro integration</li>
+        <li>Co-managed IT licensing (priced closer to mobile user rate)</li>
+        <li>ADP payroll integration (in progress)</li>
+        <li>Sophos, Cove, Duo integrations (community-requested)</li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="callout-blue">
+    <div class="callout-label">The timing works in your favor</div>
+    <p>Your Autotask contract expires August 2026. Apollo 3 ships May 31 — global agreement pricing updates, contract renewal notifications, and the full agreements redesign are all live before you'd need to make a final call. TD SYNNEX M365 integration is live in June. You're not betting on a roadmap. <strong>Everything Celerius needs is shipping before your deadline.</strong></p>
   </div>
 </div>
 
 <!-- THE NUMBERS -->
 <div class="section">
-  <div class="section-tag">Section 4</div>
+  <div class="section-tag">Section 5</div>
   <h2>The Numbers</h2>
-  <p class="lead">Year 1 ROI — conservative, based entirely on what Celerius told us in discovery.</p>
+  <p class="lead">Year 1 ROI — built from your actual discovery conversations and current Autotask pricing.</p>
 
   <div class="summary-grid">
     <div class="sum-card" style="border-top:3px solid var(--red)">
-      <div class="sum-val" style="color:var(--red)">$23,275</div>
+      <div class="sum-val" style="color:var(--red)">$22,320</div>
       <div class="sum-label">Annual Cost of<br>Current State</div>
     </div>
     <div class="sum-card" style="border-top:3px solid var(--blue)">
-      <div class="sum-val" style="color:var(--blue)">~$9,720</div>
-      <div class="sum-label">Est. Annual Rev.io Cost<br><span style="font-size:9px;color:var(--muted)">~$810/mo × 12</span></div>
+      <div class="sum-val" style="color:var(--blue)">$9,720</div>
+      <div class="sum-label">Rev.io Investment<br><span style="font-size:9px;color:var(--muted)">$90/user × 9 × 12 — setup waived</span></div>
     </div>
     <div class="sum-card" style="border-top:3px solid var(--green)">
-      <div class="sum-val" style="color:var(--green)">~$13,555</div>
+      <div class="sum-val" style="color:var(--green)">$12,600</div>
       <div class="sum-label">Est. Year 1<br>Net Savings</div>
     </div>
     <div class="sum-card" style="border-top:3px solid var(--yellow)">
@@ -240,48 +323,57 @@
   </div>
 
   <div class="callout">
-    <div class="callout-label">The Real Value — Beyond the Line Items</div>
-    <p>The numbers above only capture <strong>direct, quantifiable time and revenue savings</strong>. They don't account for: the capacity your accounting manager gets back when billing runs automatically; the leakage you stop once license syncing is automated; or the ability to <strong>grow revenue without growing headcount</strong> — because your platform scales with you instead of requiring more manual effort. For a 9-person team, that last one matters most.</p>
+    <div class="callout-label">What the math doesn't capture</div>
+    <p>The numbers above only model direct, quantifiable costs. They don't capture: <strong>the leakage you stop</strong> once TD SYNNEX license syncing is automated in June; <strong>the margin you recover</strong> once you can actually run annual pricing increases across all agreements in seconds instead of hours; or <strong>the co-managed IT revenue</strong> you haven't been able to unlock because Autotask's pricing made it unworkable. Those compound significantly over time — and they're all on Rev.io's roadmap before your Autotask deadline.</p>
   </div>
 </div>
 
 <!-- NEXT STEPS -->
 <div class="section">
-  <div class="section-tag">Section 5</div>
+  <div class="section-tag">Section 6</div>
   <h2>What Happens Next</h2>
 
   <div class="next-step">
     <div class="step-num">1</div>
     <div class="step-content">
-      <h4>Contract review — April 22</h4>
-      <p>Scheduled for April 22 at 11 AM. Walk through the agreement, confirm pricing, and address any final questions from Woody and the team.</p>
+      <h4>Contract review — April 22 at 11 AM</h4>
+      <p>Walk through the agreement together. Pricing is $90/user for 9 users ($810/mo), month-to-month, setup fee fully waived. No long-term commitment — walk away anytime with no penalty.</p>
     </div>
   </div>
   <div class="next-step">
     <div class="step-num">2</div>
     <div class="step-content">
-      <h4>Decision &amp; signature</h4>
-      <p>Celerius's Autotask contract expires August 2026. Signing now gives the team time for a smooth onboarding and migration — so you're fully live before the Autotask deadline, not scrambling at the end.</p>
+      <h4>Steve conversation — the co-owner buy-in</h4>
+      <p>Woody knows Steve will push back on another PSA migration. Here's the case to make: month-to-month means zero commitment risk. Rev.io does the migration — you give API access, they extract and import everything. No three-month manual project. And the billing doesn't even start until 30 days after signature.</p>
     </div>
   </div>
   <div class="next-step">
     <div class="step-num">3</div>
     <div class="step-content">
-      <h4>Onboarding — dedicated analyst, unlimited support until live</h4>
-      <p>A dedicated onboarding analyst walks your team through setup, data migration from Autotask, QuickBooks sync configuration, and license integration setup (Pax8 today, TD SYNNEX in June). Weekly calls and unlimited support until you're fully live.</p>
+      <h4>Migration from Autotask — Rev.io handles it</h4>
+      <p>Customer accounts, historic tickets, product SKUs, active agreements, contacts — Rev.io's data migration engineers extract and import with just your API credentials. No cost, no three-month project. Woody, you don't do this one yourself.</p>
     </div>
   </div>
   <div class="next-step">
     <div class="step-num">4</div>
     <div class="step-content">
-      <h4>TD SYNNEX (M365) integration — June 2026</h4>
-      <p>The Microsoft 365 licensing integration via TD SYNNEX is live in June 2026 — eliminating your highest-impact manual workflow before your Autotask contract even expires.</p>
+      <h4>Onboarding — dedicated analyst, unlimited support until live</h4>
+      <p>A dedicated solutions analyst works with Tim on billing configuration, payroll clock-in/clock-out setup, Maryland tax codes, and QuickBooks sync. Weekly calls and unlimited support until the team is fully live. Tim stops building manual payroll reports from day one.</p>
+    </div>
+  </div>
+  <div class="next-step">
+    <div class="step-num">5</div>
+    <div class="step-content">
+      <h4>Apollo 3 + TD SYNNEX — May 31 &amp; June 2026</h4>
+      <p>Apollo 3 ships May 31 with global agreement pricing updates, the full agreements redesign, and contract renewal notifications. TD SYNNEX M365 integration goes live in June — eliminating your highest-impact manual workflow before your Autotask contract even expires in August.</p>
     </div>
   </div>
 </div>
 
 <div class="disclaimer">
-  This analysis is based on information shared by Celerius during discovery conversations with Connor Flynn at Rev.io. All cost estimates use conservative assumptions and a fully-loaded employee cost of $65,000/year ($31.25/hr). Actual savings will vary based on team utilization, implementation, and adoption. Rev.io makes no guarantees of specific financial outcomes.
+  This analysis is based on information shared by Celerius across four discovery calls with Connor Flynn at Rev.io (April 7, 10, 15, and 22, 2026), as documented in Notion meeting notes. All cost estimates use conservative assumptions and a fully-loaded employee cost of $65,000/year ($31.25/hr). Actual savings will vary based on utilization, implementation, and adoption. Rev.io makes no guarantees of specific financial outcomes.
+  <br><br>
+  Key contacts: Woody Hower (DM / Co-Owner) · Steve (Co-Owner) · Tim (Operations / Billing)
   <br><br>
   Prepared by Rev.io Sales · Connor Flynn · Confidential · April 2026
 </div>
