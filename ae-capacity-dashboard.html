@@ -4,116 +4,160 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>AE Capacity — Prospect Meetings by Month</title>
-<style>* { margin: 0; padding: 0; box-sizing: border-box; }
-body { background: #000000; font-family: 'Segoe UI', system-ui, sans-serif; color: #e2e8f0; min-height: 100vh; padding: 40px 48px; }
+<style>
+* { margin: 0; padding: 0; box-sizing: border-box; }
+body { background: #000; font-family: 'Segoe UI', system-ui, sans-serif; color: #e2e8f0; min-height: 100vh; padding: 40px 48px; }
 h1 { font-size: 26px; font-weight: 700; color: #fff; margin-bottom: 6px; }
 .subtitle { font-size: 14px; color: #94a3b8; margin-bottom: 40px; }
 .grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 24px; margin-bottom: 40px; }
 .card { background: #1e293b; border-radius: 12px; padding: 28px 24px; position: relative; overflow: hidden; }
 .card::before { content: ''; position: absolute; top: 0; left: 0; right: 0; height: 4px; background: var(--accent); }
-.card.jan { --accent: #38bdf8; } .card.feb { --accent: #a78bfa; } .card.mar { --accent: #34d399; } .card.apr { --accent: #f97316; }
+.card.jan { --accent: #38bdf8; } .card.feb { --accent: #a78bfa; }
+.card.mar { --accent: #34d399; } .card.apr { --accent: #f97316; }
 .month-label { font-size: 11px; font-weight: 700; letter-spacing: 1.5px; text-transform: uppercase; color: #64748b; margin-bottom: 16px; }
 .meetings-val { font-size: 64px; font-weight: 800; line-height: 1; margin-bottom: 4px; color: var(--accent); }
 .meetings-label { font-size: 13px; color: #94a3b8; margin-bottom: 24px; }
 .ae-badge { display: inline-flex; align-items: center; gap: 8px; background: #0f172a; border-radius: 8px; padding: 8px 14px; }
 .ae-num { font-size: 22px; font-weight: 700; color: #fff; }
 .ae-text { font-size: 12px; color: #64748b; line-height: 1.3; }
-.ae-text strong { display: block; color: #94a3b8; }
-.mtg-per-ae { margin-top: 20px; padding-top: 16px; border-top: 1px solid #0f172a; display: flex; justify-content: space-between; align-items: center; }
-.mpa-val { font-size: 20px; font-weight: 700; color: #fff; }
-.mpa-label { font-size: 11px; color: #64748b; }
-.chart-section { background: #1e293b; border-radius: 12px; padding: 28px 24px; margin-bottom: 40px; }
-.chart-title { font-size: 13px; font-weight: 700; color: #64748b; letter-spacing: 1px; text-transform: uppercase; margin-bottom: 28px; }
-.bar-row { display: flex; align-items: center; margin-bottom: 20px; gap: 16px; }
-.bar-month { font-size: 12px; font-weight: 600; color: #94a3b8; width: 120px; flex-shrink: 0; }
-.bar-track { flex: 1; background: #0f172a; border-radius: 6px; height: 36px; overflow: hidden; display: flex; }
-.bar-fill-actual { height: 100%; display: flex; align-items: center; padding-left: 12px; font-size: 13px; font-weight: 700; border-radius: 6px 0 0 6px; }
-.bar-fill-projected { height: 100%; display: flex; align-items: center; padding-left: 8px; font-size: 12px; font-weight: 600; opacity: 0.65; position: relative; border-radius: 0 6px 6px 0; }
-.bar-fill-projected::after { content: ''; position: absolute; left: 0; top: 4px; bottom: 4px; width: 2px; background: rgba(255,255,255,0.3); }
-.bar-row.jan .bar-fill-actual { background: #38bdf8; color: #0f172a; }
-.bar-row.feb .bar-fill-actual { background: #a78bfa; color: #0f172a; }
-.bar-row.mar .bar-fill-actual { background: #34d399; color: #0f172a; }
-.bar-row.apr .bar-fill-actual { background: #f97316; color: #0f172a; }
-.bar-row.apr .bar-fill-projected { background: #fb923c; color: #431407; }
-.bar-stat { font-size: 12px; color: #64748b; width: 140px; text-align: right; flex-shrink: 0; line-height: 1.5; }
-.bar-stat strong { color: #cbd5e1; }
-.table-section { background: #1e293b; border-radius: 12px; padding: 28px 24px; }
-.table-title { font-size: 13px; font-weight: 700; color: #64748b; letter-spacing: 1px; text-transform: uppercase; margin-bottom: 20px; }
-table { width: 100%; border-collapse: collapse; }
-thead th { font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 1px; color: #475569; padding: 8px 12px; text-align: left; border-bottom: 1px solid #0f172a; }
-tbody tr { border-bottom: 1px solid #0f172a; } tbody tr:last-child { border-bottom: none; }
-tbody tr:hover { background: #0f172a44; }
-tbody td { padding: 10px 12px; font-size: 13px; color: #94a3b8; }
-tbody td:first-child { color: #e2e8f0; font-weight: 600; }</style>
+.rep-table { background: #1e293b; border-radius: 12px; overflow: hidden; }
+.rep-table table { width: 100%; border-collapse: collapse; }
+.rep-table th { font-size: 10px; font-weight: 700; letter-spacing: 1px; text-transform: uppercase; color: #64748b; padding: 10px 12px; text-align: center; background: #0f172a; }
+.rep-table th:first-child { text-align: left; }
+.rep-table tr:last-child td { border-bottom: none; }
+.footer { margin-top: 32px; font-size: 11px; color: #475569; text-align: center; letter-spacing: 1px; }
+</style>
 </head>
 <body>
-<div style="position:relative">
-  <img src="https://raw.githubusercontent.com/koontz-robin/robin-decks/master/revio-logo.png" style="position:absolute;top:0;right:0;height:48px;opacity:0.95" alt="rev.io">
-  <h1>AE Capacity — Prospect Meetings by Month</h1>
-  <p class="subtitle">Discovery calls, demos &amp; pricing calls &nbsp;·&nbsp; 8 biz days remaining in April &nbsp;·&nbsp; April 20, 2026</p>
-</div>
-<div class="grid">
-  <div class="card jan">
-    <div class="month-label">January 2026 — Final</div>
-    <div class="meetings-val">196</div>
-    <div class="meetings-label">Completed Meetings · 22 biz days</div>
-    <div class="ae-badge"><div class="ae-num">12</div><div class="ae-text"><strong>Active AEs</strong>16.3 / AE</div></div>
-    <div class="mtg-per-ae"><div><div class="mpa-val">0.74</div><div class="mpa-label">/ AE / day&nbsp; (3.7/wk)</div></div><span style="color:#f87171;font-size:11px">▼ 9%</span></div>
+<h1>AE Capacity Dashboard</h1>
+<div class="subtitle">Prospect meetings completed by month · Q1–Q2 2026 · Updated April 22, 2026</div>
+
+<div class="grid"><div class="card jan">
+  <div class="month-label">Jan 2026</div>
+  <div class="meetings-val">232</div>
+  <div class="meetings-label">prospect meetings</div>
+  <div class="ae-badge">
+    <div class="ae-num">12</div>
+    <div class="ae-text">Active<br>AEs</div>
   </div>
-  <div class="card feb">
-    <div class="month-label">February 2026 — Final</div>
-    <div class="meetings-val">215</div>
-    <div class="meetings-label">Completed Meetings · 20 biz days</div>
-    <div class="ae-badge"><div class="ae-num">11</div><div class="ae-text"><strong>Active AEs</strong>19.5 / AE</div></div>
-    <div class="mtg-per-ae"><div><div class="mpa-val">0.98</div><div class="mpa-label">/ AE / day&nbsp; (4.9/wk)</div></div><span style="color:#34d399;font-size:11px">▲ 10%</span></div>
+  <div style="font-size:13px;color:#94a3b8;margin-top:14px">0.88 mtgs/AE/day</div>
+  
+</div><div class="card feb">
+  <div class="month-label">Feb 2026</div>
+  <div class="meetings-val">229</div>
+  <div class="meetings-label">prospect meetings</div>
+  <div class="ae-badge">
+    <div class="ae-num">12</div>
+    <div class="ae-text">Active<br>AEs</div>
   </div>
-  <div class="card mar">
-    <div class="month-label">March 2026 — Final</div>
-    <div class="meetings-val">263</div>
-    <div class="meetings-label">Completed Meetings · 22 biz days</div>
-    <div class="ae-badge"><div class="ae-num">8</div><div class="ae-text"><strong>Active AEs</strong>32.9 / AE</div></div>
-    <div class="mtg-per-ae"><div><div class="mpa-val">1.49</div><div class="mpa-label">/ AE / day&nbsp; (7.5/wk)</div></div><span style="color:#34d399;font-size:11px">▲ 22%</span></div>
+  <div style="font-size:13px;color:#94a3b8;margin-top:14px">0.95 mtgs/AE/day</div>
+  
+</div><div class="card mar">
+  <div class="month-label">Mar 2026</div>
+  <div class="meetings-val">268</div>
+  <div class="meetings-label">prospect meetings</div>
+  <div class="ae-badge">
+    <div class="ae-num">10</div>
+    <div class="ae-text">Active<br>AEs</div>
   </div>
-  <div class="card apr">
-    <div class="month-label">April 2026 — MTD</div>
-    <div class="meetings-val">133</div>
-    <div class="meetings-label">133 actual · 209 projected · 8 days left</div>
-    <div class="ae-badge"><div class="ae-num">7</div><div class="ae-text"><strong>Active AEs</strong>19.0 / AE projected</div></div>
-    <div class="mtg-per-ae"><div><div class="mpa-val">1.36</div><div class="mpa-label">/ AE / day&nbsp; (6.8/wk)</div></div><span style="color:#f87171;font-size:11px">▼ 21%</span></div>
+  <div style="font-size:13px;color:#94a3b8;margin-top:14px">1.22 mtgs/AE/day</div>
+  
+</div><div class="card apr">
+  <div class="month-label">Apr 2026</div>
+  <div class="meetings-val">165</div>
+  <div class="meetings-label">prospect meetings</div>
+  <div class="ae-badge">
+    <div class="ae-num">7</div>
+    <div class="ae-text">Active<br>AEs</div>
   </div>
-</div>
-<div class="chart-section">
-  <div class="chart-title">Monthly Comparison</div>
-  <div class="bar-row jan">
-    <div class="bar-month">January 2026</div>
-    <div class="bar-track"><div class="bar-fill-actual" style="width:74%">196</div></div>
-    <div class="bar-stat"><strong>0.74</strong> mtg/AE/day<br><span style="color:#f87171;font-size:11px">▼ 9%</span></div>
-  </div>
-  <div class="bar-row feb">
-    <div class="bar-month">February 2026</div>
-    <div class="bar-track"><div class="bar-fill-actual" style="width:81%">215</div></div>
-    <div class="bar-stat"><strong>0.98</strong> mtg/AE/day<br><span style="color:#34d399;font-size:11px">▲ 10%</span></div>
-  </div>
-  <div class="bar-row mar">
-    <div class="bar-month">March 2026</div>
-    <div class="bar-track"><div class="bar-fill-actual" style="width:100%">263</div></div>
-    <div class="bar-stat"><strong>1.49</strong> mtg/AE/day<br><span style="color:#34d399;font-size:11px">▲ 22%</span></div>
-  </div>
-  <div class="bar-row apr">
-    <div class="bar-month">April 2026 (proj)</div>
-    <div class="bar-track">
-      <div class="bar-fill-actual" style="width:50%">133</div>
-      <div class="bar-fill-projected" style="width:28%">→ 209</div>
-    </div>
-    <div class="bar-stat"><strong>1.36</strong> mtg/AE/day<br><span style="color:#f87171;font-size:11px">▼ 21%</span></div>
-  </div>
-</div>
-<div class="table-section">
-  <div class="table-title">By AE — Feb · Mar · Apr MTD</div>
+  <div style="font-size:13px;color:#94a3b8;margin-top:14px">1.47 mtgs/AE/day</div>
+  <div style="font-size:12px;color:#94a3b8;margin-top:6px">Projected: <strong style="color:#f97316">165</strong></div>
+</div></div>
+
+<div class="rep-table">
   <table>
-    <thead><tr><th>AE</th><th>Feb</th><th>Mar</th><th>Apr MTD</th><th>Apr Proj</th><th>Pace</th><th>Trend vs Mar</th></tr></thead>
-    <tbody><tr><td>Patrick Davies</td><td style="color:#64748b">24</td><td style="color:#94a3b8">44</td><td style="color:#34d399;font-weight:700">34</td><td style="color:#94a3b8">53</td><td style="color:#64748b">2.4/day</td><td><span style="color:#34d399;font-size:11px">▲ 20%</span></td></tr><tr><td>Jamie Butler</td><td style="color:#64748b">22</td><td style="color:#94a3b8">40</td><td style="color:#34d399;font-weight:700">25</td><td style="color:#94a3b8">39</td><td style="color:#64748b">1.8/day</td><td><span style="color:#94a3b8;font-size:11px">— flat</span></td></tr><tr><td>Andy Whisenant</td><td style="color:#64748b">29</td><td style="color:#94a3b8">45</td><td style="color:#34d399;font-weight:700">17</td><td style="color:#94a3b8">26</td><td style="color:#64748b">1.2/day</td><td><span style="color:#f87171;font-size:11px">▼ 42%</span></td></tr><tr><td>Jaylin Bender</td><td style="color:#64748b">12</td><td style="color:#94a3b8">24</td><td style="color:#34d399;font-weight:700">15</td><td style="color:#94a3b8">23</td><td style="color:#64748b">1.1/day</td><td><span style="color:#94a3b8;font-size:11px">— flat</span></td></tr><tr><td>Jake Borah</td><td style="color:#64748b">14</td><td style="color:#94a3b8">27</td><td style="color:#34d399;font-weight:700">15</td><td style="color:#94a3b8">23</td><td style="color:#64748b">1.1/day</td><td><span style="color:#f87171;font-size:11px">▼ 15%</span></td></tr><tr><td>Connor Flynn</td><td style="color:#64748b">31</td><td style="color:#94a3b8">29</td><td style="color:#34d399;font-weight:700">14</td><td style="color:#94a3b8">22</td><td style="color:#64748b">1.0/day</td><td><span style="color:#f87171;font-size:11px">▼ 24%</span></td></tr><tr><td>Husam Zalmiyar</td><td style="color:#64748b">13</td><td style="color:#94a3b8">17</td><td style="color:#34d399;font-weight:700">13</td><td style="color:#94a3b8">20</td><td style="color:#64748b">0.9/day</td><td><span style="color:#34d399;font-size:11px">▲ 18%</span></td></tr></tbody>
+    <thead><tr>
+      <th style="text-align:left">Rep</th>
+      <th style="color:#38bdf8">Jan</th>
+      <th style="color:#a78bfa">Feb</th>
+      <th style="color:#34d399">Mar</th>
+      <th style="color:#f97316">Apr MTD</th>
+      <th>Trend</th>
+    </tr></thead>
+    <tbody><tr style="border-bottom:1px solid #0f172a">
+  <td style="padding:8px 12px;color:#e2e8f0;font-weight:600">Andy Whisenant</td>
+  <td style="text-align:center;color:#38bdf8">15</td>
+  <td style="text-align:center;color:#a78bfa">29</td>
+  <td style="text-align:center;color:#34d399">45</td>
+  <td style="text-align:center;color:#f97316;font-weight:700">21</td>
+  <td style="text-align:center"><span style="color:#f87171">▼</span></td>
+</tr><tr style="border-bottom:1px solid #0f172a">
+  <td style="padding:8px 12px;color:#e2e8f0;font-weight:600">Connor Flynn</td>
+  <td style="text-align:center;color:#38bdf8">25</td>
+  <td style="text-align:center;color:#a78bfa">31</td>
+  <td style="text-align:center;color:#34d399">29</td>
+  <td style="text-align:center;color:#f97316;font-weight:700">22</td>
+  <td style="text-align:center"><span style="color:#f87171">▼</span></td>
+</tr><tr style="border-bottom:1px solid #0f172a">
+  <td style="padding:8px 12px;color:#e2e8f0;font-weight:600">Davis Herndon</td>
+  <td style="text-align:center;color:#38bdf8">10</td>
+  <td style="text-align:center;color:#a78bfa">22</td>
+  <td style="text-align:center;color:#34d399">13</td>
+  <td style="text-align:center;color:#f97316;font-weight:700">—</td>
+  <td style="text-align:center"><span style="color:#f87171">▼</span></td>
+</tr><tr style="border-bottom:1px solid #0f172a">
+  <td style="padding:8px 12px;color:#e2e8f0;font-weight:600">Husam Zalmiyar</td>
+  <td style="text-align:center;color:#38bdf8">14</td>
+  <td style="text-align:center;color:#a78bfa">13</td>
+  <td style="text-align:center;color:#34d399">17</td>
+  <td style="text-align:center;color:#f97316;font-weight:700">17</td>
+  <td style="text-align:center"><span style="color:#64748b">—</span></td>
+</tr><tr style="border-bottom:1px solid #0f172a">
+  <td style="padding:8px 12px;color:#e2e8f0;font-weight:600">Jake Borah</td>
+  <td style="text-align:center;color:#38bdf8">16</td>
+  <td style="text-align:center;color:#a78bfa">14</td>
+  <td style="text-align:center;color:#34d399">27</td>
+  <td style="text-align:center;color:#f97316;font-weight:700">19</td>
+  <td style="text-align:center"><span style="color:#f87171">▼</span></td>
+</tr><tr style="border-bottom:1px solid #0f172a">
+  <td style="padding:8px 12px;color:#e2e8f0;font-weight:600">Jamie Butler</td>
+  <td style="text-align:center;color:#38bdf8">22</td>
+  <td style="text-align:center;color:#a78bfa">22</td>
+  <td style="text-align:center;color:#34d399">40</td>
+  <td style="text-align:center;color:#f97316;font-weight:700">29</td>
+  <td style="text-align:center"><span style="color:#f87171">▼</span></td>
+</tr><tr style="border-bottom:1px solid #0f172a">
+  <td style="padding:8px 12px;color:#e2e8f0;font-weight:600">Jaylin Bender</td>
+  <td style="text-align:center;color:#38bdf8">22</td>
+  <td style="text-align:center;color:#a78bfa">12</td>
+  <td style="text-align:center;color:#34d399">24</td>
+  <td style="text-align:center;color:#f97316;font-weight:700">18</td>
+  <td style="text-align:center"><span style="color:#f87171">▼</span></td>
+</tr><tr style="border-bottom:1px solid #0f172a">
+  <td style="padding:8px 12px;color:#e2e8f0;font-weight:600">Joseph Abarno</td>
+  <td style="text-align:center;color:#38bdf8">22</td>
+  <td style="text-align:center;color:#a78bfa">22</td>
+  <td style="text-align:center;color:#34d399">24</td>
+  <td style="text-align:center;color:#f97316;font-weight:700">—</td>
+  <td style="text-align:center"><span style="color:#f87171">▼</span></td>
+</tr><tr style="border-bottom:1px solid #0f172a">
+  <td style="padding:8px 12px;color:#e2e8f0;font-weight:600">Patrick Dahlstrom</td>
+  <td style="text-align:center;color:#38bdf8">27</td>
+  <td style="text-align:center;color:#a78bfa">26</td>
+  <td style="text-align:center;color:#34d399">—</td>
+  <td style="text-align:center;color:#f97316;font-weight:700">—</td>
+  <td style="text-align:center"><span style="color:#64748b">—</span></td>
+</tr><tr style="border-bottom:1px solid #0f172a">
+  <td style="padding:8px 12px;color:#e2e8f0;font-weight:600">Patrick Davies</td>
+  <td style="text-align:center;color:#38bdf8">23</td>
+  <td style="text-align:center;color:#a78bfa">24</td>
+  <td style="text-align:center;color:#34d399">44</td>
+  <td style="text-align:center;color:#f97316;font-weight:700">39</td>
+  <td style="text-align:center"><span style="color:#f87171">▼</span></td>
+</tr></tbody>
   </table>
 </div>
+
+<div class="footer">REV.IO SALES INTELLIGENCE · ROBIN 🦸🏻‍♂️ · APRIL 22, 2026</div>
 </body>
 </html>
