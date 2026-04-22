@@ -1,0 +1,290 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Rev.io ROI Analysis — Celerius</title>
+<style>
+  :root {
+    --bg: #0a0f1e;
+    --surface: #111827;
+    --surface2: #0d1525;
+    --border: #1e2d45;
+    --blue: #1667CC;
+    --green: #3DC570;
+    --cyan: #06b6d4;
+    --red: #f87171;
+    --yellow: #f5a623;
+    --text: #e2e8f0;
+    --muted: #64748b;
+  }
+  * { margin:0; padding:0; box-sizing:border-box; }
+  body { background:var(--bg); font-family:'Segoe UI',system-ui,sans-serif; color:var(--text); min-height:100vh; }
+
+  .cover { background:linear-gradient(135deg, #0a0f1e 0%, #0d1b35 50%, #0a1628 100%); padding:80px 80px 60px; border-bottom:1px solid var(--border); position:relative; overflow:hidden; }
+  .cover::before { content:''; position:absolute; top:-100px; right:-100px; width:500px; height:500px; background:radial-gradient(circle, rgba(22,103,204,0.08) 0%, transparent 70%); }
+  .cover-logo { margin-bottom:48px; }
+  .cover-logo img { height:40px; opacity:0.9; }
+  .cover-tag { font-size:11px; font-weight:700; letter-spacing:3px; text-transform:uppercase; color:var(--cyan); margin-bottom:16px; }
+  .cover h1 { font-size:42px; font-weight:800; color:#fff; line-height:1.15; margin-bottom:8px; }
+  .cover h1 span { color:var(--cyan); }
+  .cover-sub { font-size:16px; color:var(--muted); margin-bottom:0; }
+
+  .section { padding:64px 80px; border-bottom:1px solid var(--border); }
+  .section:last-child { border-bottom:none; }
+  .section-tag { font-size:10px; font-weight:700; letter-spacing:3px; text-transform:uppercase; color:var(--blue); margin-bottom:12px; }
+  .section h2 { font-size:28px; font-weight:800; color:#fff; margin-bottom:8px; }
+  .section .lead { font-size:15px; color:var(--muted); line-height:1.7; max-width:740px; margin-bottom:40px; }
+
+  .pain-grid { display:grid; grid-template-columns:repeat(3,1fr); gap:16px; margin-bottom:40px; }
+  .pain-card { background:var(--surface); border:1px solid var(--border); border-top:3px solid var(--red); border-radius:10px; padding:20px; }
+  .pain-card h4 { font-size:13px; font-weight:700; color:#fff; margin-bottom:8px; }
+  .pain-card p { font-size:12px; color:var(--muted); line-height:1.6; }
+  .pain-card .pain-quote { font-size:11px; color:var(--yellow); font-style:italic; margin-top:10px; border-left:2px solid var(--yellow); padding-left:10px; }
+
+  .roi-table { width:100%; border-collapse:collapse; margin-bottom:24px; }
+  .roi-table thead th { font-size:10px; font-weight:700; text-transform:uppercase; letter-spacing:1px; color:var(--muted); padding:12px 16px; text-align:left; background:var(--surface2); border-bottom:1px solid var(--border); }
+  .roi-table tbody td { padding:14px 16px; font-size:13px; color:#94a3b8; border-bottom:1px solid #0a0f1e; vertical-align:top; }
+  .roi-table tbody td:first-child { color:var(--text); font-weight:600; }
+  .roi-table tbody tr:last-child td { border-bottom:none; }
+  .roi-table .total-row td { background:rgba(61,197,112,0.06); color:var(--green); font-weight:700; font-size:14px; border-top:1px solid rgba(61,197,112,0.2); }
+  .math { font-size:11px; color:var(--muted); font-style:italic; margin-top:4px; }
+
+  .summary-grid { display:grid; grid-template-columns:repeat(4,1fr); gap:16px; margin:32px 0; }
+  .sum-card { background:var(--surface); border-radius:12px; padding:22px; text-align:center; }
+  .sum-val { font-size:30px; font-weight:800; margin-bottom:4px; }
+  .sum-label { font-size:10px; font-weight:700; letter-spacing:1.5px; text-transform:uppercase; color:var(--muted); line-height:1.4; }
+
+  .compare { display:grid; grid-template-columns:1fr auto 1fr; gap:24px; align-items:start; margin:32px 0; }
+  .compare-box { background:var(--surface); border-radius:12px; padding:28px; }
+  .compare-box.today { border-top:3px solid var(--red); }
+  .compare-box.tomorrow { border-top:3px solid var(--green); }
+  .compare-label { font-size:10px; font-weight:700; letter-spacing:2px; text-transform:uppercase; margin-bottom:16px; }
+  .compare-box.today .compare-label { color:var(--red); }
+  .compare-box.tomorrow .compare-label { color:var(--green); }
+  .compare-line { font-size:13px; color:#94a3b8; padding:7px 0; border-bottom:1px solid var(--border); line-height:1.4; }
+  .compare-line:last-child { border-bottom:none; }
+  .compare-line strong { color:var(--text); }
+  .vs { font-size:24px; font-weight:800; color:var(--muted); text-align:center; padding-top:60px; }
+
+  .callout { background:rgba(61,197,112,0.06); border:1px solid rgba(61,197,112,0.2); border-radius:10px; padding:20px 24px; margin-top:24px; }
+  .callout-label { font-size:10px; font-weight:700; letter-spacing:2px; text-transform:uppercase; color:var(--green); margin-bottom:8px; }
+  .callout p { font-size:14px; color:var(--text); line-height:1.7; }
+
+  .next-step { display:flex; gap:16px; align-items:flex-start; padding:16px 0; border-bottom:1px solid var(--border); }
+  .next-step:last-child { border-bottom:none; }
+  .step-num { width:32px; height:32px; background:var(--blue); border-radius:50%; display:flex; align-items:center; justify-content:center; font-size:13px; font-weight:800; color:#fff; flex-shrink:0; margin-top:2px; }
+  .step-content h4 { font-size:14px; font-weight:700; color:#fff; margin-bottom:4px; }
+  .step-content p { font-size:13px; color:var(--muted); line-height:1.5; }
+
+  .disclaimer { font-size:11px; color:#334155; text-align:center; padding:24px 80px; line-height:1.6; }
+</style>
+</head>
+<body>
+
+<!-- COVER -->
+<div class="cover">
+  <div class="cover-logo">
+    <img src="https://koontz-robin.github.io/robin-decks/revio-logo.png" alt="rev.io">
+  </div>
+  <div class="cover-tag">Business Value Assessment</div>
+  <h1>ROI Analysis for<br><span>Celerius</span></h1>
+  <p class="cover-sub">Prepared by Connor Flynn, Rev.io &nbsp;·&nbsp; April 2026</p>
+</div>
+
+<!-- WHAT WE HEARD -->
+<div class="section">
+  <div class="section-tag">Section 1</div>
+  <h2>What We Heard</h2>
+  <p class="lead">Based on our discovery conversations, here are the operational challenges you shared with us. Celerius is a 9-person MSP north of Baltimore currently on Autotask — with a contract expiring August 2026. These are the problems you told us about. We've simply quantified the cost.</p>
+
+  <div class="pain-grid">
+    <div class="pain-card">
+      <h4>Manual License Syncing — Your #1 Time Drain</h4>
+      <p>License syncing with Sophos, Cove, and Microsoft (via TD SYNNEX) is the single most time-consuming task at Celerius — all done manually. Every time a customer adds or removes a license, someone on your team has to catch it, reconcile it, and make sure it gets billed correctly.</p>
+      <div class="pain-quote">"License syncing with vendors is the most time-consuming task — all done manually."</div>
+    </div>
+    <div class="pain-card">
+      <h4>Separate Quoting Tool Creating Double Entry</h4>
+      <p>Kaseya Quote Manager lives outside your PSA. Every quote that converts requires manual re-entry into Autotask — creating duplicate work, introducing errors, and slowing down the quote-to-job flow for your team.</p>
+      <div class="pain-quote">"Manual entry required for projects and tickets due to separate quoting platform."</div>
+    </div>
+    <div class="pain-card">
+      <h4>Accounting Manager Buried in Billing Workflows</h4>
+      <p>Your accounting manager spends significant time on manual billing workflows and vendor invoice processing. Recurring billing requires manual oversight because the QuickBooks integration is finicky — meaning billing isn't truly automated, it's just partially assisted.</p>
+      <div class="pain-quote">"Accounting manager spends significant time on billing workflows and vendor invoice processing."</div>
+    </div>
+    <div class="pain-card">
+      <h4>Complex Maryland Tax Environment</h4>
+      <p>Maryland's tax structure — sales tax, digital tax, and IT tech tax — isn't handled well in your current setup. Multi-tax scenarios require manual attention and create compliance risk that compounds as you grow.</p>
+      <div class="pain-quote">"Complex Maryland tax environment (sales tax, digital tax, IT tech tax) not handled well in current setup."</div>
+    </div>
+    <div class="pain-card">
+      <h4>No Payroll Clock-In / Clock-Out</h4>
+      <p>Your current PSA has no payroll clock-in/clock-out functionality. Time tracking for payroll requires a separate process or workaround — another manual step that costs your team time and creates data inconsistency between your PSA and payroll.</p>
+      <div class="pain-quote">"No payroll clock-in/clock-out functionality in current PSA."</div>
+    </div>
+    <div class="pain-card">
+      <h4>Revenue Leakage from License Mismatches</h4>
+      <p>When customers add or remove licenses and the sync doesn't happen in time — or at all — you either overbill (creating churn risk) or underbill (leaving money on the table). Without automated license reconciliation, this leakage is invisible until someone manually catches it.</p>
+      <div class="pain-quote">"License reconciliation to prevent revenue leakage when customers add/remove licenses."</div>
+    </div>
+  </div>
+</div>
+
+<!-- COST OF TODAY -->
+<div class="section">
+  <div class="section-tag">Section 2</div>
+  <h2>The Cost of Today</h2>
+  <p class="lead">Conservative estimates based on your team size (9 people), a fully-loaded annual cost of $65,000 per employee ($31.25/hr), and the specific workflows you described. We only model what you told us.</p>
+
+  <table class="roi-table">
+    <thead>
+      <tr>
+        <th style="width:30%">Pain Point</th>
+        <th>Conservative Assumption</th>
+        <th style="text-align:right">Annual Cost</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td>Manual license syncing (Sophos, Cove, M365)<br><div class="math">5 hrs/week × $31.25/hr × 52 weeks</div></td>
+        <td>Conservative 5 hrs/week across your team spent on manual vendor license reconciliation — your own words called this your most time-consuming task.</td>
+        <td style="text-align:right;color:var(--red);font-weight:700">$8,125</td>
+      </tr>
+      <tr>
+        <td>Accounting manager billing overhead<br><div class="math">4 hrs/week × $31.25/hr × 52 weeks</div></td>
+        <td>Conservative 4 hrs/week of accounting manager time on manual billing workflows, vendor invoice processing, and QuickBooks reconciliation.</td>
+        <td style="text-align:right;color:var(--red);font-weight:700">$6,500</td>
+      </tr>
+      <tr>
+        <td>Quote-to-job double entry (Kaseya Quote Manager)<br><div class="math">2 hrs/week × $31.25/hr × 52 weeks</div></td>
+        <td>Manual re-entry of every converted quote into Autotask. Conservative 2 hrs/week — likely higher during busy project periods.</td>
+        <td style="text-align:right;color:var(--red);font-weight:700">$3,250</td>
+      </tr>
+      <tr>
+        <td>Revenue leakage from license mismatches<br><div class="math">Conservative: 1% of estimated $300K ARR unbilled due to sync lag</div></td>
+        <td>Even a 1% leakage rate from delayed or missed license syncing represents $3,000/year in unbilled revenue — conservative for a manual process with no automated reconciliation.</td>
+        <td style="text-align:right;color:var(--red);font-weight:700">$3,000</td>
+      </tr>
+      <tr>
+        <td>Tax compliance risk &amp; manual handling<br><div class="math">Estimated cost of manual tax research + error risk in MD multi-tax environment</div></td>
+        <td>Maryland's three-layer tax structure requires ongoing manual attention. Conservative estimate of time cost + error risk — does not include potential penalties.</td>
+        <td style="text-align:right;color:var(--red);font-weight:700">$2,400</td>
+      </tr>
+      <tr class="total-row">
+        <td>Total Estimated Annual Cost of Current State</td>
+        <td>Conservative. Does not include the opportunity cost of team capacity lost to admin work, or the risk exposure from undetected billing errors.</td>
+        <td style="text-align:right">$23,275 / year</td>
+      </tr>
+    </tbody>
+  </table>
+</div>
+
+<!-- WHAT CHANGES -->
+<div class="section">
+  <div class="section-tag">Section 3</div>
+  <h2>What Changes with Rev.io PSA</h2>
+  <p class="lead">Specific to the challenges Celerius identified — not generic benefits. Each item maps directly to something you told us in discovery.</p>
+
+  <div class="compare">
+    <div class="compare-box today">
+      <div class="compare-label">Today — Autotask + Fragmented Stack</div>
+      <div class="compare-line"><strong>PSA:</strong> Autotask (contract expires Aug 2026)</div>
+      <div class="compare-line"><strong>Quoting:</strong> Kaseya Quote Manager — separate tool, manual re-entry</div>
+      <div class="compare-line"><strong>Billing:</strong> QuickBooks — finicky integration, manual oversight required</div>
+      <div class="compare-line"><strong>License Syncing:</strong> All manual — Sophos, Cove, M365 via TD SYNNEX</div>
+      <div class="compare-line"><strong>Tax:</strong> Not handled well — Maryland multi-tax environment manual</div>
+      <div class="compare-line"><strong>Time Tracking:</strong> No clock-in/clock-out for payroll</div>
+      <div class="compare-line"><strong>E-Signature:</strong> Separate tool or manual process</div>
+      <div class="compare-line"><strong>Payments:</strong> External processor, no auto-surcharging</div>
+    </div>
+    <div class="vs">→</div>
+    <div class="compare-box tomorrow">
+      <div class="compare-label">With Rev.io PSA — Unified Platform</div>
+      <div class="compare-line"><strong>PSA:</strong> Rev.io PSA — CRM, ticketing, projects, invoicing all native</div>
+      <div class="compare-line"><strong>Quoting:</strong> Built-in quoting with e-signature — auto-generates tickets on approval</div>
+      <div class="compare-line"><strong>Billing:</strong> Two-way QuickBooks Online sync + automated recurring billing</div>
+      <div class="compare-line"><strong>License Syncing:</strong> Pax8 live today; TD SYNNEX (M365) coming June 2026 — automated reconciliation prevents leakage</div>
+      <div class="compare-line"><strong>Tax:</strong> SureTax engine handles Maryland's multi-tax scenarios automatically by location</div>
+      <div class="compare-line"><strong>Time Tracking:</strong> Clock-in/clock-out with payroll reporting + ADP integration in progress</div>
+      <div class="compare-line"><strong>E-Signature:</strong> Built in — no add-on cost, no separate tool</div>
+      <div class="compare-line"><strong>Payments:</strong> Built-in processing with auto-surcharging and collections automation</div>
+    </div>
+  </div>
+</div>
+
+<!-- THE NUMBERS -->
+<div class="section">
+  <div class="section-tag">Section 4</div>
+  <h2>The Numbers</h2>
+  <p class="lead">Year 1 ROI — conservative, based entirely on what Celerius told us in discovery.</p>
+
+  <div class="summary-grid">
+    <div class="sum-card" style="border-top:3px solid var(--red)">
+      <div class="sum-val" style="color:var(--red)">$23,275</div>
+      <div class="sum-label">Annual Cost of<br>Current State</div>
+    </div>
+    <div class="sum-card" style="border-top:3px solid var(--blue)">
+      <div class="sum-val" style="color:var(--blue)">~$9,720</div>
+      <div class="sum-label">Est. Annual Rev.io Cost<br><span style="font-size:9px;color:var(--muted)">~$810/mo × 12</span></div>
+    </div>
+    <div class="sum-card" style="border-top:3px solid var(--green)">
+      <div class="sum-val" style="color:var(--green)">~$13,555</div>
+      <div class="sum-label">Est. Year 1<br>Net Savings</div>
+    </div>
+    <div class="sum-card" style="border-top:3px solid var(--yellow)">
+      <div class="sum-val" style="color:var(--yellow)">&lt; 6 mo</div>
+      <div class="sum-label">Estimated<br>Payback Period</div>
+    </div>
+  </div>
+
+  <div class="callout">
+    <div class="callout-label">The Real Value — Beyond the Line Items</div>
+    <p>The numbers above only capture <strong>direct, quantifiable time and revenue savings</strong>. They don't account for: the capacity your accounting manager gets back when billing runs automatically; the leakage you stop once license syncing is automated; or the ability to <strong>grow revenue without growing headcount</strong> — because your platform scales with you instead of requiring more manual effort. For a 9-person team, that last one matters most.</p>
+  </div>
+</div>
+
+<!-- NEXT STEPS -->
+<div class="section">
+  <div class="section-tag">Section 5</div>
+  <h2>What Happens Next</h2>
+
+  <div class="next-step">
+    <div class="step-num">1</div>
+    <div class="step-content">
+      <h4>Contract review — April 22</h4>
+      <p>Scheduled for April 22 at 11 AM. Walk through the agreement, confirm pricing, and address any final questions from Woody and the team.</p>
+    </div>
+  </div>
+  <div class="next-step">
+    <div class="step-num">2</div>
+    <div class="step-content">
+      <h4>Decision &amp; signature</h4>
+      <p>Celerius's Autotask contract expires August 2026. Signing now gives the team time for a smooth onboarding and migration — so you're fully live before the Autotask deadline, not scrambling at the end.</p>
+    </div>
+  </div>
+  <div class="next-step">
+    <div class="step-num">3</div>
+    <div class="step-content">
+      <h4>Onboarding — dedicated analyst, unlimited support until live</h4>
+      <p>A dedicated onboarding analyst walks your team through setup, data migration from Autotask, QuickBooks sync configuration, and license integration setup (Pax8 today, TD SYNNEX in June). Weekly calls and unlimited support until you're fully live.</p>
+    </div>
+  </div>
+  <div class="next-step">
+    <div class="step-num">4</div>
+    <div class="step-content">
+      <h4>TD SYNNEX (M365) integration — June 2026</h4>
+      <p>The Microsoft 365 licensing integration via TD SYNNEX is live in June 2026 — eliminating your highest-impact manual workflow before your Autotask contract even expires.</p>
+    </div>
+  </div>
+</div>
+
+<div class="disclaimer">
+  This analysis is based on information shared by Celerius during discovery conversations with Connor Flynn at Rev.io. All cost estimates use conservative assumptions and a fully-loaded employee cost of $65,000/year ($31.25/hr). Actual savings will vary based on team utilization, implementation, and adoption. Rev.io makes no guarantees of specific financial outcomes.
+  <br><br>
+  Prepared by Rev.io Sales · Connor Flynn · Confidential · April 2026
+</div>
+
+</body>
+</html>
