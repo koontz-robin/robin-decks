@@ -1,0 +1,373 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>PSA Pipeline Requirements — 2026</title>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body { font-family: 'Segoe UI', system-ui, sans-serif; background: #0f1117; color: #e2e8f0; }
+    header { background: linear-gradient(135deg, #1e293b 0%, #0f172a 100%); border-bottom: 1px solid #334155; padding: 20px 32px; display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 12px; }
+    header h1 { font-size: 1.4rem; font-weight: 700; color: #f8fafc; }
+    header h1 span { color: #38bdf8; }
+    .badge { background: #1e40af; color: #bfdbfe; font-size: 0.75rem; padding: 4px 10px; border-radius: 20px; font-weight: 600; }
+    .updated { font-size: 0.72rem; color: #64748b; margin-top: 4px; }
+    .container { max-width: 1300px; margin: 0 auto; padding: 28px 24px; }
+    .section-label { font-size: 0.7rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.08em; color: #475569; margin-bottom: 14px; margin-top: 28px; padding-bottom: 6px; border-bottom: 1px solid #1e293b; }
+
+    /* Assumption bar */
+    .assume-row { display: flex; gap: 12px; flex-wrap: wrap; margin-bottom: 20px; }
+    .assume-chip { background: #1e293b; border: 1px solid #334155; border-radius: 8px; padding: 10px 16px; font-size: 0.8rem; display: flex; flex-direction: column; gap: 2px; }
+    .assume-chip .a-label { font-size: 0.65rem; text-transform: uppercase; letter-spacing: 0.05em; color: #64748b; font-weight: 600; }
+    .assume-chip .a-val { font-weight: 700; color: #f8fafc; }
+
+    /* Split panels */
+    .split-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin-bottom: 8px; }
+    @media (max-width: 700px) { .split-grid { grid-template-columns: 1fr; } }
+
+    .team-panel { background: #1e293b; border: 1px solid #334155; border-radius: 14px; padding: 0; overflow: hidden; }
+    .team-header { padding: 16px 20px; border-bottom: 1px solid #334155; display: flex; align-items: center; justify-content: space-between; background: var(--bg); }
+    .team-header h2 { font-size: 0.95rem; font-weight: 700; color: var(--color); display: flex; align-items: center; gap: 8px; }
+    .team-header .split-tag { font-size: 0.7rem; color: #64748b; font-weight: 400; }
+    .team-panel.mktg { --color: #a78bfa; --bg: rgba(167,139,250,0.05); }
+    .team-panel.sales { --color: #38bdf8; --bg: rgba(56,189,248,0.05); }
+
+    table { width: 100%; border-collapse: collapse; font-size: 0.8rem; }
+    th { text-align: right; padding: 8px 12px; color: #64748b; font-weight: 600; font-size: 0.68rem; text-transform: uppercase; border-bottom: 1px solid #334155; white-space: nowrap; }
+    th:first-child { text-align: left; }
+    td { padding: 9px 12px; border-bottom: 1px solid #1a2438; color: #cbd5e1; text-align: right; vertical-align: middle; }
+    td:first-child { text-align: left; font-weight: 700; color: #e2e8f0; }
+    tr:last-child td { border-bottom: none; }
+    tr:hover td { background: #1e2d40; }
+    tr.past td { opacity: 0.5; }
+    tr.current td { background: rgba(56, 189, 248, 0.05); }
+
+    .num-big { font-size: 1rem; font-weight: 800; }
+    .green { color: #4ade80; }
+    .blue  { color: #38bdf8; }
+    .purple { color: #a78bfa; }
+    .yellow { color: #facc15; }
+    .red   { color: #f87171; }
+    .dim   { color: #475569; }
+
+    .pill { display: inline-block; padding: 2px 7px; border-radius: 8px; font-size: 0.67rem; font-weight: 700; }
+    .pill-blue   { background: #0c2a45; color: #38bdf8; }
+    .pill-purple { background: #2e1065; color: #a78bfa; }
+    .pill-gray   { background: #1e293b; color: #64748b; border: 1px solid #334155; }
+    .pill-yellow { background: #422006; color: #fbbf24; }
+
+    /* Charts */
+    .chart-card { background: #1e293b; border: 1px solid #334155; border-radius: 12px; padding: 22px; margin-bottom: 20px; }
+    .chart-card h3 { font-size: 0.85rem; font-weight: 700; color: #94a3b8; text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: 18px; }
+    .chart-wrap { position: relative; height: 300px; }
+    .chart-wrap-sm { position: relative; height: 250px; }
+    .two-col { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin-bottom: 20px; }
+    @media (max-width: 800px) { .two-col { grid-template-columns: 1fr; } }
+
+    .note-bar { background: #0f1117; border: 1px solid #334155; border-radius: 8px; padding: 10px 16px; font-size: 0.78rem; color: #94a3b8; margin-bottom: 20px; line-height: 1.5; }
+    .note-bar strong { color: #e2e8f0; }
+
+    /* Summary total row */
+    .totals-row { display: grid; grid-template-columns: repeat(4, 1fr); gap: 14px; margin-bottom: 8px; }
+    .total-card { background: #1e293b; border: 1px solid #334155; border-radius: 10px; padding: 16px; }
+    .total-card .t-label { font-size: 0.68rem; text-transform: uppercase; letter-spacing: 0.05em; color: #64748b; font-weight: 600; margin-bottom: 4px; }
+    .total-card .t-val { font-size: 1.6rem; font-weight: 800; line-height: 1; }
+    .total-card .t-sub { font-size: 0.72rem; color: #475569; margin-top: 4px; }
+
+    footer { text-align: center; padding: 20px; font-size: 0.72rem; color: #475569; border-top: 1px solid #1e293b; margin-top: 8px; }
+    ::-webkit-scrollbar { width: 6px; } ::-webkit-scrollbar-track { background: #0f172a; } ::-webkit-scrollbar-thumb { background: #334155; border-radius: 3px; }
+  </style>
+</head>
+<body>
+
+<header>
+  <div>
+    <h1>PSA Pipeline Requirements <span>— May–Dec 2026</span></h1>
+    <div class="updated">Last updated: <span id="ts"></span></div>
+  </div>
+  <div class="badge">10:1 Opp-to-Close · 60/40 Split</div>
+</header>
+
+<div class="container">
+
+  <div class="note-bar">
+    Based on targets from <strong>2026 Revenue Targets (Draft)</strong>. PSA split: <strong>60% Marketing / 40% Sales</strong>.
+    Assumptions: <strong>10:1 opp-to-close ratio</strong> · avg deal size <strong>Marketing $759 / Sales $670</strong> (2026 YTD actuals).
+    "Opps needed" = (Target MRR ÷ Avg Deal Size) × 10. Months Jan–Apr shown as actual.
+  </div>
+
+  <!-- Assumptions -->
+  <div class="assume-row">
+    <div class="assume-chip"><div class="a-label">Opp-to-Close Ratio</div><div class="a-val">10 : 1</div></div>
+    <div class="assume-chip"><div class="a-label">Marketing Avg Deal</div><div class="a-val">$759 MRR</div></div>
+    <div class="assume-chip"><div class="a-label">Sales Avg Deal</div><div class="a-val">$670 MRR</div></div>
+    <div class="assume-chip"><div class="a-label">Marketing Split</div><div class="a-val">60% of PSA Target</div></div>
+    <div class="assume-chip"><div class="a-label">Sales Split</div><div class="a-val">40% of PSA Target</div></div>
+    <div class="assume-chip"><div class="a-label">Total PSA Target</div><div class="a-val">$480K MRR (full year)</div></div>
+  </div>
+
+  <!-- Remaining totals -->
+  <div class="section-label">May–Dec Requirements (8 months remaining)</div>
+  <div class="totals-row">
+    <div class="total-card">
+      <div class="t-label">Marketing Target Remaining</div>
+      <div class="t-val purple">$236K</div>
+      <div class="t-sub">May–Dec MRR to close</div>
+    </div>
+    <div class="total-card">
+      <div class="t-label">Marketing Opps Needed</div>
+      <div class="t-val purple">3,109</div>
+      <div class="t-sub">~389/month avg</div>
+    </div>
+    <div class="total-card">
+      <div class="t-label">Sales Target Remaining</div>
+      <div class="t-val blue">$157K</div>
+      <div class="t-sub">May–Dec MRR to close</div>
+    </div>
+    <div class="total-card">
+      <div class="t-label">Sales Opps Needed</div>
+      <div class="t-val blue">2,343</div>
+      <div class="t-sub">~293/month avg</div>
+    </div>
+  </div>
+
+  <!-- Main chart -->
+  <div class="section-label">Opps Required per Month — Marketing vs Sales</div>
+  <div class="chart-card">
+    <h3>Monthly Opps Needed to Hit PSA Target (10:1 ratio)</h3>
+    <div class="chart-wrap">
+      <canvas id="mainChart"></canvas>
+    </div>
+  </div>
+
+  <!-- Split tables -->
+  <div class="section-label">Month-by-Month Breakdown</div>
+  <div class="split-grid">
+
+    <!-- Marketing -->
+    <div class="team-panel mktg">
+      <div class="team-header">
+        <h2>📣 Marketing Generated <span class="split-tag">60% of PSA target</span></h2>
+      </div>
+      <table>
+        <thead>
+          <tr>
+            <th>Month</th>
+            <th>MRR Target</th>
+            <th>Deals Needed</th>
+            <th>Opps Needed</th>
+            <th>Actual MRR Won</th>
+          </tr>
+        </thead>
+        <tbody id="mgTable"></tbody>
+      </table>
+    </div>
+
+    <!-- Sales -->
+    <div class="team-panel sales">
+      <div class="team-header">
+        <h2>💼 Sales Generated <span class="split-tag">40% of PSA target</span></h2>
+      </div>
+      <table>
+        <thead>
+          <tr>
+            <th>Month</th>
+            <th>MRR Target</th>
+            <th>Deals Needed</th>
+            <th>Opps Needed</th>
+            <th>Actual MRR Won</th>
+          </tr>
+        </thead>
+        <tbody id="sgTable"></tbody>
+      </table>
+    </div>
+
+  </div>
+
+  <!-- Opps needed vs actuals chart -->
+  <div class="two-col">
+    <div class="chart-card">
+      <h3>Marketing — Opps Needed vs Actual Created</h3>
+      <div class="chart-wrap-sm"><canvas id="mgOppChart"></canvas></div>
+    </div>
+    <div class="chart-card">
+      <h3>Sales — Opps Needed vs Actual Created</h3>
+      <div class="chart-wrap-sm"><canvas id="sgOppChart"></canvas></div>
+    </div>
+  </div>
+
+</div>
+<footer>Rev.io Internal · Robin 🦸🏻‍♂️ · Targets: 2026 Revenue Targets (Draft) · Actuals: Salesforce · 10:1 assumption</footer>
+
+<script>
+  document.getElementById('ts').textContent = new Date().toLocaleDateString('en-US', {
+    month: 'short', day: 'numeric', year: 'numeric', hour: '2-digit', minute: '2-digit'
+  });
+
+  // ── CONSTANTS ─────────────────────────────────────────────────────────────
+  const MG_AVG_DEAL = 759;
+  const SG_AVG_DEAL = 670;
+  const OPP_RATIO   = 10;
+  const MG_SPLIT    = 0.60;
+  const SG_SPLIT    = 0.40;
+
+  // Full year PSA total targets
+  const psaTotal = [17000,21000,25000,30000,34000,38000,42000,46000,50000,55000,59000,63000];
+  const monthLabels = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+
+  // Actuals (Jan–Apr, PSA only, by lead direction, MRR Won)
+  const mgActualMRR   = [4575, 5694, 6430, 0,    null,null,null,null,null,null,null,null];
+  const sgActualMRR   = [5030, 3345, 5360, 1675, null,null,null,null,null,null,null,null];
+  const mgActualOpps  = [68,   59,   52,   43,   null,null,null,null,null,null,null,null];
+  const sgActualOpps  = [140,  90,   79,   61,   null,null,null,null,null,null,null,null];
+
+  // Derive targets and requirements
+  const mgTargets    = psaTotal.map(t => Math.round(t * MG_SPLIT));
+  const sgTargets    = psaTotal.map(t => Math.round(t * SG_SPLIT));
+  const mgDealsNeeded = mgTargets.map(t => Math.ceil(t / MG_AVG_DEAL));
+  const sgDealsNeeded = sgTargets.map(t => Math.ceil(t / SG_AVG_DEAL));
+  const mgOppsNeeded  = mgDealsNeeded.map(d => d * OPP_RATIO);
+  const sgOppsNeeded  = sgDealsNeeded.map(d => d * OPP_RATIO);
+
+  // ── RENDER TABLES ─────────────────────────────────────────────────────────
+  function renderTable(tbodyId, targets, dealsNeeded, oppsNeeded, actualMRR, teamClass) {
+    const tbody = document.getElementById(tbodyId);
+    const color = teamClass === 'mktg' ? '#a78bfa' : '#38bdf8';
+
+    monthLabels.forEach((m, i) => {
+      const isPast    = i < 3;
+      const isCurrent = i === 3;
+      const isFuture  = i >= 4;
+      const tr = document.createElement('tr');
+      if (isPast) tr.className = 'past';
+      if (isCurrent) tr.className = 'current';
+
+      const actCell = actualMRR[i] !== null
+        ? `<span style="color:${color};font-weight:700">$${actualMRR[i].toLocaleString()}</span>`
+        : `<span class="pill pill-blue">Required</span>`;
+
+      const oppCell = isFuture
+        ? `<span style="color:${color};font-weight:800">${oppsNeeded[i].toLocaleString()}</span>`
+        : (isCurrent
+            ? `<span class="yellow">${oppsNeeded[i].toLocaleString()} <span style="font-size:0.65rem;color:#64748b">(MTD)</span></span>`
+            : `<span class="dim">${oppsNeeded[i].toLocaleString()}</span>`);
+
+      const dealCell = isFuture
+        ? `<span style="font-weight:700">${dealsNeeded[i]}</span>`
+        : `<span class="dim">${dealsNeeded[i]}</span>`;
+
+      tr.innerHTML = `
+        <td>${m}${isCurrent ? ' <span style="font-size:0.65rem;color:#64748b">(now)</span>' : ''}</td>
+        <td>$${targets[i].toLocaleString()}</td>
+        <td>${dealCell}</td>
+        <td>${oppCell}</td>
+        <td>${actCell}</td>
+      `;
+      tbody.appendChild(tr);
+    });
+  }
+
+  renderTable('mgTable', mgTargets, mgDealsNeeded, mgOppsNeeded, mgActualMRR, 'mktg');
+  renderTable('sgTable', sgTargets, sgDealsNeeded, sgOppsNeeded, sgActualMRR, 'sales');
+
+  // ── MAIN CHART ────────────────────────────────────────────────────────────
+  new Chart(document.getElementById('mainChart').getContext('2d'), {
+    type: 'bar',
+    data: {
+      labels: monthLabels,
+      datasets: [
+        {
+          label: 'Marketing Opps Needed',
+          data: mgOppsNeeded,
+          backgroundColor: monthLabels.map((m,i) => i < 4 ? 'rgba(167,139,250,0.3)' : '#7c3aed'),
+          borderRadius: 4,
+        },
+        {
+          label: 'Sales Opps Needed',
+          data: sgOppsNeeded,
+          backgroundColor: monthLabels.map((m,i) => i < 4 ? 'rgba(56,189,248,0.3)' : '#0284c7'),
+          borderRadius: 4,
+        },
+        {
+          label: 'Marketing Actual Created',
+          data: mgActualOpps,
+          type: 'line',
+          borderColor: '#a78bfa',
+          backgroundColor: 'transparent',
+          borderWidth: 2,
+          pointBackgroundColor: '#a78bfa',
+          pointRadius: 5,
+          spanGaps: false,
+          tension: 0.2,
+        },
+        {
+          label: 'Sales Actual Created',
+          data: sgActualOpps,
+          type: 'line',
+          borderColor: '#38bdf8',
+          backgroundColor: 'transparent',
+          borderWidth: 2,
+          pointBackgroundColor: '#38bdf8',
+          pointRadius: 5,
+          spanGaps: false,
+          tension: 0.2,
+        },
+      ]
+    },
+    options: {
+      responsive: true, maintainAspectRatio: false,
+      plugins: {
+        legend: { labels: { color: '#94a3b8', font: { size: 11 } } },
+        tooltip: { mode: 'index', intersect: false,
+          callbacks: { label: ctx => ` ${ctx.dataset.label}: ${ctx.parsed.y !== null ? ctx.parsed.y.toLocaleString() : '—'}` }
+        }
+      },
+      scales: {
+        x: { ticks: { color: '#64748b' }, grid: { color: '#1e293b' } },
+        y: { ticks: { color: '#64748b' }, grid: { color: '#1e293b' }, beginAtZero: true,
+             title: { display: true, text: 'Opps', color: '#64748b', font: { size: 11 } } }
+      }
+    }
+  });
+
+  // ── OPP GAP CHARTS ────────────────────────────────────────────────────────
+  function oppGapChart(canvasId, oppsNeeded, actualOpps, color) {
+    new Chart(document.getElementById(canvasId).getContext('2d'), {
+      type: 'bar',
+      data: {
+        labels: monthLabels,
+        datasets: [
+          {
+            label: 'Opps Needed',
+            data: oppsNeeded,
+            backgroundColor: monthLabels.map((m,i) => i < 4 ? 'rgba(255,255,255,0.08)' : color + 'cc'),
+            borderRadius: 3,
+          },
+          {
+            label: 'Actual Opps Created',
+            data: actualOpps,
+            backgroundColor: monthLabels.map((m,i) => i < 4 ? color : 'transparent'),
+            borderRadius: 3,
+          },
+        ]
+      },
+      options: {
+        responsive: true, maintainAspectRatio: false,
+        plugins: {
+          legend: { labels: { color: '#94a3b8', font: { size: 10 }, boxWidth: 10 } },
+          tooltip: { mode: 'index', intersect: false }
+        },
+        scales: {
+          x: { ticks: { color: '#64748b', font: { size: 10 } }, grid: { color: '#1e293b' } },
+          y: { ticks: { color: '#64748b' }, grid: { color: '#1e293b' }, beginAtZero: true }
+        }
+      }
+    });
+  }
+
+  oppGapChart('mgOppChart', mgOppsNeeded, mgActualOpps, '#a78bfa');
+  oppGapChart('sgOppChart', sgOppsNeeded, sgActualOpps, '#38bdf8');
+</script>
+</body>
+</html>
