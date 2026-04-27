@@ -219,6 +219,51 @@
       .kpi-row { grid-template-columns: repeat(2, 1fr); }
     }
 
+    /* ── MONTH BREAKDOWN CARDS ──────────────────────────────────── */
+    .month-breakdown-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 20px; }
+    @media (max-width: 900px) { .month-breakdown-grid { grid-template-columns: repeat(2, 1fr); } }
+    @media (max-width: 560px) { .month-breakdown-grid { grid-template-columns: 1fr; } }
+
+    .mb-card { background: #fff; border: 1px solid var(--border); border-radius: 14px; overflow: hidden; }
+    .mb-card-header {
+      background: var(--navy); padding: 14px 18px;
+      display: flex; align-items: center; justify-content: space-between;
+    }
+    .mb-card-header .mb-month { font: 800 18px/1 'Montserrat'; color: #fff; }
+    .mb-card-header .mb-tag { font: 600 10px/1 'Open Sans'; letter-spacing: 1px; text-transform: uppercase; color: rgba(255,255,255,0.45); }
+
+    .mb-card-body { padding: 16px 18px; display: flex; flex-direction: column; gap: 14px; }
+
+    .mb-direction { border-radius: 10px; padding: 12px 14px; }
+    .mb-direction.sg { background: rgba(35,153,181,0.06); border-left: 3px solid var(--teal); }
+    .mb-direction.mg { background: rgba(110,190,79,0.06); border-left: 3px solid var(--green); }
+
+    .mb-dir-label { font: 700 10px/1 'Open Sans'; letter-spacing: 1px; text-transform: uppercase; margin-bottom: 10px; }
+    .mb-direction.sg .mb-dir-label { color: var(--teal); }
+    .mb-direction.mg .mb-dir-label { color: var(--green); }
+
+    .mb-stats-row { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 6px; margin-bottom: 10px; }
+    .mb-stat { text-align: center; }
+    .mb-stat .ms-val { font: 700 16px/1 'Montserrat'; color: var(--navy); }
+    .mb-stat .ms-lbl { font: 400 9px/1.3 'Open Sans'; text-transform: uppercase; letter-spacing: 0.5px; color: #8a9ab0; margin-top: 2px; }
+
+    .mb-wr-row { display: flex; align-items: center; justify-content: space-between; margin-bottom: 5px; }
+    .mb-wr-label { font: 600 11px/1 'Open Sans'; color: var(--body-text); }
+    .mb-wr-pct { font: 800 14px/1 'Montserrat'; }
+    .mb-wr-track { background: var(--border); border-radius: 4px; height: 6px; overflow: hidden; }
+    .mb-wr-fill { height: 100%; border-radius: 4px; }
+
+    .mb-goal-line { display: flex; align-items: center; gap: 6px; margin-top: 4px; }
+    .mb-goal-dot { width: 8px; height: 8px; border-radius: 50%; background: #f59e0b; flex-shrink: 0; }
+    .mb-goal-text { font: 400 10px/1 'Open Sans'; color: #8a9ab0; }
+
+    .mb-mrr { text-align: center; padding: 8px 0 2px; border-top: 1px solid var(--border); }
+    .mb-mrr .mrr-val { font: 700 15px/1 'Montserrat'; color: var(--navy); }
+    .mb-mrr .mrr-lbl { font: 400 9px/1 'Open Sans'; text-transform: uppercase; letter-spacing: 0.5px; color: #8a9ab0; margin-top: 3px; }
+
+    .mb-vs-target { text-align: center; padding: 6px 0; background: var(--light-bg); border-radius: 0 0 10px 10px; margin: 0 -18px -16px; }
+    .mb-vs-target span { font: 600 11px/1 'Open Sans'; }
+
     ::-webkit-scrollbar { width: 6px; height: 6px; }
     ::-webkit-scrollbar-track { background: var(--light-bg); }
     ::-webkit-scrollbar-thumb { background: var(--border); border-radius: 3px; }
@@ -235,6 +280,7 @@
   <div class="nav-links">
     <a href="#trends">Trends</a>
     <a href="#targets">Targets</a>
+    <a href="#monthly-breakdown">Monthly Breakdown</a>
     <a href="#requirements">Requirements</a>
     <a href="#crosssell">Cross-Sell</a>
   </div>
@@ -387,6 +433,21 @@
       <h3>MRR Won vs Target</h3>
       <div class="card-title">Actual MRR Won vs Monthly Target — Marketing &amp; Sales</div>
       <div class="chart-wrap"><canvas id="targetChart"></canvas></div>
+    </div>
+  </div>
+</section>
+
+<!-- ── SECTION 2B: MONTHLY BREAKDOWN ─────────────────────────── -->
+<section id="monthly-breakdown">
+  <div class="section-inner">
+    <div class="eyebrow">Monthly Breakdown</div>
+    <h2 class="section-heading">Sales vs Marketing — Side by Side, Month by Month</h2>
+    <p class="section-sub">Opps created, win rate, and MRR won for each direction per month. Win rate goal line based on the 2024–2025 historical baseline of <strong>14.1%</strong>.</p>
+    <div id="monthBreakdownCards"></div>
+    <div class="chart-card" style="margin-top:24px">
+      <h3>Win Rate vs Goal</h3>
+      <div class="card-title">Monthly Win Rate — Sales Generated vs Marketing Generated vs 14.1% Baseline</div>
+      <div class="chart-wrap"><canvas id="winRateDetailChart"></canvas></div>
     </div>
   </div>
 </section>
@@ -757,6 +818,150 @@
       r.style.display = !q || r.dataset.name.includes(q.toLowerCase()) ? '' : 'none';
     });
   }
+
+  // ── MONTHLY BREAKDOWN ─────────────────────────────────────
+  const GOAL_WR = 14.1; // 2024-25 historical baseline
+
+  const monthlyData = [
+    {
+      month: 'Jan', tag: 'Fully Closed',
+      sg: { created:140, won:9,  lost:131, active:0,  wr:6.4,  mrr:5030,  mrrTgt:6800  },
+      mg: { created:68,  won:8,  lost:60,  active:0,  wr:11.8, mrr:4575,  mrrTgt:10200 },
+    },
+    {
+      month: 'Feb', tag: 'Fully Closed',
+      sg: { created:90,  won:5,  lost:84,  active:1,  wr:5.6,  mrr:3345,  mrrTgt:8400  },
+      mg: { created:59,  won:8,  lost:51,  active:0,  wr:13.6, mrr:5694,  mrrTgt:12600 },
+    },
+    {
+      month: 'Mar', tag: 'Mostly Closed',
+      sg: { created:79,  won:6,  lost:69,  active:4,  wr:8.0,  mrr:5360,  mrrTgt:10000 },
+      mg: { created:52,  won:6,  lost:42,  active:4,  wr:12.5, mrr:6430,  mrrTgt:15000 },
+    },
+    {
+      month: 'Apr', tag: 'MTD · Still Open',
+      sg: { created:62,  won:3,  lost:34,  active:25, wr:8.1,  mrr:1675,  mrrTgt:12000 },
+      mg: { created:43,  won:0,  lost:11,  active:32, wr:0.0,  mrr:0,     mrrTgt:18000 },
+    },
+  ];
+
+  function buildBreakdownCards() {
+    const wrap = document.getElementById('monthBreakdownCards');
+    wrap.innerHTML = '<div class="month-breakdown-grid">' + monthlyData.map(d => {
+      const buildDir = (v, cls, label) => {
+        const pct = Math.min(v.wr, 30);
+        const goalPct = Math.min(GOAL_WR, 30);
+        const wrColor = v.wr >= GOAL_WR ? 'var(--green)' : v.wr >= GOAL_WR * 0.7 ? '#f59e0b' : '#ef4444';
+        const fillWidth = Math.min((v.wr / GOAL_WR) * 100, 100);
+        const mrrPct = v.mrrTgt > 0 ? Math.round((v.mrr / v.mrrTgt) * 100) : 0;
+        const mrrColor = mrrPct >= 90 ? 'var(--green)' : mrrPct >= 50 ? '#f59e0b' : '#ef4444';
+        const gap = v.mrr - v.mrrTgt;
+        const gapStr = gap >= 0 ? `+$${gap.toLocaleString()}` : `-$${Math.abs(gap).toLocaleString()}`;
+        const gapColor = gap >= 0 ? 'var(--green)' : '#ef4444';
+
+        return `
+          <div class="mb-direction ${cls}">
+            <div class="mb-dir-label">${label}</div>
+            <div class="mb-stats-row">
+              <div class="mb-stat">
+                <div class="ms-val">${v.created}</div>
+                <div class="ms-lbl">Opps</div>
+              </div>
+              <div class="mb-stat">
+                <div class="ms-val" style="color:var(--green)">${v.won}</div>
+                <div class="ms-lbl">Won</div>
+              </div>
+              <div class="mb-stat">
+                <div class="ms-val" style="color:#ef4444">${v.lost}</div>
+                <div class="ms-lbl">Lost</div>
+              </div>
+            </div>
+            <div class="mb-wr-row">
+              <span class="mb-wr-label">Win Rate</span>
+              <span class="mb-wr-pct" style="color:${wrColor}">${v.wr.toFixed(1)}%</span>
+            </div>
+            <div class="mb-wr-track">
+              <div class="mb-wr-fill" style="width:${fillWidth}%;background:${wrColor}"></div>
+            </div>
+            <div class="mb-goal-line">
+              <div class="mb-goal-dot"></div>
+              <span class="mb-goal-text">Goal: ${GOAL_WR}% baseline · ${v.wr >= GOAL_WR ? '✅ Above' : v.wr >= GOAL_WR * 0.7 ? '⚠️ Close' : '🔴 Below'}</span>
+            </div>
+            <div class="mb-mrr" style="margin-top:10px">
+              <div class="mrr-val" style="color:${mrrColor}">$${v.mrr.toLocaleString()}</div>
+              <div class="mrr-lbl">MRR Won · Target $${v.mrrTgt.toLocaleString()}</div>
+              <div style="font:700 11px/1 'Open Sans';color:${gapColor};margin-top:4px">${gapStr} (${mrrPct}%)</div>
+            </div>
+          </div>`;
+      };
+
+      return `
+        <div class="mb-card">
+          <div class="mb-card-header">
+            <span class="mb-month">${d.month}</span>
+            <span class="mb-tag">${d.tag}</span>
+          </div>
+          <div class="mb-card-body">
+            ${buildDir(d.sg, 'sg', '💼 Sales Generated')}
+            ${buildDir(d.mg, 'mg', '📣 Marketing Generated')}
+          </div>
+        </div>`;
+    }).join('') + '</div>';
+  }
+  buildBreakdownCards();
+
+  // Win rate detail chart
+  new Chart(document.getElementById('winRateDetailChart').getContext('2d'), {
+    type: 'bar',
+    data: {
+      labels: months4,
+      datasets: [
+        {
+          label: 'Sales Generated Win Rate',
+          data: [6.4, 5.6, 8.0, 8.1],
+          backgroundColor: TEAL,
+          borderRadius: 4,
+          order: 2,
+        },
+        {
+          label: 'Marketing Generated Win Rate',
+          data: [11.8, 13.6, 12.5, 0],
+          backgroundColor: GREEN,
+          borderRadius: 4,
+          order: 2,
+        },
+        {
+          label: '14.1% Historical Goal',
+          data: [14.1, 14.1, 14.1, 14.1],
+          type: 'line',
+          borderColor: '#f59e0b',
+          backgroundColor: 'transparent',
+          borderWidth: 2.5,
+          borderDash: [6, 4],
+          pointRadius: 0,
+          order: 1,
+        },
+      ]
+    },
+    options: {
+      responsive: true, maintainAspectRatio: false,
+      plugins: {
+        legend: { labels: { color: NAVY, font: { size: 11 } } },
+        tooltip: {
+          mode: 'index', intersect: false,
+          callbacks: { label: c => ` ${c.dataset.label}: ${c.parsed.y.toFixed(1)}%` }
+        }
+      },
+      scales: {
+        x: { ticks: { color: NAVY }, grid: { color: gridColor } },
+        y: {
+          ticks: { color: NAVY, callback: v => v + '%' },
+          grid: { color: gridColor }, beginAtZero: true, max: 20,
+          title: { display: true, text: 'Win Rate %', color: '#8a9ab0', font: { size: 11 } }
+        }
+      }
+    }
+  });
 </script>
 </body>
 </html>
