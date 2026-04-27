@@ -298,24 +298,29 @@
         <div class="k-sub">Marketing generated</div>
       </div>
       <div class="kpi-card">
-        <div class="k-lbl">SG Win Rate</div>
-        <div class="k-val" style="color:var(--teal)">9.2%</div>
-        <div class="k-sub">On closed opps (10.8:1)</div>
+        <div class="k-lbl">SG Win Rate — PSA</div>
+        <div class="k-val" style="color:var(--teal)">6.8%</div>
+        <div class="k-sub">23 wins / 340 closed</div>
       </div>
       <div class="kpi-card green">
+        <div class="k-lbl">MG Win Rate — PSA</div>
+        <div class="k-val">11.8%</div>
+        <div class="k-sub">22 wins / 186 closed · 74% higher than SG</div>
+      </div>
+      <div class="kpi-card">
         <div class="k-lbl">SG Won MRR YTD</div>
-        <div class="k-val">$15.4K</div>
-        <div class="k-sub">Sales Generated</div>
+        <div class="k-val" style="color:var(--teal)">$15.4K</div>
+        <div class="k-sub">Sales Generated · PSA</div>
       </div>
       <div class="kpi-card">
         <div class="k-lbl">MG Won MRR YTD</div>
-        <div class="k-val" style="color:var(--teal)">$16.7K</div>
-        <div class="k-sub">Marketing Generated</div>
+        <div class="k-val" style="color:var(--green)">$16.7K</div>
+        <div class="k-sub">Marketing Generated · PSA</div>
       </div>
       <div class="kpi-card">
         <div class="k-lbl">Historical Win Rate</div>
         <div class="k-val" style="color:#8a9ab0">14.1%</div>
-        <div class="k-sub">2024–2025 baseline</div>
+        <div class="k-sub">2024–2025 all-PSA baseline</div>
       </div>
     </div>
 
@@ -571,9 +576,9 @@
     }
   });
 
-  // 3. Win Rate
-  const sgWR = [9,9,20,14]; // Jan-Apr (Apr still open, estimate)
-  const mgWR = [13,15,24,0];
+  // 3. Win Rate (PSA only, closed opps)
+  const sgWR = [5,8,6,null]; // Jan-Apr SG PSA (Apr still open)
+  const mgWR = [12,14,12,0]; // Jan-Apr MG PSA
   new Chart(document.getElementById('winRateChart'), {
     type:'line',
     data:{
