@@ -1,0 +1,456 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>PSA Target Tracker — Marketing vs Sales 2026</title>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body { font-family: 'Segoe UI', system-ui, sans-serif; background: #0f1117; color: #e2e8f0; }
+
+    header { background: linear-gradient(135deg, #1e293b 0%, #0f172a 100%); border-bottom: 1px solid #334155; padding: 20px 32px; display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 12px; }
+    header h1 { font-size: 1.4rem; font-weight: 700; color: #f8fafc; }
+    header h1 span { color: #38bdf8; }
+    .header-right { display: flex; flex-direction: column; align-items: flex-end; gap: 4px; }
+    .badge { background: #1e40af; color: #bfdbfe; font-size: 0.75rem; padding: 4px 10px; border-radius: 20px; font-weight: 600; }
+    .updated { font-size: 0.72rem; color: #64748b; }
+
+    .container { max-width: 1300px; margin: 0 auto; padding: 28px 24px; }
+    .section-label { font-size: 0.7rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.08em; color: #475569; margin-bottom: 14px; margin-top: 28px; padding-bottom: 6px; border-bottom: 1px solid #1e293b; }
+
+    /* Split KPI panels */
+    .split-kpi { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin-bottom: 8px; }
+    @media (max-width: 700px) { .split-kpi { grid-template-columns: 1fr; } }
+
+    .team-panel { background: #1e293b; border: 1px solid #334155; border-radius: 14px; padding: 22px; position: relative; overflow: hidden; }
+    .team-panel::before { content: ''; position: absolute; top: 0; left: 0; right: 0; height: 4px; background: var(--team-color); }
+    .team-panel.mktg { --team-color: #a78bfa; }
+    .team-panel.sales { --team-color: #38bdf8; }
+    .team-panel h2 { font-size: 1rem; font-weight: 700; color: var(--team-color); margin-bottom: 16px; display: flex; align-items: center; gap: 8px; }
+    .team-panel h2 .split-note { font-size: 0.72rem; font-weight: 400; color: #64748b; background: #0f172a; padding: 2px 8px; border-radius: 10px; }
+
+    .kpi-row { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; margin-bottom: 14px; }
+    .kpi { background: #0f172a; border-radius: 10px; padding: 14px; }
+    .kpi .k-label { font-size: 0.68rem; font-weight: 600; text-transform: uppercase; letter-spacing: 0.05em; color: #64748b; margin-bottom: 4px; }
+    .kpi .k-val { font-size: 1.5rem; font-weight: 800; color: #f8fafc; line-height: 1; }
+    .kpi .k-sub { font-size: 0.72rem; color: #475569; margin-top: 3px; }
+
+    /* Attainment bar */
+    .attain-block { margin-bottom: 6px; }
+    .attain-label { display: flex; justify-content: space-between; font-size: 0.78rem; color: #94a3b8; margin-bottom: 5px; }
+    .attain-label .pct { font-weight: 700; }
+    .attain-track { background: #0f172a; border-radius: 6px; height: 10px; overflow: hidden; }
+    .attain-fill { height: 100%; border-radius: 6px; transition: width 0.6s ease; background: var(--team-color); }
+    .attain-fill.over { background: #22c55e; }
+    .attain-fill.warn { background: #facc15; }
+    .attain-fill.low  { background: #ef4444; }
+
+    /* Charts */
+    .chart-card { background: #1e293b; border: 1px solid #334155; border-radius: 12px; padding: 22px; margin-bottom: 20px; }
+    .chart-card h3 { font-size: 0.85rem; font-weight: 700; color: #94a3b8; text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: 18px; }
+    .chart-wrap { position: relative; height: 300px; }
+    .chart-wrap-sm { position: relative; height: 240px; }
+    .two-col { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
+    @media (max-width: 800px) { .two-col { grid-template-columns: 1fr; } }
+
+    /* Month detail table */
+    table { width: 100%; border-collapse: collapse; font-size: 0.82rem; }
+    th { text-align: left; padding: 9px 12px; color: #64748b; font-weight: 600; font-size: 0.72rem; text-transform: uppercase; border-bottom: 1px solid #334155; white-space: nowrap; }
+    td { padding: 10px 12px; border-bottom: 1px solid #1a2438; color: #cbd5e1; vertical-align: middle; }
+    .td-month { font-weight: 700; color: #f8fafc; }
+    tr:last-child td { border-bottom: none; }
+    tr:hover td { background: #1e2d40; }
+
+    .pill { display: inline-block; padding: 2px 8px; border-radius: 10px; font-size: 0.7rem; font-weight: 700; }
+    .pill-green  { background: #14532d; color: #4ade80; }
+    .pill-yellow { background: #422006; color: #fbbf24; }
+    .pill-red    { background: #450a0a; color: #f87171; }
+    .pill-gray   { background: #1e293b; color: #94a3b8; border: 1px solid #334155; }
+
+    .mrr-act { color: #f8fafc; font-weight: 700; }
+    .mrr-tgt { color: #475569; }
+    .pct-good { color: #4ade80; font-weight: 700; }
+    .pct-mid  { color: #fbbf24; font-weight: 700; }
+    .pct-low  { color: #f87171; font-weight: 700; }
+    .pct-na   { color: #475569; }
+
+    .note-bar { background: #1c1f2e; border: 1px solid #2d3748; border-radius: 8px; padding: 10px 16px; font-size: 0.78rem; color: #94a3b8; margin-bottom: 20px; }
+    .note-bar strong { color: #e2e8f0; }
+
+    footer { text-align: center; padding: 20px; font-size: 0.72rem; color: #475569; border-top: 1px solid #1e293b; margin-top: 8px; }
+    ::-webkit-scrollbar { width: 6px; } ::-webkit-scrollbar-track { background: #0f172a; } ::-webkit-scrollbar-thumb { background: #334155; border-radius: 3px; }
+  </style>
+</head>
+<body>
+
+<header>
+  <div>
+    <h1>PSA Target Tracker <span>— Marketing vs Sales 2026</span></h1>
+  </div>
+  <div class="header-right">
+    <div class="badge">PSA MRR Won vs Target · Monthly</div>
+    <div class="updated">Last updated: <span id="ts"></span></div>
+  </div>
+</header>
+
+<div class="container">
+
+  <div class="note-bar">
+    Targets sourced from <strong>2026 Revenue Targets (Draft)</strong> — PSA split: <strong>60% Marketing</strong> / <strong>40% Sales</strong> of total monthly PSA target. MRR Won = Closed Won opportunities with Product Type PSA / PSA 2.0.
+  </div>
+
+  <!-- YTD summary panels -->
+  <div class="section-label">YTD Attainment (Jan–Apr 2026)</div>
+  <div class="split-kpi">
+    <!-- Marketing -->
+    <div class="team-panel mktg">
+      <h2>📣 Marketing Generated <span class="split-note">60% of target</span></h2>
+      <div class="kpi-row">
+        <div class="kpi">
+          <div class="k-label">MRR Won YTD</div>
+          <div class="k-val" id="mg-won-ytd">—</div>
+          <div class="k-sub">Actual closed</div>
+        </div>
+        <div class="kpi">
+          <div class="k-label">Target YTD</div>
+          <div class="k-val" id="mg-tgt-ytd">—</div>
+          <div class="k-sub">Jan–Apr target</div>
+        </div>
+        <div class="kpi">
+          <div class="k-label">Attainment</div>
+          <div class="k-val" id="mg-pct-ytd">—</div>
+          <div class="k-sub">vs target</div>
+        </div>
+      </div>
+      <div id="mg-attain-bars"></div>
+    </div>
+
+    <!-- Sales -->
+    <div class="team-panel sales">
+      <h2>💼 Sales Generated <span class="split-note">40% of target</span></h2>
+      <div class="kpi-row">
+        <div class="kpi">
+          <div class="k-label">MRR Won YTD</div>
+          <div class="k-val" id="sg-won-ytd">—</div>
+          <div class="k-sub">Actual closed</div>
+        </div>
+        <div class="kpi">
+          <div class="k-label">Target YTD</div>
+          <div class="k-val" id="sg-tgt-ytd">—</div>
+          <div class="k-sub">Jan–Apr target</div>
+        </div>
+        <div class="kpi">
+          <div class="k-label">Attainment</div>
+          <div class="k-val" id="sg-pct-ytd">—</div>
+          <div class="k-sub">vs target</div>
+        </div>
+      </div>
+      <div id="sg-attain-bars"></div>
+    </div>
+  </div>
+
+  <!-- Main chart -->
+  <div class="section-label">MRR Won vs Target — by Month</div>
+  <div class="chart-card">
+    <h3>PSA MRR Won vs Monthly Target (Marketing &amp; Sales)</h3>
+    <div class="chart-wrap">
+      <canvas id="mainChart"></canvas>
+    </div>
+  </div>
+
+  <!-- Two small charts -->
+  <div class="two-col">
+    <div class="chart-card">
+      <h3>Monthly Attainment % — Marketing</h3>
+      <div class="chart-wrap-sm"><canvas id="mgPctChart"></canvas></div>
+    </div>
+    <div class="chart-card">
+      <h3>Monthly Attainment % — Sales</h3>
+      <div class="chart-wrap-sm"><canvas id="sgPctChart"></canvas></div>
+    </div>
+  </div>
+
+  <!-- Detail table -->
+  <div class="section-label">Monthly Detail</div>
+  <div class="chart-card">
+    <h3>Month-by-Month Breakdown</h3>
+    <table>
+      <thead>
+        <tr>
+          <th>Month</th>
+          <th>Team</th>
+          <th>Target MRR</th>
+          <th>Won MRR</th>
+          <th>Gap</th>
+          <th>Attainment</th>
+          <th>Opps Created</th>
+          <th>Opps Won</th>
+          <th>Full Year Target</th>
+        </tr>
+      </thead>
+      <tbody id="detailTable"></tbody>
+    </table>
+  </div>
+
+  <!-- Full year targets reference -->
+  <div class="section-label">Full Year PSA Targets (2026)</div>
+  <div class="chart-card">
+    <h3>Monthly PSA Targets — Rest of Year</h3>
+    <div class="chart-wrap-sm"><canvas id="fullYearChart"></canvas></div>
+  </div>
+
+</div>
+<footer>Rev.io Internal · Robin 🦸🏻‍♂️ · Targets: 2026 Revenue Targets (Draft) · Actuals: Salesforce</footer>
+
+<script>
+  document.getElementById('ts').textContent = new Date().toLocaleDateString('en-US', {
+    month: 'short', day: 'numeric', year: 'numeric', hour: '2-digit', minute: '2-digit'
+  });
+
+  // ── DATA ──────────────────────────────────────────────────────────────────
+
+  // From the spreadsheet — PSA total targets by month (full year)
+  const psaTotalTargets = [17000, 21000, 25000, 30000, 34000, 38000, 42000, 46000, 50000, 55000, 59000, 63000];
+  const mgShare = 0.60;
+  const sgShare = 0.40;
+
+  const monthLabels = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+  const ytdMonths = ['Jan','Feb','Mar','Apr'];
+
+  // Actuals from Salesforce (PSA opps only, Closed Won)
+  const mgActuals = [4575, 5694, 6430, 0];    // Marketing Generated MRR Won
+  const sgActuals = [5030, 3345, 5360, 1675]; // Sales Generated MRR Won
+
+  // Opps detail
+  const mgOppsCreated = [68, 59, 52, 43];
+  const sgOppsCreated = [140, 90, 79, 61];
+  const mgOppsWon    = [8, 8, 6, 0];
+  const sgOppsWon    = [9, 5, 6, 3];
+
+  // Targets for YTD months
+  const mgTargets = psaTotalTargets.slice(0, 4).map(t => Math.round(t * mgShare));
+  const sgTargets = psaTotalTargets.slice(0, 4).map(t => Math.round(t * sgShare));
+
+  // ── YTD SUMMARY ───────────────────────────────────────────────────────────
+  const mgWonYTD = mgActuals.reduce((a,b) => a+b, 0);
+  const sgWonYTD = sgActuals.reduce((a,b) => a+b, 0);
+  const mgTgtYTD = mgTargets.reduce((a,b) => a+b, 0);
+  const sgTgtYTD = sgTargets.reduce((a,b) => a+b, 0);
+  const mgPctYTD = Math.round((mgWonYTD / mgTgtYTD) * 100);
+  const sgPctYTD = Math.round((sgWonYTD / sgTgtYTD) * 100);
+
+  document.getElementById('mg-won-ytd').textContent = '$' + mgWonYTD.toLocaleString();
+  document.getElementById('sg-won-ytd').textContent = '$' + sgWonYTD.toLocaleString();
+  document.getElementById('mg-tgt-ytd').textContent = '$' + mgTgtYTD.toLocaleString();
+  document.getElementById('sg-tgt-ytd').textContent = '$' + sgTgtYTD.toLocaleString();
+  document.getElementById('mg-pct-ytd').textContent = mgPctYTD + '%';
+  document.getElementById('sg-pct-ytd').textContent = sgPctYTD + '%';
+
+  // Monthly attainment bars
+  function attainBars(containerId, actuals, targets, color) {
+    const wrap = document.getElementById(containerId);
+    ytdMonths.forEach((m, i) => {
+      const pct = targets[i] > 0 ? Math.min(100, Math.round((actuals[i] / targets[i]) * 100)) : 0;
+      const rawPct = targets[i] > 0 ? Math.round((actuals[i] / targets[i]) * 100) : 0;
+      const fillClass = rawPct >= 90 ? 'over' : rawPct >= 60 ? 'warn' : 'low';
+      const note = i === 3 ? ' (MTD)' : '';
+      wrap.innerHTML += `
+        <div class="attain-block">
+          <div class="attain-label">
+            <span>${m}${note} — $${actuals[i].toLocaleString()} / $${targets[i].toLocaleString()}</span>
+            <span class="pct">${rawPct}%</span>
+          </div>
+          <div class="attain-track">
+            <div class="attain-fill ${fillClass}" style="width:${pct}%"></div>
+          </div>
+        </div>
+      `;
+    });
+  }
+
+  attainBars('mg-attain-bars', mgActuals, mgTargets, '#a78bfa');
+  attainBars('sg-attain-bars', sgActuals, sgTargets, '#38bdf8');
+
+  // ── MAIN CHART ────────────────────────────────────────────────────────────
+  new Chart(document.getElementById('mainChart').getContext('2d'), {
+    type: 'bar',
+    data: {
+      labels: ytdMonths,
+      datasets: [
+        {
+          label: 'Marketing — Won MRR',
+          data: mgActuals,
+          backgroundColor: '#a78bfa',
+          borderRadius: 4,
+          order: 2,
+        },
+        {
+          label: 'Sales — Won MRR',
+          data: sgActuals,
+          backgroundColor: '#38bdf8',
+          borderRadius: 4,
+          order: 2,
+        },
+        {
+          label: 'Marketing Target',
+          data: mgTargets,
+          type: 'line',
+          borderColor: '#7c3aed',
+          backgroundColor: 'transparent',
+          borderWidth: 2,
+          borderDash: [6, 4],
+          pointBackgroundColor: '#7c3aed',
+          pointRadius: 5,
+          tension: 0.2,
+          order: 1,
+        },
+        {
+          label: 'Sales Target',
+          data: sgTargets,
+          type: 'line',
+          borderColor: '#0ea5e9',
+          backgroundColor: 'transparent',
+          borderWidth: 2,
+          borderDash: [6, 4],
+          pointBackgroundColor: '#0ea5e9',
+          pointRadius: 5,
+          tension: 0.2,
+          order: 1,
+        },
+      ]
+    },
+    options: {
+      responsive: true, maintainAspectRatio: false,
+      plugins: {
+        legend: { labels: { color: '#94a3b8', font: { size: 11 } } },
+        tooltip: {
+          mode: 'index', intersect: false,
+          callbacks: { label: ctx => ` ${ctx.dataset.label}: $${ctx.parsed.y.toLocaleString()}` }
+        }
+      },
+      scales: {
+        x: { ticks: { color: '#64748b' }, grid: { color: '#1e293b' } },
+        y: {
+          ticks: { color: '#64748b', callback: v => '$' + (v/1000).toFixed(0) + 'K' },
+          grid: { color: '#1e293b' }, beginAtZero: true,
+          title: { display: true, text: 'MRR ($)', color: '#64748b', font: { size: 11 } }
+        }
+      }
+    }
+  });
+
+  // ── ATTAINMENT % CHARTS ───────────────────────────────────────────────────
+  function pctChart(canvasId, actuals, targets, color) {
+    const pcts = actuals.map((a, i) => targets[i] > 0 ? Math.round((a / targets[i]) * 100) : 0);
+    new Chart(document.getElementById(canvasId).getContext('2d'), {
+      type: 'bar',
+      data: {
+        labels: ytdMonths,
+        datasets: [{
+          label: 'Attainment %',
+          data: pcts,
+          backgroundColor: pcts.map(p => p >= 90 ? '#22c55e' : p >= 60 ? '#facc15' : '#ef4444'),
+          borderRadius: 5,
+        }]
+      },
+      options: {
+        responsive: true, maintainAspectRatio: false,
+        plugins: {
+          legend: { display: false },
+          tooltip: { callbacks: { label: ctx => ` ${ctx.parsed.y}% of target` } }
+        },
+        scales: {
+          x: { ticks: { color: '#64748b' }, grid: { color: '#1e293b' } },
+          y: {
+            ticks: { color: '#64748b', callback: v => v + '%' },
+            grid: { color: '#1e293b' }, beginAtZero: true, max: 120,
+            title: { display: true, text: 'Attainment %', color: '#64748b', font: { size: 10 } }
+          }
+        },
+        annotation: {
+          annotations: { line100: { type: 'line', yMin: 100, yMax: 100, borderColor: '#334155', borderWidth: 1, borderDash: [4,4] } }
+        }
+      }
+    });
+  }
+
+  pctChart('mgPctChart', mgActuals, mgTargets, '#a78bfa');
+  pctChart('sgPctChart', sgActuals, sgTargets, '#38bdf8');
+
+  // ── DETAIL TABLE ──────────────────────────────────────────────────────────
+  const tbody = document.getElementById('detailTable');
+  const teams = [
+    { label: 'Marketing', actuals: mgActuals, targets: mgTargets, oppsCreated: mgOppsCreated, oppsWon: mgOppsWon, color: '#a78bfa' },
+    { label: 'Sales', actuals: sgActuals, targets: sgTargets, oppsCreated: sgOppsCreated, oppsWon: sgOppsWon, color: '#38bdf8' },
+  ];
+
+  ytdMonths.forEach((m, i) => {
+    teams.forEach((t, ti) => {
+      const act = t.actuals[i];
+      const tgt = t.targets[i];
+      const gap = act - tgt;
+      const pct = tgt > 0 ? Math.round((act / tgt) * 100) : 0;
+      const pctClass = pct >= 90 ? 'pct-good' : pct >= 60 ? 'pct-mid' : 'pct-low';
+      const pillClass = pct >= 90 ? 'pill-green' : pct >= 60 ? 'pill-yellow' : 'pill-red';
+      const pillLabel = pct >= 90 ? 'On Track' : pct >= 60 ? 'Behind' : 'Off Track';
+      const gapFmt = gap >= 0 ? `+$${gap.toLocaleString()}` : `-$${Math.abs(gap).toLocaleString()}`;
+      const gapColor = gap >= 0 ? 'pct-good' : 'pct-low';
+      const isMTD = i === 3;
+      const fullYrTgt = Math.round(psaTotalTargets[i] * (t.label === 'Marketing' ? mgShare : sgShare));
+
+      const tr = document.createElement('tr');
+      if (ti === 0) tr.style.borderTop = '2px solid #334155';
+      tr.innerHTML = `
+        <td class="td-month">${ti === 0 ? m + (isMTD ? ' <span style="font-size:0.68rem;color:#475569">(MTD)</span>' : '') : ''}</td>
+        <td><span style="color:${t.color};font-weight:600">${t.label}</span></td>
+        <td class="mrr-tgt">$${tgt.toLocaleString()}</td>
+        <td class="mrr-act">$${act.toLocaleString()}</td>
+        <td class="${gapColor}">${gapFmt}</td>
+        <td><span class="pill ${pillClass}">${pct}% — ${pillLabel}</span></td>
+        <td style="color:#94a3b8">${t.oppsCreated[i]}</td>
+        <td style="color:#94a3b8">${t.oppsWon[i]}</td>
+        <td style="color:#475569">$${fullYrTgt.toLocaleString()}</td>
+      `;
+      tbody.appendChild(tr);
+    });
+  });
+
+  // ── FULL YEAR TARGETS ─────────────────────────────────────────────────────
+  new Chart(document.getElementById('fullYearChart').getContext('2d'), {
+    type: 'bar',
+    data: {
+      labels: monthLabels,
+      datasets: [
+        {
+          label: 'Marketing Target (60%)',
+          data: psaTotalTargets.map(t => Math.round(t * mgShare)),
+          backgroundColor: monthLabels.map((m, i) => i < 4 ? '#7c3aed' : '#4c1d95'),
+          borderRadius: 4,
+        },
+        {
+          label: 'Sales Target (40%)',
+          data: psaTotalTargets.map(t => Math.round(t * sgShare)),
+          backgroundColor: monthLabels.map((m, i) => i < 4 ? '#0284c7' : '#0c4a6e'),
+          borderRadius: 4,
+        },
+      ]
+    },
+    options: {
+      responsive: true, maintainAspectRatio: false,
+      plugins: {
+        legend: { labels: { color: '#94a3b8', font: { size: 11 } } },
+        tooltip: {
+          mode: 'index', intersect: false,
+          callbacks: { label: ctx => ` ${ctx.dataset.label}: $${ctx.parsed.y.toLocaleString()}` }
+        }
+      },
+      scales: {
+        x: { stacked: true, ticks: { color: '#64748b' }, grid: { color: '#1e293b' } },
+        y: { stacked: true, ticks: { color: '#64748b', callback: v => '$' + (v/1000).toFixed(0) + 'K' }, grid: { color: '#1e293b' }, beginAtZero: true }
+      }
+    }
+  });
+</script>
+</body>
+</html>
