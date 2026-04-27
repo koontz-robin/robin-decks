@@ -1,0 +1,757 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>PSA Analytics Dashboard — Rev.io 2026</title>
+  <meta name="description" content="Rev.io PSA pipeline analytics — lead direction trends, target attainment, pipeline requirements, and cross-sell insights." />
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Open+Sans:wght@400;600;700;800&family=Montserrat:wght@400;600;700;800&display=swap" rel="stylesheet">
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --navy: #1D3756;
+      --teal: #2399B5;
+      --green: #6EBE4F;
+      --platinum: #E8E8EC;
+      --body-text: #3d4d5c;
+      --light-bg: #F5F7FA;
+      --border: #DDE2E8;
+    }
+
+    body { font: 400 16px/1.7 'Open Sans', system-ui, sans-serif; color: var(--body-text); background: #fff; }
+
+    /* ── NAV ────────────────────────────────────────────────── */
+    nav {
+      position: sticky; top: 0; z-index: 100;
+      background: var(--navy);
+      height: 64px;
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 0 40px;
+      box-shadow: 0 2px 16px rgba(0,0,0,0.18);
+    }
+    .nav-logo { display: flex; align-items: center; gap: 10px; }
+    .nav-logo-mark {
+      width: 32px; height: 32px; border-radius: 6px;
+      background: linear-gradient(135deg, var(--teal), var(--green));
+      display: flex; align-items: center; justify-content: center;
+      font: 800 14px/1 'Open Sans'; color: #fff;
+    }
+    .nav-title { font: 700 15px/1 'Open Sans'; color: #fff; letter-spacing: 0.3px; }
+    .nav-title span { color: var(--teal); }
+    .nav-links { display: flex; align-items: center; gap: 28px; }
+    .nav-links a {
+      font: 600 11px/1 'Open Sans'; letter-spacing: 1.5px; text-transform: uppercase;
+      color: rgba(255,255,255,0.75); text-decoration: none; transition: color 0.2s;
+    }
+    .nav-links a:hover { color: #fff; }
+    .nav-updated { font: 400 11px/1 'Open Sans'; color: rgba(255,255,255,0.4); }
+
+    /* ── GRADIENT STRIPE ────────────────────────────────────── */
+    .stripe { height: 4px; background: linear-gradient(90deg, var(--teal) 0%, var(--green) 100%); }
+
+    /* ── HERO ───────────────────────────────────────────────── */
+    .hero {
+      background: var(--navy);
+      padding: 60px 40px 52px;
+    }
+    .hero-inner { max-width: 1200px; margin: 0 auto; display: grid; grid-template-columns: 1fr auto; align-items: center; gap: 40px; }
+    .hero-eyebrow { font: 700 11px/1 'Open Sans'; letter-spacing: 2px; text-transform: uppercase; color: var(--green); margin-bottom: 12px; }
+    .hero h1 { font: 800 clamp(28px, 3.5vw, 44px)/1.15 'Open Sans'; color: #fff; margin-bottom: 10px; }
+    .hero h1 span { color: var(--teal); }
+    .hero-sub { font: 400 16px/1.6 'Open Sans'; color: var(--platinum); max-width: 560px; }
+    .hero-stats { display: flex; gap: 32px; flex-wrap: wrap; }
+    .hero-stat { text-align: center; }
+    .hero-stat .h-num { font: 800 36px/1 'Montserrat'; color: var(--teal); }
+    .hero-stat .h-num.green { color: var(--green); }
+    .hero-stat .h-lbl { font: 600 10px/1.3 'Open Sans'; letter-spacing: 1px; text-transform: uppercase; color: rgba(255,255,255,0.55); margin-top: 4px; max-width: 80px; }
+
+    /* ── ALERT BANNER ───────────────────────────────────────── */
+    .alert-banner {
+      background: #fff8e6; border-left: 4px solid #f59e0b;
+      padding: 14px 40px; display: flex; align-items: center; gap: 12px;
+    }
+    .alert-banner-inner { max-width: 1200px; margin: 0 auto; display: flex; align-items: center; gap: 12px; width: 100%; }
+    .alert-banner span { font: 600 13px/1.5 'Open Sans'; color: #92400e; }
+    .alert-banner strong { color: #78350f; }
+
+    /* ── SECTIONS ───────────────────────────────────────────── */
+    section { padding: 64px 40px; }
+    section:nth-child(even) { background: var(--light-bg); }
+    .section-inner { max-width: 1200px; margin: 0 auto; }
+    .eyebrow { font: 700 11px/1 'Open Sans'; letter-spacing: 2px; text-transform: uppercase; color: var(--green); margin-bottom: 10px; }
+    .section-heading { font: 800 clamp(22px, 2.5vw, 32px)/1.2 'Open Sans'; color: var(--navy); margin-bottom: 6px; }
+    .section-sub { font: 400 15px/1.6 'Open Sans'; color: #5a6f8c; margin-bottom: 36px; max-width: 680px; }
+
+    /* ── KPI CARDS ──────────────────────────────────────────── */
+    .kpi-row { display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 16px; margin-bottom: 48px; }
+    .kpi-card {
+      background: #fff; border: 1px solid var(--border); border-radius: 12px;
+      padding: 20px 22px; position: relative; overflow: hidden;
+    }
+    .kpi-card::before { content: ''; position: absolute; top: 0; left: 0; right: 0; height: 3px; background: var(--accent, var(--teal)); }
+    .kpi-card.green { --accent: var(--green); }
+    .kpi-card.navy { --accent: var(--navy); background: var(--navy); }
+    .kpi-card .k-lbl { font: 600 11px/1 'Open Sans'; letter-spacing: 1px; text-transform: uppercase; color: #8a9ab0; margin-bottom: 8px; }
+    .kpi-card.navy .k-lbl { color: rgba(255,255,255,0.55); }
+    .kpi-card .k-val { font: 800 32px/1 'Montserrat'; color: var(--navy); }
+    .kpi-card.navy .k-val { color: #fff; }
+    .kpi-card.teal .k-val { color: var(--teal); }
+    .kpi-card.green .k-val { color: var(--green); }
+    .kpi-card .k-sub { font: 400 12px/1.4 'Open Sans'; color: #8a9ab0; margin-top: 4px; }
+    .kpi-card.navy .k-sub { color: rgba(255,255,255,0.45); }
+
+    /* ── CHART CARDS ────────────────────────────────────────── */
+    .chart-grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 24px; margin-bottom: 24px; }
+    .chart-grid-3 { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 24px; margin-bottom: 24px; }
+    @media (max-width: 900px) { .chart-grid-2, .chart-grid-3 { grid-template-columns: 1fr; } }
+    .chart-card {
+      background: #fff; border: 1px solid var(--border); border-radius: 14px;
+      padding: 24px; overflow: hidden;
+    }
+    .chart-card.dark { background: var(--navy); border-color: transparent; }
+    .chart-card h3 {
+      font: 700 13px/1 'Open Sans'; letter-spacing: 0.5px; text-transform: uppercase;
+      color: #8a9ab0; margin-bottom: 4px;
+    }
+    .chart-card.dark h3 { color: rgba(255,255,255,0.5); }
+    .chart-card .card-title { font: 700 17px/1.3 'Open Sans'; color: var(--navy); margin-bottom: 18px; }
+    .chart-card.dark .card-title { color: #fff; }
+    .chart-wrap { position: relative; height: 260px; }
+    .chart-wrap-sm { position: relative; height: 220px; }
+
+    /* ── SPLIT TEAM PANELS ──────────────────────────────────── */
+    .team-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 24px; margin-bottom: 32px; }
+    @media (max-width: 768px) { .team-grid { grid-template-columns: 1fr; } }
+    .team-panel {
+      border-radius: 14px; overflow: hidden;
+      border: 1px solid var(--border);
+    }
+    .team-panel-header {
+      padding: 18px 22px;
+      display: flex; justify-content: space-between; align-items: center;
+    }
+    .team-panel.mktg .team-panel-header { background: rgba(35,153,181,0.08); border-bottom: 1px solid rgba(35,153,181,0.2); }
+    .team-panel.sales .team-panel-header { background: rgba(110,190,79,0.08); border-bottom: 1px solid rgba(110,190,79,0.2); }
+    .team-panel-header h3 { font: 700 15px/1 'Open Sans'; color: var(--navy); }
+    .team-panel-header .split-tag { font: 600 11px/1 'Open Sans'; letter-spacing: 1px; text-transform: uppercase; color: #8a9ab0; }
+    .team-panel-body { padding: 0; }
+
+    /* ── ATTAINMENT BARS ────────────────────────────────────── */
+    .attain-list { padding: 16px 22px; display: flex; flex-direction: column; gap: 14px; }
+    .attain-item {}
+    .attain-meta { display: flex; justify-content: space-between; margin-bottom: 5px; }
+    .attain-meta .a-month { font: 700 13px/1 'Open Sans'; color: var(--navy); }
+    .attain-meta .a-mrr { font: 400 12px/1 'Open Sans'; color: #8a9ab0; }
+    .attain-meta .a-pct { font: 700 13px/1 'Montserrat'; }
+    .attain-track { background: var(--border); border-radius: 4px; height: 8px; overflow: hidden; }
+    .attain-fill { height: 100%; border-radius: 4px; transition: width 0.6s ease; }
+    .fill-good { background: var(--green); }
+    .fill-mid  { background: #f59e0b; }
+    .fill-low  { background: #ef4444; }
+
+    /* ── TABLES ─────────────────────────────────────────────── */
+    .data-table-wrap { overflow-x: auto; }
+    table { width: 100%; border-collapse: collapse; font-size: 13px; }
+    th {
+      text-align: left; padding: 10px 14px;
+      font: 600 11px/1 'Open Sans'; letter-spacing: 0.8px; text-transform: uppercase;
+      color: #fff; background: var(--navy); white-space: nowrap;
+    }
+    th.teal { background: var(--teal); }
+    td { padding: 10px 14px; border-bottom: 1px solid var(--border); color: var(--body-text); vertical-align: middle; }
+    tr:last-child td { border-bottom: none; }
+    tr:nth-child(even) td { background: var(--light-bg); }
+    tr:hover td { background: #eef3fa; }
+    .td-name { font: 600 13px/1.3 'Open Sans'; color: var(--navy); }
+    .mrr-green { color: var(--green); font-weight: 700; }
+    .mrr-teal  { color: var(--teal); font-weight: 700; }
+    .mrr-dim   { color: #8a9ab0; }
+
+    /* ── PILLS ──────────────────────────────────────────────── */
+    .pill { display: inline-block; padding: 3px 9px; border-radius: 20px; font: 700 11px/1 'Open Sans'; white-space: nowrap; }
+    .pill-teal   { background: #e0f5fa; color: #0e7490; }
+    .pill-green  { background: #dcfce7; color: #166534; }
+    .pill-amber  { background: #fef3c7; color: #92400e; }
+    .pill-red    { background: #fee2e2; color: #991b1b; }
+    .pill-navy   { background: var(--navy); color: #fff; }
+    .pill-warn   { background: #fff3cd; color: #856404; border: 1px solid #ffc107; }
+
+    /* ── REQUIREMENTS TABLE ─────────────────────────────────── */
+    .req-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 24px; }
+    @media (max-width: 768px) { .req-grid { grid-template-columns: 1fr; } }
+
+    .month-row-past td { opacity: 0.5; }
+    .month-row-current { background: rgba(35,153,181,0.06) !important; }
+    .month-row-current td { border-left: 3px solid var(--teal); }
+
+    /* ── CROSS-SELL ─────────────────────────────────────────── */
+    .cross-table-wrap { max-height: 460px; overflow-y: auto; border-radius: 0 0 14px 14px; }
+
+    /* ── SEARCH ─────────────────────────────────────────────── */
+    .search-input {
+      width: 100%; border: 1px solid var(--border); border-radius: 8px;
+      padding: 10px 16px; font: 400 14px/1 'Open Sans'; color: var(--body-text);
+      outline: none; margin-bottom: 16px; background: #fff;
+    }
+    .search-input:focus { border-color: var(--teal); box-shadow: 0 0 0 3px rgba(35,153,181,0.12); }
+
+    /* ── CTA BAND ───────────────────────────────────────────── */
+    .cta-band { background: var(--navy); padding: 48px 40px; text-align: center; }
+    .cta-band h2 { font: 800 28px/1.2 'Open Sans'; color: #fff; margin-bottom: 8px; }
+    .cta-band p { font: 400 15px/1.6 'Open Sans'; color: var(--platinum); margin-bottom: 24px; }
+
+    /* ── FOOTER ─────────────────────────────────────────────── */
+    footer { background: var(--navy); padding: 24px 40px; border-top: 1px solid rgba(255,255,255,0.08); }
+    footer p { max-width: 1200px; margin: 0 auto; font: 400 12px/1.6 'Open Sans'; color: rgba(255,255,255,0.35); text-align: center; }
+
+    /* ── RESPONSIVE ─────────────────────────────────────────── */
+    @media (max-width: 768px) {
+      nav { padding: 0 20px; }
+      nav .nav-links { display: none; }
+      section { padding: 48px 24px; }
+      .hero { padding: 40px 24px; }
+      .hero-inner { grid-template-columns: 1fr; }
+      .hero-stats { justify-content: flex-start; }
+      .kpi-row { grid-template-columns: repeat(2, 1fr); }
+    }
+
+    ::-webkit-scrollbar { width: 6px; height: 6px; }
+    ::-webkit-scrollbar-track { background: var(--light-bg); }
+    ::-webkit-scrollbar-thumb { background: var(--border); border-radius: 3px; }
+  </style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav>
+  <div class="nav-logo">
+    <div class="nav-logo-mark">R</div>
+    <div class="nav-title">Rev.io <span>PSA Analytics</span></div>
+  </div>
+  <div class="nav-links">
+    <a href="#trends">Trends</a>
+    <a href="#targets">Targets</a>
+    <a href="#requirements">Requirements</a>
+    <a href="#crosssell">Cross-Sell</a>
+  </div>
+  <div class="nav-updated">Updated: <span id="ts"></span></div>
+</nav>
+<div class="stripe"></div>
+
+<!-- HERO -->
+<div class="hero">
+  <div class="hero-inner">
+    <div>
+      <div class="hero-eyebrow">2026 YTD · Sales & Marketing</div>
+      <h1>PSA Pipeline <span>Analytics</span></h1>
+      <p class="hero-sub">Lead direction trends, target attainment, pipeline requirements, and cross-sell insights — all in one place.</p>
+    </div>
+    <div class="hero-stats">
+      <div class="hero-stat">
+        <div class="h-num">547</div>
+        <div class="h-lbl">SG Opps Created</div>
+      </div>
+      <div class="hero-stat">
+        <div class="h-num green">49</div>
+        <div class="h-lbl">2026 Wins</div>
+      </div>
+      <div class="hero-stat">
+        <div class="h-num">74</div>
+        <div class="h-lbl">Active Pipeline</div>
+      </div>
+      <div class="hero-stat">
+        <div class="h-num green">10:1</div>
+        <div class="h-lbl">Opp-to-Close Ratio</div>
+      </div>
+    </div>
+  </div>
+</div>
+<div class="stripe"></div>
+
+<!-- DATA QUALITY ALERT -->
+<div class="alert-banner">
+  <div class="alert-banner-inner">
+    <span>⚠️ <strong>Data Quality:</strong> 172 accounts have Closed Won PSA deals but are still typed as <em>TigerPaw Client</em> in Salesforce. They should be <em>Rev.io PSA Client</em>. This undercounts PSA customers and affects cross-sell targeting.</span>
+  </div>
+</div>
+
+<!-- ── SECTION 1: TRENDS ──────────────────────────────────────── -->
+<section id="trends">
+  <div class="section-inner">
+    <div class="eyebrow">Lead Direction Trends</div>
+    <h2 class="section-heading">Sales Generated Opps — 2026 vs 2025</h2>
+    <p class="section-sub">Monthly opportunities created by lead direction, with 2025 Sales Generated as a benchmark. Win rate and MRR won by direction.</p>
+
+    <div class="kpi-row">
+      <div class="kpi-card teal">
+        <div class="k-lbl">SG Opps YTD</div>
+        <div class="k-val">547</div>
+        <div class="k-sub">Jan–Apr 2026</div>
+      </div>
+      <div class="kpi-card green">
+        <div class="k-lbl">MG Opps YTD</div>
+        <div class="k-val">329</div>
+        <div class="k-sub">Marketing generated</div>
+      </div>
+      <div class="kpi-card">
+        <div class="k-lbl">SG Win Rate</div>
+        <div class="k-val" style="color:var(--teal)">9.2%</div>
+        <div class="k-sub">On closed opps (10.8:1)</div>
+      </div>
+      <div class="kpi-card green">
+        <div class="k-lbl">SG Won MRR YTD</div>
+        <div class="k-val">$15.4K</div>
+        <div class="k-sub">Sales Generated</div>
+      </div>
+      <div class="kpi-card">
+        <div class="k-lbl">MG Won MRR YTD</div>
+        <div class="k-val" style="color:var(--teal)">$16.7K</div>
+        <div class="k-sub">Marketing Generated</div>
+      </div>
+      <div class="kpi-card">
+        <div class="k-lbl">Historical Win Rate</div>
+        <div class="k-val" style="color:#8a9ab0">14.1%</div>
+        <div class="k-sub">2024–2025 baseline</div>
+      </div>
+    </div>
+
+    <div class="chart-grid-2">
+      <div class="chart-card">
+        <h3>Opps Created</h3>
+        <div class="card-title">Monthly Volume by Lead Direction</div>
+        <div class="chart-wrap"><canvas id="oppsCreatedChart"></canvas></div>
+      </div>
+      <div class="chart-card">
+        <h3>MRR Won</h3>
+        <div class="card-title">Won MRR by Lead Direction</div>
+        <div class="chart-wrap"><canvas id="mrrWonChart"></canvas></div>
+      </div>
+    </div>
+
+    <div class="chart-grid-2">
+      <div class="chart-card dark">
+        <h3>Win Rate</h3>
+        <div class="card-title">Close Rate on Closed Opps (% Won)</div>
+        <div class="chart-wrap-sm"><canvas id="winRateChart"></canvas></div>
+      </div>
+      <div class="chart-card dark">
+        <h3>2026 vs 2025</h3>
+        <div class="card-title">Sales Generated — YoY Comparison</div>
+        <div class="chart-wrap-sm"><canvas id="yoyChart"></canvas></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ── SECTION 2: TARGET ATTAINMENT ──────────────────────────── -->
+<section id="targets">
+  <div class="section-inner">
+    <div class="eyebrow">Target Attainment</div>
+    <h2 class="section-heading">PSA MRR Won vs Target — Marketing &amp; Sales</h2>
+    <p class="section-sub">Targets from <em>2026 Revenue Targets (Draft)</em>. PSA split: <strong>60% Marketing / 40% Sales</strong>. Avg deal size: Marketing $759 · Sales $670.</p>
+
+    <div class="team-grid">
+      <!-- Marketing -->
+      <div class="team-panel mktg">
+        <div class="team-panel-header">
+          <h3>📣 Marketing Generated</h3>
+          <span class="split-tag">60% of PSA Target</span>
+        </div>
+        <div class="team-panel-body">
+          <div class="attain-list" id="mgAttainList"></div>
+        </div>
+      </div>
+
+      <!-- Sales -->
+      <div class="team-panel sales">
+        <div class="team-panel-header">
+          <h3>💼 Sales Generated</h3>
+          <span class="split-tag">40% of PSA Target</span>
+        </div>
+        <div class="team-panel-body">
+          <div class="attain-list" id="sgAttainList"></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="chart-card" style="margin-bottom:0">
+      <h3>MRR Won vs Target</h3>
+      <div class="card-title">Actual MRR Won vs Monthly Target — Marketing &amp; Sales</div>
+      <div class="chart-wrap"><canvas id="targetChart"></canvas></div>
+    </div>
+  </div>
+</section>
+
+<!-- ── SECTION 3: PIPELINE REQUIREMENTS ──────────────────────── -->
+<section id="requirements">
+  <div class="section-inner">
+    <div class="eyebrow">Pipeline Requirements</div>
+    <h2 class="section-heading">Opps Needed to Hit Target — May–Dec 2026</h2>
+    <p class="section-sub">Using a <strong>10:1 opp-to-close ratio</strong> and 2026 YTD avg deal sizes, how many opps does each team need to create each month to hit the PSA target?</p>
+
+    <div class="kpi-row">
+      <div class="kpi-card teal">
+        <div class="k-lbl">MG Target Remaining</div>
+        <div class="k-val">$236K</div>
+        <div class="k-sub">May–Dec MRR to win</div>
+      </div>
+      <div class="kpi-card">
+        <div class="k-lbl">MG Opps Needed</div>
+        <div class="k-val" style="color:var(--teal)">3,109</div>
+        <div class="k-sub">~389/month avg</div>
+      </div>
+      <div class="kpi-card green">
+        <div class="k-lbl">SG Target Remaining</div>
+        <div class="k-val">$157K</div>
+        <div class="k-sub">May–Dec MRR to win</div>
+      </div>
+      <div class="kpi-card">
+        <div class="k-lbl">SG Opps Needed</div>
+        <div class="k-val" style="color:var(--green)">2,343</div>
+        <div class="k-sub">~293/month avg</div>
+      </div>
+    </div>
+
+    <div class="chart-card" style="margin-bottom:24px">
+      <h3>Monthly Opps Needed</h3>
+      <div class="card-title">Opps Required per Month to Hit PSA Target at 10:1 (with YTD Actuals)</div>
+      <div class="chart-wrap"><canvas id="reqChart"></canvas></div>
+    </div>
+
+    <div class="req-grid">
+      <div class="chart-card">
+        <h3>Marketing Requirements</h3>
+        <div class="card-title">Monthly Opps Needed · 60% Split · $759 avg</div>
+        <div class="data-table-wrap">
+          <table><thead><tr><th>Month</th><th>MRR Target</th><th>Deals</th><th>Opps Needed</th><th>Actual</th></tr></thead>
+          <tbody id="mgReqTable"></tbody></table>
+        </div>
+      </div>
+      <div class="chart-card">
+        <h3>Sales Requirements</h3>
+        <div class="card-title">Monthly Opps Needed · 40% Split · $670 avg</div>
+        <div class="data-table-wrap">
+          <table><thead><tr><th>Month</th><th>MRR Target</th><th>Deals</th><th>Opps Needed</th><th>Actual</th></tr></thead>
+          <tbody id="sgReqTable"></tbody></table>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ── SECTION 4: CROSS-SELL ──────────────────────────────────── -->
+<section id="crosssell">
+  <div class="section-inner">
+    <div class="eyebrow">Cross-Sell Intelligence</div>
+    <h2 class="section-heading">Accounts with Both Billing &amp; PSA Closed Won</h2>
+    <p class="section-sub">50 accounts have won both products. 14 are still typed as <em>TigerPaw Client</em> in Salesforce — needs ops cleanup for accurate cross-sell targeting.</p>
+
+    <div class="kpi-row">
+      <div class="kpi-card green">
+        <div class="k-lbl">Cross-Sell Wins</div>
+        <div class="k-val">50</div>
+        <div class="k-sub">Both billing + PSA won</div>
+      </div>
+      <div class="kpi-card">
+        <div class="k-lbl">Type Mismatch</div>
+        <div class="k-val" style="color:#ef4444">172</div>
+        <div class="k-sub">Won PSA, still TigerPaw</div>
+      </div>
+      <div class="kpi-card teal">
+        <div class="k-lbl">2026 PSA Wins</div>
+        <div class="k-val">49</div>
+        <div class="k-sub">All account types</div>
+      </div>
+      <div class="kpi-card">
+        <div class="k-lbl">All-Time PSA Wins</div>
+        <div class="k-val" style="color:var(--navy)">1,114</div>
+        <div class="k-sub">Since inception</div>
+      </div>
+    </div>
+
+    <div class="chart-card">
+      <h3>Cross-Sell Accounts</h3>
+      <div class="card-title">Accounts with Both Billing &amp; PSA Closed Won — Sorted by PSA Win Date</div>
+      <input type="text" class="search-input" id="crossSearch" placeholder="Search accounts…" oninput="filterCrossTable(this.value)">
+      <div class="cross-table-wrap">
+        <table>
+          <thead>
+            <tr>
+              <th>Account</th>
+              <th>SF Type</th>
+              <th>Billing MRR</th>
+              <th>PSA MRR</th>
+              <th>PSA Won</th>
+            </tr>
+          </thead>
+          <tbody id="crossTable"></tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<div class="stripe"></div>
+<div class="cta-band">
+  <h2>Questions about the data?</h2>
+  <p>All figures pulled live from Salesforce. Targets from 2026 Revenue Targets (Draft) via Jennifer Hopkins.</p>
+</div>
+<footer>
+  <p>Rev.io Internal · PSA Analytics Dashboard · Robin 🦸🏻‍♂️ · Salesforce + 2026 Revenue Targets (Draft) · Last updated <span id="ts2"></span></p>
+</footer>
+
+<script>
+  const now = new Date().toLocaleDateString('en-US', { month:'short', day:'numeric', year:'numeric', hour:'2-digit', minute:'2-digit' });
+  document.getElementById('ts').textContent = now;
+  document.getElementById('ts2').textContent = now;
+
+  const NAVY='#1D3756', TEAL='#2399B5', GREEN='#6EBE4F', PLATINUM='#E8E8EC';
+  const months4 = ['Jan','Feb','Mar','Apr'];
+  const months12 = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+
+  // ── ACTUALS ──────────────────────────────────────────────
+  const sgOpps   = [187,130,133,97];
+  const mgOpps   = [100,88,81,60];
+  const cgOpps   = [1,7,5,3];
+  const sg2025   = [185,180,183,250];
+  const sgMrrWon = [5030,3345,5360,1675];
+  const mgMrrWon = [4575,5694,6430,0];
+
+  // ── TARGETS ──────────────────────────────────────────────
+  const psaTotal = [17000,21000,25000,30000,34000,38000,42000,46000,50000,55000,59000,63000];
+  const mgTgt    = psaTotal.map(t => Math.round(t*0.60));
+  const sgTgt    = psaTotal.map(t => Math.round(t*0.40));
+
+  // ── REQUIREMENTS ─────────────────────────────────────────
+  const mgDeals = mgTgt.map(t => Math.ceil(t/759));
+  const sgDeals = sgTgt.map(t => Math.ceil(t/670));
+  const mgOppsNeeded = mgDeals.map(d => d*10);
+  const sgOppsNeeded = sgDeals.map(d => d*10);
+
+  // ── CHART DEFAULTS ────────────────────────────────────────
+  Chart.defaults.font.family = "'Open Sans', system-ui, sans-serif";
+  Chart.defaults.color = '#8a9ab0';
+  const gridColor = 'rgba(0,0,0,0.06)';
+  const gridColorDark = 'rgba(255,255,255,0.08)';
+
+  // 1. Opps Created
+  new Chart(document.getElementById('oppsCreatedChart'), {
+    type:'bar',
+    data:{
+      labels: months4,
+      datasets:[
+        { label:'Sales Generated', data:sgOpps, backgroundColor:TEAL, borderRadius:4 },
+        { label:'Marketing Generated', data:mgOpps, backgroundColor:GREEN, borderRadius:4 },
+        { label:'Channel Generated', data:cgOpps, backgroundColor:'#a78bfa', borderRadius:4 },
+        { label:'SG 2025 Baseline', data:sg2025, type:'line', borderColor:'#f59e0b', backgroundColor:'transparent', borderDash:[5,4], borderWidth:2, pointBackgroundColor:'#f59e0b', pointRadius:4, tension:0.2, order:0 },
+      ]
+    },
+    options:{ responsive:true, maintainAspectRatio:false, plugins:{ legend:{ labels:{ color:NAVY, font:{ size:11 } } }, tooltip:{ mode:'index', intersect:false } }, scales:{ x:{ ticks:{ color:NAVY }, grid:{ color:gridColor } }, y:{ ticks:{ color:NAVY }, grid:{ color:gridColor }, beginAtZero:true } } }
+  });
+
+  // 2. MRR Won
+  new Chart(document.getElementById('mrrWonChart'), {
+    type:'bar',
+    data:{
+      labels: months4,
+      datasets:[
+        { label:'Sales Generated', data:sgMrrWon, backgroundColor:TEAL, borderRadius:4 },
+        { label:'Marketing Generated', data:mgMrrWon, backgroundColor:GREEN, borderRadius:4 },
+      ]
+    },
+    options:{
+      responsive:true, maintainAspectRatio:false,
+      plugins:{ legend:{ labels:{ color:NAVY, font:{ size:11 } } }, tooltip:{ mode:'index', intersect:false, callbacks:{ label: c=>' '+c.dataset.label+': $'+c.parsed.y.toLocaleString() } } },
+      scales:{ x:{ ticks:{ color:NAVY }, grid:{ color:gridColor } }, y:{ ticks:{ color:NAVY, callback:v=>'$'+(v/1000).toFixed(0)+'K' }, grid:{ color:gridColor }, beginAtZero:true } }
+    }
+  });
+
+  // 3. Win Rate
+  const sgWR = [9,9,20,14]; // Jan-Apr (Apr still open, estimate)
+  const mgWR = [13,15,24,0];
+  new Chart(document.getElementById('winRateChart'), {
+    type:'line',
+    data:{
+      labels: months4,
+      datasets:[
+        { label:'Sales Generated', data:sgWR, borderColor:TEAL, backgroundColor:'rgba(35,153,181,0.1)', fill:true, tension:0.3, pointRadius:5, pointBackgroundColor:TEAL, borderWidth:2 },
+        { label:'Marketing Generated', data:mgWR, borderColor:GREEN, backgroundColor:'rgba(110,190,79,0.1)', fill:true, tension:0.3, pointRadius:5, pointBackgroundColor:GREEN, borderWidth:2 },
+        { label:'2024-25 Baseline', data:[14,14,14,14], borderColor:'rgba(255,255,255,0.3)', backgroundColor:'transparent', borderDash:[5,4], borderWidth:1.5, pointRadius:0 },
+      ]
+    },
+    options:{
+      responsive:true, maintainAspectRatio:false,
+      plugins:{ legend:{ labels:{ color:PLATINUM, font:{ size:11 } } } },
+      scales:{ x:{ ticks:{ color:PLATINUM }, grid:{ color:gridColorDark } }, y:{ ticks:{ color:PLATINUM, callback:v=>v+'%' }, grid:{ color:gridColorDark }, beginAtZero:true, max:30 } }
+    }
+  });
+
+  // 4. YoY
+  new Chart(document.getElementById('yoyChart'), {
+    type:'bar',
+    data:{
+      labels: months4,
+      datasets:[
+        { label:'2026', data:sgOpps, backgroundColor:TEAL, borderRadius:4 },
+        { label:'2025', data:sg2025, backgroundColor:'rgba(255,255,255,0.15)', borderRadius:4 },
+      ]
+    },
+    options:{
+      responsive:true, maintainAspectRatio:false,
+      plugins:{ legend:{ labels:{ color:PLATINUM, font:{ size:11 } } }, tooltip:{ mode:'index', intersect:false } },
+      scales:{ x:{ ticks:{ color:PLATINUM }, grid:{ color:gridColorDark } }, y:{ ticks:{ color:PLATINUM }, grid:{ color:gridColorDark }, beginAtZero:true } }
+    }
+  });
+
+  // 5. Target Chart
+  new Chart(document.getElementById('targetChart'), {
+    type:'bar',
+    data:{
+      labels: months4,
+      datasets:[
+        { label:'MG Won MRR', data:mgMrrWon, backgroundColor:GREEN, borderRadius:4, order:2 },
+        { label:'SG Won MRR', data:sgMrrWon, backgroundColor:TEAL, borderRadius:4, order:2 },
+        { label:'MG Target', data:mgTgt.slice(0,4), type:'line', borderColor:'#6EBE4F', backgroundColor:'transparent', borderDash:[6,4], borderWidth:2, pointBackgroundColor:'#6EBE4F', pointRadius:5, tension:0.2, order:1 },
+        { label:'SG Target', data:sgTgt.slice(0,4), type:'line', borderColor:TEAL, backgroundColor:'transparent', borderDash:[6,4], borderWidth:2, pointBackgroundColor:TEAL, pointRadius:5, tension:0.2, order:1 },
+      ]
+    },
+    options:{
+      responsive:true, maintainAspectRatio:false,
+      plugins:{ legend:{ labels:{ color:NAVY, font:{ size:11 } } }, tooltip:{ mode:'index', intersect:false, callbacks:{ label: c=>' '+c.dataset.label+': $'+c.parsed.y.toLocaleString() } } },
+      scales:{ x:{ ticks:{ color:NAVY }, grid:{ color:gridColor } }, y:{ ticks:{ color:NAVY, callback:v=>'$'+(v/1000).toFixed(0)+'K' }, grid:{ color:gridColor }, beginAtZero:true } }
+    }
+  });
+
+  // 6. Requirements Chart
+  new Chart(document.getElementById('reqChart'), {
+    type:'bar',
+    data:{
+      labels: months12,
+      datasets:[
+        { label:'MG Opps Needed', data:mgOppsNeeded, backgroundColor: months12.map((_,i)=>i<4?'rgba(110,190,79,0.3)':GREEN), borderRadius:4 },
+        { label:'SG Opps Needed', data:sgOppsNeeded, backgroundColor: months12.map((_,i)=>i<4?'rgba(35,153,181,0.3)':TEAL), borderRadius:4 },
+        { label:'MG Actual Created', data:[...mgOpps, ...Array(8).fill(null)], type:'line', borderColor:GREEN, backgroundColor:'transparent', borderWidth:2, pointBackgroundColor:GREEN, pointRadius:5, spanGaps:false, tension:0.2 },
+        { label:'SG Actual Created', data:[...sgOpps, ...Array(8).fill(null)], type:'line', borderColor:TEAL, backgroundColor:'transparent', borderWidth:2, pointBackgroundColor:TEAL, pointRadius:5, spanGaps:false, tension:0.2 },
+      ]
+    },
+    options:{
+      responsive:true, maintainAspectRatio:false,
+      plugins:{ legend:{ labels:{ color:NAVY, font:{ size:11 } } }, tooltip:{ mode:'index', intersect:false } },
+      scales:{ x:{ ticks:{ color:NAVY }, grid:{ color:gridColor } }, y:{ ticks:{ color:NAVY }, grid:{ color:gridColor }, beginAtZero:true, title:{ display:true, text:'Opps', color:'#8a9ab0', font:{ size:11 } } } }
+    }
+  });
+
+  // ── ATTAINMENT BARS ───────────────────────────────────────
+  function buildAttainBars(containerId, actuals, targets) {
+    const wrap = document.getElementById(containerId);
+    months4.forEach((m,i) => {
+      const pct = targets[i]>0 ? Math.round((actuals[i]/targets[i])*100) : 0;
+      const fillClass = pct>=90?'fill-good':pct>=60?'fill-mid':'fill-low';
+      const pctColor = pct>=90?'var(--green)':pct>=60?'#f59e0b':'#ef4444';
+      const isMTD = i===3;
+      wrap.innerHTML += `
+        <div class="attain-item">
+          <div class="attain-meta">
+            <span class="a-month">${m}${isMTD?' <small style="font-weight:400;color:#8a9ab0;font-size:10px">(MTD)</small>':''}</span>
+            <span class="a-mrr">$${actuals[i].toLocaleString()} / $${targets[i].toLocaleString()}</span>
+            <span class="a-pct" style="color:${pctColor}">${pct}%</span>
+          </div>
+          <div class="attain-track"><div class="attain-fill ${fillClass}" style="width:${Math.min(pct,100)}%"></div></div>
+        </div>`;
+    });
+  }
+  buildAttainBars('mgAttainList', mgMrrWon, mgTgt.slice(0,4));
+  buildAttainBars('sgAttainList', sgMrrWon, sgTgt.slice(0,4));
+
+  // ── REQUIREMENTS TABLES ───────────────────────────────────
+  function buildReqTable(tbodyId, targets, deals, oppsNeeded, actualOpps) {
+    const tbody = document.getElementById(tbodyId);
+    months12.forEach((m,i) => {
+      const isPast = i<3, isCurr = i===3, isFuture = i>=4;
+      const tr = document.createElement('tr');
+      if(isPast) tr.className='month-row-past';
+      if(isCurr) tr.className='month-row-current';
+      const actCell = actualOpps[i]!==null
+        ? `<span class="${isPast||isCurr?'mrr-teal':''}">${actualOpps[i]}</span>`
+        : `<span class="pill pill-navy">Required</span>`;
+      const oppCell = isFuture
+        ? `<strong style="color:var(--navy)">${oppsNeeded[i].toLocaleString()}</strong>`
+        : `<span style="color:#8a9ab0">${oppsNeeded[i].toLocaleString()}</span>`;
+      tr.innerHTML = `<td class="td-name">${m}${isCurr?' <span class="pill pill-teal" style="font-size:9px">NOW</span>':''}</td><td class="mrr-dim">$${targets[i].toLocaleString()}</td><td>${deals[i]}</td><td>${oppCell}</td><td>${actCell}</td>`;
+      tbody.appendChild(tr);
+    });
+  }
+  const mgActOpps = [...mgOpps,...Array(8).fill(null)];
+  const sgActOpps = [...sgOpps,...Array(8).fill(null)];
+  buildReqTable('mgReqTable', mgTgt, mgDeals, mgOppsNeeded, mgActOpps);
+  buildReqTable('sgReqTable', sgTgt, sgDeals, sgOppsNeeded, sgActOpps);
+
+  // ── CROSS-SELL TABLE ──────────────────────────────────────
+  const crossData = [
+    { name:"KeyCom", type:"Client", billing:500, psa:895, date:"2026-04-24" },
+    { name:"Bullfrog Group", type:"TigerPaw Client", billing:3815, psa:600, date:"2026-03-05" },
+    { name:"Fuse.Cloud", type:"TigerPaw Client", billing:10500, psa:1250, date:"2026-02-27" },
+    { name:"Trifecta Solutions Inc", type:"TigerPaw Client", billing:4000, psa:550, date:"2026-02-27" },
+    { name:"Losh Network Services", type:"TigerPaw Client", billing:1500, psa:1004, date:"2026-02-26" },
+    { name:"Stratus Telecom", type:"TigerPaw Client", billing:3200, psa:500, date:"2026-01-28" },
+    { name:"Tailwinds Voice & Data", type:"TigerPaw Client", billing:4000, psa:500, date:"2026-01-27" },
+    { name:"Avalora", type:"Rev.io PSA Client", billing:4200, psa:630, date:"2025-12-31" },
+    { name:"Class 5 Technologies", type:"TigerPaw Client", billing:2250, psa:500, date:"2025-12-11" },
+    { name:"XMission", type:"TigerPaw Client", billing:10000, psa:1800, date:"2025-12-09" },
+    { name:"Automated Telecom", type:"TigerPaw Client", billing:2800, psa:500, date:"2025-12-04" },
+    { name:"Wyoming.com", type:"TigerPaw Client", billing:500, psa:1740, date:"2025-12-04" },
+    { name:"Global Data Technologies", type:"Rev.io PSA Client", billing:400, psa:2320, date:"2025-11-18" },
+    { name:"TCG Tech", type:"Rev.io Billing Client", billing:500, psa:520, date:"2025-10-30" },
+    { name:"MetroSwitch Technologies", type:"Rev.io PSA Client", billing:3333, psa:400, date:"2025-10-27" },
+    { name:"Ten4", type:"Rev.io PSA Client", billing:5000, psa:500, date:"2025-10-06" },
+    { name:"Dialog Telecommunications, Inc.", type:"Rev.io PSA Client", billing:18550, psa:400, date:"2025-09-23" },
+    { name:"Savvy Communications", type:"Rev.io PSA Client", billing:2500, psa:400, date:"2025-09-12" },
+    { name:"CallSprout", type:"Rev.io PSA Client", billing:2000, psa:400, date:"2025-08-29" },
+    { name:"Atron Solutions, LLC", type:"Rev.io Billing Client", billing:7624, psa:549, date:"2025-07-31" },
+    { name:"BlueEdge Technologies", type:"Rev.io PSA Client", billing:3000, psa:400, date:"2025-07-31" },
+    { name:"Revolve Tech", type:"Rev.io Billing Client", billing:2600, psa:1160, date:"2025-07-25" },
+    { name:"Blueline Telecom", type:"Rev.io PSA Client", billing:8700, psa:1580, date:"2025-07-15" },
+    { name:"JMF Solutions/Prestige Healthcare", type:"Rev.io Billing Client", billing:750, psa:1260, date:"2025-07-07" },
+    { name:"AhelioTech", type:"Client", billing:6255, psa:2800, date:"2025-06-30" },
+    { name:"Quick Copper Communications", type:"Rev.io PSA Client", billing:7718, psa:2040, date:"2025-02-20" },
+    { name:"Bridge Communications", type:"Rev.io PSA Client", billing:2750, psa:800, date:"2024-11-20" },
+    { name:"Hiscall", type:"Rev.io Billing Client", billing:1000, psa:6000, date:"2024-10-28" },
+    { name:"Hinson Communications Inc.", type:"Rev.io Billing Client", billing:1100, psa:810, date:"2024-10-31" },
+    { name:"Techmode", type:"Rev.io Billing Client", billing:3500, psa:116, date:"2024-10-08" },
+    { name:"Rage Technologies", type:"Rev.io Billing Client", billing:2028, psa:500, date:"2024-05-21" },
+    { name:"Kinetic VoIP, Inc", type:"Rev.io Billing Client", billing:2000, psa:500, date:"2023-12-20" },
+    { name:"Advanced Technology Group, LLC", type:"Rev.io Billing Client", billing:2700, psa:732, date:"2023-11-30" },
+    { name:"Converged Networks", type:"Rev.io Billing Client", billing:2833, psa:700, date:"2023-09-21" },
+  ];
+
+  function typePill(t) {
+    if(t==='TigerPaw Client') return `<span class="pill pill-warn">⚠️ TigerPaw</span>`;
+    if(t.includes('Rev.io Billing')) return `<span class="pill pill-teal">Billing</span>`;
+    if(t.includes('Rev.io PSA')) return `<span class="pill pill-green">PSA Client</span>`;
+    return `<span class="pill" style="background:#f1f5f9;color:#64748b">${t}</span>`;
+  }
+
+  const crossTbody = document.getElementById('crossTable');
+  let crossRows = [];
+  crossData.forEach(r => {
+    const tr = document.createElement('tr');
+    tr.dataset.name = r.name.toLowerCase();
+    const billingColor = r.billing>=5000?'color:#0e7490;font-weight:700':r.billing>=2000?'color:var(--teal);font-weight:700':'';
+    tr.innerHTML = `<td class="td-name">${r.name}</td><td>${typePill(r.type)}</td><td style="${billingColor}">$${r.billing.toLocaleString()}</td><td class="mrr-green">$${r.psa.toLocaleString()}</td><td style="color:#8a9ab0">${r.date}</td>`;
+    crossTbody.appendChild(tr);
+    crossRows.push(tr);
+  });
+
+  function filterCrossTable(q) {
+    crossRows.forEach(r => {
+      r.style.display = !q || r.dataset.name.includes(q.toLowerCase()) ? '' : 'none';
+    });
+  }
+</script>
+</body>
+</html>
