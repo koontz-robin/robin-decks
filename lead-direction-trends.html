@@ -1,0 +1,373 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Lead Direction Trends — 2026</title>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body { font-family: 'Segoe UI', system-ui, sans-serif; background: #0f1117; color: #e2e8f0; }
+    header { background: linear-gradient(135deg, #1e293b 0%, #0f172a 100%); border-bottom: 1px solid #334155; padding: 20px 32px; display: flex; align-items: center; justify-content: space-between; }
+    header h1 { font-size: 1.4rem; font-weight: 700; color: #f8fafc; }
+    header h1 span { color: #38bdf8; }
+    .badge { background: #1e40af; color: #bfdbfe; font-size: 0.75rem; padding: 4px 10px; border-radius: 20px; font-weight: 600; }
+    .updated { font-size: 0.72rem; color: #64748b; margin-top: 4px; }
+    .container { max-width: 1300px; margin: 0 auto; padding: 28px 24px; }
+    .section-label { font-size: 0.7rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.08em; color: #475569; margin-bottom: 12px; margin-top: 28px; padding-bottom: 6px; border-bottom: 1px solid #1e293b; }
+
+    /* KPI row */
+    .kpi-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(160px, 1fr)); gap: 14px; margin-bottom: 8px; }
+    .kpi-card { background: #1e293b; border: 1px solid #334155; border-radius: 12px; padding: 18px; position: relative; overflow: hidden; }
+    .kpi-card::before { content:''; position:absolute; top:0; left:0; right:0; height:3px; background: var(--accent, #38bdf8); }
+    .kpi-card .label { font-size: 0.7rem; font-weight: 600; text-transform: uppercase; letter-spacing: 0.05em; color: #94a3b8; }
+    .kpi-card .value { font-size: 1.8rem; font-weight: 800; color: #f8fafc; margin: 6px 0 3px; line-height: 1; }
+    .kpi-card .sub { font-size: 0.75rem; color: #64748b; }
+    .kpi-card.blue   { --accent: #38bdf8; }
+    .kpi-card.green  { --accent: #22c55e; }
+    .kpi-card.purple { --accent: #a78bfa; }
+    .kpi-card.orange { --accent: #f97316; }
+    .kpi-card.yellow { --accent: #facc15; }
+    .kpi-card.teal   { --accent: #2dd4bf; }
+
+    /* Charts */
+    .chart-card { background: #1e293b; border: 1px solid #334155; border-radius: 12px; padding: 22px; margin-bottom: 20px; }
+    .chart-card h3 { font-size: 0.85rem; font-weight: 700; color: #94a3b8; text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: 16px; }
+    .chart-wrap { position: relative; height: 280px; }
+    .chart-wrap-sm { position: relative; height: 220px; }
+    .two-col { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
+    @media (max-width: 800px) { .two-col { grid-template-columns: 1fr; } }
+
+    /* Month breakdown table */
+    table { width: 100%; border-collapse: collapse; font-size: 0.82rem; }
+    th { text-align: left; padding: 9px 12px; color: #64748b; font-weight: 600; font-size: 0.72rem; text-transform: uppercase; border-bottom: 1px solid #334155; white-space: nowrap; }
+    td { padding: 10px 12px; border-bottom: 1px solid #1a2438; color: #cbd5e1; }
+    tr:last-child td { border-bottom: none; }
+    tr:hover td { background: #243247; }
+    .num { font-weight: 700; }
+    .green-num { color: #4ade80; font-weight: 700; }
+    .red-num { color: #f87171; font-weight: 700; }
+    .yellow-num { color: #facc15; font-weight: 700; }
+    .dim { color: #64748b; }
+
+    .trend-up   { color: #4ade80; font-size: 0.8rem; }
+    .trend-down { color: #f87171; font-size: 0.8rem; }
+    .trend-flat { color: #94a3b8; font-size: 0.8rem; }
+
+    footer { text-align: center; padding: 20px; font-size: 0.72rem; color: #475569; border-top: 1px solid #1e293b; margin-top: 8px; }
+    ::-webkit-scrollbar { width: 6px; } ::-webkit-scrollbar-track { background: #0f172a; } ::-webkit-scrollbar-thumb { background: #334155; border-radius: 3px; }
+  </style>
+</head>
+<body>
+<header>
+  <div>
+    <h1>Lead Direction Trends <span>— 2026 YTD</span></h1>
+    <div class="updated">Last updated: <span id="ts"></span> · Salesforce data</div>
+  </div>
+  <div class="badge">Sales Generated Focus</div>
+</header>
+
+<div class="container">
+
+  <div class="section-label">2026 YTD Summary — Sales Generated</div>
+  <div class="kpi-grid">
+    <div class="kpi-card blue">
+      <div class="label">Total SG Opps Created</div>
+      <div class="value">547</div>
+      <div class="sub">Jan–Apr 2026</div>
+    </div>
+    <div class="kpi-card green">
+      <div class="label">SG Closed Won</div>
+      <div class="value">62</div>
+      <div class="sub">11.3% win rate</div>
+    </div>
+    <div class="kpi-card yellow">
+      <div class="label">SG Won MRR</div>
+      <div class="value">$30.5K</div>
+      <div class="sub">Across 4 months</div>
+    </div>
+    <div class="kpi-card purple">
+      <div class="label">Active SG Pipeline</div>
+      <div class="value">64</div>
+      <div class="sub">Opps still open</div>
+    </div>
+    <div class="kpi-card teal">
+      <div class="label">MG Opps Created</div>
+      <div class="value">329</div>
+      <div class="sub">Marketing Generated</div>
+    </div>
+    <div class="kpi-card orange">
+      <div class="label">Channel Opps</div>
+      <div class="value">16</div>
+      <div class="sub">Channel Generated</div>
+    </div>
+  </div>
+
+  <!-- Main line chart: opps created by month -->
+  <div class="section-label">Opps Created by Month — All Lead Directions</div>
+  <div class="chart-card">
+    <h3>Opportunities Created per Month (2026 vs 2025 SG baseline)</h3>
+    <div class="chart-wrap">
+      <canvas id="mainChart"></canvas>
+    </div>
+  </div>
+
+  <!-- Two cols: win rate + MRR won -->
+  <div class="two-col">
+    <div class="chart-card">
+      <h3>Sales Generated — Win Rate by Month</h3>
+      <div class="chart-wrap-sm"><canvas id="winRateChart"></canvas></div>
+    </div>
+    <div class="chart-card">
+      <h3>Sales Generated — Won MRR by Month</h3>
+      <div class="chart-wrap-sm"><canvas id="mrrChart"></canvas></div>
+    </div>
+  </div>
+
+  <!-- Detailed breakdown table -->
+  <div class="section-label">Monthly Breakdown Detail</div>
+  <div class="chart-card">
+    <h3>All Lead Directions — Month by Month</h3>
+    <table>
+      <thead>
+        <tr>
+          <th>Month</th>
+          <th>Direction</th>
+          <th>Created</th>
+          <th>Won</th>
+          <th>Lost</th>
+          <th>Active</th>
+          <th>Win Rate</th>
+          <th>MRR Created</th>
+          <th>MRR Won</th>
+          <th>vs 2025</th>
+        </tr>
+      </thead>
+      <tbody id="detailTable"></tbody>
+    </table>
+  </div>
+
+</div>
+<footer>Rev.io Internal · Robin 🦸🏻‍♂️ · Data from Salesforce</footer>
+
+<script>
+  document.getElementById('ts').textContent = new Date().toLocaleDateString('en-US', {
+    month: 'short', day: 'numeric', year: 'numeric', hour: '2-digit', minute: '2-digit'
+  });
+
+  // ── DATA ──────────────────────────────────────────────────────────────────
+  const months = ['Jan', 'Feb', 'Mar', 'Apr'];
+
+  const sg = [
+    { created:187, won:16, lost:171, active:0,  mrr_created:144151, mrr_won:7198  },
+    { created:130, won:11, lost:117, active:2,  mrr_created:89756,  mrr_won:4384  },
+    { created:133, won:24, lost:95,  active:14, mrr_created:91591,  mrr_won:15572 },
+    { created:97,  won:11, lost:38,  active:48, mrr_created:68620,  mrr_won:3383  },
+  ];
+  const mg = [
+    { created:100, won:13, lost:87, active:0,  mrr_created:86423,  mrr_won:5953  },
+    { created:88,  won:13, lost:75, active:0,  mrr_created:65684,  mrr_won:6745  },
+    { created:81,  won:18, lost:55, active:8,  mrr_created:68700,  mrr_won:13240 },
+    { created:60,  won:3,  lost:12, active:45, mrr_created:47344,  mrr_won:0     },
+  ];
+  const cg = [
+    { created:1,  won:0, lost:1, active:0, mrr_created:750,   mrr_won:0    },
+    { created:7,  won:4, lost:2, active:1, mrr_created:10690, mrr_won:7790 },
+    { created:5,  won:1, lost:3, active:1, mrr_created:6840,  mrr_won:590  },
+    { created:3,  won:0, lost:0, active:3, mrr_created:9320,  mrr_won:0    },
+  ];
+
+  // 2025 Sales Generated monthly baseline
+  const sg2025 = [185, 180, 183, 250, 166, 161, 192, 134, 152, 209, 146, 136];
+
+  // ── MAIN CHART ────────────────────────────────────────────────────────────
+  new Chart(document.getElementById('mainChart').getContext('2d'), {
+    type: 'bar',
+    data: {
+      labels: months,
+      datasets: [
+        {
+          label: 'Sales Generated 2026',
+          data: sg.map(d => d.created),
+          backgroundColor: '#38bdf8',
+          borderRadius: 4,
+          order: 2,
+        },
+        {
+          label: 'Marketing Generated 2026',
+          data: mg.map(d => d.created),
+          backgroundColor: '#a78bfa',
+          borderRadius: 4,
+          order: 2,
+        },
+        {
+          label: 'Channel Generated 2026',
+          data: cg.map(d => d.created),
+          backgroundColor: '#2dd4bf',
+          borderRadius: 4,
+          order: 2,
+        },
+        {
+          label: 'SG 2025 Baseline',
+          data: sg2025.slice(0, 4),
+          type: 'line',
+          borderColor: '#f97316',
+          backgroundColor: 'transparent',
+          borderWidth: 2,
+          borderDash: [5, 4],
+          pointBackgroundColor: '#f97316',
+          pointRadius: 4,
+          tension: 0.3,
+          order: 1,
+        },
+      ]
+    },
+    options: {
+      responsive: true, maintainAspectRatio: false,
+      plugins: {
+        legend: { labels: { color: '#94a3b8', font: { size: 11 } } },
+        tooltip: { mode: 'index', intersect: false }
+      },
+      scales: {
+        x: { ticks: { color: '#64748b' }, grid: { color: '#1e293b' } },
+        y: { ticks: { color: '#64748b' }, grid: { color: '#1e293b' }, beginAtZero: true,
+             title: { display: true, text: 'Opps Created', color: '#64748b', font: { size: 11 } } }
+      }
+    }
+  });
+
+  // ── WIN RATE CHART ────────────────────────────────────────────────────────
+  const sgWinRate = sg.map(d => {
+    const closed = d.won + d.lost;
+    return closed > 0 ? Math.round((d.won / closed) * 100) : null;
+  });
+  const mgWinRate = mg.map(d => {
+    const closed = d.won + d.lost;
+    return closed > 0 ? Math.round((d.won / closed) * 100) : null;
+  });
+
+  new Chart(document.getElementById('winRateChart').getContext('2d'), {
+    type: 'line',
+    data: {
+      labels: months,
+      datasets: [
+        {
+          label: 'Sales Generated',
+          data: sgWinRate,
+          borderColor: '#38bdf8',
+          backgroundColor: 'rgba(56,189,248,0.1)',
+          fill: true,
+          tension: 0.3,
+          pointRadius: 5,
+          pointBackgroundColor: '#38bdf8',
+          borderWidth: 2,
+        },
+        {
+          label: 'Marketing Generated',
+          data: mgWinRate,
+          borderColor: '#a78bfa',
+          backgroundColor: 'rgba(167,139,250,0.08)',
+          fill: true,
+          tension: 0.3,
+          pointRadius: 5,
+          pointBackgroundColor: '#a78bfa',
+          borderWidth: 2,
+        },
+      ]
+    },
+    options: {
+      responsive: true, maintainAspectRatio: false,
+      plugins: { legend: { labels: { color: '#94a3b8', font: { size: 11 } } } },
+      scales: {
+        x: { ticks: { color: '#64748b' }, grid: { color: '#1e293b' } },
+        y: { ticks: { color: '#64748b', callback: v => v + '%' }, grid: { color: '#1e293b' }, beginAtZero: true,
+             title: { display: true, text: 'Win Rate %', color: '#64748b', font: { size: 11 } } }
+      }
+    }
+  });
+
+  // ── MRR WON CHART ─────────────────────────────────────────────────────────
+  new Chart(document.getElementById('mrrChart').getContext('2d'), {
+    type: 'bar',
+    data: {
+      labels: months,
+      datasets: [
+        {
+          label: 'Sales Generated MRR Won',
+          data: sg.map(d => d.mrr_won),
+          backgroundColor: '#22c55e',
+          borderRadius: 4,
+        },
+        {
+          label: 'Marketing Generated MRR Won',
+          data: mg.map(d => d.mrr_won),
+          backgroundColor: '#a78bfa',
+          borderRadius: 4,
+        },
+        {
+          label: 'Channel Generated MRR Won',
+          data: cg.map(d => d.mrr_won),
+          backgroundColor: '#2dd4bf',
+          borderRadius: 4,
+        },
+      ]
+    },
+    options: {
+      responsive: true, maintainAspectRatio: false,
+      plugins: {
+        legend: { labels: { color: '#94a3b8', font: { size: 11 } } },
+        tooltip: {
+          callbacks: { label: ctx => ` ${ctx.dataset.label}: $${ctx.parsed.y.toLocaleString()}` }
+        }
+      },
+      scales: {
+        x: { stacked: false, ticks: { color: '#64748b' }, grid: { color: '#1e293b' } },
+        y: { ticks: { color: '#64748b', callback: v => '$' + (v/1000).toFixed(0) + 'K' }, grid: { color: '#1e293b' }, beginAtZero: true }
+      }
+    }
+  });
+
+  // ── DETAIL TABLE ──────────────────────────────────────────────────────────
+  const tbody = document.getElementById('detailTable');
+  const directions = [
+    { label: 'Sales Generated', data: sg, color: '#38bdf8', vs2025: sg2025 },
+    { label: 'Marketing Generated', data: mg, color: '#a78bfa', vs2025: null },
+    { label: 'Channel Generated', data: cg, color: '#2dd4bf', vs2025: null },
+  ];
+
+  months.forEach((m, i) => {
+    directions.forEach((dir, di) => {
+      const d = dir.data[i];
+      const closed = d.won + d.lost;
+      const wr = closed > 0 ? ((d.won / closed) * 100).toFixed(0) + '%' : '—';
+      const vs = dir.vs2025 ? dir.vs2025[i] : null;
+      let vsCell = '<span class="dim">—</span>';
+      if (vs !== null) {
+        const diff = d.created - vs;
+        const pct = Math.round((diff / vs) * 100);
+        const cls = diff >= 0 ? 'trend-up' : 'trend-down';
+        const sign = diff >= 0 ? '▲' : '▼';
+        vsCell = `<span class="${cls}">${sign} ${Math.abs(diff)} (${Math.abs(pct)}%)</span>`;
+      }
+      const tr = document.createElement('tr');
+      if (di === 0) {
+        tr.style.borderTop = '1px solid #334155';
+      }
+      tr.innerHTML = `
+        <td>${di === 0 ? `<strong>${m}</strong>` : ''}</td>
+        <td><span style="color:${dir.color};font-weight:600">${dir.label}</span></td>
+        <td class="num">${d.created}</td>
+        <td class="green-num">${d.won}</td>
+        <td class="red-num">${d.lost}</td>
+        <td class="yellow-num">${d.active}</td>
+        <td class="num">${wr}</td>
+        <td class="dim">$${d.mrr_created.toLocaleString()}</td>
+        <td class="green-num">$${d.mrr_won.toLocaleString()}</td>
+        <td>${vsCell}</td>
+      `;
+      tbody.appendChild(tr);
+    });
+  });
+</script>
+</body>
+</html>
