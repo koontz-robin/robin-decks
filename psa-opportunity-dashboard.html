@@ -1,0 +1,412 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>PSA Opportunity Dashboard — Rev.io Billing Clients</title>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body { font-family: 'Segoe UI', system-ui, sans-serif; background: #0f1117; color: #e2e8f0; min-height: 100vh; }
+
+    header {
+      background: linear-gradient(135deg, #1e293b 0%, #0f172a 100%);
+      border-bottom: 1px solid #334155;
+      padding: 20px 32px;
+      display: flex; align-items: center; justify-content: space-between;
+    }
+    header h1 { font-size: 1.5rem; font-weight: 700; color: #f8fafc; }
+    header h1 span { color: #38bdf8; }
+    .badge { background: #1e40af; color: #bfdbfe; font-size: 0.75rem; padding: 4px 10px; border-radius: 20px; font-weight: 600; }
+    .updated { font-size: 0.75rem; color: #64748b; margin-top: 4px; }
+
+    .container { max-width: 1400px; margin: 0 auto; padding: 28px 24px; }
+
+    /* KPI Cards */
+    .kpi-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 16px; margin-bottom: 28px; }
+    .kpi-card {
+      background: #1e293b; border: 1px solid #334155; border-radius: 12px;
+      padding: 20px; position: relative; overflow: hidden;
+    }
+    .kpi-card::before {
+      content: ''; position: absolute; top: 0; left: 0; right: 0; height: 3px;
+      background: var(--accent, #38bdf8);
+    }
+    .kpi-card .label { font-size: 0.72rem; font-weight: 600; text-transform: uppercase; letter-spacing: 0.05em; color: #94a3b8; }
+    .kpi-card .value { font-size: 2rem; font-weight: 800; color: #f8fafc; margin: 6px 0 4px; line-height: 1; }
+    .kpi-card .sub { font-size: 0.78rem; color: #64748b; }
+    .kpi-card.green  { --accent: #22c55e; }
+    .kpi-card.blue   { --accent: #38bdf8; }
+    .kpi-card.orange { --accent: #f97316; }
+    .kpi-card.red    { --accent: #ef4444; }
+    .kpi-card.purple { --accent: #a78bfa; }
+    .kpi-card.yellow { --accent: #facc15; }
+
+    /* Charts row */
+    .charts-row { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 20px; margin-bottom: 28px; }
+    @media (max-width: 900px) { .charts-row { grid-template-columns: 1fr; } }
+
+    .chart-card {
+      background: #1e293b; border: 1px solid #334155; border-radius: 12px; padding: 20px;
+    }
+    .chart-card h3 { font-size: 0.85rem; font-weight: 700; color: #94a3b8; text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: 16px; }
+    .chart-wrap { position: relative; height: 220px; }
+
+    /* Funnel */
+    .funnel-wrap { margin-top: 4px; }
+    .funnel-bar { margin-bottom: 10px; }
+    .funnel-label { font-size: 0.78rem; color: #cbd5e1; display: flex; justify-content: space-between; margin-bottom: 4px; }
+    .funnel-track { background: #0f172a; border-radius: 4px; height: 20px; overflow: hidden; }
+    .funnel-fill { height: 100%; border-radius: 4px; transition: width 0.6s ease; }
+
+    /* Tables */
+    .tables-row { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin-bottom: 28px; }
+    @media (max-width: 900px) { .tables-row { grid-template-columns: 1fr; } }
+
+    .table-card { background: #1e293b; border: 1px solid #334155; border-radius: 12px; padding: 20px; }
+    .table-card h3 { font-size: 0.85rem; font-weight: 700; color: #94a3b8; text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: 14px; display: flex; align-items: center; gap: 8px; }
+    .count-badge { background: #334155; color: #94a3b8; font-size: 0.7rem; padding: 2px 8px; border-radius: 10px; font-weight: 700; }
+
+    table { width: 100%; border-collapse: collapse; font-size: 0.82rem; }
+    th { text-align: left; padding: 8px 10px; color: #64748b; font-weight: 600; font-size: 0.72rem; text-transform: uppercase; border-bottom: 1px solid #334155; }
+    td { padding: 9px 10px; border-bottom: 1px solid #1e293b; color: #cbd5e1; }
+    tr:last-child td { border-bottom: none; }
+    tr:hover td { background: #243247; }
+
+    .stage-pill {
+      display: inline-block; padding: 2px 8px; border-radius: 10px;
+      font-size: 0.68rem; font-weight: 700; white-space: nowrap;
+    }
+    .stage-won    { background: #14532d; color: #4ade80; }
+    .stage-lost   { background: #450a0a; color: #f87171; }
+    .stage-disc   { background: #1e3a5f; color: #7dd3fc; }
+    .stage-demo   { background: #4c1d95; color: #c4b5fd; }
+    .stage-active { background: #164e63; color: #67e8f9; }
+
+    /* Never pitched section */
+    .never-section { background: #1e293b; border: 1px solid #334155; border-radius: 12px; padding: 20px; margin-bottom: 28px; }
+    .never-section h3 { font-size: 0.85rem; font-weight: 700; color: #94a3b8; text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: 8px; display: flex; align-items: center; gap: 8px; }
+    .never-section p { font-size: 0.82rem; color: #64748b; margin-bottom: 16px; }
+    .acct-grid { display: flex; flex-wrap: wrap; gap: 8px; max-height: 260px; overflow-y: auto; padding-right: 4px; }
+    .acct-chip {
+      background: #0f172a; border: 1px solid #334155; border-radius: 6px;
+      padding: 5px 12px; font-size: 0.75rem; color: #94a3b8; white-space: nowrap;
+      cursor: default;
+    }
+    .acct-chip:hover { border-color: #38bdf8; color: #e2e8f0; }
+
+    /* Search */
+    .search-bar { width: 100%; background: #0f172a; border: 1px solid #334155; border-radius: 8px; padding: 8px 14px; color: #e2e8f0; font-size: 0.85rem; margin-bottom: 14px; outline: none; }
+    .search-bar:focus { border-color: #38bdf8; }
+
+    footer { text-align: center; padding: 20px; font-size: 0.72rem; color: #475569; border-top: 1px solid #1e293b; margin-top: 8px; }
+
+    ::-webkit-scrollbar { width: 6px; height: 6px; }
+    ::-webkit-scrollbar-track { background: #0f172a; }
+    ::-webkit-scrollbar-thumb { background: #334155; border-radius: 3px; }
+  </style>
+</head>
+<body>
+
+<header>
+  <div>
+    <h1>PSA Opportunity Dashboard <span>— Rev.io Billing Clients</span></h1>
+    <div class="updated">Last updated: <span id="ts"></span></div>
+  </div>
+  <div class="badge">Live SF Data · April 2026</div>
+</header>
+
+<div class="container">
+
+  <!-- KPI Row -->
+  <div class="kpi-grid">
+    <div class="kpi-card blue">
+      <div class="label">Total Billing Clients</div>
+      <div class="value">190</div>
+      <div class="sub">Rev.io Billing Client type</div>
+    </div>
+    <div class="kpi-card orange">
+      <div class="label">Never Pitched PSA</div>
+      <div class="value">115</div>
+      <div class="sub">60.5% untouched</div>
+    </div>
+    <div class="kpi-card purple">
+      <div class="label">Engaged Accounts</div>
+      <div class="value">75</div>
+      <div class="sub">39.5% of base</div>
+    </div>
+    <div class="kpi-card green">
+      <div class="label">Closed Won</div>
+      <div class="value">14</div>
+      <div class="sub">Unique accounts</div>
+    </div>
+    <div class="kpi-card green">
+      <div class="label">Won MRR</div>
+      <div class="value">$13.3K</div>
+      <div class="sub">16 won opps</div>
+    </div>
+    <div class="kpi-card yellow">
+      <div class="label">Active Pipeline</div>
+      <div class="value">4</div>
+      <div class="sub">$3,825 potential MRR</div>
+    </div>
+    <div class="kpi-card red">
+      <div class="label">Closed Lost</div>
+      <div class="value">94</div>
+      <div class="sub">82% loss rate</div>
+    </div>
+  </div>
+
+  <!-- Charts Row -->
+  <div class="charts-row">
+    <!-- Donut: Engagement -->
+    <div class="chart-card">
+      <h3>Account Engagement</h3>
+      <div class="chart-wrap">
+        <canvas id="donutChart"></canvas>
+      </div>
+    </div>
+
+    <!-- Bar: Win/Loss by Year -->
+    <div class="chart-card">
+      <h3>PSA Opps by Year</h3>
+      <div class="chart-wrap">
+        <canvas id="yearChart"></canvas>
+      </div>
+    </div>
+
+    <!-- Funnel: Stage Breakdown -->
+    <div class="chart-card">
+      <h3>Stage Breakdown</h3>
+      <div class="funnel-wrap" id="funnelWrap"></div>
+    </div>
+  </div>
+
+  <!-- Tables Row -->
+  <div class="tables-row">
+    <!-- Closed Won -->
+    <div class="table-card">
+      <h3>✅ Closed Won Accounts <span class="count-badge">16 opps · 14 accts</span></h3>
+      <table>
+        <thead>
+          <tr>
+            <th>Account</th>
+            <th>MRR</th>
+            <th>Close Date</th>
+            <th>Product</th>
+          </tr>
+        </thead>
+        <tbody id="wonTable"></tbody>
+      </table>
+    </div>
+
+    <!-- Active Pipeline -->
+    <div class="table-card">
+      <h3>🔥 Active Pipeline <span class="count-badge">$3,825 MRR</span></h3>
+      <table>
+        <thead>
+          <tr>
+            <th>Account</th>
+            <th>Stage</th>
+            <th>Potential MRR</th>
+            <th>Owner</th>
+          </tr>
+        </thead>
+        <tbody id="activeTable"></tbody>
+      </table>
+    </div>
+  </div>
+
+  <!-- Never Pitched -->
+  <div class="never-section">
+    <h3>🎯 Never Pitched PSA <span class="count-badge">115 accounts</span></h3>
+    <p>These Rev.io Billing Clients have never had a PSA opportunity created — your biggest growth pool.</p>
+    <input class="search-bar" type="text" id="searchBox" placeholder="Search accounts…" oninput="filterChips()" />
+    <div class="acct-grid" id="acctGrid"></div>
+  </div>
+
+</div>
+
+<footer>Rev.io Internal · Robin 🦸🏻‍♂️ · Data from Salesforce</footer>
+
+<script>
+  document.getElementById('ts').textContent = new Date().toLocaleDateString('en-US', {
+    month: 'short', day: 'numeric', year: 'numeric', hour: '2-digit', minute: '2-digit'
+  });
+
+  // DATA
+  const wonAccounts = [
+    { account: "TCG Tech", mrr: 520, date: "2025-10-27", product: "PSA 2.0" },
+    { account: "JMF Solutions/Prestige Healthcare", mrr: 1260, date: "2025-07-02", product: "PSA 2.0" },
+    { account: "Revolve Tech", mrr: 1160, date: "2025-06-23", product: "PSA 2.0" },
+    { account: "Atron Solutions, LLC", mrr: 549, date: "2025-03-27", product: "PSA 2.0" },
+    { account: "Hiscall", mrr: 1500, date: "2024-10-28", product: "PSA" },
+    { account: "Techmode", mrr: 65, date: "2024-10-08", product: "PSA" },
+    { account: "Hinson Communications Inc.", mrr: 810, date: "2024-10-03", product: "PSA" },
+    { account: "Rage Technologies", mrr: 500, date: "2024-05-13", product: "PSA" },
+    { account: "Hiscall", mrr: 4500, date: "2024-05-13", product: "PSA" },
+    { account: "Converged Digital Networks", mrr: 292, date: "2024-02-01", product: "PSA" },
+    { account: "Vertex Communications, Inc.", mrr: 20, date: "2023-12-27", product: "PSA" },
+    { account: "Techmode", mrr: 51, date: "2023-11-01", product: "PSA" },
+    { account: "BTI Communications Group", mrr: 104, date: "2023-10-23", product: "PSA" },
+    { account: "Kinetic VoIP, Inc", mrr: 500, date: "2023-10-18", product: "PSA" },
+    { account: "Advanced Technology Group, LLC", mrr: 732, date: "2023-10-11", product: "PSA" },
+    { account: "Converged Networks", mrr: 700, date: "2023-08-22", product: "PSA" },
+  ];
+
+  const activePipeline = [
+    { account: "RyTel", stage: "1- Discovery Scheduled", mrr: 575, owner: "Sales Rep" },
+    { account: "Smart Choice Communications", stage: "2 - Discovery Completed", mrr: 575, owner: "Sales Rep" },
+    { account: "Xchange Telecom / Skywire Networks", stage: "2 - Discovery Completed", mrr: 1575, owner: "Sales Rep" },
+    { account: "Scipio Technologies (Peace Communications)", stage: "3 - Initial Product Demo", mrr: 1100, owner: "Sales Rep" },
+  ];
+
+  const stageBreakdown = {
+    "Closed Won": 16,
+    "Closed Lost": 94,
+    "1- Discovery Scheduled": 1,
+    "2 - Discovery Completed": 2,
+    "3 - Initial Product Demo": 1,
+  };
+
+  const winsByYear = { "2023": 6, "2024": 6, "2025": 4 };
+  const lossesByYear = { "2022": 2, "2023": 22, "2024": 46, "2025": 21, "2026": 3 };
+
+  const neverPitched = ["A2M Technologies","Accelerated Networks","AccuTech Corp","Airespring","All American Communications","AllBridge","Allied Telecom Group","AllTech","AloTech","ALPHA OMEGA WIRELESS","American Broadband","American Fidelity Insurance","AmTel","Apex Telephone Company","Appalachian Wireless","Armor Fiber","Arnet Telecom","Arrowhead Telephone","Atlantic Telephone Membership Corp","AVST","Axia Wireless","B&R Technologies","Band-X","Bek Communications","Bell Media","Big Sandy Telecom","Blue Ridge Cable Technologies","Broadlinc","BT Business Direct","Buffalo-Lake Erie Wireless (BLEW)","Capital Networks","Cardinal Broadband","Carolina Digital Phone","CC Communications","Central Iowa Telephone","Century Link","Chambersburg Engineering","Ciera Networks","ClearFiber","Clearwave Communications","Clearwave Fiber","Cloud IX","Cobalt Digital","Cobaltix","ColorComm (Red Sky)","Commander Networks","CommNet Cellular","Communications International Inc","CoNetrix","Connected2Fiber","Corelink","Cornerstone Telephone","Crossroads Communications","Ctel","CTL (Consolidated Telephone)","Digital West","Direct Communications","Duet Technologies","East Tennessee Telephone","Eastern Internet","Eclipse Telecom","Emery Telcom","Etex Communications","Excede","FairPoint Communications","FastTrack Communications","Fenex","FirstLight Fiber","Giger Networks","Global Telesat Corp","Go2Communications","Granite Telecom","Great Plains Energy","Great Plains Technologies","Hawaiian Telcom","HTC","Hughes Network Systems","Integrated Device Technology","Integrated Telemanagement Services","IntelliCom","Intervox Communications","IOWA TELECOMMUNICATIONS SERVICES","Jaguar Communications","K2 Pure Solutions","Lake Region Telephone","Lakedale Telephone","LHTC","LocalEdge","Lone Star Communications","Lumen Technologies","Lynx Telecommunications","Managed Network Systems","Maximus","McLeodUSA","MCM Telecom","Mediacom Communications","Metrodata","Midwest Fiber","Mitel Networks","NCTC - National Cable & Telecommunications","NEP Broadcast","Nexgen Networks","North Central Telephone","Northland Communications","Novatel Wireless","NTS Communications","Nutmeg Communications","Open Range Communications","OptiLink","Orbit Communication Company","PAETEC","Panhandle Telecommunications","Paragould Light, Water & Cable","Pavlov Media","PDQ.net","Penford Corporation","Phone1","Pinnacle Business Management"];
+
+  // Render won table
+  const wonTbody = document.getElementById('wonTable');
+  wonAccounts.forEach(r => {
+    const tr = document.createElement('tr');
+    const d = new Date(r.date).toLocaleDateString('en-US', { month: 'short', year: 'numeric' });
+    tr.innerHTML = `
+      <td>${r.account}</td>
+      <td style="color:#4ade80;font-weight:700">$${r.mrr.toLocaleString()}</td>
+      <td style="color:#94a3b8">${d}</td>
+      <td><span class="stage-pill ${r.product === 'PSA 2.0' ? 'stage-demo' : 'stage-active'}">${r.product}</span></td>
+    `;
+    wonTbody.appendChild(tr);
+  });
+
+  // Render active table
+  const activeTbody = document.getElementById('activeTable');
+  activePipeline.forEach(r => {
+    const tr = document.createElement('tr');
+    const stageNum = r.stage.charAt(0);
+    tr.innerHTML = `
+      <td>${r.account}</td>
+      <td><span class="stage-pill stage-disc">Stage ${stageNum}</span></td>
+      <td style="color:#facc15;font-weight:700">$${r.mrr.toLocaleString()}</td>
+      <td style="color:#94a3b8">${r.owner}</td>
+    `;
+    activeTbody.appendChild(tr);
+  });
+
+  // Render never pitched chips
+  const grid = document.getElementById('acctGrid');
+  let allChips = [];
+  neverPitched.forEach(name => {
+    const chip = document.createElement('div');
+    chip.className = 'acct-chip';
+    chip.textContent = name;
+    chip.dataset.name = name.toLowerCase();
+    grid.appendChild(chip);
+    allChips.push(chip);
+  });
+
+  function filterChips() {
+    const q = document.getElementById('searchBox').value.toLowerCase();
+    allChips.forEach(c => {
+      c.style.display = c.dataset.name.includes(q) ? '' : 'none';
+    });
+  }
+
+  // Funnel
+  const funnelWrap = document.getElementById('funnelWrap');
+  const totalOpps = 114;
+  const funnelStages = [
+    { label: 'Total Opps Opened', count: 114, color: '#38bdf8' },
+    { label: 'Progressed to Demo', count: 3, color: '#a78bfa' },
+    { label: 'Closed Won', count: 16, color: '#22c55e' },
+    { label: 'Closed Lost', count: 94, color: '#ef4444' },
+  ];
+  funnelStages.forEach(s => {
+    const pct = Math.max(4, Math.round((s.count / totalOpps) * 100));
+    funnelWrap.innerHTML += `
+      <div class="funnel-bar">
+        <div class="funnel-label"><span>${s.label}</span><span>${s.count}</span></div>
+        <div class="funnel-track">
+          <div class="funnel-fill" style="width:${pct}%;background:${s.color}"></div>
+        </div>
+      </div>
+    `;
+  });
+
+  // Donut Chart
+  const donutCtx = document.getElementById('donutChart').getContext('2d');
+  new Chart(donutCtx, {
+    type: 'doughnut',
+    data: {
+      labels: ['Never Pitched', 'Closed Won', 'Active Pipeline', 'Closed Lost'],
+      datasets: [{
+        data: [115, 14, 4, 57],
+        backgroundColor: ['#334155', '#22c55e', '#facc15', '#ef4444'],
+        borderColor: '#0f1117',
+        borderWidth: 3,
+        hoverOffset: 6,
+      }]
+    },
+    options: {
+      responsive: true, maintainAspectRatio: false,
+      cutout: '68%',
+      plugins: {
+        legend: {
+          position: 'bottom',
+          labels: { color: '#94a3b8', boxWidth: 12, padding: 12, font: { size: 11 } }
+        },
+        tooltip: {
+          callbacks: {
+            label: ctx => ` ${ctx.label}: ${ctx.parsed} accounts`
+          }
+        }
+      }
+    }
+  });
+
+  // Year Bar Chart
+  const years = ['2022', '2023', '2024', '2025', '2026'];
+  const yearCtx = document.getElementById('yearChart').getContext('2d');
+  new Chart(yearCtx, {
+    type: 'bar',
+    data: {
+      labels: years,
+      datasets: [
+        {
+          label: 'Won',
+          data: years.map(y => winsByYear[y] || 0),
+          backgroundColor: '#22c55e',
+          borderRadius: 4,
+        },
+        {
+          label: 'Lost',
+          data: years.map(y => lossesByYear[y] || 0),
+          backgroundColor: '#ef4444',
+          borderRadius: 4,
+        }
+      ]
+    },
+    options: {
+      responsive: true, maintainAspectRatio: false,
+      plugins: {
+        legend: { labels: { color: '#94a3b8', font: { size: 11 } } },
+        tooltip: { mode: 'index', intersect: false }
+      },
+      scales: {
+        x: { stacked: false, ticks: { color: '#64748b' }, grid: { color: '#1e293b' } },
+        y: { ticks: { color: '#64748b' }, grid: { color: '#1e293b' }, beginAtZero: true }
+      }
+    }
+  });
+</script>
+</body>
+</html>
