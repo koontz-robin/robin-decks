@@ -1,0 +1,508 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>SDR Efficiency Dashboard — Rev.io 2026</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Open+Sans:wght@400;600;700;800&family=Montserrat:wght@800&display=swap" rel="stylesheet">
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+<style>
+  :root {
+    --navy: #1D3756;
+    --teal: #2399B5;
+    --green: #6EBE4F;
+    --platinum: #E8E8EC;
+    --light-bg: #F5F7FA;
+    --card-border: #dce4ed;
+  }
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  body { font-family: 'Open Sans', Arial, sans-serif; background: var(--light-bg); color: var(--navy); }
+
+  /* NAV */
+  nav { background: var(--navy); padding: 14px 40px; display: flex; align-items: center; gap: 12px; }
+  .nav-logo { font: 800 18px/1 'Open Sans'; color: #fff; letter-spacing: -0.5px; }
+  .nav-logo span { color: var(--teal); }
+  .nav-title { font: 600 13px/1 'Open Sans'; color: rgba(255,255,255,0.5); margin-left: 8px; padding-left: 16px; border-left: 1px solid rgba(255,255,255,0.15); }
+
+  /* STRIPE */
+  .stripe { height: 4px; background: linear-gradient(90deg, var(--teal), var(--green)); }
+
+  /* HERO */
+  .hero { background: var(--navy); padding: 48px 40px 52px; }
+  .hero-inner { max-width: 1200px; margin: 0 auto; display: grid; grid-template-columns: 1fr auto; align-items: center; gap: 40px; }
+  .hero-eyebrow { font: 700 11px/1 'Open Sans'; letter-spacing: 2px; text-transform: uppercase; color: var(--green); margin-bottom: 12px; }
+  .hero h1 { font: 800 clamp(26px, 3vw, 40px)/1.15 'Open Sans'; color: #fff; margin-bottom: 10px; }
+  .hero h1 span { color: var(--teal); }
+  .hero-sub { font: 400 15px/1.6 'Open Sans'; color: var(--platinum); max-width: 560px; }
+  .hero-stats { display: flex; gap: 32px; flex-shrink: 0; }
+  .hero-stat { text-align: center; }
+  .h-num { font: 800 36px/1 'Montserrat'; color: #fff; }
+  .h-num.green { color: var(--green); }
+  .h-num.teal { color: var(--teal); }
+  .h-lbl { font: 600 10px/1.3 'Open Sans'; letter-spacing: 1px; text-transform: uppercase; color: rgba(255,255,255,0.5); margin-top: 5px; max-width: 80px; }
+
+  /* BREAK-EVEN BANNER */
+  .be-banner { background: #0f2235; border-left: 4px solid var(--green); padding: 14px 40px; }
+  .be-banner-inner { max-width: 1200px; margin: 0 auto; display: flex; align-items: center; gap: 12px; font: 400 13px/1.5 'Open Sans'; color: rgba(255,255,255,0.75); }
+  .be-banner strong { color: var(--green); }
+
+  /* SECTIONS */
+  section { padding: 52px 40px; }
+  section:nth-child(even) { background: #fff; }
+  .section-inner { max-width: 1200px; margin: 0 auto; }
+  .eyebrow { font: 700 11px/1 'Open Sans'; letter-spacing: 2px; text-transform: uppercase; color: var(--green); margin-bottom: 10px; }
+  .section-heading { font: 800 clamp(20px, 2.2vw, 30px)/1.2 'Open Sans'; color: var(--navy); margin-bottom: 6px; }
+  .section-sub { font: 400 14px/1.6 'Open Sans'; color: #5a6f8c; margin-bottom: 36px; max-width: 700px; }
+
+  /* KPI CARDS */
+  .kpi-row { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 16px; margin-bottom: 40px; }
+  .kpi-card { background: #fff; border: 1.5px solid var(--card-border); border-radius: 10px; padding: 20px 22px; }
+  .kpi-card.teal { border-top: 4px solid var(--teal); }
+  .kpi-card.green { border-top: 4px solid var(--green); }
+  .kpi-card.navy { border-top: 4px solid var(--navy); }
+  .k-lbl { font: 700 10px/1 'Open Sans'; letter-spacing: 1px; text-transform: uppercase; color: #8a9ab0; margin-bottom: 10px; }
+  .k-val { font: 800 28px/1 'Montserrat'; color: var(--navy); }
+  .k-sub { font: 400 12px/1.4 'Open Sans'; color: #8a9ab0; margin-top: 5px; }
+
+  /* CHART GRID */
+  .chart-grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 24px; margin-bottom: 24px; }
+  .chart-grid-3 { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 24px; margin-bottom: 24px; }
+  .chart-card { background: #fff; border: 1.5px solid var(--card-border); border-radius: 12px; padding: 24px 26px; }
+  .chart-card.full { grid-column: 1 / -1; }
+  .chart-card h3 { font: 700 11px/1 'Open Sans'; letter-spacing: 1px; text-transform: uppercase; color: #8a9ab0; margin-bottom: 4px; }
+  .chart-card .card-title { font: 700 17px/1.3 'Open Sans'; color: var(--navy); margin-bottom: 20px; }
+  .chart-wrap { position: relative; height: 260px; }
+  .chart-wrap-sm { position: relative; height: 200px; }
+
+  /* MONTHLY BREAKDOWN CARDS */
+  .month-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 20px; margin-bottom: 0; }
+  .month-card { background: #fff; border: 1.5px solid var(--card-border); border-radius: 12px; overflow: hidden; }
+  .month-card-header { padding: 14px 18px 12px; display: flex; justify-content: space-between; align-items: center; }
+  .month-card-header .month-label { font: 800 20px/1 'Montserrat'; color: var(--navy); }
+  .month-card-header .month-tag { font: 700 10px/1 'Open Sans'; letter-spacing: 1px; text-transform: uppercase; color: #8a9ab0; background: var(--light-bg); padding: 3px 8px; border-radius: 20px; }
+  .month-card-header .month-tag.mtd { color: var(--teal); background: #e0f5fa; }
+  .month-card-body { padding: 0 18px 16px; }
+  .mc-stat { display: flex; justify-content: space-between; align-items: baseline; padding: 7px 0; border-bottom: 1px solid #f0f4f8; }
+  .mc-stat:last-child { border-bottom: none; }
+  .mc-stat-label { font: 400 12px/1 'Open Sans'; color: #8a9ab0; }
+  .mc-stat-val { font: 700 14px/1 'Open Sans'; color: var(--navy); }
+  .mc-stat-val.green { color: var(--green); }
+  .mc-stat-val.teal { color: var(--teal); }
+  .mc-stat-val.red { color: #ef4444; }
+  .month-card-footer { padding: 12px 18px; display: flex; align-items: center; justify-content: space-between; }
+  .be-status { font: 700 12px/1.3 'Open Sans'; }
+  .be-status.pass { color: var(--green); }
+  .be-status.warn { color: #f59e0b; }
+  .be-bar-wrap { flex: 1; margin: 0 12px; background: #f0f4f8; border-radius: 20px; height: 6px; overflow: hidden; }
+  .be-bar-fill { height: 100%; border-radius: 20px; }
+  .be-mult { font: 800 14px/1 'Montserrat'; }
+  .be-mult.pass { color: var(--green); }
+  .be-mult.warn { color: #f59e0b; }
+
+  /* SDR TABLE */
+  .sdr-table-wrap { overflow-x: auto; margin-top: 16px; }
+  table { width: 100%; border-collapse: collapse; font-size: 13px; }
+  thead tr { background: var(--navy); }
+  thead th { padding: 10px 14px; text-align: left; font: 700 11px/1 'Open Sans'; letter-spacing: 0.5px; text-transform: uppercase; color: rgba(255,255,255,0.75); }
+  tbody tr:nth-child(even) td { background: #f7fafc; }
+  tbody td { padding: 10px 14px; border-bottom: 1px solid #f0f4f8; color: var(--navy); }
+  .pill { display: inline-block; border-radius: 10px; padding: 2px 9px; font: 700 11px/1.4 'Open Sans'; }
+  .pill-green { background: #e8f5ef; color: #2d7a4a; }
+  .pill-yellow { background: #fef3c7; color: #92400e; }
+
+  /* FOOTER */
+  footer { background: var(--navy); padding: 20px 40px; }
+  footer p { max-width: 1200px; margin: 0 auto; font: 400 11px/1.6 'Open Sans'; color: rgba(255,255,255,0.3); text-align: center; }
+</style>
+</head>
+<body>
+
+<nav>
+  <div class="nav-logo">rev<span>.io</span></div>
+  <span class="nav-title">SDR Efficiency Dashboard · 2026 YTD</span>
+</nav>
+<div class="stripe"></div>
+
+<!-- HERO -->
+<div class="hero">
+  <div class="hero-inner">
+    <div>
+      <div class="hero-eyebrow">2026 YTD · Jan–Apr · SDR Performance</div>
+      <h1>SDR <span>Efficiency</span> Dashboard</h1>
+      <p class="hero-sub">Opportunity influence, pipeline generated, and closed won MRR by month — tracking SDR payback against the $500/rep/month break-even threshold.</p>
+    </div>
+    <div class="hero-stats">
+      <div class="hero-stat">
+        <div class="h-num">911</div>
+        <div class="h-lbl">Opps Influenced</div>
+      </div>
+      <div class="hero-stat">
+        <div class="h-num teal">115</div>
+        <div class="h-lbl">Deals Won</div>
+      </div>
+      <div class="hero-stat">
+        <div class="h-num green">$65.3K</div>
+        <div class="h-lbl">MRR Won YTD</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="be-banner">
+  <div class="be-banner-inner">
+    💡 <strong>Break-even rule:</strong> Each SDR must source <strong>$500 MRR/month</strong> to pay for themselves. Jan–Mar show consistent positive ROI. Apr is mid-month — full cycle not yet closed.
+  </div>
+</div>
+
+<!-- SECTION 1: KPIs -->
+<section>
+  <div class="section-inner">
+    <div class="eyebrow">Year-to-Date Summary</div>
+    <h2 class="section-heading">SDR Impact — Jan through Apr 2026</h2>
+    <p class="section-sub">All opps where SDR Influence is not blank. Win rates and MRR reflect fully closed opportunities.</p>
+
+    <div class="kpi-row">
+      <div class="kpi-card teal">
+        <div class="k-lbl">Total Opps Influenced</div>
+        <div class="k-val">911</div>
+        <div class="k-sub">Jan–Apr 2026</div>
+      </div>
+      <div class="kpi-card green">
+        <div class="k-lbl">Pipeline Value Influenced</div>
+        <div class="k-val">$703K</div>
+        <div class="k-sub">Total opp amount</div>
+      </div>
+      <div class="kpi-card navy">
+        <div class="k-lbl">Deals Closed Won</div>
+        <div class="k-val">115</div>
+        <div class="k-sub">SDR-influenced wins</div>
+      </div>
+      <div class="kpi-card green">
+        <div class="k-lbl">MRR Won (Jan–Mar)</div>
+        <div class="k-val">$65.3K</div>
+        <div class="k-sub">$61.9K fully closed + $3.4K Apr MTD</div>
+      </div>
+      <div class="kpi-card teal">
+        <div class="k-lbl">Win Rate (closed)</div>
+        <div class="k-val">12.6%</div>
+        <div class="k-sub">115 won / 911 influenced</div>
+      </div>
+      <div class="kpi-card">
+        <div class="k-lbl">Break-Even Threshold</div>
+        <div class="k-val" style="color:var(--green)">$500</div>
+        <div class="k-sub">MRR per SDR per month</div>
+      </div>
+    </div>
+
+    <!-- Charts row 1 -->
+    <div class="chart-grid-2">
+      <div class="chart-card">
+        <h3>Volume</h3>
+        <div class="card-title">Opps Influenced & Effective SDRs by Month</div>
+        <div class="chart-wrap"><canvas id="oppsChart"></canvas></div>
+      </div>
+      <div class="chart-card">
+        <h3>Revenue</h3>
+        <div class="card-title">Closed Won MRR vs Break-Even Threshold</div>
+        <div class="chart-wrap"><canvas id="mrrChart"></canvas></div>
+      </div>
+    </div>
+
+    <div class="chart-grid-2">
+      <div class="chart-card">
+        <h3>Pipeline</h3>
+        <div class="card-title">Total Pipeline Value Influenced ($)</div>
+        <div class="chart-wrap-sm"><canvas id="pipelineChart"></canvas></div>
+      </div>
+      <div class="chart-card">
+        <h3>Efficiency</h3>
+        <div class="card-title">MRR Won per SDR vs $500 Break-Even</div>
+        <div class="chart-wrap-sm"><canvas id="perSdrChart"></canvas></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- SECTION 2: MONTHLY BREAKDOWN -->
+<section>
+  <div class="section-inner">
+    <div class="eyebrow">Monthly Breakdown</div>
+    <h2 class="section-heading">Month-by-Month SDR Performance</h2>
+    <p class="section-sub">Each card shows pipeline generated, deals won, MRR closed, and break-even payback multiple for that month's SDR team.</p>
+
+    <div class="month-grid">
+
+      <!-- JAN -->
+      <div class="month-card">
+        <div class="month-card-header" style="border-bottom: 3px solid var(--teal);">
+          <span class="month-label">Jan</span>
+          <span class="month-tag">Fully Closed</span>
+        </div>
+        <div class="month-card-body">
+          <div class="mc-stat"><span class="mc-stat-label">Opps Influenced</span><span class="mc-stat-val teal">286</span></div>
+          <div class="mc-stat"><span class="mc-stat-label">Pipeline Value</span><span class="mc-stat-val">$229,744</span></div>
+          <div class="mc-stat"><span class="mc-stat-label">Deals Won</span><span class="mc-stat-val green">29</span></div>
+          <div class="mc-stat"><span class="mc-stat-label">Closed Won MRR</span><span class="mc-stat-val green">$13,151</span></div>
+          <div class="mc-stat"><span class="mc-stat-label">Effective SDRs</span><span class="mc-stat-val">4</span></div>
+          <div class="mc-stat"><span class="mc-stat-label">Break-Even Target</span><span class="mc-stat-val">$2,000</span></div>
+          <div class="mc-stat"><span class="mc-stat-label">MRR / SDR</span><span class="mc-stat-val green">$3,288</span></div>
+        </div>
+        <div class="month-card-footer">
+          <span class="be-status pass">✓ Positive</span>
+          <div class="be-bar-wrap"><div class="be-bar-fill" style="width:100%;background:var(--green)"></div></div>
+          <span class="be-mult pass">6.6×</span>
+        </div>
+      </div>
+
+      <!-- FEB -->
+      <div class="month-card">
+        <div class="month-card-header" style="border-bottom: 3px solid #a78bfa;">
+          <span class="month-label">Feb</span>
+          <span class="month-tag">Fully Closed</span>
+        </div>
+        <div class="month-card-body">
+          <div class="mc-stat"><span class="mc-stat-label">Opps Influenced</span><span class="mc-stat-val teal">225</span></div>
+          <div class="mc-stat"><span class="mc-stat-label">Pipeline Value</span><span class="mc-stat-val">$166,130</span></div>
+          <div class="mc-stat"><span class="mc-stat-label">Deals Won</span><span class="mc-stat-val green">28</span></div>
+          <div class="mc-stat"><span class="mc-stat-label">Closed Won MRR</span><span class="mc-stat-val green">$18,844</span></div>
+          <div class="mc-stat"><span class="mc-stat-label">Effective SDRs</span><span class="mc-stat-val">5</span></div>
+          <div class="mc-stat"><span class="mc-stat-label">Break-Even Target</span><span class="mc-stat-val">$2,500</span></div>
+          <div class="mc-stat"><span class="mc-stat-label">MRR / SDR</span><span class="mc-stat-val green">$3,769</span></div>
+        </div>
+        <div class="month-card-footer">
+          <span class="be-status pass">✓ Positive</span>
+          <div class="be-bar-wrap"><div class="be-bar-fill" style="width:100%;background:var(--green)"></div></div>
+          <span class="be-mult pass">7.5×</span>
+        </div>
+      </div>
+
+      <!-- MAR -->
+      <div class="month-card">
+        <div class="month-card-header" style="border-bottom: 3px solid var(--green);">
+          <span class="month-label">Mar</span>
+          <span class="month-tag">Fully Closed</span>
+        </div>
+        <div class="month-card-body">
+          <div class="mc-stat"><span class="mc-stat-label">Opps Influenced</span><span class="mc-stat-val teal">219</span></div>
+          <div class="mc-stat"><span class="mc-stat-label">Pipeline Value</span><span class="mc-stat-val">$167,131</span></div>
+          <div class="mc-stat"><span class="mc-stat-label">Deals Won</span><span class="mc-stat-val green">44</span></div>
+          <div class="mc-stat"><span class="mc-stat-label">Closed Won MRR</span><span class="mc-stat-val green">$29,927</span></div>
+          <div class="mc-stat"><span class="mc-stat-label">Effective SDRs</span><span class="mc-stat-val">6</span></div>
+          <div class="mc-stat"><span class="mc-stat-label">Break-Even Target</span><span class="mc-stat-val">$3,000</span></div>
+          <div class="mc-stat"><span class="mc-stat-label">MRR / SDR</span><span class="mc-stat-val green">$4,988</span></div>
+        </div>
+        <div class="month-card-footer">
+          <span class="be-status pass">✓ Positive</span>
+          <div class="be-bar-wrap"><div class="be-bar-fill" style="width:100%;background:var(--green)"></div></div>
+          <span class="be-mult pass">10.0×</span>
+        </div>
+      </div>
+
+      <!-- APR -->
+      <div class="month-card">
+        <div class="month-card-header" style="border-bottom: 3px solid #f97316;">
+          <span class="month-label">Apr</span>
+          <span class="month-tag mtd">MTD</span>
+        </div>
+        <div class="month-card-body">
+          <div class="mc-stat"><span class="mc-stat-label">Opps Influenced</span><span class="mc-stat-val teal">181</span></div>
+          <div class="mc-stat"><span class="mc-stat-label">Pipeline Value</span><span class="mc-stat-val">$140,279</span></div>
+          <div class="mc-stat"><span class="mc-stat-label">Deals Won (so far)</span><span class="mc-stat-val green">14</span></div>
+          <div class="mc-stat"><span class="mc-stat-label">Closed Won MRR</span><span class="mc-stat-val" style="color:#f97316">$3,383</span></div>
+          <div class="mc-stat"><span class="mc-stat-label">Effective SDRs</span><span class="mc-stat-val">7</span></div>
+          <div class="mc-stat"><span class="mc-stat-label">Break-Even Target</span><span class="mc-stat-val">$3,500</span></div>
+          <div class="mc-stat"><span class="mc-stat-label">MRR / SDR</span><span class="mc-stat-val" style="color:#f97316">$483 MTD</span></div>
+        </div>
+        <div class="month-card-footer">
+          <span class="be-status warn">⏳ In Progress</span>
+          <div class="be-bar-wrap"><div class="be-bar-fill" style="width:14%;background:#f97316"></div></div>
+          <span class="be-mult warn">~</span>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<!-- SECTION 3: TREND TABLE -->
+<section>
+  <div class="section-inner">
+    <div class="eyebrow">Summary Table</div>
+    <h2 class="section-heading">SDR Efficiency — Monthly Rollup</h2>
+    <p class="section-sub">Break-even threshold: $500 MRR per effective SDR per month. Multiple = Closed Won MRR ÷ Break-Even Target.</p>
+    <div class="chart-card">
+      <div class="sdr-table-wrap">
+        <table>
+          <thead>
+            <tr>
+              <th>Month</th>
+              <th>Effective SDRs</th>
+              <th>Opps Influenced</th>
+              <th>Pipeline Value</th>
+              <th>Deals Won</th>
+              <th>Closed Won MRR</th>
+              <th>Break-Even Target</th>
+              <th>MRR / SDR</th>
+              <th>Payback Multiple</th>
+              <th>Status</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><strong>Jan</strong></td>
+              <td>4</td>
+              <td>286</td>
+              <td>$229,744</td>
+              <td>29</td>
+              <td style="color:var(--green);font-weight:700">$13,151</td>
+              <td>$2,000</td>
+              <td>$3,288</td>
+              <td><strong style="color:var(--green)">6.6×</strong></td>
+              <td><span class="pill pill-green">✓ Positive ROI</span></td>
+            </tr>
+            <tr>
+              <td><strong>Feb</strong></td>
+              <td>5</td>
+              <td>225</td>
+              <td>$166,130</td>
+              <td>28</td>
+              <td style="color:var(--green);font-weight:700">$18,844</td>
+              <td>$2,500</td>
+              <td>$3,769</td>
+              <td><strong style="color:var(--green)">7.5×</strong></td>
+              <td><span class="pill pill-green">✓ Positive ROI</span></td>
+            </tr>
+            <tr>
+              <td><strong>Mar</strong></td>
+              <td>6</td>
+              <td>219</td>
+              <td>$167,131</td>
+              <td>44</td>
+              <td style="color:var(--green);font-weight:700">$29,927</td>
+              <td>$3,000</td>
+              <td>$4,988</td>
+              <td><strong style="color:var(--green)">10.0×</strong></td>
+              <td><span class="pill pill-green">✓ Positive ROI</span></td>
+            </tr>
+            <tr>
+              <td><strong>Apr</strong></td>
+              <td>7</td>
+              <td>181</td>
+              <td>$140,279</td>
+              <td>14 (MTD)</td>
+              <td style="color:#f97316;font-weight:700">$3,383 MTD</td>
+              <td>$3,500</td>
+              <td>$483 MTD</td>
+              <td><strong style="color:#f97316">TBD</strong></td>
+              <td><span class="pill pill-yellow">⏳ In Progress</span></td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+</section>
+
+<div class="stripe"></div>
+<footer>
+  <p>Rev.io Internal · SDR Efficiency Dashboard · Robin 🦸🏻‍♂️ · Salesforce · Break-even: $500 MRR/SDR/month · Last updated <span id="ts"></span></p>
+</footer>
+
+<script>
+  document.getElementById('ts').textContent = new Date().toLocaleDateString('en-US', { month:'short', day:'numeric', year:'numeric', hour:'2-digit', minute:'2-digit' });
+
+  const NAVY='#1D3756', TEAL='#2399B5', GREEN='#6EBE4F', ORANGE='#f97316';
+  const PURPLE='#a78bfa';
+  const months = ['Jan','Feb','Mar','Apr'];
+  const sdrs = [4, 5, 6, 7];
+  const opps = [286, 225, 219, 181];
+  const pipeline = [229744, 166130, 167131, 140279];
+  const mrrWon = [13151, 18844, 29927, 3383];
+  const breakEven = [2000, 2500, 3000, 3500];
+  const mrrPerSdr = [3288, 3769, 4988, 483];
+  const monthColors = [TEAL, PURPLE, GREEN, ORANGE];
+
+  Chart.defaults.font.family = "'Open Sans', system-ui, sans-serif";
+  Chart.defaults.color = '#8a9ab0';
+  const grid = 'rgba(0,0,0,0.06)';
+
+  // 1. Opps influenced + SDR headcount
+  new Chart(document.getElementById('oppsChart'), {
+    data: {
+      labels: months,
+      datasets: [
+        { type: 'bar', label: 'Opps Influenced', data: opps, backgroundColor: monthColors, borderRadius: 5, yAxisID: 'y' },
+        { type: 'line', label: 'Effective SDRs', data: sdrs, borderColor: NAVY, backgroundColor: 'transparent', borderWidth: 2.5, pointBackgroundColor: NAVY, pointRadius: 5, tension: 0.3, yAxisID: 'y2' },
+      ]
+    },
+    options: {
+      responsive: true, maintainAspectRatio: false,
+      plugins: { legend: { labels: { color: NAVY, font: { size: 11 } } }, tooltip: { mode: 'index', intersect: false } },
+      scales: {
+        x: { ticks: { color: NAVY }, grid: { color: grid } },
+        y: { ticks: { color: NAVY }, grid: { color: grid }, beginAtZero: true, title: { display: true, text: 'Opps', color: '#8a9ab0', font: { size: 11 } } },
+        y2: { position: 'right', ticks: { color: NAVY, stepSize: 1 }, grid: { display: false }, beginAtZero: true, title: { display: true, text: 'SDRs', color: '#8a9ab0', font: { size: 11 } } }
+      }
+    }
+  });
+
+  // 2. MRR Won vs Break-Even
+  new Chart(document.getElementById('mrrChart'), {
+    type: 'bar',
+    data: {
+      labels: months,
+      datasets: [
+        { label: 'Closed Won MRR', data: mrrWon, backgroundColor: monthColors, borderRadius: 5 },
+        { label: 'Break-Even Target', data: breakEven, type: 'line', borderColor: '#ef4444', backgroundColor: 'transparent', borderDash: [5, 4], borderWidth: 2, pointBackgroundColor: '#ef4444', pointRadius: 4, tension: 0.2 },
+      ]
+    },
+    options: {
+      responsive: true, maintainAspectRatio: false,
+      plugins: { legend: { labels: { color: NAVY, font: { size: 11 } } }, tooltip: { mode: 'index', intersect: false, callbacks: { label: c => ' ' + c.dataset.label + ': $' + c.parsed.y.toLocaleString() } } },
+      scales: {
+        x: { ticks: { color: NAVY }, grid: { color: grid } },
+        y: { ticks: { color: NAVY, callback: v => '$' + (v/1000).toFixed(0) + 'K' }, grid: { color: grid }, beginAtZero: true }
+      }
+    }
+  });
+
+  // 3. Pipeline value
+  new Chart(document.getElementById('pipelineChart'), {
+    type: 'bar',
+    data: {
+      labels: months,
+      datasets: [{ label: 'Pipeline Value', data: pipeline, backgroundColor: monthColors, borderRadius: 5 }]
+    },
+    options: {
+      responsive: true, maintainAspectRatio: false,
+      plugins: { legend: { display: false }, tooltip: { callbacks: { label: c => ' $' + c.parsed.y.toLocaleString() } } },
+      scales: {
+        x: { ticks: { color: NAVY }, grid: { color: grid } },
+        y: { ticks: { color: NAVY, callback: v => '$' + (v/1000).toFixed(0) + 'K' }, grid: { color: grid }, beginAtZero: true }
+      }
+    }
+  });
+
+  // 4. MRR per SDR vs $500 target
+  new Chart(document.getElementById('perSdrChart'), {
+    type: 'bar',
+    data: {
+      labels: months,
+      datasets: [
+        { label: 'MRR per SDR', data: mrrPerSdr, backgroundColor: mrrPerSdr.map(v => v >= 500 ? GREEN : ORANGE), borderRadius: 5 },
+        { label: '$500 Break-Even', data: [500,500,500,500], type: 'line', borderColor: '#ef4444', backgroundColor: 'transparent', borderDash: [5,4], borderWidth: 2, pointRadius: 0 },
+      ]
+    },
+    options: {
+      responsive: true, maintainAspectRatio: false,
+      plugins: { legend: { labels: { color: NAVY, font: { size: 11 } } }, tooltip: { callbacks: { label: c => ' ' + c.dataset.label + ': $' + c.parsed.y.toLocaleString() } } },
+      scales: {
+        x: { ticks: { color: NAVY }, grid: { color: grid } },
+        y: { ticks: { color: NAVY, callback: v => '$' + v.toLocaleString() }, grid: { color: grid }, beginAtZero: true }
+      }
+    }
+  });
+</script>
+</body>
+</html>
