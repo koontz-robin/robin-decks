@@ -5,6 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Q2 2026 Board Presentation — Rev.io Sales</title>
 <link href="https://fonts.googleapis.com/css2?family=Open+Sans:wght@400;600;700;800&family=Montserrat:wght@800&display=swap" rel="stylesheet">
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
 <style>
 /* ====== SLIDE: PSA Pipeline Gap — Critical ====== */
 
@@ -90,7 +91,7 @@ h1 { font-size: 17px; font-weight: 800; color: #fff; }
 }
 .chart-eyebrow { font-size: 8px; font-weight: 700; letter-spacing: 1.5px; text-transform: uppercase; color: rgba(255,255,255,0.55); }
 .chart-title { font-size: 12px; font-weight: 800; color: #fff; margin-top: 2px; }
-.chart-body { padding: 10px 12px; flex: 1; position: relative; min-height: 0; }
+.chart-body { padding: 10px 12px; flex: 1; position: relative; min-height: 200px; }
 
 /* Tables side */
 .tables-col {
@@ -1196,17 +1197,15 @@ html, body { height: 100%; background: #f5f7fa; }
 .deck-dots { display: flex; gap: 6px; align-items: center; }
 .deck-dot { width: 7px; height: 7px; border-radius: 50%; background: rgba(255,255,255,0.25); cursor: pointer; transition: background 0.15s, transform 0.15s; }
 .deck-dot.active { background: #6EBE4F; transform: scale(1.3); }
-.deck-dot.alert { background: #e74c3c; }
-.deck-dot.alert.active { background: #e74c3c; box-shadow: 0 0 6px #e74c3c; }
-.key-hint { position: fixed; bottom: 72px; left: 50%; transform: translateX(-50%); font-size: 10px; color: rgba(29,55,86,0.4); letter-spacing: 0.5px; pointer-events: none; }
+.deck-dot.alert { background: rgba(231,76,60,0.6); }
+.deck-dot.alert.active { background: #e74c3c; box-shadow: 0 0 6px #e74c3c; transform: scale(1.3); }
 .slide-label { font-size: 10px; color: rgba(255,255,255,0.5); font-style: italic; max-width: 200px; text-align: center; }
+.key-hint { position: fixed; bottom: 72px; left: 50%; transform: translateX(-50%); font-size: 10px; color: rgba(29,55,86,0.4); letter-spacing: 0.5px; pointer-events: none; }
 </style>
 </head>
 <body>
 
-
-    <div class="slide-page" id="slide-1" style="display:flex;flex-direction:column;min-height:100vh;">
-      <div class="top-stripe"></div>
+<div class="slide-page" id="slide-1" style="display:flex;flex-direction:column;min-height:100vh;"><div class="top-stripe"></div>
 
 <div class="slide-header">
   <img src="https://7091219.fs1.hubspotusercontent-na1.net/hubfs/7091219/email-assets/logo-revio-white.png" alt="Rev.io" class="logo">
@@ -1291,7 +1290,7 @@ html, body { height: 100%; background: #f5f7fa; }
         </div>
       </div>
       <div class="chart-body">
-        <canvas id="pipelineChart"></canvas>
+        <canvas id="pipelineChart" style="width:100%;height:100%;"></canvas>
       </div>
     </div>
 
@@ -1347,134 +1346,8 @@ html, body { height: 100%; background: #f5f7fa; }
 <div class="slide-footer">
   <div class="footer-left">Rev.io Sales Intelligence · Q2 2026 Board Presentation · Data as of April 28, 2026</div>
   <img src="https://7091219.fs1.hubspotusercontent-na1.net/hubfs/7091219/email-assets/logo-revio-white.png" alt="Rev.io" class="footer-logo">
-</div>
-
-<script>
-const ctx = document.getElementById('pipelineChart').getContext('2d');
-
-const months = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
-
-const mgNeeded = [140,170,200,240,270,310,340,370,400,440,470,500];
-const sgNeeded = [110,130,150,180,210,230,260,280,300,330,360,380];
-const mgActual = [68,59,52,46,null,null,null,null,null,null,null,null];
-const sgActual = [140,88,79,67,null,null,null,null,null,null,null,null];
-
-new Chart(ctx, {
-  type: 'bar',
-  data: {
-    labels: months,
-    datasets: [
-      {
-        label: 'MG Opps Needed',
-        data: mgNeeded,
-        backgroundColor: 'rgba(147,197,253,0.55)',
-        borderColor: 'rgba(147,197,253,0.8)',
-        borderWidth: 1,
-        stack: 'needed',
-        order: 2,
-      },
-      {
-        label: 'SG Opps Needed',
-        data: sgNeeded,
-        backgroundColor: 'rgba(187,247,208,0.55)',
-        borderColor: 'rgba(187,247,208,0.8)',
-        borderWidth: 1,
-        stack: 'needed',
-        order: 2,
-      },
-      {
-        label: 'MG Actual Created',
-        data: mgActual,
-        type: 'line',
-        borderColor: '#2399B5',
-        backgroundColor: '#2399B5',
-        borderWidth: 2.5,
-        pointRadius: 5,
-        pointBackgroundColor: '#2399B5',
-        pointBorderColor: '#fff',
-        pointBorderWidth: 2,
-        tension: 0.3,
-        order: 1,
-        stack: undefined,
-      },
-      {
-        label: 'SG Actual Created',
-        data: sgActual,
-        type: 'line',
-        borderColor: '#6EBE4F',
-        backgroundColor: '#6EBE4F',
-        borderWidth: 2.5,
-        pointRadius: 5,
-        pointBackgroundColor: '#6EBE4F',
-        pointBorderColor: '#fff',
-        pointBorderWidth: 2,
-        tension: 0.3,
-        order: 1,
-        stack: undefined,
-      },
-    ]
-  },
-  options: {
-    responsive: true,
-    maintainAspectRatio: false,
-    interaction: { mode: 'index', intersect: false },
-    plugins: {
-      legend: { display: false },
-      tooltip: {
-        backgroundColor: '#1D3756',
-        titleColor: '#fff',
-        bodyColor: 'rgba(255,255,255,0.75)',
-        padding: 10,
-        callbacks: {
-          label: function(ctx) {
-            if (ctx.raw === null) return null;
-            return ctx.dataset.label + ': ' + ctx.raw;
-          }
-        }
-      },
-      annotation: {
-        annotations: {
-          nowLine: {
-            type: 'line',
-            xMin: 3, xMax: 3,
-            borderColor: 'rgba(231,76,60,0.6)',
-            borderWidth: 2,
-            borderDash: [4,4],
-            label: {
-              display: true,
-              content: 'NOW',
-              position: 'start',
-              backgroundColor: '#c0392b',
-              color: '#fff',
-              font: { size: 9, weight: 'bold' },
-              padding: { x: 5, y: 3 }
-            }
-          }
-        }
-      }
-    },
-    scales: {
-      x: {
-        stacked: true,
-        grid: { color: 'rgba(0,0,0,0.04)' },
-        ticks: { font: { size: 10, family: 'Open Sans' }, color: '#8da0b4' },
-        border: { color: '#e8edf3' }
-      },
-      y: {
-        stacked: true,
-        grid: { color: 'rgba(0,0,0,0.04)' },
-        ticks: { font: { size: 10, family: 'Open Sans' }, color: '#8da0b4' },
-        border: { color: '#e8edf3' },
-        title: { display: true, text: 'Opps', font: { size: 9 }, color: '#8da0b4' }
-      }
-    }
-  }
-});
-</script>
-    </div>
-
-    <div class="slide-page" id="slide-2" style="display:none;flex-direction:column;min-height:100vh;">
-      <div class="top-stripe"></div>
+</div></div>
+<div class="slide-page" id="slide-2" style="display:none;flex-direction:column;min-height:100vh;"><div class="top-stripe"></div>
 
 <!-- Header -->
 <div class="slide-header">
@@ -1726,11 +1599,8 @@ new Chart(ctx, {
 <div class="slide-footer">
   <div class="footer-left">Rev.io Sales Intelligence · Q2 2026 Board Presentation · Data as of April 28, 2026</div>
   <img src="https://7091219.fs1.hubspotusercontent-na1.net/hubfs/7091219/email-assets/logo-revio-white.png" alt="Rev.io" class="footer-logo">
-</div>
-    </div>
-
-    <div class="slide-page" id="slide-3" style="display:none;flex-direction:column;min-height:100vh;">
-      <div class="top-stripe"></div>
+</div></div>
+<div class="slide-page" id="slide-3" style="display:none;flex-direction:column;min-height:100vh;"><div class="top-stripe"></div>
 
 <div class="slide-header">
   <img src="https://7091219.fs1.hubspotusercontent-na1.net/hubfs/7091219/email-assets/logo-revio-white.png" alt="Rev.io" class="logo">
@@ -1944,11 +1814,8 @@ new Chart(ctx, {
 <div class="slide-footer">
   <div class="footer-left">Rev.io Sales Intelligence · Q2 2026 Board Presentation · April 28, 2026</div>
   <img src="https://7091219.fs1.hubspotusercontent-na1.net/hubfs/7091219/email-assets/logo-revio-white.png" alt="Rev.io" class="footer-logo">
-</div>
-    </div>
-
-    <div class="slide-page" id="slide-4" style="display:none;flex-direction:column;min-height:100vh;">
-      <div class="top-stripe"></div>
+</div></div>
+<div class="slide-page" id="slide-4" style="display:none;flex-direction:column;min-height:100vh;"><div class="top-stripe"></div>
 
 <div class="slide-header">
   <img src="https://7091219.fs1.hubspotusercontent-na1.net/hubfs/7091219/email-assets/logo-revio-white.png" alt="Rev.io" class="logo">
@@ -2163,11 +2030,8 @@ new Chart(ctx, {
   <div class="footer-left">Rev.io Sales Intelligence · Q2 2026 Board Presentation · April 28, 2026</div>
   <div class="footer-author">Field Assessment: Brook Lee, Senior Director of Community</div>
   <img src="https://7091219.fs1.hubspotusercontent-na1.net/hubfs/7091219/email-assets/logo-revio-white.png" alt="Rev.io" class="footer-logo">
-</div>
-    </div>
-
-    <div class="slide-page" id="slide-5" style="display:none;flex-direction:column;min-height:100vh;">
-      <div class="top-stripe"></div>
+</div></div>
+<div class="slide-page" id="slide-5" style="display:none;flex-direction:column;min-height:100vh;"><div class="top-stripe"></div>
 
 <div class="slide-header">
   <img src="https://7091219.fs1.hubspotusercontent-na1.net/hubfs/7091219/email-assets/logo-revio-white.png" alt="Rev.io" class="logo">
@@ -2382,11 +2246,8 @@ new Chart(ctx, {
   <div class="footer-left">Rev.io Sales Intelligence · Q2 2026 Board Presentation · April 28, 2026</div>
   <div style="font-size:9px;color:#b0bec5">Community Program · Brook Lee, Senior Director of Community</div>
   <img src="https://7091219.fs1.hubspotusercontent-na1.net/hubfs/7091219/email-assets/logo-revio-white.png" alt="Rev.io" class="footer-logo">
-</div>
-    </div>
-
-    <div class="slide-page" id="slide-6" style="display:none;flex-direction:column;min-height:100vh;">
-      <div class="top-stripe"></div>
+</div></div>
+<div class="slide-page" id="slide-6" style="display:none;flex-direction:column;min-height:100vh;"><div class="top-stripe"></div>
 
 <div class="slide-header">
   <img src="https://7091219.fs1.hubspotusercontent-na1.net/hubfs/7091219/email-assets/logo-revio-white.png" alt="Rev.io" class="logo">
@@ -2607,8 +2468,7 @@ new Chart(ctx, {
   <div class="footer-left">Rev.io Sales Intelligence · Q2 2026 Board Presentation · April 28, 2026</div>
   <div style="font-size:9px;color:#b0bec5">Channel Team · Brook Lee, Usman Zahoor, Jake Mitchell</div>
   <img src="https://7091219.fs1.hubspotusercontent-na1.net/hubfs/7091219/email-assets/logo-revio-white.png" alt="Rev.io" class="footer-logo">
-</div>
-    </div>
+</div></div>
 
 <nav class="deck-nav">
   <button class="deck-btn" id="btn-prev" onclick="navigate(-1)">← Prev</button>
@@ -2620,39 +2480,165 @@ new Chart(ctx, {
   <span class="slide-label" id="slide-label">PSA Pipeline Gap — Critical</span>
   <button class="deck-btn primary" id="btn-next" onclick="navigate(1)">Next →</button>
 </nav>
-
 <div class="key-hint">← → arrow keys to navigate</div>
 
 <script>
-  var current = 1;
-  var total = 6;
-  var labels = ["'PSA Pipeline Gap — Critical'", "'Sales Team Efficiency'", "'Accelerating MSP Growth'", "'Community Field Assessment'", "'Community ROI & PAC'", "'Channel Bookings'"];
+var current = 1;
+var total = 6;
+var labels = ["PSA Pipeline Gap \u2014 Critical", "Sales Team Efficiency", "Accelerating MSP Growth", "Community Field Assessment", "Community ROI & PAC", "Channel Bookings"];
 
-  function goTo(n) {
-    if (n < 1 || n > total) return;
-    document.getElementById('slide-' + current).style.display = 'none';
-    current = n;
-    var slide = document.getElementById('slide-' + current);
-    slide.style.display = 'flex';
-    document.getElementById('deck-counter').textContent = current + ' / ' + total;
-    document.getElementById('slide-label').textContent = labels[current - 1];
-    document.getElementById('btn-prev').disabled = current === 1;
-    document.getElementById('btn-next').disabled = current === total;
-    var dots = document.querySelectorAll('.deck-dot');
-    dots.forEach(function(d, i) {
-      d.classList.toggle('active', i === current - 1);
-    });
-    window.scrollTo(0, 0);
+function goTo(n) {
+  if (n < 1 || n > total) return;
+  document.getElementById('slide-' + current).style.display = 'none';
+  current = n;
+  var slide = document.getElementById('slide-' + current);
+  slide.style.display = 'flex';
+  document.getElementById('deck-counter').textContent = current + ' / ' + total;
+  document.getElementById('slide-label').textContent = labels[current - 1];
+  document.getElementById('btn-prev').disabled = current === 1;
+  document.getElementById('btn-next').disabled = current === total;
+  var dots = document.querySelectorAll('.deck-dot');
+  dots.forEach(function(d, i) { d.classList.toggle('active', i === current - 1); });
+  window.scrollTo(0, 0);
+  // Init slide scripts on first visit
+  
+  if (n === 1 && !window._slideInit1) {
+    window._slideInit1 = true;
+    (function() {
+      
+const ctx = document.getElementById('pipelineChart').getContext('2d');
+
+const months = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+
+const mgNeeded = [140,170,200,240,270,310,340,370,400,440,470,500];
+const sgNeeded = [110,130,150,180,210,230,260,280,300,330,360,380];
+const mgActual = [68,59,52,46,null,null,null,null,null,null,null,null];
+const sgActual = [140,88,79,67,null,null,null,null,null,null,null,null];
+
+new Chart(ctx, {
+  type: 'bar',
+  data: {
+    labels: months,
+    datasets: [
+      {
+        label: 'MG Opps Needed',
+        data: mgNeeded,
+        backgroundColor: 'rgba(147,197,253,0.55)',
+        borderColor: 'rgba(147,197,253,0.8)',
+        borderWidth: 1,
+        stack: 'needed',
+        order: 2,
+      },
+      {
+        label: 'SG Opps Needed',
+        data: sgNeeded,
+        backgroundColor: 'rgba(187,247,208,0.55)',
+        borderColor: 'rgba(187,247,208,0.8)',
+        borderWidth: 1,
+        stack: 'needed',
+        order: 2,
+      },
+      {
+        label: 'MG Actual Created',
+        data: mgActual,
+        type: 'line',
+        borderColor: '#2399B5',
+        backgroundColor: '#2399B5',
+        borderWidth: 2.5,
+        pointRadius: 5,
+        pointBackgroundColor: '#2399B5',
+        pointBorderColor: '#fff',
+        pointBorderWidth: 2,
+        tension: 0.3,
+        order: 1,
+        stack: undefined,
+      },
+      {
+        label: 'SG Actual Created',
+        data: sgActual,
+        type: 'line',
+        borderColor: '#6EBE4F',
+        backgroundColor: '#6EBE4F',
+        borderWidth: 2.5,
+        pointRadius: 5,
+        pointBackgroundColor: '#6EBE4F',
+        pointBorderColor: '#fff',
+        pointBorderWidth: 2,
+        tension: 0.3,
+        order: 1,
+        stack: undefined,
+      },
+    ]
+  },
+  options: {
+    responsive: true,
+    maintainAspectRatio: false,
+    interaction: { mode: 'index', intersect: false },
+    plugins: {
+      legend: { display: false },
+      tooltip: {
+        backgroundColor: '#1D3756',
+        titleColor: '#fff',
+        bodyColor: 'rgba(255,255,255,0.75)',
+        padding: 10,
+        callbacks: {
+          label: function(ctx) {
+            if (ctx.raw === null) return null;
+            return ctx.dataset.label + ': ' + ctx.raw;
+          }
+        }
+      },
+      annotation: {
+        annotations: {
+          nowLine: {
+            type: 'line',
+            xMin: 3, xMax: 3,
+            borderColor: 'rgba(231,76,60,0.6)',
+            borderWidth: 2,
+            borderDash: [4,4],
+            label: {
+              display: true,
+              content: 'NOW',
+              position: 'start',
+              backgroundColor: '#c0392b',
+              color: '#fff',
+              font: { size: 9, weight: 'bold' },
+              padding: { x: 5, y: 3 }
+            }
+          }
+        }
+      }
+    },
+    scales: {
+      x: {
+        stacked: true,
+        grid: { color: 'rgba(0,0,0,0.04)' },
+        ticks: { font: { size: 10, family: 'Open Sans' }, color: '#8da0b4' },
+        border: { color: '#e8edf3' }
+      },
+      y: {
+        stacked: true,
+        grid: { color: 'rgba(0,0,0,0.04)' },
+        ticks: { font: { size: 10, family: 'Open Sans' }, color: '#8da0b4' },
+        border: { color: '#e8edf3' },
+        title: { display: true, text: 'Opps', font: { size: 9 }, color: '#8da0b4' }
+      }
+    }
   }
+});
 
-  function navigate(dir) { goTo(current + dir); }
+    })();
+  }
+}
 
-  document.addEventListener('keydown', function(e) {
-    if (e.key === 'ArrowRight' || e.key === 'ArrowDown') navigate(1);
-    if (e.key === 'ArrowLeft' || e.key === 'ArrowUp') navigate(-1);
-  });
+function navigate(dir) { goTo(current + dir); }
+document.addEventListener('keydown', function(e) {
+  if (e.key === 'ArrowRight' || e.key === 'ArrowDown') navigate(1);
+  if (e.key === 'ArrowLeft' || e.key === 'ArrowUp') navigate(-1);
+});
 
-  goTo(1);
+// Init slide 1 on load
+goTo(1);
 </script>
 </body>
 </html>
