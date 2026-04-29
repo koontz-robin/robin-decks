@@ -1,0 +1,384 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Q2 2026 Community Field Assessment — Rev.io Board</title>
+<link href="https://fonts.googleapis.com/css2?family=Open+Sans:wght@400;600;700;800&family=Montserrat:wght@800&display=swap" rel="stylesheet">
+<style>
+* { margin: 0; padding: 0; box-sizing: border-box; }
+html, body { height: 100%; background: #f5f7fa; font-family: 'Open Sans', Arial, sans-serif; color: #1D3756; }
+body { display: flex; flex-direction: column; min-height: 100vh; }
+
+.top-stripe { height: 4px; background: linear-gradient(90deg, #2399B5, #6EBE4F); flex-shrink: 0; }
+
+.slide-header {
+  background: #1D3756; padding: 14px 40px;
+  display: flex; align-items: center; justify-content: space-between; flex-shrink: 0;
+}
+.logo { height: 26px; }
+.slide-tag { font-size: 9px; font-weight: 700; letter-spacing: 2px; text-transform: uppercase; color: #6EBE4F; margin-bottom: 3px; }
+h1 { font-size: 18px; font-weight: 800; color: #fff; }
+.header-sub { font-size: 10px; color: rgba(255,255,255,0.45); margin-top: 2px; }
+.header-right { text-align: right; }
+.slide-date { font-size: 10px; color: rgba(255,255,255,0.4); }
+.slide-num { font-size: 10px; color: rgba(255,255,255,0.25); margin-top: 2px; }
+
+.body-content { padding: 14px 40px 10px; flex: 1; display: flex; flex-direction: column; gap: 10px; }
+
+/* ── BRAND SHIFT BANNER ── */
+.shift-banner {
+  background: #1D3756;
+  border-radius: 10px;
+  padding: 12px 18px;
+  display: grid;
+  grid-template-columns: 1fr auto 1fr auto auto;
+  align-items: center;
+  gap: 14px;
+  flex-shrink: 0;
+}
+.shift-box {
+  background: rgba(255,255,255,0.06);
+  border-radius: 8px;
+  padding: 10px 14px;
+  text-align: center;
+}
+.shift-label { font-size: 8px; font-weight: 700; letter-spacing: 1.5px; text-transform: uppercase; color: rgba(255,255,255,0.4); margin-bottom: 4px; }
+.shift-quote { font-size: 12px; font-weight: 700; color: #fff; line-height: 1.3; font-style: italic; }
+.shift-context { font-size: 9px; color: rgba(255,255,255,0.4); margin-top: 3px; }
+.shift-arrow { font-size: 24px; color: #6EBE4F; font-weight: 800; }
+.shift-stat { text-align: center; min-width: 90px; }
+.shift-stat-val { font-family: 'Montserrat', sans-serif; font-size: 20px; font-weight: 800; color: #6EBE4F; }
+.shift-stat-label { font-size: 9px; color: rgba(255,255,255,0.45); margin-top: 2px; line-height: 1.3; }
+.shift-stat-val.teal { color: #2399B5; }
+
+/* ── MAIN GRID ── */
+.main-grid {
+  display: grid;
+  grid-template-columns: 1.4fr 1fr 1fr;
+  gap: 10px;
+  flex: 1;
+  min-height: 0;
+}
+
+/* Section card */
+.section-card {
+  background: #fff;
+  border-radius: 10px;
+  border: 1px solid #e8edf3;
+  box-shadow: 0 1px 4px rgba(29,55,86,0.05);
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+}
+.card-head {
+  background: var(--chbg);
+  padding: 10px 14px;
+  flex-shrink: 0;
+}
+.section-card.events { --chbg: #2399B5; }
+.section-card.resonating { --chbg: #1D3756; }
+.section-card.gaps { --chbg: #c0392b; }
+
+.card-eyebrow { font-size: 8px; font-weight: 700; letter-spacing: 1.5px; text-transform: uppercase; color: rgba(255,255,255,0.55); margin-bottom: 2px; }
+.card-title { font-size: 13px; font-weight: 800; color: #fff; line-height: 1.2; }
+
+.card-body { padding: 10px 13px; flex: 1; display: flex; flex-direction: column; gap: 7px; overflow: hidden; }
+
+/* Event table */
+.event-table { width: 100%; border-collapse: collapse; }
+.event-table th {
+  font-size: 8px; font-weight: 700; text-transform: uppercase; letter-spacing: 1px;
+  color: #8da0b4; padding: 3px 5px; border-bottom: 1px solid #e8edf3; text-align: right;
+}
+.event-table th:first-child { text-align: left; }
+.event-table td { font-size: 9.5px; color: #1D3756; padding: 4px 5px; border-bottom: 1px solid #f0f4f8; text-align: right; }
+.event-table td:first-child { text-align: left; font-weight: 600; }
+.event-table tr:last-child td { border-bottom: none; }
+.event-table .total-row td { font-weight: 800; background: #f5f7fa; color: #1D3756; border-top: 2px solid #dce4ed; }
+.event-table .total-row td:first-child { color: #1D3756; }
+.mature-badge {
+  display: inline-block; font-size: 7px; font-weight: 700; letter-spacing: 0.5px;
+  background: #e8f7f0; color: #3a8a50; border-radius: 3px; padding: 1px 5px; margin-left: 3px;
+}
+.early-badge {
+  display: inline-block; font-size: 7px; font-weight: 700; letter-spacing: 0.5px;
+  background: #fff4e6; color: #e67e22; border-radius: 3px; padding: 1px 5px; margin-left: 3px;
+}
+.event-note {
+  font-size: 9px; color: #8da0b4; line-height: 1.4;
+  background: #f5f7fa; border-radius: 6px; padding: 7px 9px;
+  border-left: 2px solid #2399B5;
+}
+.event-note strong { color: #2399B5; }
+
+/* Supporting activity */
+.activity-row {
+  display: flex; gap: 8px; padding: 7px 9px;
+  background: #f5f7fa; border-radius: 7px;
+  border-left: 3px solid var(--ac);
+}
+.activity-row.podcast { --ac: #2399B5; }
+.activity-row.newsletter { --ac: #6EBE4F; }
+.activity-row.community { --ac: #2399B5; }
+.act-icon { font-size: 14px; flex-shrink: 0; }
+.act-title { font-size: 10px; font-weight: 800; color: #1D3756; }
+.act-desc { font-size: 9px; color: #4a6280; line-height: 1.3; margin-top: 1px; }
+.act-stat { font-size: 9px; font-weight: 700; color: var(--ac); margin-top: 2px; }
+
+/* Resonating list */
+.res-item {
+  display: flex; align-items: flex-start; gap: 7px;
+  padding: 6px 8px; background: #f5f7fa; border-radius: 6px;
+}
+.res-check { color: #6EBE4F; font-size: 12px; flex-shrink: 0; font-weight: 800; margin-top: 1px; }
+.res-text { font-size: 10px; color: #1D3756; line-height: 1.35; font-weight: 600; }
+.res-sub { font-size: 9px; color: #64748b; font-weight: 400; margin-top: 1px; }
+
+/* Gap items */
+.gap-item {
+  background: #fff5f5; border-radius: 7px; padding: 9px 11px;
+  border-left: 3px solid #e74c3c;
+}
+.gap-title { font-size: 11px; font-weight: 800; color: #c0392b; margin-bottom: 3px; display: flex; align-items: center; gap: 6px; }
+.gap-badge { font-size: 8px; font-weight: 700; background: #c0392b; color: #fff; padding: 1px 6px; border-radius: 8px; }
+.gap-desc { font-size: 9.5px; color: #4a6280; line-height: 1.4; }
+
+.traj-box {
+  background: #1D3756; border-radius: 7px; padding: 9px 11px; margin-top: auto;
+}
+.traj-title { font-size: 9px; font-weight: 700; letter-spacing: 1px; text-transform: uppercase; color: #6EBE4F; margin-bottom: 4px; }
+.traj-text { font-size: 9.5px; color: rgba(255,255,255,0.7); line-height: 1.4; }
+.traj-text strong { color: #fff; }
+
+/* Footer */
+.slide-footer {
+  padding: 8px 40px; display: flex; justify-content: space-between; align-items: center;
+  border-top: 1px solid #e8edf3; flex-shrink: 0;
+}
+.footer-left { font-size: 9px; color: #b0bec5; letter-spacing: 0.5px; }
+.footer-author { font-size: 9px; color: #b0bec5; }
+.footer-logo { height: 16px; opacity: 0.3; filter: brightness(0) invert(19%) sepia(96%) saturate(343%) hue-rotate(172deg) brightness(96%) contrast(90%); }
+</style>
+</head>
+<body>
+
+<div class="top-stripe"></div>
+
+<div class="slide-header">
+  <img src="https://7091219.fs1.hubspotusercontent-na1.net/hubfs/7091219/email-assets/logo-revio-white.png" alt="Rev.io" class="logo">
+  <div style="text-align:center">
+    <div class="slide-tag">Q2 2026 Board Presentation</div>
+    <h1>Community Field Assessment — MSP Market Presence</h1>
+    <div class="header-sub">Brook Lee, Senior Director of Community · April 2026</div>
+  </div>
+  <div class="header-right">
+    <div class="slide-date">April 28, 2026</div>
+    <div class="slide-num">Slide 3</div>
+  </div>
+</div>
+
+<div class="body-content">
+
+  <!-- Brand shift banner -->
+  <div class="shift-banner">
+    <div class="shift-box">
+      <div class="shift-label">February 2026</div>
+      <div class="shift-quote">"Who is Rev.io?"</div>
+      <div class="shift-context">Consistent response at first events</div>
+    </div>
+    <div class="shift-arrow">→</div>
+    <div class="shift-box">
+      <div class="shift-label">April 2026</div>
+      <div class="shift-quote">"I've heard of you guys. Tell me more."</div>
+      <div class="shift-context">Bootcamp · MSP Summit · ChannelPartners</div>
+    </div>
+    <div style="width:1px;height:40px;background:rgba(255,255,255,0.1)"></div>
+    <div style="display:flex;gap:20px;">
+      <div class="shift-stat">
+        <div class="shift-stat-val">60</div>
+        <div class="shift-stat-label">Days from zero to<br>unprompted awareness</div>
+      </div>
+      <div class="shift-stat">
+        <div class="shift-stat-val teal">6</div>
+        <div class="shift-stat-label">Events attended<br>since Feb 2026</div>
+      </div>
+      <div class="shift-stat">
+        <div class="shift-stat-val">$148K</div>
+        <div class="shift-stat-label">Total event<br>investment YTD</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Main 3-col grid -->
+  <div class="main-grid">
+
+    <!-- Col 1: Events -->
+    <div class="section-card events">
+      <div class="card-head">
+        <div class="card-eyebrow">Events Strategy</div>
+        <div class="card-title">Pipeline from 6 Events · $148K Investment</div>
+      </div>
+      <div class="card-body">
+        <table class="event-table">
+          <thead>
+            <tr>
+              <th>Event</th>
+              <th>Cost</th>
+              <th>Leads</th>
+              <th>Opps</th>
+              <th>Pipeline</th>
+              <th>Closed MRR</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>ITEXPO <span class="mature-badge">Mature</span></td>
+              <td>$10.6K</td><td>16</td><td>11</td><td>$10,830</td><td style="color:#6EBE4F;font-weight:700">$2,250</td>
+            </tr>
+            <tr>
+              <td>ISC West <span class="mature-badge">Mature</span></td>
+              <td>$37.2K</td><td>62</td><td>24</td><td>$27,115</td><td style="color:#6EBE4F;font-weight:700">$5,280</td>
+            </tr>
+            <tr>
+              <td>ASCII Costa Mesa <span class="early-badge">Early</span></td>
+              <td>$7.4K</td><td>15</td><td>8</td><td>$4,025</td><td>—</td>
+            </tr>
+            <tr>
+              <td>TMT Bootcamp <span class="early-badge">&lt;2 wks</span></td>
+              <td>$37.3K</td><td>59</td><td>5</td><td>$5,315</td><td>—</td>
+            </tr>
+            <tr>
+              <td>MSP Summit <span class="early-badge">&lt;2 wks</span></td>
+              <td>$19.4K</td><td>24</td><td>1</td><td>$700</td><td>—</td>
+            </tr>
+            <tr>
+              <td>Channel Partners <span class="early-badge">&lt;1 wk</span></td>
+              <td>$36.2K</td><td>25</td><td>0</td><td>—</td><td>—</td>
+            </tr>
+            <tr class="total-row">
+              <td>TOTAL</td>
+              <td>$148K</td><td>201</td><td>49</td><td>$47,985</td><td style="color:#3a8a50">$7,530</td>
+            </tr>
+          </tbody>
+        </table>
+        <div class="event-note">
+          <strong>Context:</strong> Only ITEXPO + ISC West have had time to mature. The remaining $110K+ in event investment has generated 84 leads and 14 opps in &lt;2 weeks — pipeline still building. Speaking slots at 3 events drove direct onsite demo signups.
+        </div>
+        <div style="margin-top:2px">
+          <div class="card-eyebrow" style="color:#64748b;margin-bottom:5px">SUPPORTING CHANNELS</div>
+          <div class="activity-row podcast">
+            <div class="act-icon">🎙️</div>
+            <div>
+              <div class="act-title">MSP Unfiltered Podcast</div>
+              <div class="act-desc">Partners: N-Able, Acronis, ScalePad, MSPHub — extends reach into trusted MSP audiences</div>
+              <div class="act-stat">Committed through EOY 2026</div>
+            </div>
+          </div>
+          <div class="activity-row newsletter" style="margin-top:6px">
+            <div class="act-icon">📰</div>
+            <div>
+              <div class="act-title">In the Loop with Brook · LinkedIn Newsletter</div>
+              <div class="act-desc">Written from firsthand MSP experience — builds trust vs. typical vendor content</div>
+              <div class="act-stat">721 subscribers · 44.5% growth last 7 days · Launched March 2026</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Col 2: What's Resonating -->
+    <div class="section-card resonating">
+      <div class="card-head">
+        <div class="card-eyebrow">Field Intelligence · 200+ MSP Conversations</div>
+        <div class="card-title">What MSPs Are Responding To</div>
+      </div>
+      <div class="card-body">
+        <div class="res-item">
+          <div class="res-check">✓</div>
+          <div>
+            <div class="res-text">Full AI integration with transparency</div>
+            <div class="res-sub">MSPs skeptical of vague AI claims — directness builds trust</div>
+          </div>
+        </div>
+        <div class="res-item">
+          <div class="res-check">✓</div>
+          <div>
+            <div class="res-text">Everything native in the PSA</div>
+            <div class="res-sub">Projects, billing, invoicing, assets, configs — no tool-stitching</div>
+          </div>
+        </div>
+        <div class="res-item">
+          <div class="res-check">✓</div>
+          <div>
+            <div class="res-text">Mobile app built for field service</div>
+            <div class="res-sub">Meaningful differentiator in a field-heavy industry</div>
+          </div>
+        </div>
+        <div class="res-item">
+          <div class="res-check">✓</div>
+          <div>
+            <div class="res-text">Month-to-month, no long-term contracts</div>
+            <div class="res-sub">Comes up in almost every conversation — MSPs burned by CW/AT</div>
+          </div>
+        </div>
+        <div class="res-item">
+          <div class="res-check">✓</div>
+          <div>
+            <div class="res-text">CommerceHub — agnostic marketplace</div>
+            <div class="res-sub">Procure software without leaving the PSA workflow — lands well once explained</div>
+          </div>
+        </div>
+        <div class="res-item">
+          <div class="res-check">✓</div>
+          <div>
+            <div class="res-text">Community built for partners, not just support</div>
+            <div class="res-sub">Peer connection differentiates from transactional vendor relationships</div>
+          </div>
+        </div>
+        <div class="traj-box">
+          <div class="traj-title">Trajectory</div>
+          <div class="traj-text">Brand recognition moved from <strong>zero to unprompted awareness in under 60 days</strong>. Pipeline from first two mature events is converting. Four events from the past two weeks have not had time to develop. <strong>The ground assault strategy is working.</strong></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Col 3: Gaps -->
+    <div class="section-card gaps">
+      <div class="card-head">
+        <div class="card-eyebrow">Honest Field Assessment</div>
+        <div class="card-title">Where We're Losing Deals</div>
+      </div>
+      <div class="card-body">
+        <div class="gap-item">
+          <div class="gap-title">
+            Integration Gaps
+            <span class="gap-badge">#1 Stall Reason</span>
+          </div>
+          <div class="gap-desc">Missing RMM integrations are table stakes — without them a significant portion of MSPs <em>cannot evaluate us</em> regardless of platform strength. Documentation platform integrations are the second most cited gap. Sales engineering tracks MRR impact monthly, providing a running dollar value of what closing these gaps is worth.</div>
+        </div>
+        <div class="gap-item" style="margin-top:4px">
+          <div class="gap-title">
+            Onboarding Velocity
+            <span class="gap-badge">Active Risk</span>
+          </div>
+          <div class="gap-desc">In a month-to-month, no-contract environment, the window to deliver first value is short. MSPs who expressed genuine intent did not get off the ground because onboarding didn't start fast enough. <strong style="color:#c0392b">Slow onboarding is a churn risk before the relationship even begins.</strong> VP of Onboarding hire currently in process.</div>
+        </div>
+        <div class="traj-box" style="background:#2d1515;border:1px solid #5a2020">
+          <div class="traj-title" style="color:#e74c3c">The Ask</div>
+          <div class="traj-text">The market activity we've built is generating opportunity at a rate the current infrastructure can't fully capture. <strong>Integration roadmap acceleration + onboarding capacity</strong> are the two investments that will unlock the pipeline already in motion.</div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<div class="slide-footer">
+  <div class="footer-left">Rev.io Sales Intelligence · Q2 2026 Board Presentation · April 28, 2026</div>
+  <div class="footer-author">Field Assessment: Brook Lee, Senior Director of Community</div>
+  <img src="https://7091219.fs1.hubspotusercontent-na1.net/hubfs/7091219/email-assets/logo-revio-white.png" alt="Rev.io" class="footer-logo">
+</div>
+
+</body>
+</html>
