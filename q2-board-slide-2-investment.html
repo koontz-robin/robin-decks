@@ -1,0 +1,448 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Q2 2026 Sales Investment — Rev.io Board</title>
+<link href="https://fonts.googleapis.com/css2?family=Open+Sans:wght@400;600;700;800&family=Montserrat:wght@800&display=swap" rel="stylesheet">
+<style>
+* { margin: 0; padding: 0; box-sizing: border-box; }
+body {
+  background: #f5f7fa;
+  font-family: 'Open Sans', Arial, sans-serif;
+  color: #1D3756;
+  min-height: 100vh;
+}
+
+.top-stripe {
+  height: 4px;
+  background: linear-gradient(90deg, #2399B5, #6EBE4F);
+}
+
+.slide-header {
+  background: #1D3756;
+  padding: 20px 48px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+.logo { height: 32px; }
+.header-center { text-align: center; }
+.slide-tag {
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  color: #6EBE4F;
+  margin-bottom: 4px;
+}
+h1 { font-size: 22px; font-weight: 800; color: #fff; }
+.header-right { text-align: right; }
+.slide-date { font-size: 11px; color: rgba(255,255,255,0.45); }
+.slide-num { font-size: 11px; color: rgba(255,255,255,0.3); margin-top: 3px; }
+
+/* Body */
+.body-content { padding: 28px 48px 20px; }
+
+/* Context bar */
+.context-bar {
+  background: #fff;
+  border: 1px solid #e8edf3;
+  border-radius: 10px;
+  padding: 14px 20px;
+  display: flex;
+  align-items: center;
+  gap: 32px;
+  margin-bottom: 24px;
+  box-shadow: 0 1px 4px rgba(29,55,86,0.05);
+}
+.context-bar-label {
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  color: #8da0b4;
+  white-space: nowrap;
+}
+.context-stats { display: flex; gap: 32px; flex: 1; }
+.ctx-stat { text-align: center; }
+.ctx-stat-val {
+  font-family: 'Montserrat', sans-serif;
+  font-size: 20px;
+  font-weight: 800;
+  color: #2399B5;
+}
+.ctx-stat-val.green { color: #6EBE4F; }
+.ctx-stat-label { font-size: 10px; color: #8da0b4; margin-top: 2px; }
+.context-divider { width: 1px; height: 36px; background: #e8edf3; }
+.context-narrative {
+  font-size: 12px;
+  color: #4a6280;
+  line-height: 1.6;
+  flex: 2;
+  border-left: 3px solid #2399B5;
+  padding-left: 16px;
+}
+.context-narrative strong { color: #1D3756; }
+
+/* Two-col initiative layout */
+.initiatives {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 20px;
+}
+
+/* Initiative card */
+.initiative {
+  background: #fff;
+  border-radius: 12px;
+  border: 1px solid #e8edf3;
+  box-shadow: 0 1px 6px rgba(29,55,86,0.07);
+  overflow: hidden;
+}
+
+.initiative-head {
+  background: var(--head-bg);
+  padding: 18px 24px 16px;
+  position: relative;
+}
+.initiative.teal { --head-bg: #2399B5; }
+.initiative.navy { --head-bg: #1D3756; }
+
+.initiative-number {
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  color: rgba(255,255,255,0.5);
+  margin-bottom: 6px;
+}
+.initiative-title {
+  font-size: 17px;
+  font-weight: 800;
+  color: #fff;
+  line-height: 1.25;
+  margin-bottom: 6px;
+}
+.initiative-subtitle {
+  font-size: 12px;
+  color: rgba(255,255,255,0.65);
+  line-height: 1.4;
+}
+.initiative-pill {
+  display: inline-block;
+  background: rgba(255,255,255,0.15);
+  color: #fff;
+  font-size: 9px;
+  font-weight: 700;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+  padding: 3px 10px;
+  border-radius: 10px;
+  margin-top: 10px;
+}
+
+.initiative-body { padding: 20px 24px; }
+
+/* Tool cards for initiative 1 */
+.tool-cards { display: flex; flex-direction: column; gap: 10px; margin-bottom: 16px; }
+.tool-card {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+  padding: 12px 14px;
+  background: #f5f7fa;
+  border-radius: 8px;
+  border-left: 3px solid var(--t-color);
+}
+.tool-card.rox { --t-color: #2399B5; }
+.tool-card.retell { --t-color: #6EBE4F; }
+.tool-card.outreach { --t-color: #2399B5; }
+
+.tool-icon {
+  font-size: 20px;
+  flex-shrink: 0;
+  margin-top: 1px;
+}
+.tool-name {
+  font-size: 12px;
+  font-weight: 800;
+  color: #1D3756;
+  margin-bottom: 3px;
+}
+.tool-desc {
+  font-size: 11px;
+  color: #4a6280;
+  line-height: 1.5;
+}
+.tool-tag {
+  display: inline-block;
+  font-size: 9px;
+  font-weight: 700;
+  letter-spacing: 0.5px;
+  color: var(--t-color);
+  background: rgba(35,153,181,0.08);
+  padding: 2px 7px;
+  border-radius: 4px;
+  margin-top: 4px;
+}
+.tool-card.retell .tool-tag { background: rgba(110,190,79,0.1); }
+
+/* Outcome box */
+.outcome-box {
+  background: #f0f7f4;
+  border-radius: 8px;
+  border: 1px solid #c8e6d0;
+  padding: 12px 14px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+.outcome-icon { font-size: 18px; flex-shrink: 0; }
+.outcome-text { font-size: 11px; color: #1D3756; line-height: 1.5; }
+.outcome-text strong { color: #3a8a50; }
+
+/* Hire cards for initiative 2 */
+.hire-profile {
+  background: #f5f7fa;
+  border-radius: 8px;
+  padding: 14px 16px;
+  margin-bottom: 10px;
+  border-left: 3px solid #6EBE4F;
+}
+.hire-title {
+  font-size: 12px;
+  font-weight: 800;
+  color: #1D3756;
+  margin-bottom: 8px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+.hire-badge {
+  font-size: 9px;
+  font-weight: 700;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+  background: #6EBE4F;
+  color: #fff;
+  padding: 2px 8px;
+  border-radius: 10px;
+}
+.hire-attrs {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+.hire-attr {
+  font-size: 10px;
+  color: #4a6280;
+  background: #fff;
+  border: 1px solid #dce4ed;
+  border-radius: 4px;
+  padding: 3px 8px;
+}
+.hire-attr.highlight {
+  color: #2399B5;
+  border-color: #2399B5;
+  font-weight: 700;
+}
+
+.salary-band {
+  background: #1D3756;
+  border-radius: 8px;
+  padding: 12px 16px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 10px;
+}
+.salary-label { font-size: 11px; color: rgba(255,255,255,0.55); }
+.salary-values { display: flex; align-items: center; gap: 12px; }
+.salary-from {
+  font-size: 13px;
+  color: rgba(255,255,255,0.4);
+  text-decoration: line-through;
+}
+.salary-arrow { font-size: 14px; color: #6EBE4F; }
+.salary-to {
+  font-family: 'Montserrat', sans-serif;
+  font-size: 16px;
+  font-weight: 800;
+  color: #6EBE4F;
+}
+
+/* Footer */
+.slide-footer {
+  padding: 10px 48px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  border-top: 1px solid #e8edf3;
+  margin-top: 4px;
+}
+.footer-left { font-size: 10px; color: #b0bec5; letter-spacing: 0.5px; }
+.footer-logo {
+  height: 18px;
+  opacity: 0.35;
+  filter: brightness(0) invert(19%) sepia(96%) saturate(343%) hue-rotate(172deg) brightness(96%) contrast(90%);
+}
+</style>
+</head>
+<body>
+
+<div class="top-stripe"></div>
+
+<!-- Header -->
+<div class="slide-header">
+  <img src="https://7091219.fs1.hubspotusercontent-na1.net/hubfs/7091219/email-assets/logo-revio-white.png" alt="Rev.io" class="logo">
+  <div class="header-center">
+    <div class="slide-tag">Q2 2026 Board Presentation</div>
+    <h1>Accelerating MSP Growth — Two Strategic Investments</h1>
+  </div>
+  <div class="header-right">
+    <div class="slide-date">April 28, 2026</div>
+    <div class="slide-num">Slide 2</div>
+  </div>
+</div>
+
+<!-- Body -->
+<div class="body-content">
+
+  <!-- Context bar -->
+  <div class="context-bar">
+    <div class="context-bar-label">Why Now</div>
+    <div class="context-stats">
+      <div class="ctx-stat">
+        <div class="ctx-stat-val">+89%</div>
+        <div class="ctx-stat-label">AE productivity gain</div>
+      </div>
+      <div class="context-divider"></div>
+      <div class="ctx-stat">
+        <div class="ctx-stat-val green">2.6×</div>
+        <div class="ctx-stat-label">Peak SDR ROI (Mar)</div>
+      </div>
+      <div class="context-divider"></div>
+      <div class="ctx-stat">
+        <div class="ctx-stat-val">40–50K</div>
+        <div class="ctx-stat-label">MSPs in North America</div>
+      </div>
+      <div class="context-divider"></div>
+      <div class="ctx-stat">
+        <div class="ctx-stat-val green">72</div>
+        <div class="ctx-stat-label">Billing clients w/ MSP signals</div>
+      </div>
+    </div>
+    <div class="context-narrative">
+      The team is more efficient than ever — but efficiency alone won't unlock the MSP market at scale. <strong>We need smarter outreach tooling and higher-caliber talent</strong> to convert the opportunity in front of us.
+    </div>
+  </div>
+
+  <!-- Two initiatives -->
+  <div class="initiatives">
+
+    <!-- Initiative 1: AI Prospecting -->
+    <div class="initiative teal">
+      <div class="initiative-head">
+        <div class="initiative-number">Initiative 01</div>
+        <div class="initiative-title">Automated MSP Prospecting<br>at Scale</div>
+        <div class="initiative-subtitle">Personalization without headcount — AI-powered outreach that sounds human and converts</div>
+        <div class="initiative-pill">Tooling Investment</div>
+      </div>
+      <div class="initiative-body">
+
+        <div class="tool-cards">
+          <div class="tool-card rox">
+            <div class="tool-icon">🤖</div>
+            <div>
+              <div class="tool-name">Rox</div>
+              <div class="tool-desc">AI-native CRM that auto-researches accounts, surfaces signals, and drafts hyper-personalized outreach — so reps spend time selling, not researching.</div>
+              <div class="tool-tag">Account Intelligence</div>
+            </div>
+          </div>
+
+          <div class="tool-card retell">
+            <div class="tool-icon">📞</div>
+            <div>
+              <div class="tool-name">Retell AI</div>
+              <div class="tool-desc">AI voice agent for high-volume outbound prospecting — qualifies cold MSP leads before they ever hit an AE's calendar.</div>
+              <div class="tool-tag">Voice Prospecting</div>
+            </div>
+          </div>
+
+          <div class="tool-card outreach">
+            <div class="tool-icon">⚡</div>
+            <div>
+              <div class="tool-name">Outreach Rev Agent</div>
+              <div class="tool-desc">AI layer on top of our existing Outreach stack — auto-personalizes sequences using account data, deal history, and MSP-specific triggers.</div>
+              <div class="tool-tag">Sequence Personalization</div>
+            </div>
+          </div>
+        </div>
+
+        <div class="outcome-box">
+          <div class="outcome-icon">🎯</div>
+          <div class="outcome-text">Goal: <strong>3× the quality of MSP outreach</strong> without adding headcount — each AE armed with fully researched, personalized touch sequences from day one of a new account.</div>
+        </div>
+
+      </div>
+    </div>
+
+    <!-- Initiative 2: Talent -->
+    <div class="initiative navy">
+      <div class="initiative-head">
+        <div class="initiative-number">Initiative 02</div>
+        <div class="initiative-title">Top-Grade MSP AE Talent<br>with External Hires</div>
+        <div class="initiative-subtitle">Add 2 tenured reps who speak the MSP language — and can close deals the current team can't</div>
+        <div class="initiative-pill">Talent Investment</div>
+      </div>
+      <div class="initiative-body">
+
+        <div class="hire-profile">
+          <div class="hire-title">
+            Target Hire Profile
+            <span class="hire-badge">× 2 Reps</span>
+          </div>
+          <div class="hire-attrs">
+            <div class="hire-attr highlight">3–7 yrs MSP sales experience</div>
+            <div class="hire-attr highlight">Technical acumen (RMM / PSA)</div>
+            <div class="hire-attr">Consultative seller</div>
+            <div class="hire-attr">ConnectWise / Autotask familiarity</div>
+            <div class="hire-attr">Mid-market deal experience</div>
+            <div class="hire-attr">Existing MSP network</div>
+            <div class="hire-attr">Complex billing knowledge</div>
+            <div class="hire-attr">Channel / partner background</div>
+          </div>
+        </div>
+
+        <div class="salary-band">
+          <div>
+            <div class="salary-label">Current AE Band</div>
+            <div class="salary-from">$65K–$80K base</div>
+          </div>
+          <div class="salary-arrow">→</div>
+          <div>
+            <div class="salary-label">Proposed MSP Senior Band</div>
+            <div class="salary-to">$90K–$110K base</div>
+          </div>
+        </div>
+
+        <div class="outcome-box">
+          <div class="outcome-icon">🏆</div>
+          <div class="outcome-text">Goal: <strong>2 net-new senior MSP AEs by Q3</strong> — reps who can self-source, navigate technical objections, and compress deal cycles with credibility the MSP buyer respects.</div>
+        </div>
+
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<!-- Footer -->
+<div class="slide-footer">
+  <div class="footer-left">Rev.io Sales Intelligence · Q2 2026 Board Presentation · April 28, 2026</div>
+  <img src="https://7091219.fs1.hubspotusercontent-na1.net/hubfs/7091219/email-assets/logo-revio-white.png" alt="Rev.io" class="footer-logo">
+</div>
+
+</body>
+</html>
