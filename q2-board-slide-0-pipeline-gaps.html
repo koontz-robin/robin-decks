@@ -26,6 +26,52 @@ h1 { font-size: 18px; font-weight: 800; color: #fff; }
 
 .body-content { padding: 14px 40px 10px; flex: 1; display: flex; flex-direction: column; gap: 10px; }
 
+/* ── CURRENT STATE BAR ── */
+.current-state {
+  display: grid;
+  grid-template-columns: auto 1fr;
+  align-items: center;
+  gap: 14px;
+  background: #fff;
+  border-radius: 10px;
+  border: 1px solid #e8edf3;
+  padding: 12px 18px;
+  flex-shrink: 0;
+  box-shadow: 0 1px 3px rgba(29,55,86,0.05);
+}
+.cs-label {
+  font-size: 9px; font-weight: 700; letter-spacing: 2px; text-transform: uppercase;
+  color: #8da0b4; white-space: nowrap; border-right: 1px solid #e8edf3; padding-right: 14px;
+}
+.cs-stats { display: flex; gap: 0; align-items: stretch; flex: 1; }
+.cs-stat {
+  flex: 1; text-align: center; padding: 4px 12px;
+  border-right: 1px solid #f0f4f8;
+}
+.cs-stat:last-child { border-right: none; }
+.cs-stat-val { font-family: 'Montserrat', sans-serif; font-size: 22px; font-weight: 800; line-height: 1; }
+.cs-stat-val.total { color: #1D3756; }
+.cs-stat-val.mkt { color: #2399B5; }
+.cs-stat-val.sales { color: #6EBE4F; }
+.cs-stat-val.channel { color: #8da0b4; }
+.cs-stat-label { font-size: 9px; color: #8da0b4; margin-top: 3px; text-transform: uppercase; letter-spacing: 1px; }
+.cs-stat-sub { font-size: 9px; margin-top: 3px; }
+.cs-stat-sub.red { color: #c0392b; font-weight: 700; }
+.cs-stat-sub.green { color: #27ae60; font-weight: 700; }
+.cs-divider-arrow {
+  display: flex; flex-direction: column; align-items: center; justify-content: center;
+  padding: 0 16px; color: #c0392b; font-size: 20px; font-weight: 800;
+}
+.cs-needed {
+  flex: 1; background: #fff5f5; border-radius: 8px; padding: 8px 14px;
+  border: 1px solid #fcd5d0; display: flex; align-items: center; gap: 10px;
+}
+.cs-needed-label { font-size: 9px; font-weight: 700; color: #c0392b; text-transform: uppercase; letter-spacing: 1px; white-space: nowrap; }
+.cs-needed-stats { display: flex; gap: 16px; }
+.cs-needed-item { text-align: center; }
+.cs-needed-val { font-family: 'Montserrat', sans-serif; font-size: 20px; font-weight: 800; color: #c0392b; }
+.cs-needed-sub { font-size: 9px; color: #e07070; margin-top: 2px; }
+
 /* ── ALERT BANNER ── */
 .alert-banner {
   background: #c0392b;
@@ -164,6 +210,56 @@ h1 { font-size: 18px; font-weight: 800; color: #fff; }
 </div>
 
 <div class="body-content">
+
+  <!-- Current State avg bar -->
+  <div class="current-state">
+    <div class="cs-label">Current State<br>Avg / Month</div>
+    <div class="cs-stats">
+      <div class="cs-stat">
+        <div class="cs-stat-val total">228</div>
+        <div class="cs-stat-label">Total Opps / Mo</div>
+        <div class="cs-stat-sub red">↓ 37% since Jan</div>
+      </div>
+      <div class="cs-stat">
+        <div class="cs-stat-val mkt">84</div>
+        <div class="cs-stat-label">Marketing Gen / Mo</div>
+        <div class="cs-stat-sub red">Need 185+ to close gap</div>
+      </div>
+      <div class="cs-stat">
+        <div class="cs-stat-val sales">140</div>
+        <div class="cs-stat-label">Sales Gen / Mo</div>
+        <div class="cs-stat-sub red">Need 168+ to close gap</div>
+      </div>
+      <div class="cs-stat">
+        <div class="cs-stat-val channel">4</div>
+        <div class="cs-stat-label">Channel Gen / Mo</div>
+        <div class="cs-stat-sub green">Growing — untapped upside</div>
+      </div>
+      <div class="cs-stat">
+        <div class="cs-stat-val" style="color:#1D3756">$821</div>
+        <div class="cs-stat-label">Avg Opp Size</div>
+        <div class="cs-stat-sub green">↑ $84 since Jan</div>
+      </div>
+      <div class="cs-divider-arrow">→</div>
+      <div class="cs-needed">
+        <div class="cs-needed-label">What's Required<br>to Hit PSA Target</div>
+        <div class="cs-needed-stats">
+          <div class="cs-needed-item">
+            <div class="cs-needed-val">185</div>
+            <div class="cs-needed-sub">Mktg / mo (now: 84)</div>
+          </div>
+          <div class="cs-needed-item">
+            <div class="cs-needed-val">168</div>
+            <div class="cs-needed-sub">Sales / mo (now: 140)</div>
+          </div>
+          <div class="cs-needed-item">
+            <div class="cs-needed-val">353+</div>
+            <div class="cs-needed-sub">Combined / mo required</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
 
   <!-- Alert banner -->
   <div class="alert-banner">
