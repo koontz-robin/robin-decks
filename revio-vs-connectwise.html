@@ -1,0 +1,501 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Rev.io PSA vs ConnectWise PSA — Feature Comparison</title>
+<style>
+  :root {
+    --bg: #0f172a;
+    --surface: #1e293b;
+    --surface2: #131f35;
+    --border: #1e3a5f;
+    --blue: #1667CC;
+    --green: #3DC570;
+    --cyan: #06b6d4;
+    --text: #e2e8f0;
+    --muted: #64748b;
+    --accent: #f97316;
+    --red: #ef4444;
+    --yellow: #eab308;
+    --revio: #3DC570;
+    --cw: #64748b;
+  }
+  * { margin:0; padding:0; box-sizing:border-box; }
+  body { background:var(--bg); font-family:'Segoe UI',system-ui,sans-serif; color:var(--text); display:flex; min-height:100vh; }
+
+  /* SIDEBAR */
+  .sidebar { width:240px; background:var(--surface2); border-right:1px solid var(--border); position:fixed; top:0; left:0; height:100vh; overflow-y:auto; padding:20px 0; flex-shrink:0; z-index:10; }
+  .sidebar-logo { padding:0 16px 16px; border-bottom:1px solid var(--border); margin-bottom:12px; }
+  .sidebar-logo img { height:28px; }
+  .sidebar-logo .title { font-size:10px; font-weight:700; letter-spacing:2px; text-transform:uppercase; color:var(--green); margin-top:6px; }
+  .nav-section { padding:0 10px; margin-bottom:4px; }
+  .nav-label { font-size:9px; font-weight:700; letter-spacing:2px; text-transform:uppercase; color:var(--muted); padding:6px 8px 3px; }
+  .nav-item { display:block; padding:6px 10px; border-radius:6px; font-size:12px; color:var(--muted); cursor:pointer; transition:all 0.15s; }
+  .nav-item:hover, .nav-item.active { background:rgba(22,103,204,0.12); color:var(--text); }
+  .nav-item.active { color:var(--cyan); }
+
+  /* MAIN */
+  .main { margin-left:240px; flex:1; padding:40px 56px; max-width:1100px; }
+
+  /* HERO */
+  .hero { margin-bottom:40px; padding-bottom:28px; border-bottom:1px solid var(--border); }
+  .hero-tag { font-size:10px; font-weight:700; letter-spacing:2px; text-transform:uppercase; color:var(--green); margin-bottom:10px; }
+  .hero h1 { font-size:36px; font-weight:800; color:#fff; line-height:1.1; margin-bottom:10px; }
+  .hero h1 span { color:var(--cyan); }
+  .hero p { font-size:14px; color:var(--muted); line-height:1.7; max-width:700px; }
+
+  /* LEGEND */
+  .legend { display:flex; gap:24px; margin:20px 0 32px; flex-wrap:wrap; }
+  .legend-item { display:flex; align-items:center; gap:8px; font-size:12px; }
+  .dot { width:10px; height:10px; border-radius:50%; flex-shrink:0; }
+  .dot-yes { background:var(--green); }
+  .dot-partial { background:var(--yellow); }
+  .dot-roadmap { background:var(--cyan); }
+  .dot-no { background:#374151; border:1px solid #4b5563; }
+
+  /* SECTION */
+  .section { display:none; }
+  .section.active { display:block; }
+  .section-header { margin-bottom:20px; }
+  .section-tag { font-size:10px; font-weight:700; letter-spacing:2px; text-transform:uppercase; color:var(--accent); margin-bottom:6px; }
+  .section h2 { font-size:24px; font-weight:800; color:#fff; margin-bottom:6px; }
+  .section .lead { font-size:13px; color:var(--muted); line-height:1.6; max-width:700px; margin-bottom:20px; }
+
+  /* COMPARISON TABLE */
+  .comp-table { width:100%; border-collapse:collapse; margin-bottom:32px; }
+  .comp-table thead tr { background:var(--surface2); }
+  .comp-table th { padding:10px 16px; text-align:left; font-size:10px; font-weight:700; text-transform:uppercase; letter-spacing:1px; color:var(--muted); border-bottom:2px solid var(--border); }
+  .comp-table th.revio-col { color:var(--green); }
+  .comp-table th.cw-col { color:var(--muted); }
+  .comp-table td { padding:11px 16px; font-size:13px; border-bottom:1px solid rgba(30,58,95,0.5); vertical-align:top; }
+  .comp-table tr:hover td { background:rgba(255,255,255,0.02); }
+  .comp-table td.feature { color:var(--text); font-weight:600; width:26%; }
+  .comp-table td.revio { width:37%; }
+  .comp-table td.cw { width:37%; color:#94a3b8; }
+
+  /* STATUS BADGE */
+  .badge { display:inline-flex; align-items:center; gap:5px; font-size:11px; font-weight:700; padding:2px 8px; border-radius:20px; white-space:nowrap; }
+  .badge-yes { background:rgba(61,197,112,0.12); color:var(--green); border:1px solid rgba(61,197,112,0.25); }
+  .badge-partial { background:rgba(234,179,8,0.1); color:var(--yellow); border:1px solid rgba(234,179,8,0.2); }
+  .badge-roadmap { background:rgba(6,182,212,0.1); color:var(--cyan); border:1px solid rgba(6,182,212,0.2); }
+  .badge-no { background:rgba(55,65,81,0.5); color:#6b7280; border:1px solid #374151; }
+
+  /* SUMMARY SCORECARD */
+  .scorecard { display:grid; grid-template-columns:repeat(3,1fr); gap:14px; margin:24px 0; }
+  .score-card { background:var(--surface); border:1px solid var(--border); border-radius:10px; padding:16px; text-align:center; }
+  .score-num { font-size:32px; font-weight:800; line-height:1; margin-bottom:4px; }
+  .score-label { font-size:10px; font-weight:700; letter-spacing:1px; text-transform:uppercase; color:var(--muted); }
+
+  /* CALLOUT */
+  .callout { background:rgba(22,103,204,0.08); border:1px solid rgba(22,103,204,0.25); border-radius:10px; padding:14px 18px; margin:16px 0; }
+  .callout.green { background:rgba(61,197,112,0.06); border-color:rgba(61,197,112,0.2); }
+  .callout.orange { background:rgba(249,115,22,0.06); border-color:rgba(249,115,22,0.2); }
+  .callout p { margin:0; font-size:13px; color:var(--text); }
+  .callout-label { font-size:9px; font-weight:700; letter-spacing:2px; text-transform:uppercase; color:var(--cyan); margin-bottom:5px; }
+  .callout.green .callout-label { color:var(--green); }
+  .callout.orange .callout-label { color:var(--accent); }
+
+  p { font-size:13px; color:#94a3b8; line-height:1.7; margin-bottom:12px; }
+  strong { color:var(--text); }
+
+  .win-revio { background:rgba(61,197,112,0.05); }
+  .win-cw { background:rgba(100,116,139,0.05); }
+</style>
+</head>
+<body>
+
+<nav class="sidebar">
+  <div class="sidebar-logo">
+    <img src="https://raw.githubusercontent.com/koontz-robin/robin-decks/master/revio-logo.png" alt="rev.io">
+    <div class="title">PSA Comparison</div>
+  </div>
+  <div class="nav-section">
+    <div class="nav-label">Overview</div>
+    <a class="nav-item active" onclick="show('overview')">Summary Scorecard</a>
+  </div>
+  <div class="nav-section">
+    <div class="nav-label">Feature Categories</div>
+    <a class="nav-item" onclick="show('ticketing')">Ticketing & Help Desk</a>
+    <a class="nav-item" onclick="show('contracts')">Contracts & Agreements</a>
+    <a class="nav-item" onclick="show('billing')">Billing & Invoicing</a>
+    <a class="nav-item" onclick="show('sales')">Sales & CRM</a>
+    <a class="nav-item" onclick="show('projects')">Project Management</a>
+    <a class="nav-item" onclick="show('scheduling')">Scheduling & Dispatch</a>
+    <a class="nav-item" onclick="show('inventory')">Inventory & Procurement</a>
+    <a class="nav-item" onclick="show('analytics')">Reporting & Analytics</a>
+    <a class="nav-item" onclick="show('ai')">AI & Automation</a>
+    <a class="nav-item" onclick="show('integrations')">Integrations</a>
+    <a class="nav-item" onclick="show('mobile')">Mobile App</a>
+    <a class="nav-item" onclick="show('platform')">Platform & Admin</a>
+  </div>
+</nav>
+
+<main class="main">
+
+  <!-- OVERVIEW -->
+  <div id="overview" class="section active">
+    <div class="hero">
+      <div class="hero-tag">Battle Card</div>
+      <h1>Rev.io PSA <span>vs</span> ConnectWise PSA</h1>
+      <p>A feature-by-feature comparison based on current Rev.io PSA capabilities (including all recent releases through April 2026) against ConnectWise PSA. Built for SE and AE use.</p>
+    </div>
+
+    <div class="legend">
+      <div class="legend-item"><div class="dot dot-yes"></div> Available today</div>
+      <div class="legend-item"><div class="dot dot-partial"></div> Partial / in progress</div>
+      <div class="legend-item"><div class="dot dot-roadmap"></div> On roadmap (with ETA)</div>
+      <div class="legend-item"><div class="dot dot-no"></div> Not available</div>
+    </div>
+
+    <div class="scorecard">
+      <div class="score-card" style="border-top:3px solid var(--green)">
+        <div class="score-num" style="color:var(--green)">Rev.io PSA</div>
+        <div class="score-label">Modern, Fast-Moving Platform</div>
+      </div>
+      <div class="score-card" style="border-top:3px solid var(--cyan)">
+        <div class="score-num" style="color:var(--cyan)">Weekly</div>
+        <div class="score-label">Release Cadence</div>
+      </div>
+      <div class="score-card" style="border-top:3px solid var(--muted)">
+        <div class="score-num" style="color:var(--muted)">ConnectWise</div>
+        <div class="score-label">Legacy Market Leader</div>
+      </div>
+    </div>
+
+    <div class="callout green">
+      <div class="callout-label">Rev.io Advantage</div>
+      <p>Rev.io PSA ships updates weekly and has launched major new modules (Opportunities, Analytics Hub, SLA Engine, Projects, Inventory, AI/Revii) in the last 6 months. ConnectWise is a mature platform with deep functionality but significant legacy tech debt and a slower, more complex product. Rev.io wins on pace of innovation, billing platform depth, and AI-native features.</p>
+    </div>
+    <div class="callout orange">
+      <div class="callout-label">Where ConnectWise Still Has an Edge</div>
+      <p>ConnectWise has had 20+ years to build out certain workflows — Knowledge Base, GL integration depth, advanced agreement types, and partner ecosystem integrations are more mature today. Several of these are actively being closed on Rev.io's roadmap.</p>
+    </div>
+
+    <p style="color:var(--muted);font-size:12px;margin-top:24px;">Use the sidebar to navigate by category. Last updated: April 2026. Sources: Rev.io PSA help.psarev.io, rev.io/product-roadmap, release notes through 4.23.26.</p>
+  </div>
+
+  <!-- TICKETING -->
+  <div id="ticketing" class="section">
+    <div class="section-header">
+      <div class="section-tag">Category 1</div>
+      <h2>Ticketing & Help Desk</h2>
+      <p class="lead">Core service desk capabilities — ticket creation, management, SLAs, and customer communication.</p>
+    </div>
+    <table class="comp-table">
+      <thead><tr>
+        <th>Feature</th>
+        <th class="revio-col">Rev.io PSA</th>
+        <th class="cw-col">ConnectWise PSA</th>
+      </tr></thead>
+      <tbody>
+        <tr><td class="feature">Ticket Creation & Management</td><td class="revio"><span class="badge badge-yes">✓ Yes</span> — Full ticket lifecycle; create, assign, close. New/Open/Pending/Closed/Void statuses.</td><td class="cw"><span class="badge badge-yes">✓ Yes</span></td></tr>
+        <tr class="win-revio"><td class="feature">SLA Policies & Timers</td><td class="revio"><span class="badge badge-yes">✓ Yes</span> — Full SLA wizard (4.2.26). Response + resolution timers, color-coded indicators (green/orange/red/blue), per-priority targets, pause/resume conditions. Default SLA per customer.</td><td class="cw"><span class="badge badge-yes">✓ Yes</span> — SLA available but setup is more complex.</td></tr>
+        <tr><td class="feature">Multi-Channel Ticket Intake</td><td class="revio"><span class="badge badge-yes">✓ Yes</span> — Email connector creates tickets from inbound email. Non-contact email badge support (4.23.26). Customer Portal submission.</td><td class="cw"><span class="badge badge-yes">✓ Yes</span> — Email, portal, API.</td></tr>
+        <tr><td class="feature">Ticket Priority & Severity</td><td class="revio"><span class="badge badge-yes">✓ Yes</span> — Admin-managed priority (High/Med/Low) and severity (Emergency/High/Med/Low). Custom priorities configurable in System Settings.</td><td class="cw"><span class="badge badge-yes">✓ Yes</span></td></tr>
+        <tr class="win-revio"><td class="feature">AI Ticket Sentiment</td><td class="revio"><span class="badge badge-yes">✓ Yes</span> — Rev.ii analyzes customer replies and assigns Positive/Neutral/Negative sentiment to each ticket, updated over time.</td><td class="cw"><span class="badge badge-no">✗ No</span></td></tr>
+        <tr><td class="feature">Linked / Related Tickets</td><td class="revio"><span class="badge badge-yes">✓ Yes</span> — Link tickets with cascading update support. Full linked ticket history.</td><td class="cw"><span class="badge badge-yes">✓ Yes</span></td></tr>
+        <tr><td class="feature">Ticket Merge / Absorb</td><td class="revio"><span class="badge badge-no">✗ No</span> — Linking is available; full merge is not.</td><td class="cw"><span class="badge badge-yes">✓ Yes</span></td></tr>
+        <tr><td class="feature">Internal & External Notes</td><td class="revio"><span class="badge badge-yes">✓ Yes</span> — Public Notes, Email Public Notes, Internal Notes. Internal email threading (4.16.26).</td><td class="cw"><span class="badge badge-yes">✓ Yes</span></td></tr>
+        <tr class="win-revio"><td class="feature">AI Note Formatting (Rev.iize)</td><td class="revio"><span class="badge badge-yes">✓ Yes</span> — Converts rough tech notes to professional documentation with one click. Available on tickets and opportunity activity.</td><td class="cw"><span class="badge badge-no">✗ No</span></td></tr>
+        <tr><td class="feature">Ticket Tasks / Checklists</td><td class="revio"><span class="badge badge-yes">✓ Yes</span> — Tasks tab on tickets; Follow Up, Phone Call, To-Do, Send Email, etc. Assignable with due dates.</td><td class="cw"><span class="badge badge-yes">✓ Yes</span></td></tr>
+        <tr><td class="feature">Workflow Automation / Notifications</td><td class="revio"><span class="badge badge-yes">✓ Yes</span> — Workflow rules trigger email/SMS/in-app notifications. Multi-response workflows with simultaneous channels (4.23.26). SLA escalation triggers.</td><td class="cw"><span class="badge badge-yes">✓ Yes</span> — More mature rule set.</td></tr>
+        <tr><td class="feature">Customer Satisfaction / Sentiment</td><td class="revio"><span class="badge badge-yes">✓ Yes</span> — Customer sentiment score on profile (90-day rolling) and on individual tickets via AI analysis.</td><td class="cw"><span class="badge badge-partial">~ Partial</span> — CSAT surveys available as add-on.</td></tr>
+        <tr><td class="feature">Macros / Templates</td><td class="revio"><span class="badge badge-yes">✓ Yes</span> — Macros applicable on ticket create/edit including from mobile (4.23.26).</td><td class="cw"><span class="badge badge-yes">✓ Yes</span></td></tr>
+        <tr class="win-revio"><td class="feature">Ticket Bulk Actions</td><td class="revio"><span class="badge badge-roadmap">🗓 Roadmap</span> — Bulk status change, tech assignment, tags. Planned.</td><td class="cw"><span class="badge badge-yes">✓ Yes</span></td></tr>
+        <tr><td class="feature">Ticket List Filters</td><td class="revio"><span class="badge badge-yes">✓ Yes</span> — Billing status, primary tech, associated tech, contact filters. Quick ticket ID search. (4.23.26)</td><td class="cw"><span class="badge badge-yes">✓ Yes</span></td></tr>
+        <tr><td class="feature">Knowledge Base</td><td class="revio"><span class="badge badge-no">✗ No</span> — Not currently available.</td><td class="cw"><span class="badge badge-yes">✓ Yes</span> — Full KB included.</td></tr>
+        <tr><td class="feature">Change Approvals</td><td class="revio"><span class="badge badge-no">✗ No</span></td><td class="cw"><span class="badge badge-yes">✓ Yes</span> — Available in Standard plan.</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <!-- CONTRACTS -->
+  <div id="contracts" class="section">
+    <div class="section-header">
+      <div class="section-tag">Category 2</div>
+      <h2>Contracts & Agreements</h2>
+      <p class="lead">How each platform handles service agreements, contract billing, renewals, and terms.</p>
+    </div>
+    <table class="comp-table">
+      <thead><tr><th>Feature</th><th class="revio-col">Rev.io PSA</th><th class="cw-col">ConnectWise PSA</th></tr></thead>
+      <tbody>
+        <tr><td class="feature">Recurring Agreements / Contracts</td><td class="revio"><span class="badge badge-yes">✓ Yes</span> — Recurring Agreement basis. Covered rate items, billing parameters, documentation, ticket + time + parts history tracked per contract.</td><td class="cw"><span class="badge badge-yes">✓ Yes</span> — Wide range of agreement types and templates.</td></tr>
+        <tr><td class="feature">Contract Templates</td><td class="revio"><span class="badge badge-partial">~ Partial</span> — Contract types configurable; templates are less mature than ConnectWise today.</td><td class="cw"><span class="badge badge-yes">✓ Yes</span> — Rich template library.</td></tr>
+        <tr><td class="feature">Agreement Types (T&M, Block Hours, Retainer)</td><td class="revio"><span class="badge badge-roadmap">🗓 Jun 2026</span> — Agreements - Additional Ticket Billing Types: retainers, block hours, T&M on roadmap.</td><td class="cw"><span class="badge badge-yes">✓ Yes</span></td></tr>
+        <tr><td class="feature">Agreement Management (Create, Edit, Renew)</td><td class="revio"><span class="badge badge-roadmap">🗓 Jun 2026</span> — Full Agreement Management feature: define terms, rates, included hours, overage rules, admin-managed pricing.</td><td class="cw"><span class="badge badge-yes">✓ Yes</span></td></tr>
+        <tr><td class="feature">Contract Locked Once Active</td><td class="revio"><span class="badge badge-partial">~ Partial</span> — Active contracts are locked; must cancel and recreate to modify. Known limitation.</td><td class="cw"><span class="badge badge-yes">✓ Yes</span> — More flexible editing.</td></tr>
+        <tr><td class="feature">SLA per Contract / Customer</td><td class="revio"><span class="badge badge-yes">✓ Yes</span> — Default SLA assignable per customer; applies to all tickets created for that customer.</td><td class="cw"><span class="badge badge-yes">✓ Yes</span></td></tr>
+        <tr><td class="feature">Renewal Notifications</td><td class="revio"><span class="badge badge-partial">~ Partial</span> — Workflow notifications can trigger on contract conditions today. Full renewal tracking coming with Agreement Management (Jun 2026).</td><td class="cw"><span class="badge badge-yes">✓ Yes</span></td></tr>
+        <tr><td class="feature">Percentage Increase at Renewal</td><td class="revio"><span class="badge badge-roadmap">🗓 Jun 2026</span> — Part of Agreement Management roadmap item.</td><td class="cw"><span class="badge badge-yes">✓ Yes</span></td></tr>
+        <tr><td class="feature">Contract-Level Covered Assets</td><td class="revio"><span class="badge badge-roadmap">🗓 Planned</span> — Agreement Covered Assets on roadmap; associate assets with agreements, parent-child hierarchy support.</td><td class="cw"><span class="badge badge-yes">✓ Yes</span> — Configurations tied to agreements.</td></tr>
+        <tr><td class="feature">Billing Cycle Options</td><td class="revio"><span class="badge badge-partial">~ Partial</span> — Monthly only today. Quarterly/Semi-Annual/Annual cycles on roadmap.</td><td class="cw"><span class="badge badge-yes">✓ Yes</span> — Multiple cycle options.</td></tr>
+        <tr><td class="feature">User-Based Billing</td><td class="revio"><span class="badge badge-partial">~ Partial</span> — Usage-based billing supported in Rev.io Billing platform. PSA-side user-based billing in development.</td><td class="cw"><span class="badge badge-yes">✓ Yes</span> — Standard plan feature.</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <!-- BILLING -->
+  <div id="billing" class="section">
+    <div class="section-header">
+      <div class="section-tag">Category 3</div>
+      <h2>Billing & Invoicing</h2>
+      <p class="lead">Invoice generation, payment processing, credits, GL integration, and billing automation.</p>
+    </div>
+    <table class="comp-table">
+      <thead><tr><th>Feature</th><th class="revio-col">Rev.io PSA</th><th class="cw-col">ConnectWise PSA</th></tr></thead>
+      <tbody>
+        <tr class="win-revio"><td class="feature">Billing Platform Depth</td><td class="revio"><span class="badge badge-yes">✓ Yes</span> — Rev.io has a full-stack billing platform (Rev.io Billing) powering the PSA. Includes usage-based billing, CDR processing, complex rate plans — purpose-built for telecom/MSP.</td><td class="cw"><span class="badge badge-partial">~ Partial</span> — PSA billing focused on T&M and agreements; less depth for telecom/usage-based.</td></tr>
+        <tr><td class="feature">Invoice Creation from Tickets</td><td class="revio"><span class="badge badge-yes">✓ Yes</span> — Parts & Labor → Send to Billing → invoice generated. Ready for Billing queue with bulk creation.</td><td class="cw"><span class="badge badge-yes">✓ Yes</span></td></tr>
+        <tr><td class="feature">Recurring Invoice Automation</td><td class="revio"><span class="badge badge-partial">~ Partial</span> — Manual batch creation today. Full automation (Bill Profile Invoice Automation) on roadmap Jun 2026.</td><td class="cw"><span class="badge badge-yes">✓ Yes</span></td></tr>
+        <tr><td class="feature">Invoice Customization (Detail Level)</td><td class="revio"><span class="badge badge-partial">~ Partial</span> — Invoice format controlled at Bill Profile level. Per-invoice column-level toggle (show/hide cost columns) needs product confirmation.</td><td class="cw"><span class="badge badge-yes">✓ Yes</span> — Flexible invoice templates.</td></tr>
+        <tr><td class="feature">Proration / Mid-Cycle Billing</td><td class="revio"><span class="badge badge-yes">✓ Yes</span> — Handled through Rev.io Billing proration logic. New services added mid-cycle are prorated automatically.</td><td class="cw"><span class="badge badge-yes">✓ Yes</span></td></tr>
+        <tr><td class="feature">Credit Memos / Bill Corrections</td><td class="revio"><span class="badge badge-partial">~ Partial</span> — Handled through Rev.io Billing. Specific workflow needs to be demonstrated — not in PSA help docs today.</td><td class="cw"><span class="badge badge-yes">✓ Yes</span></td></tr>
+        <tr><td class="feature">Tax Provider Integration</td><td class="revio"><span class="badge badge-roadmap">🗓 Jun 2026</span> — Tax Provider Configuration on roadmap: choose provider, enter credentials, validate connectivity at setup.</td><td class="cw"><span class="badge badge-yes">✓ Yes</span></td></tr>
+        <tr class="win-revio"><td class="feature">Time-Based Billing Automation</td><td class="revio"><span class="badge badge-yes">✓ Yes</span> — Timer runs on ticket, stops, auto-bills. Tech marks Ready for Billing. Billing team receives notification. Zero manual re-entry.</td><td class="cw"><span class="badge badge-yes">✓ Yes</span></td></tr>
+        <tr><td class="feature">Manual Time/Quantity Edit Pre-Billing</td><td class="revio"><span class="badge badge-yes">✓ Yes</span> — Parts & Labor tab editable pre-billing. Time entries editable with role permissions (4.16.26).</td><td class="cw"><span class="badge badge-yes">✓ Yes</span></td></tr>
+        <tr><td class="feature">GL Integration</td><td class="revio"><span class="badge badge-partial">~ Partial</span> — GL mapping available in Rev.io Billing. PSA-side direct GL integration being developed.</td><td class="cw"><span class="badge badge-yes">✓ Yes</span> — Standard plan feature.</td></tr>
+        <tr><td class="feature">QuickBooks Integration</td><td class="revio"><span class="badge badge-roadmap">🗓 Planned</span> — QuickBooks Desktop on roadmap. QBO available through Rev.io Billing today.</td><td class="cw"><span class="badge badge-yes">✓ Yes</span> — QB Desktop + Online.</td></tr>
+        <tr><td class="feature">Advance Billing (Bill Before Service)</td><td class="revio"><span class="badge badge-yes">✓ Yes</span> — Bill Profile supports advance billing cycles. Configurable per customer.</td><td class="cw"><span class="badge badge-yes">✓ Yes</span></td></tr>
+        <tr><td class="feature">Minimum Billable Increment Rules</td><td class="revio"><span class="badge badge-no">✗ No</span> — Not currently available (e.g. "don't bill if < 5 min"). Feature request logged.</td><td class="cw"><span class="badge badge-partial">~ Partial</span> — Configurable with some constraints.</td></tr>
+        <tr><td class="feature">Job Costing / Gross Profit per Ticket</td><td class="revio"><span class="badge badge-yes">✓ Yes</span> — Job Costing panel on every ticket: Material Sales, Costs, Margin. Real-time profitability.</td><td class="cw"><span class="badge badge-yes">✓ Yes</span></td></tr>
+        <tr><td class="feature">Search by Invoice Number</td><td class="revio"><span class="badge badge-roadmap">🗓 Jun 2026</span> — Quick invoice number lookup in Billing Invoices on roadmap.</td><td class="cw"><span class="badge badge-yes">✓ Yes</span></td></tr>
+        <tr><td class="feature">Pick Tickets & Packing Slips</td><td class="revio"><span class="badge badge-yes">✓ Yes</span> — Pick Ticket PDF and Packing Slip PDF from Parts & Labor tab. (4.23.26)</td><td class="cw"><span class="badge badge-yes">✓ Yes</span></td></tr>
+        <tr><td class="feature">Office 365 License Billing</td><td class="revio"><span class="badge badge-roadmap">🗓 Planned</span> — Microsoft 365 integration on roadmap.</td><td class="cw"><span class="badge badge-yes">✓ Yes</span> — Standard plan feature.</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <!-- SALES -->
+  <div id="sales" class="section">
+    <div class="section-header">
+      <div class="section-tag">Category 4</div>
+      <h2>Sales & CRM</h2>
+      <p class="lead">Pipeline management, quoting, opportunity tracking, and sales analytics.</p>
+    </div>
+    <table class="comp-table">
+      <thead><tr><th>Feature</th><th class="revio-col">Rev.io PSA</th><th class="cw-col">ConnectWise PSA</th></tr></thead>
+      <tbody>
+        <tr class="win-revio"><td class="feature">Opportunities Module</td><td class="revio"><span class="badge badge-yes">✓ Yes</span> — Full Opportunities module launched (3.26.26). Stage pipeline, custom fields, activity log, quotes from opportunities, permission-controlled.</td><td class="cw"><span class="badge badge-yes">✓ Yes</span></td></tr>
+        <tr class="win-revio"><td class="feature">Pipeline / Funnel View</td><td class="revio"><span class="badge badge-yes">✓ Yes</span> — Visual funnel showing opportunity count and expected amount by stage. (4.9.26)</td><td class="cw"><span class="badge badge-partial">~ Partial</span> — Dashboard views available, less modern.</td></tr>
+        <tr class="win-revio"><td class="feature">Opportunity Forecast Categories</td><td class="revio"><span class="badge badge-yes">✓ Yes</span> — Forecast Category (Pipeline/Best Case/Forecast) and Next Step fields, admin-managed. (4.16.26)</td><td class="cw"><span class="badge badge-partial">~ Partial</span></td></tr>
+        <tr><td class="feature">Quote / Proposal Creation</td><td class="revio"><span class="badge badge-yes">✓ Yes</span> — Rebuilt quoting experience (4.1.26): New Quote Detail + List screens, create from opportunity, recurring vs. one-time line items, e-signature, proposal templates.</td><td class="cw"><span class="badge badge-yes">✓ Yes</span> — Mature quoting.</td></tr>
+        <tr><td class="feature">Quote to Ticket Auto-Conversion</td><td class="revio"><span class="badge badge-yes">✓ Yes</span> — Non-recurring quote items auto-create service tickets on acceptance. Recurring items go to billing profile.</td><td class="cw"><span class="badge badge-yes">✓ Yes</span></td></tr>
+        <tr><td class="feature">E-Signature Capture</td><td class="revio"><span class="badge badge-yes">✓ Yes</span> — E-signature on proposals. Capture Signature button available on tickets.</td><td class="cw"><span class="badge badge-yes">✓ Yes</span></td></tr>
+        <tr class="win-revio"><td class="feature">AI Sales Pipeline Assistant</td><td class="revio"><span class="badge badge-partial">~ In Progress</span> — Ask Revii for Sales Opportunities: natural language pipeline management in development.</td><td class="cw"><span class="badge badge-no">✗ No</span></td></tr>
+        <tr><td class="feature">Sales Opportunity Dashboards</td><td class="revio"><span class="badge badge-roadmap">🗓 Planned</span> — KPIs, pipeline value, deal flow, win/loss charts in Analytics Hub.</td><td class="cw"><span class="badge badge-yes">✓ Yes</span></td></tr>
+        <tr><td class="feature">Product Catalog / Packages</td><td class="revio"><span class="badge badge-yes">✓ Yes</span> — Full product catalog. Packages (Kits/Bundles) available. Package Quantities on roadmap (Jun 2026). Product Images roadmap (Jun 2026).</td><td class="cw"><span class="badge badge-yes">✓ Yes</span></td></tr>
+        <tr><td class="feature">HTML Email Templates</td><td class="revio"><span class="badge badge-partial">~ Partial</span> — Workflow notifications support email templates. Custom HTML email template builder not currently documented.</td><td class="cw"><span class="badge badge-yes">✓ Yes</span></td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <!-- PROJECTS -->
+  <div id="projects" class="section">
+    <div class="section-header">
+      <div class="section-tag">Category 5</div>
+      <h2>Project Management</h2>
+      <p class="lead">Complex work spanning multiple tasks, tickets, and phases.</p>
+    </div>
+    <table class="comp-table">
+      <thead><tr><th>Feature</th><th class="revio-col">Rev.io PSA</th><th class="cw-col">ConnectWise PSA</th></tr></thead>
+      <tbody>
+        <tr><td class="feature">Projects Module</td><td class="revio"><span class="badge badge-yes">✓ Yes</span> — Full Projects module: multi-ticket/task/phase organization, timelines, progress tracking, stage view.</td><td class="cw"><span class="badge badge-yes">✓ Yes</span></td></tr>
+        <tr><td class="feature">Milestones</td><td class="revio"><span class="badge badge-yes">✓ Yes</span> — Project milestones for tracking critical dates and deadlines (3.19.26).</td><td class="cw"><span class="badge badge-yes">✓ Yes</span></td></tr>
+        <tr class="win-revio"><td class="feature">Project Activity Feed</td><td class="revio"><span class="badge badge-yes">✓ Yes</span> — Chronological activity feed on project detail: tickets, tasks, time entries, POs, billing events, with filtering. (4.9.26)</td><td class="cw"><span class="badge badge-partial">~ Partial</span></td></tr>
+        <tr><td class="feature">Task Assignment to Individuals</td><td class="revio"><span class="badge badge-yes">✓ Yes</span> — Tasks assignable to techs/admins with due dates and action types. Tasks tab on tickets; Scheduling module calendar-level tasks independent of tickets.</td><td class="cw"><span class="badge badge-yes">✓ Yes</span></td></tr>
+        <tr><td class="feature">Resource / Capacity View</td><td class="revio"><span class="badge badge-partial">~ Partial</span> — Dispatch Board shows tech availability. Dedicated capacity planning dashboard on roadmap.</td><td class="cw"><span class="badge badge-yes">✓ Yes</span></td></tr>
+        <tr><td class="feature">Project Timelines / Gantt</td><td class="revio"><span class="badge badge-partial">~ Partial</span> — Timeline view available. Full Gantt-style not currently documented.</td><td class="cw"><span class="badge badge-yes">✓ Yes</span></td></tr>
+        <tr class="win-revio"><td class="feature">Project Management Analytics</td><td class="revio"><span class="badge badge-roadmap">🗓 Planned</span> — Dedicated project dashboards: budget vs. actual, milestone tracking, team performance. In Analytics Hub.</td><td class="cw"><span class="badge badge-partial">~ Partial</span></td></tr>
+        <tr><td class="feature">One-Time / Flat-Fee Projects</td><td class="revio"><span class="badge badge-yes">✓ Yes</span> — Quote with one-time line items → accepted → auto-creates ticket. Wrap in a Project for phase management.</td><td class="cw"><span class="badge badge-yes">✓ Yes</span></td></tr>
+        <tr><td class="feature">Progressive / Milestone Billing</td><td class="revio"><span class="badge badge-roadmap">🗓 Planned</span> — Progressive Billing on roadmap.</td><td class="cw"><span class="badge badge-yes">✓ Yes</span></td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <!-- SCHEDULING -->
+  <div id="scheduling" class="section">
+    <div class="section-header">
+      <div class="section-tag">Category 6</div>
+      <h2>Scheduling & Dispatch</h2>
+    </div>
+    <table class="comp-table">
+      <thead><tr><th>Feature</th><th class="revio-col">Rev.io PSA</th><th class="cw-col">ConnectWise PSA</th></tr></thead>
+      <tbody>
+        <tr><td class="feature">Dispatch Board</td><td class="revio"><span class="badge badge-yes">✓ Yes</span> — Drag-and-drop scheduling, filter by tech groups. Ticket queue panel for unscheduled work.</td><td class="cw"><span class="badge badge-yes">✓ Yes</span></td></tr>
+        <tr><td class="feature">Calendar Sync (Outlook / Google)</td><td class="revio"><span class="badge badge-yes">✓ Yes</span> — Bidirectional sync with Outlook and Google Calendar. Default customer prompt on calendar config. (4.9.26)</td><td class="cw"><span class="badge badge-yes">✓ Yes</span></td></tr>
+        <tr><td class="feature">Technician Calendars</td><td class="revio"><span class="badge badge-yes">✓ Yes</span> — Per-tech calendar view; Calendar Quickview on ticket Stage panel.</td><td class="cw"><span class="badge badge-yes">✓ Yes</span></td></tr>
+        <tr class="win-revio"><td class="feature">GPS Tracking / Map in Dispatch</td><td class="revio"><span class="badge badge-roadmap">🗓 Planned</span> — GPS Tracking on Dispatch Board on roadmap. Mobile geofencing + auto travel timer stop already live.</td><td class="cw"><span class="badge badge-partial">~ Partial</span> — Available via ConnectWise Automate integration.</td></tr>
+        <tr class="win-revio"><td class="feature">Mobile Travel Timer & ETA SMS</td><td class="revio"><span class="badge badge-yes">✓ Yes</span> — Auto-send SMS to customers when tech starts travel with GPS-based ETA. Auto-stop travel timer on geofence entry. (4.23.26)</td><td class="cw"><span class="badge badge-no">✗ No</span></td></tr>
+        <tr><td class="feature">Time Tracking on Tickets</td><td class="revio"><span class="badge badge-yes">✓ Yes</span> — Start/stop timer visible in top ribbon across entire app. Time Logs tab. Rev.ii can retroactively add time entries by voice.</td><td class="cw"><span class="badge badge-yes">✓ Yes</span></td></tr>
+        <tr><td class="feature">Timesheet View</td><td class="revio"><span class="badge badge-yes">✓ Yes</span> — Weekly and daily timesheet views by tech. Filter by time log type on roadmap.</td><td class="cw"><span class="badge badge-yes">✓ Yes</span></td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <!-- INVENTORY -->
+  <div id="inventory" class="section">
+    <div class="section-header">
+      <div class="section-tag">Category 7</div>
+      <h2>Inventory & Procurement</h2>
+    </div>
+    <table class="comp-table">
+      <thead><tr><th>Feature</th><th class="revio-col">Rev.io PSA</th><th class="cw-col">ConnectWise PSA</th></tr></thead>
+      <tbody>
+        <tr><td class="feature">Inventory Management</td><td class="revio"><span class="badge badge-yes">✓ Yes</span> — Track serial numbers and locations. Multi-warehouse + truck stock. Reserve from inventory on ticket. Inventory Matrix with location filter (4.16.26).</td><td class="cw"><span class="badge badge-yes">✓ Yes</span> — Standard plan feature.</td></tr>
+        <tr><td class="feature">Purchase Orders from Tickets</td><td class="revio"><span class="badge badge-yes">✓ Yes</span> — Create POs directly from tickets. Drop Ship POs auto-populate service address (4.23.26).</td><td class="cw"><span class="badge badge-yes">✓ Yes</span></td></tr>
+        <tr class="win-revio"><td class="feature">Inventory Analytics Dashboards</td><td class="revio"><span class="badge badge-yes">✓ Yes</span> — 6 dashboards: Inventory Aging, Valuation, Levels, Stock Movement, Reserved vs. Available, Pick List. (4.1.26)</td><td class="cw"><span class="badge badge-partial">~ Partial</span></td></tr>
+        <tr><td class="feature">Pick Tickets & Packing Slips</td><td class="revio"><span class="badge badge-yes">✓ Yes</span> — PDF generation from Parts & Labor tab. (4.23.26)</td><td class="cw"><span class="badge badge-yes">✓ Yes</span></td></tr>
+        <tr><td class="feature">Vendor / Provider Management</td><td class="revio"><span class="badge badge-yes">✓ Yes</span> — Provider tab in System Settings with type configuration.</td><td class="cw"><span class="badge badge-yes">✓ Yes</span></td></tr>
+        <tr><td class="feature">TD Synnex Integration</td><td class="revio"><span class="badge badge-roadmap">🗓 Planned</span> — TD Synnex account sync and license integration on roadmap.</td><td class="cw"><span class="badge badge-yes">✓ Yes</span></td></tr>
+        <tr><td class="feature">Pax8 Integration</td><td class="revio"><span class="badge badge-roadmap">🗓 Planned</span> — On roadmap.</td><td class="cw"><span class="badge badge-yes">✓ Yes</span></td></tr>
+        <tr><td class="feature">Bulk Import (Products / Payments)</td><td class="revio"><span class="badge badge-yes">✓ Yes</span> — Bulk Tools admin section: Product Import, Product Update, Payment Import via CSV/Excel. Download failed rows. (4.9.26 / 4.23.26)</td><td class="cw"><span class="badge badge-yes">✓ Yes</span></td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <!-- ANALYTICS -->
+  <div id="analytics" class="section">
+    <div class="section-header">
+      <div class="section-tag">Category 8</div>
+      <h2>Reporting & Analytics</h2>
+    </div>
+    <table class="comp-table">
+      <thead><tr><th>Feature</th><th class="revio-col">Rev.io PSA</th><th class="cw-col">ConnectWise PSA</th></tr></thead>
+      <tbody>
+        <tr class="win-revio"><td class="feature">Custom Dashboards</td><td class="revio"><span class="badge badge-yes">✓ Yes</span> — Analytics Hub (2.26.26): browse pre-built dashboards, create custom dashboards, charts and visualizations on live data.</td><td class="cw"><span class="badge badge-yes">✓ Yes</span> — Dashboard customization available.</td></tr>
+        <tr class="win-revio"><td class="feature">SQL Lab / Custom Queries</td><td class="revio"><span class="badge badge-yes">✓ Yes</span> — SQL Lab: write and run T-SQL directly against your data. Save and share queries.</td><td class="cw"><span class="badge badge-partial">~ Partial</span> — Custom reports via template editor; SQL Lab not standard.</td></tr>
+        <tr><td class="feature">Scheduled Reports</td><td class="revio"><span class="badge badge-partial">~ Partial</span> — Dashboard available; scheduled email delivery of reports not yet documented.</td><td class="cw"><span class="badge badge-yes">✓ Yes</span> — Scheduled reports with template editor.</td></tr>
+        <tr><td class="feature">Technician Productivity Reports</td><td class="revio"><span class="badge badge-yes">✓ Yes</span> — Profit by Technician dashboard, Time Entry List view, timesheet reporting.</td><td class="cw"><span class="badge badge-yes">✓ Yes</span></td></tr>
+        <tr><td class="feature">SLA Reporting</td><td class="revio"><span class="badge badge-yes">✓ Yes</span> — SLA Performance gauge on dashboard. Response/resolution timer columns in Ticket List view.</td><td class="cw"><span class="badge badge-yes">✓ Yes</span></td></tr>
+        <tr><td class="feature">Revenue / Billing Analytics</td><td class="revio"><span class="badge badge-yes">✓ Yes</span> — YTD Revenue Analysis (MRC vs NRC), Job Costing per ticket. TRX Payments Reporting on roadmap (Jun 2026).</td><td class="cw"><span class="badge badge-yes">✓ Yes</span></td></tr>
+        <tr class="win-revio"><td class="feature">Project Management Analytics</td><td class="revio"><span class="badge badge-roadmap">🗓 Planned</span> — Purpose-built project dashboards: budget vs. actual, milestone health, team performance.</td><td class="cw"><span class="badge badge-partial">~ Partial</span></td></tr>
+        <tr><td class="feature">Asset / Inventory Analytics</td><td class="revio"><span class="badge badge-yes">✓ Yes</span> — 6 inventory dashboards including Aging, Valuation, Stock Movement (4.1.26).</td><td class="cw"><span class="badge badge-partial">~ Partial</span></td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <!-- AI -->
+  <div id="ai" class="section">
+    <div class="section-header">
+      <div class="section-tag">Category 9</div>
+      <h2>AI & Automation</h2>
+      <p class="lead">Where Rev.io has a clear and growing advantage.</p>
+    </div>
+    <table class="comp-table">
+      <thead><tr><th>Feature</th><th class="revio-col">Rev.io PSA</th><th class="cw-col">ConnectWise PSA</th></tr></thead>
+      <tbody>
+        <tr class="win-revio"><td class="feature">AI Note Formatting (Rev.iize)</td><td class="revio"><span class="badge badge-yes">✓ Yes</span> — Converts rough notes to professional documentation in one click. Available on tickets and opportunity activity.</td><td class="cw"><span class="badge badge-no">✗ No</span></td></tr>
+        <tr class="win-revio"><td class="feature">AI Ticket / History Summarization</td><td class="revio"><span class="badge badge-yes">✓ Yes</span> — Ask Rev.ii summarizes full ticket history. 90-day customer journal summary on customer profile.</td><td class="cw"><span class="badge badge-no">✗ No</span></td></tr>
+        <tr class="win-revio"><td class="feature">Voice Ticket Creation</td><td class="revio"><span class="badge badge-yes">✓ Yes</span> — Tell Rev.ii to create a ticket by voice with issue, priority, and status. Available from any screen.</td><td class="cw"><span class="badge badge-no">✗ No</span></td></tr>
+        <tr class="win-revio"><td class="feature">AI Time Entry Correction</td><td class="revio"><span class="badge badge-yes">✓ Yes</span> — Tell Rev.ii to add a missed time entry by specifying reason code, start time, and end time in plain language.</td><td class="cw"><span class="badge badge-no">✗ No</span></td></tr>
+        <tr class="win-revio"><td class="feature">AI Customer Sentiment Scoring</td><td class="revio"><span class="badge badge-yes">✓ Yes</span> — AI analyzes customer replies and scores ticket sentiment (Positive/Neutral/Negative). 90-day rolling sentiment on customer profile.</td><td class="cw"><span class="badge badge-no">✗ No</span></td></tr>
+        <tr class="win-revio"><td class="feature">AI for Sales Pipeline</td><td class="revio"><span class="badge badge-partial">~ In Progress</span> — Ask Revii for Sales Opportunities: natural language pipeline queries in development.</td><td class="cw"><span class="badge badge-no">✗ No</span></td></tr>
+        <tr class="win-revio"><td class="feature">AI Customer Summaries</td><td class="revio"><span class="badge badge-roadmap">🗓 Planned</span> — AI-generated customer overviews across servicing and billing data.</td><td class="cw"><span class="badge badge-no">✗ No</span></td></tr>
+        <tr class="win-revio"><td class="feature">AI-Driven Chart / Dashboard Creation</td><td class="revio"><span class="badge badge-roadmap">🗓 Planned</span> — Create analytics charts via Rev.ii natural language in Analytics Hub.</td><td class="cw"><span class="badge badge-no">✗ No</span></td></tr>
+        <tr class="win-revio"><td class="feature">AI Onboarding Assistant (Revii Learn)</td><td class="revio"><span class="badge badge-roadmap">🗓 Planned</span> — Guides new users through setup in plain language.</td><td class="cw"><span class="badge badge-no">✗ No</span></td></tr>
+        <tr><td class="feature">Workflow Automation</td><td class="revio"><span class="badge badge-yes">✓ Yes</span> — Multi-response workflows (email + SMS + in-app simultaneously). SLA triggers. Condition-based rules. Phase 1 enhancements in progress.</td><td class="cw"><span class="badge badge-yes">✓ Yes</span> — Mature, more complex rule engine.</td></tr>
+        <tr><td class="feature">AI Permission Governance</td><td class="revio"><span class="badge badge-partial">~ In Progress</span> — Revii & AI Permissions framework: admin-controlled AI feature access by role, audit trail.</td><td class="cw"><span class="badge badge-no">✗ No</span></td></tr>
+      </tbody>
+    </table>
+    <div class="callout green">
+      <div class="callout-label">AI is Rev.io's Biggest Differentiator</div>
+      <p>Rev.io has built AI natively into the workflow — not as an add-on. ConnectWise has announced AI features but has not shipped anything comparable to Revii's live capabilities today.</p>
+    </div>
+  </div>
+
+  <!-- INTEGRATIONS -->
+  <div id="integrations" class="section">
+    <div class="section-header">
+      <div class="section-tag">Category 10</div>
+      <h2>Integrations</h2>
+    </div>
+    <table class="comp-table">
+      <thead><tr><th>Feature</th><th class="revio-col">Rev.io PSA</th><th class="cw-col">ConnectWise PSA</th></tr></thead>
+      <tbody>
+        <tr><td class="feature">NinjaOne RMM</td><td class="revio"><span class="badge badge-yes">✓ Yes</span> — Bidirectional account sync, org creation in NinjaOne, lifecycle tracking. (4.9.26)</td><td class="cw"><span class="badge badge-yes">✓ Yes</span></td></tr>
+        <tr><td class="feature">N-able N-central</td><td class="revio"><span class="badge badge-yes">✓ Yes</span> — Account sync integration launched (4.1.26).</td><td class="cw"><span class="badge badge-yes">✓ Yes</span></td></tr>
+        <tr><td class="feature">IT Glue</td><td class="revio"><span class="badge badge-roadmap">🗓 May 2026</span> — IT Glue Account Sync on roadmap.</td><td class="cw"><span class="badge badge-yes">✓ Yes</span></td></tr>
+        <tr><td class="feature">Hudu</td><td class="revio"><span class="badge badge-roadmap">🗓 May 2026</span> — Hudu Accounts on roadmap.</td><td class="cw"><span class="badge badge-yes">✓ Yes</span></td></tr>
+        <tr><td class="feature">D-Tools</td><td class="revio"><span class="badge badge-roadmap">🗓 Planned</span> — D-Tools Phase I on roadmap: account sync.</td><td class="cw"><span class="badge badge-partial">~ Partial</span></td></tr>
+        <tr><td class="feature">COPS Monitoring</td><td class="revio"><span class="badge badge-yes">✓ Yes</span> — One-way customer sync + bidirectional contact sync (4.1.26).</td><td class="cw"><span class="badge badge-partial">~ Partial</span></td></tr>
+        <tr><td class="feature">Rapid Response</td><td class="revio"><span class="badge badge-roadmap">🗓 Planned</span> — Account Create/Update/Sync on roadmap.</td><td class="cw"><span class="badge badge-partial">~ Partial</span></td></tr>
+        <tr><td class="feature">Acronis</td><td class="revio"><span class="badge badge-roadmap">🗓 May 2026</span> — Phase 3: produce tickets from alerts.</td><td class="cw"><span class="badge badge-yes">✓ Yes</span></td></tr>
+        <tr><td class="feature">QuickBooks Desktop</td><td class="revio"><span class="badge badge-roadmap">🗓 Planned</span></td><td class="cw"><span class="badge badge-yes">✓ Yes</span></td></tr>
+        <tr><td class="feature">QuickBooks Online</td><td class="revio"><span class="badge badge-yes">✓ Yes</span> — Via Rev.io Billing.</td><td class="cw"><span class="badge badge-yes">✓ Yes</span></td></tr>
+        <tr><td class="feature">TD Synnex</td><td class="revio"><span class="badge badge-roadmap">🗓 Planned</span></td><td class="cw"><span class="badge badge-yes">✓ Yes</span></td></tr>
+        <tr><td class="feature">Pax8</td><td class="revio"><span class="badge badge-roadmap">🗓 Planned</span></td><td class="cw"><span class="badge badge-yes">✓ Yes</span></td></tr>
+        <tr><td class="feature">Developer API</td><td class="revio"><span class="badge badge-yes">✓ Yes</span> — REST API. Opportunities, Assets, POs, Quote API endpoints added (4.9.26/4.16.26). Developer Portal at developer-portal.reviopsa.com.</td><td class="cw"><span class="badge badge-yes">✓ Yes</span></td></tr>
+        <tr><td class="feature">Customer Portal</td><td class="revio"><span class="badge badge-yes">✓ Yes</span> — Self-service: view/pay invoices, edit payment info, submit tickets, view public notes on active tickets.</td><td class="cw"><span class="badge badge-yes">✓ Yes</span></td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <!-- MOBILE -->
+  <div id="mobile" class="section">
+    <div class="section-header">
+      <div class="section-tag">Category 11</div>
+      <h2>Mobile App</h2>
+    </div>
+    <table class="comp-table">
+      <thead><tr><th>Feature</th><th class="revio-col">Rev.io PSA</th><th class="cw-col">ConnectWise PSA</th></tr></thead>
+      <tbody>
+        <tr><td class="feature">iOS & Android App</td><td class="revio"><span class="badge badge-yes">✓ Yes</span> — Rev.io Mobile App on iOS and Android.</td><td class="cw"><span class="badge badge-yes">✓ Yes</span></td></tr>
+        <tr><td class="feature">Ticket Management</td><td class="revio"><span class="badge badge-yes">✓ Yes</span> — View, create, edit tickets. Ticket overview with 30/60/90-day summary analysis window. (4.23.26)</td><td class="cw"><span class="badge badge-yes">✓ Yes</span></td></tr>
+        <tr class="win-revio"><td class="feature">Send to Billing from Mobile</td><td class="revio"><span class="badge badge-yes">✓ Yes</span> — Send to Billing and Invoice Ticket directly from mobile. (4.23.26)</td><td class="cw"><span class="badge badge-partial">~ Partial</span></td></tr>
+        <tr class="win-revio"><td class="feature">GPS Geofencing & Travel Timer</td><td class="revio"><span class="badge badge-yes">✓ Yes</span> — Auto-stop travel timer on geofence entry. Auto-SMS customer with ETA when travel starts. Reminder prompt on exit without time log. (4.23.26)</td><td class="cw"><span class="badge badge-partial">~ Partial</span> — Via Automate integration.</td></tr>
+        <tr><td class="feature">Offline Mode</td><td class="revio"><span class="badge badge-yes">✓ Yes</span> — Offline support launched (4.1.26).</td><td class="cw"><span class="badge badge-yes">✓ Yes</span></td></tr>
+        <tr class="win-revio"><td class="feature">Rev.ii Voice on Mobile</td><td class="revio"><span class="badge badge-yes">✓ Yes</span> — Revii voice commands for tickets and time entries (4.1.26).</td><td class="cw"><span class="badge badge-no">✗ No</span></td></tr>
+        <tr><td class="feature">Clock In / Out</td><td class="revio"><span class="badge badge-yes">✓ Yes</span> — Clock in/out via Rev.ii voice commands on mobile (4.1.26).</td><td class="cw"><span class="badge badge-yes">✓ Yes</span></td></tr>
+        <tr><td class="feature">Macros on Mobile</td><td class="revio"><span class="badge badge-yes">✓ Yes</span> — Apply macros when creating/editing tickets in mobile. (4.23.26)</td><td class="cw"><span class="badge badge-partial">~ Partial</span></td></tr>
+        <tr><td class="feature">Recently Viewed</td><td class="revio"><span class="badge badge-yes">✓ Yes</span> — Recently Viewed overlay for quick access to customers and tickets. (4.9.26)</td><td class="cw"><span class="badge badge-yes">✓ Yes</span></td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <!-- PLATFORM -->
+  <div id="platform" class="section">
+    <div class="section-header">
+      <div class="section-tag">Category 12</div>
+      <h2>Platform & Administration</h2>
+    </div>
+    <table class="comp-table">
+      <thead><tr><th>Feature</th><th class="revio-col">Rev.io PSA</th><th class="cw-col">ConnectWise PSA</th></tr></thead>
+      <tbody>
+        <tr><td class="feature">Deployment</td><td class="revio"><span class="badge badge-yes">✓ Yes</span> — Cloud-hosted SaaS.</td><td class="cw"><span class="badge badge-yes">✓ Yes</span> — Cloud-hosted only (no on-premise).</td></tr>
+        <tr><td class="feature">Role-Based Access Control</td><td class="revio"><span class="badge badge-yes">✓ Yes</span> — Admin-managed roles and permissions. Permission categories including time entry control, analytics, AI features.</td><td class="cw"><span class="badge badge-yes">✓ Yes</span></td></tr>
+        <tr><td class="feature">Multi-Language Support</td><td class="revio"><span class="badge badge-roadmap">🗓 Planned</span> — Internationalization on roadmap. Preferred language in My Preferences (8.5.25).</td><td class="cw"><span class="badge badge-no">✗ No</span> — English only.</td></tr>
+        <tr class="win-revio"><td class="feature">Address Validation</td><td class="revio"><span class="badge badge-yes">✓ Yes</span> — Real-time US address validation with autocomplete on customer creation (9.30.25). International/domestic expansion roadmap (Jun 2026).</td><td class="cw"><span class="badge badge-partial">~ Partial</span></td></tr>
+        <tr><td class="feature">Dark Mode / Light Mode</td><td class="revio"><span class="badge badge-partial">~ Partial</span> — Dark mode available. Light mode toggle not currently documented.</td><td class="cw"><span class="badge badge-partial">~ Partial</span> — Light mode default.</td></tr>
+        <tr><td class="feature">Global Search</td><td class="revio"><span class="badge badge-partial">~ In Progress</span> — Apollo 3 Search in development: Phase 1 covers customers, tickets, contacts.</td><td class="cw"><span class="badge badge-yes">✓ Yes</span></td></tr>
+        <tr class="win-revio"><td class="feature">Assets Module</td><td class="revio"><span class="badge badge-roadmap">🗓 Planned</span> — Full Assets module in development: relationships, journal, ticket history, API, RMM managed indicator, agreement-covered assets.</td><td class="cw"><span class="badge badge-yes">✓ Yes</span> — Configurations module is mature.</td></tr>
+        <tr><td class="feature">Release Cadence</td><td class="revio"><span class="badge badge-yes">✓ Yes</span> — Weekly releases. Major new modules shipped every 1–2 months throughout 2025–2026.</td><td class="cw"><span class="badge badge-partial">~ Partial</span> — Slower cadence, quarterly major releases.</td></tr>
+        <tr class="win-revio"><td class="feature">Guided Onboarding (Turbo-Tax Style)</td><td class="revio"><span class="badge badge-roadmap">🗓 Jun 2026</span> — Pre-Provisioning wizard: guided setup from account creation to payment. Plus Revii Learn AI onboarding assistant.</td><td class="cw"><span class="badge badge-no">✗ No</span></td></tr>
+        <tr><td class="feature">Parent / Child Account Hierarchy</td><td class="revio"><span class="badge badge-yes">✓ Yes</span> — Standard, Parent, Child account types. Parent-child billing relationships from Rev.io Billing.</td><td class="cw"><span class="badge badge-yes">✓ Yes</span></td></tr>
+        <tr><td class="feature">Customer Tags</td><td class="revio"><span class="badge badge-yes">✓ Yes</span> — Fully customizable, color-coded tags on customer profiles. Visible in customer list and on tickets (via Stage panel).</td><td class="cw"><span class="badge badge-partial">~ Partial</span> — Labels/groups available, less flexible.</td></tr>
+        <tr><td class="feature">Duplicate Customer Detection</td><td class="revio"><span class="badge badge-yes">✓ Yes</span> — Auto-detects duplicates on new customer creation (4.9.26).</td><td class="cw"><span class="badge badge-partial">~ Partial</span></td></tr>
+      </tbody>
+    </table>
+    <div class="callout">
+      <div class="callout-label">Bottom Line</div>
+      <p>Rev.io PSA is newer and moving fast — closing gaps weekly. ConnectWise has a larger feature surface today, particularly in GL integration depth, Knowledge Base, and agreement type variety. Rev.io wins on AI, mobile innovation, billing platform depth, and pace of development. For MSPs and integrators evaluating both, the question is whether they need ConnectWise's legacy feature set today, or want a platform that will significantly surpass it within 12–18 months.</p>
+    </div>
+  </div>
+
+</main>
+
+<script>
+function show(id) {
+  document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
+  document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
+  document.getElementById(id).classList.add('active');
+  document.querySelectorAll('.nav-item').forEach(link => {
+    if (link.getAttribute('onclick') && link.getAttribute('onclick').includes("'" + id + "'")) {
+      link.classList.add('active');
+    }
+  });
+  window.scrollTo(0, 0);
+}
+</script>
+</body>
+</html>
