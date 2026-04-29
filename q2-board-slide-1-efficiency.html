@@ -1,0 +1,428 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Q2 2026 Board — Sales Team Efficiency</title>
+<style>
+* { margin: 0; padding: 0; box-sizing: border-box; }
+body {
+  background: #000;
+  font-family: 'Segoe UI', system-ui, sans-serif;
+  color: #e2e8f0;
+  min-height: 100vh;
+  padding: 44px 52px;
+}
+
+/* Header */
+.slide-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  margin-bottom: 36px;
+}
+.slide-header-left {}
+.slide-tag {
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  color: #00ff88;
+  margin-bottom: 8px;
+}
+h1 {
+  font-size: 30px;
+  font-weight: 800;
+  color: #fff;
+  line-height: 1.1;
+}
+.slide-sub {
+  font-size: 13px;
+  color: #475569;
+  margin-top: 6px;
+}
+.slide-date {
+  font-size: 12px;
+  color: #334155;
+  text-align: right;
+  margin-top: 4px;
+}
+
+/* Section label */
+.section-label {
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  color: #334155;
+  margin-bottom: 14px;
+  padding-left: 2px;
+}
+
+/* AE CAPACITY CARDS */
+.ae-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 16px;
+  margin-bottom: 10px;
+}
+.ae-card {
+  background: #0f172a;
+  border-radius: 14px;
+  padding: 22px 20px 18px;
+  position: relative;
+  overflow: hidden;
+}
+.ae-card::before {
+  content: '';
+  position: absolute;
+  top: 0; left: 0; right: 0;
+  height: 3px;
+  background: var(--accent);
+}
+.ae-card.jan { --accent: #38bdf8; }
+.ae-card.feb { --accent: #a78bfa; }
+.ae-card.mar { --accent: #34d399; }
+.ae-card.apr { --accent: #f97316; }
+
+.ae-month {
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 1.5px;
+  text-transform: uppercase;
+  color: #475569;
+  margin-bottom: 10px;
+}
+.ae-meetings {
+  font-size: 52px;
+  font-weight: 800;
+  line-height: 1;
+  color: var(--accent);
+}
+.ae-meetings-label {
+  font-size: 11px;
+  color: #475569;
+  margin-bottom: 14px;
+  margin-top: 2px;
+}
+.ae-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  background: #1e293b;
+  border-radius: 8px;
+  padding: 7px 12px;
+  margin-bottom: 10px;
+}
+.ae-badge-num { font-size: 18px; font-weight: 700; color: #fff; }
+.ae-badge-label { font-size: 10px; color: #475569; line-height: 1.3; }
+.ae-rate {
+  font-size: 12px;
+  color: #64748b;
+}
+.ae-rate strong { color: var(--accent); }
+
+/* Trend arrow */
+.trend-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 28px;
+  padding: 12px 16px;
+  background: #0f172a;
+  border-radius: 10px;
+  border: 1px solid #1e293b;
+}
+.trend-arrow { font-size: 20px; }
+.trend-text { font-size: 13px; color: #94a3b8; }
+.trend-text strong { color: #00ff88; }
+.trend-spacer { flex: 1; }
+.trend-stat {
+  text-align: center;
+  padding: 0 20px;
+  border-left: 1px solid #1e293b;
+}
+.trend-stat:first-of-type { border-left: none; }
+.trend-stat-val { font-size: 20px; font-weight: 800; color: #fff; }
+.trend-stat-label { font-size: 10px; color: #475569; text-transform: uppercase; letter-spacing: 1px; margin-top: 2px; }
+
+/* SDR TABLE */
+.sdr-section {}
+.sdr-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 16px;
+}
+.sdr-card {
+  background: #0f172a;
+  border-radius: 14px;
+  padding: 20px;
+  position: relative;
+  overflow: hidden;
+}
+.sdr-card::before {
+  content: '';
+  position: absolute;
+  top: 0; left: 0; right: 0;
+  height: 3px;
+  background: var(--accent);
+}
+.sdr-card.jan { --accent: #38bdf8; }
+.sdr-card.feb { --accent: #a78bfa; }
+.sdr-card.mar { --accent: #34d399; }
+.sdr-card.apr { --accent: #f97316; }
+
+.sdr-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 16px;
+}
+.sdr-month {
+  font-size: 18px;
+  font-weight: 800;
+  color: #fff;
+}
+.sdr-status {
+  font-size: 9px;
+  font-weight: 700;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+  padding: 3px 8px;
+  border-radius: 4px;
+  background: #1e293b;
+  color: #64748b;
+}
+.sdr-status.closed { color: #34d399; }
+.sdr-status.progress { color: #f97316; }
+
+.sdr-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 5px 0;
+  border-bottom: 1px solid #1e293b;
+  font-size: 12px;
+}
+.sdr-row:last-of-type { border-bottom: none; }
+.sdr-row-label { color: #64748b; }
+.sdr-row-val { font-weight: 600; color: #e2e8f0; }
+.sdr-row-val.green { color: #34d399; }
+.sdr-row-val.accent { color: var(--accent); }
+.sdr-row-val.orange { color: #f97316; }
+
+.sdr-footer {
+  margin-top: 14px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  background: #1e293b;
+  border-radius: 8px;
+  padding: 10px 12px;
+}
+.sdr-roi {
+  font-size: 22px;
+  font-weight: 800;
+}
+.sdr-roi.bad { color: #ef4444; }
+.sdr-roi.ok { color: #f59e0b; }
+.sdr-roi.good { color: #34d399; }
+.sdr-roi.progress { color: #f97316; }
+
+.sdr-roi-label { font-size: 10px; color: #475569; margin-top: 2px; }
+.sdr-conv { text-align: right; }
+.sdr-conv-val { font-size: 18px; font-weight: 700; color: #fff; }
+.sdr-conv-label { font-size: 10px; color: #475569; margin-top: 2px; }
+
+.footer {
+  margin-top: 28px;
+  font-size: 10px;
+  color: #1e293b;
+  text-align: center;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+}
+</style>
+</head>
+<body>
+
+<!-- Header -->
+<div class="slide-header">
+  <div class="slide-header-left">
+    <div class="slide-tag">Q2 2026 Board Presentation · Slide 1 of N</div>
+    <h1>Sales Team Efficiency</h1>
+    <div class="slide-sub">AE productivity & SDR ROI — January through April 2026</div>
+  </div>
+  <div class="slide-date">Rev.io Sales · April 28, 2026</div>
+</div>
+
+<!-- AE Capacity -->
+<div class="section-label">AE Capacity — Prospect Meetings</div>
+<div class="ae-grid">
+  <div class="ae-card jan">
+    <div class="ae-month">Jan 2026</div>
+    <div class="ae-meetings">232</div>
+    <div class="ae-meetings-label">prospect meetings</div>
+    <div class="ae-badge">
+      <div class="ae-badge-num">12</div>
+      <div class="ae-badge-label">Active<br>AEs</div>
+    </div>
+    <div class="ae-rate"><strong>0.88</strong> mtgs/AE/day</div>
+  </div>
+  <div class="ae-card feb">
+    <div class="ae-month">Feb 2026</div>
+    <div class="ae-meetings">229</div>
+    <div class="ae-meetings-label">prospect meetings</div>
+    <div class="ae-badge">
+      <div class="ae-badge-num">11</div>
+      <div class="ae-badge-label">Active<br>AEs</div>
+    </div>
+    <div class="ae-rate"><strong>1.04</strong> mtgs/AE/day</div>
+  </div>
+  <div class="ae-card mar">
+    <div class="ae-month">Mar 2026</div>
+    <div class="ae-meetings">268</div>
+    <div class="ae-meetings-label">prospect meetings</div>
+    <div class="ae-badge">
+      <div class="ae-badge-num">10</div>
+      <div class="ae-badge-label">Active<br>AEs</div>
+    </div>
+    <div class="ae-rate"><strong>1.22</strong> mtgs/AE/day</div>
+  </div>
+  <div class="ae-card apr">
+    <div class="ae-month">Apr 2026</div>
+    <div class="ae-meetings">232</div>
+    <div class="ae-meetings-label">prospect meetings</div>
+    <div class="ae-badge">
+      <div class="ae-badge-num">7</div>
+      <div class="ae-badge-label">Active<br>AEs</div>
+    </div>
+    <div class="ae-rate"><strong>1.66</strong> mtgs/AE/day &nbsp;·&nbsp; Proj: <strong>232</strong></div>
+  </div>
+</div>
+
+<!-- Trend callout -->
+<div class="trend-row" style="margin-top:14px; margin-bottom:28px;">
+  <span class="trend-arrow">📈</span>
+  <div class="trend-text">AE headcount down <strong>42%</strong> (12 → 7) since January — yet meetings/AE/day up <strong>89%</strong>. The remaining team is operating at nearly twice the pace.</div>
+  <div class="trend-spacer"></div>
+  <div class="trend-stat">
+    <div class="trend-stat-val" style="color:#38bdf8">0.88</div>
+    <div class="trend-stat-label">Jan Rate</div>
+  </div>
+  <div class="trend-stat">
+    <div class="trend-stat-val" style="color:#f97316">1.66</div>
+    <div class="trend-stat-label">Apr Rate</div>
+  </div>
+  <div class="trend-stat">
+    <div class="trend-stat-val" style="color:#00ff88">+89%</div>
+    <div class="trend-stat-label">Productivity Gain</div>
+  </div>
+</div>
+
+<!-- SDR Section -->
+<div class="section-label">SDR Performance — Pipeline & ROI</div>
+<div class="sdr-grid">
+
+  <div class="sdr-card jan">
+    <div class="sdr-header">
+      <div class="sdr-month">January</div>
+      <div class="sdr-status closed">Fully Closed</div>
+    </div>
+    <div class="sdr-row"><span class="sdr-row-label">Opps Influenced</span><span class="sdr-row-val accent">92</span></div>
+    <div class="sdr-row"><span class="sdr-row-label">Discovery Calls</span><span class="sdr-row-val accent">47</span></div>
+    <div class="sdr-row"><span class="sdr-row-label">Pipeline Value</span><span class="sdr-row-val">$73,325</span></div>
+    <div class="sdr-row"><span class="sdr-row-label">Deals Won</span><span class="sdr-row-val">1</span></div>
+    <div class="sdr-row"><span class="sdr-row-label">Closed Won MRR</span><span class="sdr-row-val green">$500</span></div>
+    <div class="sdr-row"><span class="sdr-row-label">Effective SDRs</span><span class="sdr-row-val">5</span></div>
+    <div class="sdr-row"><span class="sdr-row-label">MRR / SDR</span><span class="sdr-row-val">$100</span></div>
+    <div class="sdr-footer">
+      <div>
+        <div class="sdr-roi bad">0.2×</div>
+        <div class="sdr-roi-label">ROI vs. Break-Even</div>
+      </div>
+      <div class="sdr-conv">
+        <div class="sdr-conv-val">2%</div>
+        <div class="sdr-conv-label">Conv. Rate</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="sdr-card feb">
+    <div class="sdr-header">
+      <div class="sdr-month">February</div>
+      <div class="sdr-status closed">Fully Closed</div>
+    </div>
+    <div class="sdr-row"><span class="sdr-row-label">Opps Influenced</span><span class="sdr-row-val accent">73</span></div>
+    <div class="sdr-row"><span class="sdr-row-label">Discovery Calls</span><span class="sdr-row-val accent">45</span></div>
+    <div class="sdr-row"><span class="sdr-row-label">Pipeline Value</span><span class="sdr-row-val">$63,325</span></div>
+    <div class="sdr-row"><span class="sdr-row-label">Deals Won</span><span class="sdr-row-val">5</span></div>
+    <div class="sdr-row"><span class="sdr-row-label">Closed Won MRR</span><span class="sdr-row-val green">$3,450</span></div>
+    <div class="sdr-row"><span class="sdr-row-label">Effective SDRs</span><span class="sdr-row-val">6</span></div>
+    <div class="sdr-row"><span class="sdr-row-label">MRR / SDR</span><span class="sdr-row-val">$575</span></div>
+    <div class="sdr-footer">
+      <div>
+        <div class="sdr-roi ok">1.15×</div>
+        <div class="sdr-roi-label">ROI vs. Break-Even</div>
+      </div>
+      <div class="sdr-conv">
+        <div class="sdr-conv-val">11%</div>
+        <div class="sdr-conv-label">Conv. Rate</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="sdr-card mar">
+    <div class="sdr-header">
+      <div class="sdr-month">March</div>
+      <div class="sdr-status closed">Fully Closed</div>
+    </div>
+    <div class="sdr-row"><span class="sdr-row-label">Opps Influenced</span><span class="sdr-row-val accent">83</span></div>
+    <div class="sdr-row"><span class="sdr-row-label">Discovery Calls</span><span class="sdr-row-val accent">67</span></div>
+    <div class="sdr-row"><span class="sdr-row-label">Pipeline Value</span><span class="sdr-row-val">$76,762</span></div>
+    <div class="sdr-row"><span class="sdr-row-label">Deals Won</span><span class="sdr-row-val">7</span></div>
+    <div class="sdr-row"><span class="sdr-row-label">Closed Won MRR</span><span class="sdr-row-val green">$7,780</span></div>
+    <div class="sdr-row"><span class="sdr-row-label">Effective SDRs</span><span class="sdr-row-val">6</span></div>
+    <div class="sdr-row"><span class="sdr-row-label">MRR / SDR</span><span class="sdr-row-val">$1,297</span></div>
+    <div class="sdr-footer">
+      <div>
+        <div class="sdr-roi good">2.6×</div>
+        <div class="sdr-roi-label">ROI vs. Break-Even</div>
+      </div>
+      <div class="sdr-conv">
+        <div class="sdr-conv-val">10%</div>
+        <div class="sdr-conv-label">Conv. Rate</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="sdr-card apr">
+    <div class="sdr-header">
+      <div class="sdr-month">April</div>
+      <div class="sdr-status progress">MTD</div>
+    </div>
+    <div class="sdr-row"><span class="sdr-row-label">Opps Influenced</span><span class="sdr-row-val accent">71</span></div>
+    <div class="sdr-row"><span class="sdr-row-label">Discovery Calls</span><span class="sdr-row-val accent">64</span></div>
+    <div class="sdr-row"><span class="sdr-row-label">Pipeline Value</span><span class="sdr-row-val">$58,360</span></div>
+    <div class="sdr-row"><span class="sdr-row-label">Deals Won (so far)</span><span class="sdr-row-val">7</span></div>
+    <div class="sdr-row"><span class="sdr-row-label">Closed Won MRR</span><span class="sdr-row-val orange">$4,965</span></div>
+    <div class="sdr-row"><span class="sdr-row-label">Effective SDRs</span><span class="sdr-row-val">5</span></div>
+    <div class="sdr-row"><span class="sdr-row-label">MRR / SDR</span><span class="sdr-row-val orange">$993 MTD</span></div>
+    <div class="sdr-footer">
+      <div>
+        <div class="sdr-roi progress">~2.5×</div>
+        <div class="sdr-roi-label">ROI · In Progress</div>
+      </div>
+      <div class="sdr-conv">
+        <div class="sdr-conv-val">~11%</div>
+        <div class="sdr-conv-label">Conv. Rate</div>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<div class="footer">Rev.io Sales Intelligence · Q2 2026 Board Presentation · Slide 1</div>
+
+</body>
+</html>
