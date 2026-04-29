@@ -1,0 +1,386 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Q2 2026 Channel Bookings — Rev.io Board</title>
+<link href="https://fonts.googleapis.com/css2?family=Open+Sans:wght@400;600;700;800&family=Montserrat:wght@800&display=swap" rel="stylesheet">
+<style>
+* { margin: 0; padding: 0; box-sizing: border-box; }
+html, body { height: 100%; background: #f5f7fa; font-family: 'Open Sans', Arial, sans-serif; color: #1D3756; }
+body { display: flex; flex-direction: column; min-height: 100vh; }
+
+.top-stripe { height: 4px; background: linear-gradient(90deg, #2399B5, #6EBE4F); flex-shrink: 0; }
+
+.slide-header {
+  background: #1D3756; padding: 14px 40px;
+  display: flex; align-items: center; justify-content: space-between; flex-shrink: 0;
+}
+.logo { height: 26px; }
+.slide-tag { font-size: 9px; font-weight: 700; letter-spacing: 2px; text-transform: uppercase; color: #6EBE4F; margin-bottom: 3px; }
+h1 { font-size: 18px; font-weight: 800; color: #fff; }
+.header-sub { font-size: 10px; color: rgba(255,255,255,0.45); margin-top: 2px; }
+.header-right { text-align: right; }
+.slide-date { font-size: 10px; color: rgba(255,255,255,0.4); }
+.slide-num { font-size: 10px; color: rgba(255,255,255,0.25); margin-top: 2px; }
+
+.body-content { padding: 14px 40px 10px; flex: 1; display: flex; flex-direction: column; gap: 10px; }
+
+/* ── TOP STATS ── */
+.top-stats {
+  display: grid;
+  grid-template-columns: repeat(6, 1fr);
+  gap: 10px;
+  flex-shrink: 0;
+}
+.ts-card {
+  background: #fff;
+  border-radius: 9px;
+  border: 1px solid #e8edf3;
+  border-top: 3px solid var(--tc);
+  padding: 11px 13px;
+  box-shadow: 0 1px 3px rgba(29,55,86,0.05);
+}
+.ts-card.ytd    { --tc: #6EBE4F; }
+.ts-card.h1     { --tc: #2399B5; }
+.ts-card.fy     { --tc: #2399B5; }
+.ts-card.touch  { --tc: #6EBE4F; }
+.ts-card.refs   { --tc: #2399B5; }
+.ts-card.opps   { --tc: #6EBE4F; }
+
+.ts-eyebrow { font-size: 8px; font-weight: 700; letter-spacing: 1.5px; text-transform: uppercase; color: #8da0b4; margin-bottom: 5px; }
+.ts-val { font-family: 'Montserrat', sans-serif; font-size: 22px; font-weight: 800; color: #1D3756; line-height: 1.1; }
+.ts-val.green { color: #3a8a50; }
+.ts-val.teal { color: #2399B5; }
+.ts-note { font-size: 9px; color: #64748b; margin-top: 4px; line-height: 1.3; }
+.ts-note .flag { color: #e67e22; font-weight: 700; }
+.ts-note .green { color: #3a8a50; font-weight: 700; }
+
+/* ── MAIN GRID ── */
+.main-grid {
+  display: grid;
+  grid-template-columns: 1.1fr 1fr 1fr;
+  gap: 10px;
+  flex: 1;
+  min-height: 0;
+}
+
+.section-card {
+  background: #fff;
+  border-radius: 10px;
+  border: 1px solid #e8edf3;
+  box-shadow: 0 1px 4px rgba(29,55,86,0.05);
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+}
+.card-head { padding: 10px 14px; flex-shrink: 0; }
+.section-card.bookings .card-head { background: #2399B5; }
+.section-card.attribution .card-head { background: #1D3756; }
+.section-card.uncounted .card-head { background: linear-gradient(90deg, #1D3756, #2399B5); }
+
+.card-eyebrow { font-size: 8px; font-weight: 700; letter-spacing: 1.5px; text-transform: uppercase; color: rgba(255,255,255,0.6); margin-bottom: 2px; }
+.card-title { font-size: 13px; font-weight: 800; color: #fff; }
+.card-body { padding: 11px 13px; flex: 1; display: flex; flex-direction: column; gap: 8px; }
+
+/* Bookings table */
+.bookings-table { width: 100%; border-collapse: collapse; }
+.bookings-table th { font-size: 8px; font-weight: 700; text-transform: uppercase; letter-spacing: 1px; color: #8da0b4; padding: 4px 8px; border-bottom: 1px solid #e8edf3; text-align: right; }
+.bookings-table th:first-child { text-align: left; }
+.bookings-table td { font-size: 11px; color: #1D3756; padding: 6px 8px; border-bottom: 1px solid #f0f4f8; text-align: right; }
+.bookings-table td:first-child { text-align: left; font-weight: 600; }
+.bookings-table tr:last-child td { border-bottom: none; }
+.bookings-table .ytd-row td { font-weight: 800; color: #3a8a50; background: #f0f9f4; border-top: 2px solid #c8e6d0; }
+.bookings-table .target-row td { color: #8da0b4; font-size: 10px; }
+.bookings-table .target-row td:first-child { color: #8da0b4; }
+
+/* Progress bar */
+.progress-wrap { margin-top: 2px; }
+.progress-label { display: flex; justify-content: space-between; font-size: 9px; color: #64748b; margin-bottom: 4px; }
+.progress-label strong { color: #1D3756; }
+.progress-track { background: #e8edf3; border-radius: 20px; height: 12px; overflow: hidden; position: relative; }
+.progress-fill { height: 100%; background: linear-gradient(90deg, #2399B5, #6EBE4F); border-radius: 20px; display: flex; align-items: center; padding-left: 8px; }
+.progress-pct { font-size: 8px; font-weight: 800; color: #fff; }
+.progress-markers { display: flex; justify-content: space-between; font-size: 8px; color: #8da0b4; margin-top: 3px; }
+
+.momentum-box {
+  background: #f5f7fa; border-radius: 7px; padding: 9px 11px; border-left: 3px solid #6EBE4F;
+}
+.momentum-title { font-size: 9px; font-weight: 700; color: #64748b; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 5px; }
+.momentum-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 6px; }
+.momentum-item { text-align: center; }
+.momentum-val { font-family: 'Montserrat', sans-serif; font-size: 15px; font-weight: 800; color: #1D3756; }
+.momentum-month { font-size: 8px; color: #8da0b4; text-transform: uppercase; letter-spacing: 1px; margin-top: 2px; }
+.momentum-arrow { font-size: 9px; color: #6EBE4F; font-weight: 800; }
+
+/* Attribution */
+.attr-note {
+  background: #f5f7fa; border-radius: 7px; padding: 9px 11px; font-size: 9.5px; color: #4a6280; line-height: 1.5;
+  border-left: 3px solid #2399B5;
+}
+.attr-note strong { color: #1D3756; }
+.attr-chips { display: flex; flex-wrap: wrap; gap: 5px; }
+.attr-chip {
+  font-size: 9px; color: #4a6280; background: #f5f7fa; border: 1px solid #dce4ed;
+  border-radius: 4px; padding: 3px 8px;
+}
+.attr-chip.hl { color: #2399B5; border-color: #2399B5; font-weight: 700; }
+
+.undercount-box {
+  background: #fff4e6; border-radius: 7px; padding: 9px 11px; border-left: 3px solid #e67e22;
+  margin-top: auto;
+}
+.undercount-title { font-size: 9px; font-weight: 700; color: #e67e22; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 4px; }
+.undercount-text { font-size: 9.5px; color: #4a6280; line-height: 1.4; }
+.undercount-text strong { color: #d35400; }
+
+/* What isn't counted */
+.uncounted-item {
+  background: #f5f7fa; border-radius: 7px; padding: 8px 10px;
+  display: flex; align-items: flex-start; gap: 7px; font-size: 9.5px; color: #1D3756; line-height: 1.35;
+}
+.uncounted-dot { color: #8da0b4; font-size: 14px; flex-shrink: 0; margin-top: -1px; }
+
+.truth-box {
+  background: #1D3756; border-radius: 7px; padding: 10px 12px; margin-top: auto;
+}
+.truth-title { font-size: 9px; font-weight: 700; letter-spacing: 1px; text-transform: uppercase; color: #6EBE4F; margin-bottom: 5px; }
+.truth-text { font-size: 9.5px; color: rgba(255,255,255,0.7); line-height: 1.5; }
+.truth-text strong { color: #fff; }
+
+/* Footer */
+.slide-footer {
+  padding: 8px 40px; display: flex; justify-content: space-between; align-items: center;
+  border-top: 1px solid #e8edf3; flex-shrink: 0;
+}
+.footer-left { font-size: 9px; color: #b0bec5; }
+.footer-logo { height: 16px; opacity: 0.3; filter: brightness(0) invert(19%) sepia(96%) saturate(343%) hue-rotate(172deg) brightness(96%) contrast(90%); }
+</style>
+</head>
+<body>
+
+<div class="top-stripe"></div>
+
+<div class="slide-header">
+  <img src="https://7091219.fs1.hubspotusercontent-na1.net/hubfs/7091219/email-assets/logo-revio-white.png" alt="Rev.io" class="logo">
+  <div style="text-align:center">
+    <div class="slide-tag">Q2 2026 Board Presentation</div>
+    <h1>Channel-Influenced Bookings — Pipeline & Revenue</h1>
+    <div class="header-sub">Brook Lee, Usman Zahoor, Jake Mitchell · 2026 YTD</div>
+  </div>
+  <div class="header-right">
+    <div class="slide-date">April 28, 2026</div>
+    <div class="slide-num">Slide 5</div>
+  </div>
+</div>
+
+<div class="body-content">
+
+  <!-- Top stats -->
+  <div class="top-stats">
+    <div class="ts-card ytd">
+      <div class="ts-eyebrow">Channel MRR · YTD</div>
+      <div class="ts-val green">$18,388</div>
+      <div class="ts-note"><span class="green">Floor figure</span> — known undercount; true impact materially broader</div>
+    </div>
+    <div class="ts-card h1">
+      <div class="ts-eyebrow">H1 Target</div>
+      <div class="ts-val teal">$24,000</div>
+      <div class="ts-note">76.6% attained with 2 months remaining — accelerating</div>
+    </div>
+    <div class="ts-card fy">
+      <div class="ts-eyebrow">Full-Year Target</div>
+      <div class="ts-val">$48,000</div>
+      <div class="ts-note">38.3% of annual target captured in 4 months</div>
+    </div>
+    <div class="ts-card touch">
+      <div class="ts-eyebrow">Partner Touch Points</div>
+      <div class="ts-val green">265+</div>
+      <div class="ts-note">245 logged in SF + ~20 April meetings pending entry</div>
+    </div>
+    <div class="ts-card refs">
+      <div class="ts-eyebrow">Referrals Logged YTD</div>
+      <div class="ts-val">8</div>
+      <div class="ts-note"><span class="flag">Known undercount</span> — intake fix in progress with Marketing &amp; RevOps</div>
+    </div>
+    <div class="ts-card opps">
+      <div class="ts-eyebrow">Opps in Pipeline</div>
+      <div class="ts-val green">85</div>
+      <div class="ts-note">Active channel-influenced opportunities across all stages</div>
+    </div>
+  </div>
+
+  <!-- Main 3-col -->
+  <div class="main-grid">
+
+    <!-- Col 1: Bookings table -->
+    <div class="section-card bookings">
+      <div class="card-head">
+        <div class="card-eyebrow">Pipeline & Revenue</div>
+        <div class="card-title">Channel-Influenced MRR by Month</div>
+      </div>
+      <div class="card-body">
+        <table class="bookings-table">
+          <thead>
+            <tr>
+              <th>Month</th>
+              <th>Channel MRR</th>
+              <th>Running Total</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>January</td>
+              <td>$1,200</td>
+              <td>$1,200</td>
+            </tr>
+            <tr>
+              <td>February</td>
+              <td>$3,369</td>
+              <td>$4,569</td>
+            </tr>
+            <tr>
+              <td>March</td>
+              <td style="color:#3a8a50;font-weight:700">$8,039</td>
+              <td>$12,608</td>
+            </tr>
+            <tr>
+              <td>April</td>
+              <td>$5,780</td>
+              <td>$18,388</td>
+            </tr>
+            <tr class="ytd-row">
+              <td>YTD Total</td>
+              <td>$18,388</td>
+              <td>—</td>
+            </tr>
+            <tr class="target-row">
+              <td>H1 Target</td>
+              <td>$24,000</td>
+              <td>—</td>
+            </tr>
+            <tr class="target-row">
+              <td>Full-Year Target</td>
+              <td>$48,000</td>
+              <td>—</td>
+            </tr>
+          </tbody>
+        </table>
+
+        <div class="progress-wrap">
+          <div class="progress-label">
+            <span>H1 Progress</span>
+            <strong>$18,388 of $24,000 — 76.6%</strong>
+          </div>
+          <div class="progress-track">
+            <div class="progress-fill" style="width:76.6%">
+              <span class="progress-pct">76.6%</span>
+            </div>
+          </div>
+          <div class="progress-markers">
+            <span>$0</span>
+            <span>$24K H1 target</span>
+            <span>$48K FY target</span>
+          </div>
+        </div>
+
+        <div class="momentum-box">
+          <div class="momentum-title">Monthly Growth Trend</div>
+          <div class="momentum-grid">
+            <div class="momentum-item">
+              <div class="momentum-val">$1.2K</div>
+              <div class="momentum-month">Jan</div>
+            </div>
+            <div class="momentum-item">
+              <div class="momentum-val">$3.4K</div>
+              <div class="momentum-month">Feb <span class="momentum-arrow">↑181%</span></div>
+            </div>
+            <div class="momentum-item">
+              <div class="momentum-val" style="color:#3a8a50">$8.0K</div>
+              <div class="momentum-month">Mar <span class="momentum-arrow">↑139%</span></div>
+            </div>
+            <div class="momentum-item">
+              <div class="momentum-val">$5.8K</div>
+              <div class="momentum-month">Apr MTD</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Col 2: Attribution & tracking -->
+    <div class="section-card attribution">
+      <div class="card-head">
+        <div class="card-eyebrow">On Attribution & Referral Tracking</div>
+        <div class="card-title">$18,388 is a Floor — Not a Ceiling</div>
+      </div>
+      <div class="card-body">
+        <div class="attr-note">
+          The $18,388 YTD reflects the full channel-influenced model — deals where channel played a role through referrals, introductions, co-marketing, and event-sourced leads. <strong>These numbers represent a floor.</strong>
+        </div>
+
+        <div style="font-size:9px;font-weight:700;color:#8da0b4;text-transform:uppercase;letter-spacing:1px;margin-top:2px;">Attribution Model Includes</div>
+        <div class="attr-chips">
+          <div class="attr-chip hl">Partner account/contact influence</div>
+          <div class="attr-chip hl">Channel team coverage</div>
+          <div class="attr-chip">Strategic Partner opp source</div>
+          <div class="attr-chip">Local Association referral</div>
+          <div class="attr-chip">Agent Referral source</div>
+          <div class="attr-chip">Lead direction: Channel Generated</div>
+          <div class="attr-chip">Marketing source: Referral / Channel</div>
+          <div class="attr-chip">Sub-source: Brook Lee, Usman Zahoor, Jake Mitchell</div>
+        </div>
+
+        <div style="background:#f5f7fa;border-radius:7px;padding:9px 11px;border-left:3px solid #6EBE4F;">
+          <div style="font-size:9px;font-weight:700;color:#64748b;text-transform:uppercase;letter-spacing:1px;margin-bottom:4px;">Referral Tracking</div>
+          <div style="font-size:9.5px;color:#4a6280;line-height:1.4;">8 referrals formally logged YTD — a <strong style="color:#1D3756">known undercount</strong>. Lead-source capture at intake has been inconsistent across the sales team. Channel is actively working with <strong style="color:#1D3756">Marketing and RevOps</strong> to correct this process. Reported referral volume will more accurately reflect actual activity in H2.</div>
+        </div>
+
+        <div class="undercount-box">
+          <div class="undercount-title">⚠️ Tracking Gap — In Progress</div>
+          <div class="undercount-text">The $18,388 reflects what <strong>can be formally tracked</strong>. The true influence on pipeline, brand consideration, and inbound conversion is materially broader. As attribution tooling and process improve, figures will more accurately reflect channel's full contribution.</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Col 3: What isn't being counted -->
+    <div class="section-card uncounted">
+      <div class="card-head">
+        <div class="card-eyebrow">Important Context</div>
+        <div class="card-title">What Isn't Being Counted</div>
+      </div>
+      <div class="card-body">
+        <div class="uncounted-item">
+          <div class="uncounted-dot">›</div>
+          When a partner speaks to a prospect about Rev.io and that prospect later visits the website and submits a form, it records as a <strong>marketing or inbound lead — not channel.</strong>
+        </div>
+        <div class="uncounted-item">
+          <div class="uncounted-dot">›</div>
+          When an SDR reaches an account warmed by a co-marketing post, a podcast Brook appeared on, or a webinar a partner ran — <strong>that warmth doesn't show up in an attribution field.</strong>
+        </div>
+        <div class="uncounted-item">
+          <div class="uncounted-dot">›</div>
+          LinkedIn co-marketing posts that drive a prospect to research Rev.io independently — <strong>recorded as organic/direct, not channel.</strong>
+        </div>
+        <div class="uncounted-item">
+          <div class="uncounted-dot">›</div>
+          A partner putting in a strong word that tips a deal already in pipeline — <strong>invisible to the current reporting model.</strong>
+        </div>
+        <div class="truth-box">
+          <div class="truth-title">The Real Picture</div>
+          <div class="truth-text">The $18,388 in channel-influenced MRR reflects what can be formally tracked. The true influence on pipeline, brand consideration, and inbound conversion is <strong>materially broader — and largely invisible to the current reporting model.</strong> As attribution tooling and process improve, these numbers will more accurately reflect the full scope of channel's contribution.</div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<div class="slide-footer">
+  <div class="footer-left">Rev.io Sales Intelligence · Q2 2026 Board Presentation · April 28, 2026</div>
+  <div style="font-size:9px;color:#b0bec5">Channel Team · Brook Lee, Usman Zahoor, Jake Mitchell</div>
+  <img src="https://7091219.fs1.hubspotusercontent-na1.net/hubfs/7091219/email-assets/logo-revio-white.png" alt="Rev.io" class="footer-logo">
+</div>
+
+</body>
+</html>
