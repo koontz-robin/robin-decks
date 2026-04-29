@@ -153,6 +153,7 @@ h1 { font-size: 22px; font-weight: 800; color: #fff; }
   display: grid;
   grid-template-columns: 1fr 1fr;
   gap: 20px;
+  align-items: start;
 }
 
 /* Initiative card */
@@ -334,6 +335,90 @@ h1 { font-size: 22px; font-weight: 800; color: #fff; }
   font-weight: 800;
   color: #6EBE4F;
 }
+
+/* Buyout tile */
+.buyout-tile {
+  background: #fff;
+  border-radius: 12px;
+  border: 1px solid #e8edf3;
+  box-shadow: 0 1px 6px rgba(29,55,86,0.07);
+  overflow: hidden;
+  margin-top: 0;
+}
+.buyout-head {
+  background: linear-gradient(90deg, #2399B5, #6EBE4F);
+  padding: 14px 20px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+.buyout-head-icon { font-size: 18px; }
+.buyout-head-text {}
+.buyout-head-tag {
+  font-size: 9px;
+  font-weight: 700;
+  letter-spacing: 1.5px;
+  text-transform: uppercase;
+  color: rgba(255,255,255,0.7);
+  margin-bottom: 2px;
+}
+.buyout-head-title {
+  font-size: 14px;
+  font-weight: 800;
+  color: #fff;
+}
+.buyout-body { padding: 14px 18px; }
+.buyout-desc {
+  font-size: 11px;
+  color: #4a6280;
+  line-height: 1.5;
+  margin-bottom: 12px;
+}
+.buyout-desc strong { color: #1D3756; }
+.buyout-credits {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 6px;
+  margin-bottom: 12px;
+}
+.buyout-credit {
+  background: #f5f7fa;
+  border-radius: 6px;
+  padding: 8px 6px;
+  text-align: center;
+  border-top: 2px solid var(--bc);
+}
+.buyout-credit.c1 { --bc: #6EBE4F; }
+.buyout-credit.c2 { --bc: #6EBE4F; }
+.buyout-credit.c3 { --bc: #2399B5; }
+.buyout-credit.c4 { --bc: #2399B5; }
+.buyout-credit-term { font-size: 9px; color: #8da0b4; margin-bottom: 3px; text-align: center; }
+.buyout-credit-val { font-family: 'Montserrat', sans-serif; font-size: 14px; font-weight: 800; color: #1D3756; }
+.buyout-perks {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 5px;
+  margin-bottom: 12px;
+}
+.buyout-perk {
+  font-size: 9px;
+  color: #4a6280;
+  background: #f5f7fa;
+  border: 1px solid #e8edf3;
+  border-radius: 4px;
+  padding: 3px 8px;
+}
+.buyout-footer-bar {
+  background: #1D3756;
+  border-radius: 6px;
+  padding: 9px 14px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+.buyout-cap { font-size: 11px; color: rgba(255,255,255,0.55); }
+.buyout-cap strong { color: #6EBE4F; font-weight: 800; font-family: 'Montserrat', sans-serif; font-size: 13px; }
+.buyout-target { font-size: 9px; color: rgba(255,255,255,0.35); text-align: right; }
 
 /* Footer */
 .slide-footer {
@@ -534,6 +619,52 @@ h1 { font-size: 22px; font-weight: 800; color: #fff; }
           <div class="outcome-text">Goal: <strong>2 net-new senior MSP AEs by Q3</strong> — reps who can self-source, navigate technical objections, and compress deal cycles with credibility the MSP buyer respects.</div>
         </div>
 
+      </div>
+    </div>
+
+    <!-- Buyout tile — bottom right, stacked under initiative 2 -->
+    <div style="grid-column: 2; margin-top: -8px;">
+      <div class="buyout-tile">
+        <div class="buyout-head">
+          <div class="buyout-head-icon">🔓</div>
+          <div class="buyout-head-text">
+            <div class="buyout-head-tag">New Program · Q2 Launch</div>
+            <div class="buyout-head-title">"Show Us Your Contract" Switch Program</div>
+          </div>
+        </div>
+        <div class="buyout-body">
+          <div class="buyout-desc">
+            MSPs locked into ConnectWise or Autotask contracts now have an escape hatch. <strong>We issue a Year 1 credit</strong> against their remaining contract balance — eliminating the #1 switching objection.
+          </div>
+          <div class="buyout-credits">
+            <div class="buyout-credit c1">
+              <div class="buyout-credit-term">1–3 mo. left</div>
+              <div class="buyout-credit-val">100%</div>
+            </div>
+            <div class="buyout-credit c2">
+              <div class="buyout-credit-term">4–6 mo. left</div>
+              <div class="buyout-credit-val">75%</div>
+            </div>
+            <div class="buyout-credit c3">
+              <div class="buyout-credit-term">7–9 mo. left</div>
+              <div class="buyout-credit-val">50%</div>
+            </div>
+            <div class="buyout-credit c4">
+              <div class="buyout-credit-term">10–12 mo. left</div>
+              <div class="buyout-credit-val">3 mo.</div>
+            </div>
+          </div>
+          <div class="buyout-perks">
+            <div class="buyout-perk">✓ Free data migration</div>
+            <div class="buyout-perk">✓ Dedicated onboarding (90 days)</div>
+            <div class="buyout-perk">✓ 24-month price lock</div>
+            <div class="buyout-perk">✓ 90-day satisfaction clause</div>
+          </div>
+          <div class="buyout-footer-bar">
+            <div class="buyout-cap">Max credit cap: <strong>$10K</strong> per deal</div>
+            <div class="buyout-target">CW &amp; Autotask switchers only · New PSA customers</div>
+          </div>
+        </div>
       </div>
     </div>
 
