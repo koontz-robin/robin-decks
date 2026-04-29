@@ -7,446 +7,267 @@
 <link href="https://fonts.googleapis.com/css2?family=Open+Sans:wght@400;600;700;800&family=Montserrat:wght@800&display=swap" rel="stylesheet">
 <style>
 * { margin: 0; padding: 0; box-sizing: border-box; }
-body {
+html, body {
+  height: 100%;
   background: #f5f7fa;
   font-family: 'Open Sans', Arial, sans-serif;
   color: #1D3756;
+}
+body {
+  display: flex;
+  flex-direction: column;
   min-height: 100vh;
 }
 
-.top-stripe {
-  height: 4px;
-  background: linear-gradient(90deg, #2399B5, #6EBE4F);
-}
+.top-stripe { height: 4px; background: linear-gradient(90deg, #2399B5, #6EBE4F); flex-shrink: 0; }
 
+/* Header */
 .slide-header {
   background: #1D3756;
-  padding: 20px 48px;
+  padding: 14px 40px;
   display: flex;
   align-items: center;
   justify-content: space-between;
+  flex-shrink: 0;
 }
-.logo { height: 32px; }
-.header-center { text-align: center; }
-.slide-tag {
-  font-size: 10px;
-  font-weight: 700;
-  letter-spacing: 2px;
-  text-transform: uppercase;
-  color: #6EBE4F;
-  margin-bottom: 4px;
-}
-h1 { font-size: 22px; font-weight: 800; color: #fff; }
+.logo { height: 26px; }
+.slide-tag { font-size: 9px; font-weight: 700; letter-spacing: 2px; text-transform: uppercase; color: #6EBE4F; margin-bottom: 3px; }
+h1 { font-size: 18px; font-weight: 800; color: #fff; }
 .header-right { text-align: right; }
-.slide-date { font-size: 11px; color: rgba(255,255,255,0.45); }
-.slide-num { font-size: 11px; color: rgba(255,255,255,0.3); margin-top: 3px; }
+.slide-date { font-size: 10px; color: rgba(255,255,255,0.4); }
+.slide-num { font-size: 10px; color: rgba(255,255,255,0.25); margin-top: 2px; }
 
 /* Body */
-.body-content { padding: 20px 48px 16px; }
+.body-content { padding: 14px 40px 10px; flex: 1; display: flex; flex-direction: column; gap: 12px; }
 
-/* Context bar */
-.context-bar {
-  background: #fff;
-  border: 1px solid #e8edf3;
+/* ── NO VOICE BANNER ── */
+.nv-banner {
+  background: #1D3756;
   border-radius: 10px;
-  padding: 14px 20px;
-  display: flex;
+  padding: 12px 16px;
+  display: grid;
+  grid-template-columns: auto 1fr auto;
   align-items: center;
-  gap: 32px;
-  margin-bottom: 24px;
-  box-shadow: 0 1px 4px rgba(29,55,86,0.05);
+  gap: 16px;
+  flex-shrink: 0;
 }
-.context-bar-label {
-  font-size: 10px;
-  font-weight: 700;
-  letter-spacing: 2px;
-  text-transform: uppercase;
-  color: #8da0b4;
-  white-space: nowrap;
-}
-.context-stats { display: flex; gap: 32px; flex: 1; }
-.ctx-stat { text-align: center; }
-.ctx-stat-val {
-  font-family: 'Montserrat', sans-serif;
-  font-size: 20px;
-  font-weight: 800;
-  color: #2399B5;
-}
-.ctx-stat-val.green { color: #6EBE4F; }
-.ctx-stat-label { font-size: 10px; color: #8da0b4; margin-top: 2px; }
-.context-divider { width: 1px; height: 36px; background: #e8edf3; }
-.context-narrative {
-  font-size: 12px;
-  color: #4a6280;
-  line-height: 1.6;
-  flex: 2;
-  border-left: 3px solid #2399B5;
-  padding-left: 16px;
-}
-.context-narrative strong { color: #1D3756; }
-
-/* Urgency / No Voice section */
-.urgency-label {
-  display: flex;
-  align-items: center;
-  gap: 12px;
-  margin-bottom: 12px;
-}
-.urgency-eyebrow {
-  font-size: 10px;
+.nv-banner-label {
+  font-size: 9px;
   font-weight: 700;
   letter-spacing: 2px;
   text-transform: uppercase;
   color: #e74c3c;
   white-space: nowrap;
+  writing-mode: horizontal-tb;
+  border-left: 3px solid #e74c3c;
+  padding-left: 10px;
 }
-.urgency-rule { flex: 1; height: 1px; background: #fcd5d0; }
-
-.nv-grid {
+.nv-months {
   display: grid;
   grid-template-columns: repeat(4, 1fr);
-  gap: 12px;
-  margin-bottom: 12px;
+  gap: 8px;
 }
-.nv-card {
-  background: #1D3756;
-  border-radius: 10px;
-  padding: 14px 16px;
-  border-top: 3px solid var(--nv-accent);
-}
-.nv-card.jan { --nv-accent: #2399B5; }
-.nv-card.feb { --nv-accent: #6EBE4F; }
-.nv-card.mar { --nv-accent: #2399B5; }
-.nv-card.apr { --nv-accent: #e67e22; }
-
-.nv-month { font-size: 9px; font-weight: 700; letter-spacing: 1.5px; text-transform: uppercase; color: rgba(255,255,255,0.4); margin-bottom: 6px; }
-.nv-pct { font-family: 'Montserrat', sans-serif; font-size: 32px; font-weight: 800; line-height: 1; }
-.nv-pct-label { font-size: 10px; color: rgba(255,255,255,0.45); margin-bottom: 10px; margin-top: 2px; }
-.nv-counts { display: flex; align-items: center; justify-content: space-between; background: rgba(255,255,255,0.07); border-radius: 6px; padding: 7px 10px; }
-.nv-count { text-align: center; }
-.nv-num { display: block; font-family: 'Montserrat', sans-serif; font-size: 16px; font-weight: 800; color: #fff; }
-.nv-clabel { display: block; font-size: 8px; text-transform: uppercase; letter-spacing: 1px; color: rgba(255,255,255,0.35); margin-top: 2px; }
-.nv-cdivider { width: 1px; height: 28px; background: rgba(255,255,255,0.1); }
-
-.nv-summary-row {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 12px;
-  margin-bottom: 20px;
-}
-.nv-summary-card {
-  border-radius: 10px;
-  padding: 14px 16px;
+.nv-month-item {
+  background: rgba(255,255,255,0.06);
+  border-radius: 7px;
+  padding: 8px 10px;
+  border-top: 2px solid var(--nc);
   display: flex;
   align-items: center;
-  gap: 14px;
+  justify-content: space-between;
 }
-.nv-summary-card.ytd { background: #1D3756; border-left: 4px solid #6EBE4F; }
-.nv-summary-card.one-in-seven { background: #1D3756; border-left: 4px solid #2399B5; }
-.nv-summary-icon { font-size: 22px; flex-shrink: 0; }
-.nv-summary-val { font-family: 'Montserrat', sans-serif; font-size: 24px; font-weight: 800; line-height: 1; }
-.nv-summary-title { font-size: 11px; color: rgba(255,255,255,0.75); margin-top: 3px; font-weight: 600; }
-.nv-summary-sub { font-size: 10px; color: rgba(255,255,255,0.4); margin-top: 3px; line-height: 1.4; }
-
-/* Two-col initiative layout */
-.initiatives {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 20px;
-  align-items: start;
-}
-
-/* Initiative card */
-.initiative {
-  background: #fff;
-  border-radius: 12px;
-  border: 1px solid #e8edf3;
-  box-shadow: 0 1px 6px rgba(29,55,86,0.07);
-  overflow: hidden;
-}
-
-.initiative-head {
-  background: var(--head-bg);
-  padding: 18px 24px 16px;
-  position: relative;
-}
-.initiative.teal { --head-bg: #2399B5; }
-.initiative.navy { --head-bg: #1D3756; }
-
-.initiative-number {
-  font-size: 10px;
-  font-weight: 700;
-  letter-spacing: 2px;
-  text-transform: uppercase;
-  color: rgba(255,255,255,0.5);
-  margin-bottom: 6px;
-}
-.initiative-title {
-  font-size: 17px;
-  font-weight: 800;
-  color: #fff;
-  line-height: 1.25;
-  margin-bottom: 6px;
-}
-.initiative-subtitle {
-  font-size: 12px;
-  color: rgba(255,255,255,0.65);
-  line-height: 1.4;
-}
-.initiative-pill {
-  display: inline-block;
-  background: rgba(255,255,255,0.15);
-  color: #fff;
-  font-size: 9px;
-  font-weight: 700;
-  letter-spacing: 1px;
-  text-transform: uppercase;
-  padding: 3px 10px;
-  border-radius: 10px;
-  margin-top: 10px;
-}
-
-.initiative-body { padding: 20px 24px; }
-
-/* Tool cards for initiative 1 */
-.tool-cards { display: flex; flex-direction: column; gap: 10px; margin-bottom: 16px; }
-.tool-card {
+.nv-month-item.jan { --nc: #2399B5; }
+.nv-month-item.feb { --nc: #6EBE4F; }
+.nv-month-item.mar { --nc: #2399B5; }
+.nv-month-item.apr { --nc: #e67e22; }
+.nv-mi-left {}
+.nv-mi-mo { font-size: 8px; font-weight: 700; letter-spacing: 1px; text-transform: uppercase; color: rgba(255,255,255,0.35); }
+.nv-mi-pct { font-family: 'Montserrat', sans-serif; font-size: 22px; font-weight: 800; color: var(--nc); line-height: 1.1; }
+.nv-mi-right { text-align: right; }
+.nv-mi-nv { font-size: 13px; font-weight: 800; color: #fff; }
+.nv-mi-total { font-size: 9px; color: rgba(255,255,255,0.3); }
+.nv-summary {
   display: flex;
-  align-items: flex-start;
-  gap: 12px;
-  padding: 12px 14px;
-  background: #f5f7fa;
-  border-radius: 8px;
-  border-left: 3px solid var(--t-color);
+  flex-direction: column;
+  gap: 6px;
+  min-width: 140px;
 }
-.tool-card.rox { --t-color: #2399B5; }
-.tool-card.retell { --t-color: #6EBE4F; }
-.tool-card.outreach { --t-color: #2399B5; }
-
-.tool-icon {
-  font-size: 20px;
-  flex-shrink: 0;
-  margin-top: 1px;
-}
-.tool-name {
-  font-size: 12px;
-  font-weight: 800;
-  color: #1D3756;
-  margin-bottom: 3px;
-}
-.tool-desc {
-  font-size: 11px;
-  color: #4a6280;
-  line-height: 1.5;
-}
-.tool-tag {
-  display: inline-block;
-  font-size: 9px;
-  font-weight: 700;
-  letter-spacing: 0.5px;
-  color: var(--t-color);
-  background: rgba(35,153,181,0.08);
-  padding: 2px 7px;
-  border-radius: 4px;
-  margin-top: 4px;
-}
-.tool-card.retell .tool-tag { background: rgba(110,190,79,0.1); }
-
-/* Outcome box */
-.outcome-box {
-  background: #f0f7f4;
-  border-radius: 8px;
-  border: 1px solid #c8e6d0;
-  padding: 12px 14px;
-  display: flex;
-  align-items: center;
-  gap: 10px;
-}
-.outcome-icon { font-size: 18px; flex-shrink: 0; }
-.outcome-text { font-size: 11px; color: #1D3756; line-height: 1.5; }
-.outcome-text strong { color: #3a8a50; }
-
-/* Hire cards for initiative 2 */
-.hire-profile {
-  background: #f5f7fa;
-  border-radius: 8px;
-  padding: 14px 16px;
-  margin-bottom: 10px;
-  border-left: 3px solid #6EBE4F;
-}
-.hire-title {
-  font-size: 12px;
-  font-weight: 800;
-  color: #1D3756;
-  margin-bottom: 8px;
+.nv-sum-item {
+  background: rgba(255,255,255,0.06);
+  border-radius: 7px;
+  padding: 7px 10px;
   display: flex;
   align-items: center;
   gap: 8px;
 }
-.hire-badge {
-  font-size: 9px;
+.nv-sum-val { font-family: 'Montserrat', sans-serif; font-size: 16px; font-weight: 800; }
+.nv-sum-val.green { color: #6EBE4F; }
+.nv-sum-val.teal { color: #2399B5; }
+.nv-sum-label { font-size: 9px; color: rgba(255,255,255,0.5); line-height: 1.3; }
+
+/* ── THREE-COL INITIATIVES ── */
+.initiatives {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+  gap: 14px;
+  flex: 1;
+  min-height: 0;
+}
+
+.initiative {
+  background: #fff;
+  border-radius: 10px;
+  border: 1px solid #e8edf3;
+  box-shadow: 0 1px 4px rgba(29,55,86,0.06);
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+}
+.initiative-head {
+  background: var(--hbg);
+  padding: 12px 16px;
+  flex-shrink: 0;
+}
+.initiative.teal { --hbg: #2399B5; }
+.initiative.navy { --hbg: #1D3756; }
+.initiative.gradient { --hbg: linear-gradient(90deg, #2399B5, #6EBE4F); }
+.initiative.gradient .initiative-head { background: linear-gradient(90deg, #2399B5, #6EBE4F); }
+
+.init-number { font-size: 8px; font-weight: 700; letter-spacing: 2px; text-transform: uppercase; color: rgba(255,255,255,0.45); margin-bottom: 3px; }
+.init-title { font-size: 13px; font-weight: 800; color: #fff; line-height: 1.2; margin-bottom: 3px; }
+.init-sub { font-size: 10px; color: rgba(255,255,255,0.6); line-height: 1.3; }
+.init-pill {
+  display: inline-block;
+  background: rgba(255,255,255,0.15);
+  color: #fff;
+  font-size: 8px;
   font-weight: 700;
   letter-spacing: 1px;
   text-transform: uppercase;
-  background: #6EBE4F;
-  color: #fff;
   padding: 2px 8px;
-  border-radius: 10px;
+  border-radius: 8px;
+  margin-top: 7px;
 }
-.hire-attrs {
+
+.init-body { padding: 12px 14px; flex: 1; display: flex; flex-direction: column; gap: 7px; }
+
+/* Tool rows */
+.tool-row {
   display: flex;
-  flex-wrap: wrap;
-  gap: 6px;
+  align-items: flex-start;
+  gap: 8px;
+  padding: 8px 10px;
+  background: #f5f7fa;
+  border-radius: 7px;
+  border-left: 3px solid var(--tc);
 }
-.hire-attr {
-  font-size: 10px;
-  color: #4a6280;
-  background: #fff;
-  border: 1px solid #dce4ed;
-  border-radius: 4px;
-  padding: 3px 8px;
+.tool-row.rox { --tc: #2399B5; }
+.tool-row.retell { --tc: #6EBE4F; }
+.tool-row.outreach { --tc: #2399B5; }
+.tool-icon { font-size: 14px; flex-shrink: 0; margin-top: 1px; }
+.tool-name { font-size: 11px; font-weight: 800; color: #1D3756; }
+.tool-desc { font-size: 9.5px; color: #4a6280; line-height: 1.4; margin-top: 1px; }
+.tool-tag { display: inline-block; font-size: 8px; font-weight: 700; color: var(--tc); background: rgba(35,153,181,0.09); padding: 1px 6px; border-radius: 3px; margin-top: 3px; }
+.tool-row.retell .tool-tag { background: rgba(110,190,79,0.1); }
+
+/* Hire */
+.hire-profile {
+  background: #f5f7fa;
+  border-radius: 7px;
+  padding: 9px 11px;
+  border-left: 3px solid #6EBE4F;
 }
-.hire-attr.highlight {
-  color: #2399B5;
-  border-color: #2399B5;
-  font-weight: 700;
-}
+.hire-title { font-size: 10px; font-weight: 800; color: #1D3756; margin-bottom: 6px; display: flex; align-items: center; gap: 6px; }
+.hire-badge { font-size: 8px; font-weight: 700; letter-spacing: 1px; background: #6EBE4F; color: #fff; padding: 2px 6px; border-radius: 8px; }
+.hire-attrs { display: flex; flex-wrap: wrap; gap: 4px; }
+.hire-attr { font-size: 9px; color: #4a6280; background: #fff; border: 1px solid #dce4ed; border-radius: 3px; padding: 2px 7px; }
+.hire-attr.hi { color: #2399B5; border-color: #2399B5; font-weight: 700; }
 
 .salary-band {
   background: #1D3756;
-  border-radius: 8px;
-  padding: 12px 16px;
+  border-radius: 7px;
+  padding: 8px 12px;
   display: flex;
   align-items: center;
   justify-content: space-between;
-  margin-bottom: 10px;
 }
-.salary-label { font-size: 11px; color: rgba(255,255,255,0.55); }
-.salary-values { display: flex; align-items: center; gap: 12px; }
-.salary-from {
-  font-size: 13px;
-  color: rgba(255,255,255,0.4);
-  text-decoration: line-through;
-}
-.salary-arrow { font-size: 14px; color: #6EBE4F; }
-.salary-to {
-  font-family: 'Montserrat', sans-serif;
-  font-size: 16px;
-  font-weight: 800;
-  color: #6EBE4F;
-}
+.sal-label { font-size: 9px; color: rgba(255,255,255,0.45); margin-bottom: 1px; }
+.sal-from { font-size: 11px; color: rgba(255,255,255,0.3); text-decoration: line-through; }
+.sal-arrow { font-size: 16px; color: #6EBE4F; }
+.sal-to { font-family: 'Montserrat', sans-serif; font-size: 14px; font-weight: 800; color: #6EBE4F; }
 
-/* Buyout tile */
-.buyout-tile {
-  background: #fff;
-  border-radius: 12px;
-  border: 1px solid #e8edf3;
-  box-shadow: 0 1px 6px rgba(29,55,86,0.07);
-  overflow: hidden;
-  margin-top: 0;
-}
-.buyout-head {
-  background: linear-gradient(90deg, #2399B5, #6EBE4F);
-  padding: 14px 20px;
-  display: flex;
-  align-items: center;
-  gap: 10px;
-}
-.buyout-head-icon { font-size: 18px; }
-.buyout-head-text {}
-.buyout-head-tag {
-  font-size: 9px;
-  font-weight: 700;
-  letter-spacing: 1.5px;
-  text-transform: uppercase;
-  color: rgba(255,255,255,0.7);
-  margin-bottom: 2px;
-}
-.buyout-head-title {
-  font-size: 14px;
-  font-weight: 800;
-  color: #fff;
-}
-.buyout-body { padding: 14px 18px; }
-.buyout-desc {
-  font-size: 11px;
-  color: #4a6280;
-  line-height: 1.5;
-  margin-bottom: 12px;
-}
+/* Buyout */
+.buyout-desc { font-size: 10px; color: #4a6280; line-height: 1.5; }
 .buyout-desc strong { color: #1D3756; }
 .buyout-credits {
   display: grid;
   grid-template-columns: repeat(4, 1fr);
-  gap: 6px;
-  margin-bottom: 12px;
+  gap: 5px;
 }
-.buyout-credit {
+.bc {
   background: #f5f7fa;
   border-radius: 6px;
-  padding: 8px 6px;
+  padding: 6px 4px;
   text-align: center;
-  border-top: 2px solid var(--bc);
+  border-top: 2px solid var(--bcc);
 }
-.buyout-credit.c1 { --bc: #6EBE4F; }
-.buyout-credit.c2 { --bc: #6EBE4F; }
-.buyout-credit.c3 { --bc: #2399B5; }
-.buyout-credit.c4 { --bc: #2399B5; }
-.buyout-credit-term { font-size: 9px; color: #8da0b4; margin-bottom: 3px; text-align: center; }
-.buyout-credit-val { font-family: 'Montserrat', sans-serif; font-size: 14px; font-weight: 800; color: #1D3756; }
-.buyout-perks {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 5px;
-  margin-bottom: 12px;
-}
-.buyout-perk {
-  font-size: 9px;
-  color: #4a6280;
-  background: #f5f7fa;
-  border: 1px solid #e8edf3;
-  border-radius: 4px;
-  padding: 3px 8px;
-}
-.buyout-footer-bar {
+.bc.c1 { --bcc: #6EBE4F; }
+.bc.c2 { --bcc: #6EBE4F; }
+.bc.c3 { --bcc: #2399B5; }
+.bc.c4 { --bcc: #2399B5; }
+.bc-term { font-size: 8px; color: #8da0b4; margin-bottom: 2px; }
+.bc-val { font-family: 'Montserrat', sans-serif; font-size: 13px; font-weight: 800; color: #1D3756; }
+.buyout-perks { display: flex; flex-wrap: wrap; gap: 4px; }
+.buyout-perk { font-size: 8.5px; color: #4a6280; background: #f5f7fa; border: 1px solid #e8edf3; border-radius: 3px; padding: 2px 7px; }
+.buyout-cap-bar {
   background: #1D3756;
   border-radius: 6px;
-  padding: 9px 14px;
+  padding: 7px 12px;
   display: flex;
   align-items: center;
   justify-content: space-between;
 }
-.buyout-cap { font-size: 11px; color: rgba(255,255,255,0.55); }
-.buyout-cap strong { color: #6EBE4F; font-weight: 800; font-family: 'Montserrat', sans-serif; font-size: 13px; }
-.buyout-target { font-size: 9px; color: rgba(255,255,255,0.35); text-align: right; }
+.bcap-label { font-size: 10px; color: rgba(255,255,255,0.5); }
+.bcap-label strong { color: #6EBE4F; font-family: 'Montserrat', sans-serif; font-size: 12px; }
+.bcap-note { font-size: 8px; color: rgba(255,255,255,0.3); text-align: right; }
+
+/* Outcome box */
+.outcome-box {
+  background: #f0f7f4;
+  border-radius: 7px;
+  border: 1px solid #c8e6d0;
+  padding: 8px 11px;
+  display: flex;
+  align-items: flex-start;
+  gap: 7px;
+  margin-top: auto;
+}
+.outcome-icon { font-size: 14px; flex-shrink: 0; }
+.outcome-text { font-size: 9.5px; color: #1D3756; line-height: 1.4; }
+.outcome-text strong { color: #3a8a50; }
 
 /* Footer */
 .slide-footer {
-  padding: 10px 48px;
+  padding: 8px 40px;
   display: flex;
   justify-content: space-between;
   align-items: center;
   border-top: 1px solid #e8edf3;
-  margin-top: 4px;
+  flex-shrink: 0;
 }
-.footer-left { font-size: 10px; color: #b0bec5; letter-spacing: 0.5px; }
-.footer-logo {
-  height: 18px;
-  opacity: 0.35;
-  filter: brightness(0) invert(19%) sepia(96%) saturate(343%) hue-rotate(172deg) brightness(96%) contrast(90%);
-}
+.footer-left { font-size: 9px; color: #b0bec5; letter-spacing: 0.5px; }
+.footer-logo { height: 16px; opacity: 0.3; filter: brightness(0) invert(19%) sepia(96%) saturate(343%) hue-rotate(172deg) brightness(96%) contrast(90%); }
 </style>
 </head>
 <body>
 
 <div class="top-stripe"></div>
 
-<!-- Header -->
 <div class="slide-header">
   <img src="https://7091219.fs1.hubspotusercontent-na1.net/hubfs/7091219/email-assets/logo-revio-white.png" alt="Rev.io" class="logo">
-  <div class="header-center">
+  <div style="text-align:center">
     <div class="slide-tag">Q2 2026 Board Presentation</div>
-    <h1>Accelerating MSP Growth — Two Strategic Investments</h1>
+    <h1>Accelerating MSP Growth — Three Strategic Plays</h1>
   </div>
   <div class="header-right">
     <div class="slide-date">April 28, 2026</div>
@@ -454,216 +275,196 @@ h1 { font-size: 22px; font-weight: 800; color: #fff; }
   </div>
 </div>
 
-<!-- Body -->
 <div class="body-content">
 
-  <!-- MSP No Voice urgency section -->
-  <div class="urgency-label">
-    <span class="urgency-eyebrow">The Problem We're Not Solving Fast Enough</span>
-    <span class="urgency-rule"></span>
-  </div>
-
-  <div class="nv-grid">
-    <div class="nv-card jan">
-      <div class="nv-month">January 2026</div>
-      <div class="nv-pct" style="color:#2399B5">14.2%</div>
-      <div class="nv-pct-label">of total opps created</div>
-      <div class="nv-counts">
-        <div class="nv-count"><span class="nv-num" style="color:#2399B5">41</span><span class="nv-clabel">No Voice</span></div>
-        <div class="nv-cdivider"></div>
-        <div class="nv-count"><span class="nv-num">288</span><span class="nv-clabel">Total</span></div>
+  <!-- No Voice Banner -->
+  <div class="nv-banner">
+    <div class="nv-banner-label">The Problem We're Not<br>Solving Fast Enough</div>
+    <div class="nv-months">
+      <div class="nv-month-item jan">
+        <div class="nv-mi-left">
+          <div class="nv-mi-mo">Jan 2026</div>
+          <div class="nv-mi-pct">14.2%</div>
+        </div>
+        <div class="nv-mi-right">
+          <div class="nv-mi-nv">41</div>
+          <div class="nv-mi-total">of 288</div>
+        </div>
+      </div>
+      <div class="nv-month-item feb">
+        <div class="nv-mi-left">
+          <div class="nv-mi-mo">Feb 2026</div>
+          <div class="nv-mi-pct">17.3%</div>
+        </div>
+        <div class="nv-mi-right">
+          <div class="nv-mi-nv">39</div>
+          <div class="nv-mi-total">of 225</div>
+        </div>
+      </div>
+      <div class="nv-month-item mar">
+        <div class="nv-mi-left">
+          <div class="nv-mi-mo">Mar 2026</div>
+          <div class="nv-mi-pct">12.3%</div>
+        </div>
+        <div class="nv-mi-right">
+          <div class="nv-mi-nv">27</div>
+          <div class="nv-mi-total">of 219</div>
+        </div>
+      </div>
+      <div class="nv-month-item apr">
+        <div class="nv-mi-left">
+          <div class="nv-mi-mo">Apr 2026</div>
+          <div class="nv-mi-pct">15.4%</div>
+        </div>
+        <div class="nv-mi-right">
+          <div class="nv-mi-nv">28</div>
+          <div class="nv-mi-total">of 182</div>
+        </div>
       </div>
     </div>
-    <div class="nv-card feb">
-      <div class="nv-month">February 2026</div>
-      <div class="nv-pct" style="color:#6EBE4F">17.3%</div>
-      <div class="nv-pct-label">of total opps created</div>
-      <div class="nv-counts">
-        <div class="nv-count"><span class="nv-num" style="color:#6EBE4F">39</span><span class="nv-clabel">No Voice</span></div>
-        <div class="nv-cdivider"></div>
-        <div class="nv-count"><span class="nv-num">225</span><span class="nv-clabel">Total</span></div>
+    <div class="nv-summary">
+      <div class="nv-sum-item">
+        <div>
+          <div class="nv-sum-val green">14.8%</div>
+          <div class="nv-sum-label">YTD avg · 135 of 914 opps</div>
+        </div>
       </div>
-    </div>
-    <div class="nv-card mar">
-      <div class="nv-month">March 2026</div>
-      <div class="nv-pct" style="color:#2399B5">12.3%</div>
-      <div class="nv-pct-label">of total opps created</div>
-      <div class="nv-counts">
-        <div class="nv-count"><span class="nv-num" style="color:#2399B5">27</span><span class="nv-clabel">No Voice</span></div>
-        <div class="nv-cdivider"></div>
-        <div class="nv-count"><span class="nv-num">219</span><span class="nv-clabel">Total</span></div>
-      </div>
-    </div>
-    <div class="nv-card apr">
-      <div class="nv-month">April 2026</div>
-      <div class="nv-pct" style="color:#e67e22">15.4%</div>
-      <div class="nv-pct-label">of total opps created</div>
-      <div class="nv-counts">
-        <div class="nv-count"><span class="nv-num" style="color:#e67e22">28</span><span class="nv-clabel">No Voice</span></div>
-        <div class="nv-cdivider"></div>
-        <div class="nv-count"><span class="nv-num">182</span><span class="nv-clabel">Total</span></div>
-      </div>
-    </div>
-  </div>
-
-  <div class="nv-summary-row">
-    <div class="nv-summary-card ytd">
-      <div class="nv-summary-icon">📊</div>
-      <div>
-        <div class="nv-summary-val" style="color:#6EBE4F">14.8%</div>
-        <div class="nv-summary-title">YTD Average — MSP No Voice Share</div>
-        <div class="nv-summary-sub">135 of 914 total opportunities created in 2026</div>
-      </div>
-    </div>
-    <div class="nv-summary-card one-in-seven">
-      <div class="nv-summary-icon">💡</div>
-      <div>
-        <div class="nv-summary-val" style="color:#2399B5">~1 in 7</div>
-        <div class="nv-summary-title">New opps come from MSP – No Voice accounts</div>
-        <div class="nv-summary-sub">Consistent signal month-over-month — these prospects can't buy without voice. We need to fix that.</div>
+      <div class="nv-sum-item">
+        <div>
+          <div class="nv-sum-val teal">~1 in 7</div>
+          <div class="nv-sum-label">New opps can't buy<br>without voice</div>
+        </div>
       </div>
     </div>
   </div>
 
-  <!-- Two initiatives -->
+  <!-- 3-col initiatives -->
   <div class="initiatives">
 
-    <!-- Initiative 1: AI Prospecting -->
+    <!-- Initiative 01: AI Tooling -->
     <div class="initiative teal">
       <div class="initiative-head">
-        <div class="initiative-number">Initiative 01</div>
-        <div class="initiative-title">Automated MSP Prospecting<br>at Scale</div>
-        <div class="initiative-subtitle">Personalization without headcount — AI-powered outreach that sounds human and converts</div>
-        <div class="initiative-pill">Tooling Investment</div>
+        <div class="init-number">Initiative 01</div>
+        <div class="init-title">Automated MSP Prospecting at Scale</div>
+        <div class="init-sub">AI-powered personalization without adding headcount</div>
+        <div class="init-pill">Tooling Investment</div>
       </div>
-      <div class="initiative-body">
-
-        <div class="tool-cards">
-          <div class="tool-card rox">
-            <div class="tool-icon">🤖</div>
-            <div>
-              <div class="tool-name">Rox</div>
-              <div class="tool-desc">AI-native CRM that auto-researches accounts, surfaces signals, and drafts hyper-personalized outreach — so reps spend time selling, not researching.</div>
-              <div class="tool-tag">Account Intelligence</div>
-            </div>
-          </div>
-
-          <div class="tool-card retell">
-            <div class="tool-icon">📞</div>
-            <div>
-              <div class="tool-name">Retell AI</div>
-              <div class="tool-desc">AI voice agent for high-volume outbound prospecting — qualifies cold MSP leads before they ever hit an AE's calendar.</div>
-              <div class="tool-tag">Voice Prospecting</div>
-            </div>
-          </div>
-
-          <div class="tool-card outreach">
-            <div class="tool-icon">⚡</div>
-            <div>
-              <div class="tool-name">Outreach Rev Agent</div>
-              <div class="tool-desc">AI layer on top of our existing Outreach stack — auto-personalizes sequences using account data, deal history, and MSP-specific triggers.</div>
-              <div class="tool-tag">Sequence Personalization</div>
-            </div>
+      <div class="init-body">
+        <div class="tool-row rox">
+          <div class="tool-icon">🤖</div>
+          <div>
+            <div class="tool-name">Rox</div>
+            <div class="tool-desc">AI-native CRM — auto-researches accounts, surfaces buying signals, drafts personalized outreach so reps focus on selling.</div>
+            <div class="tool-tag">Account Intelligence</div>
           </div>
         </div>
-
+        <div class="tool-row retell">
+          <div class="tool-icon">📞</div>
+          <div>
+            <div class="tool-name">Retell AI</div>
+            <div class="tool-desc">AI voice agent for high-volume outbound — qualifies cold MSP leads before they hit an AE's calendar.</div>
+            <div class="tool-tag">Voice Prospecting</div>
+          </div>
+        </div>
+        <div class="tool-row outreach">
+          <div class="tool-icon">⚡</div>
+          <div>
+            <div class="tool-name">Outreach Rev Agent</div>
+            <div class="tool-desc">AI layer on existing Outreach stack — auto-personalizes sequences using account data and MSP-specific triggers.</div>
+            <div class="tool-tag">Sequence Personalization</div>
+          </div>
+        </div>
         <div class="outcome-box">
           <div class="outcome-icon">🎯</div>
-          <div class="outcome-text">Goal: <strong>3× the quality of MSP outreach</strong> without adding headcount — each AE armed with fully researched, personalized touch sequences from day one of a new account.</div>
+          <div class="outcome-text">Goal: <strong>3× MSP outreach quality</strong> — every AE armed with fully researched, personalized sequences from day one.</div>
         </div>
-
       </div>
     </div>
 
-    <!-- Initiative 2: Talent -->
+    <!-- Initiative 02: Talent -->
     <div class="initiative navy">
       <div class="initiative-head">
-        <div class="initiative-number">Initiative 02</div>
-        <div class="initiative-title">Top-Grade MSP AE Talent<br>with External Hires</div>
-        <div class="initiative-subtitle">Add 2 tenured reps who speak the MSP language — and can close deals the current team can't</div>
-        <div class="initiative-pill">Talent Investment</div>
+        <div class="init-number">Initiative 02</div>
+        <div class="init-title">Top-Grade MSP AE Talent via External Hires</div>
+        <div class="init-sub">2 tenured reps who speak MSP — and can close deals the current team can't</div>
+        <div class="init-pill">Talent Investment</div>
       </div>
-      <div class="initiative-body">
-
+      <div class="init-body">
         <div class="hire-profile">
           <div class="hire-title">
             Target Hire Profile
             <span class="hire-badge">× 2 Reps</span>
           </div>
           <div class="hire-attrs">
-            <div class="hire-attr highlight">3–7 yrs MSP sales experience</div>
-            <div class="hire-attr highlight">Technical acumen (RMM / PSA)</div>
+            <div class="hire-attr hi">3–7 yrs MSP sales</div>
+            <div class="hire-attr hi">RMM / PSA acumen</div>
             <div class="hire-attr">Consultative seller</div>
-            <div class="hire-attr">ConnectWise / Autotask familiarity</div>
-            <div class="hire-attr">Mid-market deal experience</div>
+            <div class="hire-attr">CW / Autotask familiarity</div>
+            <div class="hire-attr">Mid-market experience</div>
             <div class="hire-attr">Existing MSP network</div>
-            <div class="hire-attr">Complex billing knowledge</div>
-            <div class="hire-attr">Channel / partner background</div>
+            <div class="hire-attr">Complex billing</div>
+            <div class="hire-attr">Channel background</div>
           </div>
         </div>
-
         <div class="salary-band">
           <div>
-            <div class="salary-label">Current AE Band</div>
-            <div class="salary-from">$65K–$80K base</div>
+            <div class="sal-label">Current Band</div>
+            <div class="sal-from">$65K–$80K base</div>
           </div>
-          <div class="salary-arrow">→</div>
+          <div class="sal-arrow">→</div>
           <div>
-            <div class="salary-label">Proposed MSP Senior Band</div>
-            <div class="salary-to">$90K–$110K base</div>
+            <div class="sal-label">Proposed Senior MSP Band</div>
+            <div class="sal-to">$90K–$110K</div>
           </div>
         </div>
-
         <div class="outcome-box">
           <div class="outcome-icon">🏆</div>
-          <div class="outcome-text">Goal: <strong>2 net-new senior MSP AEs by Q3</strong> — reps who can self-source, navigate technical objections, and compress deal cycles with credibility the MSP buyer respects.</div>
+          <div class="outcome-text">Goal: <strong>2 senior MSP AEs by Q3</strong> — self-sourcing reps who compress deal cycles with real credibility.</div>
         </div>
-
       </div>
     </div>
 
-    <!-- Buyout tile — bottom right, stacked under initiative 2 -->
-    <div style="grid-column: 2; margin-top: -8px;">
-      <div class="buyout-tile">
-        <div class="buyout-head">
-          <div class="buyout-head-icon">🔓</div>
-          <div class="buyout-head-text">
-            <div class="buyout-head-tag">New Program · Q2 Launch</div>
-            <div class="buyout-head-title">"Show Us Your Contract" Switch Program</div>
+    <!-- Initiative 03: Contract Buyout -->
+    <div class="initiative gradient">
+      <div class="initiative-head">
+        <div class="init-number">Initiative 03 · New Program</div>
+        <div class="init-title">"Show Us Your Contract" Switch Program</div>
+        <div class="init-sub">Eliminate the #1 objection — being locked into CW or Autotask</div>
+        <div class="init-pill">Competitive Weapon</div>
+      </div>
+      <div class="init-body">
+        <div class="buyout-desc">MSPs stuck in a ConnectWise or Autotask contract get a <strong>Year 1 credit</strong> against their remaining balance — applied against their Rev.io invoice.</div>
+        <div class="buyout-credits">
+          <div class="bc c1">
+            <div class="bc-term">1–3 mo. left</div>
+            <div class="bc-val">100%</div>
+          </div>
+          <div class="bc c2">
+            <div class="bc-term">4–6 mo. left</div>
+            <div class="bc-val">75%</div>
+          </div>
+          <div class="bc c3">
+            <div class="bc-term">7–9 mo. left</div>
+            <div class="bc-val">50%</div>
+          </div>
+          <div class="bc c4">
+            <div class="bc-term">10–12 mo. left</div>
+            <div class="bc-val">3 mo.</div>
           </div>
         </div>
-        <div class="buyout-body">
-          <div class="buyout-desc">
-            MSPs locked into ConnectWise or Autotask contracts now have an escape hatch. <strong>We issue a Year 1 credit</strong> against their remaining contract balance — eliminating the #1 switching objection.
-          </div>
-          <div class="buyout-credits">
-            <div class="buyout-credit c1">
-              <div class="buyout-credit-term">1–3 mo. left</div>
-              <div class="buyout-credit-val">100%</div>
-            </div>
-            <div class="buyout-credit c2">
-              <div class="buyout-credit-term">4–6 mo. left</div>
-              <div class="buyout-credit-val">75%</div>
-            </div>
-            <div class="buyout-credit c3">
-              <div class="buyout-credit-term">7–9 mo. left</div>
-              <div class="buyout-credit-val">50%</div>
-            </div>
-            <div class="buyout-credit c4">
-              <div class="buyout-credit-term">10–12 mo. left</div>
-              <div class="buyout-credit-val">3 mo.</div>
-            </div>
-          </div>
-          <div class="buyout-perks">
-            <div class="buyout-perk">✓ Free data migration</div>
-            <div class="buyout-perk">✓ Dedicated onboarding (90 days)</div>
-            <div class="buyout-perk">✓ 24-month price lock</div>
-            <div class="buyout-perk">✓ 90-day satisfaction clause</div>
-          </div>
-          <div class="buyout-footer-bar">
-            <div class="buyout-cap">Max credit cap: <strong>$10K</strong> per deal</div>
-            <div class="buyout-target">CW &amp; Autotask switchers only · New PSA customers</div>
-          </div>
+        <div class="buyout-perks">
+          <div class="buyout-perk">✓ Free data migration</div>
+          <div class="buyout-perk">✓ Dedicated onboarding 90 days</div>
+          <div class="buyout-perk">✓ 24-month price lock</div>
+          <div class="buyout-perk">✓ 90-day satisfaction clause</div>
+        </div>
+        <div class="buyout-cap-bar">
+          <div class="bcap-label">Max credit: <strong>$10K</strong> / deal</div>
+          <div class="bcap-note">New PSA customers only<br>CW &amp; Autotask switchers</div>
+        </div>
+        <div class="outcome-box">
+          <div class="outcome-icon">🔓</div>
+          <div class="outcome-text">Goal: <strong>remove contract lock-in as an objection</strong> entirely — turn "I can't switch yet" into a closed deal.</div>
         </div>
       </div>
     </div>
@@ -671,7 +472,6 @@ h1 { font-size: 22px; font-weight: 800; color: #fff; }
   </div>
 </div>
 
-<!-- Footer -->
 <div class="slide-footer">
   <div class="footer-left">Rev.io Sales Intelligence · Q2 2026 Board Presentation · April 28, 2026</div>
   <img src="https://7091219.fs1.hubspotusercontent-na1.net/hubfs/7091219/email-assets/logo-revio-white.png" alt="Rev.io" class="footer-logo">
