@@ -1283,10 +1283,9 @@ html, body { height: 100%; background: #f5f7fa; }
           <div class="chart-title">Monthly Opps Needed to Hit PSA Target at 10:1 Coverage</div>
         </div>
         <div style="display:flex;gap:12px;align-items:center;flex-shrink:0;">
-          <div style="display:flex;align-items:center;gap:4px;font-size:9px;color:rgba(255,255,255,0.6)"><div style="width:10px;height:10px;background:#93c5fd;border-radius:2px"></div>MG Needed</div>
-          <div style="display:flex;align-items:center;gap:4px;font-size:9px;color:rgba(255,255,255,0.6)"><div style="width:10px;height:10px;background:#bbf7d0;border-radius:2px"></div>SG Needed</div>
-          <div style="display:flex;align-items:center;gap:4px;font-size:9px;color:rgba(255,255,255,0.6)"><div style="width:16px;height:2px;background:#2399B5"></div>MG Actual</div>
-          <div style="display:flex;align-items:center;gap:4px;font-size:9px;color:rgba(255,255,255,0.6)"><div style="width:16px;height:2px;background:#6EBE4F"></div>SG Actual</div>
+          <div style="display:flex;align-items:center;gap:4px;font-size:9px;color:rgba(255,255,255,0.75)"><div style="width:10px;height:10px;background:#16a34a;border-radius:2px"></div>SG Target</div>
+          <div style="display:flex;align-items:center;gap:4px;font-size:9px;color:rgba(255,255,255,0.75)"><div style="width:16px;height:3px;background:#dc2626"></div>SG Actual</div>
+          <div style="display:flex;align-items:center;gap:4px;font-size:9px;color:rgba(255,255,255,0.5)"><div style="width:10px;height:10px;background:rgba(220,38,38,0.28);border-radius:2px"></div>Gap</div>
         </div>
       </div>
       <div class="chart-body">
@@ -2510,10 +2509,11 @@ const ctx = document.getElementById('pipelineChart').getContext('2d');
 
 const months = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
 
-const mgNeeded = [140,170,200,240,270,310,340,370,400,440,470,500];
 const sgNeeded = [110,130,150,180,210,230,260,280,300,330,360,380];
-const mgActual = [68,59,52,46,null,null,null,null,null,null,null,null];
 const sgActual = [140,88,79,67,null,null,null,null,null,null,null,null];
+
+// Gap = how far below target each actual month is (0 if ahead)
+const sgGap = sgNeeded.map((n, i) => sgActual[i] !== null ? Math.max(0, n - sgActual[i]) : null);
 
 new Chart(ctx, {
   type: 'bar',
@@ -2521,50 +2521,37 @@ new Chart(ctx, {
     labels: months,
     datasets: [
       {
-        label: 'MG Opps Needed',
-        data: mgNeeded,
-        backgroundColor: 'rgba(147,197,253,0.55)',
-        borderColor: 'rgba(147,197,253,0.8)',
-        borderWidth: 1,
-        stack: 'needed',
-        order: 2,
-      },
-      {
-        label: 'SG Opps Needed',
+        label: 'SG Target',
         data: sgNeeded,
-        backgroundColor: 'rgba(187,247,208,0.55)',
-        borderColor: 'rgba(187,247,208,0.8)',
+        backgroundColor: function(c) {
+          return c.dataIndex < 4 ? 'rgba(22,163,74,0.4)' : 'rgba(22,163,74,0.6)';
+        },
+        borderColor: '#16a34a',
+        borderWidth: 1.5,
+        stack: 'target',
+        order: 3,
+      },
+      {
+        label: 'Gap (Behind Target)',
+        data: sgGap,
+        backgroundColor: 'rgba(220,38,38,0.28)',
+        borderColor: 'rgba(220,38,38,0.55)',
         borderWidth: 1,
-        stack: 'needed',
-        order: 2,
+        stack: 'target',
+        order: 3,
       },
       {
-        label: 'MG Actual Created',
-        data: mgActual,
-        type: 'line',
-        borderColor: '#2399B5',
-        backgroundColor: '#2399B5',
-        borderWidth: 2.5,
-        pointRadius: 5,
-        pointBackgroundColor: '#2399B5',
-        pointBorderColor: '#fff',
-        pointBorderWidth: 2,
-        tension: 0.3,
-        order: 1,
-        stack: undefined,
-      },
-      {
-        label: 'SG Actual Created',
+        label: 'SG Actual',
         data: sgActual,
         type: 'line',
-        borderColor: '#6EBE4F',
-        backgroundColor: '#6EBE4F',
-        borderWidth: 2.5,
-        pointRadius: 5,
-        pointBackgroundColor: '#6EBE4F',
+        borderColor: '#dc2626',
+        backgroundColor: '#dc2626',
+        borderWidth: 3,
+        pointRadius: 6,
+        pointBackgroundColor: '#dc2626',
         pointBorderColor: '#fff',
-        pointBorderWidth: 2,
-        tension: 0.3,
+        pointBorderWidth: 2.5,
+        tension: 0.25,
         order: 1,
         stack: undefined,
       },
@@ -2577,14 +2564,17 @@ new Chart(ctx, {
     plugins: {
       legend: { display: false },
       tooltip: {
-        backgroundColor: '#1D3756',
+        backgroundColor: '#0f172a',
         titleColor: '#fff',
-        bodyColor: 'rgba(255,255,255,0.75)',
+        bodyColor: 'rgba(255,255,255,0.8)',
         padding: 10,
         callbacks: {
-          label: function(ctx) {
-            if (ctx.raw === null) return null;
-            return ctx.dataset.label + ': ' + ctx.raw;
+          label: function(c) {
+            if (c.raw === null) return null;
+            if (c.dataset.label === 'Gap (Behind Target)') {
+              return c.raw > 0 ? '⚠ Gap: -' + c.raw + ' opps' : null;
+            }
+            return c.dataset.label + ': ' + c.raw;
           }
         }
       },
@@ -2592,15 +2582,15 @@ new Chart(ctx, {
         annotations: {
           nowLine: {
             type: 'line',
-            xMin: 3, xMax: 3,
-            borderColor: 'rgba(231,76,60,0.6)',
+            xMin: 3.5, xMax: 3.5,
+            borderColor: 'rgba(220,38,38,0.7)',
             borderWidth: 2,
-            borderDash: [4,4],
+            borderDash: [5,4],
             label: {
               display: true,
               content: 'NOW',
               position: 'start',
-              backgroundColor: '#c0392b',
+              backgroundColor: '#dc2626',
               color: '#fff',
               font: { size: 9, weight: 'bold' },
               padding: { x: 5, y: 3 }
@@ -2612,16 +2602,16 @@ new Chart(ctx, {
     scales: {
       x: {
         stacked: true,
-        grid: { color: 'rgba(0,0,0,0.04)' },
-        ticks: { font: { size: 10, family: 'Open Sans' }, color: '#8da0b4' },
-        border: { color: '#e8edf3' }
+        grid: { color: 'rgba(0,0,0,0.05)' },
+        ticks: { font: { size: 10, family: 'Open Sans' }, color: '#4a6280' },
+        border: { color: '#c8d6e5' }
       },
       y: {
         stacked: true,
-        grid: { color: 'rgba(0,0,0,0.04)' },
-        ticks: { font: { size: 10, family: 'Open Sans' }, color: '#8da0b4' },
-        border: { color: '#e8edf3' },
-        title: { display: true, text: 'Opps', font: { size: 9 }, color: '#8da0b4' }
+        grid: { color: 'rgba(0,0,0,0.05)' },
+        ticks: { font: { size: 10, family: 'Open Sans' }, color: '#4a6280' },
+        border: { color: '#c8d6e5' },
+        title: { display: true, text: 'Sales-Gen Opps', font: { size: 9 }, color: '#4a6280' }
       }
     }
   }
