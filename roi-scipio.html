@@ -1,0 +1,310 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Rev.io ROI Analysis — Scipio Technologies</title>
+<style>
+  :root {
+    --bg: #0a0f1e;
+    --surface: #111827;
+    --surface2: #0d1525;
+    --border: #1e2d45;
+    --blue: #1667CC;
+    --green: #3DC570;
+    --cyan: #06b6d4;
+    --red: #f87171;
+    --yellow: #f5a623;
+    --text: #e2e8f0;
+    --muted: #64748b;
+  }
+  * { margin:0; padding:0; box-sizing:border-box; }
+  body { background:var(--bg); font-family:'Segoe UI',system-ui,sans-serif; color:var(--text); min-height:100vh; }
+
+  .cover { background:linear-gradient(135deg, #0a0f1e 0%, #0d1b35 50%, #0a1628 100%); padding:80px 80px 60px; border-bottom:1px solid var(--border); position:relative; overflow:hidden; }
+  .cover::before { content:''; position:absolute; top:-100px; right:-100px; width:500px; height:500px; background:radial-gradient(circle, rgba(22,103,204,0.08) 0%, transparent 70%); }
+  .cover-logo { margin-bottom:48px; }
+  .cover-logo img { height:40px; opacity:0.9; }
+  .cover-tag { font-size:11px; font-weight:700; letter-spacing:3px; text-transform:uppercase; color:var(--cyan); margin-bottom:16px; }
+  .cover h1 { font-size:42px; font-weight:800; color:#fff; line-height:1.15; margin-bottom:8px; }
+  .cover h1 span { color:var(--cyan); }
+  .cover-sub { font-size:16px; color:var(--muted); margin-bottom:0; }
+
+  .section { padding:64px 80px; border-bottom:1px solid var(--border); }
+  .section:last-child { border-bottom:none; }
+  .section-tag { font-size:10px; font-weight:700; letter-spacing:3px; text-transform:uppercase; color:var(--blue); margin-bottom:12px; }
+  .section h2 { font-size:28px; font-weight:800; color:#fff; margin-bottom:8px; }
+  .section .lead { font-size:15px; color:var(--muted); line-height:1.7; max-width:740px; margin-bottom:40px; }
+
+  .pain-grid { display:grid; grid-template-columns:repeat(3,1fr); gap:16px; margin-bottom:40px; }
+  .pain-card { background:var(--surface); border:1px solid var(--border); border-top:3px solid var(--red); border-radius:10px; padding:20px; }
+  .pain-card h4 { font-size:13px; font-weight:700; color:#fff; margin-bottom:8px; }
+  .pain-card p { font-size:12px; color:var(--muted); line-height:1.6; }
+  .pain-card .pain-quote { font-size:11px; color:var(--yellow); font-style:italic; margin-top:10px; border-left:2px solid var(--yellow); padding-left:10px; }
+
+  .roi-table { width:100%; border-collapse:collapse; margin-bottom:24px; }
+  .roi-table thead th { font-size:10px; font-weight:700; text-transform:uppercase; letter-spacing:1px; color:var(--muted); padding:12px 16px; text-align:left; background:var(--surface2); border-bottom:1px solid var(--border); }
+  .roi-table tbody td { padding:14px 16px; font-size:13px; color:#94a3b8; border-bottom:1px solid #0a0f1e; vertical-align:top; }
+  .roi-table tbody td:first-child { color:var(--text); font-weight:600; }
+  .roi-table tbody tr:last-child td { border-bottom:none; }
+  .roi-table .total-row td { background:rgba(61,197,112,0.06); color:var(--green); font-weight:700; font-size:14px; border-top:1px solid rgba(61,197,112,0.2); }
+  .math { font-size:11px; color:var(--muted); font-style:italic; margin-top:4px; }
+
+  .summary-grid { display:grid; grid-template-columns:repeat(4,1fr); gap:16px; margin:32px 0; }
+  .sum-card { background:var(--surface); border-radius:12px; padding:22px; text-align:center; }
+  .sum-val { font-size:30px; font-weight:800; margin-bottom:4px; }
+  .sum-label { font-size:10px; font-weight:700; letter-spacing:1.5px; text-transform:uppercase; color:var(--muted); line-height:1.4; }
+
+  .compare { display:grid; grid-template-columns:1fr auto 1fr; gap:24px; align-items:start; margin:32px 0; }
+  .compare-box { background:var(--surface); border-radius:12px; padding:28px; }
+  .compare-box.today { border-top:3px solid var(--red); }
+  .compare-box.tomorrow { border-top:3px solid var(--green); }
+  .compare-label { font-size:10px; font-weight:700; letter-spacing:2px; text-transform:uppercase; margin-bottom:16px; }
+  .compare-box.today .compare-label { color:var(--red); }
+  .compare-box.tomorrow .compare-label { color:var(--green); }
+  .compare-line { font-size:13px; color:#94a3b8; padding:7px 0; border-bottom:1px solid var(--border); line-height:1.4; }
+  .compare-line:last-child { border-bottom:none; }
+  .compare-line strong { color:var(--text); }
+  .vs { font-size:24px; font-weight:800; color:var(--muted); text-align:center; padding-top:60px; }
+
+  .callout { background:rgba(61,197,112,0.06); border:1px solid rgba(61,197,112,0.2); border-radius:10px; padding:20px 24px; margin-top:24px; }
+  .callout-label { font-size:10px; font-weight:700; letter-spacing:2px; text-transform:uppercase; color:var(--green); margin-bottom:8px; }
+  .callout p { font-size:14px; color:var(--text); line-height:1.7; }
+
+  .highlight-box { background:rgba(22,103,204,0.08); border:1px solid rgba(22,103,204,0.25); border-radius:10px; padding:20px 24px; margin-top:16px; }
+  .highlight-box .callout-label { color:var(--cyan); }
+  .highlight-box p { font-size:14px; color:var(--text); line-height:1.7; }
+
+  .next-step { display:flex; gap:16px; align-items:flex-start; padding:16px 0; border-bottom:1px solid var(--border); }
+  .next-step:last-child { border-bottom:none; }
+  .step-num { width:32px; height:32px; background:var(--blue); border-radius:50%; display:flex; align-items:center; justify-content:center; font-size:13px; font-weight:800; color:#fff; flex-shrink:0; margin-top:2px; }
+  .step-content h4 { font-size:14px; font-weight:700; color:#fff; margin-bottom:4px; }
+  .step-content p { font-size:13px; color:var(--muted); line-height:1.5; }
+
+  .disclaimer { font-size:11px; color:#334155; text-align:center; padding:24px 80px; line-height:1.6; }
+</style>
+</head>
+<body>
+
+<!-- COVER -->
+<div class="cover">
+  <div class="cover-logo">
+    <img src="https://koontz-robin.github.io/robin-decks/revio-logo.png" alt="rev.io">
+  </div>
+  <div class="cover-tag">Business Value Assessment</div>
+  <h1>ROI Analysis for<br><span>Scipio Technologies</span></h1>
+  <p class="cover-sub">Prepared by Jamie Butler, Rev.io &nbsp;·&nbsp; April 2026</p>
+</div>
+
+<!-- WHAT WE HEARD -->
+<div class="section">
+  <div class="section-tag">Section 1</div>
+  <h2>What We Heard</h2>
+  <p class="lead">Scipio Technologies (Peace Communications) has been a Rev.io Billing client since 2017. You know the platform and you trust it. The problem is the gap between your PSA and your billing system — and the manual work that lives in that gap every single day. These are your words, documented in discovery.</p>
+
+  <div class="pain-grid">
+    <div class="pain-card">
+      <h4>Revenue Leakage — "Three or Four Mistakes Today"</h4>
+      <p>When a project completes in ConnectWise, your finance team manually re-enters that contract data into Rev.io Billing. Every manual step is an opportunity for error. By your own count, your team makes three or four billing mistakes a day — each one representing revenue that was earned but not captured correctly.</p>
+      <div class="pain-quote">"Three or four mistakes today — errors causing direct revenue leakage with no way to detect or quantify."</div>
+    </div>
+    <div class="pain-card">
+      <h4>Manual Spreadsheet for Billable Hours</h4>
+      <p>As professional services grows at Scipio, your team is actively building a spreadsheet to manually upload billable hours into Rev.io Billing. This process doesn't scale. More professional services means more hours, more rows in the spreadsheet, and more risk — not less.</p>
+      <div class="pain-quote">"Building a spreadsheet right now to upload billable hours into Rev.io. As professional services grows, this process breaks."</div>
+    </div>
+    <div class="pain-card">
+      <h4>Finance Team Bottleneck — Emily Klein</h4>
+      <p>After every ConnectWise project completion, Emily Klein (CFO) and the accounting team manually input contract items into Rev.io Billing. This is described as a "very painful, manual process" — and Emily's team lives in constant fear of making a mistake that causes a billing error or a missed charge.</p>
+      <div class="pain-quote">"Very painful, manual process — large fear of mistakes and revenue leakage."</div>
+    </div>
+    <div class="pain-card">
+      <h4>Multiple Sources of Truth — No Single Pane of Glass</h4>
+      <p>ConnectWise handles ticketing, PM, and account management. Rev.io Billing handles invoicing. A separate SQL database handles reporting. None of these systems talk to each other natively. Scipio's stated goal is a single pane of glass — and today, that simply doesn't exist.</p>
+      <div class="pain-quote">"ConnectWise + Rev.io Billing + SQL database — three systems, no single source of truth."</div>
+    </div>
+    <div class="pain-card">
+      <h4>15-Minute Billing Increments &amp; Overage Tracking</h4>
+      <p>Scipio needs to capture time in 15-minute increments, detect overages weekly, and invoice correctly — all across ConnectWise agreements that must then be manually reconciled with Rev.io Billing. The API integration between CW and Rev.io is described as requiring "very specific agreement setup" and is fragile.</p>
+      <div class="pain-quote">"Agreement/billable time tracking needs: 15-minute increments, overage detection, correct invoicing — API is very specific and breaks easily."</div>
+    </div>
+    <div class="pain-card">
+      <h4>Goal: Reduce Manual Effort by 100% + AI Reporting</h4>
+      <p>Leadership has explicitly set a goal of eliminating manual effort entirely and implementing AI-driven reporting — revenue leakage detection, trend analysis, customer sentiment, and faster access to data for leadership requests. This goal is structurally impossible while ConnectWise and Rev.io Billing remain siloed.</p>
+      <div class="pain-quote">"Goal: reduce manual effort by 100%, improve reporting, implement AI — needs a single unified platform."</div>
+    </div>
+  </div>
+</div>
+
+<!-- COST OF TODAY -->
+<div class="section">
+  <div class="section-tag">Section 2</div>
+  <h2>The Cost of Today</h2>
+  <p class="lead">Conservative estimates based on Scipio's documented pain points. We use a fully-loaded cost of $80,000/year per employee ($38.46/hr) — appropriate for a Chattanooga-based UCaaS/VoIP MSP with finance and technical staff.</p>
+
+  <table class="roi-table">
+    <thead>
+      <tr>
+        <th style="width:30%">Pain Point</th>
+        <th>Conservative Assumption</th>
+        <th style="text-align:right">Annual Cost</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td>Manual CW-to-Rev.io Billing re-entry<br><div class="math">3 hrs/week × $38.46/hr × 52 weeks (finance team)</div></td>
+        <td>Conservative 3 hrs/week of Emily Klein's team manually inputting ConnectWise contract completions into Rev.io Billing. Your own discovery notes called this "very painful."</td>
+        <td style="text-align:right;color:var(--red);font-weight:700">$6,000</td>
+      </tr>
+      <tr>
+        <td>Billable hours spreadsheet process<br><div class="math">2 hrs/week × $38.46/hr × 52 weeks</div></td>
+        <td>Building and managing a manual spreadsheet to upload professional services hours into Rev.io Billing. Conservative 2 hrs/week — will grow as professional services scales.</td>
+        <td style="text-align:right;color:var(--red);font-weight:700">$4,000</td>
+      </tr>
+      <tr>
+        <td>Revenue leakage from billing errors<br><div class="math">"3-4 mistakes/day" × avg $50 error × 250 working days</div></td>
+        <td>By your own account, 3-4 billing errors daily. Conservatively modeled at $50 average impact per error — missed charges, incorrect quantities, wrong rates. Likely significantly higher.</td>
+        <td style="text-align:right;color:var(--red);font-weight:700">$37,500</td>
+      </tr>
+      <tr>
+        <td>Cross-system reporting overhead<br><div class="math">SQL database reconciliation + cross-platform data pulls for leadership</div></td>
+        <td>Pulling data from ConnectWise, Rev.io, and the SQL database separately to answer leadership questions. Conservative 2 hrs/week of senior staff time.</td>
+        <td style="text-align:right;color:var(--red);font-weight:700">$4,000</td>
+      </tr>
+      <tr>
+        <td>ConnectWise licensing cost (replaced by Rev.io PSA)<br><div class="math">Estimated CW annual cost for Scipio's user count</div></td>
+        <td>ConnectWise Manage licensing for Scipio's team. Rev.io PSA replaces this entirely — including all modules with no add-on costs.</td>
+        <td style="text-align:right;color:var(--red);font-weight:700">$8,400</td>
+      </tr>
+      <tr class="total-row">
+        <td>Total Estimated Annual Cost of Current State</td>
+        <td>Conservative. The revenue leakage number alone ($37.5K) justifies the switch. Everything else is margin recovery on top of that.</td>
+        <td style="text-align:right">$59,900 / year</td>
+      </tr>
+    </tbody>
+  </table>
+</div>
+
+<!-- WHAT CHANGES -->
+<div class="section">
+  <div class="section-tag">Section 3</div>
+  <h2>What Changes with Rev.io PSA</h2>
+  <p class="lead">Scipio already trusts Rev.io for billing. The move to Rev.io PSA isn't a platform switch — it's closing the gap between your PSA and your billing system by bringing them onto a shared dataset.</p>
+
+  <div class="compare">
+    <div class="compare-box today">
+      <div class="compare-label">Today — ConnectWise + Rev.io Billing Siloed</div>
+      <div class="compare-line"><strong>PSA:</strong> ConnectWise — no native Rev.io Billing integration</div>
+      <div class="compare-line"><strong>Billing handoff:</strong> Manual — finance re-enters every project completion into Rev.io</div>
+      <div class="compare-line"><strong>Billable hours:</strong> Spreadsheet upload process — grows with professional services volume</div>
+      <div class="compare-line"><strong>Data:</strong> CW + Rev.io Billing + SQL database — 3 separate sources</div>
+      <div class="compare-line"><strong>Billing accuracy:</strong> 3-4 errors/day — no proactive detection</div>
+      <div class="compare-line"><strong>Reporting:</strong> Manual cross-system pulls for leadership requests</div>
+      <div class="compare-line"><strong>AI:</strong> Not possible across fragmented systems</div>
+      <div class="compare-line"><strong>Quoting:</strong> Separate from billing — no auto-flow into contracts</div>
+      <div class="compare-line"><strong>Agreement tracking:</strong> Fragile CW-to-Rev.io API, specific setup required</div>
+    </div>
+    <div class="vs">→</div>
+    <div class="compare-box tomorrow">
+      <div class="compare-label">With Rev.io PSA — Shared Dataset</div>
+      <div class="compare-line"><strong>PSA:</strong> Rev.io PSA — native shared dataset with Rev.io Billing</div>
+      <div class="compare-line"><strong>Billing handoff:</strong> Eliminated — project completion auto-generates billing items in Rev.io</div>
+      <div class="compare-line"><strong>Billable hours:</strong> Time tracked in PSA flows directly to billing — no spreadsheet, no upload</div>
+      <div class="compare-line"><strong>Data:</strong> Single unified dataset — one source of truth for PSA, billing, and reporting</div>
+      <div class="compare-line"><strong>Billing accuracy:</strong> Every billable event captured automatically — leakage detected in real time</div>
+      <div class="compare-line"><strong>Reporting:</strong> SQL-level querying across unified data — leadership answers in seconds</div>
+      <div class="compare-line"><strong>AI (Revii):</strong> Revenue leakage detection, trend analysis, customer sentiment, ticket profitability</div>
+      <div class="compare-line"><strong>Quoting:</strong> Native e-signature → auto-creates contracts + billing items on approval</div>
+      <div class="compare-line"><strong>Agreement tracking:</strong> 15-min increments, overage detection, weekly alerts — all native, no API fragility</div>
+    </div>
+  </div>
+
+  <div class="highlight-box">
+    <div class="callout-label">The only PSA that shares a dataset with your billing platform</div>
+    <p>Scipio already bills through Rev.io. That means switching to Rev.io PSA isn't a migration to a new platform — <strong>it's eliminating the gap between two platforms you already own.</strong> No other PSA can offer this. ConnectWise will always require a separate billing integration that must be manually maintained. Rev.io PSA shares the same customer records, product catalog, and contract data as your billing platform — natively, with zero reconciliation.</p>
+  </div>
+</div>
+
+<!-- THE NUMBERS -->
+<div class="section">
+  <div class="section-tag">Section 4</div>
+  <h2>The Numbers</h2>
+  <p class="lead">Year 1 ROI — conservative, based entirely on documented discovery. The revenue leakage number alone drives the math.</p>
+
+  <div class="summary-grid">
+    <div class="sum-card" style="border-top:3px solid var(--red)">
+      <div class="sum-val" style="color:var(--red)">$59,900</div>
+      <div class="sum-label">Annual Cost of<br>Current State</div>
+    </div>
+    <div class="sum-card" style="border-top:3px solid var(--blue)">
+      <div class="sum-val" style="color:var(--blue)">~$13,200</div>
+      <div class="sum-label">Est. Annual Rev.io PSA Cost<br><span style="font-size:9px;color:var(--muted)">~$1,100/mo est.</span></div>
+    </div>
+    <div class="sum-card" style="border-top:3px solid var(--green)">
+      <div class="sum-val" style="color:var(--green)">~$46,700</div>
+      <div class="sum-label">Est. Year 1<br>Net Savings</div>
+    </div>
+    <div class="sum-card" style="border-top:3px solid var(--yellow)">
+      <div class="sum-val" style="color:var(--yellow)">&lt; 3 mo</div>
+      <div class="sum-label">Estimated<br>Payback Period</div>
+    </div>
+  </div>
+
+  <div class="callout">
+    <div class="callout-label">The real number that matters</div>
+    <p>The $37,500 revenue leakage estimate is conservative — it models just $50 per error at 3 errors per day. If any single one of those daily errors involves a missed monthly recurring charge on a managed services agreement, the real number is far higher. <strong>For Scipio, stopping the leakage alone pays for Rev.io PSA more than twice over in Year 1.</strong> Everything else — the time savings, the ConnectWise cost elimination, the AI reporting capabilities — is pure upside on top of that.</p>
+  </div>
+</div>
+
+<!-- NEXT STEPS -->
+<div class="section">
+  <div class="section-tag">Section 5</div>
+  <h2>What Happens Next</h2>
+
+  <div class="next-step">
+    <div class="step-num">1</div>
+    <div class="step-content">
+      <h4>Sandbox / deeper demo — pending</h4>
+      <p>Next steps in Salesforce are noted as "Pending Next Steps on Sandbox / Integrations." The priority is getting Scipio into a demo environment with real data so Emily Klein and the finance team can see exactly what billing looks like without the manual handoff.</p>
+    </div>
+  </div>
+  <div class="next-step">
+    <div class="step-num">2</div>
+    <div class="step-content">
+      <h4>Emily Klein demo — finance workflow focus</h4>
+      <p>Emily is the primary pain owner. The demo should show her exactly what happens when a project completes: automatic billing item generation in Rev.io with zero manual input. One view, one click, no spreadsheet. That is the moment this closes.</p>
+    </div>
+  </div>
+  <div class="next-step">
+    <div class="step-num">3</div>
+    <div class="step-content">
+      <h4>Stakeholder alignment — Terry Diamond (COO/EVP) + Jim (exec sponsor)</h4>
+      <p>Terry is focused on single pane of glass and integration strategy. Jim is the exec sponsor focused on M&A and consolidation. Both are already engaged. The ROI story for them is simple: one platform, zero reconciliation, AI reporting available from day one.</p>
+    </div>
+  </div>
+  <div class="next-step">
+    <div class="step-num">4</div>
+    <div class="step-content">
+      <h4>Migration from ConnectWise — shared dataset from day one</h4>
+      <p>Scipio already has customer data, billing history, and product catalog in Rev.io Billing. Migration from ConnectWise to Rev.io PSA means moving ticketing, projects, and agreements — not starting from scratch. The hard work is already done.</p>
+    </div>
+  </div>
+  <div class="next-step">
+    <div class="step-num">5</div>
+    <div class="step-content">
+      <h4>Onboarding — dedicated analyst, unlimited support until live</h4>
+      <p>A dedicated onboarding analyst works with Emily (finance), Mark Phillips (quoting/ops), and the technical team to configure the platform — 15-minute time increments, overage rules, professional services billing workflows, and Revii AI setup. Weekly calls and unlimited support until fully live.</p>
+    </div>
+  </div>
+</div>
+
+<div class="disclaimer">
+  This analysis is based on information shared by Scipio Technologies (Peace Communications) during discovery conversations with Jamie Butler at Rev.io, as documented in Salesforce opportunity notes. All cost estimates use conservative assumptions and a fully-loaded employee cost of $80,000/year ($38.46/hr). Revenue leakage modeled at $50/error × 3 errors/day × 250 working days. Actual savings will vary based on team size, implementation, and adoption. Rev.io makes no guarantees of specific financial outcomes.
+  <br><br>
+  Key contacts: Emily Klein (CFO) · Terry Diamond (EVP/COO) · Mark Phillips (Director of Operations) · Jim (Executive Sponsor)
+  <br><br>
+  Prepared by Rev.io Sales · Jamie Butler · Confidential · April 2026
+</div>
+
+</body>
+</html>
