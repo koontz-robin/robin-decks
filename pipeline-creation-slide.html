@@ -1,0 +1,321 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Pipeline Creation — Q2 2026</title>
+<link href="https://fonts.googleapis.com/css2?family=Open+Sans:wght@400;600;700;800&family=Montserrat:wght@800&display=swap" rel="stylesheet">
+<style>
+* { margin:0; padding:0; box-sizing:border-box; }
+html, body { height:100%; background:#f5f7fa; font-family:'Open Sans',Arial,sans-serif; color:#1D3756; }
+body { display:flex; flex-direction:column; min-height:100vh; }
+
+.top-stripe { height:4px; background:linear-gradient(90deg,#2399B5,#6EBE4F); flex-shrink:0; }
+
+.slide-header {
+  background:#1D3756; padding:14px 40px;
+  display:flex; align-items:center; justify-content:space-between; flex-shrink:0;
+}
+.logo { height:26px; }
+.slide-tag { font-size:9px; font-weight:700; letter-spacing:2px; text-transform:uppercase; color:#6EBE4F; margin-bottom:3px; }
+h1 { font-size:18px; font-weight:800; color:#fff; }
+.header-right { text-align:right; }
+.slide-date { font-size:10px; color:rgba(255,255,255,0.4); }
+
+.body-content { padding:14px 40px 10px; flex:1; display:flex; flex-direction:column; gap:10px; }
+
+/* Section label */
+.section-label {
+  font-size:11px; font-weight:800; text-transform:uppercase; letter-spacing:1px;
+  color:#1D3756; display:flex; align-items:center; gap:10px; margin-bottom:6px;
+}
+.section-rule { flex:1; height:1px; background:#dce4ed; }
+
+/* Month grid */
+.month-grid {
+  display:grid; grid-template-columns:repeat(4,1fr); gap:10px;
+}
+
+/* Card */
+.mo-card {
+  background:#fff; border-radius:9px; border:1px solid #e8edf3;
+  box-shadow:0 1px 4px rgba(29,55,86,0.05); overflow:hidden;
+}
+.mo-head {
+  padding:7px 12px; display:flex; justify-content:space-between; align-items:center;
+}
+.mo-head.total { background:#1D3756; }
+.mo-head.psa   { background:#0e7490; }
+.mo-head.rule  { background:#15803d; }
+.mo-month { font-size:11px; font-weight:800; color:#fff; }
+.mo-total-val {
+  font-family:'Montserrat',sans-serif; font-size:22px; font-weight:800; color:#fff; line-height:1;
+}
+.mo-total-label { font-size:7.5px; color:rgba(255,255,255,0.5); text-transform:uppercase; letter-spacing:1px; margin-top:1px; }
+
+.mo-body { padding:9px 12px; display:flex; flex-direction:column; gap:5px; }
+
+.mo-row { display:flex; justify-content:space-between; align-items:center; }
+.mo-row-label { font-size:9.5px; color:#8da0b4; font-weight:600; text-transform:uppercase; letter-spacing:0.8px; }
+.mo-row-val { font-family:'Montserrat',sans-serif; font-size:17px; font-weight:800; line-height:1; }
+.val-mg { color:#2399B5; }
+.val-sg { color:#6EBE4F; }
+.val-req { color:#8da0b4; }
+
+.mo-divider { height:1px; background:#f0f4f8; margin:2px 0; }
+
+/* Gap badge */
+.gap-badge {
+  display:inline-flex; align-items:center;
+  font-size:10px; font-weight:800; padding:2px 8px; border-radius:10px;
+}
+.gap-pos { background:#d1fae5; color:#065f46; }
+.gap-neg { background:#fee2e2; color:#991b1b; }
+
+/* Trend banner */
+.trend-banner {
+  background:#fff; border-radius:9px; border:1px solid #e8edf3;
+  box-shadow:0 1px 4px rgba(29,55,86,0.05);
+  padding:10px 16px; display:flex; align-items:center; gap:16px; flex-shrink:0;
+}
+.trend-stat { text-align:center; flex:1; }
+.trend-val { font-family:'Montserrat',sans-serif; font-size:20px; font-weight:800; }
+.trend-lbl { font-size:8px; color:#8da0b4; text-transform:uppercase; letter-spacing:1px; margin-top:2px; }
+.trend-divider { width:1px; height:36px; background:#e8edf3; }
+
+.slide-footer {
+  padding:7px 40px; display:flex; justify-content:space-between; align-items:center;
+  border-top:1px solid #e8edf3; flex-shrink:0;
+}
+.footer-left { font-size:9px; color:#b0bec5; }
+.footer-logo { height:15px; opacity:0.3; filter:brightness(0) invert(19%) sepia(96%) saturate(343%) hue-rotate(172deg) brightness(96%) contrast(90%); }
+</style>
+</head>
+<body>
+<div class="top-stripe"></div>
+
+<div class="slide-header">
+  <img src="https://7091219.fs1.hubspotusercontent-na1.net/hubfs/7091219/email-assets/logo-revio-white.png" alt="Rev.io" class="logo">
+  <div style="text-align:center">
+    <div class="slide-tag">Q2 2026 Board Presentation</div>
+    <h1>Pipeline Creation — Total & PSA Opps vs. 10:1 Coverage Requirement</h1>
+  </div>
+  <div class="header-right">
+    <div class="slide-date">April 29, 2026</div>
+  </div>
+</div>
+
+<div class="body-content">
+
+  <!-- Summary trend bar -->
+  <div class="trend-banner">
+    <div class="trend-stat">
+      <div class="trend-val" style="color:#1D3756;">952</div>
+      <div class="trend-lbl">Total Opps Created YTD</div>
+    </div>
+    <div class="trend-divider"></div>
+    <div class="trend-stat">
+      <div class="trend-val" style="color:#0e7490;">661</div>
+      <div class="trend-lbl">PSA Opps Created YTD</div>
+    </div>
+    <div class="trend-divider"></div>
+    <div class="trend-stat">
+      <div class="trend-val" style="color:#2399B5;">363</div>
+      <div class="trend-lbl">MG Opps YTD</div>
+    </div>
+    <div class="trend-divider"></div>
+    <div class="trend-stat">
+      <div class="trend-val" style="color:#6EBE4F;">588</div>
+      <div class="trend-lbl">SG Opps YTD (all)</div>
+    </div>
+    <div class="trend-divider"></div>
+    <div class="trend-stat">
+      <div class="trend-val" style="color:#dc2626;">-36</div>
+      <div class="trend-lbl">SG Gap vs. Req (cumulative)</div>
+    </div>
+    <div style="flex:2;background:#f5f7fa;border-radius:7px;padding:8px 12px;font-size:9.5px;color:#4a6280;line-height:1.5;">
+      At 10:1 pipeline coverage, PSA requires <strong style="color:#1D3756">930 SG opps Jan–Apr</strong>. Actuals: 514. Sales-gen shortfall has grown each month — team was ahead in Jan, essentially flat by Mar, and now running <strong style="color:#dc2626">behind target</strong> heading into Q2.
+    </div>
+  </div>
+
+  <!-- Section 1: Total Opps -->
+  <div>
+    <div class="section-label">Total Opps Created <span class="section-rule"></span></div>
+    <div class="month-grid">
+
+      <div class="mo-card">
+        <div class="mo-head total">
+          <div><div class="mo-month">January</div><div class="mo-total-label">Total Created</div></div>
+          <div class="mo-total-val">310</div>
+        </div>
+        <div class="mo-body">
+          <div class="mo-row"><span class="mo-row-label">Mktg Gen</span><span class="mo-row-val val-mg">119</span></div>
+          <div class="mo-divider"></div>
+          <div class="mo-row"><span class="mo-row-label">Sales Gen</span><span class="mo-row-val val-sg">191</span></div>
+        </div>
+      </div>
+
+      <div class="mo-card">
+        <div class="mo-head total">
+          <div><div class="mo-month">February</div><div class="mo-total-label">Total Created</div></div>
+          <div class="mo-total-val">231</div>
+        </div>
+        <div class="mo-body">
+          <div class="mo-row"><span class="mo-row-label">Mktg Gen</span><span class="mo-row-val val-mg">96</span></div>
+          <div class="mo-divider"></div>
+          <div class="mo-row"><span class="mo-row-label">Sales Gen</span><span class="mo-row-val val-sg">135</span></div>
+        </div>
+      </div>
+
+      <div class="mo-card">
+        <div class="mo-head total">
+          <div><div class="mo-month">March</div><div class="mo-total-label">Total Created</div></div>
+          <div class="mo-total-val">246</div>
+        </div>
+        <div class="mo-body">
+          <div class="mo-row"><span class="mo-row-label">Mktg Gen</span><span class="mo-row-val val-mg">94</span></div>
+          <div class="mo-divider"></div>
+          <div class="mo-row"><span class="mo-row-label">Sales Gen</span><span class="mo-row-val val-sg">152</span></div>
+        </div>
+      </div>
+
+      <div class="mo-card">
+        <div class="mo-head total">
+          <div><div class="mo-month">April</div><div class="mo-total-label">Total Created</div></div>
+          <div class="mo-total-val">164</div>
+        </div>
+        <div class="mo-body">
+          <div class="mo-row"><span class="mo-row-label">Mktg Gen</span><span class="mo-row-val val-mg">54</span></div>
+          <div class="mo-divider"></div>
+          <div class="mo-row"><span class="mo-row-label">Sales Gen</span><span class="mo-row-val val-sg">110</span></div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- Section 2: PSA Opps -->
+  <div>
+    <div class="section-label">PSA Opps Created <span class="section-rule"></span></div>
+    <div class="month-grid">
+
+      <div class="mo-card">
+        <div class="mo-head psa">
+          <div><div class="mo-month">January</div><div class="mo-total-label">PSA Created</div></div>
+          <div class="mo-total-val">227</div>
+        </div>
+        <div class="mo-body">
+          <div class="mo-row"><span class="mo-row-label">Mktg Gen</span><span class="mo-row-val val-mg">87</span></div>
+          <div class="mo-divider"></div>
+          <div class="mo-row"><span class="mo-row-label">Sales Gen</span><span class="mo-row-val val-sg">140</span></div>
+        </div>
+      </div>
+
+      <div class="mo-card">
+        <div class="mo-head psa">
+          <div><div class="mo-month">February</div><div class="mo-total-label">PSA Created</div></div>
+          <div class="mo-total-val">165</div>
+        </div>
+        <div class="mo-body">
+          <div class="mo-row"><span class="mo-row-label">Mktg Gen</span><span class="mo-row-val val-mg">70</span></div>
+          <div class="mo-divider"></div>
+          <div class="mo-row"><span class="mo-row-label">Sales Gen</span><span class="mo-row-val val-sg">95</span></div>
+        </div>
+      </div>
+
+      <div class="mo-card">
+        <div class="mo-head psa">
+          <div><div class="mo-month">March</div><div class="mo-total-label">PSA Created</div></div>
+          <div class="mo-total-val">152</div>
+        </div>
+        <div class="mo-body">
+          <div class="mo-row"><span class="mo-row-label">Mktg Gen</span><span class="mo-row-val val-mg">56</span></div>
+          <div class="mo-divider"></div>
+          <div class="mo-row"><span class="mo-row-label">Sales Gen</span><span class="mo-row-val val-sg">96</span></div>
+        </div>
+      </div>
+
+      <div class="mo-card">
+        <div class="mo-head psa">
+          <div><div class="mo-month">April</div><div class="mo-total-label">PSA Created</div></div>
+          <div class="mo-total-val">117</div>
+        </div>
+        <div class="mo-body">
+          <div class="mo-row"><span class="mo-row-label">Mktg Gen</span><span class="mo-row-val val-mg">41</span></div>
+          <div class="mo-divider"></div>
+          <div class="mo-row"><span class="mo-row-label">Sales Gen</span><span class="mo-row-val val-sg">76</span></div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- Section 3: 10:1 Rule Coverage -->
+  <div>
+    <div class="section-label">10:1 Coverage Requirement vs. Actual <span class="section-rule"></span></div>
+    <div class="month-grid">
+
+      <div class="mo-card">
+        <div class="mo-head rule">
+          <div><div class="mo-month">January</div><div class="mo-total-label">Opps Required</div></div>
+          <div class="mo-total-val">170</div>
+        </div>
+        <div class="mo-body">
+          <div class="mo-row"><span class="mo-row-label">MG Required</span><span class="mo-row-val val-req">102</span></div>
+          <div class="mo-row"><span class="mo-row-label">SG Required</span><span class="mo-row-val val-req">68</span></div>
+          <div class="mo-divider"></div>
+          <div class="mo-row"><span class="mo-row-label">SG Gap</span><span class="gap-badge gap-pos">+123</span></div>
+        </div>
+      </div>
+
+      <div class="mo-card">
+        <div class="mo-head rule">
+          <div><div class="mo-month">February</div><div class="mo-total-label">Opps Required</div></div>
+          <div class="mo-total-val">210</div>
+        </div>
+        <div class="mo-body">
+          <div class="mo-row"><span class="mo-row-label">MG Required</span><span class="mo-row-val val-req">126</span></div>
+          <div class="mo-row"><span class="mo-row-label">SG Required</span><span class="mo-row-val val-req">84</span></div>
+          <div class="mo-divider"></div>
+          <div class="mo-row"><span class="mo-row-label">SG Gap</span><span class="gap-badge gap-pos">+12</span></div>
+        </div>
+      </div>
+
+      <div class="mo-card">
+        <div class="mo-head rule">
+          <div><div class="mo-month">March</div><div class="mo-total-label">Opps Required</div></div>
+          <div class="mo-total-val">250</div>
+        </div>
+        <div class="mo-body">
+          <div class="mo-row"><span class="mo-row-label">MG Required</span><span class="mo-row-val val-req">150</span></div>
+          <div class="mo-row"><span class="mo-row-label">SG Required</span><span class="mo-row-val val-req">100</span></div>
+          <div class="mo-divider"></div>
+          <div class="mo-row"><span class="mo-row-label">SG Gap</span><span class="gap-badge gap-neg">-4</span></div>
+        </div>
+      </div>
+
+      <div class="mo-card">
+        <div class="mo-head rule">
+          <div><div class="mo-month">April</div><div class="mo-total-label">Opps Required</div></div>
+          <div class="mo-total-val">300</div>
+        </div>
+        <div class="mo-body">
+          <div class="mo-row"><span class="mo-row-label">MG Required</span><span class="mo-row-val val-req">180</span></div>
+          <div class="mo-row"><span class="mo-row-label">SG Required</span><span class="mo-row-val val-req">120</span></div>
+          <div class="mo-divider"></div>
+          <div class="mo-row"><span class="mo-row-label">SG Gap</span><span class="gap-badge gap-neg">-44</span></div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+</div>
+
+<div class="slide-footer">
+  <div class="footer-left">Rev.io Sales Intelligence · Q2 2026 Board Presentation · April 29, 2026</div>
+  <img src="https://7091219.fs1.hubspotusercontent-na1.net/hubfs/7091219/email-assets/logo-revio-white.png" alt="Rev.io" class="footer-logo">
+</div>
+
+</body>
+</html>
