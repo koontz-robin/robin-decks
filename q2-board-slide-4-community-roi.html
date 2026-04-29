@@ -1,0 +1,402 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Q2 2026 Community ROI — Rev.io Board</title>
+<link href="https://fonts.googleapis.com/css2?family=Open+Sans:wght@400;600;700;800&family=Montserrat:wght@800&display=swap" rel="stylesheet">
+<style>
+* { margin: 0; padding: 0; box-sizing: border-box; }
+html, body { height: 100%; background: #f5f7fa; font-family: 'Open Sans', Arial, sans-serif; color: #1D3756; }
+body { display: flex; flex-direction: column; min-height: 100vh; }
+
+.top-stripe { height: 4px; background: linear-gradient(90deg, #2399B5, #6EBE4F); flex-shrink: 0; }
+
+.slide-header {
+  background: #1D3756; padding: 14px 40px;
+  display: flex; align-items: center; justify-content: space-between; flex-shrink: 0;
+}
+.logo { height: 26px; }
+.slide-tag { font-size: 9px; font-weight: 700; letter-spacing: 2px; text-transform: uppercase; color: #6EBE4F; margin-bottom: 3px; }
+h1 { font-size: 18px; font-weight: 800; color: #fff; }
+.header-sub { font-size: 10px; color: rgba(255,255,255,0.45); margin-top: 2px; }
+.header-right { text-align: right; }
+.slide-date { font-size: 10px; color: rgba(255,255,255,0.4); }
+.slide-num { font-size: 10px; color: rgba(255,255,255,0.25); margin-top: 2px; }
+
+.body-content { padding: 14px 40px 10px; flex: 1; display: flex; flex-direction: column; gap: 10px; }
+
+/* ── TOP 6-STAT SUMMARY BAR ── */
+.summary-grid {
+  display: grid;
+  grid-template-columns: repeat(6, 1fr);
+  gap: 10px;
+  flex-shrink: 0;
+}
+.sum-card {
+  background: #fff;
+  border-radius: 9px;
+  border: 1px solid #e8edf3;
+  border-top: 3px solid var(--sc);
+  padding: 11px 13px;
+  box-shadow: 0 1px 3px rgba(29,55,86,0.05);
+}
+.sum-card.bookings   { --sc: #2399B5; }
+.sum-card.commerce   { --sc: #6EBE4F; }
+.sum-card.linkedin   { --sc: #2399B5; }
+.sum-card.pac        { --sc: #6EBE4F; }
+.sum-card.partners   { --sc: #2399B5; }
+.sum-card.roi        { --sc: #6EBE4F; }
+
+.sum-eyebrow { font-size: 8px; font-weight: 700; letter-spacing: 1.5px; text-transform: uppercase; color: #8da0b4; margin-bottom: 5px; }
+.sum-val { font-family: 'Montserrat', sans-serif; font-size: 17px; font-weight: 800; color: #1D3756; line-height: 1.15; }
+.sum-val span { display: block; }
+.sum-note { font-size: 9px; color: #64748b; margin-top: 4px; line-height: 1.3; }
+.sum-note .green { color: #3a8a50; font-weight: 700; }
+.sum-note .teal { color: #2399B5; font-weight: 700; }
+
+/* ── MAIN GRID ── */
+.main-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1.1fr;
+  gap: 10px;
+  flex: 1;
+  min-height: 0;
+}
+
+.section-card {
+  background: #fff;
+  border-radius: 10px;
+  border: 1px solid #e8edf3;
+  box-shadow: 0 1px 4px rgba(29,55,86,0.05);
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+}
+.card-head {
+  padding: 10px 14px; flex-shrink: 0;
+  background: var(--chbg);
+}
+.section-card.roi-tracker { --chbg: #2399B5; }
+.section-card.circle { --chbg: #1D3756; }
+.section-card.pac { --chbg: #6EBE4F; }
+.section-card.pac .card-head { background: linear-gradient(90deg, #6EBE4F, #2399B5); }
+
+.card-eyebrow { font-size: 8px; font-weight: 700; letter-spacing: 1.5px; text-transform: uppercase; color: rgba(255,255,255,0.6); margin-bottom: 2px; }
+.card-title { font-size: 13px; font-weight: 800; color: #fff; }
+.card-body { padding: 11px 13px; flex: 1; display: flex; flex-direction: column; gap: 8px; }
+
+/* ROI Table */
+.roi-table { width: 100%; border-collapse: collapse; }
+.roi-table th { font-size: 8px; font-weight: 700; text-transform: uppercase; letter-spacing: 1px; color: #8da0b4; padding: 3px 6px; border-bottom: 1px solid #e8edf3; text-align: right; }
+.roi-table th:first-child { text-align: left; }
+.roi-table td { font-size: 10px; color: #1D3756; padding: 5px 6px; border-bottom: 1px solid #f0f4f8; text-align: right; }
+.roi-table td:first-child { text-align: left; }
+.roi-table .total-row td { font-weight: 800; background: #f5f7fa; border-top: 2px solid #dce4ed; color: #1D3756; }
+.roi-table .total-row td.green { color: #3a8a50; }
+
+.roi-examples {
+  background: #f5f7fa; border-radius: 7px; padding: 8px 10px;
+  border-left: 3px solid #2399B5;
+  font-size: 9px; color: #4a6280; line-height: 1.5;
+}
+.roi-examples strong { color: #1D3756; }
+
+.roi-total-bar {
+  background: #1D3756; border-radius: 7px; padding: 10px 13px;
+  display: flex; align-items: center; justify-content: space-between; margin-top: auto;
+}
+.rtb-label { font-size: 9px; color: rgba(255,255,255,0.5); margin-bottom: 2px; }
+.rtb-val { font-family: 'Montserrat', sans-serif; font-size: 18px; font-weight: 800; }
+.rtb-val.green { color: #6EBE4F; }
+.rtb-val.muted { color: rgba(255,255,255,0.35); font-size: 14px; text-decoration: line-through; }
+.rtb-note { font-size: 9px; color: rgba(255,255,255,0.4); text-align: right; max-width: 150px; line-height: 1.3; }
+
+/* Circle Platform table */
+.circle-table { width: 100%; border-collapse: collapse; }
+.circle-table th { font-size: 8px; font-weight: 700; text-transform: uppercase; letter-spacing: 1px; background: #0f172a; color: rgba(255,255,255,0.6); padding: 6px 8px; text-align: center; }
+.circle-table th:first-child { text-align: left; background: #0f172a; }
+.circle-table td { font-size: 10.5px; padding: 6px 8px; border-bottom: 1px solid #f0f4f8; text-align: center; color: #1D3756; }
+.circle-table td:first-child { text-align: left; font-weight: 600; }
+.circle-table tr:nth-child(even) td { background: #f9fbfc; }
+.circle-table .mar-col { font-weight: 800; color: #2399B5; }
+
+.trend-chip {
+  display: inline-flex; align-items: center; gap: 4px;
+  font-size: 9px; font-weight: 700; color: #3a8a50;
+  background: #e8f7f0; border-radius: 4px; padding: 2px 7px; margin-left: 6px;
+}
+
+.circle-growth {
+  display: grid; grid-template-columns: repeat(3, 1fr); gap: 7px;
+}
+.cg-stat {
+  background: #f5f7fa; border-radius: 7px; padding: 9px 10px; text-align: center;
+  border-top: 2px solid var(--cgs);
+}
+.cg-stat.mem { --cgs: #2399B5; }
+.cg-stat.active { --cgs: #6EBE4F; }
+.cg-stat.univ { --cgs: #2399B5; }
+.cg-stat-val { font-family: 'Montserrat', sans-serif; font-size: 20px; font-weight: 800; color: #1D3756; }
+.cg-stat-label { font-size: 8px; color: #8da0b4; text-transform: uppercase; letter-spacing: 1px; margin-top: 2px; }
+.cg-stat-trend { font-size: 9px; font-weight: 700; color: #3a8a50; margin-top: 3px; }
+
+.partners-box {
+  background: #f5f7fa; border-radius: 7px; padding: 9px 11px; border-left: 3px solid #6EBE4F;
+}
+.partners-title { font-size: 9px; font-weight: 700; letter-spacing: 1px; text-transform: uppercase; color: #8da0b4; margin-bottom: 5px; }
+.partners-names { font-size: 13px; font-weight: 800; color: #1D3756; line-height: 1.4; }
+.partners-note { font-size: 9px; color: #64748b; margin-top: 3px; }
+
+/* PAC card */
+.pac-callout {
+  background: #f0f9f4; border-radius: 7px; border-left: 4px solid #6EBE4F; padding: 10px 12px;
+}
+.pac-callout-title { font-size: 10px; font-weight: 800; color: #1D3756; margin-bottom: 5px; }
+.pac-callout-text { font-size: 9.5px; color: #4a6280; line-height: 1.45; }
+.pac-callout-text strong { color: #1D3756; }
+
+.pac-bullets { display: flex; flex-direction: column; gap: 5px; }
+.pac-bullet {
+  display: flex; align-items: flex-start; gap: 7px;
+  padding: 6px 9px; background: #f5f7fa; border-radius: 6px; font-size: 9.5px; color: #1D3756; line-height: 1.35;
+}
+.pac-dot { color: #6EBE4F; font-size: 14px; flex-shrink: 0; margin-top: -1px; }
+
+.pac-bottom {
+  background: #1D3756; border-radius: 7px; padding: 9px 12px; margin-top: auto;
+}
+.pac-bottom-title { font-size: 9px; font-weight: 700; letter-spacing: 1px; text-transform: uppercase; color: #6EBE4F; margin-bottom: 4px; }
+.pac-bottom-text { font-size: 9.5px; color: rgba(255,255,255,0.7); line-height: 1.4; }
+.pac-bottom-text strong { color: #fff; }
+
+/* Footer */
+.slide-footer {
+  padding: 8px 40px; display: flex; justify-content: space-between; align-items: center;
+  border-top: 1px solid #e8edf3; flex-shrink: 0;
+}
+.footer-left { font-size: 9px; color: #b0bec5; }
+.footer-logo { height: 16px; opacity: 0.3; filter: brightness(0) invert(19%) sepia(96%) saturate(343%) hue-rotate(172deg) brightness(96%) contrast(90%); }
+</style>
+</head>
+<body>
+
+<div class="top-stripe"></div>
+
+<div class="slide-header">
+  <img src="https://7091219.fs1.hubspotusercontent-na1.net/hubfs/7091219/email-assets/logo-revio-white.png" alt="Rev.io" class="logo">
+  <div style="text-align:center">
+    <div class="slide-tag">Q2 2026 Board Presentation</div>
+    <h1>Community Program — ROI, Platform Growth & Partner Advisory Council</h1>
+    <div class="header-sub">Brook Lee, Senior Director of Community · April 2026</div>
+  </div>
+  <div class="header-right">
+    <div class="slide-date">April 28, 2026</div>
+    <div class="slide-num">Slide 4</div>
+  </div>
+</div>
+
+<div class="body-content">
+
+  <!-- 6-stat summary -->
+  <div class="summary-grid">
+    <div class="sum-card bookings">
+      <div class="sum-eyebrow">Channel Bookings</div>
+      <div class="sum-val">$18,388 <span>YTD</span></div>
+      <div class="sum-note">vs $24K H1 target — <span class="teal">accelerating</span>; lead source fix will improve H2 figures</div>
+    </div>
+    <div class="sum-card commerce">
+      <div class="sum-eyebrow">CommerceHub</div>
+      <div class="sum-val">11 active <span>4 in review</span></div>
+      <div class="sum-note">15–20 more ready to activate when transactional layer ships</div>
+    </div>
+    <div class="sum-card linkedin">
+      <div class="sum-eyebrow">LinkedIn & Earned Value</div>
+      <div class="sum-val">333K <span>impressions Q1</span></div>
+      <div class="sum-note"><span class="green">$72.9K</span> savings/earned · conservative & auditable</div>
+    </div>
+    <div class="sum-card pac">
+      <div class="sum-eyebrow">Partner Advisory Council</div>
+      <div class="sum-val">In Dev</div>
+      <div class="sum-note">Key unlock for PSA adoption — peer validation at scale</div>
+    </div>
+    <div class="sum-card partners">
+      <div class="sum-eyebrow">Partnerships in Dev.</div>
+      <div class="sum-val">AT&T · Verizon <span>Sangoma · VoIP.ms</span></div>
+      <div class="sum-note">Active — not yet in booking figures</div>
+    </div>
+    <div class="sum-card roi">
+      <div class="sum-eyebrow">Program ROI</div>
+      <div class="sum-val">~$91K <span>documented</span></div>
+      <div class="sum-note">vs ~$360K base cost · <span class="green">ahead of 18–24 mo. benchmark</span></div>
+    </div>
+  </div>
+
+  <!-- Main 3-col -->
+  <div class="main-grid">
+
+    <!-- Col 1: ROI Value Tracker -->
+    <div class="section-card roi-tracker">
+      <div class="card-head">
+        <div class="card-eyebrow">Community ROI Value Tracker</div>
+        <div class="card-title">$72,875 Earned / Saved YTD</div>
+      </div>
+      <div class="card-body">
+        <table class="roi-table">
+          <thead>
+            <tr>
+              <th>Category</th>
+              <th># Items</th>
+              <th>Net Savings</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>Media placements &amp; earned coverage</td>
+              <td>10</td>
+              <td>$24,200</td>
+            </tr>
+            <tr>
+              <td>Events — passes, discounts &amp; negotiations</td>
+              <td>6</td>
+              <td>$48,675</td>
+            </tr>
+            <tr class="total-row">
+              <td>Total (vs. $110,150 market value)</td>
+              <td>16</td>
+              <td class="green">$72,875</td>
+            </tr>
+          </tbody>
+        </table>
+        <div class="roi-examples">
+          <strong>Selected items:</strong> Pax8 Calgary ($30K value, zero cash — traded for Summit presence) · TMT Bootcamp ($5K saved) · BootCamp Dallas (4 vendor passes, $6K value) · Channel Company interview with Evan ($5K earned media at no cost) · ECN interview + N-able podcast with Brook ($4.5K + $2K). All valuations auditable against published rate cards.
+        </div>
+        <div class="roi-total-bar">
+          <div>
+            <div class="rtb-label">Base Program Cost</div>
+            <div class="rtb-val muted">~$360K</div>
+          </div>
+          <div style="text-align:center">
+            <div class="rtb-label">Documented Return</div>
+            <div class="rtb-val green">~$91K</div>
+          </div>
+          <div class="rtb-note">Tracking toward cost-neutrality in Year 1 — ahead of typical 18–24 month benchmark</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Col 2: Circle Platform -->
+    <div class="section-card circle">
+      <div class="card-head">
+        <div class="card-eyebrow">Community — Circle Platform</div>
+        <div class="card-title">Members Growing · Engagement Rising</div>
+      </div>
+      <div class="card-body">
+        <table class="circle-table">
+          <thead>
+            <tr>
+              <th>Metric</th>
+              <th>Jan</th>
+              <th>Feb</th>
+              <th class="mar-col">Mar</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>Total Community Members</td>
+              <td>71</td>
+              <td>97</td>
+              <td class="mar-col">126 <span class="trend-chip">↑77%</span></td>
+            </tr>
+            <tr>
+              <td>Active Members</td>
+              <td>54</td>
+              <td>59</td>
+              <td class="mar-col">79 <span class="trend-chip">↑46%</span></td>
+            </tr>
+            <tr>
+              <td>University Completion Rate</td>
+              <td>14%</td>
+              <td>16%</td>
+              <td class="mar-col">18% <span class="trend-chip">↑4pp</span></td>
+            </tr>
+          </tbody>
+        </table>
+
+        <div class="circle-growth">
+          <div class="cg-stat mem">
+            <div class="cg-stat-val">126</div>
+            <div class="cg-stat-label">Members (Mar)</div>
+            <div class="cg-stat-trend">+77% since Jan</div>
+          </div>
+          <div class="cg-stat active">
+            <div class="cg-stat-val">63%</div>
+            <div class="cg-stat-label">Active Rate</div>
+            <div class="cg-stat-trend">79 of 126</div>
+          </div>
+          <div class="cg-stat univ">
+            <div class="cg-stat-val">18%</div>
+            <div class="cg-stat-label">Univ. Complete</div>
+            <div class="cg-stat-trend">+4pp QTD</div>
+          </div>
+        </div>
+
+        <div class="partners-box">
+          <div class="partners-title">Partnerships in Development</div>
+          <div class="partners-names">AT&T · Verizon · Sangoma · VoIP.ms</div>
+          <div class="partners-note">Active relationships — not yet reflected in any booking figures. Pipeline upside ahead.</div>
+        </div>
+
+        <div style="background:#f5f7fa;border-radius:7px;padding:9px 11px;border-left:3px solid #2399B5;">
+          <div style="font-size:9px;font-weight:700;color:#8da0b4;text-transform:uppercase;letter-spacing:1px;margin-bottom:4px;">MSP Unfiltered Podcast Partners</div>
+          <div style="font-size:10.5px;font-weight:700;color:#1D3756;">N-Able · Acronis · ScalePad · MSPHub</div>
+          <div style="font-size:9px;color:#64748b;margin-top:2px;">Joint GTM committed through EOY 2026 · extends reach into established partner audiences</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Col 3: PAC -->
+    <div class="section-card pac">
+      <div class="card-head">
+        <div class="card-eyebrow">Strategic Initiative</div>
+        <div class="card-title">Partner Advisory Council (PAC)</div>
+      </div>
+      <div class="card-body">
+        <div class="pac-callout">
+          <div class="pac-callout-title">Why the PAC Matters — PSA Adoption</div>
+          <div class="pac-callout-text">The single biggest barrier to PSA adoption among our comms client base is <strong>inertia</strong>. Operators on legacy systems won't migrate without a compelling reason and peer validation. The PAC creates both — senior decision-makers get a voice in shaping the roadmap, which <strong>directly accelerates their own adoption</strong>, and creates a peer network where migration decisions are validated laterally rather than sold top-down.</div>
+        </div>
+
+        <div class="pac-bullets">
+          <div class="pac-bullet">
+            <div class="pac-dot">›</div>
+            PAC structure in development — inaugural cohort being identified from existing client and partner base
+          </div>
+          <div class="pac-bullet">
+            <div class="pac-dot">›</div>
+            Focus: communications providers with legacy PSA dependencies who are evaluating or have expressed interest in Rev.io PSA
+          </div>
+          <div class="pac-bullet">
+            <div class="pac-dot">›</div>
+            Expected output: roadmap input, peer advocacy, and referral pipeline from a group with credibility in the market
+          </div>
+        </div>
+
+        <div class="pac-bottom">
+          <div class="pac-bottom-title">The Strategic Unlock</div>
+          <div class="pac-bottom-text">This is how legacy PSA incumbents get displaced — <strong>not through feature comparisons, but through community trust.</strong> PAC members become internal champions and trusted referral sources for their peer networks.</div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<div class="slide-footer">
+  <div class="footer-left">Rev.io Sales Intelligence · Q2 2026 Board Presentation · April 28, 2026</div>
+  <div style="font-size:9px;color:#b0bec5">Community Program · Brook Lee, Senior Director of Community</div>
+  <img src="https://7091219.fs1.hubspotusercontent-na1.net/hubfs/7091219/email-assets/logo-revio-white.png" alt="Rev.io" class="footer-logo">
+</div>
+
+</body>
+</html>
