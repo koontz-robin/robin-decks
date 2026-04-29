@@ -42,7 +42,7 @@ h1 { font-size: 22px; font-weight: 800; color: #fff; }
 .slide-num { font-size: 11px; color: rgba(255,255,255,0.3); margin-top: 3px; }
 
 /* Body */
-.body-content { padding: 28px 48px 20px; }
+.body-content { padding: 20px 48px 16px; }
 
 /* Context bar */
 .context-bar {
@@ -84,6 +84,69 @@ h1 { font-size: 22px; font-weight: 800; color: #fff; }
   padding-left: 16px;
 }
 .context-narrative strong { color: #1D3756; }
+
+/* Urgency / No Voice section */
+.urgency-label {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 12px;
+}
+.urgency-eyebrow {
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  color: #e74c3c;
+  white-space: nowrap;
+}
+.urgency-rule { flex: 1; height: 1px; background: #fcd5d0; }
+
+.nv-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 12px;
+  margin-bottom: 12px;
+}
+.nv-card {
+  background: #1D3756;
+  border-radius: 10px;
+  padding: 14px 16px;
+  border-top: 3px solid var(--nv-accent);
+}
+.nv-card.jan { --nv-accent: #2399B5; }
+.nv-card.feb { --nv-accent: #6EBE4F; }
+.nv-card.mar { --nv-accent: #2399B5; }
+.nv-card.apr { --nv-accent: #e67e22; }
+
+.nv-month { font-size: 9px; font-weight: 700; letter-spacing: 1.5px; text-transform: uppercase; color: rgba(255,255,255,0.4); margin-bottom: 6px; }
+.nv-pct { font-family: 'Montserrat', sans-serif; font-size: 32px; font-weight: 800; line-height: 1; }
+.nv-pct-label { font-size: 10px; color: rgba(255,255,255,0.45); margin-bottom: 10px; margin-top: 2px; }
+.nv-counts { display: flex; align-items: center; justify-content: space-between; background: rgba(255,255,255,0.07); border-radius: 6px; padding: 7px 10px; }
+.nv-count { text-align: center; }
+.nv-num { display: block; font-family: 'Montserrat', sans-serif; font-size: 16px; font-weight: 800; color: #fff; }
+.nv-clabel { display: block; font-size: 8px; text-transform: uppercase; letter-spacing: 1px; color: rgba(255,255,255,0.35); margin-top: 2px; }
+.nv-cdivider { width: 1px; height: 28px; background: rgba(255,255,255,0.1); }
+
+.nv-summary-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+  margin-bottom: 20px;
+}
+.nv-summary-card {
+  border-radius: 10px;
+  padding: 14px 16px;
+  display: flex;
+  align-items: center;
+  gap: 14px;
+}
+.nv-summary-card.ytd { background: #1D3756; border-left: 4px solid #6EBE4F; }
+.nv-summary-card.one-in-seven { background: #1D3756; border-left: 4px solid #2399B5; }
+.nv-summary-icon { font-size: 22px; flex-shrink: 0; }
+.nv-summary-val { font-family: 'Montserrat', sans-serif; font-size: 24px; font-weight: 800; line-height: 1; }
+.nv-summary-title { font-size: 11px; color: rgba(255,255,255,0.75); margin-top: 3px; font-weight: 600; }
+.nv-summary-sub { font-size: 10px; color: rgba(255,255,255,0.4); margin-top: 3px; line-height: 1.4; }
 
 /* Two-col initiative layout */
 .initiatives {
@@ -309,32 +372,71 @@ h1 { font-size: 22px; font-weight: 800; color: #fff; }
 <!-- Body -->
 <div class="body-content">
 
-  <!-- Context bar -->
-  <div class="context-bar">
-    <div class="context-bar-label">Why Now</div>
-    <div class="context-stats">
-      <div class="ctx-stat">
-        <div class="ctx-stat-val">+89%</div>
-        <div class="ctx-stat-label">AE productivity gain</div>
-      </div>
-      <div class="context-divider"></div>
-      <div class="ctx-stat">
-        <div class="ctx-stat-val green">2.6×</div>
-        <div class="ctx-stat-label">Peak SDR ROI (Mar)</div>
-      </div>
-      <div class="context-divider"></div>
-      <div class="ctx-stat">
-        <div class="ctx-stat-val">40–50K</div>
-        <div class="ctx-stat-label">MSPs in North America</div>
-      </div>
-      <div class="context-divider"></div>
-      <div class="ctx-stat">
-        <div class="ctx-stat-val green">72</div>
-        <div class="ctx-stat-label">Billing clients w/ MSP signals</div>
+  <!-- MSP No Voice urgency section -->
+  <div class="urgency-label">
+    <span class="urgency-eyebrow">The Problem We're Not Solving Fast Enough</span>
+    <span class="urgency-rule"></span>
+  </div>
+
+  <div class="nv-grid">
+    <div class="nv-card jan">
+      <div class="nv-month">January 2026</div>
+      <div class="nv-pct" style="color:#2399B5">14.2%</div>
+      <div class="nv-pct-label">of total opps created</div>
+      <div class="nv-counts">
+        <div class="nv-count"><span class="nv-num" style="color:#2399B5">41</span><span class="nv-clabel">No Voice</span></div>
+        <div class="nv-cdivider"></div>
+        <div class="nv-count"><span class="nv-num">288</span><span class="nv-clabel">Total</span></div>
       </div>
     </div>
-    <div class="context-narrative">
-      The team is more efficient than ever — but efficiency alone won't unlock the MSP market at scale. <strong>We need smarter outreach tooling and higher-caliber talent</strong> to convert the opportunity in front of us.
+    <div class="nv-card feb">
+      <div class="nv-month">February 2026</div>
+      <div class="nv-pct" style="color:#6EBE4F">17.3%</div>
+      <div class="nv-pct-label">of total opps created</div>
+      <div class="nv-counts">
+        <div class="nv-count"><span class="nv-num" style="color:#6EBE4F">39</span><span class="nv-clabel">No Voice</span></div>
+        <div class="nv-cdivider"></div>
+        <div class="nv-count"><span class="nv-num">225</span><span class="nv-clabel">Total</span></div>
+      </div>
+    </div>
+    <div class="nv-card mar">
+      <div class="nv-month">March 2026</div>
+      <div class="nv-pct" style="color:#2399B5">12.3%</div>
+      <div class="nv-pct-label">of total opps created</div>
+      <div class="nv-counts">
+        <div class="nv-count"><span class="nv-num" style="color:#2399B5">27</span><span class="nv-clabel">No Voice</span></div>
+        <div class="nv-cdivider"></div>
+        <div class="nv-count"><span class="nv-num">219</span><span class="nv-clabel">Total</span></div>
+      </div>
+    </div>
+    <div class="nv-card apr">
+      <div class="nv-month">April 2026</div>
+      <div class="nv-pct" style="color:#e67e22">15.4%</div>
+      <div class="nv-pct-label">of total opps created</div>
+      <div class="nv-counts">
+        <div class="nv-count"><span class="nv-num" style="color:#e67e22">28</span><span class="nv-clabel">No Voice</span></div>
+        <div class="nv-cdivider"></div>
+        <div class="nv-count"><span class="nv-num">182</span><span class="nv-clabel">Total</span></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="nv-summary-row">
+    <div class="nv-summary-card ytd">
+      <div class="nv-summary-icon">📊</div>
+      <div>
+        <div class="nv-summary-val" style="color:#6EBE4F">14.8%</div>
+        <div class="nv-summary-title">YTD Average — MSP No Voice Share</div>
+        <div class="nv-summary-sub">135 of 914 total opportunities created in 2026</div>
+      </div>
+    </div>
+    <div class="nv-summary-card one-in-seven">
+      <div class="nv-summary-icon">💡</div>
+      <div>
+        <div class="nv-summary-val" style="color:#2399B5">~1 in 7</div>
+        <div class="nv-summary-title">New opps come from MSP – No Voice accounts</div>
+        <div class="nv-summary-sub">Consistent signal month-over-month — these prospects can't buy without voice. We need to fix that.</div>
+      </div>
     </div>
   </div>
 
