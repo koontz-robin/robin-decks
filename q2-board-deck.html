@@ -1,0 +1,2301 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Q2 2026 Board Presentation — Rev.io Sales</title>
+<link href="https://fonts.googleapis.com/css2?family=Open+Sans:wght@400;600;700;800&family=Montserrat:wght@800&display=swap" rel="stylesheet">
+<style>
+/* ====== SLIDE: Sales Team Efficiency ====== */
+
+* { margin: 0; padding: 0; box-sizing: border-box; }
+body {
+  background: #f5f7fa;
+  font-family: 'Open Sans', Arial, sans-serif;
+  color: #1D3756;
+  min-height: 100vh;
+  padding: 0;
+}
+
+/* Top stripe */
+.top-stripe {
+  height: 4px;
+  background: linear-gradient(90deg, #2399B5, #6EBE4F);
+}
+
+/* Header bar */
+.slide-header {
+  background: #1D3756;
+  padding: 20px 48px 20px 48px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+.logo { height: 32px; }
+.header-center {}
+.slide-tag {
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  color: #6EBE4F;
+  margin-bottom: 4px;
+}
+h1 {
+  font-size: 22px;
+  font-weight: 800;
+  color: #fff;
+  line-height: 1.1;
+}
+.header-right {
+  text-align: right;
+}
+.slide-date {
+  font-size: 11px;
+  color: rgba(255,255,255,0.45);
+  letter-spacing: 0.5px;
+}
+.slide-num {
+  font-size: 11px;
+  color: rgba(255,255,255,0.3);
+  margin-top: 3px;
+}
+
+/* Body */
+.body-content {
+  padding: 32px 48px 28px;
+}
+
+/* Section header */
+.section-header {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 16px;
+}
+.section-label {
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  color: #2399B5;
+}
+.section-rule {
+  flex: 1;
+  height: 1px;
+  background: #dce4ed;
+}
+
+/* AE Cards */
+.ae-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 16px;
+  margin-bottom: 16px;
+}
+.ae-card {
+  background: #fff;
+  border-radius: 10px;
+  padding: 20px 18px 16px;
+  position: relative;
+  overflow: hidden;
+  border: 1px solid #e8edf3;
+  box-shadow: 0 1px 4px rgba(29,55,86,0.06);
+}
+.ae-card::before {
+  content: '';
+  position: absolute;
+  top: 0; left: 0; right: 0;
+  height: 4px;
+  background: var(--accent);
+}
+.ae-card.jan { --accent: #2399B5; }
+.ae-card.feb { --accent: #6EBE4F; }
+.ae-card.mar { --accent: #2399B5; }
+.ae-card.apr { --accent: #6EBE4F; }
+
+.ae-month {
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 1.5px;
+  text-transform: uppercase;
+  color: #8da0b4;
+  margin-bottom: 8px;
+}
+.ae-meetings {
+  font-family: 'Montserrat', sans-serif;
+  font-size: 48px;
+  font-weight: 800;
+  line-height: 1;
+  color: var(--accent);
+}
+.ae-meetings-label {
+  font-size: 11px;
+  color: #8da0b4;
+  margin-bottom: 12px;
+  margin-top: 2px;
+}
+.ae-meta {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  background: #f5f7fa;
+  border-radius: 6px;
+  padding: 8px 10px;
+}
+.ae-aes {}
+.ae-aes-num { font-family: 'Montserrat', sans-serif; font-size: 18px; font-weight: 800; color: #1D3756; }
+.ae-aes-label { font-size: 9px; text-transform: uppercase; letter-spacing: 1px; color: #8da0b4; margin-top: 1px; }
+.ae-divider { width: 1px; height: 30px; background: #dce4ed; }
+.ae-rate {}
+.ae-rate-num { font-family: 'Montserrat', sans-serif; font-size: 18px; font-weight: 800; color: #1D3756; }
+.ae-rate-label { font-size: 9px; text-transform: uppercase; letter-spacing: 1px; color: #8da0b4; margin-top: 1px; }
+
+/* Trend banner */
+.trend-banner {
+  background: #1D3756;
+  border-radius: 10px;
+  padding: 14px 20px;
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  margin-bottom: 24px;
+}
+.trend-text {
+  font-size: 13px;
+  color: rgba(255,255,255,0.75);
+  flex: 1;
+  line-height: 1.5;
+}
+.trend-text strong { color: #6EBE4F; }
+.trend-stats {
+  display: flex;
+  gap: 0;
+}
+.trend-stat {
+  text-align: center;
+  padding: 0 20px;
+  border-left: 1px solid rgba(255,255,255,0.1);
+}
+.trend-stat-val {
+  font-family: 'Montserrat', sans-serif;
+  font-size: 20px;
+  font-weight: 800;
+  color: #fff;
+}
+.trend-stat-val.green { color: #6EBE4F; }
+.trend-stat-val.teal { color: #2399B5; }
+.trend-stat-label {
+  font-size: 9px;
+  color: rgba(255,255,255,0.4);
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  margin-top: 2px;
+}
+
+/* SDR Cards */
+.sdr-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 16px;
+}
+.sdr-card {
+  background: #fff;
+  border-radius: 10px;
+  border: 1px solid #e8edf3;
+  box-shadow: 0 1px 4px rgba(29,55,86,0.06);
+  overflow: hidden;
+}
+.sdr-card-head {
+  background: var(--accent);
+  padding: 10px 14px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+.sdr-card.jan { --accent: #2399B5; }
+.sdr-card.feb { --accent: #1D3756; }
+.sdr-card.mar { --accent: #6EBE4F; }
+.sdr-card.apr { --accent: #2399B5; }
+
+.sdr-card-month {
+  font-size: 14px;
+  font-weight: 800;
+  color: #fff;
+}
+.sdr-card-status {
+  font-size: 9px;
+  font-weight: 700;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+  background: rgba(255,255,255,0.2);
+  color: #fff;
+  padding: 2px 8px;
+  border-radius: 10px;
+}
+
+.sdr-body { padding: 14px; }
+
+.sdr-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 4px 0;
+  border-bottom: 1px solid #f0f4f8;
+  font-size: 11px;
+}
+.sdr-row:last-of-type { border-bottom: none; }
+.sdr-row-label { color: #8da0b4; }
+.sdr-row-val { font-weight: 700; color: #1D3756; }
+.sdr-row-val.teal { color: #2399B5; }
+.sdr-row-val.green { color: #6EBE4F; }
+.sdr-row-val.orange { color: #e67e22; }
+.sdr-row-sub { font-size: 9px; color: #b0bec5; margin-top: 0px; }
+
+.sdr-footer {
+  margin: 10px 14px 14px;
+  background: #f5f7fa;
+  border-radius: 8px;
+  padding: 10px 12px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  border: 1px solid #e8edf3;
+}
+.sdr-roi-val {
+  font-family: 'Montserrat', sans-serif;
+  font-size: 22px;
+  font-weight: 800;
+}
+.sdr-roi-val.bad { color: #e74c3c; }
+.sdr-roi-val.ok { color: #e67e22; }
+.sdr-roi-val.good { color: #6EBE4F; }
+.sdr-roi-val.mtd { color: #2399B5; }
+.sdr-roi-label { font-size: 9px; color: #8da0b4; text-transform: uppercase; letter-spacing: 1px; margin-top: 2px; }
+
+.sdr-conv-val {
+  font-family: 'Montserrat', sans-serif;
+  font-size: 20px;
+  font-weight: 800;
+  color: #1D3756;
+  text-align: right;
+}
+.sdr-conv-label { font-size: 9px; color: #8da0b4; text-transform: uppercase; letter-spacing: 1px; margin-top: 2px; text-align: right; }
+
+/* Footer */
+.slide-footer {
+  padding: 10px 48px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  border-top: 1px solid #e8edf3;
+}
+.footer-left { font-size: 10px; color: #b0bec5; letter-spacing: 0.5px; }
+.footer-logo { height: 18px; opacity: 0.35; filter: brightness(0) invert(19%) sepia(96%) saturate(343%) hue-rotate(172deg) brightness(96%) contrast(90%); }
+
+
+/* ====== SLIDE: Accelerating MSP Growth ====== */
+
+* { margin: 0; padding: 0; box-sizing: border-box; }
+html, body {
+  height: 100%;
+  background: #f5f7fa;
+  font-family: 'Open Sans', Arial, sans-serif;
+  color: #1D3756;
+}
+body {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+}
+
+.top-stripe { height: 4px; background: linear-gradient(90deg, #2399B5, #6EBE4F); flex-shrink: 0; }
+
+/* Header */
+.slide-header {
+  background: #1D3756;
+  padding: 14px 40px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-shrink: 0;
+}
+.logo { height: 26px; }
+.slide-tag { font-size: 9px; font-weight: 700; letter-spacing: 2px; text-transform: uppercase; color: #6EBE4F; margin-bottom: 3px; }
+h1 { font-size: 18px; font-weight: 800; color: #fff; }
+.header-right { text-align: right; }
+.slide-date { font-size: 10px; color: rgba(255,255,255,0.4); }
+.slide-num { font-size: 10px; color: rgba(255,255,255,0.25); margin-top: 2px; }
+
+/* Body */
+.body-content { padding: 14px 40px 10px; flex: 1; display: flex; flex-direction: column; gap: 12px; }
+
+/* ── NO VOICE BANNER ── */
+.nv-banner {
+  background: #1D3756;
+  border-radius: 10px;
+  padding: 12px 16px;
+  display: grid;
+  grid-template-columns: auto 1fr auto;
+  align-items: center;
+  gap: 16px;
+  flex-shrink: 0;
+}
+.nv-banner-label {
+  font-size: 9px;
+  font-weight: 700;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  color: #e74c3c;
+  white-space: nowrap;
+  writing-mode: horizontal-tb;
+  border-left: 3px solid #e74c3c;
+  padding-left: 10px;
+}
+.nv-months {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 8px;
+}
+.nv-month-item {
+  background: rgba(255,255,255,0.06);
+  border-radius: 7px;
+  padding: 8px 10px;
+  border-top: 2px solid var(--nc);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+.nv-month-item.jan { --nc: #2399B5; }
+.nv-month-item.feb { --nc: #6EBE4F; }
+.nv-month-item.mar { --nc: #2399B5; }
+.nv-month-item.apr { --nc: #e67e22; }
+.nv-mi-left {}
+.nv-mi-mo { font-size: 8px; font-weight: 700; letter-spacing: 1px; text-transform: uppercase; color: rgba(255,255,255,0.35); }
+.nv-mi-pct { font-family: 'Montserrat', sans-serif; font-size: 22px; font-weight: 800; color: var(--nc); line-height: 1.1; }
+.nv-mi-right { text-align: right; }
+.nv-mi-nv { font-size: 13px; font-weight: 800; color: #fff; }
+.nv-mi-total { font-size: 9px; color: rgba(255,255,255,0.3); }
+.nv-summary {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  min-width: 140px;
+}
+.nv-sum-item {
+  background: rgba(255,255,255,0.06);
+  border-radius: 7px;
+  padding: 7px 10px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+.nv-sum-val { font-family: 'Montserrat', sans-serif; font-size: 16px; font-weight: 800; }
+.nv-sum-val.green { color: #6EBE4F; }
+.nv-sum-val.teal { color: #2399B5; }
+.nv-sum-label { font-size: 9px; color: rgba(255,255,255,0.5); line-height: 1.3; }
+
+/* ── THREE-COL INITIATIVES ── */
+.initiatives {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+  gap: 14px;
+  flex: 1;
+  min-height: 0;
+}
+
+.initiative {
+  background: #fff;
+  border-radius: 10px;
+  border: 1px solid #e8edf3;
+  box-shadow: 0 1px 4px rgba(29,55,86,0.06);
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+}
+.initiative-head {
+  background: var(--hbg);
+  padding: 12px 16px;
+  flex-shrink: 0;
+}
+.initiative.teal { --hbg: #2399B5; }
+.initiative.navy { --hbg: #1D3756; }
+.initiative.gradient { --hbg: linear-gradient(90deg, #2399B5, #6EBE4F); }
+.initiative.gradient .initiative-head { background: linear-gradient(90deg, #2399B5, #6EBE4F); }
+
+.init-number { font-size: 8px; font-weight: 700; letter-spacing: 2px; text-transform: uppercase; color: rgba(255,255,255,0.45); margin-bottom: 3px; }
+.init-title { font-size: 13px; font-weight: 800; color: #fff; line-height: 1.2; margin-bottom: 3px; }
+.init-sub { font-size: 10px; color: rgba(255,255,255,0.6); line-height: 1.3; }
+.init-pill {
+  display: inline-block;
+  background: rgba(255,255,255,0.15);
+  color: #fff;
+  font-size: 8px;
+  font-weight: 700;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+  padding: 2px 8px;
+  border-radius: 8px;
+  margin-top: 7px;
+}
+
+.init-body { padding: 12px 14px; flex: 1; display: flex; flex-direction: column; gap: 7px; }
+
+/* Tool rows */
+.tool-row {
+  display: flex;
+  align-items: flex-start;
+  gap: 8px;
+  padding: 8px 10px;
+  background: #f5f7fa;
+  border-radius: 7px;
+  border-left: 3px solid var(--tc);
+}
+.tool-row.rox { --tc: #2399B5; }
+.tool-row.retell { --tc: #6EBE4F; }
+.tool-row.outreach { --tc: #2399B5; }
+.tool-icon { font-size: 14px; flex-shrink: 0; margin-top: 1px; }
+.tool-name { font-size: 11px; font-weight: 800; color: #1D3756; }
+.tool-desc { font-size: 9.5px; color: #4a6280; line-height: 1.4; margin-top: 1px; }
+.tool-tag { display: inline-block; font-size: 8px; font-weight: 700; color: var(--tc); background: rgba(35,153,181,0.09); padding: 1px 6px; border-radius: 3px; margin-top: 3px; }
+.tool-row.retell .tool-tag { background: rgba(110,190,79,0.1); }
+
+/* Hire */
+.hire-profile {
+  background: #f5f7fa;
+  border-radius: 7px;
+  padding: 9px 11px;
+  border-left: 3px solid #6EBE4F;
+}
+.hire-title { font-size: 10px; font-weight: 800; color: #1D3756; margin-bottom: 6px; display: flex; align-items: center; gap: 6px; }
+.hire-badge { font-size: 8px; font-weight: 700; letter-spacing: 1px; background: #6EBE4F; color: #fff; padding: 2px 6px; border-radius: 8px; }
+.hire-attrs { display: flex; flex-wrap: wrap; gap: 4px; }
+.hire-attr { font-size: 9px; color: #4a6280; background: #fff; border: 1px solid #dce4ed; border-radius: 3px; padding: 2px 7px; }
+.hire-attr.hi { color: #2399B5; border-color: #2399B5; font-weight: 700; }
+
+.salary-band {
+  background: #1D3756;
+  border-radius: 7px;
+  padding: 8px 12px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+.sal-label { font-size: 9px; color: rgba(255,255,255,0.45); margin-bottom: 1px; }
+.sal-from { font-size: 11px; color: rgba(255,255,255,0.3); text-decoration: line-through; }
+.sal-arrow { font-size: 16px; color: #6EBE4F; }
+.sal-to { font-family: 'Montserrat', sans-serif; font-size: 14px; font-weight: 800; color: #6EBE4F; }
+
+/* Buyout */
+.buyout-desc { font-size: 10px; color: #4a6280; line-height: 1.5; }
+.buyout-desc strong { color: #1D3756; }
+.buyout-credits {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 5px;
+}
+.bc {
+  background: #f5f7fa;
+  border-radius: 6px;
+  padding: 6px 4px;
+  text-align: center;
+  border-top: 2px solid var(--bcc);
+}
+.bc.c1 { --bcc: #6EBE4F; }
+.bc.c2 { --bcc: #6EBE4F; }
+.bc.c3 { --bcc: #2399B5; }
+.bc.c4 { --bcc: #2399B5; }
+.bc-term { font-size: 8px; color: #8da0b4; margin-bottom: 2px; }
+.bc-val { font-family: 'Montserrat', sans-serif; font-size: 13px; font-weight: 800; color: #1D3756; }
+.buyout-perks { display: flex; flex-wrap: wrap; gap: 4px; }
+.buyout-perk { font-size: 8.5px; color: #4a6280; background: #f5f7fa; border: 1px solid #e8edf3; border-radius: 3px; padding: 2px 7px; }
+.buyout-cap-bar {
+  background: #1D3756;
+  border-radius: 6px;
+  padding: 7px 12px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+.bcap-label { font-size: 10px; color: rgba(255,255,255,0.5); }
+.bcap-label strong { color: #6EBE4F; font-family: 'Montserrat', sans-serif; font-size: 12px; }
+.bcap-note { font-size: 8px; color: rgba(255,255,255,0.3); text-align: right; }
+
+/* Outcome box */
+.outcome-box {
+  background: #f0f7f4;
+  border-radius: 7px;
+  border: 1px solid #c8e6d0;
+  padding: 8px 11px;
+  display: flex;
+  align-items: flex-start;
+  gap: 7px;
+  margin-top: auto;
+}
+.outcome-icon { font-size: 14px; flex-shrink: 0; }
+.outcome-text { font-size: 9.5px; color: #1D3756; line-height: 1.4; }
+.outcome-text strong { color: #3a8a50; }
+
+/* Footer */
+.slide-footer {
+  padding: 8px 40px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  border-top: 1px solid #e8edf3;
+  flex-shrink: 0;
+}
+.footer-left { font-size: 9px; color: #b0bec5; letter-spacing: 0.5px; }
+.footer-logo { height: 16px; opacity: 0.3; filter: brightness(0) invert(19%) sepia(96%) saturate(343%) hue-rotate(172deg) brightness(96%) contrast(90%); }
+
+
+/* ====== SLIDE: Community Field Assessment ====== */
+
+* { margin: 0; padding: 0; box-sizing: border-box; }
+html, body { height: 100%; background: #f5f7fa; font-family: 'Open Sans', Arial, sans-serif; color: #1D3756; }
+body { display: flex; flex-direction: column; min-height: 100vh; }
+
+.top-stripe { height: 4px; background: linear-gradient(90deg, #2399B5, #6EBE4F); flex-shrink: 0; }
+
+.slide-header {
+  background: #1D3756; padding: 14px 40px;
+  display: flex; align-items: center; justify-content: space-between; flex-shrink: 0;
+}
+.logo { height: 26px; }
+.slide-tag { font-size: 9px; font-weight: 700; letter-spacing: 2px; text-transform: uppercase; color: #6EBE4F; margin-bottom: 3px; }
+h1 { font-size: 18px; font-weight: 800; color: #fff; }
+.header-sub { font-size: 10px; color: rgba(255,255,255,0.45); margin-top: 2px; }
+.header-right { text-align: right; }
+.slide-date { font-size: 10px; color: rgba(255,255,255,0.4); }
+.slide-num { font-size: 10px; color: rgba(255,255,255,0.25); margin-top: 2px; }
+
+.body-content { padding: 14px 40px 10px; flex: 1; display: flex; flex-direction: column; gap: 10px; }
+
+/* ── BRAND SHIFT BANNER ── */
+.shift-banner {
+  background: #1D3756;
+  border-radius: 10px;
+  padding: 12px 18px;
+  display: grid;
+  grid-template-columns: 1fr auto 1fr auto auto;
+  align-items: center;
+  gap: 14px;
+  flex-shrink: 0;
+}
+.shift-box {
+  background: rgba(255,255,255,0.06);
+  border-radius: 8px;
+  padding: 10px 14px;
+  text-align: center;
+}
+.shift-label { font-size: 8px; font-weight: 700; letter-spacing: 1.5px; text-transform: uppercase; color: rgba(255,255,255,0.4); margin-bottom: 4px; }
+.shift-quote { font-size: 12px; font-weight: 700; color: #fff; line-height: 1.3; font-style: italic; }
+.shift-context { font-size: 9px; color: rgba(255,255,255,0.4); margin-top: 3px; }
+.shift-arrow { font-size: 24px; color: #6EBE4F; font-weight: 800; }
+.shift-stat { text-align: center; min-width: 90px; }
+.shift-stat-val { font-family: 'Montserrat', sans-serif; font-size: 20px; font-weight: 800; color: #6EBE4F; }
+.shift-stat-label { font-size: 9px; color: rgba(255,255,255,0.45); margin-top: 2px; line-height: 1.3; }
+.shift-stat-val.teal { color: #2399B5; }
+
+/* ── MAIN GRID ── */
+.main-grid {
+  display: grid;
+  grid-template-columns: 1.4fr 1fr 1fr;
+  gap: 10px;
+  flex: 1;
+  min-height: 0;
+}
+
+/* Section card */
+.section-card {
+  background: #fff;
+  border-radius: 10px;
+  border: 1px solid #e8edf3;
+  box-shadow: 0 1px 4px rgba(29,55,86,0.05);
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+}
+.card-head {
+  background: var(--chbg);
+  padding: 10px 14px;
+  flex-shrink: 0;
+}
+.section-card.events { --chbg: #2399B5; }
+.section-card.resonating { --chbg: #1D3756; }
+.section-card.gaps { --chbg: #c0392b; }
+
+.card-eyebrow { font-size: 8px; font-weight: 700; letter-spacing: 1.5px; text-transform: uppercase; color: rgba(255,255,255,0.55); margin-bottom: 2px; }
+.card-title { font-size: 13px; font-weight: 800; color: #fff; line-height: 1.2; }
+
+.card-body { padding: 10px 13px; flex: 1; display: flex; flex-direction: column; gap: 7px; overflow: hidden; }
+
+/* Event table */
+.event-table { width: 100%; border-collapse: collapse; }
+.event-table th {
+  font-size: 8px; font-weight: 700; text-transform: uppercase; letter-spacing: 1px;
+  color: #8da0b4; padding: 3px 5px; border-bottom: 1px solid #e8edf3; text-align: right;
+}
+.event-table th:first-child { text-align: left; }
+.event-table td { font-size: 9.5px; color: #1D3756; padding: 4px 5px; border-bottom: 1px solid #f0f4f8; text-align: right; }
+.event-table td:first-child { text-align: left; font-weight: 600; }
+.event-table tr:last-child td { border-bottom: none; }
+.event-table .total-row td { font-weight: 800; background: #f5f7fa; color: #1D3756; border-top: 2px solid #dce4ed; }
+.event-table .total-row td:first-child { color: #1D3756; }
+.mature-badge {
+  display: inline-block; font-size: 7px; font-weight: 700; letter-spacing: 0.5px;
+  background: #e8f7f0; color: #3a8a50; border-radius: 3px; padding: 1px 5px; margin-left: 3px;
+}
+.early-badge {
+  display: inline-block; font-size: 7px; font-weight: 700; letter-spacing: 0.5px;
+  background: #fff4e6; color: #e67e22; border-radius: 3px; padding: 1px 5px; margin-left: 3px;
+}
+.event-note {
+  font-size: 9px; color: #8da0b4; line-height: 1.4;
+  background: #f5f7fa; border-radius: 6px; padding: 7px 9px;
+  border-left: 2px solid #2399B5;
+}
+.event-note strong { color: #2399B5; }
+
+/* Supporting activity */
+.activity-row {
+  display: flex; gap: 8px; padding: 7px 9px;
+  background: #f5f7fa; border-radius: 7px;
+  border-left: 3px solid var(--ac);
+}
+.activity-row.podcast { --ac: #2399B5; }
+.activity-row.newsletter { --ac: #6EBE4F; }
+.activity-row.community { --ac: #2399B5; }
+.act-icon { font-size: 14px; flex-shrink: 0; }
+.act-title { font-size: 10px; font-weight: 800; color: #1D3756; }
+.act-desc { font-size: 9px; color: #4a6280; line-height: 1.3; margin-top: 1px; }
+.act-stat { font-size: 9px; font-weight: 700; color: var(--ac); margin-top: 2px; }
+
+/* Resonating list */
+.res-item {
+  display: flex; align-items: flex-start; gap: 7px;
+  padding: 6px 8px; background: #f5f7fa; border-radius: 6px;
+}
+.res-check { color: #6EBE4F; font-size: 12px; flex-shrink: 0; font-weight: 800; margin-top: 1px; }
+.res-text { font-size: 10px; color: #1D3756; line-height: 1.35; font-weight: 600; }
+.res-sub { font-size: 9px; color: #64748b; font-weight: 400; margin-top: 1px; }
+
+/* Gap items */
+.gap-item {
+  background: #fff5f5; border-radius: 7px; padding: 9px 11px;
+  border-left: 3px solid #e74c3c;
+}
+.gap-title { font-size: 11px; font-weight: 800; color: #c0392b; margin-bottom: 3px; display: flex; align-items: center; gap: 6px; }
+.gap-badge { font-size: 8px; font-weight: 700; background: #c0392b; color: #fff; padding: 1px 6px; border-radius: 8px; }
+.gap-desc { font-size: 9.5px; color: #4a6280; line-height: 1.4; }
+
+.traj-box {
+  background: #1D3756; border-radius: 7px; padding: 9px 11px; margin-top: auto;
+}
+.traj-title { font-size: 9px; font-weight: 700; letter-spacing: 1px; text-transform: uppercase; color: #6EBE4F; margin-bottom: 4px; }
+.traj-text { font-size: 9.5px; color: rgba(255,255,255,0.7); line-height: 1.4; }
+.traj-text strong { color: #fff; }
+
+/* Footer */
+.slide-footer {
+  padding: 8px 40px; display: flex; justify-content: space-between; align-items: center;
+  border-top: 1px solid #e8edf3; flex-shrink: 0;
+}
+.footer-left { font-size: 9px; color: #b0bec5; letter-spacing: 0.5px; }
+.footer-author { font-size: 9px; color: #b0bec5; }
+.footer-logo { height: 16px; opacity: 0.3; filter: brightness(0) invert(19%) sepia(96%) saturate(343%) hue-rotate(172deg) brightness(96%) contrast(90%); }
+
+
+/* ====== SLIDE: Community ROI & PAC ====== */
+
+* { margin: 0; padding: 0; box-sizing: border-box; }
+html, body { height: 100%; background: #f5f7fa; font-family: 'Open Sans', Arial, sans-serif; color: #1D3756; }
+body { display: flex; flex-direction: column; min-height: 100vh; }
+
+.top-stripe { height: 4px; background: linear-gradient(90deg, #2399B5, #6EBE4F); flex-shrink: 0; }
+
+.slide-header {
+  background: #1D3756; padding: 14px 40px;
+  display: flex; align-items: center; justify-content: space-between; flex-shrink: 0;
+}
+.logo { height: 26px; }
+.slide-tag { font-size: 9px; font-weight: 700; letter-spacing: 2px; text-transform: uppercase; color: #6EBE4F; margin-bottom: 3px; }
+h1 { font-size: 18px; font-weight: 800; color: #fff; }
+.header-sub { font-size: 10px; color: rgba(255,255,255,0.45); margin-top: 2px; }
+.header-right { text-align: right; }
+.slide-date { font-size: 10px; color: rgba(255,255,255,0.4); }
+.slide-num { font-size: 10px; color: rgba(255,255,255,0.25); margin-top: 2px; }
+
+.body-content { padding: 14px 40px 10px; flex: 1; display: flex; flex-direction: column; gap: 10px; }
+
+/* ── TOP 6-STAT SUMMARY BAR ── */
+.summary-grid {
+  display: grid;
+  grid-template-columns: repeat(6, 1fr);
+  gap: 10px;
+  flex-shrink: 0;
+}
+.sum-card {
+  background: #fff;
+  border-radius: 9px;
+  border: 1px solid #e8edf3;
+  border-top: 3px solid var(--sc);
+  padding: 11px 13px;
+  box-shadow: 0 1px 3px rgba(29,55,86,0.05);
+}
+.sum-card.bookings   { --sc: #2399B5; }
+.sum-card.commerce   { --sc: #6EBE4F; }
+.sum-card.linkedin   { --sc: #2399B5; }
+.sum-card.pac        { --sc: #6EBE4F; }
+.sum-card.partners   { --sc: #2399B5; }
+.sum-card.roi        { --sc: #6EBE4F; }
+
+.sum-eyebrow { font-size: 8px; font-weight: 700; letter-spacing: 1.5px; text-transform: uppercase; color: #8da0b4; margin-bottom: 5px; }
+.sum-val { font-family: 'Montserrat', sans-serif; font-size: 17px; font-weight: 800; color: #1D3756; line-height: 1.15; }
+.sum-val span { display: block; }
+.sum-note { font-size: 9px; color: #64748b; margin-top: 4px; line-height: 1.3; }
+.sum-note .green { color: #3a8a50; font-weight: 700; }
+.sum-note .teal { color: #2399B5; font-weight: 700; }
+
+/* ── MAIN GRID ── */
+.main-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1.1fr;
+  gap: 10px;
+  flex: 1;
+  min-height: 0;
+}
+
+.section-card {
+  background: #fff;
+  border-radius: 10px;
+  border: 1px solid #e8edf3;
+  box-shadow: 0 1px 4px rgba(29,55,86,0.05);
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+}
+.card-head {
+  padding: 10px 14px; flex-shrink: 0;
+  background: var(--chbg);
+}
+.section-card.roi-tracker { --chbg: #2399B5; }
+.section-card.circle { --chbg: #1D3756; }
+.section-card.pac { --chbg: #6EBE4F; }
+.section-card.pac .card-head { background: linear-gradient(90deg, #6EBE4F, #2399B5); }
+
+.card-eyebrow { font-size: 8px; font-weight: 700; letter-spacing: 1.5px; text-transform: uppercase; color: rgba(255,255,255,0.6); margin-bottom: 2px; }
+.card-title { font-size: 13px; font-weight: 800; color: #fff; }
+.card-body { padding: 11px 13px; flex: 1; display: flex; flex-direction: column; gap: 8px; }
+
+/* ROI Table */
+.roi-table { width: 100%; border-collapse: collapse; }
+.roi-table th { font-size: 8px; font-weight: 700; text-transform: uppercase; letter-spacing: 1px; color: #8da0b4; padding: 3px 6px; border-bottom: 1px solid #e8edf3; text-align: right; }
+.roi-table th:first-child { text-align: left; }
+.roi-table td { font-size: 10px; color: #1D3756; padding: 5px 6px; border-bottom: 1px solid #f0f4f8; text-align: right; }
+.roi-table td:first-child { text-align: left; }
+.roi-table .total-row td { font-weight: 800; background: #f5f7fa; border-top: 2px solid #dce4ed; color: #1D3756; }
+.roi-table .total-row td.green { color: #3a8a50; }
+
+.roi-examples {
+  background: #f5f7fa; border-radius: 7px; padding: 8px 10px;
+  border-left: 3px solid #2399B5;
+  font-size: 9px; color: #4a6280; line-height: 1.5;
+}
+.roi-examples strong { color: #1D3756; }
+
+.roi-total-bar {
+  background: #1D3756; border-radius: 7px; padding: 10px 13px;
+  display: flex; align-items: center; justify-content: space-between; margin-top: auto;
+}
+.rtb-label { font-size: 9px; color: rgba(255,255,255,0.5); margin-bottom: 2px; }
+.rtb-val { font-family: 'Montserrat', sans-serif; font-size: 18px; font-weight: 800; }
+.rtb-val.green { color: #6EBE4F; }
+.rtb-val.muted { color: rgba(255,255,255,0.35); font-size: 14px; text-decoration: line-through; }
+.rtb-note { font-size: 9px; color: rgba(255,255,255,0.4); text-align: right; max-width: 150px; line-height: 1.3; }
+
+/* Circle Platform table */
+.circle-table { width: 100%; border-collapse: collapse; }
+.circle-table th { font-size: 8px; font-weight: 700; text-transform: uppercase; letter-spacing: 1px; background: #0f172a; color: rgba(255,255,255,0.6); padding: 6px 8px; text-align: center; }
+.circle-table th:first-child { text-align: left; background: #0f172a; }
+.circle-table td { font-size: 10.5px; padding: 6px 8px; border-bottom: 1px solid #f0f4f8; text-align: center; color: #1D3756; }
+.circle-table td:first-child { text-align: left; font-weight: 600; }
+.circle-table tr:nth-child(even) td { background: #f9fbfc; }
+.circle-table .mar-col { font-weight: 800; color: #2399B5; }
+
+.trend-chip {
+  display: inline-flex; align-items: center; gap: 4px;
+  font-size: 9px; font-weight: 700; color: #3a8a50;
+  background: #e8f7f0; border-radius: 4px; padding: 2px 7px; margin-left: 6px;
+}
+
+.circle-growth {
+  display: grid; grid-template-columns: repeat(3, 1fr); gap: 7px;
+}
+.cg-stat {
+  background: #f5f7fa; border-radius: 7px; padding: 9px 10px; text-align: center;
+  border-top: 2px solid var(--cgs);
+}
+.cg-stat.mem { --cgs: #2399B5; }
+.cg-stat.active { --cgs: #6EBE4F; }
+.cg-stat.univ { --cgs: #2399B5; }
+.cg-stat-val { font-family: 'Montserrat', sans-serif; font-size: 20px; font-weight: 800; color: #1D3756; }
+.cg-stat-label { font-size: 8px; color: #8da0b4; text-transform: uppercase; letter-spacing: 1px; margin-top: 2px; }
+.cg-stat-trend { font-size: 9px; font-weight: 700; color: #3a8a50; margin-top: 3px; }
+
+.partners-box {
+  background: #f5f7fa; border-radius: 7px; padding: 9px 11px; border-left: 3px solid #6EBE4F;
+}
+.partners-title { font-size: 9px; font-weight: 700; letter-spacing: 1px; text-transform: uppercase; color: #8da0b4; margin-bottom: 5px; }
+.partners-names { font-size: 13px; font-weight: 800; color: #1D3756; line-height: 1.4; }
+.partners-note { font-size: 9px; color: #64748b; margin-top: 3px; }
+
+/* PAC card */
+.pac-callout {
+  background: #f0f9f4; border-radius: 7px; border-left: 4px solid #6EBE4F; padding: 10px 12px;
+}
+.pac-callout-title { font-size: 10px; font-weight: 800; color: #1D3756; margin-bottom: 5px; }
+.pac-callout-text { font-size: 9.5px; color: #4a6280; line-height: 1.45; }
+.pac-callout-text strong { color: #1D3756; }
+
+.pac-bullets { display: flex; flex-direction: column; gap: 5px; }
+.pac-bullet {
+  display: flex; align-items: flex-start; gap: 7px;
+  padding: 6px 9px; background: #f5f7fa; border-radius: 6px; font-size: 9.5px; color: #1D3756; line-height: 1.35;
+}
+.pac-dot { color: #6EBE4F; font-size: 14px; flex-shrink: 0; margin-top: -1px; }
+
+.pac-bottom {
+  background: #1D3756; border-radius: 7px; padding: 9px 12px; margin-top: auto;
+}
+.pac-bottom-title { font-size: 9px; font-weight: 700; letter-spacing: 1px; text-transform: uppercase; color: #6EBE4F; margin-bottom: 4px; }
+.pac-bottom-text { font-size: 9.5px; color: rgba(255,255,255,0.7); line-height: 1.4; }
+.pac-bottom-text strong { color: #fff; }
+
+/* Footer */
+.slide-footer {
+  padding: 8px 40px; display: flex; justify-content: space-between; align-items: center;
+  border-top: 1px solid #e8edf3; flex-shrink: 0;
+}
+.footer-left { font-size: 9px; color: #b0bec5; }
+.footer-logo { height: 16px; opacity: 0.3; filter: brightness(0) invert(19%) sepia(96%) saturate(343%) hue-rotate(172deg) brightness(96%) contrast(90%); }
+
+
+/* ====== SLIDE: Channel Bookings ====== */
+
+* { margin: 0; padding: 0; box-sizing: border-box; }
+html, body { height: 100%; background: #f5f7fa; font-family: 'Open Sans', Arial, sans-serif; color: #1D3756; }
+body { display: flex; flex-direction: column; min-height: 100vh; }
+
+.top-stripe { height: 4px; background: linear-gradient(90deg, #2399B5, #6EBE4F); flex-shrink: 0; }
+
+.slide-header {
+  background: #1D3756; padding: 14px 40px;
+  display: flex; align-items: center; justify-content: space-between; flex-shrink: 0;
+}
+.logo { height: 26px; }
+.slide-tag { font-size: 9px; font-weight: 700; letter-spacing: 2px; text-transform: uppercase; color: #6EBE4F; margin-bottom: 3px; }
+h1 { font-size: 18px; font-weight: 800; color: #fff; }
+.header-sub { font-size: 10px; color: rgba(255,255,255,0.45); margin-top: 2px; }
+.header-right { text-align: right; }
+.slide-date { font-size: 10px; color: rgba(255,255,255,0.4); }
+.slide-num { font-size: 10px; color: rgba(255,255,255,0.25); margin-top: 2px; }
+
+.body-content { padding: 14px 40px 10px; flex: 1; display: flex; flex-direction: column; gap: 10px; }
+
+/* ── TOP STATS ── */
+.top-stats {
+  display: grid;
+  grid-template-columns: repeat(6, 1fr);
+  gap: 10px;
+  flex-shrink: 0;
+}
+.ts-card {
+  background: #fff;
+  border-radius: 9px;
+  border: 1px solid #e8edf3;
+  border-top: 3px solid var(--tc);
+  padding: 11px 13px;
+  box-shadow: 0 1px 3px rgba(29,55,86,0.05);
+}
+.ts-card.ytd    { --tc: #6EBE4F; }
+.ts-card.h1     { --tc: #2399B5; }
+.ts-card.fy     { --tc: #2399B5; }
+.ts-card.touch  { --tc: #6EBE4F; }
+.ts-card.refs   { --tc: #2399B5; }
+.ts-card.opps   { --tc: #6EBE4F; }
+
+.ts-eyebrow { font-size: 8px; font-weight: 700; letter-spacing: 1.5px; text-transform: uppercase; color: #8da0b4; margin-bottom: 5px; }
+.ts-val { font-family: 'Montserrat', sans-serif; font-size: 22px; font-weight: 800; color: #1D3756; line-height: 1.1; }
+.ts-val.green { color: #3a8a50; }
+.ts-val.teal { color: #2399B5; }
+.ts-note { font-size: 9px; color: #64748b; margin-top: 4px; line-height: 1.3; }
+.ts-note .flag { color: #e67e22; font-weight: 700; }
+.ts-note .green { color: #3a8a50; font-weight: 700; }
+
+/* ── MAIN GRID ── */
+.main-grid {
+  display: grid;
+  grid-template-columns: 1.1fr 1fr 1fr;
+  gap: 10px;
+  flex: 1;
+  min-height: 0;
+}
+
+.section-card {
+  background: #fff;
+  border-radius: 10px;
+  border: 1px solid #e8edf3;
+  box-shadow: 0 1px 4px rgba(29,55,86,0.05);
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+}
+.card-head { padding: 10px 14px; flex-shrink: 0; }
+.section-card.bookings .card-head { background: #2399B5; }
+.section-card.attribution .card-head { background: #1D3756; }
+.section-card.uncounted .card-head { background: linear-gradient(90deg, #1D3756, #2399B5); }
+
+.card-eyebrow { font-size: 8px; font-weight: 700; letter-spacing: 1.5px; text-transform: uppercase; color: rgba(255,255,255,0.6); margin-bottom: 2px; }
+.card-title { font-size: 13px; font-weight: 800; color: #fff; }
+.card-body { padding: 11px 13px; flex: 1; display: flex; flex-direction: column; gap: 8px; }
+
+/* Bookings table */
+.bookings-table { width: 100%; border-collapse: collapse; }
+.bookings-table th { font-size: 8px; font-weight: 700; text-transform: uppercase; letter-spacing: 1px; color: #8da0b4; padding: 4px 8px; border-bottom: 1px solid #e8edf3; text-align: right; }
+.bookings-table th:first-child { text-align: left; }
+.bookings-table td { font-size: 11px; color: #1D3756; padding: 6px 8px; border-bottom: 1px solid #f0f4f8; text-align: right; }
+.bookings-table td:first-child { text-align: left; font-weight: 600; }
+.bookings-table tr:last-child td { border-bottom: none; }
+.bookings-table .ytd-row td { font-weight: 800; color: #3a8a50; background: #f0f9f4; border-top: 2px solid #c8e6d0; }
+.bookings-table .target-row td { color: #8da0b4; font-size: 10px; }
+.bookings-table .target-row td:first-child { color: #8da0b4; }
+
+/* Progress bar */
+.progress-wrap { margin-top: 2px; }
+.progress-label { display: flex; justify-content: space-between; font-size: 9px; color: #64748b; margin-bottom: 4px; }
+.progress-label strong { color: #1D3756; }
+.progress-track { background: #e8edf3; border-radius: 20px; height: 12px; overflow: hidden; position: relative; }
+.progress-fill { height: 100%; background: linear-gradient(90deg, #2399B5, #6EBE4F); border-radius: 20px; display: flex; align-items: center; padding-left: 8px; }
+.progress-pct { font-size: 8px; font-weight: 800; color: #fff; }
+.progress-markers { display: flex; justify-content: space-between; font-size: 8px; color: #8da0b4; margin-top: 3px; }
+
+.momentum-box {
+  background: #f5f7fa; border-radius: 7px; padding: 9px 11px; border-left: 3px solid #6EBE4F;
+}
+.momentum-title { font-size: 9px; font-weight: 700; color: #64748b; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 5px; }
+.momentum-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 6px; }
+.momentum-item { text-align: center; }
+.momentum-val { font-family: 'Montserrat', sans-serif; font-size: 15px; font-weight: 800; color: #1D3756; }
+.momentum-month { font-size: 8px; color: #8da0b4; text-transform: uppercase; letter-spacing: 1px; margin-top: 2px; }
+.momentum-arrow { font-size: 9px; color: #6EBE4F; font-weight: 800; }
+
+/* Attribution */
+.attr-note {
+  background: #f5f7fa; border-radius: 7px; padding: 9px 11px; font-size: 9.5px; color: #4a6280; line-height: 1.5;
+  border-left: 3px solid #2399B5;
+}
+.attr-note strong { color: #1D3756; }
+.attr-chips { display: flex; flex-wrap: wrap; gap: 5px; }
+.attr-chip {
+  font-size: 9px; color: #4a6280; background: #f5f7fa; border: 1px solid #dce4ed;
+  border-radius: 4px; padding: 3px 8px;
+}
+.attr-chip.hl { color: #2399B5; border-color: #2399B5; font-weight: 700; }
+
+.undercount-box {
+  background: #fff4e6; border-radius: 7px; padding: 9px 11px; border-left: 3px solid #e67e22;
+  margin-top: auto;
+}
+.undercount-title { font-size: 9px; font-weight: 700; color: #e67e22; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 4px; }
+.undercount-text { font-size: 9.5px; color: #4a6280; line-height: 1.4; }
+.undercount-text strong { color: #d35400; }
+
+/* What isn't counted */
+.uncounted-item {
+  background: #f5f7fa; border-radius: 7px; padding: 8px 10px;
+  display: flex; align-items: flex-start; gap: 7px; font-size: 9.5px; color: #1D3756; line-height: 1.35;
+}
+.uncounted-dot { color: #8da0b4; font-size: 14px; flex-shrink: 0; margin-top: -1px; }
+
+.truth-box {
+  background: #1D3756; border-radius: 7px; padding: 10px 12px; margin-top: auto;
+}
+.truth-title { font-size: 9px; font-weight: 700; letter-spacing: 1px; text-transform: uppercase; color: #6EBE4F; margin-bottom: 5px; }
+.truth-text { font-size: 9.5px; color: rgba(255,255,255,0.7); line-height: 1.5; }
+.truth-text strong { color: #fff; }
+
+/* Footer */
+.slide-footer {
+  padding: 8px 40px; display: flex; justify-content: space-between; align-items: center;
+  border-top: 1px solid #e8edf3; flex-shrink: 0;
+}
+.footer-left { font-size: 9px; color: #b0bec5; }
+.footer-logo { height: 16px; opacity: 0.3; filter: brightness(0) invert(19%) sepia(96%) saturate(343%) hue-rotate(172deg) brightness(96%) contrast(90%); }
+
+
+/* ====== DECK NAVIGATION ====== */
+* { margin: 0; padding: 0; box-sizing: border-box; }
+html, body { height: 100%; background: #f5f7fa; }
+
+.slide-page { min-height: 100vh; }
+
+.deck-nav {
+  position: fixed;
+  bottom: 20px;
+  left: 50%;
+  transform: translateX(-50%);
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  background: rgba(29, 55, 86, 0.92);
+  backdrop-filter: blur(8px);
+  border-radius: 40px;
+  padding: 10px 20px;
+  z-index: 9999;
+  box-shadow: 0 4px 24px rgba(0,0,0,0.3);
+}
+.deck-btn {
+  background: rgba(255,255,255,0.15);
+  border: none;
+  color: #fff;
+  font-family: 'Open Sans', sans-serif;
+  font-size: 13px;
+  font-weight: 700;
+  padding: 7px 18px;
+  border-radius: 20px;
+  cursor: pointer;
+  transition: background 0.15s;
+  letter-spacing: 0.3px;
+}
+.deck-btn:hover { background: rgba(255,255,255,0.25); }
+.deck-btn:disabled { opacity: 0.3; cursor: default; }
+.deck-btn.primary {
+  background: #6EBE4F;
+  color: #fff;
+}
+.deck-btn.primary:hover { background: #5aa83e; }
+.deck-counter {
+  font-family: 'Open Sans', sans-serif;
+  font-size: 12px;
+  color: rgba(255,255,255,0.6);
+  min-width: 60px;
+  text-align: center;
+  letter-spacing: 0.5px;
+}
+.deck-dots {
+  display: flex;
+  gap: 6px;
+  align-items: center;
+}
+.deck-dot {
+  width: 7px; height: 7px;
+  border-radius: 50%;
+  background: rgba(255,255,255,0.25);
+  cursor: pointer;
+  transition: background 0.15s, transform 0.15s;
+}
+.deck-dot.active {
+  background: #6EBE4F;
+  transform: scale(1.3);
+}
+
+/* Keyboard hint */
+.key-hint {
+  position: fixed;
+  bottom: 72px;
+  left: 50%;
+  transform: translateX(-50%);
+  font-size: 10px;
+  color: rgba(29,55,86,0.4);
+  letter-spacing: 0.5px;
+  pointer-events: none;
+}
+</style>
+</head>
+<body>
+
+
+    <div class="slide-page" id="slide-1" style="display:flex;flex-direction:column;min-height:100vh;">
+      <div class="top-stripe"></div>
+
+<!-- Header -->
+<div class="slide-header">
+  <img src="https://7091219.fs1.hubspotusercontent-na1.net/hubfs/7091219/email-assets/logo-revio-white.png" alt="Rev.io" class="logo">
+  <div class="header-center">
+    <div class="slide-tag">Q2 2026 Board Presentation</div>
+    <h1>Sales Team Efficiency</h1>
+  </div>
+  <div class="header-right">
+    <div class="slide-date">April 28, 2026</div>
+    <div class="slide-num">Slide 1</div>
+  </div>
+</div>
+
+<!-- Body -->
+<div class="body-content">
+
+  <!-- AE Section -->
+  <div class="section-header">
+    <div class="section-label">AE Capacity — Prospect Meetings</div>
+    <div class="section-rule"></div>
+  </div>
+
+  <div class="ae-grid">
+    <div class="ae-card jan">
+      <div class="ae-month">Jan 2026</div>
+      <div class="ae-meetings">232</div>
+      <div class="ae-meetings-label">prospect meetings</div>
+      <div class="ae-meta">
+        <div class="ae-aes">
+          <div class="ae-aes-num">12</div>
+          <div class="ae-aes-label">Active AEs</div>
+        </div>
+        <div class="ae-divider"></div>
+        <div class="ae-rate">
+          <div class="ae-rate-num">0.88</div>
+          <div class="ae-rate-label">Mtgs/AE/Day</div>
+        </div>
+      </div>
+    </div>
+    <div class="ae-card feb">
+      <div class="ae-month">Feb 2026</div>
+      <div class="ae-meetings">229</div>
+      <div class="ae-meetings-label">prospect meetings</div>
+      <div class="ae-meta">
+        <div class="ae-aes">
+          <div class="ae-aes-num">11</div>
+          <div class="ae-aes-label">Active AEs</div>
+        </div>
+        <div class="ae-divider"></div>
+        <div class="ae-rate">
+          <div class="ae-rate-num">1.04</div>
+          <div class="ae-rate-label">Mtgs/AE/Day</div>
+        </div>
+      </div>
+    </div>
+    <div class="ae-card mar">
+      <div class="ae-month">Mar 2026</div>
+      <div class="ae-meetings">268</div>
+      <div class="ae-meetings-label">prospect meetings</div>
+      <div class="ae-meta">
+        <div class="ae-aes">
+          <div class="ae-aes-num">10</div>
+          <div class="ae-aes-label">Active AEs</div>
+        </div>
+        <div class="ae-divider"></div>
+        <div class="ae-rate">
+          <div class="ae-rate-num">1.22</div>
+          <div class="ae-rate-label">Mtgs/AE/Day</div>
+        </div>
+      </div>
+    </div>
+    <div class="ae-card apr">
+      <div class="ae-month">Apr 2026</div>
+      <div class="ae-meetings">232</div>
+      <div class="ae-meetings-label">prospect meetings (proj.)</div>
+      <div class="ae-meta">
+        <div class="ae-aes">
+          <div class="ae-aes-num">7</div>
+          <div class="ae-aes-label">Active AEs</div>
+        </div>
+        <div class="ae-divider"></div>
+        <div class="ae-rate">
+          <div class="ae-rate-num">1.66</div>
+          <div class="ae-rate-label">Mtgs/AE/Day</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Trend banner -->
+  <div class="trend-banner">
+    <div class="trend-text">
+      AE headcount reduced <strong>42%</strong> (12 → 7 AEs) since January — yet meetings per AE per day increased <strong>89%</strong>. The team is doing more with less.
+    </div>
+    <div class="trend-stats">
+      <div class="trend-stat">
+        <div class="trend-stat-val teal">0.88</div>
+        <div class="trend-stat-label">Jan Rate</div>
+      </div>
+      <div class="trend-stat">
+        <div class="trend-stat-val">1.66</div>
+        <div class="trend-stat-label">Apr Rate</div>
+      </div>
+      <div class="trend-stat">
+        <div class="trend-stat-val green">+89%</div>
+        <div class="trend-stat-label">Productivity Gain</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- SDR Section -->
+  <div class="section-header">
+    <div class="section-label">SDR Performance — Pipeline & ROI</div>
+    <div class="section-rule"></div>
+  </div>
+
+  <div class="sdr-grid">
+
+    <div class="sdr-card jan">
+      <div class="sdr-card-head">
+        <div class="sdr-card-month">January</div>
+        <div class="sdr-card-status">Fully Closed</div>
+      </div>
+      <div class="sdr-body">
+        <div class="sdr-row"><span class="sdr-row-label">Opps Influenced</span><span class="sdr-row-val teal">92</span></div>
+        <div class="sdr-row">
+          <span class="sdr-row-label">Discovery Calls</span>
+          <span class="sdr-row-val teal">47
+            <div class="sdr-row-sub">PSA 38% · Billing 28%</div>
+          </span>
+        </div>
+        <div class="sdr-row"><span class="sdr-row-label">Pipeline Value</span><span class="sdr-row-val">$73,325</span></div>
+        <div class="sdr-row"><span class="sdr-row-label">Deals Won</span><span class="sdr-row-val">1</span></div>
+        <div class="sdr-row"><span class="sdr-row-label">Closed Won MRR</span><span class="sdr-row-val green">$500</span></div>
+        <div class="sdr-row"><span class="sdr-row-label">Effective SDRs</span><span class="sdr-row-val">5</span></div>
+        <div class="sdr-row"><span class="sdr-row-label">MRR / SDR</span><span class="sdr-row-val">$100</span></div>
+      </div>
+      <div class="sdr-footer">
+        <div>
+          <div class="sdr-roi-val bad">0.2×</div>
+          <div class="sdr-roi-label">ROI vs. Break-Even</div>
+        </div>
+        <div>
+          <div class="sdr-conv-val">2%</div>
+          <div class="sdr-conv-label">Conv. Rate</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="sdr-card feb">
+      <div class="sdr-card-head">
+        <div class="sdr-card-month">February</div>
+        <div class="sdr-card-status">Fully Closed</div>
+      </div>
+      <div class="sdr-body">
+        <div class="sdr-row"><span class="sdr-row-label">Opps Influenced</span><span class="sdr-row-val teal">73</span></div>
+        <div class="sdr-row">
+          <span class="sdr-row-label">Discovery Calls</span>
+          <span class="sdr-row-val teal">45
+            <div class="sdr-row-sub">PSA 38% · Billing 32%</div>
+          </span>
+        </div>
+        <div class="sdr-row"><span class="sdr-row-label">Pipeline Value</span><span class="sdr-row-val">$63,325</span></div>
+        <div class="sdr-row"><span class="sdr-row-label">Deals Won</span><span class="sdr-row-val">5</span></div>
+        <div class="sdr-row"><span class="sdr-row-label">Closed Won MRR</span><span class="sdr-row-val green">$3,450</span></div>
+        <div class="sdr-row"><span class="sdr-row-label">Effective SDRs</span><span class="sdr-row-val">6</span></div>
+        <div class="sdr-row"><span class="sdr-row-label">MRR / SDR</span><span class="sdr-row-val">$575</span></div>
+      </div>
+      <div class="sdr-footer">
+        <div>
+          <div class="sdr-roi-val ok">1.15×</div>
+          <div class="sdr-roi-label">ROI vs. Break-Even</div>
+        </div>
+        <div>
+          <div class="sdr-conv-val">11%</div>
+          <div class="sdr-conv-label">Conv. Rate</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="sdr-card mar">
+      <div class="sdr-card-head">
+        <div class="sdr-card-month">March</div>
+        <div class="sdr-card-status">Fully Closed</div>
+      </div>
+      <div class="sdr-body">
+        <div class="sdr-row"><span class="sdr-row-label">Opps Influenced</span><span class="sdr-row-val teal">83</span></div>
+        <div class="sdr-row">
+          <span class="sdr-row-label">Discovery Calls</span>
+          <span class="sdr-row-val teal">67
+            <div class="sdr-row-sub">PSA 50% · Billing 29%</div>
+          </span>
+        </div>
+        <div class="sdr-row"><span class="sdr-row-label">Pipeline Value</span><span class="sdr-row-val">$76,762</span></div>
+        <div class="sdr-row"><span class="sdr-row-label">Deals Won</span><span class="sdr-row-val">7</span></div>
+        <div class="sdr-row"><span class="sdr-row-label">Closed Won MRR</span><span class="sdr-row-val green">$7,780</span></div>
+        <div class="sdr-row"><span class="sdr-row-label">Effective SDRs</span><span class="sdr-row-val">6</span></div>
+        <div class="sdr-row"><span class="sdr-row-label">MRR / SDR</span><span class="sdr-row-val">$1,297</span></div>
+      </div>
+      <div class="sdr-footer">
+        <div>
+          <div class="sdr-roi-val good">2.6×</div>
+          <div class="sdr-roi-label">ROI vs. Break-Even</div>
+        </div>
+        <div>
+          <div class="sdr-conv-val">10%</div>
+          <div class="sdr-conv-label">Conv. Rate</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="sdr-card apr">
+      <div class="sdr-card-head">
+        <div class="sdr-card-month">April</div>
+        <div class="sdr-card-status">MTD</div>
+      </div>
+      <div class="sdr-body">
+        <div class="sdr-row"><span class="sdr-row-label">Opps Influenced</span><span class="sdr-row-val teal">71</span></div>
+        <div class="sdr-row">
+          <span class="sdr-row-label">Discovery Calls</span>
+          <span class="sdr-row-val teal">64
+            <div class="sdr-row-sub">PSA 52% · Billing 29%</div>
+          </span>
+        </div>
+        <div class="sdr-row"><span class="sdr-row-label">Pipeline Value</span><span class="sdr-row-val">$58,360</span></div>
+        <div class="sdr-row"><span class="sdr-row-label">Deals Won (so far)</span><span class="sdr-row-val">7</span></div>
+        <div class="sdr-row"><span class="sdr-row-label">Closed Won MRR</span><span class="sdr-row-val orange">$4,965</span></div>
+        <div class="sdr-row"><span class="sdr-row-label">Effective SDRs</span><span class="sdr-row-val">5</span></div>
+        <div class="sdr-row"><span class="sdr-row-label">MRR / SDR (MTD)</span><span class="sdr-row-val orange">$993</span></div>
+      </div>
+      <div class="sdr-footer">
+        <div>
+          <div class="sdr-roi-val mtd">~2.5×</div>
+          <div class="sdr-roi-label">ROI · In Progress</div>
+        </div>
+        <div>
+          <div class="sdr-conv-val">11%</div>
+          <div class="sdr-conv-label">Conv. Rate</div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+</div>
+
+<!-- Footer -->
+<div class="slide-footer">
+  <div class="footer-left">Rev.io Sales Intelligence · Q2 2026 Board Presentation · Data as of April 28, 2026</div>
+  <img src="https://7091219.fs1.hubspotusercontent-na1.net/hubfs/7091219/email-assets/logo-revio-white.png" alt="Rev.io" class="footer-logo">
+</div>
+    </div>
+
+    <div class="slide-page" id="slide-2" style="display:none;flex-direction:column;min-height:100vh;">
+      <div class="top-stripe"></div>
+
+<div class="slide-header">
+  <img src="https://7091219.fs1.hubspotusercontent-na1.net/hubfs/7091219/email-assets/logo-revio-white.png" alt="Rev.io" class="logo">
+  <div style="text-align:center">
+    <div class="slide-tag">Q2 2026 Board Presentation</div>
+    <h1>Accelerating MSP Growth — Three Strategic Plays</h1>
+  </div>
+  <div class="header-right">
+    <div class="slide-date">April 28, 2026</div>
+    <div class="slide-num">Slide 2</div>
+  </div>
+</div>
+
+<div class="body-content">
+
+  <!-- No Voice Banner -->
+  <div class="nv-banner">
+    <div class="nv-banner-label">The Problem We're Not<br>Solving Fast Enough</div>
+    <div class="nv-months">
+      <div class="nv-month-item jan">
+        <div class="nv-mi-left">
+          <div class="nv-mi-mo">Jan 2026</div>
+          <div class="nv-mi-pct">14.2%</div>
+        </div>
+        <div class="nv-mi-right">
+          <div class="nv-mi-nv">41</div>
+          <div class="nv-mi-total">of 288</div>
+        </div>
+      </div>
+      <div class="nv-month-item feb">
+        <div class="nv-mi-left">
+          <div class="nv-mi-mo">Feb 2026</div>
+          <div class="nv-mi-pct">17.3%</div>
+        </div>
+        <div class="nv-mi-right">
+          <div class="nv-mi-nv">39</div>
+          <div class="nv-mi-total">of 225</div>
+        </div>
+      </div>
+      <div class="nv-month-item mar">
+        <div class="nv-mi-left">
+          <div class="nv-mi-mo">Mar 2026</div>
+          <div class="nv-mi-pct">12.3%</div>
+        </div>
+        <div class="nv-mi-right">
+          <div class="nv-mi-nv">27</div>
+          <div class="nv-mi-total">of 219</div>
+        </div>
+      </div>
+      <div class="nv-month-item apr">
+        <div class="nv-mi-left">
+          <div class="nv-mi-mo">Apr 2026</div>
+          <div class="nv-mi-pct">15.4%</div>
+        </div>
+        <div class="nv-mi-right">
+          <div class="nv-mi-nv">28</div>
+          <div class="nv-mi-total">of 182</div>
+        </div>
+      </div>
+    </div>
+    <div class="nv-summary">
+      <div class="nv-sum-item">
+        <div>
+          <div class="nv-sum-val green">14.8%</div>
+          <div class="nv-sum-label">YTD avg · 135 of 914 opps</div>
+        </div>
+      </div>
+      <div class="nv-sum-item">
+        <div>
+          <div class="nv-sum-val teal">~1 in 7</div>
+          <div class="nv-sum-label">New opps can't buy<br>without voice</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 3-col initiatives -->
+  <div class="initiatives">
+
+    <!-- Initiative 01: AI Tooling -->
+    <div class="initiative teal">
+      <div class="initiative-head">
+        <div class="init-number">Initiative 01</div>
+        <div class="init-title">Automated MSP Prospecting at Scale</div>
+        <div class="init-sub">AI-powered personalization without adding headcount</div>
+        <div class="init-pill">Tooling Investment</div>
+      </div>
+      <div class="init-body">
+        <div class="tool-row rox">
+          <div class="tool-icon">🤖</div>
+          <div>
+            <div class="tool-name">Rox</div>
+            <div class="tool-desc">AI-native CRM — auto-researches accounts, surfaces buying signals, drafts personalized outreach so reps focus on selling.</div>
+            <div class="tool-tag">Account Intelligence</div>
+          </div>
+        </div>
+        <div class="tool-row retell">
+          <div class="tool-icon">📞</div>
+          <div>
+            <div class="tool-name">Retell AI</div>
+            <div class="tool-desc">AI voice agent for high-volume outbound — qualifies cold MSP leads before they hit an AE's calendar.</div>
+            <div class="tool-tag">Voice Prospecting</div>
+          </div>
+        </div>
+        <div class="tool-row outreach">
+          <div class="tool-icon">⚡</div>
+          <div>
+            <div class="tool-name">Outreach Rev Agent</div>
+            <div class="tool-desc">AI layer on existing Outreach stack — auto-personalizes sequences using account data and MSP-specific triggers.</div>
+            <div class="tool-tag">Sequence Personalization</div>
+          </div>
+        </div>
+        <div class="outcome-box">
+          <div class="outcome-icon">🎯</div>
+          <div class="outcome-text">Goal: <strong>3× MSP outreach quality</strong> — every AE armed with fully researched, personalized sequences from day one.</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Initiative 02: Talent -->
+    <div class="initiative navy">
+      <div class="initiative-head">
+        <div class="init-number">Initiative 02</div>
+        <div class="init-title">Top-Grade MSP AE Talent via External Hires</div>
+        <div class="init-sub">2 tenured reps who speak MSP — and can close deals the current team can't</div>
+        <div class="init-pill">Talent Investment</div>
+      </div>
+      <div class="init-body">
+        <div class="hire-profile">
+          <div class="hire-title">
+            Target Hire Profile
+            <span class="hire-badge">× 2 Reps</span>
+          </div>
+          <div class="hire-attrs">
+            <div class="hire-attr hi">3–7 yrs MSP sales</div>
+            <div class="hire-attr hi">RMM / PSA acumen</div>
+            <div class="hire-attr">Consultative seller</div>
+            <div class="hire-attr">CW / Autotask familiarity</div>
+            <div class="hire-attr">Mid-market experience</div>
+            <div class="hire-attr">Existing MSP network</div>
+            <div class="hire-attr">Complex billing</div>
+            <div class="hire-attr">Channel background</div>
+          </div>
+        </div>
+        <div class="salary-band">
+          <div>
+            <div class="sal-label">Current Band</div>
+            <div class="sal-from">$65K–$80K base</div>
+          </div>
+          <div class="sal-arrow">→</div>
+          <div>
+            <div class="sal-label">Proposed Senior MSP Band</div>
+            <div class="sal-to">$90K–$110K</div>
+          </div>
+        </div>
+        <div class="outcome-box">
+          <div class="outcome-icon">🏆</div>
+          <div class="outcome-text">Goal: <strong>2 senior MSP AEs by Q3</strong> — self-sourcing reps who compress deal cycles with real credibility.</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Initiative 03: Contract Buyout -->
+    <div class="initiative gradient">
+      <div class="initiative-head">
+        <div class="init-number">Initiative 03 · New Program</div>
+        <div class="init-title">"Show Us Your Contract" Switch Program</div>
+        <div class="init-sub">Eliminate the #1 objection — being locked into CW or Autotask</div>
+        <div class="init-pill">Competitive Weapon</div>
+      </div>
+      <div class="init-body">
+        <div class="buyout-desc">MSPs stuck in a ConnectWise or Autotask contract get a <strong>Year 1 credit</strong> against their remaining balance — applied against their Rev.io invoice.</div>
+        <div class="buyout-credits">
+          <div class="bc c1">
+            <div class="bc-term">1–3 mo. left</div>
+            <div class="bc-val">100%</div>
+          </div>
+          <div class="bc c2">
+            <div class="bc-term">4–6 mo. left</div>
+            <div class="bc-val">75%</div>
+          </div>
+          <div class="bc c3">
+            <div class="bc-term">7–9 mo. left</div>
+            <div class="bc-val">50%</div>
+          </div>
+          <div class="bc c4">
+            <div class="bc-term">10–12 mo. left</div>
+            <div class="bc-val">3 mo.</div>
+          </div>
+        </div>
+        <div class="buyout-perks">
+          <div class="buyout-perk">✓ Free data migration</div>
+          <div class="buyout-perk">✓ Dedicated onboarding 90 days</div>
+          <div class="buyout-perk">✓ 24-month price lock</div>
+          <div class="buyout-perk">✓ 90-day satisfaction clause</div>
+        </div>
+        <div class="buyout-cap-bar">
+          <div class="bcap-label">Max credit: <strong>$10K</strong> / deal</div>
+          <div class="bcap-note">New PSA customers only<br>CW &amp; Autotask switchers</div>
+        </div>
+        <div class="outcome-box">
+          <div class="outcome-icon">🔓</div>
+          <div class="outcome-text">Goal: <strong>remove contract lock-in as an objection</strong> entirely — turn "I can't switch yet" into a closed deal.</div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<div class="slide-footer">
+  <div class="footer-left">Rev.io Sales Intelligence · Q2 2026 Board Presentation · April 28, 2026</div>
+  <img src="https://7091219.fs1.hubspotusercontent-na1.net/hubfs/7091219/email-assets/logo-revio-white.png" alt="Rev.io" class="footer-logo">
+</div>
+    </div>
+
+    <div class="slide-page" id="slide-3" style="display:none;flex-direction:column;min-height:100vh;">
+      <div class="top-stripe"></div>
+
+<div class="slide-header">
+  <img src="https://7091219.fs1.hubspotusercontent-na1.net/hubfs/7091219/email-assets/logo-revio-white.png" alt="Rev.io" class="logo">
+  <div style="text-align:center">
+    <div class="slide-tag">Q2 2026 Board Presentation</div>
+    <h1>Community Field Assessment — MSP Market Presence</h1>
+    <div class="header-sub">Brook Lee, Senior Director of Community · April 2026</div>
+  </div>
+  <div class="header-right">
+    <div class="slide-date">April 28, 2026</div>
+    <div class="slide-num">Slide 3</div>
+  </div>
+</div>
+
+<div class="body-content">
+
+  <!-- Brand shift banner -->
+  <div class="shift-banner">
+    <div class="shift-box">
+      <div class="shift-label">February 2026</div>
+      <div class="shift-quote">"Who is Rev.io?"</div>
+      <div class="shift-context">Consistent response at first events</div>
+    </div>
+    <div class="shift-arrow">→</div>
+    <div class="shift-box">
+      <div class="shift-label">April 2026</div>
+      <div class="shift-quote">"I've heard of you guys. Tell me more."</div>
+      <div class="shift-context">Bootcamp · MSP Summit · ChannelPartners</div>
+    </div>
+    <div style="width:1px;height:40px;background:rgba(255,255,255,0.1)"></div>
+    <div style="display:flex;gap:20px;">
+      <div class="shift-stat">
+        <div class="shift-stat-val">60</div>
+        <div class="shift-stat-label">Days from zero to<br>unprompted awareness</div>
+      </div>
+      <div class="shift-stat">
+        <div class="shift-stat-val teal">6</div>
+        <div class="shift-stat-label">Events attended<br>since Feb 2026</div>
+      </div>
+      <div class="shift-stat">
+        <div class="shift-stat-val">$148K</div>
+        <div class="shift-stat-label">Total event<br>investment YTD</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Main 3-col grid -->
+  <div class="main-grid">
+
+    <!-- Col 1: Events -->
+    <div class="section-card events">
+      <div class="card-head">
+        <div class="card-eyebrow">Events Strategy</div>
+        <div class="card-title">Pipeline from 6 Events · $148K Investment</div>
+      </div>
+      <div class="card-body">
+        <table class="event-table">
+          <thead>
+            <tr>
+              <th>Event</th>
+              <th>Cost</th>
+              <th>Leads</th>
+              <th>Opps</th>
+              <th>Pipeline</th>
+              <th>Closed MRR</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>ITEXPO <span class="mature-badge">Mature</span></td>
+              <td>$10.6K</td><td>16</td><td>11</td><td>$10,830</td><td style="color:#6EBE4F;font-weight:700">$2,250</td>
+            </tr>
+            <tr>
+              <td>ISC West <span class="mature-badge">Mature</span></td>
+              <td>$37.2K</td><td>62</td><td>24</td><td>$27,115</td><td style="color:#6EBE4F;font-weight:700">$5,280</td>
+            </tr>
+            <tr>
+              <td>ASCII Costa Mesa <span class="early-badge">Early</span></td>
+              <td>$7.4K</td><td>15</td><td>8</td><td>$4,025</td><td>—</td>
+            </tr>
+            <tr>
+              <td>TMT Bootcamp <span class="early-badge">&lt;2 wks</span></td>
+              <td>$37.3K</td><td>59</td><td>5</td><td>$5,315</td><td>—</td>
+            </tr>
+            <tr>
+              <td>MSP Summit <span class="early-badge">&lt;2 wks</span></td>
+              <td>$19.4K</td><td>24</td><td>1</td><td>$700</td><td>—</td>
+            </tr>
+            <tr>
+              <td>Channel Partners <span class="early-badge">&lt;1 wk</span></td>
+              <td>$36.2K</td><td>25</td><td>0</td><td>—</td><td>—</td>
+            </tr>
+            <tr class="total-row">
+              <td>TOTAL</td>
+              <td>$148K</td><td>201</td><td>49</td><td>$47,985</td><td style="color:#3a8a50">$7,530</td>
+            </tr>
+          </tbody>
+        </table>
+        <div class="event-note">
+          <strong>Context:</strong> Only ITEXPO + ISC West have had time to mature. The remaining $110K+ in event investment has generated 84 leads and 14 opps in &lt;2 weeks — pipeline still building. Speaking slots at 3 events drove direct onsite demo signups.
+        </div>
+        <div style="margin-top:2px">
+          <div class="card-eyebrow" style="color:#64748b;margin-bottom:5px">SUPPORTING CHANNELS</div>
+          <div class="activity-row podcast">
+            <div class="act-icon">🎙️</div>
+            <div>
+              <div class="act-title">MSP Unfiltered Podcast</div>
+              <div class="act-desc">Partners: N-Able, Acronis, ScalePad, MSPHub — extends reach into trusted MSP audiences</div>
+              <div class="act-stat">Committed through EOY 2026</div>
+            </div>
+          </div>
+          <div class="activity-row newsletter" style="margin-top:6px">
+            <div class="act-icon">📰</div>
+            <div>
+              <div class="act-title">In the Loop with Brook · LinkedIn Newsletter</div>
+              <div class="act-desc">Written from firsthand MSP experience — builds trust vs. typical vendor content</div>
+              <div class="act-stat">721 subscribers · 44.5% growth last 7 days · Launched March 2026</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Col 2: What's Resonating -->
+    <div class="section-card resonating">
+      <div class="card-head">
+        <div class="card-eyebrow">Field Intelligence · 200+ MSP Conversations</div>
+        <div class="card-title">What MSPs Are Responding To</div>
+      </div>
+      <div class="card-body">
+        <div class="res-item">
+          <div class="res-check">✓</div>
+          <div>
+            <div class="res-text">Full AI integration with transparency</div>
+            <div class="res-sub">MSPs skeptical of vague AI claims — directness builds trust</div>
+          </div>
+        </div>
+        <div class="res-item">
+          <div class="res-check">✓</div>
+          <div>
+            <div class="res-text">Everything native in the PSA</div>
+            <div class="res-sub">Projects, billing, invoicing, assets, configs — no tool-stitching</div>
+          </div>
+        </div>
+        <div class="res-item">
+          <div class="res-check">✓</div>
+          <div>
+            <div class="res-text">Mobile app built for field service</div>
+            <div class="res-sub">Meaningful differentiator in a field-heavy industry</div>
+          </div>
+        </div>
+        <div class="res-item">
+          <div class="res-check">✓</div>
+          <div>
+            <div class="res-text">Month-to-month, no long-term contracts</div>
+            <div class="res-sub">Comes up in almost every conversation — MSPs burned by CW/AT</div>
+          </div>
+        </div>
+        <div class="res-item">
+          <div class="res-check">✓</div>
+          <div>
+            <div class="res-text">CommerceHub — agnostic marketplace</div>
+            <div class="res-sub">Procure software without leaving the PSA workflow — lands well once explained</div>
+          </div>
+        </div>
+        <div class="res-item">
+          <div class="res-check">✓</div>
+          <div>
+            <div class="res-text">Community built for partners, not just support</div>
+            <div class="res-sub">Peer connection differentiates from transactional vendor relationships</div>
+          </div>
+        </div>
+        <div class="traj-box">
+          <div class="traj-title">Trajectory</div>
+          <div class="traj-text">Brand recognition moved from <strong>zero to unprompted awareness in under 60 days</strong>. Pipeline from first two mature events is converting. Four events from the past two weeks have not had time to develop. <strong>The ground assault strategy is working.</strong></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Col 3: Gaps -->
+    <div class="section-card gaps">
+      <div class="card-head">
+        <div class="card-eyebrow">Honest Field Assessment</div>
+        <div class="card-title">Where We're Losing Deals</div>
+      </div>
+      <div class="card-body">
+        <div class="gap-item">
+          <div class="gap-title">
+            Integration Gaps
+            <span class="gap-badge">#1 Stall Reason</span>
+          </div>
+          <div class="gap-desc">Missing RMM integrations are table stakes — without them a significant portion of MSPs <em>cannot evaluate us</em> regardless of platform strength. Documentation platform integrations are the second most cited gap. Sales engineering tracks MRR impact monthly, providing a running dollar value of what closing these gaps is worth.</div>
+        </div>
+        <div class="gap-item" style="margin-top:4px">
+          <div class="gap-title">
+            Onboarding Velocity
+            <span class="gap-badge">Active Risk</span>
+          </div>
+          <div class="gap-desc">In a month-to-month, no-contract environment, the window to deliver first value is short. MSPs who expressed genuine intent did not get off the ground because onboarding didn't start fast enough. <strong style="color:#c0392b">Slow onboarding is a churn risk before the relationship even begins.</strong> VP of Onboarding hire currently in process.</div>
+        </div>
+        <div class="traj-box" style="background:#2d1515;border:1px solid #5a2020">
+          <div class="traj-title" style="color:#e74c3c">The Ask</div>
+          <div class="traj-text">The market activity we've built is generating opportunity at a rate the current infrastructure can't fully capture. <strong>Integration roadmap acceleration + onboarding capacity</strong> are the two investments that will unlock the pipeline already in motion.</div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<div class="slide-footer">
+  <div class="footer-left">Rev.io Sales Intelligence · Q2 2026 Board Presentation · April 28, 2026</div>
+  <div class="footer-author">Field Assessment: Brook Lee, Senior Director of Community</div>
+  <img src="https://7091219.fs1.hubspotusercontent-na1.net/hubfs/7091219/email-assets/logo-revio-white.png" alt="Rev.io" class="footer-logo">
+</div>
+    </div>
+
+    <div class="slide-page" id="slide-4" style="display:none;flex-direction:column;min-height:100vh;">
+      <div class="top-stripe"></div>
+
+<div class="slide-header">
+  <img src="https://7091219.fs1.hubspotusercontent-na1.net/hubfs/7091219/email-assets/logo-revio-white.png" alt="Rev.io" class="logo">
+  <div style="text-align:center">
+    <div class="slide-tag">Q2 2026 Board Presentation</div>
+    <h1>Community Program — ROI, Platform Growth & Partner Advisory Council</h1>
+    <div class="header-sub">Brook Lee, Senior Director of Community · April 2026</div>
+  </div>
+  <div class="header-right">
+    <div class="slide-date">April 28, 2026</div>
+    <div class="slide-num">Slide 4</div>
+  </div>
+</div>
+
+<div class="body-content">
+
+  <!-- 6-stat summary -->
+  <div class="summary-grid">
+    <div class="sum-card bookings">
+      <div class="sum-eyebrow">Channel Bookings</div>
+      <div class="sum-val">$18,388 <span>YTD</span></div>
+      <div class="sum-note">vs $24K H1 target — <span class="teal">accelerating</span>; lead source fix will improve H2 figures</div>
+    </div>
+    <div class="sum-card commerce">
+      <div class="sum-eyebrow">CommerceHub</div>
+      <div class="sum-val">11 active <span>4 in review</span></div>
+      <div class="sum-note">15–20 more ready to activate when transactional layer ships</div>
+    </div>
+    <div class="sum-card linkedin">
+      <div class="sum-eyebrow">LinkedIn & Earned Value</div>
+      <div class="sum-val">333K <span>impressions Q1</span></div>
+      <div class="sum-note"><span class="green">$72.9K</span> savings/earned · conservative & auditable</div>
+    </div>
+    <div class="sum-card pac">
+      <div class="sum-eyebrow">Partner Advisory Council</div>
+      <div class="sum-val">In Dev</div>
+      <div class="sum-note">Key unlock for PSA adoption — peer validation at scale</div>
+    </div>
+    <div class="sum-card partners">
+      <div class="sum-eyebrow">Partnerships in Dev.</div>
+      <div class="sum-val">AT&T · Verizon <span>Sangoma · VoIP.ms</span></div>
+      <div class="sum-note">Active — not yet in booking figures</div>
+    </div>
+    <div class="sum-card roi">
+      <div class="sum-eyebrow">Program ROI</div>
+      <div class="sum-val">~$91K <span>documented</span></div>
+      <div class="sum-note">vs ~$360K base cost · <span class="green">ahead of 18–24 mo. benchmark</span></div>
+    </div>
+  </div>
+
+  <!-- Main 3-col -->
+  <div class="main-grid">
+
+    <!-- Col 1: ROI Value Tracker -->
+    <div class="section-card roi-tracker">
+      <div class="card-head">
+        <div class="card-eyebrow">Community ROI Value Tracker</div>
+        <div class="card-title">$72,875 Earned / Saved YTD</div>
+      </div>
+      <div class="card-body">
+        <table class="roi-table">
+          <thead>
+            <tr>
+              <th>Category</th>
+              <th># Items</th>
+              <th>Net Savings</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>Media placements &amp; earned coverage</td>
+              <td>10</td>
+              <td>$24,200</td>
+            </tr>
+            <tr>
+              <td>Events — passes, discounts &amp; negotiations</td>
+              <td>6</td>
+              <td>$48,675</td>
+            </tr>
+            <tr class="total-row">
+              <td>Total (vs. $110,150 market value)</td>
+              <td>16</td>
+              <td class="green">$72,875</td>
+            </tr>
+          </tbody>
+        </table>
+        <div class="roi-examples">
+          <strong>Selected items:</strong> Pax8 Calgary ($30K value, zero cash — traded for Summit presence) · TMT Bootcamp ($5K saved) · BootCamp Dallas (4 vendor passes, $6K value) · Channel Company interview with Evan ($5K earned media at no cost) · ECN interview + N-able podcast with Brook ($4.5K + $2K). All valuations auditable against published rate cards.
+        </div>
+        <div class="roi-total-bar">
+          <div>
+            <div class="rtb-label">Base Program Cost</div>
+            <div class="rtb-val muted">~$360K</div>
+          </div>
+          <div style="text-align:center">
+            <div class="rtb-label">Documented Return</div>
+            <div class="rtb-val green">~$91K</div>
+          </div>
+          <div class="rtb-note">Tracking toward cost-neutrality in Year 1 — ahead of typical 18–24 month benchmark</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Col 2: Circle Platform -->
+    <div class="section-card circle">
+      <div class="card-head">
+        <div class="card-eyebrow">Community — Circle Platform</div>
+        <div class="card-title">Members Growing · Engagement Rising</div>
+      </div>
+      <div class="card-body">
+        <table class="circle-table">
+          <thead>
+            <tr>
+              <th>Metric</th>
+              <th>Jan</th>
+              <th>Feb</th>
+              <th class="mar-col">Mar</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>Total Community Members</td>
+              <td>71</td>
+              <td>97</td>
+              <td class="mar-col">126 <span class="trend-chip">↑77%</span></td>
+            </tr>
+            <tr>
+              <td>Active Members</td>
+              <td>54</td>
+              <td>59</td>
+              <td class="mar-col">79 <span class="trend-chip">↑46%</span></td>
+            </tr>
+            <tr>
+              <td>University Completion Rate</td>
+              <td>14%</td>
+              <td>16%</td>
+              <td class="mar-col">18% <span class="trend-chip">↑4pp</span></td>
+            </tr>
+          </tbody>
+        </table>
+
+        <div class="circle-growth">
+          <div class="cg-stat mem">
+            <div class="cg-stat-val">126</div>
+            <div class="cg-stat-label">Members (Mar)</div>
+            <div class="cg-stat-trend">+77% since Jan</div>
+          </div>
+          <div class="cg-stat active">
+            <div class="cg-stat-val">63%</div>
+            <div class="cg-stat-label">Active Rate</div>
+            <div class="cg-stat-trend">79 of 126</div>
+          </div>
+          <div class="cg-stat univ">
+            <div class="cg-stat-val">18%</div>
+            <div class="cg-stat-label">Univ. Complete</div>
+            <div class="cg-stat-trend">+4pp QTD</div>
+          </div>
+        </div>
+
+        <div class="partners-box">
+          <div class="partners-title">Partnerships in Development</div>
+          <div class="partners-names">AT&T · Verizon · Sangoma · VoIP.ms</div>
+          <div class="partners-note">Active relationships — not yet reflected in any booking figures. Pipeline upside ahead.</div>
+        </div>
+
+        <div style="background:#f5f7fa;border-radius:7px;padding:9px 11px;border-left:3px solid #2399B5;">
+          <div style="font-size:9px;font-weight:700;color:#8da0b4;text-transform:uppercase;letter-spacing:1px;margin-bottom:4px;">MSP Unfiltered Podcast Partners</div>
+          <div style="font-size:10.5px;font-weight:700;color:#1D3756;">N-Able · Acronis · ScalePad · MSPHub</div>
+          <div style="font-size:9px;color:#64748b;margin-top:2px;">Joint GTM committed through EOY 2026 · extends reach into established partner audiences</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Col 3: PAC -->
+    <div class="section-card pac">
+      <div class="card-head">
+        <div class="card-eyebrow">Strategic Initiative</div>
+        <div class="card-title">Partner Advisory Council (PAC)</div>
+      </div>
+      <div class="card-body">
+        <div class="pac-callout">
+          <div class="pac-callout-title">Why the PAC Matters — PSA Adoption</div>
+          <div class="pac-callout-text">The single biggest barrier to PSA adoption among our comms client base is <strong>inertia</strong>. Operators on legacy systems won't migrate without a compelling reason and peer validation. The PAC creates both — senior decision-makers get a voice in shaping the roadmap, which <strong>directly accelerates their own adoption</strong>, and creates a peer network where migration decisions are validated laterally rather than sold top-down.</div>
+        </div>
+
+        <div class="pac-bullets">
+          <div class="pac-bullet">
+            <div class="pac-dot">›</div>
+            PAC structure in development — inaugural cohort being identified from existing client and partner base
+          </div>
+          <div class="pac-bullet">
+            <div class="pac-dot">›</div>
+            Focus: communications providers with legacy PSA dependencies who are evaluating or have expressed interest in Rev.io PSA
+          </div>
+          <div class="pac-bullet">
+            <div class="pac-dot">›</div>
+            Expected output: roadmap input, peer advocacy, and referral pipeline from a group with credibility in the market
+          </div>
+        </div>
+
+        <div class="pac-bottom">
+          <div class="pac-bottom-title">The Strategic Unlock</div>
+          <div class="pac-bottom-text">This is how legacy PSA incumbents get displaced — <strong>not through feature comparisons, but through community trust.</strong> PAC members become internal champions and trusted referral sources for their peer networks.</div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<div class="slide-footer">
+  <div class="footer-left">Rev.io Sales Intelligence · Q2 2026 Board Presentation · April 28, 2026</div>
+  <div style="font-size:9px;color:#b0bec5">Community Program · Brook Lee, Senior Director of Community</div>
+  <img src="https://7091219.fs1.hubspotusercontent-na1.net/hubfs/7091219/email-assets/logo-revio-white.png" alt="Rev.io" class="footer-logo">
+</div>
+    </div>
+
+    <div class="slide-page" id="slide-5" style="display:none;flex-direction:column;min-height:100vh;">
+      <div class="top-stripe"></div>
+
+<div class="slide-header">
+  <img src="https://7091219.fs1.hubspotusercontent-na1.net/hubfs/7091219/email-assets/logo-revio-white.png" alt="Rev.io" class="logo">
+  <div style="text-align:center">
+    <div class="slide-tag">Q2 2026 Board Presentation</div>
+    <h1>Channel-Influenced Bookings — Pipeline & Revenue</h1>
+    <div class="header-sub">Brook Lee, Usman Zahoor, Jake Mitchell · 2026 YTD</div>
+  </div>
+  <div class="header-right">
+    <div class="slide-date">April 28, 2026</div>
+    <div class="slide-num">Slide 5</div>
+  </div>
+</div>
+
+<div class="body-content">
+
+  <!-- Top stats -->
+  <div class="top-stats">
+    <div class="ts-card ytd">
+      <div class="ts-eyebrow">Channel MRR · YTD</div>
+      <div class="ts-val green">$18,388</div>
+      <div class="ts-note"><span class="green">Floor figure</span> — known undercount; true impact materially broader</div>
+    </div>
+    <div class="ts-card h1">
+      <div class="ts-eyebrow">H1 Target</div>
+      <div class="ts-val teal">$24,000</div>
+      <div class="ts-note">76.6% attained with 2 months remaining — accelerating</div>
+    </div>
+    <div class="ts-card fy">
+      <div class="ts-eyebrow">Full-Year Target</div>
+      <div class="ts-val">$48,000</div>
+      <div class="ts-note">38.3% of annual target captured in 4 months</div>
+    </div>
+    <div class="ts-card touch">
+      <div class="ts-eyebrow">Partner Touch Points</div>
+      <div class="ts-val green">265+</div>
+      <div class="ts-note">245 logged in SF + ~20 April meetings pending entry</div>
+    </div>
+    <div class="ts-card refs">
+      <div class="ts-eyebrow">Referrals Logged YTD</div>
+      <div class="ts-val">8</div>
+      <div class="ts-note"><span class="flag">Known undercount</span> — intake fix in progress with Marketing &amp; RevOps</div>
+    </div>
+    <div class="ts-card opps">
+      <div class="ts-eyebrow">Opps in Pipeline</div>
+      <div class="ts-val green">85</div>
+      <div class="ts-note">Active channel-influenced opportunities across all stages</div>
+    </div>
+  </div>
+
+  <!-- Main 3-col -->
+  <div class="main-grid">
+
+    <!-- Col 1: Bookings table -->
+    <div class="section-card bookings">
+      <div class="card-head">
+        <div class="card-eyebrow">Pipeline & Revenue</div>
+        <div class="card-title">Channel-Influenced MRR by Month</div>
+      </div>
+      <div class="card-body">
+        <table class="bookings-table">
+          <thead>
+            <tr>
+              <th>Month</th>
+              <th>Channel MRR</th>
+              <th>Running Total</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>January</td>
+              <td>$1,200</td>
+              <td>$1,200</td>
+            </tr>
+            <tr>
+              <td>February</td>
+              <td>$3,369</td>
+              <td>$4,569</td>
+            </tr>
+            <tr>
+              <td>March</td>
+              <td style="color:#3a8a50;font-weight:700">$8,039</td>
+              <td>$12,608</td>
+            </tr>
+            <tr>
+              <td>April</td>
+              <td>$5,780</td>
+              <td>$18,388</td>
+            </tr>
+            <tr class="ytd-row">
+              <td>YTD Total</td>
+              <td>$18,388</td>
+              <td>—</td>
+            </tr>
+            <tr class="target-row">
+              <td>H1 Target</td>
+              <td>$24,000</td>
+              <td>—</td>
+            </tr>
+            <tr class="target-row">
+              <td>Full-Year Target</td>
+              <td>$48,000</td>
+              <td>—</td>
+            </tr>
+          </tbody>
+        </table>
+
+        <div class="progress-wrap">
+          <div class="progress-label">
+            <span>H1 Progress</span>
+            <strong>$18,388 of $24,000 — 76.6%</strong>
+          </div>
+          <div class="progress-track">
+            <div class="progress-fill" style="width:76.6%">
+              <span class="progress-pct">76.6%</span>
+            </div>
+          </div>
+          <div class="progress-markers">
+            <span>$0</span>
+            <span>$24K H1 target</span>
+            <span>$48K FY target</span>
+          </div>
+        </div>
+
+        <div class="momentum-box">
+          <div class="momentum-title">Monthly Growth Trend</div>
+          <div class="momentum-grid">
+            <div class="momentum-item">
+              <div class="momentum-val">$1.2K</div>
+              <div class="momentum-month">Jan</div>
+            </div>
+            <div class="momentum-item">
+              <div class="momentum-val">$3.4K</div>
+              <div class="momentum-month">Feb <span class="momentum-arrow">↑181%</span></div>
+            </div>
+            <div class="momentum-item">
+              <div class="momentum-val" style="color:#3a8a50">$8.0K</div>
+              <div class="momentum-month">Mar <span class="momentum-arrow">↑139%</span></div>
+            </div>
+            <div class="momentum-item">
+              <div class="momentum-val">$5.8K</div>
+              <div class="momentum-month">Apr MTD</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Col 2: Attribution & tracking -->
+    <div class="section-card attribution">
+      <div class="card-head">
+        <div class="card-eyebrow">On Attribution & Referral Tracking</div>
+        <div class="card-title">$18,388 is a Floor — Not a Ceiling</div>
+      </div>
+      <div class="card-body">
+        <div class="attr-note">
+          The $18,388 YTD reflects the full channel-influenced model — deals where channel played a role through referrals, introductions, co-marketing, and event-sourced leads. <strong>These numbers represent a floor.</strong>
+        </div>
+
+        <div style="font-size:9px;font-weight:700;color:#8da0b4;text-transform:uppercase;letter-spacing:1px;margin-top:2px;">Attribution Model Includes</div>
+        <div class="attr-chips">
+          <div class="attr-chip hl">Partner account/contact influence</div>
+          <div class="attr-chip hl">Channel team coverage</div>
+          <div class="attr-chip">Strategic Partner opp source</div>
+          <div class="attr-chip">Local Association referral</div>
+          <div class="attr-chip">Agent Referral source</div>
+          <div class="attr-chip">Lead direction: Channel Generated</div>
+          <div class="attr-chip">Marketing source: Referral / Channel</div>
+          <div class="attr-chip">Sub-source: Brook Lee, Usman Zahoor, Jake Mitchell</div>
+        </div>
+
+        <div style="background:#f5f7fa;border-radius:7px;padding:9px 11px;border-left:3px solid #6EBE4F;">
+          <div style="font-size:9px;font-weight:700;color:#64748b;text-transform:uppercase;letter-spacing:1px;margin-bottom:4px;">Referral Tracking</div>
+          <div style="font-size:9.5px;color:#4a6280;line-height:1.4;">8 referrals formally logged YTD — a <strong style="color:#1D3756">known undercount</strong>. Lead-source capture at intake has been inconsistent across the sales team. Channel is actively working with <strong style="color:#1D3756">Marketing and RevOps</strong> to correct this process. Reported referral volume will more accurately reflect actual activity in H2.</div>
+        </div>
+
+        <div class="undercount-box">
+          <div class="undercount-title">⚠️ Tracking Gap — In Progress</div>
+          <div class="undercount-text">The $18,388 reflects what <strong>can be formally tracked</strong>. The true influence on pipeline, brand consideration, and inbound conversion is materially broader. As attribution tooling and process improve, figures will more accurately reflect channel's full contribution.</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Col 3: What isn't being counted -->
+    <div class="section-card uncounted">
+      <div class="card-head">
+        <div class="card-eyebrow">Important Context</div>
+        <div class="card-title">What Isn't Being Counted</div>
+      </div>
+      <div class="card-body">
+        <div class="uncounted-item">
+          <div class="uncounted-dot">›</div>
+          When a partner speaks to a prospect about Rev.io and that prospect later visits the website and submits a form, it records as a <strong>marketing or inbound lead — not channel.</strong>
+        </div>
+        <div class="uncounted-item">
+          <div class="uncounted-dot">›</div>
+          When an SDR reaches an account warmed by a co-marketing post, a podcast Brook appeared on, or a webinar a partner ran — <strong>that warmth doesn't show up in an attribution field.</strong>
+        </div>
+        <div class="uncounted-item">
+          <div class="uncounted-dot">›</div>
+          LinkedIn co-marketing posts that drive a prospect to research Rev.io independently — <strong>recorded as organic/direct, not channel.</strong>
+        </div>
+        <div class="uncounted-item">
+          <div class="uncounted-dot">›</div>
+          A partner putting in a strong word that tips a deal already in pipeline — <strong>invisible to the current reporting model.</strong>
+        </div>
+        <div class="truth-box">
+          <div class="truth-title">The Real Picture</div>
+          <div class="truth-text">The $18,388 in channel-influenced MRR reflects what can be formally tracked. The true influence on pipeline, brand consideration, and inbound conversion is <strong>materially broader — and largely invisible to the current reporting model.</strong> As attribution tooling and process improve, these numbers will more accurately reflect the full scope of channel's contribution.</div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<div class="slide-footer">
+  <div class="footer-left">Rev.io Sales Intelligence · Q2 2026 Board Presentation · April 28, 2026</div>
+  <div style="font-size:9px;color:#b0bec5">Channel Team · Brook Lee, Usman Zahoor, Jake Mitchell</div>
+  <img src="https://7091219.fs1.hubspotusercontent-na1.net/hubfs/7091219/email-assets/logo-revio-white.png" alt="Rev.io" class="footer-logo">
+</div>
+    </div>
+
+<!-- Navigation -->
+<nav class="deck-nav">
+  <button class="deck-btn" id="btn-prev" onclick="navigate(-1)">← Prev</button>
+  <div class="deck-dots" id="deck-dots">
+    <div class="deck-dot  active" onclick="goTo(1)" title="Slide 1"></div><div class="deck-dot" onclick="goTo(2)" title="Slide 2"></div><div class="deck-dot" onclick="goTo(3)" title="Slide 3"></div><div class="deck-dot" onclick="goTo(4)" title="Slide 4"></div><div class="deck-dot" onclick="goTo(5)" title="Slide 5"></div>
+  </div>
+  <span class="deck-counter" id="deck-counter">1 / 5</span>
+  <button class="deck-btn primary" id="btn-next" onclick="navigate(1)">Next →</button>
+</nav>
+
+<div class="key-hint">← → arrow keys to navigate</div>
+
+<script>
+  var current = 1;
+  var total = 5;
+
+  function goTo(n) {
+    if (n < 1 || n > total) return;
+    document.getElementById('slide-' + current).style.display = 'none';
+    current = n;
+    document.getElementById('slide-' + current).style.display = 'flex';
+    document.getElementById('deck-counter').textContent = current + ' / ' + total;
+    document.getElementById('btn-prev').disabled = current === 1;
+    document.getElementById('btn-next').disabled = current === total;
+    // Update dots
+    var dots = document.querySelectorAll('.deck-dot');
+    dots.forEach(function(d, i) {
+      d.classList.toggle('active', i === current - 1);
+    });
+    window.scrollTo(0, 0);
+  }
+
+  function navigate(dir) {
+    goTo(current + dir);
+  }
+
+  document.addEventListener('keydown', function(e) {
+    if (e.key === 'ArrowRight' || e.key === 'ArrowDown') navigate(1);
+    if (e.key === 'ArrowLeft' || e.key === 'ArrowUp') navigate(-1);
+  });
+
+  // Init state
+  goTo(1);
+</script>
+</body>
+</html>
