@@ -189,6 +189,28 @@
       </div>
     </div>
   </div>
+
+  <div class="section-title">Contact Status by Event</div>
+  <div class="chart-card" style="display:block;padding:24px">
+    <div style="display:flex;gap:16px;flex-wrap:wrap;margin-bottom:16px;">
+      <div style="display:flex;align-items:center;gap:6px">
+        <div style="width:10px;height:10px;border-radius:2px;background:#00ff88;flex-shrink:0"></div>
+        <span style="font-size:11px;color:#c8f0dc;font-weight:600">SQL</span>
+      </div>      <div style="display:flex;align-items:center;gap:6px">
+        <div style="width:10px;height:10px;border-radius:2px;background:#00e5ff;flex-shrink:0"></div>
+        <span style="font-size:11px;color:#c8f0dc;font-weight:600">MQL</span>
+      </div>      <div style="display:flex;align-items:center;gap:6px">
+        <div style="width:10px;height:10px;border-radius:2px;background:#ff4444;flex-shrink:0"></div>
+        <span style="font-size:11px;color:#c8f0dc;font-weight:600">Disqualified</span>
+      </div>      <div style="display:flex;align-items:center;gap:6px">
+        <div style="width:10px;height:10px;border-radius:2px;background:#444;flex-shrink:0"></div>
+        <span style="font-size:11px;color:#c8f0dc;font-weight:600">Unknown</span>
+      </div>
+    </div>
+    <div style="position:relative">
+      <canvas id="eventChart"></canvas>
+    </div>
+  </div>
   <div class="section-title">Conversion by AE</div>
   <div class="owner-table-wrap">
     <table class="owner-table">
@@ -1902,6 +1924,94 @@ function toggleEvent(id) {
 </script>
 
 <script>
+
+(function() {
+  const labels   = ["ISC West 26", "TMTBootcamp", "Kaseya Connect 26", "MSP Summit 26", "Channel Partners 26", "ITEXPO 26", "ASCII 26", "AIN 26", "SkySwitch Vectors 26", "GIA 26"];
+  const totals   = [50, 39, 38, 23, 16, 16, 12, 5, 4, 2];
+  const datasets = [{"label": "SQL", "color": "#00ff88", "data": [13, 9, 1, 2, 0, 4, 9, 1, 0, 1]}, {"label": "MQL", "color": "#00e5ff", "data": [19, 29, 25, 20, 16, 5, 3, 3, 4, 0]}, {"label": "Disqualified", "color": "#ff4444", "data": [0, 1, 2, 1, 0, 2, 0, 0, 0, 0]}, {"label": "Unknown", "color": "#444", "data": [18, 0, 10, 0, 0, 5, 0, 1, 0, 1]}];
+  const canvas   = document.getElementById('eventChart');
+  const ctx      = canvas.getContext('2d');
+
+  const barH    = 32;
+  const gap     = 10;
+  const labelW  = 160;
+  const padding = { top:10, right:80, bottom:10, left:labelW };
+  const chartW  = 700;
+  const chartH  = labels.length * (barH + gap) + padding.top + padding.bottom;
+
+  canvas.width  = chartW;
+  canvas.height = chartH;
+  canvas.style.width  = '100%';
+  canvas.style.maxWidth = chartW + 'px';
+
+  const maxVal = Math.max(...totals);
+  const availW = chartW - padding.left - padding.right;
+
+  ctx.font = '600 11px Segoe UI, system-ui';
+  ctx.textBaseline = 'middle';
+
+  labels.forEach((label, i) => {
+    const y = padding.top + i * (barH + gap);
+    const total = totals[i];
+
+    // Label
+    ctx.fillStyle = '#c8f0dc';
+    ctx.textAlign = 'right';
+    ctx.fillText(label, labelW - 8, y + barH / 2);
+
+    // Stacked bars
+    let x = padding.left;
+    datasets.forEach(ds => {
+      const val = ds.data[i];
+      if (!val) return;
+      const w = (val / maxVal) * availW;
+      ctx.fillStyle = ds.color;
+      ctx.beginPath();
+      if (x === padding.left && val === total) {
+        roundRect(ctx, x, y, w, barH, 4);
+      } else if (x === padding.left) {
+        roundRectLeft(ctx, x, y, w, barH, 4);
+      } else if (x + w >= padding.left + (total / maxVal) * availW - 1) {
+        roundRectRight(ctx, x, y, w, barH, 4);
+      } else {
+        ctx.rect(x, y, w, barH);
+      }
+      ctx.fill();
+      x += w;
+    });
+
+    // Total label
+    const totalW = (total / maxVal) * availW;
+    ctx.fillStyle = '#fff';
+    ctx.textAlign = 'left';
+    ctx.font = '700 11px Segoe UI, system-ui';
+    ctx.fillText(total, padding.left + totalW + 6, y + barH / 2);
+    ctx.font = '600 11px Segoe UI, system-ui';
+  });
+
+  function roundRect(ctx, x, y, w, h, r) {
+    ctx.beginPath();
+    ctx.moveTo(x + r, y);
+    ctx.lineTo(x + w - r, y); ctx.quadraticCurveTo(x+w, y, x+w, y+r);
+    ctx.lineTo(x+w, y+h-r); ctx.quadraticCurveTo(x+w, y+h, x+w-r, y+h);
+    ctx.lineTo(x+r, y+h); ctx.quadraticCurveTo(x, y+h, x, y+h-r);
+    ctx.lineTo(x, y+r); ctx.quadraticCurveTo(x, y, x+r, y);
+    ctx.closePath();
+  }
+  function roundRectLeft(ctx, x, y, w, h, r) {
+    ctx.beginPath();
+    ctx.moveTo(x+r, y); ctx.lineTo(x+w, y); ctx.lineTo(x+w, y+h); ctx.lineTo(x+r, y+h);
+    ctx.quadraticCurveTo(x, y+h, x, y+h-r); ctx.lineTo(x, y+r);
+    ctx.quadraticCurveTo(x, y, x+r, y); ctx.closePath();
+  }
+  function roundRectRight(ctx, x, y, w, h, r) {
+    ctx.beginPath();
+    ctx.moveTo(x, y); ctx.lineTo(x+w-r, y); ctx.quadraticCurveTo(x+w, y, x+w, y+r);
+    ctx.lineTo(x+w, y+h-r); ctx.quadraticCurveTo(x+w, y+h, x+w-r, y+h);
+    ctx.lineTo(x, y+h); ctx.closePath();
+  }
+})();
+
 (function() {
   const ctx = document.getElementById('statusChart').getContext('2d');
   const labels = ["MQL", "SQL", "Disqualified", "Unknown"];
