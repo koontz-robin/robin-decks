@@ -211,20 +211,32 @@
       <canvas id="eventChart"></canvas>
     </div>
   </div>
-  <div class="section-title">Conversion by AE</div>
-  <div class="owner-table-wrap">
-    <table class="owner-table">
-      <thead><tr>
-        <th>AE</th>
-        <th>Contacts</th>
-        <th>Conv %</th>
-        <th>With Opp</th>
-        <th>Pipeline</th>
-        <th>Closed Won</th>
-      </tr></thead>
-      <tbody><tr>
+
+  <div class="section-title">MQL → Opportunity Conversion by Rep</div>
+  <div class="chart-card" style="display:block;padding:24px">
+    <div style="display:flex;gap:20px;flex-wrap:wrap;margin-bottom:16px">
+      <div style="display:flex;align-items:center;gap:6px"><div style="width:10px;height:10px;border-radius:2px;background:#00ff88"></div><span style="font-size:11px;color:#c8f0dc;font-weight:600">SQL</span></div>
+      <div style="display:flex;align-items:center;gap:6px"><div style="width:10px;height:10px;border-radius:2px;background:#00e5ff"></div><span style="font-size:11px;color:#c8f0dc;font-weight:600">MQL</span></div>
+      <div style="display:flex;align-items:center;gap:6px"><div style="width:10px;height:10px;border-radius:2px;background:#ffd700"></div><span style="font-size:11px;color:#c8f0dc;font-weight:600">Opps Created</span></div>
+    </div>
+    <canvas id="repChart"></canvas>
+    <div class="owner-table-wrap" style="margin-top:20px;margin-bottom:0">
+      <table class="owner-table">
+        <thead><tr>
+          <th>Rep</th><th>Leads</th><th>Status Mix</th><th>→ Opp %</th><th>Opps</th><th>Pipeline</th><th>CW</th>
+        </tr></thead>
+        <tbody><tr>
       <td style="font-weight:600;color:#c8f0dc">Connor Flynn</td>
-      <td style="text-align:center">42</td>
+      <td style="text-align:center;font-weight:700">42</td>
+      <td><div style="display:flex;height:8px;border-radius:4px;overflow:hidden;width:120px;background:#0a0a0a">
+      <div style="width:17%;background:#00ff88"></div>
+      <div style="width:81%;background:#00e5ff"></div>
+      <div style="width:0%;background:#ff4444"></div>
+      <div style="width:2%;background:#333"></div>
+    </div>
+    <div style="font-size:9px;color:#3a6a4a;margin-top:2px">
+      <span style="color:#00ff88">7 SQL</span> · <span style="color:#00e5ff">34 MQL</span>
+    </div></td>
       <td style="text-align:center;color:#ffd700;font-weight:700">17%</td>
       <td style="text-align:center;color:#00e5ff">7</td>
       <td style="text-align:center;color:#ffd700">$1,275</td>
@@ -232,23 +244,50 @@
     </tr>
 <tr>
       <td style="font-weight:600;color:#c8f0dc">Ardit Berdyna</td>
-      <td style="text-align:center">36</td>
+      <td style="text-align:center;font-weight:700">36</td>
+      <td><div style="display:flex;height:8px;border-radius:4px;overflow:hidden;width:120px;background:#0a0a0a">
+      <div style="width:0%;background:#00ff88"></div>
+      <div style="width:36%;background:#00e5ff"></div>
+      <div style="width:6%;background:#ff4444"></div>
+      <div style="width:58%;background:#333"></div>
+    </div>
+    <div style="font-size:9px;color:#3a6a4a;margin-top:2px">
+      <span style="color:#00ff88">0 SQL</span> · <span style="color:#00e5ff">13 MQL</span> · <span style='color:#ff4444'>2 DQ</span>
+    </div></td>
       <td style="text-align:center;color:#ff4444;font-weight:700">0%</td>
       <td style="text-align:center;color:#00e5ff">0</td>
-      <td style="text-align:center;color:#ffd700">$0</td>
-      <td style="text-align:center;color:#00ff88;font-weight:700">$0</td>
+      <td style="text-align:center;color:#ffd700">—</td>
+      <td style="text-align:center;color:#00ff88;font-weight:700">—</td>
     </tr>
 <tr>
       <td style="font-weight:600;color:#c8f0dc">Andy Whisenant</td>
-      <td style="text-align:center">34</td>
+      <td style="text-align:center;font-weight:700">34</td>
+      <td><div style="display:flex;height:8px;border-radius:4px;overflow:hidden;width:120px;background:#0a0a0a">
+      <div style="width:18%;background:#00ff88"></div>
+      <div style="width:76%;background:#00e5ff"></div>
+      <div style="width:3%;background:#ff4444"></div>
+      <div style="width:3%;background:#333"></div>
+    </div>
+    <div style="font-size:9px;color:#3a6a4a;margin-top:2px">
+      <span style="color:#00ff88">6 SQL</span> · <span style="color:#00e5ff">26 MQL</span> · <span style='color:#ff4444'>1 DQ</span>
+    </div></td>
       <td style="text-align:center;color:#ffd700;font-weight:700">21%</td>
       <td style="text-align:center;color:#00e5ff">7</td>
       <td style="text-align:center;color:#ffd700">$4,240</td>
-      <td style="text-align:center;color:#00ff88;font-weight:700">$0</td>
+      <td style="text-align:center;color:#00ff88;font-weight:700">—</td>
     </tr>
 <tr>
       <td style="font-weight:600;color:#c8f0dc">Jamie Butler</td>
-      <td style="text-align:center">29</td>
+      <td style="text-align:center;font-weight:700">29</td>
+      <td><div style="display:flex;height:8px;border-radius:4px;overflow:hidden;width:120px;background:#0a0a0a">
+      <div style="width:28%;background:#00ff88"></div>
+      <div style="width:62%;background:#00e5ff"></div>
+      <div style="width:10%;background:#ff4444"></div>
+      <div style="width:0%;background:#333"></div>
+    </div>
+    <div style="font-size:9px;color:#3a6a4a;margin-top:2px">
+      <span style="color:#00ff88">8 SQL</span> · <span style="color:#00e5ff">18 MQL</span> · <span style='color:#ff4444'>3 DQ</span>
+    </div></td>
       <td style="text-align:center;color:#00ff88;font-weight:700">34%</td>
       <td style="text-align:center;color:#00e5ff">10</td>
       <td style="text-align:center;color:#ffd700">$2,850</td>
@@ -256,70 +295,143 @@
     </tr>
 <tr>
       <td style="font-weight:600;color:#c8f0dc">Usman Zahoor</td>
-      <td style="text-align:center">16</td>
+      <td style="text-align:center;font-weight:700">16</td>
+      <td><div style="display:flex;height:8px;border-radius:4px;overflow:hidden;width:120px;background:#0a0a0a">
+      <div style="width:12%;background:#00ff88"></div>
+      <div style="width:88%;background:#00e5ff"></div>
+      <div style="width:0%;background:#ff4444"></div>
+      <div style="width:0%;background:#333"></div>
+    </div>
+    <div style="font-size:9px;color:#3a6a4a;margin-top:2px">
+      <span style="color:#00ff88">2 SQL</span> · <span style="color:#00e5ff">14 MQL</span>
+    </div></td>
       <td style="text-align:center;color:#ff4444;font-weight:700">6%</td>
       <td style="text-align:center;color:#00e5ff">1</td>
-      <td style="text-align:center;color:#ffd700">$0</td>
-      <td style="text-align:center;color:#00ff88;font-weight:700">$0</td>
+      <td style="text-align:center;color:#ffd700">—</td>
+      <td style="text-align:center;color:#00ff88;font-weight:700">—</td>
     </tr>
 <tr>
       <td style="font-weight:600;color:#c8f0dc">Patrick Davies</td>
-      <td style="text-align:center">13</td>
+      <td style="text-align:center;font-weight:700">13</td>
+      <td><div style="display:flex;height:8px;border-radius:4px;overflow:hidden;width:120px;background:#0a0a0a">
+      <div style="width:31%;background:#00ff88"></div>
+      <div style="width:46%;background:#00e5ff"></div>
+      <div style="width:0%;background:#ff4444"></div>
+      <div style="width:23%;background:#333"></div>
+    </div>
+    <div style="font-size:9px;color:#3a6a4a;margin-top:2px">
+      <span style="color:#00ff88">4 SQL</span> · <span style="color:#00e5ff">6 MQL</span>
+    </div></td>
       <td style="text-align:center;color:#ffd700;font-weight:700">15%</td>
       <td style="text-align:center;color:#00e5ff">2</td>
-      <td style="text-align:center;color:#ffd700">$0</td>
-      <td style="text-align:center;color:#00ff88;font-weight:700">$0</td>
+      <td style="text-align:center;color:#ffd700">—</td>
+      <td style="text-align:center;color:#00ff88;font-weight:700">—</td>
     </tr>
 <tr>
       <td style="font-weight:600;color:#c8f0dc">Jake Borah</td>
-      <td style="text-align:center">11</td>
+      <td style="text-align:center;font-weight:700">11</td>
+      <td><div style="display:flex;height:8px;border-radius:4px;overflow:hidden;width:120px;background:#0a0a0a">
+      <div style="width:45%;background:#00ff88"></div>
+      <div style="width:36%;background:#00e5ff"></div>
+      <div style="width:0%;background:#ff4444"></div>
+      <div style="width:18%;background:#333"></div>
+    </div>
+    <div style="font-size:9px;color:#3a6a4a;margin-top:2px">
+      <span style="color:#00ff88">5 SQL</span> · <span style="color:#00e5ff">4 MQL</span>
+    </div></td>
       <td style="text-align:center;color:#00ff88;font-weight:700">36%</td>
       <td style="text-align:center;color:#00e5ff">4</td>
       <td style="text-align:center;color:#ffd700">$2,700</td>
-      <td style="text-align:center;color:#00ff88;font-weight:700">$0</td>
+      <td style="text-align:center;color:#00ff88;font-weight:700">—</td>
     </tr>
 <tr>
       <td style="font-weight:600;color:#c8f0dc">Jaylin Bender</td>
-      <td style="text-align:center">9</td>
+      <td style="text-align:center;font-weight:700">9</td>
+      <td><div style="display:flex;height:8px;border-radius:4px;overflow:hidden;width:120px;background:#0a0a0a">
+      <div style="width:33%;background:#00ff88"></div>
+      <div style="width:22%;background:#00e5ff"></div>
+      <div style="width:0%;background:#ff4444"></div>
+      <div style="width:44%;background:#333"></div>
+    </div>
+    <div style="font-size:9px;color:#3a6a4a;margin-top:2px">
+      <span style="color:#00ff88">3 SQL</span> · <span style="color:#00e5ff">2 MQL</span>
+    </div></td>
       <td style="text-align:center;color:#00ff88;font-weight:700">33%</td>
       <td style="text-align:center;color:#00e5ff">3</td>
-      <td style="text-align:center;color:#ffd700">$0</td>
-      <td style="text-align:center;color:#00ff88;font-weight:700">$0</td>
+      <td style="text-align:center;color:#ffd700">—</td>
+      <td style="text-align:center;color:#00ff88;font-weight:700">—</td>
     </tr>
 <tr>
       <td style="font-weight:600;color:#c8f0dc">Husam Zalmiyar</td>
-      <td style="text-align:center">8</td>
+      <td style="text-align:center;font-weight:700">8</td>
+      <td><div style="display:flex;height:8px;border-radius:4px;overflow:hidden;width:120px;background:#0a0a0a">
+      <div style="width:25%;background:#00ff88"></div>
+      <div style="width:50%;background:#00e5ff"></div>
+      <div style="width:0%;background:#ff4444"></div>
+      <div style="width:25%;background:#333"></div>
+    </div>
+    <div style="font-size:9px;color:#3a6a4a;margin-top:2px">
+      <span style="color:#00ff88">2 SQL</span> · <span style="color:#00e5ff">4 MQL</span>
+    </div></td>
       <td style="text-align:center;color:#00ff88;font-weight:700">38%</td>
       <td style="text-align:center;color:#00e5ff">3</td>
       <td style="text-align:center;color:#ffd700">$2,025</td>
-      <td style="text-align:center;color:#00ff88;font-weight:700">$0</td>
+      <td style="text-align:center;color:#00ff88;font-weight:700">—</td>
     </tr>
 <tr>
       <td style="font-weight:600;color:#c8f0dc">Joseph Abarno</td>
-      <td style="text-align:center">3</td>
+      <td style="text-align:center;font-weight:700">3</td>
+      <td><div style="display:flex;height:8px;border-radius:4px;overflow:hidden;width:120px;background:#0a0a0a">
+      <div style="width:100%;background:#00ff88"></div>
+      <div style="width:0%;background:#00e5ff"></div>
+      <div style="width:0%;background:#ff4444"></div>
+      <div style="width:0%;background:#333"></div>
+    </div>
+    <div style="font-size:9px;color:#3a6a4a;margin-top:2px">
+      <span style="color:#00ff88">3 SQL</span> · <span style="color:#00e5ff">0 MQL</span>
+    </div></td>
       <td style="text-align:center;color:#00ff88;font-weight:700">67%</td>
       <td style="text-align:center;color:#00e5ff">2</td>
-      <td style="text-align:center;color:#ffd700">$0</td>
-      <td style="text-align:center;color:#00ff88;font-weight:700">$0</td>
+      <td style="text-align:center;color:#ffd700">—</td>
+      <td style="text-align:center;color:#00ff88;font-weight:700">—</td>
     </tr>
 <tr>
       <td style="font-weight:600;color:#c8f0dc">Justin Lee</td>
-      <td style="text-align:center">2</td>
+      <td style="text-align:center;font-weight:700">2</td>
+      <td><div style="display:flex;height:8px;border-radius:4px;overflow:hidden;width:120px;background:#0a0a0a">
+      <div style="width:0%;background:#00ff88"></div>
+      <div style="width:100%;background:#00e5ff"></div>
+      <div style="width:0%;background:#ff4444"></div>
+      <div style="width:0%;background:#333"></div>
+    </div>
+    <div style="font-size:9px;color:#3a6a4a;margin-top:2px">
+      <span style="color:#00ff88">0 SQL</span> · <span style="color:#00e5ff">2 MQL</span>
+    </div></td>
       <td style="text-align:center;color:#ff4444;font-weight:700">0%</td>
       <td style="text-align:center;color:#00e5ff">0</td>
-      <td style="text-align:center;color:#ffd700">$0</td>
-      <td style="text-align:center;color:#00ff88;font-weight:700">$0</td>
+      <td style="text-align:center;color:#ffd700">—</td>
+      <td style="text-align:center;color:#00ff88;font-weight:700">—</td>
     </tr>
 <tr>
       <td style="font-weight:600;color:#c8f0dc">Jake Mitchell</td>
-      <td style="text-align:center">2</td>
+      <td style="text-align:center;font-weight:700">2</td>
+      <td><div style="display:flex;height:8px;border-radius:4px;overflow:hidden;width:120px;background:#0a0a0a">
+      <div style="width:0%;background:#00ff88"></div>
+      <div style="width:50%;background:#00e5ff"></div>
+      <div style="width:0%;background:#ff4444"></div>
+      <div style="width:50%;background:#333"></div>
+    </div>
+    <div style="font-size:9px;color:#3a6a4a;margin-top:2px">
+      <span style="color:#00ff88">0 SQL</span> · <span style="color:#00e5ff">1 MQL</span>
+    </div></td>
       <td style="text-align:center;color:#ff4444;font-weight:700">0%</td>
       <td style="text-align:center;color:#00e5ff">0</td>
-      <td style="text-align:center;color:#ffd700">$0</td>
-      <td style="text-align:center;color:#00ff88;font-weight:700">$0</td>
+      <td style="text-align:center;color:#ffd700">—</td>
+      <td style="text-align:center;color:#00ff88;font-weight:700">—</td>
     </tr>
 </tbody>
-    </table>
+      </table>
+    </div>
   </div>
 
   <div class="section-title">By Event — 10 events</div>
@@ -2010,6 +2122,77 @@ function toggleEvent(id) {
     ctx.lineTo(x+w, y+h-r); ctx.quadraticCurveTo(x+w, y+h, x+w-r, y+h);
     ctx.lineTo(x, y+h); ctx.closePath();
   }
+})();
+
+
+(function() {
+  const repNames = ["Connor Flynn", "Ardit Berdyna", "Andy Whisenant", "Jamie Butler", "Usman Zahoor", "Patrick Davies", "Jake Borah", "Jaylin Bender", "Husam Zalmiyar", "Joseph Abarno", "Justin Lee", "Jake Mitchell"];
+  const totals   = [42, 36, 34, 29, 16, 13, 11, 9, 8, 3, 2, 2];
+  const mqls     = [34, 13, 26, 18, 14, 6, 4, 2, 4, 0, 2, 1];
+  const sqls     = [7, 0, 6, 8, 2, 4, 5, 3, 2, 3, 0, 0];
+  const opps     = [7, 0, 7, 10, 1, 2, 4, 3, 3, 2, 0, 0];
+
+  const canvas = document.getElementById('repChart');
+  const ctx    = canvas.getContext('2d');
+  const n      = repNames.length;
+  const barH   = 22, gap = 14, groupGap = 8;
+  const labelW = 140, padding = { top:8, right:60, bottom:8, left:labelW };
+  const chartW = 680;
+  const rowH   = barH * 3 + groupGap * 2;
+  const chartH = n * (rowH + gap) + padding.top + padding.bottom;
+
+  canvas.width  = chartW;
+  canvas.height = chartH;
+  canvas.style.width = '100%';
+  canvas.style.maxWidth = chartW + 'px';
+
+  const maxVal = Math.max(...totals);
+  const availW = chartW - padding.left - padding.right;
+
+  ctx.font = '600 11px Segoe UI, system-ui';
+  ctx.textBaseline = 'middle';
+
+  repNames.forEach((rep, i) => {
+    const baseY = padding.top + i * (rowH + gap);
+    const cy    = baseY + rowH / 2;
+
+    // Rep label
+    ctx.fillStyle = '#c8f0dc';
+    ctx.textAlign = 'right';
+    ctx.fillText(rep, labelW - 8, cy);
+
+    const bars = [
+      { val: totals[i], color: 'rgba(0,229,255,0.25)', label: '' },
+      { val: sqls[i],   color: '#00ff88', label: sqls[i] + ' SQL' },
+      { val: opps[i],   color: '#ffd700', label: opps[i] + ' opps' },
+    ];
+
+    bars.forEach((bar, bi) => {
+      const y = baseY + bi * (barH + groupGap);
+      const w = (bar.val / maxVal) * availW;
+      if (w > 0) {
+        ctx.fillStyle = bar.color;
+        ctx.beginPath();
+        ctx.roundRect(padding.left, y, w, barH, 3);
+        ctx.fill();
+        if (bar.label) {
+          ctx.fillStyle = '#fff';
+          ctx.textAlign = 'left';
+          ctx.font = '700 10px Segoe UI, system-ui';
+          ctx.fillText(bar.label, padding.left + w + 5, y + barH/2);
+          ctx.font = '600 11px Segoe UI, system-ui';
+        }
+      }
+    });
+
+    // Total
+    const totalW = (totals[i] / maxVal) * availW;
+    ctx.fillStyle = '#888';
+    ctx.textAlign = 'left';
+    ctx.font = '600 10px Segoe UI, system-ui';
+    ctx.fillText(totals[i] + ' leads', padding.left + totalW + 5, baseY + barH/2);
+    ctx.font = '600 11px Segoe UI, system-ui';
+  });
 })();
 
 (function() {
