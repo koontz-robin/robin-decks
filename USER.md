@@ -1,17 +1,17 @@
 # USER.md - About Your Human
 
-_Learn about the person you're helping. Update this as you go._
-
-- **Name:**
-- **What to call them:**
-- **Pronouns:** _(optional)_
-- **Timezone:**
-- **Notes:**
+- **Name:** Ryan Koontz
+- **What to call them:** Ryan
+- **Pronouns:** he/him
+- **Timezone:** US Eastern (ET)
+- **Work email:** ryank@rev.io
+- **Discord:** ryan_koontz
+- **Role:** VP Sales, Rev.io
 
 ## Context
 
-_(What do they care about? What projects are they working on? What annoys them? What makes them laugh? Build this over time.)_
-
----
-
-The more you know, the better you can help. But remember — you're learning about a person, not building a dossier. Respect the difference.
+- Runs the Rev.io sales team — AEs, SDRs, channel
+- Products: PSA 2.0, Billing, Payments AR, Cyber Protect, CommerceHub
+- Weekly forecast dashboard sent to Evan (evanr@rev.io) and Brent (brentm@rev.io)
+- Prefers direct, no-filler communication
+- Works primarily via Discord DMs with Robin
