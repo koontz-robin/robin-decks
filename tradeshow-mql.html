@@ -1346,13 +1346,13 @@
 </div>
 <script>
 (function(){var ctx=document.getElementById('stageDonut').getContext('2d');
-var labels=["In Progress", "New", "Recycled", "Disqualified", "None"],values=[216, 40, 54, 8, 48],colors=["#00ff88", "#00e5ff", "#ffd700", "#ff4444", "#444"],total=366;
+var labels=["In Progress", "New", "Recycled", "Disqualified", "None"],values=[190, 35, 50, 8, 32],colors=["#00ff88", "#00e5ff", "#ffd700", "#ff4444", "#444"],total=315;
 var cx=140,cy=140,outerR=125,innerR=80,a=-Math.PI/2;
 values.forEach(function(v,i){var s=(v/total)*2*Math.PI;ctx.beginPath();ctx.moveTo(cx,cy);ctx.arc(cx,cy,outerR,a,a+s);ctx.closePath();ctx.fillStyle=colors[i];ctx.fill();a+=s;});
 ctx.beginPath();ctx.arc(cx,cy,innerR,0,2*Math.PI);ctx.fillStyle='#060d14';ctx.fill();
 ctx.beginPath();ctx.arc(cx,cy,innerR,0,2*Math.PI);ctx.strokeStyle='rgba(0,255,136,0.15)';ctx.lineWidth=1;ctx.stroke();})();
 
-(function(){var evNames=["ISC West 26", "TMTBootcamp", "Kaseya Connect 26", "Channel Partners 26", "MSP Summit 26", "ITEXPO 26", "SkySwitch Vectors 26", "AIN 26", "ASCII 26", "GIA 26"],datasets=[{"label": "In Progress", "color": "#00ff88", "data": [39, 41, 20, 36, 23, 12, 19, 13, 11, 2]}, {"label": "New", "color": "#00e5ff", "data": [5, 1, 17, 6, 5, 1, 5, 0, 0, 0]}, {"label": "Recycled", "color": "#ffd700", "data": [2, 20, 2, 4, 3, 6, 1, 10, 6, 0]}, {"label": "Disqualified", "color": "#ff4444", "data": [1, 2, 2, 0, 1, 2, 0, 0, 0, 0]}, {"label": "None", "color": "#444", "data": [29, 0, 11, 0, 1, 5, 0, 1, 0, 1]}],totals=[76, 64, 52, 46, 33, 26, 25, 24, 17, 3];
+(function(){var evNames=["ISC West 26", "TMTBootcamp", "Channel Partners 26", "Kaseya Connect 26", "MSP Summit 26", "AIN 26", "ITEXPO 26", "SkySwitch Vectors 26", "ASCII 26", "GIA 26"],datasets=[{"label": "In Progress", "color": "#00ff88", "data": [33, 41, 32, 17, 22, 12, 8, 13, 11, 1]}, {"label": "New", "color": "#00e5ff", "data": [5, 1, 5, 14, 5, 0, 1, 4, 0, 0]}, {"label": "Recycled", "color": "#ffd700", "data": [2, 18, 3, 2, 2, 10, 6, 1, 6, 0]}, {"label": "Disqualified", "color": "#ff4444", "data": [1, 2, 0, 2, 1, 0, 2, 0, 0, 0]}, {"label": "None", "color": "#444", "data": [28, 0, 0, 1, 0, 1, 2, 0, 0, 0]}],totals=[69, 62, 40, 36, 30, 23, 19, 18, 17, 1];
 var canvas=document.getElementById('stageByEvent'),ctx=canvas.getContext('2d');
 var n=evNames.length,barH=28,gap=10,labelW=175,pad={t:8,r:60,b:8,l:labelW},chartW=700;
 var chartH=n*(barH+gap)+pad.t+pad.b;canvas.width=chartW;canvas.height=chartH;
@@ -1366,7 +1366,7 @@ var w=(val/maxVal)*availW;ctx.fillStyle=ds.color;ctx.beginPath();ctx.roundRect(x
 var tw=(totals[i]/maxVal)*availW;ctx.fillStyle='#888';ctx.textAlign='left';ctx.font='600 10px Segoe UI';
 ctx.fillText(totals[i],pad.l+tw+5,y+barH/2);ctx.font='600 11px Segoe UI,system-ui';});})();
 
-(function(){var evNames=["ISC West 26", "TMTBootcamp", "Kaseya Connect 26", "Channel Partners 26", "MSP Summit 26", "ITEXPO 26", "SkySwitch Vectors 26", "AIN 26", "ASCII 26", "GIA 26"],evTotals=[76, 64, 52, 46, 33, 26, 25, 24, 17, 3],evOpps=[24, 14, 0, 8, 6, 12, 3, 12, 9, 0];
+(function(){var evNames=["ISC West 26", "TMTBootcamp", "Channel Partners 26", "Kaseya Connect 26", "MSP Summit 26", "AIN 26", "ITEXPO 26", "SkySwitch Vectors 26", "ASCII 26", "GIA 26"],evTotals=[69, 62, 40, 36, 30, 23, 19, 18, 17, 1],evOpps=[24, 14, 8, 0, 6, 12, 12, 3, 9, 0];
 var canvas=document.getElementById('oppConvChart');if(!canvas)return;
 var ctx=canvas.getContext('2d');
 var n=evNames.length,barH=22,gap=10,groupGap=6,labelW=175,pad={t:8,r:90,b:8,l:labelW},chartW=700;
