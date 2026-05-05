@@ -3,320 +3,172 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Q2 2026 PSA Pipeline Gap — Rev.io Board</title>
+<title>PSA Pipeline Gap — 10:1 Coverage — Rev.io</title>
 <link href="https://fonts.googleapis.com/css2?family=Open+Sans:wght@400;600;700;800&family=Montserrat:wght@800&display=swap" rel="stylesheet">
 <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-annotation@3.0.1/dist/chartjs-plugin-annotation.min.js"></script>
 <style>
 * { margin: 0; padding: 0; box-sizing: border-box; }
 html, body { height: 100%; background: #f5f7fa; font-family: 'Open Sans', Arial, sans-serif; color: #1D3756; }
 body { display: flex; flex-direction: column; min-height: 100vh; }
-
 .top-stripe { height: 4px; background: linear-gradient(90deg, #2399B5, #6EBE4F); flex-shrink: 0; }
-
-.slide-header {
-  background: #1D3756; padding: 13px 40px;
-  display: flex; align-items: center; justify-content: space-between; flex-shrink: 0;
-}
-.logo { height: 26px; }
-.slide-tag { font-size: 9px; font-weight: 700; letter-spacing: 2px; text-transform: uppercase; color: #e74c3c; margin-bottom: 3px; }
-h1 { font-size: 17px; font-weight: 800; color: #fff; }
-.header-sub { font-size: 10px; color: rgba(255,255,255,0.45); margin-top: 2px; }
-.header-right { text-align: right; }
-.slide-date { font-size: 10px; color: rgba(255,255,255,0.4); }
-.slide-num { font-size: 10px; color: rgba(255,255,255,0.25); margin-top: 2px; }
-
-.body-content { padding: 12px 40px 8px; flex: 1; display: flex; flex-direction: column; gap: 9px; }
-
-/* ── CURRENT STATE BAR ── */
-.current-state {
-  display: grid;
-  grid-template-columns: auto 1fr;
-  align-items: center;
-  gap: 12px;
-  background: #fff;
-  border-radius: 10px;
-  border: 1px solid #e8edf3;
-  padding: 10px 16px;
-  flex-shrink: 0;
-  box-shadow: 0 1px 3px rgba(29,55,86,0.05);
-}
-.cs-label { font-size: 9px; font-weight: 700; letter-spacing: 2px; text-transform: uppercase; color: #8da0b4; white-space: nowrap; border-right: 1px solid #e8edf3; padding-right: 12px; }
-.cs-stats { display: flex; gap: 0; align-items: stretch; flex: 1; }
-.cs-stat { flex: 1; text-align: center; padding: 3px 10px; border-right: 1px solid #f0f4f8; }
-.cs-stat:last-child { border-right: none; }
-.cs-stat-val { font-family: 'Montserrat', sans-serif; font-size: 20px; font-weight: 800; line-height: 1; }
-.cs-stat-val.total { color: #1D3756; }
-.cs-stat-val.mkt { color: #2399B5; }
-.cs-stat-val.sales { color: #6EBE4F; }
-.cs-stat-label { font-size: 8px; color: #8da0b4; margin-top: 2px; text-transform: uppercase; letter-spacing: 1px; }
-.cs-stat-sub { font-size: 8px; margin-top: 2px; }
-.cs-stat-sub.red { color: #c0392b; font-weight: 700; }
-.cs-stat-sub.green { color: #27ae60; font-weight: 700; }
-.cs-divider-arrow { display: flex; align-items: center; justify-content: center; padding: 0 10px; color: #c0392b; font-size: 18px; font-weight: 800; }
-.cs-needed { flex: 1.2; background: #fff5f5; border-radius: 8px; padding: 7px 12px; border: 1px solid #fcd5d0; display: flex; align-items: center; gap: 10px; }
-.cs-needed-label { font-size: 8px; font-weight: 700; color: #c0392b; text-transform: uppercase; letter-spacing: 1px; white-space: nowrap; line-height: 1.4; }
-.cs-needed-stats { display: flex; gap: 12px; }
-.cs-needed-item { text-align: center; }
-.cs-needed-val { font-family: 'Montserrat', sans-serif; font-size: 18px; font-weight: 800; color: #c0392b; }
-.cs-needed-sub { font-size: 8px; color: #e07070; margin-top: 1px; }
-
-/* ── MAIN LAYOUT: chart left, tables right ── */
-.main-layout {
-  display: grid;
-  grid-template-columns: 1.2fr 1fr;
-  gap: 10px;
-  flex: 1;
-  min-height: 0;
-}
-
-/* Chart card */
-.chart-card {
-  background: #fff;
-  border-radius: 10px;
-  border: 1px solid #e8edf3;
-  box-shadow: 0 1px 4px rgba(29,55,86,0.05);
-  overflow: hidden;
-  display: flex;
-  flex-direction: column;
-}
-.chart-head {
-  background: #1D3756;
-  padding: 9px 14px;
-  flex-shrink: 0;
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-}
-.chart-eyebrow { font-size: 8px; font-weight: 700; letter-spacing: 1.5px; text-transform: uppercase; color: rgba(255,255,255,0.55); }
-.chart-title { font-size: 12px; font-weight: 800; color: #fff; margin-top: 2px; }
-.chart-body { padding: 10px 12px; flex: 1; position: relative; min-height: 200px; }
-
-/* Tables side */
-.tables-col {
-  display: flex;
-  flex-direction: column;
-  gap: 9px;
-}
-.table-card {
-  background: #fff;
-  border-radius: 10px;
-  border: 1px solid #e8edf3;
-  box-shadow: 0 1px 4px rgba(29,55,86,0.05);
-  overflow: hidden;
-  flex: 1;
-  display: flex;
-  flex-direction: column;
-}
-.table-head {
-  padding: 8px 12px;
-  flex-shrink: 0;
-}
-.table-card.mkt .table-head { background: #2399B5; }
-.table-card.sales .table-head { background: #1D3756; }
-.table-eyebrow { font-size: 7px; font-weight: 700; letter-spacing: 1.5px; text-transform: uppercase; color: rgba(255,255,255,0.55); }
-.table-title { font-size: 11px; font-weight: 800; color: #fff; }
-.gap-badge { float: right; background: #c0392b; color: #fff; font-size: 8px; font-weight: 800; padding: 3px 8px; border-radius: 4px; margin-top: 1px; }
-
-.gap-table { width: 100%; border-collapse: collapse; font-size: 9.5px; }
-.gap-table th { font-size: 7px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.8px; padding: 3px 7px; text-align: right; border-bottom: 1px solid #e8edf3; background: #f5f7fa; color: #8da0b4; }
+.slide-header { background: #1D3756; padding: 13px 40px; display: flex; align-items: center; justify-content: space-between; flex-shrink: 0; }
+.logo-text { color: #fff; font-size: 13px; font-weight: 700; letter-spacing: 1px; opacity: 0.9; }
+.header-date { color: rgba(255,255,255,0.5); font-size: 11px; }
+.slide-body { flex: 1; padding: 28px 40px 20px; display: flex; flex-direction: column; gap: 20px; }
+h1 { font-size: 20px; font-weight: 800; color: #1D3756; line-height: 1.2; }
+h1 span { color: #c0392b; }
+.subtitle { font-size: 12px; color: #7f8c8d; margin-top: 4px; }
+.kpi-row { display: flex; gap: 14px; flex-wrap: wrap; }
+.kpi { background: #fff; border: 1px solid #e2e8f0; border-radius: 10px; padding: 14px 20px; min-width: 140px; flex: 1; position: relative; overflow: hidden; }
+.kpi::before { content: ''; position: absolute; top: 0; left: 0; right: 0; height: 3px; background: var(--accent, #2399B5); }
+.kpi.red { --accent: #c0392b; }
+.kpi.green { --accent: #6EBE4F; }
+.kpi.orange { --accent: #f39c12; }
+.kpi.blue { --accent: #2399B5; }
+.kpi-label { font-size: 9px; font-weight: 700; text-transform: uppercase; letter-spacing: 1px; color: #95a5a6; margin-bottom: 5px; }
+.kpi-val { font-size: 26px; font-weight: 800; color: #1D3756; line-height: 1; }
+.kpi-val.red { color: #c0392b; }
+.kpi-val.green { color: #27ae60; }
+.kpi-sub { font-size: 10px; color: #95a5a6; margin-top: 3px; }
+.content-row { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; flex: 1; }
+.chart-section { background: #fff; border: 1px solid #e2e8f0; border-radius: 10px; padding: 18px; display: flex; flex-direction: column; }
+.section-title { font-size: 10px; font-weight: 700; text-transform: uppercase; letter-spacing: 1.5px; color: #95a5a6; margin-bottom: 14px; }
+.chart-wrap { flex: 1; position: relative; min-height: 220px; }
+.tables-section { display: flex; flex-direction: column; gap: 14px; }
+.table-card { background: #fff; border: 1px solid #e2e8f0; border-radius: 10px; padding: 14px 16px; }
+.table-label { font-size: 9px; font-weight: 700; text-transform: uppercase; letter-spacing: 1.5px; margin-bottom: 8px; }
+.table-label.mg { color: #2399B5; }
+.table-label.sg { color: #6EBE4F; }
+.gap-table { width: 100%; border-collapse: collapse; font-size: 11px; }
+.gap-table th { text-align: right; padding: 4px 8px; color: #95a5a6; font-size: 9px; font-weight: 700; text-transform: uppercase; border-bottom: 1px solid #f1f5f9; }
 .gap-table th:first-child { text-align: left; }
-.gap-table td { padding: 3px 7px; border-bottom: 1px solid #f5f7fa; text-align: right; color: #1D3756; }
+.gap-table td { text-align: right; padding: 5px 8px; border-bottom: 1px solid #f8fafc; color: #1D3756; }
 .gap-table td:first-child { text-align: left; font-weight: 600; }
 .gap-table tr:last-child td { border-bottom: none; }
-
-.now-pill { display: inline-flex; align-items: center; gap: 3px; }
-.now-tag { font-size: 6px; font-weight: 700; background: #2399B5; color: #fff; padding: 1px 4px; border-radius: 2px; }
-.actual-miss { color: #c0392b !important; font-weight: 800 !important; }
-.actual-exceed { color: #27ae60 !important; font-weight: 800 !important; }
-.future-req { font-size: 7.5px !important; background: #1D3756; color: #fff !important; padding: 1px 5px; border-radius: 8px; font-weight: 700 !important; display: inline-block; }
-.gap-miss { color: #c0392b !important; font-weight: 800 !important; }
-.gap-exceed { color: #27ae60 !important; font-weight: 800 !important; }
-.gap-future { color: #8da0b4 !important; font-size: 8px !important; }
-tr.highlight-now { background: #fff5f5; }
-
-/* Footer */
-.slide-footer {
-  padding: 7px 40px; display: flex; justify-content: space-between; align-items: center;
-  border-top: 1px solid #e8edf3; flex-shrink: 0;
-}
-.footer-left { font-size: 9px; color: #b0bec5; }
-.footer-logo { height: 15px; opacity: 0.3; filter: brightness(0) invert(19%) sepia(96%) saturate(343%) hue-rotate(172deg) brightness(96%) contrast(90%); }
+.actual-exceed { color: #27ae60; font-weight: 700; }
+.actual-miss { color: #c0392b; font-weight: 700; }
+.gap-exceed { color: #27ae60; font-weight: 700; }
+.gap-miss { color: #c0392b; font-weight: 700; }
+.insight-box { background: #fef9ec; border: 1px solid #f39c12; border-left: 4px solid #f39c12; border-radius: 8px; padding: 12px 16px; font-size: 11px; color: #7d6008; line-height: 1.5; }
+.insight-box strong { color: #1D3756; }
+.footer { background: #1D3756; padding: 8px 40px; display: flex; align-items: center; justify-content: space-between; flex-shrink: 0; }
+.footer-text { font-size: 10px; color: rgba(255,255,255,0.4); }
 </style>
 </head>
 <body>
-
 <div class="top-stripe"></div>
-
 <div class="slide-header">
-  <img src="https://7091219.fs1.hubspotusercontent-na1.net/hubfs/7091219/email-assets/logo-revio-white.png" alt="Rev.io" class="logo">
-  <div style="text-align:center">
-    <div class="slide-tag">⚠️ Critical Gap — Requires Board Attention</div>
-    <h1>PSA Opp Creation: Marketing & Sales Are Both Missing Target</h1>
-    <div class="header-sub">Opps required per month to hit PSA target at 10:1 coverage · 60/40 MG/SG split</div>
-  </div>
-  <div class="header-right">
-    <div class="slide-date">April 28, 2026</div>
-    <div class="slide-num">Slide 1</div>
-  </div>
+  <span class="logo-text">REV.IO SALES INTELLIGENCE</span>
+  <span class="header-date">PSA Pipeline Coverage · May 05, 2026 · 10:1 Model · Salesforce Data</span>
 </div>
 
-<div class="body-content">
+<div class="slide-body">
+  <div>
+    <h1>PSA Opp Creation Is <span>Well Below 10:1 Coverage</span> Needed to Hit Targets</h1>
+    <div class="subtitle">Based on $36K/mo PSA quota, ~$750 avg deal MRR, 10:1 pipeline coverage ratio · * = partial month (May)</div>
+  </div>
 
-  <!-- Current State avg bar -->
-  <div class="current-state">
-    <div class="cs-label">Current State<br>Avg / Month</div>
-    <div class="cs-stats">
-      <div class="cs-stat">
-        <div class="cs-stat-val total">228</div>
-        <div class="cs-stat-label">Total Opps / Mo</div>
-        <div class="cs-stat-sub red">↓ 37% since Jan</div>
-      </div>
-      <div class="cs-stat">
-        <div class="cs-stat-val mkt">84</div>
-        <div class="cs-stat-label">Marketing Gen / Mo</div>
-        <div class="cs-stat-sub red">Need 185+ to close gap</div>
-      </div>
-      <div class="cs-stat">
-        <div class="cs-stat-val sales">140</div>
-        <div class="cs-stat-label">Sales Gen / Mo</div>
-        <div class="cs-stat-sub red">Need 168+ to close gap</div>
-      </div>
-      <div class="cs-stat">
-        <div class="cs-stat-val" style="color:#8da0b4">4</div>
-        <div class="cs-stat-label">Channel Gen / Mo</div>
-        <div class="cs-stat-sub green">Growing — untapped</div>
-      </div>
-      <div class="cs-stat">
-        <div class="cs-stat-val" style="color:#1D3756">$821</div>
-        <div class="cs-stat-label">Avg Opp Size</div>
-        <div class="cs-stat-sub green">↑ since Jan</div>
-      </div>
-      <div class="cs-divider-arrow">→</div>
-      <div class="cs-needed">
-        <div class="cs-needed-label">What's Required<br>to Hit PSA Target</div>
-        <div class="cs-needed-stats">
-          <div class="cs-needed-item">
-            <div class="cs-needed-val">185</div>
-            <div class="cs-needed-sub">Mktg / mo (now: 84)</div>
-          </div>
-          <div class="cs-needed-item">
-            <div class="cs-needed-val">168</div>
-            <div class="cs-needed-sub">Sales / mo (now: 140)</div>
-          </div>
-          <div class="cs-needed-item">
-            <div class="cs-needed-val">353+</div>
-            <div class="cs-needed-sub">Combined / mo required</div>
-          </div>
-        </div>
-      </div>
+  <div class="kpi-row">
+    <div class="kpi red">
+      <div class="kpi-label">MG Gap YTD (Jan–Apr)</div>
+      <div class="kpi-val red">-186</div>
+      <div class="kpi-sub">227 actual vs 413 needed</div>
+    </div>
+    <div class="kpi red">
+      <div class="kpi-label">SG Gap YTD (Jan–Apr)</div>
+      <div class="kpi-val red">+50</div>
+      <div class="kpi-sub">387 actual vs 337 needed</div>
+    </div>
+    <div class="kpi orange">
+      <div class="kpi-label">Opps Needed May–Dec</div>
+      <div class="kpi-val">3,840</div>
+      <div class="kpi-sub">2112 MG + 1728 SG per 10:1 model</div>
+    </div>
+    <div class="kpi blue">
+      <div class="kpi-label">Opps/Month Needed</div>
+      <div class="kpi-val">480</div>
+      <div class="kpi-sub">May–Dec avg to stay on 10:1</div>
+    </div>
+    <div class="kpi red">
+      <div class="kpi-label">May Run Rate (partial)</div>
+      <div class="kpi-val red">23</div>
+      <div class="kpi-sub">vs 480 needed this month</div>
     </div>
   </div>
 
-  <!-- Chart + Tables -->
-  <div class="main-layout">
-
-    <!-- Chart -->
-    <div class="chart-card">
-      <div class="chart-head">
-        <div>
-          <div class="chart-eyebrow">Opps Required vs. Actuals YTD</div>
-          <div class="chart-title">Monthly Opps Needed to Hit PSA Target at 10:1 Coverage</div>
-        </div>
-        <div style="display:flex;gap:12px;align-items:center;flex-shrink:0;">
-          <div style="display:flex;align-items:center;gap:4px;font-size:9px;color:rgba(255,255,255,0.6)"><div style="width:10px;height:10px;background:#93c5fd;border-radius:2px"></div>MG Needed</div>
-          <div style="display:flex;align-items:center;gap:4px;font-size:9px;color:rgba(255,255,255,0.6)"><div style="width:10px;height:10px;background:#bbf7d0;border-radius:2px"></div>SG Needed</div>
-          <div style="display:flex;align-items:center;gap:4px;font-size:9px;color:rgba(255,255,255,0.6)"><div style="width:16px;height:2px;background:#2399B5"></div>MG Actual</div>
-          <div style="display:flex;align-items:center;gap:4px;font-size:9px;color:rgba(255,255,255,0.6)"><div style="width:16px;height:2px;background:#6EBE4F"></div>SG Actual</div>
-        </div>
-      </div>
-      <div class="chart-body">
-        <canvas id="pipelineChart" style="width:100%;height:100%;"></canvas>
+  <div class="content-row">
+    <div class="chart-section">
+      <div class="section-title">Opps Created vs. 10:1 Coverage Needed — All 2026</div>
+      <div class="chart-wrap">
+        <canvas id="pipelineChart"></canvas>
       </div>
     </div>
 
-    <!-- Tables -->
-    <div class="tables-col">
-
-      <!-- Marketing table -->
-      <div class="table-card mkt">
-        <div class="table-head">
-          <span class="gap-badge">-525 YTD</span>
-          <div class="table-eyebrow">Marketing Generated · 60% Split · $759 avg</div>
-          <div class="table-title">Monthly Opps Needed vs. Actual</div>
-        </div>
+    <div class="tables-section">
+      <div class="table-card">
+        <div class="table-label mg">Marketing Generated — Monthly Detail</div>
         <table class="gap-table">
-          <thead><tr><th>Month</th><th>MRR Target</th><th>Deals</th><th>Opps Needed</th><th>Actual</th><th>Gap</th></tr></thead>
-          <tbody>
-            <tr><td>Jan</td><td>$10,200</td><td>14</td><td>140</td><td class="actual-miss">68</td><td class="gap-miss">-72</td></tr>
-            <tr><td>Feb</td><td>$12,600</td><td>17</td><td>170</td><td class="actual-miss">59</td><td class="gap-miss">-111</td></tr>
-            <tr><td>Mar</td><td>$15,000</td><td>20</td><td>200</td><td class="actual-miss">52</td><td class="gap-miss">-148</td></tr>
-            <tr class="highlight-now"><td><span class="now-pill">Apr <span class="now-tag">NOW</span></span></td><td>$18,000</td><td>24</td><td>240</td><td class="actual-miss">46</td><td class="gap-miss">-194</td></tr>
-            <tr style="opacity:.6"><td>May</td><td>$20,400</td><td>27</td><td>270</td><td><span class="future-req">Req</span></td><td class="gap-future">—</td></tr>
-            <tr style="opacity:.6"><td>Jun</td><td>$22,800</td><td>31</td><td>310</td><td><span class="future-req">Req</span></td><td class="gap-future">—</td></tr>
-            <tr style="opacity:.5;font-size:8.5px"><td colspan="6" style="padding:3px 7px;color:#8da0b4;font-style:italic">Jul–Dec: 340 → 500 opps/mo required</td></tr>
-          </tbody>
+          <thead><tr><th>Month</th><th>Quota</th><th>Deals</th><th>Needed (10:1)</th><th>Actual</th><th>Gap</th></tr></thead>
+          <tbody><tr><td>Jan</td><td>$10,200</td><td>14</td><td>77</td><td class="actual-miss">68</td><td class="gap-miss">-9</td></tr>
+<tr><td>Feb</td><td>$12,600</td><td>17</td><td>94</td><td class="actual-miss">58</td><td class="gap-miss">-36</td></tr>
+<tr><td>Mar</td><td>$15,000</td><td>20</td><td>110</td><td class="actual-miss">52</td><td class="gap-miss">-58</td></tr>
+<tr><td>Apr</td><td>$18,000</td><td>24</td><td>132</td><td class="actual-miss">49</td><td class="gap-miss">-83</td></tr>
+<tr><td>May</td><td>$36,000</td><td>48</td><td>264</td><td class="actual-miss">12*</td><td class="gap-miss">-252</td></tr>
+</tbody>
         </table>
       </div>
-
-      <!-- Sales table -->
-      <div class="table-card sales">
-        <div class="table-head">
-          <span class="gap-badge">-196 YTD</span>
-          <div class="table-eyebrow">Sales Generated · 40% Split · $670 avg</div>
-          <div class="table-title">Monthly Opps Needed vs. Actual</div>
-        </div>
+      <div class="table-card">
+        <div class="table-label sg">Sales Generated — Monthly Detail</div>
         <table class="gap-table">
-          <thead><tr><th>Month</th><th>MRR Target</th><th>Deals</th><th>Opps Needed</th><th>Actual</th><th>Gap</th></tr></thead>
-          <tbody>
-            <tr><td>Jan</td><td>$6,800</td><td>11</td><td>110</td><td class="actual-exceed">140</td><td class="gap-exceed">+30</td></tr>
-            <tr><td>Feb</td><td>$8,400</td><td>13</td><td>130</td><td class="actual-miss">88</td><td class="gap-miss">-42</td></tr>
-            <tr><td>Mar</td><td>$10,000</td><td>15</td><td>150</td><td class="actual-miss">79</td><td class="gap-miss">-71</td></tr>
-            <tr class="highlight-now"><td><span class="now-pill">Apr <span class="now-tag">NOW</span></span></td><td>$12,000</td><td>18</td><td>180</td><td class="actual-miss">67</td><td class="gap-miss">-113</td></tr>
-            <tr style="opacity:.6"><td>May</td><td>$13,600</td><td>21</td><td>210</td><td><span class="future-req">Req</span></td><td class="gap-future">—</td></tr>
-            <tr style="opacity:.6"><td>Jun</td><td>$15,200</td><td>23</td><td>230</td><td><span class="future-req">Req</span></td><td class="gap-future">—</td></tr>
-            <tr style="opacity:.5;font-size:8.5px"><td colspan="6" style="padding:3px 7px;color:#8da0b4;font-style:italic">Jul–Dec: 260 → 380 opps/mo required</td></tr>
-          </tbody>
+          <thead><tr><th>Month</th><th>Quota</th><th>Deals</th><th>Needed (10:1)</th><th>Actual</th><th>Gap</th></tr></thead>
+          <tbody><tr><td>Jan</td><td>$10,200</td><td>14</td><td>63</td><td class="actual-exceed">140</td><td class="gap-exceed">+77</td></tr>
+<tr><td>Feb</td><td>$12,600</td><td>17</td><td>76</td><td class="actual-exceed">90</td><td class="gap-exceed">+14</td></tr>
+<tr><td>Mar</td><td>$15,000</td><td>20</td><td>90</td><td class="actual-miss">79</td><td class="gap-miss">-11</td></tr>
+<tr><td>Apr</td><td>$18,000</td><td>24</td><td>108</td><td class="actual-miss">78</td><td class="gap-miss">-30</td></tr>
+<tr><td>May</td><td>$36,000</td><td>48</td><td>216</td><td class="actual-miss">11*</td><td class="gap-miss">-205</td></tr>
+</tbody>
         </table>
       </div>
-
+      <div class="insight-box">
+        <strong>Key finding:</strong> SG exceeded 10:1 only in January. MG has never hit coverage. With quota jumping to $36K/mo in May, the gap widens significantly — we need ~<strong>480 opps/month</strong> vs. a May run rate of ~23 so far. Pipeline creation must roughly <strong>triple</strong> to maintain 10:1 at current quota levels.
+      </div>
     </div>
   </div>
 </div>
 
-<div class="slide-footer">
-  <div class="footer-left">Rev.io Sales Intelligence · Q2 2026 Board Presentation · Data as of April 28, 2026</div>
-  <img src="https://7091219.fs1.hubspotusercontent-na1.net/hubfs/7091219/email-assets/logo-revio-white.png" alt="Rev.io" class="footer-logo">
+<div class="footer">
+  <span class="footer-text">REV.IO INTERNAL · ROBIN 🦸🏻‍♂️ · PSA PIPELINE COVERAGE ANALYSIS · MAY 05, 2026</span>
+  <span class="footer-text">10:1 MODEL · $750 AVG DEAL · $36K/MO QUOTA</span>
 </div>
 
 <script>
+const months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+const mgNeeded = [77, 94, 110, 132, 264, 264, 264, 264, 264, 264, 264, 264];
+const sgNeeded = [63, 76, 90, 108, 216, 216, 216, 216, 216, 216, 216, 216];
+const mgActual = [68,58,52,49,12,null,null,null,null,null,null,null];
+const sgActual = [140,90,79,78,11,null,null,null,null,null,null,null];
+
 const ctx = document.getElementById('pipelineChart').getContext('2d');
-
-const months = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
-
-const mgNeeded = [140,170,200,240,270,310,340,370,400,440,470,500];
-const sgNeeded = [110,130,150,180,210,230,260,280,300,330,360,380];
-const mgActual = [68,59,52,46,null,null,null,null,null,null,null,null];
-const sgActual = [140,88,79,67,null,null,null,null,null,null,null,null];
-
 new Chart(ctx, {
   type: 'bar',
   data: {
     labels: months,
     datasets: [
       {
-        label: 'MG Opps Needed',
+        label: 'MG Opps Needed (10:1)',
         data: mgNeeded,
-        backgroundColor: 'rgba(147,197,253,0.55)',
-        borderColor: 'rgba(147,197,253,0.8)',
+        backgroundColor: 'rgba(35,153,181,0.18)',
+        borderColor: 'rgba(35,153,181,0.5)',
         borderWidth: 1,
         stack: 'needed',
         order: 2,
       },
       {
-        label: 'SG Opps Needed',
+        label: 'SG Opps Needed (10:1)',
         data: sgNeeded,
-        backgroundColor: 'rgba(187,247,208,0.55)',
-        borderColor: 'rgba(187,247,208,0.8)',
+        backgroundColor: 'rgba(110,190,79,0.18)',
+        borderColor: 'rgba(110,190,79,0.5)',
         borderWidth: 1,
         stack: 'needed',
         order: 2,
@@ -358,36 +210,39 @@ new Chart(ctx, {
     maintainAspectRatio: false,
     interaction: { mode: 'index', intersect: false },
     plugins: {
-      legend: { display: false },
+      legend: {
+        display: true,
+        position: 'top',
+        labels: { font: { size: 10 }, boxWidth: 12, padding: 10 }
+      },
       tooltip: {
         backgroundColor: '#1D3756',
         titleColor: '#fff',
         bodyColor: 'rgba(255,255,255,0.75)',
         padding: 10,
-        callbacks: {
-          label: function(ctx) {
-            if (ctx.raw === null) return null;
-            return ctx.dataset.label + ': ' + ctx.raw;
-          }
-        }
       },
       annotation: {
         annotations: {
           nowLine: {
             type: 'line',
-            xMin: 3, xMax: 3,
-            borderColor: 'rgba(231,76,60,0.6)',
+            xMin: 3.5, xMax: 3.5,
+            borderColor: 'rgba(192,57,43,0.7)',
             borderWidth: 2,
             borderDash: [4,4],
             label: {
               display: true,
-              content: 'NOW',
+              content: 'TODAY',
               position: 'start',
               backgroundColor: '#c0392b',
               color: '#fff',
               font: { size: 9, weight: 'bold' },
               padding: { x: 5, y: 3 }
             }
+          },
+          quotaJump: {
+            type: 'line',
+            xMin: 3.5, xMax: 3.5,
+            borderColor: 'transparent',
           }
         }
       }
@@ -396,15 +251,13 @@ new Chart(ctx, {
       x: {
         stacked: true,
         grid: { color: 'rgba(0,0,0,0.04)' },
-        ticks: { font: { size: 10, family: 'Open Sans' }, color: '#8da0b4' },
-        border: { color: '#e8edf3' }
+        ticks: { font: { size: 10 }, color: '#8d99ae' }
       },
       y: {
-        stacked: true,
+        stacked: false,
+        beginAtZero: true,
         grid: { color: 'rgba(0,0,0,0.04)' },
-        ticks: { font: { size: 10, family: 'Open Sans' }, color: '#8da0b4' },
-        border: { color: '#e8edf3' },
-        title: { display: true, text: 'Opps', font: { size: 9 }, color: '#8da0b4' }
+        ticks: { font: { size: 10 }, color: '#8d99ae' }
       }
     }
   }
