@@ -49,6 +49,7 @@
     .red-num { color: #f87171; font-weight: 700; }
     .yellow-num { color: #facc15; font-weight: 700; }
     .dim { color: #64748b; }
+    .partial { color: #f97316; font-size: 0.7rem; font-style: italic; }
 
     .trend-up   { color: #4ade80; font-size: 0.8rem; }
     .trend-down { color: #f87171; font-size: 0.8rem; }
@@ -69,36 +70,36 @@
 
 <div class="container">
 
-  <div class="section-label">2026 YTD Summary — Sales Generated</div>
+  <div class="section-label">2026 YTD Summary — Sales Generated (Jan–Apr)</div>
   <div class="kpi-grid">
     <div class="kpi-card blue">
       <div class="label">Total SG Opps Created</div>
-      <div class="value">547</div>
+      <div class="value">571</div>
       <div class="sub">Jan–Apr 2026</div>
     </div>
     <div class="kpi-card green">
       <div class="label">SG Closed Won</div>
-      <div class="value">62</div>
-      <div class="sub">11.3% win rate</div>
+      <div class="value">67</div>
+      <div class="sub">16.7% win rate (closed)</div>
     </div>
     <div class="kpi-card yellow">
-      <div class="label">SG Won MRR</div>
-      <div class="value">$30.5K</div>
+      <div class="label">SG Won Amount</div>
+      <div class="value">$32.4K</div>
       <div class="sub">Across 4 months</div>
     </div>
     <div class="kpi-card purple">
       <div class="label">Active SG Pipeline</div>
-      <div class="value">64</div>
+      <div class="value">61</div>
       <div class="sub">Opps still open</div>
     </div>
     <div class="kpi-card teal">
       <div class="label">MG Opps Created</div>
-      <div class="value">329</div>
+      <div class="value">346</div>
       <div class="sub">Marketing Generated</div>
     </div>
     <div class="kpi-card orange">
       <div class="label">Channel Opps</div>
-      <div class="value">16</div>
+      <div class="value">17</div>
       <div class="sub">Channel Generated</div>
     </div>
   </div>
@@ -106,20 +107,20 @@
   <!-- Main line chart: opps created by month -->
   <div class="section-label">Opps Created by Month — All Lead Directions</div>
   <div class="chart-card">
-    <h3>Opportunities Created per Month (2026 vs 2025 SG baseline)</h3>
+    <h3>Opportunities Created per Month (2026 vs 2025 SG baseline) · May = partial month</h3>
     <div class="chart-wrap">
       <canvas id="mainChart"></canvas>
     </div>
   </div>
 
-  <!-- Two cols: win rate + MRR won -->
+  <!-- Two cols: win rate + Amount won -->
   <div class="two-col">
     <div class="chart-card">
       <h3>Sales Generated — Win Rate by Month</h3>
       <div class="chart-wrap-sm"><canvas id="winRateChart"></canvas></div>
     </div>
     <div class="chart-card">
-      <h3>Sales Generated — Won MRR by Month</h3>
+      <h3>Sales Generated — Won Amount by Month</h3>
       <div class="chart-wrap-sm"><canvas id="mrrChart"></canvas></div>
     </div>
   </div>
@@ -138,9 +139,9 @@
           <th>Lost</th>
           <th>Active</th>
           <th>Win Rate</th>
-          <th>MRR Created</th>
-          <th>MRR Won</th>
-          <th>vs 2025</th>
+          <th>Amt Created</th>
+          <th>Amt Won</th>
+          <th>vs 2025 SG</th>
         </tr>
       </thead>
       <tbody id="detailTable"></tbody>
@@ -155,29 +156,35 @@
     month: 'short', day: 'numeric', year: 'numeric', hour: '2-digit', minute: '2-digit'
   });
 
-  // ── DATA ──────────────────────────────────────────────────────────────────
-  const months = ['Jan', 'Feb', 'Mar', 'Apr'];
+  // ── DATA (refreshed 2026-05-05 from Salesforce) ───────────────────────────
+  const months = ['Jan', 'Feb', 'Mar', 'Apr', 'May*'];
 
+  // Sales Generated
   const sg = [
     { created:187, won:16, lost:171, active:0,  mrr_created:144151, mrr_won:7198  },
-    { created:130, won:11, lost:117, active:2,  mrr_created:89756,  mrr_won:4384  },
-    { created:133, won:24, lost:95,  active:14, mrr_created:91591,  mrr_won:15572 },
-    { created:97,  won:11, lost:38,  active:48, mrr_created:68620,  mrr_won:3383  },
+    { created:130, won:11, lost:119, active:0,  mrr_created:89756,  mrr_won:4384  },
+    { created:133, won:26, lost:96,  active:11, mrr_created:91591,  mrr_won:16177 },
+    { created:121, won:14, lost:57,  active:50, mrr_created:81591,  mrr_won:4641  },
+    { created:9,   won:0,  lost:1,   active:8,  mrr_created:7800,   mrr_won:0     },
   ];
+  // Marketing Generated
   const mg = [
     { created:100, won:13, lost:87, active:0,  mrr_created:86423,  mrr_won:5953  },
     { created:88,  won:13, lost:75, active:0,  mrr_created:65684,  mrr_won:6745  },
-    { created:81,  won:18, lost:55, active:8,  mrr_created:68700,  mrr_won:13240 },
-    { created:60,  won:3,  lost:12, active:45, mrr_created:47344,  mrr_won:0     },
+    { created:81,  won:19, lost:57, active:5,  mrr_created:68700,  mrr_won:13765 },
+    { created:77,  won:6,  lost:28, active:43, mrr_created:59099,  mrr_won:1274  },
+    { created:12,  won:1,  lost:0,  active:11, mrr_created:7980,   mrr_won:50    },
   ];
+  // Channel Generated
   const cg = [
     { created:1,  won:0, lost:1, active:0, mrr_created:750,   mrr_won:0    },
     { created:7,  won:4, lost:2, active:1, mrr_created:10690, mrr_won:7790 },
-    { created:5,  won:1, lost:3, active:1, mrr_created:6840,  mrr_won:590  },
-    { created:3,  won:0, lost:0, active:3, mrr_created:9320,  mrr_won:0    },
+    { created:5,  won:1, lost:4, active:0, mrr_created:6840,  mrr_won:590  },
+    { created:4,  won:0, lost:0, active:4, mrr_created:12320, mrr_won:0    },
+    { created:0,  won:0, lost:0, active:0, mrr_created:0,     mrr_won:0    },
   ];
 
-  // 2025 Sales Generated monthly baseline
+  // 2025 Sales Generated monthly baseline (full year)
   const sg2025 = [185, 180, 183, 250, 166, 161, 192, 134, 152, 209, 146, 136];
 
   // ── MAIN CHART ────────────────────────────────────────────────────────────
@@ -209,7 +216,7 @@
         },
         {
           label: 'SG 2025 Baseline',
-          data: sg2025.slice(0, 4),
+          data: sg2025.slice(0, 5),
           type: 'line',
           borderColor: '#f97316',
           backgroundColor: 'transparent',
@@ -286,26 +293,26 @@
     }
   });
 
-  // ── MRR WON CHART ─────────────────────────────────────────────────────────
+  // ── AMOUNT WON CHART ──────────────────────────────────────────────────────
   new Chart(document.getElementById('mrrChart').getContext('2d'), {
     type: 'bar',
     data: {
       labels: months,
       datasets: [
         {
-          label: 'Sales Generated MRR Won',
+          label: 'Sales Generated Won',
           data: sg.map(d => d.mrr_won),
           backgroundColor: '#22c55e',
           borderRadius: 4,
         },
         {
-          label: 'Marketing Generated MRR Won',
+          label: 'Marketing Generated Won',
           data: mg.map(d => d.mrr_won),
           backgroundColor: '#a78bfa',
           borderRadius: 4,
         },
         {
-          label: 'Channel Generated MRR Won',
+          label: 'Channel Generated Won',
           data: cg.map(d => d.mrr_won),
           backgroundColor: '#2dd4bf',
           borderRadius: 4,
@@ -336,11 +343,13 @@
   ];
 
   months.forEach((m, i) => {
+    const isPartial = m.includes('*');
     directions.forEach((dir, di) => {
       const d = dir.data[i];
+      if (isPartial && d.created === 0) return; // skip empty partial rows
       const closed = d.won + d.lost;
       const wr = closed > 0 ? ((d.won / closed) * 100).toFixed(0) + '%' : '—';
-      const vs = dir.vs2025 ? dir.vs2025[i] : null;
+      const vs = (!isPartial && dir.vs2025) ? dir.vs2025[i] : null;
       let vsCell = '<span class="dim">—</span>';
       if (vs !== null) {
         const diff = d.created - vs;
@@ -353,8 +362,9 @@
       if (di === 0) {
         tr.style.borderTop = '1px solid #334155';
       }
+      const monthLabel = di === 0 ? `<strong>${m}</strong>${isPartial ? ' <span class="partial">partial</span>' : ''}` : '';
       tr.innerHTML = `
-        <td>${di === 0 ? `<strong>${m}</strong>` : ''}</td>
+        <td>${monthLabel}</td>
         <td><span style="color:${dir.color};font-weight:600">${dir.label}</span></td>
         <td class="num">${d.created}</td>
         <td class="green-num">${d.won}</td>
