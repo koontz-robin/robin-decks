@@ -1,0 +1,390 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Rev.io ROI Analysis — Interactive Control Systems</title>
+<style>
+  :root {
+    --bg: #0a0f1e;
+    --surface: #111827;
+    --surface2: #0d1525;
+    --border: #1e2d45;
+    --blue: #1667CC;
+    --green: #3DC570;
+    --cyan: #06b6d4;
+    --red: #f87171;
+    --yellow: #f5a623;
+    --text: #e2e8f0;
+    --muted: #64748b;
+  }
+  * { margin:0; padding:0; box-sizing:border-box; }
+  body { background:var(--bg); font-family:'Segoe UI',system-ui,sans-serif; color:var(--text); min-height:100vh; }
+
+  .cover { background:linear-gradient(135deg, #0a0f1e 0%, #0d1b35 50%, #0a1628 100%); padding:80px 80px 60px; border-bottom:1px solid var(--border); position:relative; overflow:hidden; }
+  .cover::before { content:''; position:absolute; top:-100px; right:-100px; width:500px; height:500px; background:radial-gradient(circle, rgba(22,103,204,0.08) 0%, transparent 70%); }
+  .cover-logo { margin-bottom:48px; }
+  .cover-logo img { height:40px; opacity:0.9; }
+  .cover-tag { font-size:11px; font-weight:700; letter-spacing:3px; text-transform:uppercase; color:var(--cyan); margin-bottom:16px; }
+  .cover h1 { font-size:42px; font-weight:800; color:#fff; line-height:1.15; margin-bottom:8px; }
+  .cover h1 span { color:var(--cyan); }
+  .cover-sub { font-size:16px; color:var(--muted); margin-bottom:0; }
+
+  .section { padding:64px 80px; border-bottom:1px solid var(--border); }
+  .section:last-child { border-bottom:none; }
+  .section-tag { font-size:10px; font-weight:700; letter-spacing:3px; text-transform:uppercase; color:var(--blue); margin-bottom:12px; }
+  .section h2 { font-size:28px; font-weight:800; color:#fff; margin-bottom:8px; }
+  .section .lead { font-size:15px; color:var(--muted); line-height:1.7; max-width:740px; margin-bottom:40px; }
+
+  .snapshot-grid { display:grid; grid-template-columns:repeat(4,1fr); gap:16px; margin-bottom:40px; }
+  .snap-card { background:var(--surface); border:1px solid var(--border); border-radius:12px; padding:22px; text-align:center; }
+  .snap-card .snap-val { font-size:30px; font-weight:800; color:var(--cyan); margin-bottom:6px; }
+  .snap-card .snap-label { font-size:11px; font-weight:600; letter-spacing:1px; text-transform:uppercase; color:var(--muted); line-height:1.4; }
+
+  .pain-grid { display:grid; grid-template-columns:repeat(3,1fr); gap:16px; margin-bottom:40px; }
+  .pain-card { background:var(--surface); border:1px solid var(--border); border-top:3px solid var(--red); border-radius:10px; padding:20px; }
+  .pain-card h4 { font-size:13px; font-weight:700; color:#fff; margin-bottom:8px; }
+  .pain-card p { font-size:12px; color:var(--muted); line-height:1.6; }
+  .pain-card .pain-quote { font-size:11px; color:var(--yellow); font-style:italic; margin-top:10px; border-left:2px solid var(--yellow); padding-left:10px; }
+
+  .roi-table { width:100%; border-collapse:collapse; margin-bottom:24px; }
+  .roi-table thead th { font-size:10px; font-weight:700; text-transform:uppercase; letter-spacing:1px; color:var(--muted); padding:12px 16px; text-align:left; background:var(--surface2); border-bottom:1px solid var(--border); }
+  .roi-table tbody td { padding:14px 16px; font-size:13px; color:#94a3b8; border-bottom:1px solid #0a0f1e; vertical-align:top; }
+  .roi-table tbody td:first-child { color:var(--text); font-weight:600; }
+  .roi-table tbody tr:last-child td { border-bottom:none; }
+  .roi-table .total-row td { background:rgba(61,197,112,0.06); color:var(--green); font-weight:700; font-size:14px; border-top:1px solid rgba(61,197,112,0.2); }
+  .math { font-size:11px; color:var(--muted); font-style:italic; margin-top:4px; }
+
+  .summary-grid { display:grid; grid-template-columns:repeat(4,1fr); gap:16px; margin:32px 0; }
+  .sum-card { background:var(--surface); border-radius:12px; padding:22px; text-align:center; }
+  .sum-val { font-size:30px; font-weight:800; margin-bottom:4px; }
+  .sum-label { font-size:10px; font-weight:700; letter-spacing:1.5px; text-transform:uppercase; color:var(--muted); line-height:1.4; }
+
+  .compare { display:grid; grid-template-columns:1fr auto 1fr; gap:24px; align-items:start; margin:32px 0; }
+  .compare-box { background:var(--surface); border-radius:12px; padding:28px; }
+  .compare-box.today { border-top:3px solid var(--red); }
+  .compare-box.tomorrow { border-top:3px solid var(--green); }
+  .compare-label { font-size:10px; font-weight:700; letter-spacing:2px; text-transform:uppercase; margin-bottom:16px; }
+  .compare-box.today .compare-label { color:var(--red); }
+  .compare-box.tomorrow .compare-label { color:var(--green); }
+  .compare-line { font-size:13px; color:#94a3b8; padding:7px 0; border-bottom:1px solid var(--border); line-height:1.4; }
+  .compare-line:last-child { border-bottom:none; }
+  .compare-line strong { color:var(--text); }
+  .vs { font-size:24px; font-weight:800; color:var(--muted); text-align:center; padding-top:60px; }
+
+  .callout { background:rgba(61,197,112,0.06); border:1px solid rgba(61,197,112,0.2); border-radius:10px; padding:20px 24px; margin-top:24px; }
+  .callout-label { font-size:10px; font-weight:700; letter-spacing:2px; text-transform:uppercase; color:var(--green); margin-bottom:8px; }
+  .callout p { font-size:14px; color:var(--text); line-height:1.7; }
+
+  .fit-grid { display:grid; grid-template-columns:repeat(3,1fr); gap:16px; margin-bottom:40px; }
+  .fit-card { background:var(--surface); border:1px solid var(--border); border-left:3px solid var(--blue); border-radius:10px; padding:20px; }
+  .fit-card h4 { font-size:13px; font-weight:700; color:#fff; margin-bottom:8px; }
+  .fit-card p { font-size:12px; color:var(--muted); line-height:1.6; }
+  .fit-card .fit-tag { font-size:10px; font-weight:700; letter-spacing:1.5px; text-transform:uppercase; color:var(--blue); margin-bottom:8px; }
+
+  .next-step { display:flex; gap:16px; align-items:flex-start; padding:16px 0; border-bottom:1px solid var(--border); }
+  .next-step:last-child { border-bottom:none; }
+  .step-num { width:32px; height:32px; background:var(--blue); border-radius:50%; display:flex; align-items:center; justify-content:center; font-size:13px; font-weight:800; color:#fff; flex-shrink:0; margin-top:2px; }
+  .step-content h4 { font-size:14px; font-weight:700; color:#fff; margin-bottom:4px; }
+  .step-content p { font-size:13px; color:var(--muted); line-height:1.5; }
+
+  .disclaimer { font-size:11px; color:#334155; text-align:center; padding:24px 80px; line-height:1.6; }
+
+  .highlight-bar { background:linear-gradient(135deg, rgba(22,103,204,0.12) 0%, rgba(6,182,212,0.08) 100%); border:1px solid rgba(6,182,212,0.2); border-radius:12px; padding:28px 36px; margin-bottom:32px; display:flex; align-items:center; gap:32px; }
+  .highlight-bar .hl-val { font-size:48px; font-weight:900; color:var(--green); white-space:nowrap; }
+  .highlight-bar .hl-label { font-size:14px; color:var(--muted); line-height:1.6; }
+  .highlight-bar .hl-label strong { color:var(--text); }
+</style>
+</head>
+<body>
+
+<!-- COVER -->
+<div class="cover">
+  <div class="cover-logo">
+    <img src="https://koontz-robin.github.io/robin-decks/revio-logo.png" alt="rev.io">
+  </div>
+  <div class="cover-tag">Business Value Assessment</div>
+  <h1>ROI Analysis for<br><span>Interactive Control Systems</span></h1>
+  <p class="cover-sub">Prepared by Rev.io Sales &nbsp;&middot;&nbsp; May 2026</p>
+</div>
+
+<!-- COMPANY SNAPSHOT -->
+<div class="section">
+  <div class="section-tag">About Interactive Control Systems</div>
+  <h2>Who They Are</h2>
+  <p class="lead">Interactive Control Systems is a full-service security integrator based in Huntington, Long Island, NY. They design, install, and service everything from video surveillance and access control to fire alarms and home automation — with a deep commitment to personalized, custom-fit solutions and ongoing customer support.</p>
+
+  <div class="snapshot-grid">
+    <div class="snap-card">
+      <div class="snap-val">35+</div>
+      <div class="snap-label">Years in Business</div>
+    </div>
+    <div class="snap-card">
+      <div class="snap-val">3,000+</div>
+      <div class="snap-label">Customers Served</div>
+    </div>
+    <div class="snap-card">
+      <div class="snap-val">Long Island, NY</div>
+      <div class="snap-label">Primary Service Area</div>
+    </div>
+    <div class="snap-card">
+      <div class="snap-val">Security + IT</div>
+      <div class="snap-label">Dual Service Lines</div>
+    </div>
+  </div>
+
+  <p class="lead" style="margin-bottom:0;">ICS serves both residential and commercial customers across Long Island — handling complex multi-system projects (alarms, cameras, access control, fire, data/fiber, Wi-Fi) alongside recurring monitoring contracts and IT managed services. That mix of project-based work and recurring revenue is exactly the complexity Rev.io PSA was built for.</p>
+</div>
+
+<!-- WHAT WE HEARD -->
+<div class="section">
+  <div class="section-tag">Section 1</div>
+  <h2>What We Heard</h2>
+  <p class="lead">Security integrators running mixed residential/commercial work with both project installs and recurring monitoring revenue consistently hit the same operational walls. These are the challenges we hear from operators at ICS's stage of growth.</p>
+
+  <div class="pain-grid">
+    <div class="pain-card">
+      <h4>Fragmented Quoting &amp; Job Management</h4>
+      <p>Multi-system installs — cameras, access control, fire, data cabling — require detailed project scopes. When quoting, job creation, and invoicing live in separate tools (or spreadsheets), every project involves manual handoffs that slow delivery and invite billing errors.</p>
+      <div class="pain-quote">Every job that starts as a quote requires someone to manually re-enter it as a ticket, then again as an invoice.</div>
+    </div>
+    <div class="pain-card">
+      <h4>Recurring Monitoring Billing Is Manual</h4>
+      <p>Monitoring contracts are your most predictable revenue stream — but without automated recurring billing, they require ongoing manual oversight every month. Missed charges, rate changes, and cancelled customers are hard to catch before they cost you real money.</p>
+      <div class="pain-quote">One missed monitoring contract per month is real revenue that's already been earned — just not collected.</div>
+    </div>
+    <div class="pain-card">
+      <h4>Field Technician Dispatch Lacks Visibility</h4>
+      <p>Coordinating techs across residential and commercial sites on Long Island — across alarm, camera, fire, and IT work — requires real-time visibility into who's available and where. Without a connected dispatch board, scheduling becomes reactive and jobs slip.</p>
+      <div class="pain-quote">Dispatch by text and phone call is how you manage five techs, not fifteen.</div>
+    </div>
+    <div class="pain-card">
+      <h4>IT Services Revenue Hard to Track</h4>
+      <p>ICS offers a full suite of IT services alongside physical security — a strong differentiator, but one that adds billing complexity. Managed IT services often require a different billing model (per-seat, per-device, per-service) than security installs, and mixing them manually is an operational headache.</p>
+      <div class="pain-quote">Physical security billing and IT managed services billing have different models — trying to manage both in the same spreadsheet breaks down fast.</div>
+    </div>
+    <div class="pain-card">
+      <h4>No Unified View of Jobs, Revenue &amp; Customer History</h4>
+      <p>With 3,000+ customers and multiple service lines, leadership needs visibility into what's installed at each site, what's under contract, and what's outstanding — without pulling from three different systems. Customer context should travel with the job, not live in someone's head.</p>
+      <div class="pain-quote">When a tech shows up on a service call, they should already know what's at the site — not have to call the office to find out.</div>
+    </div>
+    <div class="pain-card">
+      <h4>Growth Strains Manual Processes</h4>
+      <p>35 years of growth built on relationships and custom solutions is a competitive advantage — but manual billing, ticketing, and scheduling don't scale the same way great service does. The goal is to keep the personalized experience customers love while automating the back-office work that slows you down.</p>
+      <div class="pain-quote">Adding 100 customers shouldn't require adding two admin headcount to keep up.</div>
+    </div>
+  </div>
+</div>
+
+<!-- COST OF TODAY -->
+<div class="section">
+  <div class="section-tag">Section 2</div>
+  <h2>The Cost of Today</h2>
+  <p class="lead">Conservative estimates based on a security integrator with ICS's profile — mixed residential/commercial installs, recurring monitoring contracts, and IT services. We use a fully-loaded labor rate of $57,000/year per employee ($27.40/hr).</p>
+
+  <table class="roi-table">
+    <thead>
+      <tr>
+        <th style="width:30%">Pain Point</th>
+        <th>Conservative Assumption</th>
+        <th style="text-align:right">Annual Cost</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td>Quote-to-job-to-invoice manual re-entry<br><div class="math">4 hrs/week &times; $27.40/hr &times; 52 weeks</div></td>
+        <td>Conservative 4 hrs/week across the team re-entering scoped quotes into job tickets and then into invoices — multiplied across alarm, camera, access control, fire, and IT projects.</td>
+        <td style="text-align:right;color:var(--red);font-weight:700">$5,700</td>
+      </tr>
+      <tr>
+        <td>Recurring monitoring billing errors &amp; leakage<br><div class="math">Conservative: 2% of estimated $300K monitoring ARR</div></td>
+        <td>Missed billing, incorrect rates, or churned customers not removed from billing cycles. 2% leakage on monitoring ARR is conservative for a manual billing process across 3,000+ customer relationships.</td>
+        <td style="text-align:right;color:var(--red);font-weight:700">$6,000</td>
+      </tr>
+      <tr>
+        <td>Dispatch &amp; scheduling inefficiency<br><div class="math">3 hrs/week &times; $27.40/hr &times; 52 weeks</div></td>
+        <td>Time lost coordinating field techs across residential and commercial jobs without a unified dispatch board — phone calls, texts, and manual calendar updates across security and IT service lines.</td>
+        <td style="text-align:right;color:var(--red);font-weight:700">$4,275</td>
+      </tr>
+      <tr>
+        <td>IT managed services billing complexity<br><div class="math">2 hrs/week &times; $27.40/hr &times; 52 weeks</div></td>
+        <td>Managing per-seat, per-device, and per-service IT billing alongside flat-fee security monitoring manually. Time spent reconciling two billing models every month.</td>
+        <td style="text-align:right;color:var(--red);font-weight:700">$2,850</td>
+      </tr>
+      <tr>
+        <td>Service call prep &amp; customer history lookup<br><div class="math">2.5 hrs/week &times; $27.40/hr &times; 52 weeks</div></td>
+        <td>Time technicians or dispatchers spend finding site history, installed equipment, and contract details before or during service calls — time that should already be in the system.</td>
+        <td style="text-align:right;color:var(--red);font-weight:700">$3,560</td>
+      </tr>
+      <tr>
+        <td>Admin overhead scaling with customer growth<br><div class="math">Estimated current overhead that grows linearly without automation</div></td>
+        <td>Without automation, every new customer adds proportional admin load. Conservative estimate of back-office overhead that doesn't need to exist with the right platform in place.</td>
+        <td style="text-align:right;color:var(--red);font-weight:700">$3,000</td>
+      </tr>
+      <tr class="total-row">
+        <td>Total Estimated Annual Cost of Current State</td>
+        <td>Conservative. Does not account for growth — as ICS continues to scale its install base and recurring monitoring portfolio, manual overhead compounds faster than revenue without automation.</td>
+        <td style="text-align:right">$25,385 / year</td>
+      </tr>
+    </tbody>
+  </table>
+</div>
+
+<!-- WHAT CHANGES -->
+<div class="section">
+  <div class="section-tag">Section 3</div>
+  <h2>What Changes with Rev.io PSA</h2>
+  <p class="lead">Rev.io PSA was purpose-built for exactly what Interactive Control Systems does — security and field service installations, recurring monitoring billing, IT managed services, and growing customer volume. Here's what the operation looks like after implementation.</p>
+
+  <div class="compare">
+    <div class="compare-box today">
+      <div class="compare-label">Today — Fragmented Tools &amp; Manual Workflows</div>
+      <div class="compare-line"><strong>Quoting:</strong> Separate from job creation and invoicing</div>
+      <div class="compare-line"><strong>Job Management:</strong> Manual ticket creation per project</div>
+      <div class="compare-line"><strong>Scheduling:</strong> Phone/text-based field dispatch</div>
+      <div class="compare-line"><strong>Monitoring Billing:</strong> Manual monthly oversight required</div>
+      <div class="compare-line"><strong>IT Services Billing:</strong> Managed separately, complex reconciliation</div>
+      <div class="compare-line"><strong>Customer History:</strong> Siloed, not accessible at job time</div>
+      <div class="compare-line"><strong>Invoicing:</strong> Manual entry after job completion</div>
+      <div class="compare-line"><strong>Reporting:</strong> No unified view of revenue, jobs &amp; tech performance</div>
+    </div>
+    <div class="vs">&rarr;</div>
+    <div class="compare-box tomorrow">
+      <div class="compare-label">With Rev.io PSA — One Connected Platform</div>
+      <div class="compare-line"><strong>Quoting:</strong> One-click convert quote &rarr; job &rarr; invoice</div>
+      <div class="compare-line"><strong>Job Management:</strong> Full project and ticket tracking, multi-system</div>
+      <div class="compare-line"><strong>Scheduling:</strong> Visual dispatch board with real-time tech visibility</div>
+      <div class="compare-line"><strong>Monitoring Billing:</strong> Automated recurring billing, zero manual touch</div>
+      <div class="compare-line"><strong>IT Services Billing:</strong> Per-seat/device billing alongside flat-fee monitoring</div>
+      <div class="compare-line"><strong>Customer History:</strong> Full site history, equipment, contracts in one view</div>
+      <div class="compare-line"><strong>Invoicing:</strong> Auto-generated at job completion or on billing cycle</div>
+      <div class="compare-line"><strong>Reporting:</strong> Live dashboards — revenue, jobs, tech utilization, AR</div>
+    </div>
+  </div>
+
+  <div class="callout">
+    <div class="callout-label">The Core Shift</div>
+    <p>ICS already has the 35 years of trust, the 3,000+ customer relationships, and the technical expertise. Rev.io PSA removes the operational drag — so your team spends more time on installs and relationships, and less time on admin, reconciliation, and chasing down job details.</p>
+  </div>
+</div>
+
+<!-- WHY REV.IO FITS -->
+<div class="section">
+  <div class="section-tag">Section 4</div>
+  <h2>Why Rev.io Is the Right Fit</h2>
+  <p class="lead">Rev.io PSA isn't generic project management software retrofitted for field service. It was built specifically for security integrators, MSPs, and field service businesses that run the exact mix ICS runs: installations, monitoring contracts, recurring billing, and growing customer volume.</p>
+
+  <div class="fit-grid">
+    <div class="fit-card">
+      <div class="fit-tag">Security Integrator DNA</div>
+      <h4>Built for Your Work Type</h4>
+      <p>Rev.io PSA handles the quote-to-cash workflow for multi-system security projects — alarms, cameras, access control, fire, data cabling — with job types, labor tracking, and parts management designed for field service, not generic consulting.</p>
+    </div>
+    <div class="fit-card">
+      <div class="fit-tag">Recurring Revenue Engine</div>
+      <h4>Automated Monitoring Billing</h4>
+      <p>Recurring monitoring contracts bill automatically on your schedule, with rate adjustments, contract renewals, and customer changes handled in the system — not manually reconciled every month. Your most predictable revenue stream finally runs on autopilot.</p>
+    </div>
+    <div class="fit-card">
+      <div class="fit-tag">IT Services Ready</div>
+      <h4>Dual-Model Billing</h4>
+      <p>Rev.io handles both flat-fee monitoring contracts and variable IT managed services billing (per-seat, per-device, per-service) within the same platform — eliminating the reconciliation headache of running two billing models in parallel.</p>
+    </div>
+    <div class="fit-card">
+      <div class="fit-tag">Field Service Native</div>
+      <h4>Dispatch &amp; Scheduling</h4>
+      <p>Visual scheduling board with technician availability, job location, and skill matching built in. Dispatchers get real-time visibility; techs get mobile access to job details, customer history, and site equipment — before they pull into the driveway.</p>
+    </div>
+    <div class="fit-card">
+      <div class="fit-tag">Customer Intelligence</div>
+      <h4>Full Site History</h4>
+      <p>Every piece of installed equipment, every service call, every contract, every invoice — all tied to the customer record. When someone calls with a problem at 9 PM, your team already knows what's at their site and when it was last serviced.</p>
+    </div>
+    <div class="fit-card">
+      <div class="fit-tag">Growth Ready</div>
+      <h4>Scales Without Adding Headcount</h4>
+      <p>At 3,000+ customers and 35 years of growth, the next phase of ICS's expansion should be driven by service quality — not limited by admin capacity. Rev.io automates the back-office so growth doesn't require proportional overhead increases.</p>
+    </div>
+  </div>
+</div>
+
+<!-- ROI SUMMARY -->
+<div class="section">
+  <div class="section-tag">Section 5</div>
+  <h2>The Business Case</h2>
+  <p class="lead">Combining direct cost savings from automation with revenue recapture from billing accuracy — here's what the first-year impact looks like at conservative assumptions.</p>
+
+  <div class="highlight-bar">
+    <div class="hl-val">$25K+</div>
+    <div class="hl-label">
+      <strong>Estimated annual value recaptured</strong> from operational efficiency, billing automation, and revenue leakage elimination — before accounting for growth-related overhead savings as ICS continues to expand its install base and monitoring portfolio.
+    </div>
+  </div>
+
+  <div class="summary-grid">
+    <div class="sum-card">
+      <div class="sum-val" style="color:var(--green)">$14,535</div>
+      <div class="sum-label">Labor Savings<br>from Automation</div>
+    </div>
+    <div class="sum-card">
+      <div class="sum-val" style="color:var(--cyan)">$6,000</div>
+      <div class="sum-label">Monitoring Revenue<br>Leakage Recovered</div>
+    </div>
+    <div class="sum-card">
+      <div class="sum-val" style="color:var(--yellow)">$3,000</div>
+      <div class="sum-label">Admin Overhead<br>Eliminated</div>
+    </div>
+    <div class="sum-card">
+      <div class="sum-val" style="color:var(--blue)">$1,850</div>
+      <div class="sum-label">IT Billing<br>Reconciliation Saved</div>
+    </div>
+  </div>
+
+  <div class="callout">
+    <div class="callout-label">Payback Context</div>
+    <p>For a security integrator at ICS's scale, Rev.io PSA typically pays for itself within 4&ndash;6 months — before accounting for the incremental growth that becomes possible when your team isn't constrained by back-office bottlenecks. The platform enables ICS to take on more projects, more monitoring contracts, and more IT services clients without adding proportional headcount.</p>
+  </div>
+</div>
+
+<!-- NEXT STEPS -->
+<div class="section">
+  <div class="section-tag">Section 6</div>
+  <h2>Recommended Next Steps</h2>
+  <p class="lead">Here's how we move from business case to validated fit — in a few focused conversations.</p>
+
+  <div class="next-step">
+    <div class="step-num">1</div>
+    <div class="step-content">
+      <h4>Discovery Call — Operations Deep Dive</h4>
+      <p>Walk us through your current tech stack, billing workflow, and field ops. We want to understand exactly how quotes become jobs, how monitoring billing runs today, and where your team spends the most time on non-billable work. (45 min)</p>
+    </div>
+  </div>
+  <div class="next-step">
+    <div class="step-num">2</div>
+    <div class="step-content">
+      <h4>Tailored Platform Demo</h4>
+      <p>Live walkthrough focused on the ICS workflow — multi-system security job quoting, recurring monitoring billing automation, field dispatch, and IT services billing. We'll map Rev.io's screens directly to your day-to-day. (60 min)</p>
+    </div>
+  </div>
+  <div class="next-step">
+    <div class="step-num">3</div>
+    <div class="step-content">
+      <h4>Validated ROI with Your Numbers</h4>
+      <p>Once we understand your current volumes — number of installs per month, monitoring contract count, IT services customers — we replace these estimates with your actual numbers and produce a customized business case. Takes 15 minutes of your data, delivers a much sharper picture.</p>
+    </div>
+  </div>
+  <div class="next-step">
+    <div class="step-num">4</div>
+    <div class="step-content">
+      <h4>Implementation Planning</h4>
+      <p>Rev.io's onboarding team has a proven migration path for security integrators moving from fragmented tools. We'll walk through what data migration, configuration, and training look like — and how we minimize disruption to your field ops during go-live.</p>
+    </div>
+  </div>
+</div>
+
+<div class="disclaimer">
+  This analysis is based on publicly available information and industry benchmarks for security integrators of similar size and profile. Cost estimates are conservative and illustrative. Actual ROI will vary based on current billing volumes, team structure, and operational specifics. Rev.io recommends a discovery conversation to validate assumptions with ICS's actual numbers.
+</div>
+
+</body>
+</html>
