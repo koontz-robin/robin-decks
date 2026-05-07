@@ -129,7 +129,7 @@ def main():
     print("Pulling client accounts...")
     types_in = "(" + ",".join(f"'{t}'" for t in CLIENT_TYPES) + ")"
     accounts_raw = sf_query_all(hdrs, iurl,
-        f"SELECT Id, Name, Type, Tigerpaw__c, Rev_io_Payments__c, Owner.Name, OwnerId FROM Account "
+        f"SELECT Id, Name, Type, Tigerpaw__c, Rev_io_Payments__c, LastActivityDate, Owner.Name, OwnerId FROM Account "
         f"WHERE Type IN {types_in} AND OwnerId != '{USMAN_ID}' ORDER BY Name")
     print(f"  {len(accounts_raw)} accounts (excl. Usman + Channel Client)")
 
@@ -151,6 +151,7 @@ def main():
             "type": display_type,
             "owner": owner_name,
             "payments": bool(a.get("Rev_io_Payments__c")),
+            "last_activity": (a.get("LastActivityDate") or "")[:10],
             "last_cbr": None,
             "last_cbr_subject": "",
             "last_cbr_owner": "",
@@ -292,6 +293,16 @@ def main():
                     if acct.get("payments") else
                     '<td style="text-align:center;font-size:13px;color:#334155">—</td>'
                 )
+                last_act = acct.get("last_activity", "")
+                last_act_days = days_since(last_act) if last_act else None
+                if last_act_days is None:
+                    act_html = '<span style="color:#475569;font-size:12px">—</span>'
+                elif last_act_days <= 7:
+                    act_html = f'<span style="font-size:12px;color:#34d399">{last_act}</span><div style="font-size:10px;color:#475569">{last_act_days}d ago</div>'
+                elif last_act_days <= 30:
+                    act_html = f'<span style="font-size:12px;color:#fbbf24">{last_act}</span><div style="font-size:10px;color:#475569">{last_act_days}d ago</div>'
+                else:
+                    act_html = f'<span style="font-size:12px;color:#f87171">{last_act}</span><div style="font-size:10px;color:#475569">{last_act_days}d ago</div>'
                 rows += (
                     f'<tr class="acct-row {badge_class}">'
                     f'<td class="acct-name">{acct["name"]}</td>'
@@ -299,6 +310,7 @@ def main():
                     f'<td class="acct-date">{acct["last_cbr"] or "—"}{cbr_by_html}</td>'
                     f'<td><span class="badge" style="color:{badge_color};border-color:{badge_color}20;background:{badge_color}12">'
                     f'{badge_label}</span></td>'
+                    f'<td style="white-space:nowrap">{act_html}</td>'
                     f'<td class="acct-subject won-cell">{won_cell}</td>'
                     f'</tr>'
                 )
@@ -315,7 +327,7 @@ def main():
   <div class="table-wrap">
   <table>
     <thead><tr>
-      <th>Client</th><th style="text-align:center">Payments</th><th>Last CBR</th><th>Status</th><th>Closed Won Opportunities</th>
+      <th>Client</th><th style="text-align:center">Payments</th><th>Last CBR</th><th>Status</th><th>Last Activity</th><th>Closed Won Opportunities</th>
     </tr></thead>
     <tbody>{rows}</tbody>
   </table>
