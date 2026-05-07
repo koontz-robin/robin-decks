@@ -140,6 +140,8 @@ def main():
         # Split PSA clients by Tigerpaw checkbox
         if raw_type in ("Rev.io PSA Client", "TigerPaw Client"):
             display_type = "Tigerpaw" if a.get("Tigerpaw__c") else "PSA Web"
+        elif raw_type == "Client":
+            display_type = "Rev.io Billing Client"  # legacy type, treat as Billing
         else:
             display_type = raw_type
         acct_map[a["Id"]] = {
