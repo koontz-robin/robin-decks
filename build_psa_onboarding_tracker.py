@@ -148,6 +148,7 @@ def pull_rts_clients():
         rts_start_raw = ((props.get("RTSStart") or {}).get("date") or {}).get("start", "")
         rts_start = rts_start_raw[:10] if rts_start_raw else ""
         rts_notes = "".join(t.get("plain_text", "") for t in (props.get("RTS Notes") or {}).get("rich_text", []))
+        sales_notes = "".join(t.get("plain_text", "") for t in (props.get("Notes") or {}).get("rich_text", []))
         notion_url = f"https://www.notion.so/{p['id'].replace('-', '')}"
 
         # Calculate days in RTS
@@ -168,6 +169,7 @@ def pull_rts_clients():
             "rts_start": rts_start,
             "days_rts": days_rts,
             "rts_notes": rts_notes,
+            "sales_notes": sales_notes,
             "url": notion_url,
             "sf_activity": [],
         })
@@ -313,14 +315,18 @@ def build_rts_section(clients):
         dc = days_color(d_rts)
         sc = status_color(c.get("status",""))
         notes = (c["rts_notes"][:70]+"…" if len(c.get("rts_notes","")) > 70 else c.get("rts_notes","")) if c.get("rts_notes") else "—"
-        # Sales Update
+        # Sales Notes — from Notion "Notes" field, fallback to sales_updates.json
+        sn_notion = (c.get("sales_notes") or "").strip()
         su = sales_updates.get(c["name"], {})
         su_text = (su.get("text") or "").strip()
         su_date = (su.get("date") or "").strip()
         su_author = (su.get("author") or "").strip()
-        if su_text:
+        if sn_notion:
+            sn_display = sn_notion[:120] + ("…" if len(sn_notion) > 120 else "")
+            sales_update_cell = f'<td style="font-size:12px;color:#e2e8f0;max-width:220px;border-left:2px solid #1e3a5f">{sn_display}</td>'
+        elif su_text:
             su_attribution = f'<div style="font-size:10px;color:#475569;margin-top:2px">{su_date} · {su_author}</div>' if (su_date or su_author) else ""
-            sales_update_cell = f'<td style="font-size:12px;color:#e2e8f0;max-width:200px;border-left:2px solid #1e3a5f">{su_text}{su_attribution}</td>'
+            sales_update_cell = f'<td style="font-size:12px;color:#e2e8f0;max-width:220px;border-left:2px solid #1e3a5f">{su_text}{su_attribution}</td>'
         else:
             sales_update_cell = '<td style="font-size:12px;color:#334155;font-style:italic;border-left:2px solid #1e3a5f">—</td>'
         activity = [a for a in c.get("sf_activity",[]) if "[In]" not in a.get("subject","")]
