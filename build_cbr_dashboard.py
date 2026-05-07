@@ -20,8 +20,8 @@ USMAN_ID = "005PX00000556I1YAI"
 
 CLIENT_TYPES = [
     "Rev.io PSA Client",
+    "TigerPaw Client",    # split via Tigerpaw__c checkbox same as PSA Client
     "Rev.io Billing Client",
-    "TigerPaw Client",
     "Rev.io Odin Client",
     "Client",
     # "Channel Client" — excluded per Ryan
@@ -138,7 +138,7 @@ def main():
         owner_name = (a.get("Owner") or {}).get("Name", "Unassigned")
         raw_type = a.get("Type", "")
         # Split PSA clients by Tigerpaw checkbox
-        if raw_type == "Rev.io PSA Client":
+        if raw_type in ("Rev.io PSA Client", "TigerPaw Client"):
             display_type = "Tigerpaw" if a.get("Tigerpaw__c") else "PSA Web"
         else:
             display_type = raw_type
