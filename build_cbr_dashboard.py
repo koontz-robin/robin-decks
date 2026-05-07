@@ -297,9 +297,9 @@ def main():
                 last_act_days = days_since(last_act) if last_act else None
                 if last_act_days is None:
                     act_html = '<span style="color:#475569;font-size:12px">—</span>'
-                elif last_act_days <= 7:
-                    act_html = f'<span style="font-size:12px;color:#34d399">{last_act}</span><div style="font-size:10px;color:#475569">{last_act_days}d ago</div>'
                 elif last_act_days <= 30:
+                    act_html = f'<span style="font-size:12px;color:#34d399">{last_act}</span><div style="font-size:10px;color:#475569">{last_act_days}d ago</div>'
+                elif last_act_days <= 45:
                     act_html = f'<span style="font-size:12px;color:#fbbf24">{last_act}</span><div style="font-size:10px;color:#475569">{last_act_days}d ago</div>'
                 else:
                     act_html = f'<span style="font-size:12px;color:#f87171">{last_act}</span><div style="font-size:10px;color:#475569">{last_act_days}d ago</div>'
