@@ -169,32 +169,9 @@ def main():
                 acct_map[aid]["last_cbr"] = date
                 acct_map[aid]["last_cbr_subject"] = ev.get("Subject", "")
 
-    # 3. CBR Tasks → WhoId → Contact → Account
-    print("Pulling CBR Tasks...")
-    tasks = sf_query_all(hdrs, iurl,
-        "SELECT Id, Subject, ActivityDate, WhoId FROM Task "
-        "WHERE Subject LIKE '%Business Review%' AND Status = 'Completed' "
-        "AND WhoId != null ORDER BY ActivityDate DESC")
-    print(f"  {len(tasks)} completed tasks")
-    who_ids = list({t["WhoId"] for t in tasks if t.get("WhoId")})
-    who_to_acct = {}
-    for i in range(0, len(who_ids), 200):
-        chunk = who_ids[i:i+200]
-        ids_in = "(" + ",".join(f"'{w}'" for w in chunk) + ")"
-        contacts = sf_query_all(hdrs, iurl,
-            f"SELECT Id, AccountId FROM Contact WHERE Id IN {ids_in} AND AccountId != null")
-        for c in contacts:
-            who_to_acct[c["Id"]] = c["AccountId"]
-    print(f"  {len(who_to_acct)} contacts resolved")
-    for task in tasks:
-        aid = who_to_acct.get(task.get("WhoId"))
-        if aid and aid in acct_map:
-            date = task.get("ActivityDate", "")
-            if not acct_map[aid]["last_cbr"] or date > acct_map[aid]["last_cbr"]:
-                acct_map[aid]["last_cbr"] = date
-                acct_map[aid]["last_cbr_subject"] = task.get("Subject", "")
+    # Tasks excluded — Outreach email sequences, not actual CBR meetings
 
-    # 4. Group: owner → type → [accounts]
+    # 3. Group: owner → type → [accounts]
     owner_groups = defaultdict(lambda: defaultdict(list))
     for acct in acct_map.values():
         owner_groups[acct["owner"]][acct["type"]].append(acct)
