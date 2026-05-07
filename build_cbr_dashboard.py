@@ -129,7 +129,7 @@ def main():
     print("Pulling client accounts...")
     types_in = "(" + ",".join(f"'{t}'" for t in CLIENT_TYPES) + ")"
     accounts_raw = sf_query_all(hdrs, iurl,
-        f"SELECT Id, Name, Type, Tigerpaw__c, Owner.Name, OwnerId FROM Account "
+        f"SELECT Id, Name, Type, Tigerpaw__c, Rev_io_Payments__c, Owner.Name, OwnerId FROM Account "
         f"WHERE Type IN {types_in} AND OwnerId != '{USMAN_ID}' ORDER BY Name")
     print(f"  {len(accounts_raw)} accounts (excl. Usman + Channel Client)")
 
@@ -150,6 +150,7 @@ def main():
             "raw_type": raw_type,
             "type": display_type,
             "owner": owner_name,
+            "payments": bool(a.get("Rev_io_Payments__c")),
             "last_cbr": None,
             "last_cbr_subject": "",
             "last_cbr_owner": "",
@@ -286,9 +287,15 @@ def main():
                     won_cell = won_lines
                 else:
                     won_cell = '<span style="color:#475569;font-size:11px">—</span>'
+                payments_cell = (
+                    '<td style="text-align:center;font-size:15px">✅</td>'
+                    if acct.get("payments") else
+                    '<td style="text-align:center;font-size:13px;color:#334155">—</td>'
+                )
                 rows += (
                     f'<tr class="acct-row {badge_class}">'
                     f'<td class="acct-name">{acct["name"]}</td>'
+                    f'{payments_cell}'
                     f'<td class="acct-date">{acct["last_cbr"] or "—"}{cbr_by_html}</td>'
                     f'<td><span class="badge" style="color:{badge_color};border-color:{badge_color}20;background:{badge_color}12">'
                     f'{badge_label}</span></td>'
@@ -308,7 +315,7 @@ def main():
   <div class="table-wrap">
   <table>
     <thead><tr>
-      <th>Client</th><th>Last CBR</th><th>Status</th><th>Closed Won Opportunities</th>
+      <th>Client</th><th style="text-align:center">Payments</th><th>Last CBR</th><th>Status</th><th>Closed Won Opportunities</th>
     </tr></thead>
     <tbody>{rows}</tbody>
   </table>
