@@ -10,6 +10,7 @@ from datetime import datetime, timedelta
 from collections import defaultdict, Counter
 
 NOTION_TOKEN = "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"
+SALES_UPDATES_FILE = "/home/openclaw/.openclaw/workspace/sales_updates.json"
 PSA_DB_ID = "dba0a0aac29e42d7ac7e968e0245f4c4"
 REPO_PATH = "/tmp/robin-decks"
 SSH_KEY = "/home/openclaw/.openclaw/ssh/id_ed25519"
@@ -27,6 +28,14 @@ notion_headers = {
 
 today = datetime.now().date()
 today_str = datetime.now().strftime("%B %d, %Y")
+
+# Load sales updates from local JSON
+try:
+    with open(SALES_UPDATES_FILE) as f:
+        _raw = json.load(f)
+    sales_updates = {k: v for k, v in _raw.items() if k != "_note"}
+except Exception:
+    sales_updates = {}
 
 
 def sf_auth():
@@ -304,6 +313,16 @@ def build_rts_section(clients):
         dc = days_color(d_rts)
         sc = status_color(c.get("status",""))
         notes = (c["rts_notes"][:70]+"…" if len(c.get("rts_notes","")) > 70 else c.get("rts_notes","")) if c.get("rts_notes") else "—"
+        # Sales Update
+        su = sales_updates.get(c["name"], {})
+        su_text = (su.get("text") or "").strip()
+        su_date = (su.get("date") or "").strip()
+        su_author = (su.get("author") or "").strip()
+        if su_text:
+            su_attribution = f'<div style="font-size:10px;color:#475569;margin-top:2px">{su_date} · {su_author}</div>' if (su_date or su_author) else ""
+            sales_update_cell = f'<td style="font-size:12px;color:#e2e8f0;max-width:200px;border-left:2px solid #1e3a5f">{su_text}{su_attribution}</td>'
+        else:
+            sales_update_cell = '<td style="font-size:12px;color:#334155;font-style:italic;border-left:2px solid #1e3a5f">—</td>'
         activity = [a for a in c.get("sf_activity",[]) if "[In]" not in a.get("subject","")]
         last_date = c.get("last_act_date","")
         last_days = c.get("last_act_days")
@@ -332,9 +351,10 @@ def build_rts_section(clients):
             f'<td>{c["rts_start"] or "—"}</td>'
             f'<td style="color:{dc};font-weight:700">{d_rts}d <span style="font-size:10px;color:#475569">({bdays}bd)</span></td>'
             f'<td style="font-size:12px">{last_display}</td>'
+            f'{sales_update_cell}'
             f'<td style="color:#64748b;font-size:12px">{notes}</td>'
             f'</tr>'
-            f'<tr id="a_{row_id}" style="display:none"><td colspan="10" style="padding:0 12px 12px 24px">'
+            f'<tr id="a_{row_id}" style="display:none"><td colspan="11" style="padding:0 12px 12px 24px">'
             f'<div style="background:#0a0f1a;border-radius:8px;overflow:hidden"><table style="width:100%;border-collapse:collapse">'
             f'<thead><tr style="background:#1e293b"><th style="padding:6px 10px;font-size:10px;color:#475569;text-align:left;text-transform:uppercase">Date</th>'
             f'<th style="padding:6px 10px;font-size:10px;color:#475569;text-align:left;text-transform:uppercase">Type</th>'
@@ -530,7 +550,7 @@ html = f"""<!DOCTYPE html><html lang="en"><head><meta charset="UTF-8">
   <div class="sec-title">All RTS Clients — sorted by urgency · click to expand SF activity</div>
   <table><thead><tr>
     <th>Client</th><th>Status</th><th>Sales Rep</th><th>SA</th>
-    <th>MRR</th><th>Date Sold</th><th>RTS Start</th><th>Days RTS</th><th>Last SF Outreach</th><th>Notes</th>
+    <th>MRR</th><th>Date Sold</th><th>RTS Start</th><th>Days RTS</th><th>Last SF Outreach</th><th style="color:#38bdf8;min-width:160px">Sales Notes</th><th>Notes</th>
   </tr></thead><tbody>{rts['rows']}</tbody></table>
 </div>
 
