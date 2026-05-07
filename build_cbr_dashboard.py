@@ -80,10 +80,12 @@ def days_since(date_str):
 
 def cbr_badge(days):
     if days is None:
-        return "#f87171", "Never", "over90"
+        return "#f87171", "Never", "never"
     if days <= 90:
-        return "#34d399", "CBR within 90d", "within90"
-    return "#f87171", "CBR over 90d", "over90"
+        return "#34d399", f"{days}d ago", "current"
+    if days <= 180:
+        return "#fbbf24", f"{days}d ago", "aging"
+    return "#f87171", f"{days}d ago", "overdue"
 
 
 def type_sort_key(t):
@@ -205,9 +207,10 @@ def main():
 
     # 5. Global stats
     total = len(acct_map)
-    within90 = sum(1 for a in acct_map.values() if a["last_cbr"] and days_since(a["last_cbr"]) <= 90)
     never = sum(1 for a in acct_map.values() if not a["last_cbr"])
-    over90 = total - within90
+    overdue = sum(1 for a in acct_map.values() if a["last_cbr"] and days_since(a["last_cbr"]) > 180)
+    aging = sum(1 for a in acct_map.values() if a["last_cbr"] and 90 < days_since(a["last_cbr"]) <= 180)
+    current = total - never - overdue - aging
 
     # ── HTML Build ─────────────────────────────────────────────────────────
     print("Building HTML...")
@@ -230,8 +233,10 @@ def main():
         types_sorted = sorted(type_dict.keys(), key=type_sort_key)
 
         owner_total = sum(len(v) for v in type_dict.values())
-        o_within90 = sum(1 for t in type_dict.values() for a in t if a["last_cbr"] and days_since(a["last_cbr"]) <= 90)
-        o_over90 = owner_total - o_within90
+        o_never   = sum(1 for t in type_dict.values() for a in t if not a["last_cbr"])
+        o_overdue = sum(1 for t in type_dict.values() for a in t if a["last_cbr"] and days_since(a["last_cbr"]) > 180)
+        o_aging   = sum(1 for t in type_dict.values() for a in t if a["last_cbr"] and 90 < days_since(a["last_cbr"]) <= 180)
+        o_current = owner_total - o_never - o_overdue - o_aging
 
         # Product sub-tab buttons for this owner
         prod_tab_btns = ""
@@ -253,8 +258,10 @@ def main():
         for pi, ptype in enumerate(types_sorted):
             accounts = sorted(type_dict[ptype], key=lambda a: a["last_cbr"] or "0000", reverse=True)
             color = type_color(ptype)
-            t_within90 = sum(1 for a in accounts if a["last_cbr"] and days_since(a["last_cbr"]) <= 90)
-            t_over90 = len(accounts) - t_within90
+            t_never   = sum(1 for a in accounts if not a["last_cbr"])
+            t_overdue = sum(1 for a in accounts if a["last_cbr"] and days_since(a["last_cbr"]) > 180)
+            t_aging   = sum(1 for a in accounts if a["last_cbr"] and 90 < days_since(a["last_cbr"]) <= 180)
+            t_current = len(accounts) - t_never - t_overdue - t_aging
 
             rows = ""
             for acct in accounts:
@@ -293,8 +300,10 @@ def main():
             prod_panels_html += f"""
 <div class="prod-panel" data-owner="{oi}" data-prod="{pi}" style="display:{disp}">
   <div class="prod-stats">
-    <span class="pstat green">{t_within90} within 90d</span>
-    <span class="pstat red">{t_over90} over 90d</span>
+    <span class="pstat green">{t_current} current</span>
+    <span class="pstat yellow">{t_aging} aging</span>
+    <span class="pstat red">{t_overdue} overdue</span>
+    <span class="pstat dim">{t_never} never</span>
   </div>
   <div class="table-wrap">
   <table>
@@ -310,8 +319,10 @@ def main():
         owner_panels_html += f"""
 <div class="owner-panel" data-owner="{oi}" style="display:{disp}">
   <div class="owner-summary">
-    <span class="ostat green">{o_within90} within 90d</span>
-    <span class="ostat red">{o_over90} over 90d</span>
+    <span class="ostat green">{o_current} current</span>
+    <span class="ostat yellow">{o_aging} aging</span>
+    <span class="ostat red">{o_overdue} overdue</span>
+    <span class="ostat dim">{o_never} never</span>
   </div>
   <div class="prod-tabs">{prod_tab_btns}</div>
   {prod_panels_html}
@@ -412,8 +423,10 @@ th{{padding:8px 12px;font-size:10px;color:#475569;text-align:left;text-transform
 
 <!-- Legend -->
 <div class="legend">
-  <span><span style="color:#34d399;font-weight:700">●</span> CBR within 90d</span>
-  <span><span style="color:#f87171;font-weight:700">●</span> CBR over 90d (incl. never)</span>
+  <span><span style="color:#34d399;font-weight:700">●</span> Current (≤ 90d)</span>
+  <span><span style="color:#fbbf24;font-weight:700">●</span> Aging (91–180d)</span>
+  <span><span style="color:#f87171;font-weight:700">●</span> Overdue (&gt; 180d)</span>
+  <span><span style="color:#f87171;font-weight:700">●</span> Never</span>
   <span style="margin-left:8px;color:#475569">|</span>
   <span style="color:#475569"><em>Excludes Channel Client &amp; Usman Zahoor accounts</em></span>
 </div>
@@ -426,14 +439,19 @@ th{{padding:8px 12px;font-size:10px;color:#475569;text-align:left;text-transform
     <div class="card-sub">{len(owners_sorted)} account owners</div>
   </div>
   <div class="card">
-    <div class="card-label">CBR Within 90d ✅</div>
-    <div class="card-val" style="color:#34d399">{within90}</div>
-    <div class="card-sub">reviewed in last 90 days</div>
+    <div class="card-label">Current ✅</div>
+    <div class="card-val" style="color:#34d399">{current}</div>
+    <div class="card-sub">CBR within 90 days</div>
   </div>
   <div class="card">
-    <div class="card-label">CBR Over 90d ❌</div>
-    <div class="card-val" style="color:#f87171">{over90}</div>
-    <div class="card-sub">{never} never reviewed</div>
+    <div class="card-label">Aging / Overdue ⚠️</div>
+    <div class="card-val" style="color:#fbbf24">{aging + overdue}</div>
+    <div class="card-sub">{aging} aging · {overdue} overdue</div>
+  </div>
+  <div class="card">
+    <div class="card-label">Never Had CBR ❌</div>
+    <div class="card-val" style="color:#f87171">{never}</div>
+    <div class="card-sub">no completed review on record</div>
   </div>
 </div>
 
