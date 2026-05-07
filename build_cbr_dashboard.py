@@ -150,12 +150,14 @@ def main():
             "owner": owner_name,
             "last_cbr": None,
             "last_cbr_subject": "",
+            "last_cbr_owner": "",
+            "won_opps": [],
         }
 
     # 2. CBR Events (WhatId = AccountId)
     print("Pulling CBR Events...")
     events = sf_query_all(hdrs, iurl,
-        "SELECT Id, Subject, ActivityDate, WhatId FROM Event "
+        "SELECT Id, Subject, ActivityDate, WhatId, Owner.Name FROM Event "
         "WHERE Subject LIKE '%Business Review%' AND WhatId != null "
         "ORDER BY ActivityDate DESC")
     print(f"  {len(events)} events with account link")
@@ -166,10 +168,34 @@ def main():
             if not acct_map[aid]["last_cbr"] or date > acct_map[aid]["last_cbr"]:
                 acct_map[aid]["last_cbr"] = date
                 acct_map[aid]["last_cbr_subject"] = ev.get("Subject", "")
+                acct_map[aid]["last_cbr_owner"] = (ev.get("Owner") or {}).get("Name", "")
 
     # Tasks excluded — Outreach email sequences, not actual CBR meetings
 
-    # 3. Group: owner → type → [accounts]
+    # 3. Closed Won opportunities per account
+    print("Pulling Closed Won opportunities...")
+    acct_ids = list(acct_map.keys())
+    won_map = defaultdict(list)
+    for i in range(0, len(acct_ids), 500):
+        chunk = acct_ids[i:i+500]
+        ids_in = "(" + ",".join(f"'{a}'" for a in chunk) + ")"
+        opps = sf_query_all(hdrs, iurl,
+            f"SELECT Id, Name, Amount, CloseDate, Owner.Name, AccountId FROM Opportunity "
+            f"WHERE StageName = 'Closed Won' AND AccountId IN {ids_in} "
+            f"ORDER BY CloseDate DESC")
+        for opp in opps:
+            won_map[opp["AccountId"]].append({
+                "name": opp.get("Name", ""),
+                "amount": opp.get("Amount") or 0,
+                "close_date": opp.get("CloseDate", ""),
+                "owner": (opp.get("Owner") or {}).get("Name", ""),
+            })
+    for aid, opps in won_map.items():
+        if aid in acct_map:
+            acct_map[aid]["won_opps"] = opps
+    print(f"  {sum(len(v) for v in won_map.values())} closed won opps across {len(won_map)} accounts")
+
+    # 4. Group: owner → type → [accounts]
     owner_groups = defaultdict(lambda: defaultdict(list))
     for acct in acct_map.values():
         owner_groups[acct["owner"]][acct["type"]].append(acct)
@@ -234,14 +260,32 @@ def main():
             for acct in accounts:
                 d = days_since(acct["last_cbr"])
                 badge_color, badge_label, badge_class = cbr_badge(d)
-                subj = clean_subject(acct.get("last_cbr_subject", ""))
+                cbr_by = acct.get("last_cbr_owner", "")
+                cbr_by_html = f'<div style="font-size:10px;color:#475569;margin-top:2px">{cbr_by}</div>' if cbr_by else ""
+                # Closed Won opps
+                won = acct.get("won_opps", [])
+                if won:
+                    won_lines = "".join(
+                        f'<div style="font-size:11px;color:#94a3b8;white-space:nowrap">'
+                        f'{o["close_date"][:7] if o["close_date"] else ""} &nbsp;'
+                        f'<span style="color:#e2e8f0">{o["name"][:40] + "…" if len(o["name"]) > 40 else o["name"]}</span>'
+                        f'&nbsp;<span style="color:#34d399;font-weight:700">${o["amount"]:,.0f}</span>'
+                        f'&nbsp;<span style="color:#475569">{o["owner"]}</span>'
+                        f'</div>'
+                        for o in won[:3]
+                    )
+                    if len(won) > 3:
+                        won_lines += f'<div style="font-size:10px;color:#475569">+{len(won)-3} more</div>'
+                    won_cell = won_lines
+                else:
+                    won_cell = '<span style="color:#475569;font-size:11px">—</span>'
                 rows += (
                     f'<tr class="acct-row {badge_class}">'
                     f'<td class="acct-name">{acct["name"]}</td>'
-                    f'<td class="acct-date">{acct["last_cbr"] or "—"}</td>'
+                    f'<td class="acct-date">{acct["last_cbr"] or "—"}{cbr_by_html}</td>'
                     f'<td><span class="badge" style="color:{badge_color};border-color:{badge_color}20;background:{badge_color}12">'
                     f'{badge_label}</span></td>'
-                    f'<td class="acct-subject">{subj}</td>'
+                    f'<td class="acct-subject won-cell">{won_cell}</td>'
                     f'</tr>'
                 )
 
@@ -255,7 +299,7 @@ def main():
   <div class="table-wrap">
   <table>
     <thead><tr>
-      <th>Client</th><th>Last CBR</th><th>Status</th><th>Subject</th>
+      <th>Client</th><th>Last CBR</th><th>Status</th><th>Closed Won Opportunities</th>
     </tr></thead>
     <tbody>{rows}</tbody>
   </table>
