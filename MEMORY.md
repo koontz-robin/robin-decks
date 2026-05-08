@@ -1,6 +1,6 @@
 # MEMORY.md — Robin's Long-Term Memory
 
-Last updated: 2026-05-06
+Last updated: 2026-05-08
 
 ---
 
@@ -58,6 +58,48 @@ Last updated: 2026-05-06
 - Auth: OAuth2 PKCE, tokens in sf-tokens.json
 - Key custom field: Forecast_Status__c (Worst Case / Most Likely / Best Case)
 - May opps: sf_may_opps.json | April opps: sf_april_opps.json
+
+---
+
+## Model Config — Locked 2026-05-08
+
+### Current State (confirmed working)
+- **Global default:** `openai-codex/gpt-5.5` ✅
+- **`agents.defaults.model.primary`:** `openai-codex/gpt-5.5` ✅
+- **Fallback:** `anthropic/claude-sonnet-4-6` (intentional safety net — do NOT remove)
+- **`LCM_SUMMARY_MODEL`:** Not configured (not needed)
+- **Auth provider:** `openai-codex:default` stored in `auth-profiles.json`, key ends in `...f5Av-z4A`
+- **Config backup:** `~/.openclaw/openclaw.json.bak.20260508-133601`
+
+### What Was Done
+1. Audited live model — was `openai/gpt-5.5` (wrong prefix), changed to `openai-codex/gpt-5.5`
+2. Updated `agents.defaults.model.primary` directly in `openclaw.json`
+3. Scanned all 20 crons — **zero have model overrides**, zero can revert to Sonnet
+4. Wired OpenAI API key to `openai-codex` provider in `auth-profiles.json`
+5. Ryan shared two keys in Discord (both should be considered exposed):
+   - First key (ending `...PRt5EYMA`) — **REVOKE THIS** at platform.openai.com/api-keys
+   - Second key (ending `...f5Av-z4A`) — currently active, **rotate soon** (also sent over Discord)
+
+### Important Notes
+- Sessions started BEFORE the model change still show `anthropic/claude-sonnet-4-6` — this is normal (sessions pin at start)
+- New sessions will use `openai-codex/gpt-5.5` automatically
+- `/model openai-codex/gpt-5.5` in Discord chat can force-switch a live session
+- `sessions.json` has many historical `claude-sonnet-4-6` entries — these are read-only history, not active config, ignore them
+- Memory note from 2026-05-06 saying "revert to Sonnet" is **obsolete** — OpenAI key is now provisioned
+
+### Key Rotation TODO
+- [ ] Revoke `...PRt5EYMA` at https://platform.openai.com/api-keys
+- [ ] Rotate `...f5Av-z4A` (shared in Discord plaintext) and re-wire via secure method
+- [ ] Ideal long-term: store key in `kv-rev-bots` as `robin--openai-api-key`, pull at startup
+
+---
+
+## Decks & Dashboard Library
+- Full library: `/home/openclaw/.openclaw/workspace/DECKS-LIBRARY.md`
+- 55 files catalogued as of 2026-05-08
+- GitHub Pages base: `https://koontz-robin.github.io/robin-decks/`
+- **Rule:** Every new deck/dashboard Robin creates MUST be added to DECKS-LIBRARY.md before it's considered done
+- Never use htmlpreview.github.io or raw.githack.com — flagged by Proofpoint
 
 ---
 
