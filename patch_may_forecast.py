@@ -139,8 +139,6 @@ def build_may_tab():
       <div class="s-label">MAY CLOSED WON</div>
       <div class="s-val">{fmt(cw)}</div>
       <div class="s-sub">{cw_pct:.1f}% of quota</div>
-      <strong style="color:{c};font-size:18px">{cw_pct:.1f}%</strong>
-      <div class="quota-fill" style="width:{cw_pct:.1f}%;background:{c};box-shadow:0 0 10px {c}88"></div>
     </div>
   </div>
   <div class="quota-bar-wrap">
