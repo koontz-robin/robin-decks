@@ -1,0 +1,420 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>Q1 Closed by Incumbent PSA — Rev.io</title>
+<style>
+  :root {
+    --bg: #020408;
+    --surface: #060d14;
+    --surface2: #0a1520;
+    --border: #0d2535;
+    --text: #c8e8f8;
+    --muted: #2a5a7a;
+    --blue: #0ea5e9;
+    --cyan: #00e5ff;
+    --green: #00ff88;
+    --gold: #f5c518;
+    --red: #ff4444;
+  }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body { font-family: 'Segoe UI', system-ui, sans-serif; background: var(--bg); color: var(--text); min-height: 100vh; }
+  body::before {
+    content: '';
+    position: fixed; inset: 0;
+    background-image:
+      linear-gradient(rgba(14,165,233,0.04) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(14,165,233,0.04) 1px, transparent 1px);
+    background-size: 40px 40px;
+    pointer-events: none; z-index: 0;
+  }
+  .container { max-width: 1100px; margin: 0 auto; padding: 28px 32px; position: relative; z-index: 1; }
+
+  /* Header */
+  .header { border-bottom: 1px solid var(--border); padding-bottom: 16px; margin-bottom: 24px; }
+  .logo-row { display: flex; align-items: center; justify-content: space-between; margin-bottom: 10px; }
+  .logo { display: flex; align-items: center; gap: 8px; }
+  .logo-dot { width: 9px; height: 9px; background: var(--blue); border-radius: 50%; box-shadow: 0 0 10px var(--blue); animation: pulse 2s infinite; }
+  .logo-text { font-size: 11px; font-weight: 700; letter-spacing: 3px; text-transform: uppercase; color: var(--blue); }
+  .header-date { font-size: 11px; color: var(--muted); letter-spacing: 1px; }
+  h1 { font-size: 32px; font-weight: 900; color: #fff; letter-spacing: -1px; }
+  h1 span { color: var(--cyan); text-shadow: 0 0 24px var(--cyan); }
+  .sub { font-size: 13px; color: var(--muted); margin-top: 4px; }
+
+  /* Stat grid */
+  .stat-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px; margin-bottom: 24px; }
+  .stat { background: var(--surface); border: 1px solid var(--border); border-radius: 10px; padding: 16px; text-align: center; }
+  .stat-label { font-size: 9px; font-weight: 700; text-transform: uppercase; letter-spacing: 1.5px; color: var(--muted); margin-bottom: 6px; }
+  .stat-val { font-size: 26px; font-weight: 900; }
+
+  /* Bar chart */
+  .card { background: var(--surface); border: 1px solid var(--border); border-radius: 10px; padding: 22px 26px; margin-bottom: 20px; }
+  .card-title { font-size: 10px; font-weight: 700; letter-spacing: 2px; text-transform: uppercase; color: var(--muted); margin-bottom: 18px; }
+  .bars { display: flex; gap: 8px; align-items: flex-end; height: 120px; }
+  .bar-group { flex: 1; display: flex; flex-direction: column; align-items: center; gap: 4px; }
+  .bar-val { font-size: 10px; font-weight: 700; color: var(--cyan); }
+  .bar-wrap { width: 100%; display: flex; align-items: flex-end; justify-content: center; flex: 1; }
+  .bar { width: 100%; max-width: 36px; border-radius: 4px 4px 0 0; min-height: 3px; }
+  .bar-label { font-size: 8px; font-weight: 700; text-transform: uppercase; color: var(--muted); letter-spacing: 0.5px; text-align: center; line-height: 1.2; }
+
+  /* Platform sections */
+  .platforms { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+  .platform { background: var(--surface); border: 1px solid var(--border); border-radius: 10px; overflow: hidden; }
+  .psa-header { display: flex; align-items: center; justify-content: space-between; padding: 10px 14px; background: var(--surface2); border-bottom: 1px solid var(--border); }
+  .psa-name { font-size: 11px; font-weight: 800; letter-spacing: 1.5px; text-transform: uppercase; color: var(--cyan); }
+  .psa-meta { display: flex; gap: 12px; }
+  .psa-badge { font-size: 10px; font-weight: 700; padding: 2px 8px; border-radius: 20px; }
+  .badge-count { background: rgba(14,165,233,0.15); color: var(--blue); border: 1px solid rgba(14,165,233,0.3); }
+  .badge-amt { background: rgba(0,255,136,0.1); color: var(--green); border: 1px solid rgba(0,255,136,0.2); }
+  table { width: 100%; border-collapse: collapse; font-size: 11px; }
+  th { font-size: 8px; font-weight: 700; text-transform: uppercase; letter-spacing: 1.5px; color: var(--muted); padding: 6px 12px; text-align: left; }
+  td { padding: 5px 12px; border-bottom: 1px solid rgba(14,165,233,0.04); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 160px; }
+  tr:last-child td { border-bottom: none; }
+  tr:hover td { background: rgba(14,165,233,0.03); }
+  .td-amt { color: var(--green); font-weight: 700; font-size: 11px; }
+  .td-owner { color: #8bb8c8; }
+  .td-date { color: var(--muted); font-size: 10px; }
+  .type-new { font-size: 8px; font-weight: 700; padding: 1px 5px; border-radius: 3px; background: rgba(0,229,255,0.1); color: var(--cyan); border: 1px solid rgba(0,229,255,0.2); }
+  .type-exp { font-size: 8px; font-weight: 700; padding: 1px 5px; border-radius: 3px; background: rgba(245,197,24,0.1); color: var(--gold); border: 1px solid rgba(245,197,24,0.2); }
+
+  /* Footer */
+  .footer { text-align: center; padding: 20px; font-size: 10px; color: #1a3a4a; letter-spacing: 1px; border-top: 1px solid var(--border); margin-top: 16px; }
+  @keyframes pulse { 0%,100%{opacity:1}50%{opacity:0.4} }
+</style>
+</head>
+<body>
+<div class="container">
+
+  <div class="header">
+    <div class="logo-row">
+      <div class="logo">
+        <div class="logo-dot"></div>
+        <div class="logo-text">Rev.io · PSA Sales Intelligence</div>
+      </div>
+      <div class="header-date">Q1 2026 · SALESFORCE LIVE DATA</div>
+    </div>
+    <h1>Q1 Closed Won — <span>Incumbent PSA</span></h1>
+    <div class="sub">39 deals closed · All Closed Won opportunities by prior PSA platform</div>
+  </div>
+
+  <!-- Summary Stats -->
+  <div class="stat-grid">
+    <div class="stat">
+      <div class="stat-label">Total Deals</div>
+      <div class="stat-val" style="color:var(--cyan)">39</div>
+    </div>
+    <div class="stat">
+      <div class="stat-label">Total ARR</div>
+      <div class="stat-val" style="color:var(--green)">$31,644</div>
+    </div>
+    <div class="stat">
+      <div class="stat-label">Avg Deal Size</div>
+      <div class="stat-val" style="color:var(--gold)">$812</div>
+    </div>
+    <div class="stat">
+      <div class="stat-label">PSA Platforms</div>
+      <div class="stat-val" style="color:var(--blue)">20</div>
+    </div>
+  </div>
+
+  <!-- Bar Chart: Deals by Platform -->
+  <div class="card">
+    <div class="card-title">Deal Count by Incumbent PSA Platform</div>
+    <div class="bars">
+      <!-- max is 6 (ConnectWise) -->
+      <div class="bar-group">
+        <div class="bar-val">6</div>
+        <div class="bar-wrap"><div class="bar" style="height:100%;background:linear-gradient(to top,#0ea5e9,#00e5ff);box-shadow:0 0 8px #0ea5e966"></div></div>
+        <div class="bar-label">CW</div>
+      </div>
+      <div class="bar-group">
+        <div class="bar-val">4</div>
+        <div class="bar-wrap"><div class="bar" style="height:67%;background:linear-gradient(to top,#0ea5e9,#00e5ff);box-shadow:0 0 8px #0ea5e966"></div></div>
+        <div class="bar-label">Halo</div>
+      </div>
+      <div class="bar-group">
+        <div class="bar-val">4</div>
+        <div class="bar-wrap"><div class="bar" style="height:67%;background:linear-gradient(to top,#0ea5e9,#00e5ff);box-shadow:0 0 8px #0ea5e966"></div></div>
+        <div class="bar-label">Sheets</div>
+      </div>
+      <div class="bar-group">
+        <div class="bar-val">3</div>
+        <div class="bar-wrap"><div class="bar" style="height:50%;background:linear-gradient(to top,#0ea5e9,#00e5ff);box-shadow:0 0 8px #0ea5e966"></div></div>
+        <div class="bar-label">HCP</div>
+      </div>
+      <div class="bar-group">
+        <div class="bar-val">3</div>
+        <div class="bar-wrap"><div class="bar" style="height:50%;background:linear-gradient(to top,#0ea5e9,#00e5ff);box-shadow:0 0 8px #0ea5e966"></div></div>
+        <div class="bar-label">Jobber</div>
+      </div>
+      <div class="bar-group">
+        <div class="bar-val">2</div>
+        <div class="bar-wrap"><div class="bar" style="height:33%;background:linear-gradient(to top,#0ea5e9,#00e5ff);box-shadow:0 0 8px #0ea5e966"></div></div>
+        <div class="bar-label">AlarmBiller</div>
+      </div>
+      <div class="bar-group">
+        <div class="bar-val">2</div>
+        <div class="bar-wrap"><div class="bar" style="height:33%;background:linear-gradient(to top,#0ea5e9,#00e5ff);box-shadow:0 0 8px #0ea5e966"></div></div>
+        <div class="bar-label">Rev.io</div>
+      </div>
+      <div class="bar-group">
+        <div class="bar-val">2</div>
+        <div class="bar-wrap"><div class="bar" style="height:33%;background:linear-gradient(to top,#0ea5e9,#00e5ff);box-shadow:0 0 8px #0ea5e966"></div></div>
+        <div class="bar-label">Svc Fusion</div>
+      </div>
+      <div class="bar-group">
+        <div class="bar-val">1</div>
+        <div class="bar-wrap"><div class="bar" style="height:17%;background:linear-gradient(to top,#0ea5e9,#00e5ff);box-shadow:0 0 8px #0ea5e966"></div></div>
+        <div class="bar-label">Sedona</div>
+      </div>
+      <div class="bar-group">
+        <div class="bar-val">7</div>
+        <div class="bar-wrap"><div class="bar" style="height:17%;background:rgba(14,165,233,0.4);border:1px dashed rgba(14,165,233,0.3)"></div></div>
+        <div class="bar-label">Other ×7</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Platform Detail Tables -->
+  <div class="platforms">
+
+    <!-- ConnectWise -->
+    <div class="platform">
+      <div class="psa-header">
+        <div class="psa-name">ConnectWise</div>
+        <div class="psa-meta">
+          <span class="psa-badge badge-count">6 deals</span>
+          <span class="psa-badge badge-amt">$7,584</span>
+        </div>
+      </div>
+      <table>
+        <thead><tr><th>Account</th><th>AE</th><th>Amount</th><th>Close</th><th>Type</th></tr></thead>
+        <tbody>
+          <tr><td>Remote Technology</td><td class="td-owner">J. Mitchell</td><td class="td-amt">$1,010</td><td class="td-date">2/20</td><td><span class="type-new">New</span></td></tr>
+          <tr><td>Losh Network Services</td><td class="td-owner">C. Flynn</td><td class="td-amt">$1,004</td><td class="td-date">2/26</td><td><span class="type-exp">Exp</span></td></tr>
+          <tr><td>Bullfrog Group</td><td class="td-owner">J. Butler</td><td class="td-amt">$600</td><td class="td-date">3/5</td><td><span class="type-exp">Exp</span></td></tr>
+          <tr><td>Ameritel</td><td class="td-owner">A. Whisenant</td><td class="td-amt">$500</td><td class="td-date">3/13</td><td><span class="type-new">New</span></td></tr>
+          <tr><td>NetWatch</td><td class="td-owner">J. Borah</td><td class="td-amt">$3,000</td><td class="td-date">3/25</td><td><span class="type-new">New</span></td></tr>
+          <tr><td>Integrated Technologies</td><td class="td-owner">J. Butler</td><td class="td-amt">$1,470</td><td class="td-date">3/31</td><td><span class="type-new">New</span></td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <!-- Halo -->
+    <div class="platform">
+      <div class="psa-header">
+        <div class="psa-name">Halo</div>
+        <div class="psa-meta">
+          <span class="psa-badge badge-count">4 deals</span>
+          <span class="psa-badge badge-amt">$3,570</span>
+        </div>
+      </div>
+      <table>
+        <thead><tr><th>Account</th><th>AE</th><th>Amount</th><th>Close</th><th>Type</th></tr></thead>
+        <tbody>
+          <tr><td>Novalera</td><td class="td-owner">J. Abarno</td><td class="td-amt">$500</td><td class="td-date">2/13</td><td><span class="type-new">New</span></td></tr>
+          <tr><td>First Class Technology</td><td class="td-owner">P. Davies</td><td class="td-amt">$500</td><td class="td-date">2/20</td><td><span class="type-new">New</span></td></tr>
+          <tr><td>Ravguard</td><td class="td-owner">A. Whisenant</td><td class="td-amt">$500</td><td class="td-date">2/20</td><td><span class="type-new">New</span></td></tr>
+          <tr><td>GuentherTech</td><td class="td-owner">A. Whisenant</td><td class="td-amt">$2,070</td><td class="td-date">3/6</td><td><span class="type-new">New</span></td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <!-- Spreadsheets -->
+    <div class="platform">
+      <div class="psa-header">
+        <div class="psa-name">Spreadsheets</div>
+        <div class="psa-meta">
+          <span class="psa-badge badge-count">4 deals</span>
+          <span class="psa-badge badge-amt">$2,330</span>
+        </div>
+      </div>
+      <table>
+        <thead><tr><th>Account</th><th>AE</th><th>Amount</th><th>Close</th><th>Type</th></tr></thead>
+        <tbody>
+          <tr><td>Triangle System Integrations</td><td class="td-owner">H. Zalmiyar</td><td class="td-amt">$620</td><td class="td-date">1/23</td><td><span class="type-new">New</span></td></tr>
+          <tr><td>Sydewire Technologies</td><td class="td-owner">P. Davies</td><td class="td-amt">$500</td><td class="td-date">2/23</td><td><span class="type-new">New</span></td></tr>
+          <tr><td>TeraPixels Systems</td><td class="td-owner">A. Whisenant</td><td class="td-amt">$520</td><td class="td-date">3/18</td><td><span class="type-new">New</span></td></tr>
+          <tr><td>Viking Lock</td><td class="td-owner">J. Borah</td><td class="td-amt">$690</td><td class="td-date">3/23</td><td><span class="type-new">New</span></td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <!-- Housecall Pro -->
+    <div class="platform">
+      <div class="psa-header">
+        <div class="psa-name">Housecall Pro</div>
+        <div class="psa-meta">
+          <span class="psa-badge badge-count">3 deals</span>
+          <span class="psa-badge badge-amt">$1,930</span>
+        </div>
+      </div>
+      <table>
+        <thead><tr><th>Account</th><th>AE</th><th>Amount</th><th>Close</th><th>Type</th></tr></thead>
+        <tbody>
+          <tr><td>TREIN Management</td><td class="td-owner">J. Borah</td><td class="td-amt">$590</td><td class="td-date">1/14</td><td><span class="type-new">New</span></td></tr>
+          <tr><td>Acoustical Design</td><td class="td-owner">J. Bender</td><td class="td-amt">$500</td><td class="td-date">1/30</td><td><span class="type-new">New</span></td></tr>
+          <tr><td>Total Temp</td><td class="td-owner">J. Bender</td><td class="td-amt">$840</td><td class="td-date">2/19</td><td><span class="type-new">New</span></td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <!-- Jobber -->
+    <div class="platform">
+      <div class="psa-header">
+        <div class="psa-name">Jobber</div>
+        <div class="psa-meta">
+          <span class="psa-badge badge-count">3 deals</span>
+          <span class="psa-badge badge-amt">$1,650</span>
+        </div>
+      </div>
+      <table>
+        <thead><tr><th>Account</th><th>AE</th><th>Amount</th><th>Close</th><th>Type</th></tr></thead>
+        <tbody>
+          <tr><td>Kellsec Security Solutions</td><td class="td-owner">H. Zalmiyar</td><td class="td-amt">$575</td><td class="td-date">2/3</td><td><span class="type-new">New</span></td></tr>
+          <tr><td>Cinemascape</td><td class="td-owner">D. Herndon</td><td class="td-amt">$575</td><td class="td-date">2/13</td><td><span class="type-new">New</span></td></tr>
+          <tr><td>Shinntek Solutions</td><td class="td-owner">A. Whisenant</td><td class="td-amt">$500</td><td class="td-date">2/17</td><td><span class="type-new">New</span></td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <!-- Rev.io Ticketing -->
+    <div class="platform">
+      <div class="psa-header">
+        <div class="psa-name">Rev.io Ticketing</div>
+        <div class="psa-meta">
+          <span class="psa-badge badge-count">2 deals</span>
+          <span class="psa-badge badge-amt">$1,250</span>
+        </div>
+      </div>
+      <table>
+        <thead><tr><th>Account</th><th>AE</th><th>Amount</th><th>Close</th><th>Type</th></tr></thead>
+        <tbody>
+          <tr><td>Stratus Telecom</td><td class="td-owner">J. Butler</td><td class="td-amt">$500</td><td class="td-date">1/28</td><td><span class="type-exp">Exp</span></td></tr>
+          <tr><td>Fuse.Cloud</td><td class="td-owner">C. Flynn</td><td class="td-amt">$750</td><td class="td-date">2/27</td><td><span class="type-exp">Exp</span></td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <!-- AlarmBiller -->
+    <div class="platform">
+      <div class="psa-header">
+        <div class="psa-name">AlarmBiller</div>
+        <div class="psa-meta">
+          <span class="psa-badge badge-count">2 deals</span>
+          <span class="psa-badge badge-amt">$1,000</span>
+        </div>
+      </div>
+      <table>
+        <thead><tr><th>Account</th><th>AE</th><th>Amount</th><th>Close</th><th>Type</th></tr></thead>
+        <tbody>
+          <tr><td>Alarm Security Inc</td><td class="td-owner">P. Davies</td><td class="td-amt">$500</td><td class="td-date">1/21</td><td><span class="type-new">New</span></td></tr>
+          <tr><td>Mule Security &amp; Electric</td><td class="td-owner">H. Zalmiyar</td><td class="td-amt">$500</td><td class="td-date">3/31</td><td><span class="type-new">New</span></td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <!-- Service Fusion -->
+    <div class="platform">
+      <div class="psa-header">
+        <div class="psa-name">Service Fusion</div>
+        <div class="psa-meta">
+          <span class="psa-badge badge-count">2 deals</span>
+          <span class="psa-badge badge-amt">$1,830</span>
+        </div>
+      </div>
+      <table>
+        <thead><tr><th>Account</th><th>AE</th><th>Amount</th><th>Close</th><th>Type</th></tr></thead>
+        <tbody>
+          <tr><td>A&amp;B Security</td><td class="td-owner">J. Borah</td><td class="td-amt">$590</td><td class="td-date">3/26</td><td><span class="type-new">New</span></td></tr>
+          <tr><td>ITR-Systems</td><td class="td-owner">P. Davies</td><td class="td-amt">$1,240</td><td class="td-date">3/30</td><td><span class="type-new">New</span></td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <!-- Sedona -->
+    <div class="platform">
+      <div class="psa-header">
+        <div class="psa-name">Sedona</div>
+        <div class="psa-meta">
+          <span class="psa-badge badge-count">1 deal</span>
+          <span class="psa-badge badge-amt">$2,970</span>
+        </div>
+      </div>
+      <table>
+        <thead><tr><th>Account</th><th>AE</th><th>Amount</th><th>Close</th><th>Type</th></tr></thead>
+        <tbody>
+          <tr><td>DFW Security</td><td class="td-owner">J. Borah</td><td class="td-amt">$2,970</td><td class="td-date">3/31</td><td><span class="type-new">New</span></td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <!-- ESC -->
+    <div class="platform">
+      <div class="psa-header">
+        <div class="psa-name">ESC</div>
+        <div class="psa-meta">
+          <span class="psa-badge badge-count">1 deal</span>
+          <span class="psa-badge badge-amt">$1,030</span>
+        </div>
+      </div>
+      <table>
+        <thead><tr><th>Account</th><th>AE</th><th>Amount</th><th>Close</th><th>Type</th></tr></thead>
+        <tbody>
+          <tr><td>H.E.L.P.</td><td class="td-owner">H. Zalmiyar</td><td class="td-amt">$1,030</td><td class="td-date">1/29</td><td><span class="type-new">New</span></td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <!-- ZOHO -->
+    <div class="platform">
+      <div class="psa-header">
+        <div class="psa-name">Zoho</div>
+        <div class="psa-meta">
+          <span class="psa-badge badge-count">1 deal</span>
+          <span class="psa-badge badge-amt">$1,200</span>
+        </div>
+      </div>
+      <table>
+        <thead><tr><th>Account</th><th>AE</th><th>Amount</th><th>Close</th><th>Type</th></tr></thead>
+        <tbody>
+          <tr><td>POS Innovation</td><td class="td-owner">D. Herndon</td><td class="td-amt">$1,200</td><td class="td-date">2/26</td><td><span class="type-new">New</span></td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <!-- Remaining singles -->
+    <div class="platform">
+      <div class="psa-header">
+        <div class="psa-name">Other (1 deal each)</div>
+        <div class="psa-meta">
+          <span class="psa-badge badge-count">7 deals</span>
+          <span class="psa-badge badge-amt">$4,830</span>
+        </div>
+      </div>
+      <table>
+        <thead><tr><th>PSA</th><th>Account</th><th>AE</th><th>Amount</th><th>Type</th></tr></thead>
+        <tbody>
+          <tr><td style="color:var(--muted);font-size:9px">D-TOOLS</td><td>Sandhills Home Theater</td><td class="td-owner">J. Bender</td><td class="td-amt">$500</td><td><span class="type-new">New</span></td></tr>
+          <tr><td style="color:var(--muted);font-size:9px">E-AUTOMATE</td><td>New Jersey Office Systems</td><td class="td-owner">J. Butler</td><td class="td-amt">$560</td><td><span class="type-new">New</span></td></tr>
+          <tr><td style="color:var(--muted);font-size:9px">FIELD POINT</td><td>Tailwinds Voice &amp; Data</td><td class="td-owner">P. Dahlstrom</td><td class="td-amt">$500</td><td><span class="type-exp">Exp</span></td></tr>
+          <tr><td style="color:var(--muted);font-size:9px">JETBUILT</td><td>CSI Video Security</td><td class="td-owner">J. Mitchell</td><td class="td-amt">$500</td><td><span class="type-new">New</span></td></tr>
+          <tr><td style="color:var(--muted);font-size:9px">JIRA</td><td>Trifecta Solutions</td><td class="td-owner">J. Abarno</td><td class="td-amt">$550</td><td><span class="type-exp">Exp</span></td></tr>
+          <tr><td style="color:var(--muted);font-size:9px">QUICKBOOKS</td><td>Frontline Security</td><td class="td-owner">P. Davies</td><td class="td-amt">$660</td><td><span class="type-new">New</span></td></tr>
+          <tr><td style="color:var(--muted);font-size:9px">SIMPRO</td><td>Atlantic Companies</td><td class="td-owner">J. Borah</td><td class="td-amt">$500</td><td><span class="type-new">New</span></td></tr>
+          <tr><td style="color:var(--muted);font-size:9px">SYNCRO</td><td>CMP Consulting Services</td><td class="td-owner">C. Flynn</td><td class="td-amt">$500</td><td><span class="type-new">New</span></td></tr>
+          <tr><td style="color:var(--muted);font-size:9px">WORKHORSE</td><td>Castle Security</td><td class="td-owner">P. Davies</td><td class="td-amt">$530</td><td><span class="type-new">New</span></td></tr>
+          <tr><td style="color:var(--muted);font-size:9px">(no PSA)</td><td>TruLine Technologies</td><td class="td-owner">J. Bender</td><td class="td-amt">$500</td><td><span class="type-new">New</span></td></tr>
+        </tbody>
+      </table>
+    </div>
+
+  </div><!-- /platforms -->
+
+  <div class="footer">
+    ROBIN · REV.IO SALES INTELLIGENCE · Q1 2026 · SOURCE: SALESFORCE
+  </div>
+</div>
+</body>
+</html>
