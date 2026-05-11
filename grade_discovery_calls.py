@@ -8,6 +8,7 @@ Discovery Call Auto-Grader
 
 import json
 import os
+import time
 import requests
 import anthropic
 from datetime import datetime, timezone
@@ -488,25 +489,45 @@ def parse_scorecard(scorecard_text):
     return score, rep, account, cats, coaching, take
 
 
+def discord_request(method, url, headers, json_payload=None, max_attempts=5):
+    """Discord write helper with 429 retry handling."""
+    for attempt in range(1, max_attempts + 1):
+        r = requests.request(method, url, headers=headers, json=json_payload)
+        if r.status_code != 429:
+            r.raise_for_status()
+            return r
+
+        retry_after = 2.0
+        try:
+            body = r.json()
+            retry_after = float(body.get("retry_after", retry_after))
+        except Exception:
+            retry_after = float(r.headers.get("Retry-After", retry_after))
+
+        print(f"  Discord rate limited; retrying in {retry_after:.1f}s (attempt {attempt}/{max_attempts})")
+        time.sleep(retry_after + 0.5)
+
+    r.raise_for_status()
+
+
 def send_discord_message(bot_token, channel_id, content=None, embeds=None):
     headers = {"Authorization": f"Bot {bot_token}", "Content-Type": "application/json"}
     payload = {}
     if content: payload["content"] = content
     if embeds: payload["embeds"] = embeds
-    r = requests.post(f"https://discord.com/api/v10/channels/{channel_id}/messages",
-                      headers=headers, json=payload)
-    r.raise_for_status()
+    r = discord_request("POST", f"https://discord.com/api/v10/channels/{channel_id}/messages",
+                        headers, payload)
     return r.json()
 
 
 def create_thread(bot_token, channel_id, message_id, thread_name):
     headers = {"Authorization": f"Bot {bot_token}", "Content-Type": "application/json"}
-    r = requests.post(
+    r = discord_request(
+        "POST",
         f"https://discord.com/api/v10/channels/{channel_id}/messages/{message_id}/threads",
-        headers=headers,
-        json={"name": thread_name, "auto_archive_duration": 1440}
+        headers,
+        {"name": thread_name, "auto_archive_duration": 1440}
     )
-    r.raise_for_status()
     return r.json()
 
 
@@ -893,11 +914,27 @@ def post_to_discord(scorecard_text, title, duration_seconds):
 
     # ── 2. Create thread off that message ──
     thread_name = f"{rep} — {account}"[:100]
-    thread = create_thread(bot_token, DISCORD_CHANNEL_ID, message_id, thread_name)
-    thread_id = thread["id"]
-    print(f"  Thread created ({thread_id})")
+    try:
+        thread = create_thread(bot_token, DISCORD_CHANNEL_ID, message_id, thread_name)
+        thread_id = thread["id"]
+        print(f"  Thread created ({thread_id})")
+    except requests.HTTPError as e:
+        response = getattr(e, "response", None)
+        if response is None or response.status_code != 429:
+            raise
+        # Fallback: Discord sometimes applies a separate short-lived thread-creation
+        # limit. Don't block grading/Notion/state on that route; post the scorecard
+        # as replies in-channel so the run can complete.
+        print("  Thread creation still rate-limited; posting scorecard in channel instead")
+        thread_id = DISCORD_CHANNEL_ID
+        discord_request(
+            "POST",
+            f"https://discord.com/api/v10/channels/{thread_id}/messages",
+            headers_http,
+            {"content": f"Full BEACON breakdown for **{account}** (thread creation was rate-limited):"}
+        )
 
-    # ── 3. Post full scorecard in thread (chunked) ──
+    # ── 3. Post full scorecard in thread/channel (chunked) ──
     full_text = scorecard_text
     chunks = []
     current = ""
@@ -911,13 +948,17 @@ def post_to_discord(scorecard_text, title, duration_seconds):
         chunks.append(current)
 
     for chunk in chunks:
-        r = requests.post(
-            f"https://discord.com/api/v10/channels/{thread_id}/messages",
-            headers=headers_http,
-            json={"content": chunk}
-        )
-        if not r.ok:
-            print(f"  Thread post error: {r.status_code} {r.text[:200]}")
+        try:
+            discord_request(
+                "POST",
+                f"https://discord.com/api/v10/channels/{thread_id}/messages",
+                headers_http,
+                {"content": chunk}
+            )
+        except requests.HTTPError as e:
+            response = getattr(e, "response", None)
+            detail = f"{response.status_code} {response.text[:200]}" if response is not None else str(e)
+            print(f"  Thread post error: {detail}")
             return False
 
     print(f"  Full scorecard posted to thread ✅")
