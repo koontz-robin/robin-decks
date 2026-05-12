@@ -16,6 +16,7 @@ Repo: `git@github.com:koontz-robin/robin-decks.git`
 |---|---|---|---|
 | Q2 Forecast Dashboard | forecast.html | https://koontz-robin.github.io/robin-decks/forecast.html | Daily (8am ET, weekdays) |
 | AE Capacity Dashboard | ae-capacity-dashboard.html | https://koontz-robin.github.io/robin-decks/ae-capacity-dashboard.html | Daily (12pm ET, weekdays) |
+| AE Capacity Slide (EXECUTE theme) | ae-capacity-slide.html | https://koontz-robin.github.io/robin-decks/ae-capacity-slide.html | Manual |
 | PSA Onboarding Tracker | psa-onboarding-tracker.html | https://koontz-robin.github.io/robin-decks/psa-onboarding-tracker.html | Daily (midnight) |
 | PSA Opportunity Dashboard | psa-opportunity-dashboard.html | https://koontz-robin.github.io/robin-decks/psa-opportunity-dashboard.html | On demand |
 | PSA Target Tracker | psa-target-tracker.html | https://koontz-robin.github.io/robin-decks/psa-target-tracker.html | On demand |
