@@ -399,7 +399,7 @@ def main():
   <div class="table-wrap">
   <table>
     <thead><tr>
-      <th>Client</th><th style="text-align:center">Payments</th><th style="text-align:right">Avg MRR</th><th>Last CBR</th><th>Status</th><th>Last Activity</th><th>Closed Won Opportunities</th>
+      <th class="sortable" onclick="sortTable(this,0)" data-col="0">Client <span class="sort-icon">⇅</span></th><th class="sortable" style="text-align:center" onclick="sortTable(this,1)" data-col="1">Payments <span class="sort-icon">⇅</span></th><th class="sortable" style="text-align:right" onclick="sortTable(this,2)" data-col="2">Avg MRR <span class="sort-icon">⇅</span></th><th class="sortable" onclick="sortTable(this,3)" data-col="3">Last CBR <span class="sort-icon">⇅</span></th><th class="sortable" onclick="sortTable(this,4)" data-col="4">Status <span class="sort-icon">⇅</span></th><th class="sortable" onclick="sortTable(this,5)" data-col="5">Last Activity <span class="sort-icon">⇅</span></th><th>Closed Won Opportunities</th>
     </tr></thead>
     <tbody>{rows}</tbody>
   </table>
@@ -480,6 +480,9 @@ body{{background:#020817;color:#e2e8f0;font-family:-apple-system,BlinkMacSystemF
 .table-wrap{{background:#070c18;border-radius:8px;overflow:hidden;overflow-x:auto}}
 table{{width:100%;border-collapse:collapse}}
 thead tr{{background:#1e293b}}
+th.sortable{{cursor:pointer;user-select:none;white-space:nowrap}}
+th.sortable:hover{{color:#f8fafc;background:#2d3f55}}
+.sort-icon{{font-size:11px;color:#475569;margin-left:4px}}
 th{{padding:8px 12px;font-size:10px;color:#475569;text-align:left;text-transform:uppercase;font-weight:700;white-space:nowrap}}
 .acct-row td{{padding:9px 12px;border-bottom:1px solid #0f172a}}
 .acct-row:last-child td{{border-bottom:none}}
@@ -561,6 +564,36 @@ function switchOwner(idx) {{
 function switchProd(ownerIdx, prodIdx) {{
   document.querySelectorAll(`.prod-tab[data-owner="${{ownerIdx}}"]`).forEach((b,i) => b.classList.toggle('active', i===prodIdx));
   document.querySelectorAll(`.prod-panel[data-owner="${{ownerIdx}}"]`).forEach(p => p.style.display = p.dataset.prod==prodIdx ? 'block' : 'none');
+}}
+function sortTable(th, colIdx) {{
+  const table = th.closest('table');
+  const tbody = table.querySelector('tbody');
+  const rows = Array.from(tbody.querySelectorAll('tr.cr'));
+  const asc = th.dataset.dir !== 'asc';
+  th.dataset.dir = asc ? 'asc' : 'desc';
+  table.querySelectorAll('th.sortable .sort-icon').forEach(i => i.textContent = '⇅');
+  th.querySelector('.sort-icon').textContent = asc ? '↑' : '↓';
+  const val = (row) => {{
+    const td = row.querySelectorAll('td')[colIdx];
+    if (!td) return '';
+    const txt = td.innerText.trim();
+    if (colIdx === 2) return parseFloat(txt.replace(/[$,]/g,'')) || 0;
+    return txt.toLowerCase();
+  }};
+  rows.sort((a, b) => {{
+    const av = val(a), bv = val(b);
+    if (av < bv) return asc ? -1 : 1;
+    if (av > bv) return asc ? 1 : -1;
+    return 0;
+  }});
+  rows.forEach(row => {{
+    tbody.appendChild(row);
+    const detailId = row.getAttribute('onclick') ? row.getAttribute('onclick').match(/toggle\('([^']+)'\)/) : null;
+    if (detailId) {{
+      const detail = document.getElementById('a_' + detailId[1]);
+      if (detail) tbody.appendChild(detail);
+    }}
+  }});
 }}
 </script>
 </body>
