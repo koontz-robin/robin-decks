@@ -7,7 +7,7 @@ CBR Dashboard — Client Business Review tracker
 - Excludes Channel Client + Usman Zahoor accounts
 """
 
-import requests, json, re
+import os, requests, json, re
 from datetime import datetime, timedelta
 from collections import defaultdict
 
@@ -228,6 +228,22 @@ def main():
                 acct_map[aid]["last_cbr"] = date
                 acct_map[aid]["last_cbr_subject"] = ev.get("Subject", "")
                 acct_map[aid]["last_cbr_owner"] = (ev.get("Owner") or {}).get("Name", "")
+
+    # 2b. CBR Override — from manual export (cbr_override.json)
+    override_path = os.path.join(os.path.dirname(__file__), "cbr_override.json")
+    if os.path.exists(override_path):
+        with open(override_path) as f:
+            cbr_override = json.load(f)
+        applied = 0
+        for aid, v in cbr_override.items():
+            if aid in acct_map:
+                date = v.get("date", "")
+                if date and (not acct_map[aid]["last_cbr"] or date > acct_map[aid]["last_cbr"]):
+                    acct_map[aid]["last_cbr"] = date
+                    acct_map[aid]["last_cbr_owner"] = v.get("assigned", "")
+                    acct_map[aid]["last_cbr_subject"] = "CBR"
+                    applied += 1
+        print(f"  {applied} accounts updated from CBR export override")
 
     # Tasks excluded — Outreach email sequences, not actual CBR meetings
 
@@ -555,7 +571,7 @@ function switchProd(ownerIdx, prodIdx) {{
     print(f"Built: {len(html):,} chars")
 
     # Push via workspace git + robin-decks remote
-    import subprocess, os, shutil
+    import subprocess, shutil
     SSH_KEY = "/home/openclaw/.openclaw/ssh/id_ed25519"
     env = {**os.environ, "GIT_SSH_COMMAND": f"ssh -i {SSH_KEY} -o StrictHostKeyChecking=no"}
 
