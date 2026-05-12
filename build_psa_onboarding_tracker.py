@@ -12,7 +12,7 @@ from collections import defaultdict, Counter
 NOTION_TOKEN = "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"
 SALES_UPDATES_FILE = "/home/openclaw/.openclaw/workspace/sales_updates.json"
 PSA_DB_ID = "dba0a0aac29e42d7ac7e968e0245f4c4"
-REPO_PATH = "/tmp/robin-decks"
+REPO_PATH = "/tmp/robin-decks-fresh"
 SSH_KEY = "/home/openclaw/.openclaw/ssh/id_ed25519"
 OUTPUT_FILE = f"{REPO_PATH}/psa-onboarding-tracker.html"
 
@@ -612,6 +612,17 @@ print(f"Built: {len(html):,} chars")
 
 # Push to GitHub
 env = {**os.environ, "GIT_SSH_COMMAND": f"ssh -i {SSH_KEY} -o StrictHostKeyChecking=no"}
+# Re-clone if the .git dir was wiped (e.g. after a /tmp purge)
+if not os.path.isdir(os.path.join(REPO_PATH, ".git")):
+    import shutil
+    if os.path.exists(REPO_PATH):
+        shutil.rmtree(REPO_PATH)
+    subprocess.run(
+        ["git", "clone", "git@github.com:koontz-robin/robin-decks.git", REPO_PATH],
+        env=env, check=True
+    )
+    subprocess.run(["git", "config", "user.email", "robin@rev.io"], cwd=REPO_PATH)
+    subprocess.run(["git", "config", "user.name", "Robin"], cwd=REPO_PATH)
 subprocess.run(["git", "add", "psa-onboarding-tracker.html"], cwd=REPO_PATH)
 diff = subprocess.run(["git", "diff", "--cached", "--quiet"], cwd=REPO_PATH)
 if diff.returncode != 0:
@@ -619,3 +630,5 @@ if diff.returncode != 0:
     subprocess.run(["git", "commit", "-m", f"PSA Onboarding Tracker - {now_str}"], cwd=REPO_PATH)
     subprocess.run(["git", "push", "origin", "master"], cwd=REPO_PATH, env=env)
     print("✅ Pushed to GitHub")
+else:
+    print("ℹ️ No changes to push")
