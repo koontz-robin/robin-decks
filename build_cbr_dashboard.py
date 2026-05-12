@@ -11,6 +11,9 @@ import requests, json, re
 from datetime import datetime, timedelta
 from collections import defaultdict
 
+NOTION_TOKEN = "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"
+NOTION_MRR_DB = "a2654cf0c7e34c57bff58f4ea63d241f"
+
 SF_CLIENT_ID = "3MVG91ftikjGaMd.NAf5_nx2GISRurI0fIm1aTgGSe.jNIN4bOdlqn95rfrur3RACkqjIZlDG8iCTnKzFRa.N"
 SF_CLIENT_SECRET = "FA7C3F3F72D6A1786F374CF966B505DB9B07AE43D69A6D54F127B2397713716E"
 SF_INSTANCE = "https://rev-io.my.salesforce.com"
@@ -114,16 +117,67 @@ def type_color(t):
     return TYPE_COLORS.get(t, "#64748b")
 
 
+def mrr_cell(mrr):
+    if mrr is None:
+        return '<td style="text-align:right;color:#475569;font-size:12px">—</td>'
+    if mrr == 0:
+        return '<td style="text-align:right;color:#475569;font-size:12px">$0</td>'
+    color = "#34d399" if mrr >= 1000 else "#e2e8f0"
+    return f'<td style="text-align:right;font-size:12px;font-weight:600;color:{color}">${mrr:,.0f}</td>'
+
+
 def clean_subject(s):
     s = re.sub(r'^\[Outreach\]\s*\[Email\]\s*\[(?:Out|In)\]\s*', '', s)
     return (s[:60] + "…") if len(s) > 60 else s
 
 
 # ── Main ─────────────────────────────────────────────────────────────────────
+def fetch_notion_mrr():
+    """Pull Average MRR from Notion Master Client List. Returns {name: mrr}."""
+    headers = {
+        "Authorization": f"Bearer {NOTION_TOKEN}",
+        "Notion-Version": "2022-06-28",
+        "Content-Type": "application/json",
+    }
+    results, body = [], {"page_size": 100}
+    while True:
+        r = requests.post(f"https://api.notion.com/v1/databases/{NOTION_MRR_DB}/query",
+                          headers=headers, json=body)
+        data = r.json()
+        results.extend(data.get("results", []))
+        if not data.get("has_more"):
+            break
+        body["start_cursor"] = data["next_cursor"]
+    mrr_map = {}
+    for page in results:
+        props = page["properties"]
+        name = (props.get("Client", {}).get("title") or [{}])[0].get("plain_text", "").strip()
+        mrr  = props.get("Average MRR", {}).get("number")
+        if name and mrr is not None:
+            mrr_map[name] = mrr
+    return mrr_map
+
+
+def match_mrr(acct_name, mrr_map):
+    """Exact match first, then case-insensitive."""
+    if acct_name in mrr_map:
+        return mrr_map[acct_name]
+    lower = acct_name.lower()
+    for k, v in mrr_map.items():
+        if k.lower() == lower:
+            return v
+    return None
+
+
 def main():
     print("Authenticating...")
     at, iurl = sf_auth()
     hdrs = {"Authorization": f"Bearer {at}"}
+
+    # 0. Pull Average MRR from Notion
+    print("Pulling Average MRR from Notion...")
+    mrr_map = fetch_notion_mrr()
+    print(f"  {len(mrr_map)} records with MRR data")
 
     # 1. Pull client accounts (exclude Channel Client + Usman)
     print("Pulling client accounts...")
@@ -147,6 +201,7 @@ def main():
         acct_map[a["Id"]] = {
             "id": a["Id"],
             "name": a["Name"],
+                "avg_mrr": match_mrr(a["Name"], mrr_map),
             "raw_type": raw_type,
             "type": display_type,
             "owner": owner_name,
@@ -307,6 +362,7 @@ def main():
                     f'<tr class="acct-row {badge_class}">'
                     f'<td class="acct-name">{acct["name"]}</td>'
                     f'{payments_cell}'
+                    f'{mrr_cell(acct.get("avg_mrr"))}'
                     f'<td class="acct-date">{acct["last_cbr"] or "—"}{cbr_by_html}</td>'
                     f'<td><span class="badge" style="color:{badge_color};border-color:{badge_color}20;background:{badge_color}12">'
                     f'{badge_label}</span></td>'
@@ -327,7 +383,7 @@ def main():
   <div class="table-wrap">
   <table>
     <thead><tr>
-      <th>Client</th><th style="text-align:center">Payments</th><th>Last CBR</th><th>Status</th><th>Last Activity</th><th>Closed Won Opportunities</th>
+      <th>Client</th><th style="text-align:center">Payments</th><th style="text-align:right">Avg MRR</th><th>Last CBR</th><th>Status</th><th>Last Activity</th><th>Closed Won Opportunities</th>
     </tr></thead>
     <tbody>{rows}</tbody>
   </table>
