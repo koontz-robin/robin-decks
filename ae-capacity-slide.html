@@ -1,0 +1,538 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>AE Capacity — Prospect Meetings · EXECUTE</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@700;800;900&family=Barlow:wght@400;500;600;700;800&display=swap');
+
+* { margin: 0; padding: 0; box-sizing: border-box; }
+
+:root {
+  --green:  #00ff88;
+  --green2: #00e5a0;
+  --bg:     #000000;
+  --surface:#0a0f0a;
+  --muted:  #1a3a28;
+  --text:   #e0ffe8;
+  --dim:    #4a7a5a;
+  --jan:    #38bdf8;
+  --feb:    #a78bfa;
+  --mar:    #00ff88;
+  --apr:    #f97316;
+  --may:    #ec4899;
+}
+
+html, body {
+  width: 1280px;
+  height: 720px;
+  overflow: hidden;
+  background: var(--bg);
+  font-family: 'Barlow', 'Segoe UI', system-ui, sans-serif;
+  color: var(--text);
+}
+
+/* Subtle grid */
+body::before {
+  content: '';
+  position: fixed; top: 0; left: 0; right: 0; bottom: 0;
+  background-image:
+    linear-gradient(rgba(0,255,136,0.04) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(0,255,136,0.04) 1px, transparent 1px);
+  background-size: 48px 48px;
+  pointer-events: none;
+}
+
+/* Right edge line */
+body::after {
+  content: '';
+  position: fixed; top: 0; right: 0; width: 3px; height: 100%;
+  background: linear-gradient(180deg, transparent 0%, var(--green) 20%, var(--green) 80%, transparent 100%);
+  box-shadow: 0 0 12px var(--green);
+}
+
+/* Bottom edge line */
+.bottom-line {
+  position: fixed; bottom: 36px; left: 0; right: 6px; height: 1px;
+  background: linear-gradient(90deg, transparent 0%, var(--green) 10%, var(--green) 90%, transparent 100%);
+  box-shadow: 0 0 8px var(--green);
+}
+
+/* HEADER */
+.header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  padding: 28px 40px 0;
+}
+
+.header-left {}
+
+.slide-tag {
+  font-family: 'Barlow Condensed', sans-serif;
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 3px;
+  text-transform: uppercase;
+  color: var(--green);
+  margin-bottom: 6px;
+  opacity: 0.8;
+}
+
+.slide-title {
+  font-family: 'Barlow Condensed', sans-serif;
+  font-size: 38px;
+  font-weight: 900;
+  text-transform: uppercase;
+  color: #fff;
+  letter-spacing: 1px;
+  line-height: 1;
+}
+
+.slide-title span { color: var(--green); text-shadow: 0 0 20px rgba(0,255,136,0.5); }
+
+.slide-sub {
+  font-size: 11px;
+  color: var(--dim);
+  letter-spacing: 1.5px;
+  text-transform: uppercase;
+  margin-top: 6px;
+}
+
+/* EXECUTE LOGO */
+.execute-logo {
+  position: relative;
+  padding: 14px 22px;
+  text-align: center;
+}
+
+/* Corner brackets */
+.execute-logo::before, .execute-logo::after {
+  content: '';
+  position: absolute;
+  width: 14px; height: 14px;
+}
+.execute-logo::before {
+  top: 0; left: 0;
+  border-top: 2px solid var(--green);
+  border-left: 2px solid var(--green);
+  box-shadow: -2px -2px 6px rgba(0,255,136,0.3);
+}
+.execute-logo::after {
+  bottom: 0; right: 0;
+  border-bottom: 2px solid var(--green);
+  border-right: 2px solid var(--green);
+  box-shadow: 2px 2px 6px rgba(0,255,136,0.3);
+}
+.execute-inner {
+  position: relative;
+  padding: 10px 18px;
+}
+.execute-inner::before {
+  content: '';
+  position: absolute;
+  top: 0; right: 0;
+  width: 12px; height: 12px;
+  border-top: 2px solid var(--green);
+  border-right: 2px solid var(--green);
+}
+.execute-inner::after {
+  content: '';
+  position: absolute;
+  bottom: 0; left: 0;
+  width: 12px; height: 12px;
+  border-bottom: 2px solid var(--green);
+  border-left: 2px solid var(--green);
+}
+
+.execute-word {
+  font-family: 'Barlow Condensed', sans-serif;
+  font-size: 26px;
+  font-weight: 900;
+  letter-spacing: 6px;
+  text-transform: uppercase;
+  color: var(--green);
+  text-shadow: 0 0 20px rgba(0,255,136,0.6), 0 0 40px rgba(0,255,136,0.2);
+  display: block;
+}
+
+.execute-sub {
+  font-size: 8px;
+  letter-spacing: 3px;
+  text-transform: uppercase;
+  color: var(--dim);
+  margin-top: 4px;
+  display: block;
+}
+
+/* BODY */
+.body {
+  padding: 18px 40px 0;
+}
+
+/* Monthly cards row */
+.month-row {
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
+  gap: 10px;
+  margin-bottom: 16px;
+}
+
+.mo-card {
+  background: var(--surface);
+  border: 1px solid rgba(0,255,136,0.12);
+  border-radius: 8px;
+  padding: 12px 14px;
+  position: relative;
+  overflow: hidden;
+}
+
+.mo-card::before {
+  content: '';
+  position: absolute;
+  top: 0; left: 0; right: 0;
+  height: 3px;
+  background: var(--accent);
+  box-shadow: 0 0 8px var(--accent);
+}
+
+.mo-card.jan { --accent: var(--jan); }
+.mo-card.feb { --accent: var(--feb); }
+.mo-card.mar { --accent: var(--mar); }
+.mo-card.apr { --accent: var(--apr); }
+.mo-card.may { --accent: var(--may); }
+
+.mo-label {
+  font-size: 9px;
+  font-weight: 700;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  color: var(--accent);
+  margin-bottom: 6px;
+}
+
+.mo-val {
+  font-family: 'Barlow Condensed', sans-serif;
+  font-size: 40px;
+  font-weight: 900;
+  line-height: 1;
+  color: #fff;
+}
+
+.mo-unit {
+  font-size: 9px;
+  color: var(--dim);
+  margin-bottom: 8px;
+  letter-spacing: 0.5px;
+}
+
+.mo-meta {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  border-top: 1px solid rgba(0,255,136,0.08);
+  padding-top: 6px;
+  margin-top: 2px;
+}
+
+.mo-aes {
+  font-family: 'Barlow Condensed', sans-serif;
+  font-size: 18px;
+  font-weight: 800;
+  color: #fff;
+}
+
+.mo-aes-label {
+  font-size: 8px;
+  color: var(--dim);
+  letter-spacing: 0.5px;
+}
+
+.mo-rate {
+  font-size: 11px;
+  font-weight: 700;
+  color: var(--accent);
+}
+
+.mo-proj {
+  font-size: 9px;
+  color: var(--dim);
+  margin-top: 2px;
+}
+
+/* DIVIDER */
+.divider {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 12px;
+}
+.divider-label {
+  font-size: 9px;
+  font-weight: 700;
+  letter-spacing: 2.5px;
+  text-transform: uppercase;
+  color: var(--green);
+  white-space: nowrap;
+  opacity: 0.7;
+}
+.divider-line {
+  flex: 1;
+  height: 1px;
+  background: linear-gradient(90deg, rgba(0,255,136,0.3), transparent);
+}
+
+/* REP CHART */
+.rep-chart {
+  display: flex;
+  flex-direction: column;
+  gap: 7px;
+}
+
+.rep-row {
+  display: grid;
+  grid-template-columns: 140px 1fr 40px;
+  align-items: center;
+  gap: 12px;
+}
+
+.rep-name {
+  font-size: 12px;
+  font-weight: 600;
+  color: #cceedd;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  overflow: hidden;
+}
+
+.rep-bars {
+  display: flex;
+  align-items: center;
+  height: 22px;
+  gap: 3px;
+  position: relative;
+}
+
+.rep-bar {
+  height: 100%;
+  border-radius: 2px;
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 20px;
+  transition: opacity 0.2s;
+}
+
+.rep-bar span {
+  font-size: 9px;
+  font-weight: 700;
+  color: rgba(0,0,0,0.8);
+  z-index: 1;
+  white-space: nowrap;
+}
+
+.b-jan { background: var(--jan); box-shadow: 0 0 4px rgba(56,189,248,0.3); }
+.b-feb { background: var(--feb); box-shadow: 0 0 4px rgba(167,139,250,0.3); }
+.b-mar { background: var(--mar); box-shadow: 0 0 4px rgba(0,255,136,0.3); }
+.b-apr { background: var(--apr); box-shadow: 0 0 4px rgba(249,115,22,0.3); }
+.b-may { background: var(--may); box-shadow: 0 0 4px rgba(236,72,153,0.3); }
+
+.rep-trend {
+  font-size: 14px;
+  font-weight: 700;
+  text-align: center;
+}
+
+.trend-up   { color: var(--green); text-shadow: 0 0 8px rgba(0,255,136,0.5); }
+.trend-down { color: #ff4466;       text-shadow: 0 0 8px rgba(255,68,102,0.4); }
+
+/* LEGEND */
+.legend {
+  display: flex;
+  align-items: center;
+  gap: 18px;
+  margin-top: 10px;
+  padding-top: 8px;
+  border-top: 1px solid rgba(0,255,136,0.06);
+}
+.leg-item {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  font-size: 9px;
+  color: var(--dim);
+  letter-spacing: 1px;
+  text-transform: uppercase;
+}
+.leg-dot {
+  width: 10px;
+  height: 10px;
+  border-radius: 2px;
+}
+
+/* FOOTER */
+.footer {
+  position: fixed;
+  bottom: 10px;
+  left: 0; right: 6px;
+  text-align: center;
+  font-size: 9px;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  color: var(--dim);
+}
+</style>
+</head>
+<body>
+
+<div class="bottom-line"></div>
+
+<!-- HEADER -->
+<div class="header">
+  <div class="header-left">
+    <div class="slide-tag">Rev.io Sales Intelligence · Q1–Q2 2026</div>
+    <div class="slide-title">AE CAPACITY — <span>PROSPECT MEETINGS</span></div>
+    <div class="slide-sub">Completed meetings · Jan–May 2026 · May data through 8 working days</div>
+  </div>
+  <div class="execute-logo">
+    <div class="execute-inner">
+      <span class="execute-word">EXECUTE</span>
+      <span class="execute-sub">Sales Performance</span>
+    </div>
+  </div>
+</div>
+
+<!-- BODY -->
+<div class="body">
+
+  <!-- Monthly Cards -->
+  <div class="month-row">
+    <div class="mo-card jan">
+      <div class="mo-label">Jan 2026</div>
+      <div class="mo-val">137</div>
+      <div class="mo-unit">prospect meetings</div>
+      <div class="mo-meta">
+        <div>
+          <div class="mo-aes">12 <span class="mo-aes-label">AEs</span></div>
+        </div>
+        <div class="mo-rate">0.52 /AE/day</div>
+      </div>
+    </div>
+    <div class="mo-card feb">
+      <div class="mo-label">Feb 2026</div>
+      <div class="mo-val">146</div>
+      <div class="mo-unit">prospect meetings</div>
+      <div class="mo-meta">
+        <div>
+          <div class="mo-aes">11 <span class="mo-aes-label">AEs</span></div>
+        </div>
+        <div class="mo-rate">0.66 /AE/day</div>
+      </div>
+    </div>
+    <div class="mo-card mar">
+      <div class="mo-label">Mar 2026</div>
+      <div class="mo-val">219</div>
+      <div class="mo-unit">prospect meetings</div>
+      <div class="mo-meta">
+        <div>
+          <div class="mo-aes">8 <span class="mo-aes-label">AEs</span></div>
+        </div>
+        <div class="mo-rate">1.24 /AE/day</div>
+      </div>
+    </div>
+    <div class="mo-card apr">
+      <div class="mo-label">Apr 2026</div>
+      <div class="mo-val">255</div>
+      <div class="mo-unit">prospect meetings</div>
+      <div class="mo-meta">
+        <div>
+          <div class="mo-aes">7 <span class="mo-aes-label">AEs</span></div>
+        </div>
+        <div class="mo-rate">1.66 /AE/day</div>
+      </div>
+    </div>
+    <div class="mo-card may">
+      <div class="mo-label">May 2026 MTD</div>
+      <div class="mo-val">102</div>
+      <div class="mo-unit">prospect meetings</div>
+      <div class="mo-meta">
+        <div>
+          <div class="mo-aes">7 <span class="mo-aes-label">AEs</span></div>
+        </div>
+        <div class="mo-rate">1.82 /AE/day</div>
+      </div>
+      <div class="mo-proj">Proj: <strong style="color:var(--may)">267</strong></div>
+    </div>
+  </div>
+
+  <!-- Rep Section -->
+  <div class="divider">
+    <span class="divider-label">Rep Breakdown</span>
+    <div class="divider-line"></div>
+  </div>
+
+  <div class="rep-chart" id="repChart"></div>
+
+  <div class="legend">
+    <div class="leg-item"><div class="leg-dot" style="background:var(--jan)"></div>Jan</div>
+    <div class="leg-item"><div class="leg-dot" style="background:var(--feb)"></div>Feb</div>
+    <div class="leg-item"><div class="leg-dot" style="background:var(--mar)"></div>Mar</div>
+    <div class="leg-item"><div class="leg-dot" style="background:var(--apr)"></div>Apr</div>
+    <div class="leg-item"><div class="leg-dot" style="background:var(--may)"></div>May MTD</div>
+  </div>
+
+</div>
+
+<div class="footer">Rev.io Sales Intelligence &nbsp;·&nbsp; Robin 🦸🏻‍♂️ &nbsp;·&nbsp; May 12, 2026 &nbsp;·&nbsp; May data through 8 working days</div>
+
+<script>
+const reps = [
+  { name: "Andy Whisenant",   vals: [15, 30, 45, 35, 11], trend: "down" },
+  { name: "Connor Flynn",     vals: [25, 31, 29, 41, 19], trend: "up"   },
+  { name: "Husam Zalmiyar",   vals: [14, 13, 17, 25, 15], trend: "up"   },
+  { name: "Jake Borah",       vals: [16, 14, 27, 33, 14], trend: "up"   },
+  { name: "Jamie Butler",     vals: [22, 22, 41, 47, 23], trend: "up"   },
+  { name: "Jaylin Bender",    vals: [22, 12, 22, 28,  7], trend: "down" },
+  { name: "Patrick Davies",   vals: [23, 24, 39, 46, 13], trend: "down" },
+];
+
+const MAX = 47;
+const PX_PER_UNIT = 8.5; // scale: 47 * 8.5 ≈ 400px total at max
+const colors = ['b-jan','b-feb','b-mar','b-apr','b-may'];
+
+const chart = document.getElementById('repChart');
+reps.forEach(r => {
+  const row = document.createElement('div');
+  row.className = 'rep-row';
+
+  const nameDiv = document.createElement('div');
+  nameDiv.className = 'rep-name';
+  nameDiv.textContent = r.name;
+
+  const barsDiv = document.createElement('div');
+  barsDiv.className = 'rep-bars';
+
+  r.vals.forEach((v, i) => {
+    const bar = document.createElement('div');
+    bar.className = `rep-bar ${colors[i]}`;
+    bar.style.width = `${v * PX_PER_UNIT}px`;
+    const label = document.createElement('span');
+    label.textContent = v;
+    bar.appendChild(label);
+    barsDiv.appendChild(bar);
+  });
+
+  const trendDiv = document.createElement('div');
+  trendDiv.className = `rep-trend trend-${r.trend}`;
+  trendDiv.textContent = r.trend === 'up' ? '▲' : '▼';
+
+  row.appendChild(nameDiv);
+  row.appendChild(barsDiv);
+  row.appendChild(trendDiv);
+  chart.appendChild(row);
+});
+</script>
+</body>
+</html>
