@@ -106,7 +106,7 @@
   </div>
 
   <!-- YTD summary panels -->
-  <div class="section-label">YTD Attainment (Jan–Apr 2026)</div>
+  <div class="section-label">YTD Attainment (Jan–May 2026)</div>
   <div class="split-kpi">
     <!-- Marketing -->
     <div class="team-panel mktg">
@@ -120,7 +120,7 @@
         <div class="kpi">
           <div class="k-label">Target YTD</div>
           <div class="k-val" id="mg-tgt-ytd">—</div>
-          <div class="k-sub">Jan–Apr target</div>
+          <div class="k-sub">Jan–May target</div>
         </div>
         <div class="kpi">
           <div class="k-label">Attainment</div>
@@ -143,7 +143,7 @@
         <div class="kpi">
           <div class="k-label">Target YTD</div>
           <div class="k-val" id="sg-tgt-ytd">—</div>
-          <div class="k-sub">Jan–Apr target</div>
+          <div class="k-sub">Jan–May target</div>
         </div>
         <div class="kpi">
           <div class="k-label">Attainment</div>
@@ -221,21 +221,21 @@
   const sgShare = 0.40;
 
   const monthLabels = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
-  const ytdMonths = ['Jan','Feb','Mar','Apr'];
+  const ytdMonths = ['Jan','Feb','Mar','Apr','May'];
 
-  // Actuals from Salesforce (PSA opps only, Closed Won)
-  const mgActuals = [4575, 5694, 6430, 0];    // Marketing Generated MRR Won
-  const sgActuals = [5030, 3345, 5360, 1675]; // Sales Generated MRR Won
+  // Actuals from Salesforce (PSA 2.0 only, Closed Won) — Marketing tagged via Q2 reengagement baseline account matching
+  const mgActuals = [1000, 2430, 3600, 1205, 820];    // Marketing-influenced MRR Won (MTD for May)
+  const sgActuals = [4740, 7604, 12270, 9925, 3905];  // Sales-generated MRR Won (MTD for May)
 
   // Opps detail
-  const mgOppsCreated = [68, 59, 52, 43];
-  const sgOppsCreated = [140, 90, 79, 61];
-  const mgOppsWon    = [8, 8, 6, 0];
-  const sgOppsWon    = [9, 5, 6, 3];
+  const mgOppsCreated = [39, 29, 22, 15, 7];
+  const sgOppsCreated = [169, 125, 110, 115, 57];
+  const mgOppsWon    = [2, 4, 2, 2, 1];
+  const sgOppsWon    = [8, 11, 12, 13, 5];
 
   // Targets for YTD months
-  const mgTargets = psaTotalTargets.slice(0, 4).map(t => Math.round(t * mgShare));
-  const sgTargets = psaTotalTargets.slice(0, 4).map(t => Math.round(t * sgShare));
+  const mgTargets = psaTotalTargets.slice(0, 5).map(t => Math.round(t * mgShare));
+  const sgTargets = psaTotalTargets.slice(0, 5).map(t => Math.round(t * sgShare));
 
   // ── YTD SUMMARY ───────────────────────────────────────────────────────────
   const mgWonYTD = mgActuals.reduce((a,b) => a+b, 0);
@@ -259,7 +259,7 @@
       const pct = targets[i] > 0 ? Math.min(100, Math.round((actuals[i] / targets[i]) * 100)) : 0;
       const rawPct = targets[i] > 0 ? Math.round((actuals[i] / targets[i]) * 100) : 0;
       const fillClass = rawPct >= 90 ? 'over' : rawPct >= 60 ? 'warn' : 'low';
-      const note = i === 3 ? ' (MTD)' : '';
+      const note = i === 4 ? ' (MTD)' : '';
       wrap.innerHTML += `
         <div class="attain-block">
           <div class="attain-label">
@@ -401,7 +401,7 @@
       const pillLabel = pct >= 90 ? 'On Track' : pct >= 60 ? 'Behind' : 'Off Track';
       const gapFmt = gap >= 0 ? `+$${gap.toLocaleString()}` : `-$${Math.abs(gap).toLocaleString()}`;
       const gapColor = gap >= 0 ? 'pct-good' : 'pct-low';
-      const isMTD = i === 3;
+      const isMTD = i === 4;
       const fullYrTgt = Math.round(psaTotalTargets[i] * (t.label === 'Marketing' ? mgShare : sgShare));
 
       const tr = document.createElement('tr');
