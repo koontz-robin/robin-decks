@@ -194,6 +194,148 @@ def inject_into_existing(html, tab_id, comp, field_block):
     return html
 
 
+# Map SF PSA_Platform__c values to battlecard tab IDs
+PLATFORM_TO_TAB = {
+    'CONNECTWISE':           'connectwise',
+    'AUTOTASK/DATTO/KASEYA': 'autotask',
+    'HALO':                  'halo',
+    'SYNCRO':                'syncro',
+    'SuperOps':              'superops',
+    'Service Fusion':        'service-fusion',
+    'AlarmBIller':           'alarmbiller',
+    'JETBUILT':              'jetbuilt',
+    'WORKHORSE':             'workhorse',
+    'MONDAY':                'monday',
+    'PROJX360':              'projx360',
+    'IPOINT':                'ipoint',
+    'SIMPRO':                'simpro',
+    'SEDONA':                'sedona',
+    'HOUSECALL PRO':         'housecall-pro',
+    'Jobber':                'jobber',
+}
+
+# Integrators section competitors — content lives inside #integrators div
+INTEGRATOR_HEADINGS = {
+    'simpro':       'Simpro',
+    'sedona':       'Sedona',
+    'housecall-pro':'Housecall Pro',
+    'jobber':       'Jobber',
+}
+
+
+def refresh_displaced_customers(html, sf_access_token, sf_instance):
+    """Pull closed won PSA accounts from SF and refresh displaced customer boxes on battlecards."""
+    import requests
+    from collections import defaultdict
+
+    print("\n=== Refreshing displaced customers from Salesforce ===")
+
+    headers = {'Authorization': f'Bearer {sf_access_token}'}
+
+    # Pull all closed won PSA 2.0 opps with account name + PSA platform
+    all_records = []
+    soql = ("SELECT AccountId, Account.Name, Account.PSA_Platform__c "
+            "FROM Opportunity "
+            "WHERE StageName = 'Closed Won' "
+            "AND Product_Type__c = 'PSA 2.0' "
+            "AND Account.PSA_Platform__c != null "
+            "AND IsDeleted = false")
+    resp = requests.get(f"{sf_instance}/services/data/v59.0/query",
+                        params={'q': soql}, headers=headers)
+    data = resp.json()
+    all_records.extend(data.get('records', []))
+    while not data.get('done'):
+        resp = requests.get(f"{sf_instance}{data['nextRecordsUrl']}", headers=headers)
+        data = resp.json()
+        all_records.extend(data.get('records', []))
+
+    # Dedupe by account, group by platform
+    acct_by_platform = defaultdict(set)
+    for r in all_records:
+        acct = r.get('Account') or {}
+        plat = acct.get('PSA_Platform__c', '')
+        name = acct.get('Name', '')
+        if plat and name:
+            acct_by_platform[plat].add(name)
+
+    # Build tab_id -> sorted account list
+    displaced = {}
+    for plat, names in acct_by_platform.items():
+        tab_id = PLATFORM_TO_TAB.get(plat)
+        if tab_id:
+            displaced[tab_id] = sorted(names)
+
+    print(f"  Found displaced accounts for {len(displaced)} competitors")
+
+    def accounts_box(names):
+        items = ''.join(
+            f'<li style="padding:3px 0;font-size:11px;color:#c8f0dc;border-bottom:1px solid #0d2a0d">'
+            f'<span style="color:#3DC570;margin-right:6px">✓</span>{name}</li>'
+            for name in names
+        )
+        return (
+            f'<div style="float:right;width:220px;background:#061a0e;border:1px solid #3DC57044;'
+            f'border-radius:8px;padding:12px;margin:0 0 16px 20px">'
+            f'<div style="font-size:9px;font-weight:700;text-transform:uppercase;letter-spacing:1.5px;'
+            f'color:#3DC570;margin-bottom:8px">✅ {len(names)} Displaced Customer{"s" if len(names)!=1 else ""}</div>'
+            f'<ul style="list-style:none;margin:0;padding:0">{items}</ul>'
+            f'</div>'
+        )
+
+    # Replace or insert displaced boxes
+    # Match the existing box pattern
+    box_pattern = re.compile(
+        r'<div style="float:right;width:220px;background:#061a0e.*?</div>\s*</div>',
+        re.DOTALL
+    )
+
+    for tab_id, names in displaced.items():
+        new_box = accounts_box(names)
+
+        if tab_id in INTEGRATOR_HEADINGS.values():
+            # These live inside the integrators section div
+            heading = next(h for tid, h in [
+                ('simpro','Simpro'),('sedona','Sedona'),
+                ('housecall-pro','Housecall Pro'),('jobber','Jobber')
+            ] if tid == tab_id)
+            integrators_idx = html.find('id="integrators"')
+            h_idx = html.find(heading, integrators_idx)
+            if h_idx == -1:
+                continue
+            end_div = html.find('</div>', h_idx) + 6
+            # Check if box already exists after this heading
+            existing = box_pattern.search(html[end_div:end_div+600])
+            if existing:
+                html = html[:end_div + existing.start()] + new_box + html[end_div + existing.end():]
+            else:
+                html = html[:end_div] + new_box + html[end_div:]
+        else:
+            # Standalone section div
+            marker_variants = [
+                f'id="{tab_id}" class="section">',
+                f'id="{tab_id}">',
+            ]
+            idx = -1
+            for mv in marker_variants:
+                idx = html.find(mv)
+                if idx != -1:
+                    insert_at = idx + len(mv)
+                    break
+            if idx == -1:
+                continue
+            # Check if box already exists near start of section
+            existing = box_pattern.search(html[insert_at:insert_at+800])
+            if existing:
+                html = html[:insert_at + existing.start()] + new_box + html[insert_at + existing.end():]
+            else:
+                html = html[:insert_at] + '\n  ' + new_box + html[insert_at:]
+
+        cnt_old = len(re.findall(r'✓</span>', html[html.find(f'id="{tab_id}"'):html.find(f'id="{tab_id}"')+2000]))
+        print(f"  ✓ {tab_id}: {len(names)} accounts")
+
+    return html
+
+
 def main():
     now = datetime.now(timezone.utc).strftime("%Y-%m-%d")
     print(f"=== Battle Card Updater {now} ===")
@@ -248,6 +390,16 @@ def main():
     # Inject new sections before </main>
     if new_sections_html:
         html = html.replace("</main>", new_sections_html + "\n</main>", 1)
+
+    # Refresh displaced customers from Salesforce
+    try:
+        import json as _json
+        _token_path = '/home/openclaw/.openclaw/workspace/sf-tokens.json'
+        with open(_token_path) as _f:
+            _sf = _json.load(_f)
+        html = refresh_displaced_customers(html, _sf['access_token'], _sf.get('instance_url', 'https://revio.my.salesforce.com'))
+    except Exception as e:
+        print(f"  ⚠️  Displaced customer refresh failed: {e}")
 
     with open(OUTPUT_FILE, "w") as f:
         f.write(html)
