@@ -1,0 +1,573 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Re-engagement — Second Losses: Software Missing Capabilities</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap');
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    font-family: 'Inter', sans-serif;
+    background: #f8f9fc;
+    color: #1a1d2e;
+    min-height: 100vh;
+  }
+
+  /* HEADER */
+  .header {
+    background: linear-gradient(135deg, #0f1b3d 0%, #1a3578 100%);
+    color: white;
+    padding: 40px 40px 32px;
+    position: relative;
+    overflow: hidden;
+  }
+  .header::before {
+    content: '';
+    position: absolute;
+    top: -60px; right: -60px;
+    width: 300px; height: 300px;
+    background: rgba(255,255,255,0.04);
+    border-radius: 50%;
+  }
+  .header::after {
+    content: '';
+    position: absolute;
+    bottom: -80px; left: -40px;
+    width: 250px; height: 250px;
+    background: rgba(255,255,255,0.03);
+    border-radius: 50%;
+  }
+  .header-inner {
+    max-width: 1200px;
+    margin: 0 auto;
+    position: relative;
+    z-index: 1;
+  }
+  .header-badge {
+    display: inline-block;
+    background: rgba(99,179,237,0.2);
+    border: 1px solid rgba(99,179,237,0.4);
+    color: #90cdf4;
+    font-size: 10px;
+    font-weight: 600;
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+    padding: 4px 14px;
+    border-radius: 20px;
+    margin-bottom: 14px;
+  }
+  .header h1 {
+    font-size: 28px;
+    font-weight: 800;
+    letter-spacing: -0.5px;
+    margin-bottom: 6px;
+  }
+  .header h1 span { color: #63b3ed; }
+  .header p {
+    font-size: 13px;
+    color: rgba(255,255,255,0.6);
+  }
+
+  /* CONTAINER */
+  .container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 32px 24px 60px;
+  }
+
+  /* KPI ROW */
+  .kpi-row {
+    display: flex;
+    gap: 16px;
+    flex-wrap: wrap;
+    margin-bottom: 32px;
+  }
+  .kpi-card {
+    background: #fff;
+    border: 1px solid #e2e8f0;
+    border-radius: 12px;
+    padding: 18px 22px;
+    flex: 1;
+    min-width: 140px;
+    border-top: 3px solid var(--accent, #1a56db);
+    box-shadow: 0 1px 4px rgba(0,0,0,0.04);
+  }
+  .kpi-label {
+    font-size: 9px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 1.5px;
+    color: #94a3b8;
+    margin-bottom: 6px;
+  }
+  .kpi-val {
+    font-size: 26px;
+    font-weight: 800;
+    color: #1a1d2e;
+    line-height: 1;
+  }
+  .kpi-val.accent-red { color: #e53e3e; }
+  .kpi-val.accent-blue { color: #1a56db; }
+  .kpi-val.accent-green { color: #3DC570; }
+  .kpi-val.accent-orange { color: #dd6b20; }
+  .kpi-sub {
+    font-size: 10px;
+    color: #94a3b8;
+    margin-top: 3px;
+  }
+
+  /* FEATURE BREAKDOWN */
+  .section-label {
+    font-size: 10px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 1.2px;
+    color: #94a3b8;
+    margin-bottom: 14px;
+  }
+  .feature-grid {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin-bottom: 32px;
+  }
+  .feature-pill {
+    background: #fff;
+    border: 1px solid #e2e8f0;
+    border-radius: 20px;
+    padding: 5px 14px;
+    font-size: 11px;
+    font-weight: 600;
+    color: #1a1d2e;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.04);
+  }
+  .feature-pill .count {
+    background: #1a56db;
+    color: #fff;
+    border-radius: 10px;
+    padding: 1px 7px;
+    font-size: 10px;
+    font-weight: 700;
+  }
+  .feature-pill.top .count { background: #e53e3e; }
+
+  /* TABLE */
+  .table-wrap {
+    background: #fff;
+    border: 1px solid #e2e8f0;
+    border-radius: 12px;
+    overflow: hidden;
+    box-shadow: 0 1px 4px rgba(0,0,0,0.04);
+  }
+  .table-header {
+    padding: 16px 20px;
+    border-bottom: 1px solid #f1f5f9;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 10px;
+  }
+  .table-header h2 {
+    font-size: 13px;
+    font-weight: 700;
+    color: #1a1d2e;
+  }
+  .table-header span {
+    font-size: 11px;
+    color: #94a3b8;
+  }
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 12px;
+  }
+  thead {
+    background: #f8fafc;
+  }
+  th {
+    font-size: 9px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 1.2px;
+    color: #94a3b8;
+    padding: 10px 16px;
+    text-align: left;
+    border-bottom: 1px solid #e2e8f0;
+    white-space: nowrap;
+  }
+  td {
+    padding: 12px 16px;
+    border-bottom: 1px solid #f1f5f9;
+    vertical-align: top;
+  }
+  tr:last-child td { border-bottom: none; }
+  tr:hover td { background: #fafbff; }
+
+  .acct-name {
+    font-weight: 700;
+    color: #1a1d2e;
+    font-size: 12px;
+  }
+  .rep-name {
+    font-size: 10px;
+    color: #94a3b8;
+    margin-top: 2px;
+  }
+  .mrr {
+    font-weight: 700;
+    color: #1a56db;
+    font-size: 13px;
+    white-space: nowrap;
+  }
+  .date {
+    font-size: 11px;
+    color: #64748b;
+    white-space: nowrap;
+  }
+  .opps-badge {
+    display: inline-block;
+    background: #fef3c7;
+    color: #92400e;
+    border-radius: 10px;
+    padding: 2px 8px;
+    font-size: 10px;
+    font-weight: 700;
+  }
+  .opps-badge.many {
+    background: #fee2e2;
+    color: #991b1b;
+  }
+  .features-list {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 4px;
+  }
+  .feat-tag {
+    background: #eff6ff;
+    color: #1a56db;
+    border-radius: 4px;
+    padding: 2px 7px;
+    font-size: 10px;
+    font-weight: 600;
+  }
+  .feat-tag.highlight {
+    background: #fef3c7;
+    color: #92400e;
+  }
+  .detail-text {
+    font-size: 11px;
+    color: #64748b;
+    line-height: 1.5;
+    max-width: 320px;
+  }
+  .detail-text.none {
+    color: #cbd5e1;
+    font-style: italic;
+  }
+
+  /* KEY FEATURES highlighted */
+  .feat-tag[data-key="prog"] { background: #fde8e8; color: #c53030; }
+  .feat-tag[data-key="mob"]  { background: #ebf4ff; color: #2b6cb0; }
+  .feat-tag[data-key="proj"] { background: #e9d8fd; color: #6b46c1; }
+  .feat-tag[data-key="job"]  { background: #fef3c7; color: #92400e; }
+
+  .footer {
+    text-align: center;
+    padding: 28px 0 0;
+    font-size: 11px;
+    color: #cbd5e1;
+  }
+  .footer strong { color: #94a3b8; }
+</style>
+</head>
+<body>
+
+<div class="header">
+  <div class="header-inner">
+    <div class="header-badge">Re-engagement Analysis · Q2 2026</div>
+    <h1>Second Losses — <span>Software Missing Capabilities</span></h1>
+    <p>Opportunities re-engaged in Q2 that were closed lost again due to product gaps · 2026 only</p>
+  </div>
+</div>
+
+<div class="container">
+
+  <!-- KPI ROW -->
+  <div class="kpi-row">
+    <div class="kpi-card" style="--accent:#e53e3e">
+      <div class="kpi-label">Second Losses</div>
+      <div class="kpi-val accent-red">16</div>
+      <div class="kpi-sub">Software Missing Capabilities</div>
+    </div>
+    <div class="kpi-card" style="--accent:#1a56db">
+      <div class="kpi-label">MRR at Stake</div>
+      <div class="kpi-val accent-blue">$31,791</div>
+      <div class="kpi-sub">Combined monthly recurring</div>
+    </div>
+    <div class="kpi-card" style="--accent:#dd6b20">
+      <div class="kpi-label">Repeat Losses (3+ opps)</div>
+      <div class="kpi-val accent-orange">9</div>
+      <div class="kpi-sub">Lost 3 or more times</div>
+    </div>
+    <div class="kpi-card" style="--accent:#3DC570">
+      <div class="kpi-label">Top Blocker</div>
+      <div class="kpi-val" style="font-size:14px;font-weight:800;color:#3DC570;padding-top:4px">Mobile App / GPS</div>
+      <div class="kpi-sub">8 of 16 opportunities</div>
+    </div>
+  </div>
+
+  <!-- FEATURE BREAKDOWN -->
+  <div class="section-label">Feature Gaps — Frequency Across 16 Opportunities</div>
+  <div class="feature-grid">
+    <div class="feature-pill top"><span>Mobile App / GPS Tracking</span><span class="count">8</span></div>
+    <div class="feature-pill top"><span>Progressive Billing</span><span class="count">7</span></div>
+    <div class="feature-pill top"><span>Project Management</span><span class="count">7</span></div>
+    <div class="feature-pill top"><span>Job Costing</span><span class="count">5</span></div>
+    <div class="feature-pill"><span>Contracts - Hourly / Usage</span><span class="count">3</span></div>
+    <div class="feature-pill"><span>Custom Fields / Reporting</span><span class="count">3</span></div>
+    <div class="feature-pill"><span>Contracts - Flexible Rate Adj.</span><span class="count">2</span></div>
+    <div class="feature-pill"><span>Integration - Ninja RMM</span><span class="count">2</span></div>
+    <div class="feature-pill"><span>CPQ</span><span class="count">2</span></div>
+    <div class="feature-pill"><span>Enhanced Ticket Views</span><span class="count">2</span></div>
+    <div class="feature-pill"><span>Inventory</span><span class="count">2</span></div>
+    <div class="feature-pill"><span>Contracts - Product & Labor Pricing</span><span class="count">2</span></div>
+    <div class="feature-pill"><span>Integration - N-Able RMM</span><span class="count">1</span></div>
+    <div class="feature-pill"><span>Integration - RapidResponse</span><span class="count">1</span></div>
+    <div class="feature-pill"><span>Product Catalog - Kits/Bundles</span><span class="count">1</span></div>
+    <div class="feature-pill"><span>SLAs</span><span class="count">1</span></div>
+  </div>
+
+  <!-- TABLE -->
+  <div class="table-wrap">
+    <div class="table-header">
+      <h2>Opportunity Detail</h2>
+      <span>Sorted by MRR · 2026 close dates only · Loss Reason: Software Missing Capabilities</span>
+    </div>
+    <table>
+      <thead>
+        <tr>
+          <th>Account</th>
+          <th>MRR</th>
+          <th>Closed Lost</th>
+          <th>Total Opps</th>
+          <th>Missing Features</th>
+          <th>Detail Notes</th>
+        </tr>
+      </thead>
+      <tbody>
+
+        <tr>
+          <td><div class="acct-name">Audio Sentry</div><div class="rep-name">Patrick Davies</div></td>
+          <td><span class="mrr">$5,710</span></td>
+          <td><span class="date">3/24/26</span></td>
+          <td><span class="opps-badge many">5×</span></td>
+          <td><div class="features-list">
+            <span class="feat-tag" data-key="prog">Progressive Billing</span>
+            <span class="feat-tag" data-key="job">Job Costing</span>
+            <span class="feat-tag">Custom Fields / Reporting</span>
+            <span class="feat-tag" data-key="proj">Project Management</span>
+          </div></td>
+          <td><span class="detail-text">Platform didn't have a lot of the functionality needed. Refer to the features above.</span></td>
+        </tr>
+
+        <tr>
+          <td><div class="acct-name">Millennium Communications Group</div><div class="rep-name">Jaylin Bender</div></td>
+          <td><span class="mrr">$5,280</span></td>
+          <td><span class="date">2/17/26</span></td>
+          <td><span class="opps-badge">2×</span></td>
+          <td><div class="features-list">
+            <span class="feat-tag">Contracts - Hourly & Usage</span>
+            <span class="feat-tag">Contracts - Product & Labor Pricing</span>
+          </div></td>
+          <td><span class="detail-text">Need enhanced contract functionality.</span></td>
+        </tr>
+
+        <tr>
+          <td><div class="acct-name">Blue Wave Communications</div><div class="rep-name">Jake Mitchell</div></td>
+          <td><span class="mrr">$3,400</span></td>
+          <td><span class="date">1/14/26</span></td>
+          <td><span class="opps-badge many">3×</span></td>
+          <td><div class="features-list">
+            <span class="feat-tag">Inventory</span>
+            <span class="feat-tag" data-key="mob">Mobile App / GPS Tracking</span>
+          </div></td>
+          <td><span class="detail-text">Missing geofencing for mobile app time tracking, detailed inventory history, and pre-sales functionality. Not a lot of pain with Simpro.</span></td>
+        </tr>
+
+        <tr>
+          <td><div class="acct-name">Ranger Technology Solutions</div><div class="rep-name">Jake Borah</div></td>
+          <td><span class="mrr">$2,355</span></td>
+          <td><span class="date">2/17/26</span></td>
+          <td><span class="opps-badge">2×</span></td>
+          <td><div class="features-list">
+            <span class="feat-tag">Product Catalog - Kits/Bundles/Assemblies</span>
+          </div></td>
+          <td><span class="detail-text none">No notes recorded.</span></td>
+        </tr>
+
+        <tr>
+          <td><div class="acct-name">NetCentra</div><div class="rep-name">Joseph Abarno</div></td>
+          <td><span class="mrr">$2,253</span></td>
+          <td><span class="date">4/22/26</span></td>
+          <td><span class="opps-badge many">3×</span></td>
+          <td><div class="features-list">
+            <span class="feat-tag" data-key="job">Job Costing</span>
+            <span class="feat-tag" data-key="mob">Mobile App / GPS Tracking</span>
+            <span class="feat-tag" data-key="prog">Progressive Billing</span>
+            <span class="feat-tag" data-key="proj">Project Management</span>
+          </div></td>
+          <td><span class="detail-text">Looking for a lot of updates after Sep 1 GA. GPS Tracking and project management are needed.</span></td>
+        </tr>
+
+        <tr>
+          <td><div class="acct-name">PROACTIVERISK</div><div class="rep-name">Jamie Butler</div></td>
+          <td><span class="mrr">$1,660</span></td>
+          <td><span class="date">3/18/26</span></td>
+          <td><span class="opps-badge">2×</span></td>
+          <td><div class="features-list">
+            <span class="feat-tag">Contracts - Flexible Rate Adj.</span>
+            <span class="feat-tag">Contracts - Hourly & Usage</span>
+            <span class="feat-tag">Integration - Ninja RMM</span>
+            <span class="feat-tag" data-key="prog">Progressive Billing</span>
+          </div></td>
+          <td><span class="detail-text none">No notes recorded.</span></td>
+        </tr>
+
+        <tr>
+          <td><div class="acct-name">Tricom Technology Solutions</div><div class="rep-name">Connor Flynn</div></td>
+          <td><span class="mrr">$1,620</span></td>
+          <td><span class="date">3/18/26</span></td>
+          <td><span class="opps-badge">2×</span></td>
+          <td><div class="features-list">
+            <span class="feat-tag">Contracts - Flexible Rate Adj.</span>
+            <span class="feat-tag">Contracts - Hourly & Usage</span>
+            <span class="feat-tag">Contracts - Product & Labor Pricing</span>
+            <span class="feat-tag" data-key="prog">Progressive Billing</span>
+          </div></td>
+          <td><span class="detail-text">Need project management and progressive billing.</span></td>
+        </tr>
+
+        <tr>
+          <td><div class="acct-name">Anderson Technologies</div><div class="rep-name">Connor Flynn</div></td>
+          <td><span class="mrr">$1,575</span></td>
+          <td><span class="date">3/26/26</span></td>
+          <td><span class="opps-badge">2×</span></td>
+          <td><div class="features-list">
+            <span class="feat-tag">Integration - Ninja RMM</span>
+          </div></td>
+          <td><span class="detail-text">CloudRadial integration is a must. Also needs Ninja and PIA — CloudRadial is by far the most important.</span></td>
+        </tr>
+
+        <tr>
+          <td><div class="acct-name">Forbel Alarms</div><div class="rep-name">Patrick Davies</div></td>
+          <td><span class="mrr">$1,550</span></td>
+          <td><span class="date">3/25/26</span></td>
+          <td><span class="opps-badge many">3×</span></td>
+          <td><div class="features-list">
+            <span class="feat-tag" data-key="prog">Progressive Billing</span>
+          </div></td>
+          <td><span class="detail-text">Needs progress billing for projects, also checklists for installs on tickets.</span></td>
+        </tr>
+
+        <tr>
+          <td><div class="acct-name">Core Security Services</div><div class="rep-name">Connor Flynn</div></td>
+          <td><span class="mrr">$1,435</span></td>
+          <td><span class="date">3/3/26</span></td>
+          <td><span class="opps-badge many">3×</span></td>
+          <td><div class="features-list">
+            <span class="feat-tag">Custom Fields / Reporting</span>
+            <span class="feat-tag">Enhanced Ticket Views</span>
+            <span class="feat-tag" data-key="mob">Mobile App / GPS Tracking</span>
+          </div></td>
+          <td><span class="detail-text">No GPS tracking was a showstopper — they already have it available today in their current system.</span></td>
+        </tr>
+
+        <tr>
+          <td><div class="acct-name">Qovo Solutions Inc</div><div class="rep-name">Jaylin Bender</div></td>
+          <td><span class="mrr">$1,100</span></td>
+          <td><span class="date">4/29/26</span></td>
+          <td><span class="opps-badge many">4×</span></td>
+          <td><div class="features-list">
+            <span class="feat-tag" data-key="mob">Mobile App / GPS Tracking</span>
+            <span class="feat-tag" data-key="proj">Project Management</span>
+          </div></td>
+          <td><span class="detail-text">Deeply ingrained in ConnectWise — needs projects fully built out and the full mobile app.</span></td>
+        </tr>
+
+        <tr>
+          <td><div class="acct-name">Atlantic Security Automation Partners</div><div class="rep-name">Patrick Davies</div></td>
+          <td><span class="mrr">$1,100</span></td>
+          <td><span class="date">4/21/26</span></td>
+          <td><span class="opps-badge many">3×</span></td>
+          <td><div class="features-list">
+            <span class="feat-tag" data-key="mob">Mobile App / GPS Tracking</span>
+          </div></td>
+          <td><span class="detail-text">Both owners love the platform. Geofencing is a dealbreaker — they have plans to re-engage when it's available.</span></td>
+        </tr>
+
+        <tr>
+          <td><div class="acct-name">HEDnorth</div><div class="rep-name">Joseph Abarno</div></td>
+          <td><span class="mrr">$1,053</span></td>
+          <td><span class="date">4/8/26</span></td>
+          <td><span class="opps-badge many">4×</span></td>
+          <td><div class="features-list">
+            <span class="feat-tag">Custom Fields / Reporting</span>
+            <span class="feat-tag" data-key="job">Job Costing</span>
+            <span class="feat-tag" data-key="mob">Mobile App / GPS Tracking</span>
+          </div></td>
+          <td><span class="detail-text">Price adjustment limitations in proposals, bulk PO limitations, no job costing, no mobile app.</span></td>
+        </tr>
+
+        <tr>
+          <td><div class="acct-name">Copper Clad Systems</div><div class="rep-name">Patrick Davies</div></td>
+          <td><span class="mrr">$975</span></td>
+          <td><span class="date">1/23/26</span></td>
+          <td><span class="opps-badge many">4×</span></td>
+          <td><div class="features-list">
+            <span class="feat-tag" data-key="job">Job Costing</span>
+            <span class="feat-tag" data-key="prog">Progressive Billing</span>
+            <span class="feat-tag" data-key="proj">Project Management</span>
+          </div></td>
+          <td><span class="detail-text">Not enough to completely replace Jetbuilt yet. Re-engage at CEDIA once TAFWA is released.</span></td>
+        </tr>
+
+        <tr>
+          <td><div class="acct-name">Dijis Technology Solutions</div><div class="rep-name">Patrick Davies</div></td>
+          <td><span class="mrr">$575</span></td>
+          <td><span class="date">1/12/26</span></td>
+          <td><span class="opps-badge many">3×</span></td>
+          <td><div class="features-list">
+            <span class="feat-tag">CPQ</span>
+          </div></td>
+          <td><span class="detail-text">Needs product images from catalog on each proposal, plus live vendor pricing.</span></td>
+        </tr>
+
+        <tr>
+          <td><div class="acct-name">Stone Mountain Systems</div><div class="rep-name">Patrick Davies</div></td>
+          <td><span class="mrr">$500</span></td>
+          <td><span class="date">4/8/26</span></td>
+          <td><span class="opps-badge">2×</span></td>
+          <td><div class="features-list">
+            <span class="feat-tag">Enhanced Ticket Views</span>
+            <span class="feat-tag" data-key="proj">Project Management</span>
+          </div></td>
+          <td><span class="detail-text">Needs enhanced ticketing, project management, enhanced customer portal with document storage.</span></td>
+        </tr>
+
+      </tbody>
+    </table>
+  </div>
+
+  <div class="footer">
+    Source: Salesforce · Re-engagement Tracker · Q2 2026 &nbsp;·&nbsp; <strong>Generated by Robin</strong>
+  </div>
+
+</div>
+</body>
+</html>
