@@ -13,8 +13,13 @@ at, iu = r.json()["access_token"], r.json()["instance_url"]
 
 with open('/home/openclaw/.openclaw/workspace/apollo2_accounts.json') as f:
     accts = json.load(f)
+with open('/home/openclaw/.openclaw/workspace/q2_reengagement_baseline.json') as f:
+    baseline = json.load(f)
 
-# Fetch all PSA opps for these accounts (any time, not just Q1)
+# Original loss date per account — re-engagement opps must be created AFTER this date
+baseline_loss_date = {b['opp_name']: b['close_date'] for b in baseline}
+
+# Fetch all PSA opps for these accounts
 sf_ids = [a['sf_id'] for a in accts if a.get('sf_id')]
 
 # Query in batches of 50 to avoid SOQL length limits
@@ -23,7 +28,7 @@ batch_size = 50
 for i in range(0, len(sf_ids), batch_size):
     batch = sf_ids[i:i+batch_size]
     id_list = "','".join(batch)
-    soql = f"SELECT AccountId, Id, StageName, CloseDate, Amount, Loss_Reason__c, CreatedDate FROM Opportunity WHERE AccountId IN ('{id_list}') AND Product_Type__c IN ('PSA 2.0','PSA') AND IsDeleted = false ORDER BY CreatedDate DESC"
+    soql = f"SELECT AccountId, Id, StageName, CloseDate, Amount, Loss_Reason__c, CreatedDate FROM Opportunity WHERE AccountId IN ('{id_list}') AND Product_Type__c IN ('PSA 2.0','PSA') AND IsDeleted = false ORDER BY CreatedDate ASC"
     qresp = requests.get(f"{iu}/services/data/v59.0/query", headers={"Authorization": f"Bearer {at}"}, params={"q": soql})
     rdata = qresp.json()
     records = rdata.get('records', []) if isinstance(rdata, dict) else []
@@ -60,7 +65,10 @@ def get_status(opps):
 # Build rows
 rows = []
 for a in accts:
-    opps = opp_by_acct.get(a['sf_id'], [])
+    all_opps = opp_by_acct.get(a['sf_id'], [])
+    # Only count opps created AFTER the original loss date (true re-engagement opps)
+    original_loss_date = baseline_loss_date.get(a['name'], '2000-01-01')
+    opps = [o for o in all_opps if o.get('CreatedDate','')[:10] > original_loss_date]
     status_key, stage, close_date, loss_reason = get_status(opps)
     # Most recent opp amount
     amount = 0
@@ -78,6 +86,7 @@ for a in accts:
         'close_date': close_date or '',
         'loss_reason': loss_reason or '',
         'amount': amount or a['mrr'],
+        're_opp_count': len(opps),
     })
 
 # Sort: won first, then active, then lost, then not_contacted; within each by MRR desc
@@ -171,7 +180,7 @@ for r in rows:
 <td style="color:#3DC570;font-weight:700">${r['mrr']:,}</td>
 <td style="color:#64748b">{r['owner']}</td>
 <td style="color:#475569;font-size:10px">{features_html}</td>
-<td style="text-align:center">{len(opp_by_acct.get(r['sf_id'],[]))}</td>
+<td style="text-align:center">{r.get('re_opp_count') or '—'}</td>
 <td style="text-align:center">{date_cell(r)}</td>
 <td style="text-align:center">{stage_badge(r)}</td>
 <td style="text-align:center;font-size:10px;color:#f87171">{r['loss_reason']}</td>
@@ -236,7 +245,7 @@ tr:hover td{{background:rgba(61,197,112,.02)}}
   <table>
     <thead><tr>
       <th>Account</th><th>MRR</th><th>Owner</th><th>Features Needed</th>
-      <th>Total Opps</th><th>Last Close Date</th><th>SF Stage</th><th>Loss Reason</th><th>Status</th>
+      <th>Re-eng Opps</th><th>Last Close Date</th><th>SF Stage</th><th>Loss Reason</th><th>Status</th>
     </tr></thead>
     <tbody id="tableBody">{table_rows}</tbody>
   </table>
