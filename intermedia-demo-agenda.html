@@ -1,0 +1,364 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Rev.io × Intermedia | Demo Agenda · May 15, 2026</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap');
+
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --rev-blue: #1A4FBE;
+    --rev-cyan: #00C3E3;
+    --rev-dark: #0D1B3E;
+    --rev-mid:  #162B5A;
+    --accent:   #00C3E3;
+    --glass:    rgba(255,255,255,0.06);
+    --border:   rgba(255,255,255,0.12);
+  }
+
+  body {
+    font-family: 'Inter', sans-serif;
+    background: var(--rev-dark);
+    color: #fff;
+    min-height: 100vh;
+    padding: 32px 24px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+
+  /* ── HEADER ── */
+  .header {
+    width: 100%;
+    max-width: 900px;
+    text-align: center;
+    margin-bottom: 36px;
+  }
+
+  .logos {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 18px;
+    margin-bottom: 20px;
+  }
+
+  .logo-pill {
+    background: var(--glass);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 10px 22px;
+    font-size: 15px;
+    font-weight: 700;
+    letter-spacing: 0.5px;
+    color: #fff;
+  }
+
+  .logo-pill.rev   { border-color: var(--rev-cyan); color: var(--rev-cyan); }
+  .logo-pill.inter { border-color: #FF6B35;         color: #FF6B35; }
+
+  .x-divider {
+    font-size: 22px;
+    font-weight: 300;
+    color: rgba(255,255,255,0.35);
+  }
+
+  .header h1 {
+    font-size: clamp(22px, 4vw, 34px);
+    font-weight: 800;
+    letter-spacing: -0.5px;
+    margin-bottom: 8px;
+  }
+
+  .header h1 span { color: var(--rev-cyan); }
+
+  .header .meta {
+    font-size: 14px;
+    color: rgba(255,255,255,0.5);
+    font-weight: 400;
+    letter-spacing: 0.3px;
+  }
+
+  /* ── PROGRESS BAR ── */
+  .timeline-bar {
+    width: 100%;
+    max-width: 900px;
+    background: rgba(255,255,255,0.08);
+    border-radius: 999px;
+    height: 8px;
+    margin-bottom: 36px;
+    overflow: hidden;
+    position: relative;
+  }
+
+  .timeline-bar::after {
+    content: '';
+    position: absolute;
+    left: 0; top: 0; bottom: 0;
+    width: 0%;
+    background: linear-gradient(90deg, var(--rev-blue), var(--rev-cyan));
+    border-radius: 999px;
+    transition: width 1.2s ease;
+  }
+
+  /* ── GRID ── */
+  .grid {
+    width: 100%;
+    max-width: 900px;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 16px;
+  }
+
+  @media (max-width: 620px) {
+    .grid { grid-template-columns: 1fr; }
+  }
+
+  /* ── BLOCK ── */
+  .block {
+    background: var(--glass);
+    border: 1px solid var(--border);
+    border-radius: 18px;
+    padding: 22px 24px;
+    position: relative;
+    overflow: hidden;
+    transition: transform 0.2s ease, border-color 0.2s ease;
+  }
+
+  .block:hover {
+    transform: translateY(-2px);
+    border-color: rgba(0,195,227,0.35);
+  }
+
+  .block::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    height: 3px;
+    border-radius: 18px 18px 0 0;
+  }
+
+  .block.blue::before   { background: linear-gradient(90deg, var(--rev-blue), var(--rev-cyan)); }
+  .block.cyan::before   { background: linear-gradient(90deg, var(--rev-cyan), #00e5a0); }
+  .block.orange::before { background: linear-gradient(90deg, #FF6B35, #FFB347); }
+  .block.purple::before { background: linear-gradient(90deg, #7B5EA7, #A78BFA); }
+  .block.green::before  { background: linear-gradient(90deg, #10B981, #34D399); }
+
+  .block.wide { grid-column: 1 / -1; }
+
+  .time-badge {
+    display: inline-block;
+    background: rgba(0,195,227,0.15);
+    border: 1px solid rgba(0,195,227,0.3);
+    color: var(--rev-cyan);
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    padding: 3px 10px;
+    border-radius: 999px;
+    margin-bottom: 12px;
+  }
+
+  .block.orange .time-badge { background: rgba(255,107,53,0.15); border-color: rgba(255,107,53,0.3); color: #FF9F7A; }
+  .block.purple .time-badge { background: rgba(167,139,250,0.15); border-color: rgba(167,139,250,0.3); color: #C4B5FD; }
+  .block.green  .time-badge { background: rgba(16,185,129,0.15); border-color: rgba(16,185,129,0.3); color: #6EE7B7; }
+
+  .block h2 {
+    font-size: 15px;
+    font-weight: 700;
+    margin-bottom: 14px;
+    color: #fff;
+  }
+
+  .item {
+    display: flex;
+    align-items: flex-start;
+    gap: 10px;
+    margin-bottom: 10px;
+  }
+
+  .item:last-child { margin-bottom: 0; }
+
+  .item-dot {
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background: var(--rev-cyan);
+    margin-top: 6px;
+    flex-shrink: 0;
+  }
+
+  .block.orange .item-dot { background: #FF9F7A; }
+  .block.purple .item-dot { background: #C4B5FD; }
+  .block.green  .item-dot { background: #6EE7B7; }
+
+  .item-content { flex: 1; }
+
+  .item-person {
+    font-size: 11px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.8px;
+    color: rgba(255,255,255,0.45);
+    margin-bottom: 2px;
+  }
+
+  .item-text {
+    font-size: 13.5px;
+    color: rgba(255,255,255,0.85);
+    line-height: 1.5;
+  }
+
+  .sub-items {
+    margin-top: 8px;
+    padding-left: 12px;
+    border-left: 2px solid rgba(255,255,255,0.1);
+  }
+
+  .sub-item {
+    font-size: 12.5px;
+    color: rgba(255,255,255,0.6);
+    padding: 3px 0 3px 10px;
+    position: relative;
+  }
+
+  .sub-item::before {
+    content: '↳';
+    position: absolute;
+    left: -4px;
+    color: rgba(255,255,255,0.2);
+    font-size: 11px;
+  }
+
+  /* ── FOOTER ── */
+  .footer {
+    margin-top: 28px;
+    font-size: 12px;
+    color: rgba(255,255,255,0.2);
+    letter-spacing: 0.3px;
+  }
+</style>
+</head>
+<body>
+
+<div class="header">
+  <div class="logos">
+    <div class="logo-pill rev">Rev.io</div>
+    <div class="x-divider">×</div>
+    <div class="logo-pill inter">Intermedia</div>
+  </div>
+  <h1>90-Minute <span>Demo Flow</span></h1>
+  <div class="meta">May 15, 2026 &nbsp;·&nbsp; Intermedia Sandbox Environment</div>
+</div>
+
+<div class="timeline-bar"></div>
+
+<div class="grid">
+
+  <!-- 0–10 min -->
+  <div class="block blue">
+    <div class="time-badge">0 – 10 min</div>
+    <h2>Welcome &amp; Introductions</h2>
+    <div class="item">
+      <div class="item-dot"></div>
+      <div class="item-content">
+        <div class="item-person">Jamie Butler</div>
+        <div class="item-text">Rev.io team introductions &amp; platform intro — features on the agenda today</div>
+      </div>
+    </div>
+    <div class="item">
+      <div class="item-dot"></div>
+      <div class="item-content">
+        <div class="item-person">Kuldip Rai</div>
+        <div class="item-text">Intermedia team introductions</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 10–20 min -->
+  <div class="block cyan">
+    <div class="time-badge">10 – 20 min</div>
+    <h2>Vision &amp; Architecture</h2>
+    <div class="item">
+      <div class="item-dot"></div>
+      <div class="item-content">
+        <div class="item-person">Jamie Butler</div>
+        <div class="item-text">2030 Goals intro</div>
+      </div>
+    </div>
+    <div class="item">
+      <div class="item-dot"></div>
+      <div class="item-content">
+        <div class="item-person">Daryl Nathanson</div>
+        <div class="item-text">Rev.io Architecture &amp; Performance Review</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 20–60 min -->
+  <div class="block orange wide">
+    <div class="time-badge">20 – 60 min</div>
+    <h2>Intermedia Sandbox Demo — Core Platform</h2>
+    <div class="item">
+      <div class="item-dot"></div>
+      <div class="item-content">
+        <div class="item-person">Cam Sharpe</div>
+        <div class="item-text">Sandbox demo begins</div>
+        <div class="sub-items">
+          <div class="sub-item">End User Profile</div>
+          <div class="sub-item">Bill Profiles: Intermedia Hierarchy &amp; Relationship Structure</div>
+          <div class="sub-item">Product Catalog &amp; Pricing Considerations</div>
+          <div class="sub-item">Credits &amp; Promotions</div>
+          <div class="sub-item">Usage Plans &amp; Rate Decks</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 60–75 min -->
+  <div class="block purple">
+    <div class="time-badge">60 – 75 min</div>
+    <h2>Billing &amp; End User Tools</h2>
+    <div class="item">
+      <div class="item-dot"></div>
+      <div class="item-content">
+        <div class="item-person">Cam Sharpe</div>
+        <div class="item-text">Continuing in Sandbox</div>
+        <div class="sub-items">
+          <div class="sub-item">Invoice Generation</div>
+          <div class="sub-item">End User Bill Center</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 75–90 min -->
+  <div class="block green">
+    <div class="time-badge">75 – 90 min</div>
+    <h2>Wrap-Up &amp; Next Steps</h2>
+    <div class="item">
+      <div class="item-dot"></div>
+      <div class="item-content">
+        <div class="item-person">Cam Sharpe — Time Permitting</div>
+        <div class="item-text">Rev.io Developer Portal</div>
+      </div>
+    </div>
+    <div class="item">
+      <div class="item-dot"></div>
+      <div class="item-content">
+        <div class="item-person">Jamie Butler — Time Permitting</div>
+        <div class="item-text">Rev.io Onboarding Team Descriptions</div>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<div class="footer">Rev.io × Intermedia &nbsp;·&nbsp; Confidential &nbsp;·&nbsp; May 15, 2026</div>
+
+</body>
+</html>
