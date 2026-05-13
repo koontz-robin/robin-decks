@@ -35,13 +35,15 @@
   /* MONTH SECTIONS */
   .month-block { padding: 12px 18px; border-bottom: 1px solid #0f172a; }
   .month-block:last-child { border-bottom: none; }
-  .month-label { font-size: 10px; font-weight: 700; letter-spacing: 1px; text-transform: uppercase; color: #475569; margin-bottom: 8px; display: flex; justify-content: space-between; }
+  .month-label { font-size: 10px; font-weight: 700; letter-spacing: 1px; text-transform: uppercase; color: #475569; margin-bottom: 8px; display: flex; justify-content: space-between; align-items: baseline; }
   .month-total { color: #94a3b8; font-weight: 700; }
+  .mtd-badge { font-size: 8px; font-weight: 700; background: #1e3a5f; color: #38bdf8; border-radius: 4px; padding: 1px 5px; margin-left: 5px; letter-spacing: 0.5px; vertical-align: middle; }
   .product-bar-row { display: flex; align-items: center; gap: 8px; margin-bottom: 5px; }
   .product-name { font-size: 11px; color: #94a3b8; width: 110px; flex-shrink: 0; }
-  .product-bar-wrap { flex: 1; height: 16px; background: #0f172a; border-radius: 4px; overflow: hidden; position: relative; }
+  .product-bar-wrap { flex: 1; height: 16px; background: #0f172a; border-radius: 4px; overflow: hidden; }
   .product-bar-fill { height: 100%; border-radius: 4px; display: flex; align-items: center; padding-left: 6px; font-size: 9px; font-weight: 700; color: #0f172a; min-width: 20px; }
-  .product-count { font-size: 10px; color: #475569; width: 50px; text-align: right; flex-shrink: 0; }
+  .product-count { font-size: 10px; color: #475569; width: 70px; text-align: right; flex-shrink: 0; }
+  .future-block { padding: 14px 18px; font-size: 11px; color: #2d3f55; font-style: italic; }
 
   /* MONTHLY TREND TABLE */
   .trend-table { width: 100%; border-collapse: collapse; background: #1e293b; border-radius: 10px; overflow: hidden; }
@@ -51,17 +53,16 @@
   .trend-table td:first-child { color: #e2e8f0; font-weight: 600; }
   .trend-table td:not(:first-child) { text-align: center; }
   .trend-table tr:last-child td { border-bottom: none; }
-  .num-up { color: #3DC570; font-weight: 700; }
-  .num-dn { color: #f87171; font-weight: 700; }
-  .num-neutral { color: #f5a623; font-weight: 700; }
-
-  .mtd-note { font-size: 9px; color: #475569; font-weight: 400; display: block; }
-  .note { font-size: 11px; color: #475569; margin-top: 32px; text-align: center; }
+  .num-up   { color: #3DC570; font-weight: 700; }
+  .num-dn   { color: #f87171; font-weight: 700; }
+  .num-dim  { color: #2d3f55; }
 
   /* PRODUCT COLOR LEGEND */
   .legend { display: flex; gap: 16px; flex-wrap: wrap; margin-bottom: 20px; }
   .legend-item { display: flex; align-items: center; gap: 6px; font-size: 11px; color: #64748b; }
   .legend-dot { width: 10px; height: 10px; border-radius: 2px; }
+
+  .note { font-size: 11px; color: #475569; margin-top: 32px; text-align: center; }
 </style>
 </head>
 <body>
@@ -70,18 +71,19 @@
     <span style="font-size:15px;line-height:1">↻</span> Refresh
   </button>
 </div>
+
 <div style="position:relative">
   <span class="rev-badge">rev.io</span>
   <h1>CSA Pipeline — Opportunities Created Q2 2026</h1>
-  <p class="subtitle">April–June 2026 · CSA roles · Breakdown by rep, month, and product line · Source: Salesforce · May 13 MTD</p>
+  <p class="subtitle">April 1 – June 30, 2026 &nbsp;·&nbsp; CSA &amp; CSA Sales Management roles &nbsp;·&nbsp; Breakdown by rep, month &amp; product &nbsp;·&nbsp; Source: Salesforce &nbsp;·&nbsp; May 13 MTD</p>
 </div>
 
 <!-- SUMMARY CARDS -->
 <div class="summary-grid">
   <div class="sum-card" style="border-top:3px solid #38bdf8">
     <div class="sum-label">Q2 Opps Created</div>
-    <div class="sum-val">51</div>
-    <div class="sum-sub">2 active CSAs · Apr–May 13</div>
+    <div class="sum-val">52</div>
+    <div class="sum-sub">3 reps · Apr 1 – May 13</div>
   </div>
   <div class="sum-card" style="border-top:3px solid #a78bfa">
     <div class="sum-label">Q2 Pipeline Value</div>
@@ -94,14 +96,14 @@
     <div class="sum-sub">31 opps · $5,672 MRR</div>
   </div>
   <div class="sum-card" style="border-top:3px solid #f5a623">
-    <div class="sum-label">Trend</div>
-    <div class="sum-val num-neutral">Apr: 33</div>
-    <div class="sum-sub">May: 18 MTD (13 days) · Jun TBD</div>
+    <div class="sum-label">April</div>
+    <div class="sum-val">33</div>
+    <div class="sum-sub">opps · $8,574 MRR</div>
   </div>
 </div>
 
 <!-- REP BREAKDOWN -->
-<div class="section-title">Rep Breakdown — Opps Created by Month &amp; Product</div>
+<div class="section-title">Rep Breakdown — Apr 1 – Jun 30, 2026</div>
 
 <div class="legend">
   <div class="legend-item"><div class="legend-dot" style="background:#10b981"></div> Payments AR</div>
@@ -121,28 +123,36 @@
       <div class="rep-role">CSA</div>
       <div class="rep-stats">
         <div><div class="rep-stat-val" style="color:#38bdf8">35</div><div class="rep-stat-label">Q2 Opps</div></div>
-        <div><div class="rep-stat-val" style="color:#38bdf8">$6,979</div><div class="rep-stat-label">Q2 Value</div></div>
+        <div><div class="rep-stat-val" style="color:#38bdf8">$6,979</div><div class="rep-stat-label">Q2 MRR</div></div>
       </div>
     </div>
 
+    <!-- April -->
     <div class="month-block">
-      <div class="month-label"><span>April</span><span class="month-total">26 opps · $6,679</span></div>
+      <div class="month-label">
+        <span>April</span>
+        <span class="month-total">26 opps · $6,679</span>
+      </div>
       <div class="product-bar-row"><div class="product-name">Payments AR</div><div class="product-bar-wrap"><div class="product-bar-fill" style="width:73%;background:#10b981">19</div></div><div class="product-count">19 · $5,172</div></div>
       <div class="product-bar-row"><div class="product-name">Billing</div><div class="product-bar-wrap"><div class="product-bar-fill" style="width:15%;background:#06b6d4">4</div></div><div class="product-count">4 · $1,207</div></div>
       <div class="product-bar-row"><div class="product-name">Billing Add-on</div><div class="product-bar-wrap"><div class="product-bar-fill" style="width:4%;background:#8b5cf6">1</div></div><div class="product-count">1 · $200</div></div>
       <div class="product-bar-row"><div class="product-name">Cyber Protect</div><div class="product-bar-wrap"><div class="product-bar-fill" style="width:4%;background:#f97316">1</div></div><div class="product-count">1 · $100</div></div>
       <div class="product-bar-row"><div class="product-name">Payments AP</div><div class="product-bar-wrap"><div class="product-bar-fill" style="width:4%;background:#64748b">1</div></div><div class="product-count">1 · $0</div></div>
     </div>
+
+    <!-- May MTD -->
     <div class="month-block">
-      <div class="month-label"><span>May <span class="mtd-note">MTD May 13</span></span><span class="month-total">9 opps · $300</span></div>
+      <div class="month-label">
+        <span>May <span class="mtd-badge">MTD</span></span>
+        <span class="month-total">9 opps · $300</span>
+      </div>
       <div class="product-bar-row"><div class="product-name">Payments AR</div><div class="product-bar-wrap"><div class="product-bar-fill" style="width:56%;background:#10b981">5</div></div><div class="product-count">5 · $150</div></div>
       <div class="product-bar-row"><div class="product-name">PSA / PSA 2.0</div><div class="product-bar-wrap"><div class="product-bar-fill" style="width:33%;background:#a78bfa">3</div></div><div class="product-count">3 · $0</div></div>
       <div class="product-bar-row"><div class="product-name">Cyber Protect</div><div class="product-bar-wrap"><div class="product-bar-fill" style="width:11%;background:#f97316">1</div></div><div class="product-count">1 · $150</div></div>
     </div>
-    <div class="month-block">
-      <div class="month-label"><span>June</span><span class="month-total" style="color:#475569">—</span></div>
-      <div style="font-size:11px;color:#475569;padding:4px 0">Month not yet started</div>
-    </div>
+
+    <!-- June -->
+    <div class="future-block">June — no data yet</div>
   </div>
 
   <!-- JUSTIN LEE -->
@@ -152,64 +162,80 @@
       <div class="rep-role">CSA</div>
       <div class="rep-stats">
         <div><div class="rep-stat-val" style="color:#a78bfa">16</div><div class="rep-stat-label">Q2 Opps</div></div>
-        <div><div class="rep-stat-val" style="color:#a78bfa">$2,195</div><div class="rep-stat-label">Q2 Value</div></div>
+        <div><div class="rep-stat-val" style="color:#a78bfa">$2,195</div><div class="rep-stat-label">Q2 MRR</div></div>
       </div>
     </div>
 
+    <!-- April -->
     <div class="month-block">
-      <div class="month-label"><span>April</span><span class="month-total">7 opps · $1,895</span></div>
+      <div class="month-label">
+        <span>April</span>
+        <span class="month-total">7 opps · $1,895</span>
+      </div>
       <div class="product-bar-row"><div class="product-name">Payments AR</div><div class="product-bar-wrap"><div class="product-bar-fill" style="width:71%;background:#10b981">5</div></div><div class="product-count">5 · $250</div></div>
       <div class="product-bar-row"><div class="product-name">Billing</div><div class="product-bar-wrap"><div class="product-bar-fill" style="width:29%;background:#06b6d4">2</div></div><div class="product-count">2 · $1,645</div></div>
     </div>
+
+    <!-- May MTD -->
     <div class="month-block">
-      <div class="month-label"><span>May <span class="mtd-note">MTD May 13</span></span><span class="month-total">9 opps · $300</span></div>
+      <div class="month-label">
+        <span>May <span class="mtd-badge">MTD</span></span>
+        <span class="month-total">9 opps · $300</span>
+      </div>
       <div class="product-bar-row"><div class="product-name">Billing</div><div class="product-bar-wrap"><div class="product-bar-fill" style="width:67%;background:#06b6d4">6</div></div><div class="product-count">6 · $0</div></div>
       <div class="product-bar-row"><div class="product-name">Payments AR</div><div class="product-bar-wrap"><div class="product-bar-fill" style="width:22%;background:#10b981">2</div></div><div class="product-count">2 · $100</div></div>
       <div class="product-bar-row"><div class="product-name">Billing Add-on</div><div class="product-bar-wrap"><div class="product-bar-fill" style="width:11%;background:#8b5cf6">1</div></div><div class="product-count">1 · $200</div></div>
     </div>
-    <div class="month-block">
-      <div class="month-label"><span>June</span><span class="month-total" style="color:#475569">—</span></div>
-      <div style="font-size:11px;color:#475569;padding:4px 0">Month not yet started</div>
-    </div>
+
+    <!-- June -->
+    <div class="future-block">June — no data yet</div>
   </div>
 
-  <!-- NASSIM FILOSO -->
+  <!-- REID DOSTER -->
   <div class="rep-card">
     <div class="rep-header">
-      <div class="rep-name">Nassim Filoso</div>
-      <div class="rep-role">CSA</div>
+      <div class="rep-name">Reid Doster</div>
+      <div class="rep-role">CSA Sales Management</div>
       <div class="rep-stats">
-        <div><div class="rep-stat-val" style="color:#475569">0</div><div class="rep-stat-label">Q2 Opps</div></div>
-        <div><div class="rep-stat-val" style="color:#475569">$0</div><div class="rep-stat-label">Q2 Value</div></div>
+        <div><div class="rep-stat-val" style="color:#34d399">1</div><div class="rep-stat-label">Q2 Opps</div></div>
+        <div><div class="rep-stat-val" style="color:#34d399">$0</div><div class="rep-stat-label">Q2 MRR</div></div>
       </div>
     </div>
 
+    <!-- April -->
     <div class="month-block">
-      <div class="month-label"><span>April</span><span class="month-total" style="color:#f87171">0 opps · $0</span></div>
-      <div style="font-size:11px;color:#475569;padding:4px 0">No opps created in April</div>
+      <div class="month-label">
+        <span>April</span>
+        <span class="month-total" style="color:#2d3f55">0 opps · $0</span>
+      </div>
+      <div style="font-size:11px;color:#2d3f55;padding:2px 0">No opps created</div>
     </div>
+
+    <!-- May MTD -->
     <div class="month-block">
-      <div class="month-label"><span>May <span class="mtd-note">MTD May 13</span></span><span class="month-total" style="color:#f87171">0 opps · $0</span></div>
-      <div style="font-size:11px;color:#475569;padding:4px 0">No opps created in May</div>
+      <div class="month-label">
+        <span>May <span class="mtd-badge">MTD</span></span>
+        <span class="month-total">1 opp · $0</span>
+      </div>
+      <div class="product-bar-row"><div class="product-name">Billing</div><div class="product-bar-wrap"><div class="product-bar-fill" style="width:100%;background:#06b6d4">1</div></div><div class="product-count">1 · $0</div></div>
     </div>
-    <div class="month-block">
-      <div class="month-label"><span>June</span><span class="month-total" style="color:#475569">—</span></div>
-      <div style="font-size:11px;color:#475569;padding:4px 0">Month not yet started</div>
-    </div>
+
+    <!-- June -->
+    <div class="future-block">June — no data yet</div>
   </div>
 
 </div>
 
 <!-- MONTHLY TREND TABLE -->
-<div class="section-title">Monthly Summary — All CSAs Combined</div>
+<div class="section-title">Monthly Summary — All Reps Combined · Q2 2026</div>
 <table class="trend-table">
   <thead>
     <tr>
       <th>Rep</th>
-      <th>Apr Opps</th><th>Apr Value</th>
-      <th>May Opps (MTD)</th><th>May Value</th>
-      <th>Jun Opps</th><th>Jun Value</th>
-      <th>Q2 Total</th><th>Q2 Value</th>
+      <th>Apr Opps</th><th>Apr MRR</th>
+      <th>May Opps (MTD)</th><th>May MRR</th>
+      <th>Jun Opps</th><th>Jun MRR</th>
+      <th>Q2 Total</th><th>Q2 MRR</th>
     </tr>
   </thead>
   <tbody>
@@ -217,33 +243,82 @@
       <td>Ingrid Beard</td>
       <td class="num-up">26</td><td>$6,679</td>
       <td>9</td><td>$300</td>
-      <td class="num-neutral">—</td><td class="num-neutral">—</td>
+      <td class="num-dim">—</td><td class="num-dim">—</td>
       <td class="num-up">35</td><td>$6,979</td>
     </tr>
     <tr>
       <td>Justin Lee</td>
       <td>7</td><td>$1,895</td>
-      <td class="num-neutral">9</td><td>$300</td>
-      <td class="num-neutral">—</td><td class="num-neutral">—</td>
+      <td>9</td><td>$300</td>
+      <td class="num-dim">—</td><td class="num-dim">—</td>
       <td>16</td><td>$2,195</td>
     </tr>
     <tr>
-      <td>Nassim Filoso</td>
-      <td class="num-dn">0</td><td>$0</td>
-      <td class="num-dn">0</td><td>$0</td>
-      <td class="num-neutral">—</td><td class="num-neutral">—</td>
-      <td class="num-dn">0</td><td>$0</td>
+      <td>Reid Doster</td>
+      <td class="num-dim">0</td><td class="num-dim">—</td>
+      <td>1</td><td>$0</td>
+      <td class="num-dim">—</td><td class="num-dim">—</td>
+      <td>1</td><td>$0</td>
     </tr>
     <tr style="background:#131f35;font-weight:700">
       <td style="color:#fff">TOTAL</td>
       <td style="color:#fff">33</td><td style="color:#fff">$8,574</td>
-      <td style="color:#fff">18</td><td style="color:#fff">$600</td>
-      <td style="color:#475569">—</td><td style="color:#475569">—</td>
-      <td style="color:#38bdf8">51</td><td style="color:#38bdf8">$9,174</td>
+      <td style="color:#fff">19</td><td style="color:#fff">$600</td>
+      <td style="color:#2d3f55">—</td><td style="color:#2d3f55">—</td>
+      <td style="color:#38bdf8">52</td><td style="color:#38bdf8">$9,174</td>
     </tr>
   </tbody>
 </table>
 
-<p class="note">Rev.io Sales Intelligence · Q2 2026 · Source: Salesforce · Updated May 13, 2026 · Robin 🦸🏻‍♂️</p>
+<!-- PRODUCT TOTALS TABLE -->
+<div class="section-title">Product Breakdown — Q2 2026 (All Reps)</div>
+<table class="trend-table">
+  <thead>
+    <tr>
+      <th>Product</th>
+      <th>Opps Created</th>
+      <th>Pipeline MRR</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><span style="display:inline-block;width:9px;height:9px;border-radius:2px;background:#10b981;margin-right:7px;vertical-align:middle"></span>Payments AR</td>
+      <td style="text-align:center" class="num-up">31</td>
+      <td style="text-align:center">$5,672</td>
+    </tr>
+    <tr>
+      <td><span style="display:inline-block;width:9px;height:9px;border-radius:2px;background:#06b6d4;margin-right:7px;vertical-align:middle"></span>Billing</td>
+      <td style="text-align:center">13</td>
+      <td style="text-align:center">$2,852</td>
+    </tr>
+    <tr>
+      <td><span style="display:inline-block;width:9px;height:9px;border-radius:2px;background:#8b5cf6;margin-right:7px;vertical-align:middle"></span>Billing Add-on</td>
+      <td style="text-align:center">2</td>
+      <td style="text-align:center">$400</td>
+    </tr>
+    <tr>
+      <td><span style="display:inline-block;width:9px;height:9px;border-radius:2px;background:#f97316;margin-right:7px;vertical-align:middle"></span>Cyber Protect</td>
+      <td style="text-align:center">2</td>
+      <td style="text-align:center">$250</td>
+    </tr>
+    <tr>
+      <td><span style="display:inline-block;width:9px;height:9px;border-radius:2px;background:#a78bfa;margin-right:7px;vertical-align:middle"></span>PSA / PSA 2.0</td>
+      <td style="text-align:center">3</td>
+      <td style="text-align:center">$0</td>
+    </tr>
+    <tr>
+      <td><span style="display:inline-block;width:9px;height:9px;border-radius:2px;background:#64748b;margin-right:7px;vertical-align:middle"></span>Payments AP / Other</td>
+      <td style="text-align:center">1</td>
+      <td style="text-align:center">$0</td>
+    </tr>
+    <tr style="background:#131f35;font-weight:700">
+      <td style="color:#fff">TOTAL</td>
+      <td style="color:#38bdf8;text-align:center">52</td>
+      <td style="color:#38bdf8;text-align:center">$9,174</td>
+    </tr>
+  </tbody>
+</table>
+
+<p class="note">Rev.io Sales Intelligence &nbsp;·&nbsp; Q2 2026 (Apr 1 – Jun 30) &nbsp;·&nbsp; Source: Salesforce &nbsp;·&nbsp; Updated May 13, 2026 &nbsp;·&nbsp; Robin 🦸🏻‍♂️</p>
 </body>
 </html>
