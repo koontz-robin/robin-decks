@@ -581,11 +581,10 @@ def post_to_notion(scorecard_text, title, recording_url=None, start_time=None, r
     }
 
     # Map BEACON categories to Notion properties
-    # Notion DB fields: Approach, Company Story, Qualifying, Talk Time, Summarize, Next Steps, Overall Score
+    # Use flexible regex (any /NN) to avoid max-pts mismatch breaking the match
     cat_scores = {}
-    for cat, pts in [("The Approach", 20), ("Company Story", 10), ("Qualifying / Needs Assessment", 30),
-                     ("Talk Time Ratio", 15), ("Summarize", 15), ("Next Steps", 10)]:
-        m = re.search(rf'{re.escape(cat)}[^—\n]*—\s*(\d+)/{pts}', scorecard_text)
+    for cat in ["The Approach", "Company Story", "Qualifying", "Summarize", "Next Steps"]:
+        m = re.search(rf'{re.escape(cat)}[^—\n]*[—-]\s*(\d+)/\d+', scorecard_text, re.IGNORECASE)
         if m:
             cat_scores[cat] = int(m.group(1))
 
@@ -596,8 +595,7 @@ def post_to_notion(scorecard_text, title, recording_url=None, start_time=None, r
         "Overall Score":     {"number": score},
         "Approach":          {"number": cat_scores.get("The Approach", 0)},
         "Company Story":     {"number": cat_scores.get("Company Story", 0)},
-        "Qualifying":        {"number": cat_scores.get("Qualifying / Needs Assessment", 0)},
-        "Talk Time":         {"number": cat_scores.get("Talk Time Ratio", 0)},
+        "Qualifying":        {"number": cat_scores.get("Qualifying", 0)},
         "Summarize":         {"number": cat_scores.get("Summarize", 0)},
         "Next Steps":        {"number": cat_scores.get("Next Steps", 0)},
         "Top Coaching Point":{"rich_text": [{"text": {"content": coaching[:1900] if coaching else ""}}]},

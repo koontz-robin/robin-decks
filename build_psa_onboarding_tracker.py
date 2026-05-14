@@ -628,7 +628,12 @@ diff = subprocess.run(["git", "diff", "--cached", "--quiet"], cwd=REPO_PATH)
 if diff.returncode != 0:
     now_str = datetime.now().strftime("%Y-%m-%d %H:%M UTC")
     subprocess.run(["git", "commit", "-m", f"PSA Onboarding Tracker - {now_str}"], cwd=REPO_PATH)
-    subprocess.run(["git", "push", "origin", "master"], cwd=REPO_PATH, env=env)
-    print("✅ Pushed to GitHub")
+    # Pull-rebase first to handle diverged branches, then push
+    subprocess.run(["git", "pull", "--rebase", "origin", "master"], cwd=REPO_PATH, env=env, check=True)
+    result = subprocess.run(["git", "push", "origin", "master"], cwd=REPO_PATH, env=env)
+    if result.returncode == 0:
+        print("✅ Pushed to GitHub")
+    else:
+        raise RuntimeError(f"git push failed with exit code {result.returncode}")
 else:
     print("ℹ️ No changes to push")

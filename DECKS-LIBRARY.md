@@ -65,6 +65,7 @@ Repo: `git@github.com:koontz-robin/robin-decks.git`
 | Name | File | URL | Notes |
 |---|---|---|---|
 | ROI — C1ST | roi-c1st.html | https://koontz-robin.github.io/robin-decks/roi-c1st.html | |
+| ROI — DFW Security | roi-dfw-security.html | https://koontz-robin.github.io/robin-decks/roi-dfw-security.html | PSA + AR Payments, security integrator, Jake Borah |
 | ROI — Celerius | roi-celerius.html | https://koontz-robin.github.io/robin-decks/roi-celerius.html | |
 | ROI — CompSys | roi-compsys.html | https://koontz-robin.github.io/robin-decks/roi-compsys.html | |
 | ROI — Interactive Control Systems | roi-interactive-control-systems.html | https://koontz-robin.github.io/robin-decks/roi-interactive-control-systems.html | |

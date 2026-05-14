@@ -32,7 +32,7 @@ def grade_label(s):
     if s >= 50: return "🟠 Needs Work"
     return "🔴 Coaching Required"
 
-def build_rep_card(rep, d):
+def build_rep_card(rep, d, is_csa=False):
     avg = d["avg_score"]; sc = score_color(avg)
     cats = d["cat_avgs"]; top3 = d["top_3"]
     calls = d["recent_calls"]; n = d["call_count"]
@@ -60,10 +60,16 @@ def build_rep_card(rep, d):
         )
 
     bars = ""
-    cat_map = [
-        ("Approach","approach",15),("Co. Story","company_story",15),
-        ("Qualifying","qualifying",40),("Summarize","summarize",20),("Next Steps","next_steps",15)
-    ]
+    if is_csa:
+        cat_map = [
+            ("Approach","approach",15),("State of Union","company_story",20),
+            ("Client Init.","qualifying",25),("Upsell Disc.","summarize",30),("Next Steps","next_steps",10)
+        ]
+    else:
+        cat_map = [
+            ("Approach","approach",15),("Co. Story","company_story",15),
+            ("Qualifying","qualifying",40),("Summarize","summarize",20),("Next Steps","next_steps",15)
+        ]
     for label, key, max_pts in cat_map:
         val = cats.get(key, 0)
         pct = min(100, val/max_pts*100) if max_pts else 0
@@ -83,7 +89,7 @@ def build_rep_card(rep, d):
         f'<div style="background:#0f172a;padding:16px 20px;display:flex;justify-content:space-between;'
         f'align-items:center;border-bottom:2px solid {sc}">'
         f'<div><div style="font-size:16px;font-weight:700;color:#e2e8f0">{rep}</div>'
-        f'<div style="font-size:11px;color:#64748b;margin-top:2px">{n} graded calls · {grade_label(avg)}</div></div>'
+        f'<div style="font-size:11px;color:#64748b;margin-top:2px">{n} graded {"CBRs" if is_csa else "calls"} · {grade_label(avg)}</div></div>'
         f'<div style="text-align:right"><div style="font-size:36px;font-weight:800;color:{sc};line-height:1">{avg:.0f}</div>'
         f'<div style="font-size:10px;color:#64748b">avg score</div></div></div>'
         f'<div style="display:grid;grid-template-columns:1fr 1fr;gap:0">'
@@ -100,7 +106,7 @@ def build_rep_card(rep, d):
     )
 
 ae_cards = "".join(build_rep_card(r, data[r]) for r in sorted(AES, key=lambda x: data.get(x,{}).get("avg_score",999)) if r in data)
-csa_cards = "".join(build_rep_card(r, data[r]) for r in sorted(CSAS, key=lambda x: data.get(x,{}).get("avg_score",999)) if r in data)
+csa_cards = "".join(build_rep_card(r, data[r], is_csa=True) for r in sorted(CSAS, key=lambda x: data.get(x,{}).get("avg_score",999)) if r in data)
 if not csa_cards:
     csa_cards = '<div style="color:#64748b;text-align:center;padding:40px;font-size:14px">No CSA scorecards graded yet.</div>'
 
