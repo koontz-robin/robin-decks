@@ -217,7 +217,7 @@ def main():
     print("Pulling CBR Events...")
     events = sf_query_all(hdrs, iurl,
         "SELECT Id, Subject, ActivityDate, WhatId, Owner.Name FROM Event "
-        "WHERE Type IN ('Client Business Review','(CSA) Client Business Review') AND Appointment_Status__c = 'Completed' AND WhatId != null "
+        "WHERE Type IN ('Client Business Review','(CSA) Client Business Review','AM - Client Business Review','PSA AM - Client Business Review') AND Appointment_Status__c = 'Completed' AND WhatId != null "
         "ORDER BY ActivityDate DESC")
     print(f"  {len(events)} events with account link")
     for ev in events:
