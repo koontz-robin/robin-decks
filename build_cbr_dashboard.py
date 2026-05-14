@@ -215,11 +215,12 @@ def main():
 
     # 2. CBR Events (WhatId = AccountId)
     print("Pulling CBR Events...")
+    CBR_TYPES = "'Client Business Review','(CSA) Client Business Review','AM - Client Business Review','PSA AM - Client Business Review'"
     events = sf_query_all(hdrs, iurl,
-        "SELECT Id, Subject, ActivityDate, WhatId, Owner.Name FROM Event "
-        "WHERE Type IN ('Client Business Review','(CSA) Client Business Review','AM - Client Business Review','PSA AM - Client Business Review') AND Appointment_Status__c = 'Completed' AND WhatId != null "
-        "ORDER BY ActivityDate DESC")
-    print(f"  {len(events)} events with account link")
+        f"SELECT Id, Subject, ActivityDate, WhatId, Owner.Name FROM Event "
+        f"WHERE Type IN ({CBR_TYPES}) AND Appointment_Status__c = 'Completed' AND WhatId != null "
+        f"ORDER BY ActivityDate DESC")
+    print(f"  {len(events)} events with account WhatId")
     for ev in events:
         aid = ev.get("WhatId")
         if aid in acct_map:
@@ -228,6 +229,36 @@ def main():
                 acct_map[aid]["last_cbr"] = date
                 acct_map[aid]["last_cbr_subject"] = ev.get("Subject", "")
                 acct_map[aid]["last_cbr_owner"] = (ev.get("Owner") or {}).get("Name", "")
+
+    # 2c. CBR Events logged on Contact (WhoId) — resolve to Account
+    print("Pulling CBR Events via Contact link...")
+    contact_events = sf_query_all(hdrs, iurl,
+        f"SELECT Id, Subject, ActivityDate, WhoId, Owner.Name FROM Event "
+        f"WHERE Type IN ({CBR_TYPES}) AND Appointment_Status__c = 'Completed' AND WhatId = null AND WhoId != null "
+        f"ORDER BY ActivityDate DESC")
+    print(f"  {len(contact_events)} events with contact-only link")
+    if contact_events:
+        contact_ids = list({ev["WhoId"] for ev in contact_events if (ev.get("WhoId") or "").startswith("003")})
+        contact_to_acct = {}
+        for i in range(0, len(contact_ids), 200):
+            chunk = contact_ids[i:i+200]
+            ids_in = "('" + "','".join(chunk) + "')"
+            contacts = sf_query_all(hdrs, iurl,
+                f"SELECT Id, AccountId FROM Contact WHERE Id IN {ids_in} AND AccountId != null")
+            for c in contacts:
+                contact_to_acct[c["Id"]] = c["AccountId"]
+        resolved = 0
+        for ev in contact_events:
+            who = ev.get("WhoId", "")
+            aid = contact_to_acct.get(who)
+            if aid and aid in acct_map:
+                date = ev.get("ActivityDate", "")
+                if not acct_map[aid]["last_cbr"] or date > acct_map[aid]["last_cbr"]:
+                    acct_map[aid]["last_cbr"] = date
+                    acct_map[aid]["last_cbr_subject"] = ev.get("Subject", "")
+                    acct_map[aid]["last_cbr_owner"] = (ev.get("Owner") or {}).get("Name", "")
+                    resolved += 1
+        print(f"  {resolved} additional accounts matched via contact lookup")
 
     # 2b. CBR Override — from manual export (cbr_override.json)
     override_path = os.path.join(os.path.dirname(__file__), "cbr_override.json")
