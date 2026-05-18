@@ -5,46 +5,40 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Rev.io PSA — Competitor Battle Cards</title>
 <style>
+  @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
   :root {
-    --green: #00ff88;
-    --cyan: #00e5ff;
-    --bg: #020408;
-    --surface: #060d14;
-    --border: #0a2a1a;
-    --border2: #061a0e;
-    --text: #c8f0dc;
-    --muted: #2a5a3a;
-    --card: #060d14;
-    --accent: #00ff88;
-    --red: #ff4466;
-    --yellow: #ffcc00;
-    --win: #061a0e;
-    --lose: #1a0606;
+    --indigo: #6366F1;
+    --indigo-light: #818CF8;
+    --indigo-dim: rgba(99,102,241,0.15);
+    --green: #6366F1;
+    --cyan: #818CF8;
+    --bg: #0A0F1A;
+    --surface: #0D1117;
+    --border: #1E293B;
+    --border2: #111827;
+    --text: #E2E8F0;
+    --muted: #64748B;
+    --card: #0F172A;
+    --accent: #6366F1;
+    --red: #F43F5E;
+    --yellow: #F59E0B;
+    --win: #0A1F0E;
+    --lose: #1A060C;
+    --emerald: #10B981;
   }
   * { box-sizing: border-box; margin: 0; padding: 0; }
-  body { background: var(--bg); color: var(--text); font-family: 'Segoe UI', system-ui, monospace; font-size: 14px; line-height: 1.5; }
-
-  /* Grid overlay */
-  body::before {
-    content: '';
-    position: fixed; top: 0; left: 0; right: 0; bottom: 0;
-    background-image:
-      linear-gradient(rgba(0,255,136,0.12) 1px, transparent 1px),
-      linear-gradient(90deg, rgba(0,255,136,0.12) 1px, transparent 1px);
-    background-size: 40px 40px;
-    pointer-events: none; z-index: 0;
-  }
+  body { background: var(--bg); color: var(--text); font-family: 'Inter', 'Segoe UI', system-ui, sans-serif; font-size: 14px; line-height: 1.5; }
 
   /* HEADER */
-  header { background: linear-gradient(135deg, #0a0e1a 0%, #0f1f3d 100%); border-bottom: 2px solid var(--green); padding: 20px 30px; display: flex; align-items: center; justify-content: space-between; position: sticky; top: 0; z-index: 100; }
-  header h1 { font-size: 20px; color: var(--green); text-transform: uppercase; letter-spacing: 2px; }
-  header .badge { background: #0a2a1a; border: 1px solid var(--green); color: var(--green); padding: 4px 12px; border-radius: 4px; font-size: 11px; text-transform: uppercase; letter-spacing: 1px; }
+  header { background: linear-gradient(135deg, #0D1117 0%, #131929 100%); border-bottom: 1px solid #1E293B; padding: 20px 30px; display: flex; align-items: center; justify-content: space-between; position: sticky; top: 0; z-index: 100; }
+  header h1 { font-size: 20px; color: #E2E8F0; text-transform: uppercase; letter-spacing: 2px; }
+  header .badge { background: rgba(99,102,241,0.12); border: 1px solid rgba(99,102,241,0.4); color: #818CF8; padding: 4px 12px; border-radius: 20px; font-size: 11px; text-transform: uppercase; letter-spacing: 1px; }
 
   /* NAV TABS */
-  .nav-tabs { display: flex; gap: 6px; padding: 16px 30px 0; background: #000; border-bottom: 1px solid #1e293b; overflow-x: auto; flex-wrap: nowrap; position:sticky;top:73px;z-index:99; }
-  .nav-tab { background: transparent; border: 1px solid #1e293b; color: #64748b; padding: 8px 18px; border-radius: 6px 6px 0 0; cursor: pointer; font-size: 12px; font-weight: 700; letter-spacing:0.5px; white-space: nowrap; transition: all 0.2s; border-bottom: none; text-transform:uppercase; }
-  .nav-tab:hover { color: #e2e8f0; border-color: #38bdf8; }
-  .nav-tab.active { background: #1e293b; color: #38bdf8; border-color: #38bdf8; border-bottom: 2px solid #1e293b; margin-bottom: -1px; }
+  .nav-tabs { display: flex; gap: 6px; padding: 12px 30px; background: #0D1117; border-bottom: 1px solid #1E293B; overflow-x: auto; flex-wrap: nowrap; position:sticky; top:73px; z-index:99; }
+  .nav-tab { background: transparent; border: 1px solid #1E293B; color: #64748B; padding: 6px 16px; border-radius: 20px; cursor: pointer; font-size: 12px; font-weight: 600; letter-spacing:0.3px; white-space: nowrap; transition: all 0.2s; text-transform: uppercase; }
+  .nav-tab:hover { color: #E2E8F0; border-color: #6366F1; }
+  .nav-tab.active { background: rgba(99,102,241,0.15); color: #818CF8; border-color: #6366F1; }
 
   /* MAIN */
   main { padding: 30px; max-width: 1200px; margin: 0 auto; position:relative;z-index:1; }
@@ -63,42 +57,42 @@
   /* SW TABLE (strengths/weaknesses) */
     /* SW TABLE — AE capacity style */
   .sw-table { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-bottom: 20px; }
-  .sw-col { background: #0f172a; border-radius: 12px; padding: 20px; position:relative; overflow:hidden; }
+  .sw-col { background: #111827; border-radius: 12px; padding: 20px; position:relative; overflow:hidden; }
   .sw-col::before { content:''; position:absolute; top:0; left:0; right:0; height:4px; }
   .sw-col.strengths::before { background: var(--green); }
   .sw-col.weaknesses::before { background: var(--red); }
   .sw-col h4 { font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 1.5px; margin-bottom: 14px; }
-  .sw-col.strengths h4 { color: var(--green); }
+  .sw-col.strengths h4 { color: #818CF8; }
   .sw-col.weaknesses h4 { color: var(--red); }
   .sw-col ul { list-style: none; }
-  .sw-col ul li { padding: 7px 0; border-bottom: 1px solid rgba(0,255,136,0.06); font-size: 13px; color: #c8f0dc; display:flex; gap:8px; align-items:flex-start; line-height:1.45; }
+  .sw-col ul li { padding: 7px 0; border-bottom: 1px solid rgba(99,102,241,0.08); font-size: 13px; color: #c8f0dc; display:flex; gap:8px; align-items:flex-start; line-height:1.45; }
   .sw-col ul li:last-child { border-bottom: none; }
-  .sw-col.strengths ul li::before { content: '✓'; color: var(--green); font-weight:700; flex-shrink:0; }
+  .sw-col.strengths ul li::before { content: '✓'; color: #818CF8; font-weight:700; flex-shrink:0; }
   .sw-col.weaknesses ul li::before { content: '✗'; color: var(--red); font-weight:700; flex-shrink:0; }
   .sw-col ul li strong { color: var(--yellow); }
 
   /* CAPABILITY TABLE */
   .cap-table { width: 100%; border-collapse: collapse; background: var(--card); border-radius: 8px; overflow: hidden; margin-bottom: 8px; }
-  .cap-table th { background: #0f172a; color: #38bdf8; font-size: 12px; text-transform: uppercase; letter-spacing: 1px; padding: 10px 14px; text-align: left; }
+  .cap-table th { background: #111827; color: #818CF8; font-size: 12px; text-transform: uppercase; letter-spacing: 1px; padding: 10px 14px; text-align: left; }
   .cap-table th:first-child { width: 40%; }
   .cap-table td { padding: 9px 14px; border-bottom: 1px solid #0f172a; font-size: 13px; vertical-align: top; }
   .cap-table tr:last-child td { border-bottom: none; }
-  .cap-table tr:hover td { background: #0f172a44; }
+  .cap-table tr:hover td { background: rgba(99,102,241,0.05); }
   .cap-table td:first-child { color: var(--muted); }
-  .win-cell { color: var(--green); }
-  .lose-cell { color: var(--red); }
-  .warn-cell { color: var(--yellow); }
+  .win-cell { color: #10B981; }
+  .lose-cell { color: #F43F5E; }
+  .warn-cell { color: #F59E0B; }
 
   /* DISCOVERY QUESTIONS */
   .questions-list { list-style: none; counter-reset: q; }
-  .questions-list li { counter-increment: q; display: flex; gap: 12px; padding: 10px 14px; background: var(--card); border-left: 3px solid #38bdf8; border-radius: 0 6px 6px 0; margin-bottom: 8px; font-size: 13px; }
-  .questions-list li::before { content: counter(q); color: var(--green); font-weight: 700; font-size: 13px; min-width: 16px; }
+  .questions-list li { counter-increment: q; display: flex; gap: 12px; padding: 10px 14px; background: var(--card); border-left: 3px solid #6366F1; border-radius: 0 6px 6px 0; margin-bottom: 8px; font-size: 13px; }
+  .questions-list li::before { content: counter(q); color: #818CF8; font-weight: 700; font-size: 13px; min-width: 16px; }
 
   /* WIN/LOSE */
   .win-lose-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 8px; }
-  .win-col { background: var(--win); border: 1px solid #34d39940; border-radius: 8px; padding: 14px; }
-  .lose-col { background: var(--lose); border: 1px solid #f8717140; border-radius: 8px; padding: 14px; }
-  .win-col h4 { color: var(--green); font-size: 12px; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 8px; }
+  .win-col { background: #0A1F0E; border: 1px solid rgba(16,185,129,0.2); border-radius: 8px; padding: 14px; }
+  .lose-col { background: #1A060C; border: 1px solid rgba(244,63,94,0.2); border-radius: 8px; padding: 14px; }
+  .win-col h4 { color: #10B981; font-size: 12px; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 8px; }
   .lose-col h4 { color: var(--red); font-size: 12px; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 8px; }
   .win-col ul, .lose-col ul { list-style: none; }
   .win-col ul li, .lose-col ul li { padding: 4px 0; font-size: 13px; border-bottom: 1px solid rgba(255,255,255,0.05); }
@@ -111,17 +105,17 @@
   .objection .a { color: var(--text); font-size: 13px; padding-left: 12px; border-left: 2px solid var(--accent); }
 
   /* VOICE OF CUSTOMER */
-  .voc-card { background: #1e293b; border: 1px solid var(--green); border-radius: 8px; padding: 14px; margin-bottom: 10px; }
+  .voc-card { background: #111827; border: 1px solid rgba(99,102,241,0.3); border-radius: 8px; padding: 14px; margin-bottom: 10px; }
   .voc-quote { font-style: italic; color: var(--text); font-size: 14px; margin-bottom: 6px; }
   .voc-attr { color: var(--muted); font-size: 12px; text-align: right; }
 
   /* QUICK REF TABLE */
   .quick-table { width: 100%; border-collapse: collapse; background: var(--card); border-radius: 8px; overflow: hidden; }
-  .quick-table th { background: #1e293b; color: var(--green); font-size: 12px; text-transform: uppercase; letter-spacing: 1px; padding: 10px 14px; text-align: left; }
+  .quick-table th { background: #111827; color: #818CF8; font-size: 12px; text-transform: uppercase; letter-spacing: 1px; padding: 10px 14px; text-align: left; }
   .quick-table td { padding: 10px 14px; border-bottom: 1px solid #0a1a10; font-size: 13px; }
   .quick-table tr:last-child td { border-bottom: none; }
-  .quick-table tr:hover td { background: #0a1a0e; }
-  .pill { display: inline-block; padding: 2px 8px; border-radius: 4px; font-size: 11px; font-weight: 600; background: #0a2a1a; color: var(--green); }
+  .quick-table tr:hover td { background: rgba(99,102,241,0.05); }
+  .pill { display: inline-block; padding: 2px 8px; border-radius: 4px; font-size: 11px; font-weight: 600; background: rgba(99,102,241,0.12); color: #818CF8; }
 
   /* UPDATED TAG */
   footer { text-align: center; color: var(--muted); font-size: 12px; padding: 30px; border-top: 1px solid var(--border); margin-top: 40px; }
@@ -131,12 +125,12 @@
     main { padding: 16px; }
     header { padding: 14px 16px; }
     header h1 { font-size: 15px; }
-    .nav-tabs { padding: 12px 16px 0; }
+    .nav-tabs { display: flex; gap: 6px; padding: 12px 30px; background: #0D1117; border-bottom: 1px solid #1E293B; overflow-x: auto; flex-wrap: nowrap; position:sticky; top:73px; z-index:99; }
   }
 
-  .seg-btn { background:transparent; border:1px solid #1e293b; color:#64748b; padding:6px 20px; border-radius:20px; cursor:pointer; font-size:12px; font-weight:700; letter-spacing:1px; text-transform:uppercase; transition:all 0.2s; margin-bottom:10px; }
-  .seg-btn:hover { border-color:#38bdf8; color:#e2e8f0; }
-  .seg-btn.active { background:rgba(56,189,248,0.1); border-color:#38bdf8; color:#38bdf8; }
+  .seg-btn { background:transparent; border:1px solid #1E293B; color:#64748B; padding:6px 20px; border-radius:20px; cursor:pointer; font-size:12px; font-weight:600; letter-spacing:0.5px; text-transform:uppercase; transition:all 0.2s; margin-bottom:10px; }
+  .seg-btn:hover { border-color:#6366F1; color:#E2E8F0; }
+  .seg-btn.active { background:rgba(99,102,241,0.15); border-color:#6366F1; color:#818CF8; }
   .nav-tab.hidden { display:none !important; }
 
   /* ── Displaced customers sidebar layout ── */
@@ -145,8 +139,8 @@
   .section-sidebar {
     position: sticky;
     top: 130px;
-    background: #061a0e;
-    border: 1px solid #3DC57055;
+    background: #0F172A;
+    border: 1px solid rgba(99,102,241,0.3);
     border-radius: 10px;
     padding: 14px 12px;
   }
@@ -155,7 +149,7 @@
     font-weight: 700;
     text-transform: uppercase;
     letter-spacing: 1.5px;
-    color: #3DC570;
+    color: #818CF8;
     margin-bottom: 10px;
     padding-bottom: 8px;
     border-bottom: 1px solid #3DC57033;
@@ -165,14 +159,14 @@
     padding: 5px 0;
     font-size: 11px;
     color: #c8f0dc;
-    border-bottom: 1px solid #0d2a0d;
+    border-bottom: 1px solid #1E293B;
     display: flex;
     align-items: flex-start;
     gap: 6px;
     line-height: 1.4;
   }
   .section-sidebar ul li:last-child { border-bottom: none; }
-  .section-sidebar .chk { color: #3DC570; font-weight: 700; flex-shrink: 0; }
+  .section-sidebar .chk { color: #10B981; font-weight: 700; flex-shrink: 0; }
   @media (max-width: 900px) {
     .section-grid { grid-template-columns: 1fr; }
     .section-sidebar { position: static; }
@@ -187,7 +181,7 @@
   </button>
 </div>
 
-<header style="background:linear-gradient(135deg,#000000 0%,#0f172a 50%,#000000 100%);border-bottom:2px solid #38bdf8;padding:18px 32px;display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;z-index:100;backdrop-filter:blur(8px)">
+<header style="background:linear-gradient(135deg,#000000 0%,#0f172a 50%,#000000 100%);border-bottom:2px solid #818CF8;padding:18px 32px;display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;z-index:100;backdrop-filter:blur(8px)">
   <div style="display:flex;align-items:center;gap:16px">
     <img src="https://koontz-robin.github.io/robin-decks/revio-logo.png" style="height:36px;opacity:0.95" alt="rev.io">
     <div>
@@ -195,7 +189,7 @@
       <div style="font-size:11px;color:#2a5a3a;letter-spacing:1px;margin-top:2px">REV.IO PSA · INTERNAL USE ONLY</div>
     </div>
   </div>
-  <div style="font-size:11px;padding:4px 12px;border:1px solid #38bdf8;border-radius:20px;color:#38bdf8;letter-spacing:1px;background:rgba(56,189,248,0.05)">SALES INTEL</div>
+  <div style="font-size:11px;padding:4px 12px;border:1px solid #818CF8;border-radius:20px;color:#818CF8;letter-spacing:1px;background:rgba(56,189,248,0.05)">SALES INTEL</div>
 </header>
 
 <div id="segment-bar" style="background:#000;border-bottom:1px solid #1e293b;padding:12px 30px 0;display:flex;gap:8px;align-items:center;position:sticky;top:73px;z-index:100">
@@ -230,7 +224,7 @@
 
 <!-- ===== CONNECTWISE ===== -->
 <div class="section active" id="connectwise">
-  <div style="float:right;width:220px;background:#061a0e;border:1px solid #3DC57044;border-radius:8px;padding:12px;margin:0 0 16px 20px"><div style="font-size:9px;font-weight:700;text-transform:uppercase;letter-spacing:1.5px;color:#3DC570;margin-bottom:8px">✅ 14 Displaced Customers</div><ul style="list-style:none;margin:0;padding:0"><li style="padding:3px 0;font-size:11px;color:#c8f0dc;border-bottom:1px solid #0d2a0d"><span style="color:#3DC570;margin-right:6px">✓</span>Ameritel</li><li style="padding:3px 0;font-size:11px;color:#c8f0dc;border-bottom:1px solid #0d2a0d"><span style="color:#3DC570;margin-right:6px">✓</span>Avalora</li><li style="padding:3px 0;font-size:11px;color:#c8f0dc;border-bottom:1px solid #0d2a0d"><span style="color:#3DC570;margin-right:6px">✓</span>Bullfrog Group</li><li style="padding:3px 0;font-size:11px;color:#c8f0dc;border-bottom:1px solid #0d2a0d"><span style="color:#3DC570;margin-right:6px">✓</span>C1st Technologies</li><li style="padding:3px 0;font-size:11px;color:#c8f0dc;border-bottom:1px solid #0d2a0d"><span style="color:#3DC570;margin-right:6px">✓</span>Class 5 Technologies</li><li style="padding:3px 0;font-size:11px;color:#c8f0dc;border-bottom:1px solid #0d2a0d"><span style="color:#3DC570;margin-right:6px">✓</span>CompuCarolina</li><li style="padding:3px 0;font-size:11px;color:#c8f0dc;border-bottom:1px solid #0d2a0d"><span style="color:#3DC570;margin-right:6px">✓</span>Digital Market POS</li><li style="padding:3px 0;font-size:11px;color:#c8f0dc;border-bottom:1px solid #0d2a0d"><span style="color:#3DC570;margin-right:6px">✓</span>Integrated Technology & Security</li><li style="padding:3px 0;font-size:11px;color:#c8f0dc;border-bottom:1px solid #0d2a0d"><span style="color:#3DC570;margin-right:6px">✓</span>JMF Solutions/Prestige Healthcare</li><li style="padding:3px 0;font-size:11px;color:#c8f0dc;border-bottom:1px solid #0d2a0d"><span style="color:#3DC570;margin-right:6px">✓</span>Lavish Automation</li><li style="padding:3px 0;font-size:11px;color:#c8f0dc;border-bottom:1px solid #0d2a0d"><span style="color:#3DC570;margin-right:6px">✓</span>Losh Network Services</li><li style="padding:3px 0;font-size:11px;color:#c8f0dc;border-bottom:1px solid #0d2a0d"><span style="color:#3DC570;margin-right:6px">✓</span>NetWatch</li><li style="padding:3px 0;font-size:11px;color:#c8f0dc;border-bottom:1px solid #0d2a0d"><span style="color:#3DC570;margin-right:6px">✓</span>Remote Technology</li><li style="padding:3px 0;font-size:11px;color:#c8f0dc;border-bottom:1px solid #0d2a0d"><span style="color:#3DC570;margin-right:6px">✓</span>TruLine Technologies</li></ul></div>
+  <div style="float:right;width:220px;background:#0F172A;border:1px solid rgba(99,102,241,0.3);border-radius:8px;padding:12px;margin:0 0 16px 20px"><div style="font-size:9px;font-weight:700;text-transform:uppercase;letter-spacing:1.5px;color:#818CF8;margin-bottom:8px">✅ 14 Displaced Customers</div><ul style="list-style:none;margin:0;padding:0"><li style="padding:3px 0;font-size:11px;color:#c8f0dc;border-bottom:1px solid #1E293B"><span style="color:#10B981;margin-right:6px">✓</span>Ameritel</li><li style="padding:3px 0;font-size:11px;color:#c8f0dc;border-bottom:1px solid #1E293B"><span style="color:#10B981;margin-right:6px">✓</span>Avalora</li><li style="padding:3px 0;font-size:11px;color:#c8f0dc;border-bottom:1px solid #1E293B"><span style="color:#10B981;margin-right:6px">✓</span>Bullfrog Group</li><li style="padding:3px 0;font-size:11px;color:#c8f0dc;border-bottom:1px solid #1E293B"><span style="color:#10B981;margin-right:6px">✓</span>C1st Technologies</li><li style="padding:3px 0;font-size:11px;color:#c8f0dc;border-bottom:1px solid #1E293B"><span style="color:#10B981;margin-right:6px">✓</span>Class 5 Technologies</li><li style="padding:3px 0;font-size:11px;color:#c8f0dc;border-bottom:1px solid #1E293B"><span style="color:#10B981;margin-right:6px">✓</span>CompuCarolina</li><li style="padding:3px 0;font-size:11px;color:#c8f0dc;border-bottom:1px solid #1E293B"><span style="color:#10B981;margin-right:6px">✓</span>Digital Market POS</li><li style="padding:3px 0;font-size:11px;color:#c8f0dc;border-bottom:1px solid #1E293B"><span style="color:#10B981;margin-right:6px">✓</span>Integrated Technology & Security</li><li style="padding:3px 0;font-size:11px;color:#c8f0dc;border-bottom:1px solid #1E293B"><span style="color:#10B981;margin-right:6px">✓</span>JMF Solutions/Prestige Healthcare</li><li style="padding:3px 0;font-size:11px;color:#c8f0dc;border-bottom:1px solid #1E293B"><span style="color:#10B981;margin-right:6px">✓</span>Lavish Automation</li><li style="padding:3px 0;font-size:11px;color:#c8f0dc;border-bottom:1px solid #1E293B"><span style="color:#10B981;margin-right:6px">✓</span>Losh Network Services</li><li style="padding:3px 0;font-size:11px;color:#c8f0dc;border-bottom:1px solid #1E293B"><span style="color:#10B981;margin-right:6px">✓</span>NetWatch</li><li style="padding:3px 0;font-size:11px;color:#c8f0dc;border-bottom:1px solid #1E293B"><span style="color:#10B981;margin-right:6px">✓</span>Remote Technology</li><li style="padding:3px 0;font-size:11px;color:#c8f0dc;border-bottom:1px solid #1E293B"><span style="color:#10B981;margin-right:6px">✓</span>TruLine Technologies</li></ul></div>
   <div class="overview-grid">
     <div class="overview-item"><div class="label">Competitor</div><div class="value">ConnectWise PSA</div></div>
   
@@ -238,11 +232,11 @@
   
 <!-- FIELD_INTEL_START:ConnectWise updated:2026-05-15 -->
 <div class="section-title">🎙️ Field Intelligence — What Prospects Say (83 raw mentions)</div>
-<div style="margin-bottom:8px"><div style="font-size:11px;color:#ff4466;text-transform:uppercase;letter-spacing:1px;margin-bottom:8px">Key Pain Points</div><div style="background:#1a0808;border-left:3px solid #ff4466;padding:10px 12px;border-radius:4px;margin-bottom:8px">
+<div style="margin-bottom:8px"><div style="font-size:11px;color:#ff4466;text-transform:uppercase;letter-spacing:1px;margin-bottom:8px">Key Pain Points</div><div style="background:#1A060C;border-left:3px solid #F43F5E;padding:10px 12px;border-radius:4px;margin-bottom:8px">
           <div style="font-size:13px;color:#e2e8f0">Quoting tool is so cumbersome and slow that prospects find it faster to manually search distributors directly, leading many to abandon the feature entirely.</div>
-        </div><div style="background:#1a0808;border-left:3px solid #ff4466;padding:10px 12px;border-radius:4px;margin-bottom:8px">
+        </div><div style="background:#1A060C;border-left:3px solid #F43F5E;padding:10px 12px;border-radius:4px;margin-bottom:8px">
           <div style="font-size:13px;color:#e2e8f0">Platform feels disjointed with acquired products that don't integrate well—data doesn't flow automatically between modules (CPQ to PSA), causing manual work and downstream reporting problems.</div>
-        </div><div style="background:#1a0808;border-left:3px solid #ff4466;padding:10px 12px;border-radius:4px;margin-bottom:8px">
+        </div><div style="background:#1A060C;border-left:3px solid #F43F5E;padding:10px 12px;border-radius:4px;margin-bottom:8px">
           <div style="font-size:13px;color:#e2e8f0">System is described as overkill and not user-friendly, with prospects feeling locked into an ecosystem they can't easily migrate away from despite wanting to leave.</div>
         </div></div>
 
@@ -350,7 +344,7 @@
 
 <!-- ===== AUTOTASK ===== -->
 <div class="section" id="autotask">
-  <div style="float:right;width:220px;background:#061a0e;border:1px solid #3DC57044;border-radius:8px;padding:12px;margin:0 0 16px 20px"><div style="font-size:9px;font-weight:700;text-transform:uppercase;letter-spacing:1.5px;color:#3DC570;margin-bottom:8px">✅ 3 Displaced Customers</div><ul style="list-style:none;margin:0;padding:0"><li style="padding:3px 0;font-size:11px;color:#c8f0dc;border-bottom:1px solid #0d2a0d"><span style="color:#3DC570;margin-right:6px">✓</span>Automated Telecom</li><li style="padding:3px 0;font-size:11px;color:#c8f0dc;border-bottom:1px solid #0d2a0d"><span style="color:#3DC570;margin-right:6px">✓</span>Grahek Technology</li><li style="padding:3px 0;font-size:11px;color:#c8f0dc;border-bottom:1px solid #0d2a0d"><span style="color:#3DC570;margin-right:6px">✓</span>Tolleson Inc</li></ul></div>
+  <div style="float:right;width:220px;background:#0F172A;border:1px solid rgba(99,102,241,0.3);border-radius:8px;padding:12px;margin:0 0 16px 20px"><div style="font-size:9px;font-weight:700;text-transform:uppercase;letter-spacing:1.5px;color:#818CF8;margin-bottom:8px">✅ 3 Displaced Customers</div><ul style="list-style:none;margin:0;padding:0"><li style="padding:3px 0;font-size:11px;color:#c8f0dc;border-bottom:1px solid #1E293B"><span style="color:#10B981;margin-right:6px">✓</span>Automated Telecom</li><li style="padding:3px 0;font-size:11px;color:#c8f0dc;border-bottom:1px solid #1E293B"><span style="color:#10B981;margin-right:6px">✓</span>Grahek Technology</li><li style="padding:3px 0;font-size:11px;color:#c8f0dc;border-bottom:1px solid #1E293B"><span style="color:#10B981;margin-right:6px">✓</span>Tolleson Inc</li></ul></div>
   <div class="overview-grid">
     <div class="overview-item"><div class="label">Competitor</div><div class="value">Datto Autotask PSA (Kaseya)</div></div>
   
@@ -358,16 +352,16 @@
   
 <!-- FIELD_INTEL_START:Autotask updated:2026-05-15 -->
 <div class="section-title">🎙️ Field Intelligence — What Prospects Say (59 raw mentions)</div>
-<div style="margin-bottom:8px"><div style="font-size:11px;color:#ff4466;text-transform:uppercase;letter-spacing:1px;margin-bottom:8px">Key Pain Points</div><div style="background:#1a0808;border-left:3px solid #ff4466;padding:10px 12px;border-radius:4px;margin-bottom:8px">
+<div style="margin-bottom:8px"><div style="font-size:11px;color:#ff4466;text-transform:uppercase;letter-spacing:1px;margin-bottom:8px">Key Pain Points</div><div style="background:#1A060C;border-left:3px solid #F43F5E;padding:10px 12px;border-radius:4px;margin-bottom:8px">
           <div style="font-size:13px;color:#e2e8f0">Autotask is described as overly complicated with 'death by a million clicks' - too extensive for small/medium MSPs despite demos suggesting otherwise.</div>
-        </div><div style="background:#1a0808;border-left:3px solid #ff4466;padding:10px 12px;border-radius:4px;margin-bottom:8px">
+        </div><div style="background:#1A060C;border-left:3px solid #F43F5E;padding:10px 12px;border-radius:4px;margin-bottom:8px">
           <div style="font-size:13px;color:#e2e8f0">Technicians hate using Autotask despite it managing data well - companies invest in workaround interfaces like Thread, and notes don't translate into time entries causing missed billable time.</div>
-        </div><div style="background:#1a0808;border-left:3px solid #ff4466;padding:10px 12px;border-radius:4px;margin-bottom:8px">
+        </div><div style="background:#1A060C;border-left:3px solid #F43F5E;padding:10px 12px;border-radius:4px;margin-bottom:8px">
           <div style="font-size:13px;color:#e2e8f0">Autotask is viewed as a 'big bloated behemoth' legacy platform that MSPs want to move away from, grouped with ConnectWise as systems to avoid.</div>
         </div></div>
-<div><div style="font-size:11px;color:#00ff88;text-transform:uppercase;letter-spacing:1px;margin-bottom:8px">Genuine Strengths</div><div style="background:#081a08;border-left:3px solid #00ff88;padding:10px 12px;border-radius:4px;margin-bottom:8px">
+<div><div style="font-size:11px;color:#818CF8;text-transform:uppercase;letter-spacing:1px;margin-bottom:8px">Genuine Strengths</div><div style="background:#0D1A2E;border-left:3px solid #6366F1;padding:10px 12px;border-radius:4px;margin-bottom:8px">
           <div style="font-size:13px;color:#e2e8f0">Strong Kaseya ecosystem integration - users appreciate seamless clicks from tickets to RMM to EDR, with integration quality improving significantly over the past two years.</div>
-        </div><div style="background:#081a08;border-left:3px solid #00ff88;padding:10px 12px;border-radius:4px;margin-bottom:8px">
+        </div><div style="background:#0D1A2E;border-left:3px solid #6366F1;padding:10px 12px;border-radius:4px;margin-bottom:8px">
           <div style="font-size:13px;color:#e2e8f0">Effective dashboards and reporting for ticket resolution times, response metrics, and color-coded status indicators that users genuinely liked.</div>
         </div></div>
 <!-- FIELD_INTEL_END:Autotask -->
@@ -450,11 +444,11 @@
 
 <!-- ===== HALO ===== -->
 <div class="section" id="halo">
-  <div style="float:right;width:220px;background:#061a0e;border:1px solid #3DC57044;border-radius:8px;padding:12px;margin:0 0 16px 20px"><div style="font-size:9px;font-weight:700;text-transform:uppercase;letter-spacing:1.5px;color:#3DC570;margin-bottom:8px">✅ 5 Displaced Customers</div><ul style="list-style:none;margin:0;padding:0"><li style="padding:3px 0;font-size:11px;color:#c8f0dc;border-bottom:1px solid #0d2a0d"><span style="color:#3DC570;margin-right:6px">✓</span>First Class Technology (MI)</li><li style="padding:3px 0;font-size:11px;color:#c8f0dc;border-bottom:1px solid #0d2a0d"><span style="color:#3DC570;margin-right:6px">✓</span>GuentherTech</li><li style="padding:3px 0;font-size:11px;color:#c8f0dc;border-bottom:1px solid #0d2a0d"><span style="color:#3DC570;margin-right:6px">✓</span>JONROG technology</li><li style="padding:3px 0;font-size:11px;color:#c8f0dc;border-bottom:1px solid #0d2a0d"><span style="color:#3DC570;margin-right:6px">✓</span>Novalera</li><li style="padding:3px 0;font-size:11px;color:#c8f0dc;border-bottom:1px solid #0d2a0d"><span style="color:#3DC570;margin-right:6px">✓</span>Ravguard</li></ul></div>
+  <div style="float:right;width:220px;background:#0F172A;border:1px solid rgba(99,102,241,0.3);border-radius:8px;padding:12px;margin:0 0 16px 20px"><div style="font-size:9px;font-weight:700;text-transform:uppercase;letter-spacing:1.5px;color:#818CF8;margin-bottom:8px">✅ 5 Displaced Customers</div><ul style="list-style:none;margin:0;padding:0"><li style="padding:3px 0;font-size:11px;color:#c8f0dc;border-bottom:1px solid #1E293B"><span style="color:#10B981;margin-right:6px">✓</span>First Class Technology (MI)</li><li style="padding:3px 0;font-size:11px;color:#c8f0dc;border-bottom:1px solid #1E293B"><span style="color:#10B981;margin-right:6px">✓</span>GuentherTech</li><li style="padding:3px 0;font-size:11px;color:#c8f0dc;border-bottom:1px solid #1E293B"><span style="color:#10B981;margin-right:6px">✓</span>JONROG technology</li><li style="padding:3px 0;font-size:11px;color:#c8f0dc;border-bottom:1px solid #1E293B"><span style="color:#10B981;margin-right:6px">✓</span>Novalera</li><li style="padding:3px 0;font-size:11px;color:#c8f0dc;border-bottom:1px solid #1E293B"><span style="color:#10B981;margin-right:6px">✓</span>Ravguard</li></ul></div>
 
 <!-- FIELD_INTEL_START:Halo PSA updated:2026-05-15 -->
 <div class="section-title">🎙️ Field Intelligence — What Prospects Say (3 raw mentions)</div>
-<div style="margin-bottom:8px"><div style="font-size:11px;color:#ff4466;text-transform:uppercase;letter-spacing:1px;margin-bottom:8px">Key Pain Points</div><div style="background:#1a0808;border-left:3px solid #ff4466;padding:10px 12px;border-radius:4px;margin-bottom:8px">
+<div style="margin-bottom:8px"><div style="font-size:11px;color:#ff4466;text-transform:uppercase;letter-spacing:1px;margin-bottom:8px">Key Pain Points</div><div style="background:#1A060C;border-left:3px solid #F43F5E;padding:10px 12px;border-radius:4px;margin-bottom:8px">
           <div style="font-size:13px;color:#e2e8f0">Prospects report not getting the full value that was pitched during the sales process, leading to disappointment with actual ROI.</div>
         </div></div>
 
@@ -467,9 +461,9 @@
 <!-- FIELD_INTEL_START:Halo updated:2026-05-15 -->
 <div class="section-title">🎙️ Field Intelligence — What Prospects Say (19 raw mentions)</div>
 
-<div><div style="font-size:11px;color:#00ff88;text-transform:uppercase;letter-spacing:1px;margin-bottom:8px">Genuine Strengths</div><div style="background:#081a08;border-left:3px solid #00ff88;padding:10px 12px;border-radius:4px;margin-bottom:8px">
+<div><div style="font-size:11px;color:#818CF8;text-transform:uppercase;letter-spacing:1px;margin-bottom:8px">Genuine Strengths</div><div style="background:#0D1A2E;border-left:3px solid #6366F1;padding:10px 12px;border-radius:4px;margin-bottom:8px">
           <div style="font-size:13px;color:#e2e8f0">Halo is widely recognized as the benchmark for modern PSA design, with prospects noting that 'everyone right now is copying Halo' for its sleek, modern UX.</div>
-        </div><div style="background:#081a08;border-left:3px solid #00ff88;padding:10px 12px;border-radius:4px;margin-bottom:8px">
+        </div><div style="background:#0D1A2E;border-left:3px solid #6366F1;padding:10px 12px;border-radius:4px;margin-bottom:8px">
           <div style="font-size:13px;color:#e2e8f0">Halo has successfully pulled significant business from ConnectWise by offering a more modern interface that other PSA vendors are now trying to emulate.</div>
         </div></div>
 <!-- FIELD_INTEL_END:Halo -->
@@ -555,7 +549,7 @@
 
 <!-- ===== SYNCRO ===== -->
 <div class="section" id="syncro">
-  <div style="float:right;width:220px;background:#061a0e;border:1px solid #3DC57044;border-radius:8px;padding:12px;margin:0 0 16px 20px"><div style="font-size:9px;font-weight:700;text-transform:uppercase;letter-spacing:1.5px;color:#3DC570;margin-bottom:8px">✅ 2 Displaced Customers</div><ul style="list-style:none;margin:0;padding:0"><li style="padding:3px 0;font-size:11px;color:#c8f0dc;border-bottom:1px solid #0d2a0d"><span style="color:#3DC570;margin-right:6px">✓</span>CMP Consulting Services</li><li style="padding:3px 0;font-size:11px;color:#c8f0dc;border-bottom:1px solid #0d2a0d"><span style="color:#3DC570;margin-right:6px">✓</span>Xact Communications</li></ul></div>
+  <div style="float:right;width:220px;background:#0F172A;border:1px solid rgba(99,102,241,0.3);border-radius:8px;padding:12px;margin:0 0 16px 20px"><div style="font-size:9px;font-weight:700;text-transform:uppercase;letter-spacing:1.5px;color:#818CF8;margin-bottom:8px">✅ 2 Displaced Customers</div><ul style="list-style:none;margin:0;padding:0"><li style="padding:3px 0;font-size:11px;color:#c8f0dc;border-bottom:1px solid #1E293B"><span style="color:#10B981;margin-right:6px">✓</span>CMP Consulting Services</li><li style="padding:3px 0;font-size:11px;color:#c8f0dc;border-bottom:1px solid #1E293B"><span style="color:#10B981;margin-right:6px">✓</span>Xact Communications</li></ul></div>
   <div class="overview-grid">
     <div class="overview-item"><div class="label">Competitor</div><div class="value">Syncro</div></div>
   
@@ -563,14 +557,14 @@
   
 <!-- FIELD_INTEL_START:Syncro updated:2026-05-15 -->
 <div class="section-title">🎙️ Field Intelligence — What Prospects Say (11 raw mentions)</div>
-<div style="margin-bottom:8px"><div style="font-size:11px;color:#ff4466;text-transform:uppercase;letter-spacing:1px;margin-bottom:8px">Key Pain Points</div><div style="background:#1a0808;border-left:3px solid #ff4466;padding:10px 12px;border-radius:4px;margin-bottom:8px">
+<div style="margin-bottom:8px"><div style="font-size:11px;color:#ff4466;text-transform:uppercase;letter-spacing:1px;margin-bottom:8px">Key Pain Points</div><div style="background:#1A060C;border-left:3px solid #F43F5E;padding:10px 12px;border-radius:4px;margin-bottom:8px">
           <div style="font-size:13px;color:#e2e8f0">Project management is broken - projects are handled as regular tickets with no way to separate them from SLAs, causing long-running projects to destroy time-to-resolution metrics and make reporting look terrible.</div>
-        </div><div style="background:#1a0808;border-left:3px solid #ff4466;padding:10px 12px;border-radius:4px;margin-bottom:8px">
+        </div><div style="background:#1A060C;border-left:3px solid #F43F5E;padding:10px 12px;border-radius:4px;margin-bottom:8px">
           <div style="font-size:13px;color:#e2e8f0">The UI looks dated compared to modern PSA platforms prospects are seeing at industry events like MSP Summit, making Syncro feel behind the competition visually.</div>
         </div></div>
-<div><div style="font-size:11px;color:#00ff88;text-transform:uppercase;letter-spacing:1px;margin-bottom:8px">Genuine Strengths</div><div style="background:#081a08;border-left:3px solid #00ff88;padding:10px 12px;border-radius:4px;margin-bottom:8px">
+<div><div style="font-size:11px;color:#818CF8;text-transform:uppercase;letter-spacing:1px;margin-bottom:8px">Genuine Strengths</div><div style="background:#0D1A2E;border-left:3px solid #6366F1;padding:10px 12px;border-radius:4px;margin-bottom:8px">
           <div style="font-size:13px;color:#e2e8f0">Prospects consistently say Syncro 'does everything they need' for core PSA/RMM functions with no major complaints about day-to-day functionality.</div>
-        </div><div style="background:#081a08;border-left:3px solid #00ff88;padding:10px 12px;border-radius:4px;margin-bottom:8px">
+        </div><div style="background:#0D1A2E;border-left:3px solid #6366F1;padding:10px 12px;border-radius:4px;margin-bottom:8px">
           <div style="font-size:13px;color:#e2e8f0">The combined PSA and RMM in a single platform is attractive to prospects evaluating their stack.</div>
         </div></div>
 <!-- FIELD_INTEL_END:Syncro -->
@@ -656,7 +650,7 @@
 
 <!-- ===== SUPEROPS ===== -->
 <div class="section" id="superops">
-  <div style="float:right;width:220px;background:#061a0e;border:1px solid #3DC57044;border-radius:8px;padding:12px;margin:0 0 16px 20px"><div style="font-size:9px;font-weight:700;text-transform:uppercase;letter-spacing:1.5px;color:#3DC570;margin-bottom:8px">✅ 3 Displaced Customers</div><ul style="list-style:none;margin:0;padding:0"><li style="padding:3px 0;font-size:11px;color:#c8f0dc;border-bottom:1px solid #0d2a0d"><span style="color:#3DC570;margin-right:6px">✓</span>Half Past Five Technologies</li><li style="padding:3px 0;font-size:11px;color:#c8f0dc;border-bottom:1px solid #0d2a0d"><span style="color:#3DC570;margin-right:6px">✓</span>Intek Technology Solutions</li><li style="padding:3px 0;font-size:11px;color:#c8f0dc;border-bottom:1px solid #0d2a0d"><span style="color:#3DC570;margin-right:6px">✓</span>Loricca</li></ul></div>
+  <div style="float:right;width:220px;background:#0F172A;border:1px solid rgba(99,102,241,0.3);border-radius:8px;padding:12px;margin:0 0 16px 20px"><div style="font-size:9px;font-weight:700;text-transform:uppercase;letter-spacing:1.5px;color:#818CF8;margin-bottom:8px">✅ 3 Displaced Customers</div><ul style="list-style:none;margin:0;padding:0"><li style="padding:3px 0;font-size:11px;color:#c8f0dc;border-bottom:1px solid #1E293B"><span style="color:#10B981;margin-right:6px">✓</span>Half Past Five Technologies</li><li style="padding:3px 0;font-size:11px;color:#c8f0dc;border-bottom:1px solid #1E293B"><span style="color:#10B981;margin-right:6px">✓</span>Intek Technology Solutions</li><li style="padding:3px 0;font-size:11px;color:#c8f0dc;border-bottom:1px solid #1E293B"><span style="color:#10B981;margin-right:6px">✓</span>Loricca</li></ul></div>
   <div class="overview-grid">
     <div class="overview-item"><div class="label">Competitor</div><div class="value">SuperOps</div></div>
   
@@ -792,8 +786,8 @@
 
     <!-- Housecall Pro -->
     <div style="background:var(--card); border:1px solid var(--border); border-left:3px solid var(--red); border-radius:8px; padding:14px;">
-      <div style="font-weight:700; color:var(--accent); margin-bottom:8px;">Housecall Pro <span style="font-size:11px;color:#3DC570;background:#061a0e;border:1px solid #3DC57066;padding:2px 8px;border-radius:10px;margin-left:8px">✅ 4 displaced</span></div><div class="overview-grid"><div class="overview-item"><div class="label">Competitor</div><div class="value">Housecall Pro</div></div><div class="overview-item"><div class="label">Founded</div><div class="value">2013</div></div><div class="overview-item"><div class="label">HQ</div><div class="value">San Diego, CA (Denver, CO office)</div></div><div class="overview-item"><div class="label">Employees</div><div class="value">~1,400</div></div><div class="overview-item"><div class="label">Revenue</div><div class="value">Private · $125M funding round (2025)</div></div><div class="overview-item"><div class="label">Funding</div><div class="value">$125M from Permira + Vista (Oct 2025)</div></div><div class="overview-item"><div class="label">Target Market</div><div class="value">25,000+ home service companies — residential HVAC, plumbing, cleaning</div></div><div class="overview-item"><div class="label">Ownership</div><div class="value">Private · Permira-backed</div></div></div>
-<div style="float:right;width:220px;background:#061a0e;border:1px solid #3DC57044;border-radius:8px;padding:12px;margin:0 0 16px 20px"><div style="font-size:9px;font-weight:700;text-transform:uppercase;letter-spacing:1.5px;color:#3DC570;margin-bottom:8px">✅ 4 Displaced Customers</div><ul style="list-style:none;margin:0;padding:0"><li style="padding:3px 0;font-size:11px;color:#c8f0dc;border-bottom:1px solid #0d2a0d"><span style="color:#3DC570;margin-right:6px">✓</span>Acoustical Design</li><li style="padding:3px 0;font-size:11px;color:#c8f0dc;border-bottom:1px solid #0d2a0d"><span style="color:#3DC570;margin-right:6px">✓</span>Leading Edge Security</li><li style="padding:3px 0;font-size:11px;color:#c8f0dc;border-bottom:1px solid #0d2a0d"><span style="color:#3DC570;margin-right:6px">✓</span>TREIN Management</li><li style="padding:3px 0;font-size:11px;color:#c8f0dc;border-bottom:1px solid #0d2a0d"><span style="color:#3DC570;margin-right:6px">✓</span>Total Temp</li></ul></div>
+      <div style="font-weight:700; color:var(--accent); margin-bottom:8px;">Housecall Pro <span style="font-size:11px;color:#818CF8;background:#0F172A;border:1px solid rgba(99,102,241,0.4);padding:2px 8px;border-radius:10px;margin-left:8px">✅ 4 displaced</span></div><div class="overview-grid"><div class="overview-item"><div class="label">Competitor</div><div class="value">Housecall Pro</div></div><div class="overview-item"><div class="label">Founded</div><div class="value">2013</div></div><div class="overview-item"><div class="label">HQ</div><div class="value">San Diego, CA (Denver, CO office)</div></div><div class="overview-item"><div class="label">Employees</div><div class="value">~1,400</div></div><div class="overview-item"><div class="label">Revenue</div><div class="value">Private · $125M funding round (2025)</div></div><div class="overview-item"><div class="label">Funding</div><div class="value">$125M from Permira + Vista (Oct 2025)</div></div><div class="overview-item"><div class="label">Target Market</div><div class="value">25,000+ home service companies — residential HVAC, plumbing, cleaning</div></div><div class="overview-item"><div class="label">Ownership</div><div class="value">Private · Permira-backed</div></div></div>
+<div style="float:right;width:220px;background:#0F172A;border:1px solid rgba(99,102,241,0.3);border-radius:8px;padding:12px;margin:0 0 16px 20px"><div style="font-size:9px;font-weight:700;text-transform:uppercase;letter-spacing:1.5px;color:#818CF8;margin-bottom:8px">✅ 4 Displaced Customers</div><ul style="list-style:none;margin:0;padding:0"><li style="padding:3px 0;font-size:11px;color:#c8f0dc;border-bottom:1px solid #1E293B"><span style="color:#10B981;margin-right:6px">✓</span>Acoustical Design</li><li style="padding:3px 0;font-size:11px;color:#c8f0dc;border-bottom:1px solid #1E293B"><span style="color:#10B981;margin-right:6px">✓</span>Leading Edge Security</li><li style="padding:3px 0;font-size:11px;color:#c8f0dc;border-bottom:1px solid #1E293B"><span style="color:#10B981;margin-right:6px">✓</span>TREIN Management</li><li style="padding:3px 0;font-size:11px;color:#c8f0dc;border-bottom:1px solid #1E293B"><span style="color:#10B981;margin-right:6px">✓</span>Total Temp</li></ul></div>
       <ul style="list-style:none; font-size:13px;">
         <li style="padding:3px 0; border-bottom:1px solid #1a2540;">✗ Self-serve onboarding — no dedicated onboarding resource</li>
         <li style="padding:3px 0; border-bottom:1px solid #1a2540;">✗ Catered to smaller companies; limited scalability</li>
@@ -819,7 +813,7 @@
 
     <!-- Jobber -->
     <div style="background:var(--card); border:1px solid var(--border); border-left:3px solid var(--red); border-radius:8px; padding:14px;">
-      <div style="font-weight:700; color:var(--accent); margin-bottom:8px;">Jobber <span style="font-size:11px;color:#3DC570;background:#061a0e;border:1px solid #3DC57066;padding:2px 8px;border-radius:10px;margin-left:8px">✅ 5 displaced</span></div><div class="overview-grid"><div class="overview-item"><div class="label">Competitor</div><div class="value">Jobber</div></div><div class="overview-item"><div class="label">Founded</div><div class="value">2011</div></div><div class="overview-item"><div class="label">HQ</div><div class="value">Edmonton, Alberta, Canada</div></div><div class="overview-item"><div class="label">Employees</div><div class="value">~670</div></div><div class="overview-item"><div class="label">Revenue</div><div class="value">~$167.5M (2024)</div></div><div class="overview-item"><div class="label">Funding</div><div class="value">$183.5M total raised</div></div><div class="overview-item"><div class="label">Target Market</div><div class="value">Small home service businesses (<30 techs) — 100K+ customers in 43 countries</div></div><div class="overview-item"><div class="label">Ownership</div><div class="value">Private · VC-backed</div></div></div>
+      <div style="font-weight:700; color:var(--accent); margin-bottom:8px;">Jobber <span style="font-size:11px;color:#818CF8;background:#0F172A;border:1px solid rgba(99,102,241,0.4);padding:2px 8px;border-radius:10px;margin-left:8px">✅ 5 displaced</span></div><div class="overview-grid"><div class="overview-item"><div class="label">Competitor</div><div class="value">Jobber</div></div><div class="overview-item"><div class="label">Founded</div><div class="value">2011</div></div><div class="overview-item"><div class="label">HQ</div><div class="value">Edmonton, Alberta, Canada</div></div><div class="overview-item"><div class="label">Employees</div><div class="value">~670</div></div><div class="overview-item"><div class="label">Revenue</div><div class="value">~$167.5M (2024)</div></div><div class="overview-item"><div class="label">Funding</div><div class="value">$183.5M total raised</div></div><div class="overview-item"><div class="label">Target Market</div><div class="value">Small home service businesses (<30 techs) — 100K+ customers in 43 countries</div></div><div class="overview-item"><div class="label">Ownership</div><div class="value">Private · VC-backed</div></div></div>
 
       <ul style="list-style:none; font-size:13px;">
         <li style="padding:3px 0; border-bottom:1px solid #1a2540;">✗ Catered to smaller companies (~$200–300/mo pricing)</li>
@@ -892,7 +886,7 @@
 
     <!-- Sedona -->
     <div style="background:var(--card); border:1px solid var(--border); border-left:3px solid var(--red); border-radius:8px; padding:14px;">
-      <div style="font-weight:700; color:var(--accent); margin-bottom:8px;">Sedona <span style="font-size:11px;color:#3DC570;background:#061a0e;border:1px solid #3DC57066;padding:2px 8px;border-radius:10px;margin-left:8px">✅ 1 displaced</span> <span style="font-size:11px; color:var(--muted); font-weight:400;">(Bold Group)</span></div><div class="overview-grid"><div class="overview-item"><div class="label">Competitor</div><div class="value">Sedona (SedonaOffice by Bold Group)</div></div><div class="overview-item"><div class="label">Founded</div><div class="value">40+ years (Bold Group)</div></div><div class="overview-item"><div class="label">HQ</div><div class="value">Colorado Springs, CO</div></div><div class="overview-item"><div class="label">Employees</div><div class="value">~130 (Bold Group total)</div></div><div class="overview-item"><div class="label">Revenue</div><div class="value">~$7.4M (Bold Group)</div></div><div class="overview-item"><div class="label">Target Market</div><div class="value">Mid-to-large alarm dealers — full back-office accounting & RMR</div></div><div class="overview-item"><div class="label">Ownership</div><div class="value">Private · Bold Group (also owns AlarmBiller)</div></div></div>
+      <div style="font-weight:700; color:var(--accent); margin-bottom:8px;">Sedona <span style="font-size:11px;color:#818CF8;background:#0F172A;border:1px solid rgba(99,102,241,0.4);padding:2px 8px;border-radius:10px;margin-left:8px">✅ 1 displaced</span> <span style="font-size:11px; color:var(--muted); font-weight:400;">(Bold Group)</span></div><div class="overview-grid"><div class="overview-item"><div class="label">Competitor</div><div class="value">Sedona (SedonaOffice by Bold Group)</div></div><div class="overview-item"><div class="label">Founded</div><div class="value">40+ years (Bold Group)</div></div><div class="overview-item"><div class="label">HQ</div><div class="value">Colorado Springs, CO</div></div><div class="overview-item"><div class="label">Employees</div><div class="value">~130 (Bold Group total)</div></div><div class="overview-item"><div class="label">Revenue</div><div class="value">~$7.4M (Bold Group)</div></div><div class="overview-item"><div class="label">Target Market</div><div class="value">Mid-to-large alarm dealers — full back-office accounting & RMR</div></div><div class="overview-item"><div class="label">Ownership</div><div class="value">Private · Bold Group (also owns AlarmBiller)</div></div></div>
 
       <ul style="list-style:none; font-size:13px;">
         <li style="padding:3px 0; border-bottom:1px solid #1a2540;">✗ Poor support; platform is stagnant</li>
@@ -918,7 +912,7 @@
 
     <!-- Simpro -->
     <div style="background:var(--card); border:1px solid var(--border); border-left:3px solid var(--red); border-radius:8px; padding:14px;">
-      <div style="font-weight:700; color:var(--accent); margin-bottom:8px;">Simpro <span style="font-size:11px;color:#3DC570;background:#061a0e;border:1px solid #3DC57066;padding:2px 8px;border-radius:10px;margin-left:8px">✅ 2 displaced</span></div><div class="overview-grid"><div class="overview-item"><div class="label">Competitor</div><div class="value">Simpro</div></div><div class="overview-item"><div class="label">Founded</div><div class="value">2002</div></div><div class="overview-item"><div class="label">HQ</div><div class="value">Brisbane, QLD, Australia (US office: Broomfield, CO)</div></div><div class="overview-item"><div class="label">Employees</div><div class="value">~490</div></div><div class="overview-item"><div class="label">Revenue</div><div class="value">~$54M</div></div><div class="overview-item"><div class="label">Target Market</div><div class="value">Electrical, HVAC, plumbing, fire — commercial trade contractors</div></div><div class="overview-item"><div class="label">Ownership</div><div class="value">Private · PE-backed</div></div></div>
+      <div style="font-weight:700; color:var(--accent); margin-bottom:8px;">Simpro <span style="font-size:11px;color:#818CF8;background:#0F172A;border:1px solid rgba(99,102,241,0.4);padding:2px 8px;border-radius:10px;margin-left:8px">✅ 2 displaced</span></div><div class="overview-grid"><div class="overview-item"><div class="label">Competitor</div><div class="value">Simpro</div></div><div class="overview-item"><div class="label">Founded</div><div class="value">2002</div></div><div class="overview-item"><div class="label">HQ</div><div class="value">Brisbane, QLD, Australia (US office: Broomfield, CO)</div></div><div class="overview-item"><div class="label">Employees</div><div class="value">~490</div></div><div class="overview-item"><div class="label">Revenue</div><div class="value">~$54M</div></div><div class="overview-item"><div class="label">Target Market</div><div class="value">Electrical, HVAC, plumbing, fire — commercial trade contractors</div></div><div class="overview-item"><div class="label">Ownership</div><div class="value">Private · PE-backed</div></div></div>
 
       <ul style="list-style:none; font-size:13px;">
         <li style="padding:3px 0; border-bottom:1px solid #1a2540;">✗ Weak tech management — hard to track utilization and schedule</li>
@@ -957,16 +951,16 @@
 
   <div class="section-title">Rev.io PSA — Integrator Advantages (Universal)</div>
   <div style="display:grid; grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); gap:10px; margin-bottom:24px;">
-    <div style="background:var(--win); border:1px solid #00ff8840; border-radius:8px; padding:12px; font-size:13px;"><span style="color:var(--green); font-weight:700;">✓ RMR Automation</span><br><span style="color:var(--muted);">Automated recurring billing — no manual monthly process</span></div>
-    <div style="background:var(--win); border:1px solid #00ff8840; border-radius:8px; padding:12px; font-size:13px;"><span style="color:var(--green); font-weight:700;">✓ Full Inventory Suite</span><br><span style="color:var(--muted);">POs, multi-location inventory, serialized assets, reserve to job</span></div>
-    <div style="background:var(--win); border:1px solid #00ff8840; border-radius:8px; padding:12px; font-size:13px;"><span style="color:var(--green); font-weight:700;">✓ Native Payments</span><br><span style="color:var(--muted);">Built-in payment processing via TRX Services — no third-party</span></div>
-    <div style="background:var(--win); border:1px solid #00ff8840; border-radius:8px; padding:12px; font-size:13px;"><span style="color:var(--green); font-weight:700;">✓ Project Management</span><br><span style="color:var(--muted);">Track long projects by phase — milestone and progressive billing</span></div>
-    <div style="background:var(--win); border:1px solid #00ff8840; border-radius:8px; padding:12px; font-size:13px;"><span style="color:var(--green); font-weight:700;">✓ AI Throughout Platform</span><br><span style="color:var(--muted);">Omni-present AI — quoting, tickets, invoices, grammar/spelling</span></div>
-    <div style="background:var(--win); border:1px solid #00ff8840; border-radius:8px; padding:12px; font-size:13px;"><span style="color:var(--green); font-weight:700;">✓ Bi-Directional QBO Sync</span><br><span style="color:var(--muted);">Real-time sync — no manual export/import to QuickBooks</span></div>
-    <div style="background:var(--win); border:1px solid #00ff8840; border-radius:8px; padding:12px; font-size:13px;"><span style="color:var(--green); font-weight:700;">✓ Customer Portal</span><br><span style="color:var(--muted);">Self-service payments, invoice viewing, and service requests</span></div>
-    <div style="background:var(--win); border:1px solid #00ff8840; border-radius:8px; padding:12px; font-size:13px;"><span style="color:var(--green); font-weight:700;">✓ 400+ Integrators</span><br><span style="color:var(--muted);">Proven across the industry — we know your workflows</span></div>
-    <div style="background:var(--win); border:1px solid #00ff8840; border-radius:8px; padding:12px; font-size:13px;"><span style="color:var(--green); font-weight:700;">✓ Robust CRM</span><br><span style="color:var(--muted);">Full customer history, file folders, opportunity management</span></div>
-    <div style="background:var(--win); border:1px solid #00ff8840; border-radius:8px; padding:12px; font-size:13px;"><span style="color:var(--green); font-weight:700;">✓ Dedicated Onboarding</span><br><span style="color:var(--muted);">PM + solutions analyst + data engineer — not self-serve</span></div>
+    <div style="background:var(--win); border:1px solid rgba(99,102,241,0.25); border-radius:8px; padding:12px; font-size:13px;"><span style="color:#818CF8; font-weight:700;">✓ RMR Automation</span><br><span style="color:var(--muted);">Automated recurring billing — no manual monthly process</span></div>
+    <div style="background:var(--win); border:1px solid rgba(99,102,241,0.25); border-radius:8px; padding:12px; font-size:13px;"><span style="color:#818CF8; font-weight:700;">✓ Full Inventory Suite</span><br><span style="color:var(--muted);">POs, multi-location inventory, serialized assets, reserve to job</span></div>
+    <div style="background:var(--win); border:1px solid rgba(99,102,241,0.25); border-radius:8px; padding:12px; font-size:13px;"><span style="color:#818CF8; font-weight:700;">✓ Native Payments</span><br><span style="color:var(--muted);">Built-in payment processing via TRX Services — no third-party</span></div>
+    <div style="background:var(--win); border:1px solid rgba(99,102,241,0.25); border-radius:8px; padding:12px; font-size:13px;"><span style="color:#818CF8; font-weight:700;">✓ Project Management</span><br><span style="color:var(--muted);">Track long projects by phase — milestone and progressive billing</span></div>
+    <div style="background:var(--win); border:1px solid rgba(99,102,241,0.25); border-radius:8px; padding:12px; font-size:13px;"><span style="color:#818CF8; font-weight:700;">✓ AI Throughout Platform</span><br><span style="color:var(--muted);">Omni-present AI — quoting, tickets, invoices, grammar/spelling</span></div>
+    <div style="background:var(--win); border:1px solid rgba(99,102,241,0.25); border-radius:8px; padding:12px; font-size:13px;"><span style="color:#818CF8; font-weight:700;">✓ Bi-Directional QBO Sync</span><br><span style="color:var(--muted);">Real-time sync — no manual export/import to QuickBooks</span></div>
+    <div style="background:var(--win); border:1px solid rgba(99,102,241,0.25); border-radius:8px; padding:12px; font-size:13px;"><span style="color:#818CF8; font-weight:700;">✓ Customer Portal</span><br><span style="color:var(--muted);">Self-service payments, invoice viewing, and service requests</span></div>
+    <div style="background:var(--win); border:1px solid rgba(99,102,241,0.25); border-radius:8px; padding:12px; font-size:13px;"><span style="color:#818CF8; font-weight:700;">✓ 400+ Integrators</span><br><span style="color:var(--muted);">Proven across the industry — we know your workflows</span></div>
+    <div style="background:var(--win); border:1px solid rgba(99,102,241,0.25); border-radius:8px; padding:12px; font-size:13px;"><span style="color:#818CF8; font-weight:700;">✓ Robust CRM</span><br><span style="color:var(--muted);">Full customer history, file folders, opportunity management</span></div>
+    <div style="background:var(--win); border:1px solid rgba(99,102,241,0.25); border-radius:8px; padding:12px; font-size:13px;"><span style="color:#818CF8; font-weight:700;">✓ Dedicated Onboarding</span><br><span style="color:var(--muted);">PM + solutions analyst + data engineer — not self-serve</span></div>
   </div>
 
   <div class="section-title">Bold Group Note</div>
@@ -990,13 +984,13 @@
   </table>
 
   <div class="section-title" style="margin-top: 32px;">The Universal Close</div>
-  <div style="background: #1e293b; border: 1px solid var(--green); border-radius: 8px; padding: 20px; font-size: 15px; line-height: 1.7; color: var(--text);">
+  <div style="background: #111827; border: 1px solid rgba(99,102,241,0.3); border-radius: 8px; padding: 20px; font-size: 15px; line-height: 1.7; color: var(--text);">
     <p style="color:var(--muted); font-size:11px; text-transform:uppercase; letter-spacing:1px; margin-bottom:8px;">Use against any competitor</p>
     "Every PSA on this list was built for pure managed IT. Rev.io was built from the ground up for companies that sell <em>more</em> — IT, VoIP, internet, cloud, security — and need one platform to quote, bill, and collect for all of it. When you're ready to stop duct-taping systems together, that's when you call us."
   </div>
 </div>
 <div id="service-fusion" class="section">
-  <div style="float:right;width:220px;background:#061a0e;border:1px solid #3DC57044;border-radius:8px;padding:12px;margin:0 0 16px 20px"><div style="font-size:9px;font-weight:700;text-transform:uppercase;letter-spacing:1.5px;color:#3DC570;margin-bottom:8px">✅ 6 Displaced Customers</div><ul style="list-style:none;margin:0;padding:0"><li style="padding:3px 0;font-size:11px;color:#c8f0dc;border-bottom:1px solid #0d2a0d"><span style="color:#3DC570;margin-right:6px">✓</span>A&B Security</li><li style="padding:3px 0;font-size:11px;color:#c8f0dc;border-bottom:1px solid #0d2a0d"><span style="color:#3DC570;margin-right:6px">✓</span>Aaron's Lock & Security</li><li style="padding:3px 0;font-size:11px;color:#c8f0dc;border-bottom:1px solid #0d2a0d"><span style="color:#3DC570;margin-right:6px">✓</span>Alliance Communication & Technologies</li><li style="padding:3px 0;font-size:11px;color:#c8f0dc;border-bottom:1px solid #0d2a0d"><span style="color:#3DC570;margin-right:6px">✓</span>ITR-Systems</li><li style="padding:3px 0;font-size:11px;color:#c8f0dc;border-bottom:1px solid #0d2a0d"><span style="color:#3DC570;margin-right:6px">✓</span>Nevada Security Company</li><li style="padding:3px 0;font-size:11px;color:#c8f0dc;border-bottom:1px solid #0d2a0d"><span style="color:#3DC570;margin-right:6px">✓</span>TCG Tech</li></ul></div>
+  <div style="float:right;width:220px;background:#0F172A;border:1px solid rgba(99,102,241,0.3);border-radius:8px;padding:12px;margin:0 0 16px 20px"><div style="font-size:9px;font-weight:700;text-transform:uppercase;letter-spacing:1.5px;color:#818CF8;margin-bottom:8px">✅ 6 Displaced Customers</div><ul style="list-style:none;margin:0;padding:0"><li style="padding:3px 0;font-size:11px;color:#c8f0dc;border-bottom:1px solid #1E293B"><span style="color:#10B981;margin-right:6px">✓</span>A&B Security</li><li style="padding:3px 0;font-size:11px;color:#c8f0dc;border-bottom:1px solid #1E293B"><span style="color:#10B981;margin-right:6px">✓</span>Aaron's Lock & Security</li><li style="padding:3px 0;font-size:11px;color:#c8f0dc;border-bottom:1px solid #1E293B"><span style="color:#10B981;margin-right:6px">✓</span>Alliance Communication & Technologies</li><li style="padding:3px 0;font-size:11px;color:#c8f0dc;border-bottom:1px solid #1E293B"><span style="color:#10B981;margin-right:6px">✓</span>ITR-Systems</li><li style="padding:3px 0;font-size:11px;color:#c8f0dc;border-bottom:1px solid #1E293B"><span style="color:#10B981;margin-right:6px">✓</span>Nevada Security Company</li><li style="padding:3px 0;font-size:11px;color:#c8f0dc;border-bottom:1px solid #1E293B"><span style="color:#10B981;margin-right:6px">✓</span>TCG Tech</li></ul></div>
   <div class="overview-grid"><div class="overview-item"><div class="label">Competitor</div><div class="value">Service Fusion</div></div>
   
 
@@ -1006,25 +1000,25 @@
 
 <!-- FIELD_INTEL_START:Service Fusion updated:2026-05-15 -->
 <div class="section-title">🎙️ Field Intelligence — What Prospects Say (31 raw mentions)</div>
-<div style="margin-bottom:8px"><div style="font-size:11px;color:#ff4466;text-transform:uppercase;letter-spacing:1px;margin-bottom:8px">Key Pain Points</div><div style="background:#1a0808;border-left:3px solid #ff4466;padding:10px 12px;border-radius:4px;margin-bottom:8px">
+<div style="margin-bottom:8px"><div style="font-size:11px;color:#ff4466;text-transform:uppercase;letter-spacing:1px;margin-bottom:8px">Key Pain Points</div><div style="background:#1A060C;border-left:3px solid #F43F5E;padding:10px 12px;border-radius:4px;margin-bottom:8px">
           <div style="font-size:13px;color:#e2e8f0">Inventory management is poorly implemented - no movement tracking history, no min/max reorder reports, partial POs don't work properly, and field workers can't add inventory from the mobile app.</div>
-        </div><div style="background:#1a0808;border-left:3px solid #ff4466;padding:10px 12px;border-radius:4px;margin-bottom:8px">
+        </div><div style="background:#1A060C;border-left:3px solid #F43F5E;padding:10px 12px;border-radius:4px;margin-bottom:8px">
           <div style="font-size:13px;color:#e2e8f0">Mobile app is consistently described as 'garbage' with insufficient capabilities, forcing users to adopt workarounds like separate time tracking tools and causing double data entry.</div>
-        </div><div style="background:#1a0808;border-left:3px solid #ff4466;padding:10px 12px;border-radius:4px;margin-bottom:8px">
+        </div><div style="background:#1A060C;border-left:3px solid #F43F5E;padding:10px 12px;border-radius:4px;margin-bottom:8px">
           <div style="font-size:13px;color:#e2e8f0">Support is described as terrible with unresolved reporting glitches after platform changes, and the system requires excessive manual work - one prospect said they could do the same work with spreadsheets in half the time.</div>
         </div></div>
-<div><div style="font-size:11px;color:#00ff88;text-transform:uppercase;letter-spacing:1px;margin-bottom:8px">Genuine Strengths</div><div style="background:#081a08;border-left:3px solid #00ff88;padding:10px 12px;border-radius:4px;margin-bottom:8px">
+<div><div style="font-size:11px;color:#818CF8;text-transform:uppercase;letter-spacing:1px;margin-bottom:8px">Genuine Strengths</div><div style="background:#0D1A2E;border-left:3px solid #6366F1;padding:10px 12px;border-radius:4px;margin-bottom:8px">
           <div style="font-size:13px;color:#e2e8f0">Custom fields, automated customer texting for appointments, document storage, and reporting capabilities are appreciated by users who are deeply embedded in the platform.</div>
-        </div><div style="background:#081a08;border-left:3px solid #00ff88;padding:10px 12px;border-radius:4px;margin-bottom:8px">
+        </div><div style="background:#0D1A2E;border-left:3px solid #6366F1;padding:10px 12px;border-radius:4px;margin-bottom:8px">
           <div style="font-size:13px;color:#e2e8f0">Mobile app visibility for technicians to see job and customer information in the field is valued by current users.</div>
         </div></div>
 <!-- FIELD_INTEL_END:Service Fusion -->
-    <h2 style="font-size:18px;color:#c8f0dc;margin-bottom:4px">Service Fusion <span style="font-size:11px;color:#ffcc00;background:#1a1400;border:1px solid #ffcc00;padding:2px 8px;border-radius:10px;margin-left:8px">🎙️ 5 field mentions</span><span style="font-size:11px;color:#3DC570;background:#061a0e;border:1px solid #3DC570;padding:2px 8px;border-radius:10px;margin-left:8px">✅ 6 displaced</span></h2>
+    <h2 style="font-size:18px;color:#c8f0dc;margin-bottom:4px">Service Fusion <span style="font-size:11px;color:#ffcc00;background:#1a1400;border:1px solid #ffcc00;padding:2px 8px;border-radius:10px;margin-left:8px">🎙️ 5 field mentions</span><span style="font-size:11px;color:#818CF8;background:#0F172A;border:1px solid #3DC570;padding:2px 8px;border-radius:10px;margin-left:8px">✅ 6 displaced</span></h2>
     <p style="color:#2a5a3a;font-size:12px;margin-bottom:20px">Field intelligence only — no static battle card yet</p>
   </div>
 </div>
 <div id="alarmbiller" class="section">
-  <div style="float:right;width:220px;background:#061a0e;border:1px solid #3DC57044;border-radius:8px;padding:12px;margin:0 0 16px 20px"><div style="font-size:9px;font-weight:700;text-transform:uppercase;letter-spacing:1.5px;color:#3DC570;margin-bottom:8px">✅ 8 Displaced Customers</div><ul style="list-style:none;margin:0;padding:0"><li style="padding:3px 0;font-size:11px;color:#c8f0dc;border-bottom:1px solid #0d2a0d"><span style="color:#3DC570;margin-right:6px">✓</span>ACS Fire & Security</li><li style="padding:3px 0;font-size:11px;color:#c8f0dc;border-bottom:1px solid #0d2a0d"><span style="color:#3DC570;margin-right:6px">✓</span>Alarm Security Inc</li><li style="padding:3px 0;font-size:11px;color:#c8f0dc;border-bottom:1px solid #0d2a0d"><span style="color:#3DC570;margin-right:6px">✓</span>Alarmtech</li><li style="padding:3px 0;font-size:11px;color:#c8f0dc;border-bottom:1px solid #0d2a0d"><span style="color:#3DC570;margin-right:6px">✓</span>Fastrack Virtual Guard</li><li style="padding:3px 0;font-size:11px;color:#c8f0dc;border-bottom:1px solid #0d2a0d"><span style="color:#3DC570;margin-right:6px">✓</span>Morgan Alarm Systems</li><li style="padding:3px 0;font-size:11px;color:#c8f0dc;border-bottom:1px solid #0d2a0d"><span style="color:#3DC570;margin-right:6px">✓</span>Mule Security & Electric</li><li style="padding:3px 0;font-size:11px;color:#c8f0dc;border-bottom:1px solid #0d2a0d"><span style="color:#3DC570;margin-right:6px">✓</span>Security Vision</li><li style="padding:3px 0;font-size:11px;color:#c8f0dc;border-bottom:1px solid #0d2a0d"><span style="color:#3DC570;margin-right:6px">✓</span>Silent Knight Security</li></ul></div>
+  <div style="float:right;width:220px;background:#0F172A;border:1px solid rgba(99,102,241,0.3);border-radius:8px;padding:12px;margin:0 0 16px 20px"><div style="font-size:9px;font-weight:700;text-transform:uppercase;letter-spacing:1.5px;color:#818CF8;margin-bottom:8px">✅ 8 Displaced Customers</div><ul style="list-style:none;margin:0;padding:0"><li style="padding:3px 0;font-size:11px;color:#c8f0dc;border-bottom:1px solid #1E293B"><span style="color:#10B981;margin-right:6px">✓</span>ACS Fire & Security</li><li style="padding:3px 0;font-size:11px;color:#c8f0dc;border-bottom:1px solid #1E293B"><span style="color:#10B981;margin-right:6px">✓</span>Alarm Security Inc</li><li style="padding:3px 0;font-size:11px;color:#c8f0dc;border-bottom:1px solid #1E293B"><span style="color:#10B981;margin-right:6px">✓</span>Alarmtech</li><li style="padding:3px 0;font-size:11px;color:#c8f0dc;border-bottom:1px solid #1E293B"><span style="color:#10B981;margin-right:6px">✓</span>Fastrack Virtual Guard</li><li style="padding:3px 0;font-size:11px;color:#c8f0dc;border-bottom:1px solid #1E293B"><span style="color:#10B981;margin-right:6px">✓</span>Morgan Alarm Systems</li><li style="padding:3px 0;font-size:11px;color:#c8f0dc;border-bottom:1px solid #1E293B"><span style="color:#10B981;margin-right:6px">✓</span>Mule Security & Electric</li><li style="padding:3px 0;font-size:11px;color:#c8f0dc;border-bottom:1px solid #1E293B"><span style="color:#10B981;margin-right:6px">✓</span>Security Vision</li><li style="padding:3px 0;font-size:11px;color:#c8f0dc;border-bottom:1px solid #1E293B"><span style="color:#10B981;margin-right:6px">✓</span>Silent Knight Security</li></ul></div>
   <div class="overview-grid"><div class="overview-item"><div class="label">Competitor</div><div class="value">AlarmBiller (Bold Group)</div></div>
   
 
@@ -1036,25 +1030,25 @@
 
 <!-- FIELD_INTEL_START:AlarmBiller updated:2026-05-15 -->
 <div class="section-title">🎙️ Field Intelligence — What Prospects Say (9 raw mentions)</div>
-<div style="margin-bottom:8px"><div style="font-size:11px;color:#ff4466;text-transform:uppercase;letter-spacing:1px;margin-bottom:8px">Key Pain Points</div><div style="background:#1a0808;border-left:3px solid #ff4466;padding:10px 12px;border-radius:4px;margin-bottom:8px">
+<div style="margin-bottom:8px"><div style="font-size:11px;color:#ff4466;text-transform:uppercase;letter-spacing:1px;margin-bottom:8px">Key Pain Points</div><div style="background:#1A060C;border-left:3px solid #F43F5E;padding:10px 12px;border-radius:4px;margin-bottom:8px">
           <div style="font-size:13px;color:#e2e8f0">No mobile app forces technicians to use laptops or clunky browser workarounds, limiting field mobility and efficiency.</div>
-        </div><div style="background:#1a0808;border-left:3px solid #ff4466;padding:10px 12px;border-radius:4px;margin-bottom:8px">
+        </div><div style="background:#1A060C;border-left:3px solid #F43F5E;padding:10px 12px;border-radius:4px;margin-bottom:8px">
           <div style="font-size:13px;color:#e2e8f0">No integrated GPS tracking capability, which is a key driver pushing prospects to evaluate alternatives.</div>
-        </div><div style="background:#1a0808;border-left:3px solid #ff4466;padding:10px 12px;border-radius:4px;margin-bottom:8px">
+        </div><div style="background:#1A060C;border-left:3px solid #F43F5E;padding:10px 12px;border-radius:4px;margin-bottom:8px">
           <div style="font-size:13px;color:#e2e8f0">Platform described as 'ancient' and stagnant — hasn't been updated in years and lacks modern features like AI, making it feel dated.</div>
         </div></div>
-<div><div style="font-size:11px;color:#00ff88;text-transform:uppercase;letter-spacing:1px;margin-bottom:8px">Genuine Strengths</div><div style="background:#081a08;border-left:3px solid #00ff88;padding:10px 12px;border-radius:4px;margin-bottom:8px">
+<div><div style="font-size:11px;color:#818CF8;text-transform:uppercase;letter-spacing:1px;margin-bottom:8px">Genuine Strengths</div><div style="background:#0D1A2E;border-left:3px solid #6366F1;padding:10px 12px;border-radius:4px;margin-bottom:8px">
           <div style="font-size:13px;color:#e2e8f0">Described as 'rock solid' and super functional for core security industry RMR billing workflows.</div>
-        </div><div style="background:#081a08;border-left:3px solid #00ff88;padding:10px 12px;border-radius:4px;margin-bottom:8px">
+        </div><div style="background:#0D1A2E;border-left:3px solid #6366F1;padding:10px 12px;border-radius:4px;margin-bottom:8px">
           <div style="font-size:13px;color:#e2e8f0">Prospects who used it previously noted they weren't having issues with most processes and had a relatively stable experience.</div>
         </div></div>
 <!-- FIELD_INTEL_END:AlarmBiller -->
-    <h2 style="font-size:18px;color:#c8f0dc;margin-bottom:4px">AlarmBiller <span style="font-size:11px;color:#ffcc00;background:#1a1400;border:1px solid #ffcc00;padding:2px 8px;border-radius:10px;margin-left:8px">🎙️ 5 field mentions</span><span style="font-size:11px;color:#3DC570;background:#061a0e;border:1px solid #3DC570;padding:2px 8px;border-radius:10px;margin-left:8px">✅ 8 displaced</span></h2>
+    <h2 style="font-size:18px;color:#c8f0dc;margin-bottom:4px">AlarmBiller <span style="font-size:11px;color:#ffcc00;background:#1a1400;border:1px solid #ffcc00;padding:2px 8px;border-radius:10px;margin-left:8px">🎙️ 5 field mentions</span><span style="font-size:11px;color:#818CF8;background:#0F172A;border:1px solid #3DC570;padding:2px 8px;border-radius:10px;margin-left:8px">✅ 8 displaced</span></h2>
     <p style="color:#2a5a3a;font-size:12px;margin-bottom:20px">Field intelligence only — no static battle card yet</p>
   </div>
 <div id="jetbuilt" class="section">
   <div class="overview-grid"><div class="overview-item"><div class="label">Competitor</div><div class="value">Jetbuilt</div></div>
-  <div style="float:right;width:220px;background:#061a0e;border:1px solid #3DC57044;border-radius:8px;padding:12px;margin:0 0 16px 20px"><div style="font-size:9px;font-weight:700;text-transform:uppercase;letter-spacing:1.5px;color:#3DC570;margin-bottom:8px">✅ 1 Displaced Customer</div><ul style="list-style:none;margin:0;padding:0"><li style="padding:3px 0;font-size:11px;color:#c8f0dc;border-bottom:1px solid #0d2a0d"><span style="color:#3DC570;margin-right:6px">✓</span>CSI Video Security Sound & Theater</li></ul></div><div class="overview-item"><div class="label">HQ</div><div class="value">Not publicly disclosed</div></div><div class="overview-item"><div class="label">Employees</div><div class="value"><50 (estimated)</div></div><div class="overview-item"><div class="label">Revenue</div><div class="value">Private · undisclosed</div></div><div class="overview-item"><div class="label">Target Market</div><div class="value">AV, IT, Security & Structured Cabling — proposal/project software</div></div><div class="overview-item"><div class="label">Ownership</div><div class="value">Private · bootstrapped</div></div></div>
+  <div style="float:right;width:220px;background:#0F172A;border:1px solid rgba(99,102,241,0.3);border-radius:8px;padding:12px;margin:0 0 16px 20px"><div style="font-size:9px;font-weight:700;text-transform:uppercase;letter-spacing:1.5px;color:#818CF8;margin-bottom:8px">✅ 1 Displaced Customer</div><ul style="list-style:none;margin:0;padding:0"><li style="padding:3px 0;font-size:11px;color:#c8f0dc;border-bottom:1px solid #1E293B"><span style="color:#10B981;margin-right:6px">✓</span>CSI Video Security Sound & Theater</li></ul></div><div class="overview-item"><div class="label">HQ</div><div class="value">Not publicly disclosed</div></div><div class="overview-item"><div class="label">Employees</div><div class="value"><50 (estimated)</div></div><div class="overview-item"><div class="label">Revenue</div><div class="value">Private · undisclosed</div></div><div class="overview-item"><div class="label">Target Market</div><div class="value">AV, IT, Security & Structured Cabling — proposal/project software</div></div><div class="overview-item"><div class="label">Ownership</div><div class="value">Private · bootstrapped</div></div></div>
 
   
 
@@ -1062,32 +1056,32 @@
 
 <!-- FIELD_INTEL_START:Jetbuilt updated:2026-05-15 -->
 <div class="section-title">🎙️ Field Intelligence — What Prospects Say (6 raw mentions)</div>
-<div style="margin-bottom:8px"><div style="font-size:11px;color:#ff4466;text-transform:uppercase;letter-spacing:1px;margin-bottom:8px">Key Pain Points</div><div style="background:#1a0808;border-left:3px solid #ff4466;padding:10px 12px;border-radius:4px;margin-bottom:8px">
+<div style="margin-bottom:8px"><div style="font-size:11px;color:#ff4466;text-transform:uppercase;letter-spacing:1px;margin-bottom:8px">Key Pain Points</div><div style="background:#1A060C;border-left:3px solid #F43F5E;padding:10px 12px;border-radius:4px;margin-bottom:8px">
           <div style="font-size:13px;color:#e2e8f0">Jetbuilt is limited to proposals only — no mobile functionality for field work, no time tracking, no project management, and no CRM integration, forcing teams to manage everything else in separate platforms.</div>
-        </div><div style="background:#1a0808;border-left:3px solid #ff4466;padding:10px 12px;border-radius:4px;margin-bottom:8px">
+        </div><div style="background:#1A060C;border-left:3px solid #F43F5E;padding:10px 12px;border-radius:4px;margin-bottom:8px">
           <div style="font-size:13px;color:#e2e8f0">Feature development has stagnated despite years of customer requests, with the company seeming more focused on expanding into new areas than improving existing functionality.</div>
-        </div><div style="background:#1a0808;border-left:3px solid #ff4466;padding:10px 12px;border-radius:4px;margin-bottom:8px">
+        </div><div style="background:#1A060C;border-left:3px solid #F43F5E;padding:10px 12px;border-radius:4px;margin-bottom:8px">
           <div style="font-size:13px;color:#e2e8f0">Inventory tracking and service contract management capabilities are too shallow to confidently scale service operations.</div>
         </div></div>
-<div><div style="font-size:11px;color:#00ff88;text-transform:uppercase;letter-spacing:1px;margin-bottom:8px">Genuine Strengths</div><div style="background:#081a08;border-left:3px solid #00ff88;padding:10px 12px;border-radius:4px;margin-bottom:8px">
+<div><div style="font-size:11px;color:#818CF8;text-transform:uppercase;letter-spacing:1px;margin-bottom:8px">Genuine Strengths</div><div style="background:#0D1A2E;border-left:3px solid #6366F1;padding:10px 12px;border-radius:4px;margin-bottom:8px">
           <div style="font-size:13px;color:#e2e8f0">The product database and proposal generation produce polished, professional-looking client proposals that consistently earn compliments.</div>
-        </div><div style="background:#081a08;border-left:3px solid #00ff88;padding:10px 12px;border-radius:4px;margin-bottom:8px">
+        </div><div style="background:#0D1A2E;border-left:3px solid #6366F1;padding:10px 12px;border-radius:4px;margin-bottom:8px">
           <div style="font-size:13px;color:#e2e8f0">Replaced error-prone Excel/Word workflows with a standardized quoting process that reduces mistakes and improves consistency.</div>
         </div></div>
 <!-- FIELD_INTEL_END:Jetbuilt -->
-    <h2 style="font-size:18px;color:#c8f0dc;margin-bottom:4px">Jetbuilt <span style="font-size:11px;color:#ffcc00;background:#1a1400;border:1px solid #ffcc00;padding:2px 8px;border-radius:10px;margin-left:8px">🎙️ 3 field mentions</span><span style="font-size:11px;color:#3DC570;background:#061a0e;border:1px solid #3DC570;padding:2px 8px;border-radius:10px;margin-left:8px">✅ 1 displaced</span></h2>
+    <h2 style="font-size:18px;color:#c8f0dc;margin-bottom:4px">Jetbuilt <span style="font-size:11px;color:#ffcc00;background:#1a1400;border:1px solid #ffcc00;padding:2px 8px;border-radius:10px;margin-left:8px">🎙️ 3 field mentions</span><span style="font-size:11px;color:#818CF8;background:#0F172A;border:1px solid #3DC570;padding:2px 8px;border-radius:10px;margin-left:8px">✅ 1 displaced</span></h2>
     <p style="color:#2a5a3a;font-size:12px;margin-bottom:20px">Field intelligence only — no static battle card yet</p>
   </div>
 <div id="servicenow" class="section">
   
 <!-- FIELD_INTEL_START:ServiceNow updated:2026-05-15 -->
 <div class="section-title">🎙️ Field Intelligence — What Prospects Say (5 raw mentions)</div>
-<div style="margin-bottom:8px"><div style="font-size:11px;color:#ff4466;text-transform:uppercase;letter-spacing:1px;margin-bottom:8px">Key Pain Points</div><div style="background:#1a0808;border-left:3px solid #ff4466;padding:10px 12px;border-radius:4px;margin-bottom:8px">
+<div style="margin-bottom:8px"><div style="font-size:11px;color:#ff4466;text-transform:uppercase;letter-spacing:1px;margin-bottom:8px">Key Pain Points</div><div style="background:#1A060C;border-left:3px solid #F43F5E;padding:10px 12px;border-radius:4px;margin-bottom:8px">
           <div style="font-size:13px;color:#e2e8f0">ServiceNow's pricing is prohibitively expensive for small-to-mid-sized field service companies, causing them to abandon evaluation despite having needed features like GPS tracking.</div>
-        </div><div style="background:#1a0808;border-left:3px solid #ff4466;padding:10px 12px;border-radius:4px;margin-bottom:8px">
+        </div><div style="background:#1A060C;border-left:3px solid #F43F5E;padding:10px 12px;border-radius:4px;margin-bottom:8px">
           <div style="font-size:13px;color:#e2e8f0">ServiceNow is perceived as oversized and overly complex for smaller organizations, with prospects viewing it as built for 'huge companies' rather than their scale of business.</div>
         </div></div>
-<div><div style="font-size:11px;color:#00ff88;text-transform:uppercase;letter-spacing:1px;margin-bottom:8px">Genuine Strengths</div><div style="background:#081a08;border-left:3px solid #00ff88;padding:10px 12px;border-radius:4px;margin-bottom:8px">
+<div><div style="font-size:11px;color:#818CF8;text-transform:uppercase;letter-spacing:1px;margin-bottom:8px">Genuine Strengths</div><div style="background:#0D1A2E;border-left:3px solid #6366F1;padding:10px 12px;border-radius:4px;margin-bottom:8px">
           <div style="font-size:13px;color:#e2e8f0">ServiceNow is the dominant platform that large enterprise customers (especially major hospitality brands) require their vendors to integrate with for ticket activity syncing.</div>
         </div></div>
 <!-- FIELD_INTEL_END:ServiceNow -->
@@ -1096,16 +1090,16 @@
   </div>
 
   <div id="monday" class="section">
-  <div style="float:right;width:220px;background:#061a0e;border:1px solid #3DC57044;border-radius:8px;padding:12px;margin:0 0 16px 20px"><div style="font-size:9px;font-weight:700;text-transform:uppercase;letter-spacing:1.5px;color:#3DC570;margin-bottom:8px">✅ 5 Displaced Customers</div><ul style="list-style:none;margin:0;padding:0"><li style="padding:3px 0;font-size:11px;color:#c8f0dc;border-bottom:1px solid #0d2a0d"><span style="color:#3DC570;margin-right:6px">✓</span>Audio Video Integrations</li><li style="padding:3px 0;font-size:11px;color:#c8f0dc;border-bottom:1px solid #0d2a0d"><span style="color:#3DC570;margin-right:6px">✓</span>Aviation Communications Ltd</li><li style="padding:3px 0;font-size:11px;color:#c8f0dc;border-bottom:1px solid #0d2a0d"><span style="color:#3DC570;margin-right:6px">✓</span>Global Data Technologies</li><li style="padding:3px 0;font-size:11px;color:#c8f0dc;border-bottom:1px solid #0d2a0d"><span style="color:#3DC570;margin-right:6px">✓</span>Patriot Cyber</li><li style="padding:3px 0;font-size:11px;color:#c8f0dc;border-bottom:1px solid #0d2a0d"><span style="color:#3DC570;margin-right:6px">✓</span>Sound Design Inc</li></ul></div>
+  <div style="float:right;width:220px;background:#0F172A;border:1px solid rgba(99,102,241,0.3);border-radius:8px;padding:12px;margin:0 0 16px 20px"><div style="font-size:9px;font-weight:700;text-transform:uppercase;letter-spacing:1.5px;color:#818CF8;margin-bottom:8px">✅ 5 Displaced Customers</div><ul style="list-style:none;margin:0;padding:0"><li style="padding:3px 0;font-size:11px;color:#c8f0dc;border-bottom:1px solid #1E293B"><span style="color:#10B981;margin-right:6px">✓</span>Audio Video Integrations</li><li style="padding:3px 0;font-size:11px;color:#c8f0dc;border-bottom:1px solid #1E293B"><span style="color:#10B981;margin-right:6px">✓</span>Aviation Communications Ltd</li><li style="padding:3px 0;font-size:11px;color:#c8f0dc;border-bottom:1px solid #1E293B"><span style="color:#10B981;margin-right:6px">✓</span>Global Data Technologies</li><li style="padding:3px 0;font-size:11px;color:#c8f0dc;border-bottom:1px solid #1E293B"><span style="color:#10B981;margin-right:6px">✓</span>Patriot Cyber</li><li style="padding:3px 0;font-size:11px;color:#c8f0dc;border-bottom:1px solid #1E293B"><span style="color:#10B981;margin-right:6px">✓</span>Sound Design Inc</li></ul></div>
 
 <!-- FIELD_INTEL_START:Monday updated:2026-05-15 -->
 <div class="section-title">🎙️ Field Intelligence — What Prospects Say (4 raw mentions)</div>
-<div style="margin-bottom:8px"><div style="font-size:11px;color:#ff4466;text-transform:uppercase;letter-spacing:1px;margin-bottom:8px">Key Pain Points</div><div style="background:#1a0808;border-left:3px solid #ff4466;padding:10px 12px;border-radius:4px;margin-bottom:8px">
+<div style="margin-bottom:8px"><div style="font-size:11px;color:#ff4466;text-transform:uppercase;letter-spacing:1px;margin-bottom:8px">Key Pain Points</div><div style="background:#1A060C;border-left:3px solid #F43F5E;padding:10px 12px;border-radius:4px;margin-bottom:8px">
           <div style="font-size:13px;color:#e2e8f0">Monday.com is a flexible general-purpose tool but lacks industry-specific functionality for trades and specialized verticals.</div>
-        </div><div style="background:#1a0808;border-left:3px solid #ff4466;padding:10px 12px;border-radius:4px;margin-bottom:8px">
+        </div><div style="background:#1A060C;border-left:3px solid #F43F5E;padding:10px 12px;border-radius:4px;margin-bottom:8px">
           <div style="font-size:13px;color:#e2e8f0">Prospects are using Monday.com primarily for high-level tracking rather than comprehensive project management, suggesting it may not go deep enough for full operational needs.</div>
         </div></div>
-<div><div style="font-size:11px;color:#00ff88;text-transform:uppercase;letter-spacing:1px;margin-bottom:8px">Genuine Strengths</div><div style="background:#081a08;border-left:3px solid #00ff88;padding:10px 12px;border-radius:4px;margin-bottom:8px">
+<div><div style="font-size:11px;color:#818CF8;text-transform:uppercase;letter-spacing:1px;margin-bottom:8px">Genuine Strengths</div><div style="background:#0D1A2E;border-left:3px solid #6366F1;padding:10px 12px;border-radius:4px;margin-bottom:8px">
           <div style="font-size:13px;color:#e2e8f0">Prospects appreciate Monday.com's flexibility and configurability, allowing them to set it up exactly how they want for their specific workflows.</div>
         </div></div>
 <!-- FIELD_INTEL_END:Monday -->
@@ -1115,25 +1109,25 @@
   <div class="overview-item"><div class="label">Founded</div><div class="value">2012</div></div><div class="overview-item"><div class="label">HQ</div><div class="value">Tel Aviv, Israel (US office: New York, NY)</div></div><div class="overview-item"><div class="label">Employees</div><div class="value">~2,000+</div></div><div class="overview-item"><div class="label">Revenue</div><div class="value">$906M ARR (2024)</div></div><div class="overview-item"><div class="label">Funding</div><div class="value">Public (MNDY) · IPO 2021 · raised $574M pre-IPO</div></div><div class="overview-item"><div class="label">Target Market</div><div class="value">Horizontal work management — Fortune 500 to SMB, all industries</div></div><div class="overview-item"><div class="label">Ownership</div><div class="value">Public (Nasdaq: MNDY)</div></div></div>
 
   
-  <h2 style="font-size:18px;color:#c8f0dc;margin-bottom:4px">Monday.com <span style="font-size:11px;color:#ffcc00;background:#1a1400;border:1px solid #ffcc00;padding:2px 8px;border-radius:10px;margin-left:8px">🎙️ 4 field mentions</span><span style="font-size:11px;color:#3DC570;background:#061a0e;border:1px solid #3DC570;padding:2px 8px;border-radius:10px;margin-left:8px">✅ 5 displaced</span></h2>
+  <h2 style="font-size:18px;color:#c8f0dc;margin-bottom:4px">Monday.com <span style="font-size:11px;color:#ffcc00;background:#1a1400;border:1px solid #ffcc00;padding:2px 8px;border-radius:10px;margin-left:8px">🎙️ 4 field mentions</span><span style="font-size:11px;color:#818CF8;background:#0F172A;border:1px solid #3DC570;padding:2px 8px;border-radius:10px;margin-left:8px">✅ 5 displaced</span></h2>
   <p style="color:#2a5a3a;font-size:12px;margin-bottom:16px">Horizontal work management / project board platform · monday.com · Trusted by 60%+ of Fortune 500</p>
 
   <div class="section-title">📋 Overview</div>
-  <div style="background:#060d14;border:1px solid #0a2a1a;border-radius:8px;padding:14px;margin-bottom:20px;font-size:13px;color:#c8f0dc;line-height:1.6">
+  <div style="background:#060d14;border:1px solid rgba(99,102,241,0.1);border-radius:8px;padding:14px;margin-bottom:20px;font-size:13px;color:#c8f0dc;line-height:1.6">
     Monday.com is a general-purpose work management and project tracking platform — NOT a PSA or field service tool. Positioned as an "AI Work Platform" with boards, automations, CRM, and AI agents. Pricing is per-seat with a free plan. Used by integrators for high-level project tracking, not for ticketing, RMR billing, scheduling, or field dispatch. Trusted by 60%+ of Fortune 500. Plans start at 3 users, monthly or annual billing.
   </div>
 
   <div class="section-title">⚔️ How to Beat Monday.com</div>
-  <div style="background:#1a0808;border-left:3px solid #ff4466;padding:10px 12px;border-radius:4px;margin-bottom:8px;font-size:13px;color:#e2e8f0">Not a PSA — has zero support for ticketing, RMR billing, monitoring station integration, field dispatch, or service contract management. Prospects using it for project boards still need a separate system for their actual operations.</div>
-  <div style="background:#1a0808;border-left:3px solid #ff4466;padding:10px 12px;border-radius:4px;margin-bottom:8px;font-size:13px;color:#e2e8f0">Generic platform not built for integrators — requires heavy configuration just to approximate industry workflows, and any rep change or team turnover means starting over.</div>
-  <div style="background:#1a0808;border-left:3px solid #ff4466;padding:10px 12px;border-radius:4px;margin-bottom:16px;font-size:13px;color:#e2e8f0">Prospects using Monday alongside another PSA are running a fragmented stack — Rev.io replaces both the board tracking AND the operational system in one platform.</div>
+  <div style="background:#1A060C;border-left:3px solid #F43F5E;padding:10px 12px;border-radius:4px;margin-bottom:8px;font-size:13px;color:#e2e8f0">Not a PSA — has zero support for ticketing, RMR billing, monitoring station integration, field dispatch, or service contract management. Prospects using it for project boards still need a separate system for their actual operations.</div>
+  <div style="background:#1A060C;border-left:3px solid #F43F5E;padding:10px 12px;border-radius:4px;margin-bottom:8px;font-size:13px;color:#e2e8f0">Generic platform not built for integrators — requires heavy configuration just to approximate industry workflows, and any rep change or team turnover means starting over.</div>
+  <div style="background:#1A060C;border-left:3px solid #F43F5E;padding:10px 12px;border-radius:4px;margin-bottom:16px;font-size:13px;color:#e2e8f0">Prospects using Monday alongside another PSA are running a fragmented stack — Rev.io replaces both the board tracking AND the operational system in one platform.</div>
 
   <div class="section-title">✅ Genuine Strengths (acknowledge these)</div>
-  <div style="background:#081a08;border-left:3px solid #00ff88;padding:10px 12px;border-radius:4px;margin-bottom:8px;font-size:13px;color:#e2e8f0">Highly configurable boards — prospects who have set it up exactly how they want it have real switching cost.</div>
-  <div style="background:#081a08;border-left:3px solid #00ff88;padding:10px 12px;border-radius:4px;margin-bottom:16px;font-size:13px;color:#e2e8f0">Strong visual project status tracking and incoming work visibility for small teams.</div>
+  <div style="background:#0D1A2E;border-left:3px solid #6366F1;padding:10px 12px;border-radius:4px;margin-bottom:8px;font-size:13px;color:#e2e8f0">Highly configurable boards — prospects who have set it up exactly how they want it have real switching cost.</div>
+  <div style="background:#0D1A2E;border-left:3px solid #6366F1;padding:10px 12px;border-radius:4px;margin-bottom:16px;font-size:13px;color:#e2e8f0">Strong visual project status tracking and incoming work visibility for small teams.</div>
 
   <div class="section-title">🎙️ Field Intelligence — What Prospects Say (4 raw mentions)</div>
-  <div style="background:#081a08;border-left:3px solid #00ff88;padding:10px 12px;border-radius:4px;margin-bottom:8px;font-size:13px;color:#e2e8f0">Prospects actively using Monday like how they've configured it — it's their "board they keep up all the time" for tracking emails, calls, and incoming work.</div>
+  <div style="background:#0D1A2E;border-left:3px solid #6366F1;padding:10px 12px;border-radius:4px;margin-bottom:8px;font-size:13px;color:#e2e8f0">Prospects actively using Monday like how they've configured it — it's their "board they keep up all the time" for tracking emails, calls, and incoming work.</div>
   <div style="background:#060d14;border-left:3px solid #475569;padding:10px 12px;border-radius:4px;margin-bottom:8px;font-size:13px;color:#e2e8f0">Security and AV departments using Monday for high-level project tracking, noting it's an upgrade from Excel — but still not a full PSA replacement.</div>
 </div>
 
@@ -1144,16 +1138,16 @@
 
 <!-- FIELD_INTEL_START:D-tools updated:2026-05-15 -->
 <div class="section-title">🎙️ Field Intelligence — What Prospects Say (22 raw mentions)</div>
-<div style="margin-bottom:8px"><div style="font-size:11px;color:#ff4466;text-transform:uppercase;letter-spacing:1px;margin-bottom:8px">Key Pain Points</div><div style="background:#1a0808;border-left:3px solid #ff4466;padding:10px 12px;border-radius:4px;margin-bottom:8px">
+<div style="margin-bottom:8px"><div style="font-size:11px;color:#ff4466;text-transform:uppercase;letter-spacing:1px;margin-bottom:8px">Key Pain Points</div><div style="background:#1A060C;border-left:3px solid #F43F5E;padding:10px 12px;border-radius:4px;margin-bottom:8px">
           <div style="font-size:13px;color:#e2e8f0">Field service and mobile capabilities are consistently described as lacking — prospects cite poor communication with field teams, no usable app, and an experience that's 'very archaic' compared to desktop.</div>
-        </div><div style="background:#1a0808;border-left:3px solid #ff4466;padding:10px 12px;border-radius:4px;margin-bottom:8px">
+        </div><div style="background:#1A060C;border-left:3px solid #F43F5E;padding:10px 12px;border-radius:4px;margin-bottom:8px">
           <div style="font-size:13px;color:#e2e8f0">Integration and data sync failures create operational chaos — multiple prospects describe working across 4-5 platforms where D-tools won't sync with QuickBooks, inventory systems, or service tools, calling it 'a mess' with high error risk.</div>
-        </div><div style="background:#1a0808;border-left:3px solid #ff4466;padding:10px 12px;border-radius:4px;margin-bottom:8px">
+        </div><div style="background:#1A060C;border-left:3px solid #F43F5E;padding:10px 12px;border-radius:4px;margin-bottom:8px">
           <div style="font-size:13px;color:#e2e8f0">The platform requires heavy manual effort where automation should exist — prospects describe 'manually pushing the process along,' quotes taking up to 8 hours, and clunky project management that's time-consuming to set up.</div>
         </div></div>
-<div><div style="font-size:11px;color:#00ff88;text-transform:uppercase;letter-spacing:1px;margin-bottom:8px">Genuine Strengths</div><div style="background:#081a08;border-left:3px solid #00ff88;padding:10px 12px;border-radius:4px;margin-bottom:8px">
+<div><div style="font-size:11px;color:#818CF8;text-transform:uppercase;letter-spacing:1px;margin-bottom:8px">Genuine Strengths</div><div style="background:#0D1A2E;border-left:3px solid #6366F1;padding:10px 12px;border-radius:4px;margin-bottom:8px">
           <div style="font-size:13px;color:#e2e8f0">Widely recognized as the strongest tool for design, quoting, and proposal depth — long-term users (10-15 years) consistently say no other all-in-one platform matches D-tools for detailed project proposals.</div>
-        </div><div style="background:#081a08;border-left:3px solid #00ff88;padding:10px 12px;border-radius:4px;margin-bottom:8px">
+        </div><div style="background:#0D1A2E;border-left:3px solid #6366F1;padding:10px 12px;border-radius:4px;margin-bottom:8px">
           <div style="font-size:13px;color:#e2e8f0">Catalog integration with vendors/manufacturers for parts ordering is a sticky feature that prospects don't want to lose when considering alternatives.</div>
         </div></div>
 <!-- FIELD_INTEL_END:D-tools -->
@@ -1166,14 +1160,14 @@
 
 <!-- FIELD_INTEL_START:Onebill updated:2026-05-15 -->
 <div class="section-title">🎙️ Field Intelligence — What Prospects Say (9 raw mentions)</div>
-<div style="margin-bottom:8px"><div style="font-size:11px;color:#ff4466;text-transform:uppercase;letter-spacing:1px;margin-bottom:8px">Key Pain Points</div><div style="background:#1a0808;border-left:3px solid #ff4466;padding:10px 12px;border-radius:4px;margin-bottom:8px">
+<div style="margin-bottom:8px"><div style="font-size:11px;color:#ff4466;text-transform:uppercase;letter-spacing:1px;margin-bottom:8px">Key Pain Points</div><div style="background:#1A060C;border-left:3px solid #F43F5E;padding:10px 12px;border-radius:4px;margin-bottom:8px">
           <div style="font-size:13px;color:#e2e8f0">Service order handling is a weakness - prospects report needing to use ConnectWise to cover gaps in OneBill's service order functionality.</div>
-        </div><div style="background:#1a0808;border-left:3px solid #ff4466;padding:10px 12px;border-radius:4px;margin-bottom:8px">
+        </div><div style="background:#1A060C;border-left:3px solid #F43F5E;padding:10px 12px;border-radius:4px;margin-bottom:8px">
           <div style="font-size:13px;color:#e2e8f0">Integration challenges with PSA tools like ConnectWise - historically required manual entries, though this may have improved.</div>
         </div></div>
-<div><div style="font-size:11px;color:#00ff88;text-transform:uppercase;letter-spacing:1px;margin-bottom:8px">Genuine Strengths</div><div style="background:#081a08;border-left:3px solid #00ff88;padding:10px 12px;border-radius:4px;margin-bottom:8px">
+<div><div style="font-size:11px;color:#818CF8;text-transform:uppercase;letter-spacing:1px;margin-bottom:8px">Genuine Strengths</div><div style="background:#0D1A2E;border-left:3px solid #6366F1;padding:10px 12px;border-radius:4px;margin-bottom:8px">
           <div style="font-size:13px;color:#e2e8f0">Reliable and low-maintenance once configured - prospects describe it as 'set it up and it works, don't think about it.'</div>
-        </div><div style="background:#081a08;border-left:3px solid #00ff88;padding:10px 12px;border-radius:4px;margin-bottom:8px">
+        </div><div style="background:#0D1A2E;border-left:3px solid #6366F1;padding:10px 12px;border-radius:4px;margin-bottom:8px">
           <div style="font-size:13px;color:#e2e8f0">Responsive partnership approach - prospects report OneBill works collaboratively with them to resolve issues when they arise.</div>
         </div></div>
 <!-- FIELD_INTEL_END:Onebill -->
@@ -1186,11 +1180,11 @@
 
 <!-- FIELD_INTEL_START:Datagate updated:2026-05-15 -->
 <div class="section-title">🎙️ Field Intelligence — What Prospects Say (13 raw mentions)</div>
-<div style="margin-bottom:8px"><div style="font-size:11px;color:#ff4466;text-transform:uppercase;letter-spacing:1px;margin-bottom:8px">Key Pain Points</div><div style="background:#1a0808;border-left:3px solid #ff4466;padding:10px 12px;border-radius:4px;margin-bottom:8px">
+<div style="margin-bottom:8px"><div style="font-size:11px;color:#ff4466;text-transform:uppercase;letter-spacing:1px;margin-bottom:8px">Key Pain Points</div><div style="background:#1A060C;border-left:3px solid #F43F5E;padding:10px 12px;border-radius:4px;margin-bottom:8px">
           <div style="font-size:13px;color:#e2e8f0">No automated payment reminders or collections - prospects report spending 2 full days monthly manually emailing and calling past due customers.</div>
-        </div><div style="background:#1a0808;border-left:3px solid #ff4466;padding:10px 12px;border-radius:4px;margin-bottom:8px">
+        </div><div style="background:#1A060C;border-left:3px solid #F43F5E;padding:10px 12px;border-radius:4px;margin-bottom:8px">
           <div style="font-size:13px;color:#e2e8f0">Poor dashboards and reporting - no clear visibility into 30/60/90 day aging, MRR, or revenue before/after taxes.</div>
-        </div><div style="background:#1a0808;border-left:3px solid #ff4466;padding:10px 12px;border-radius:4px;margin-bottom:8px">
+        </div><div style="background:#1A060C;border-left:3px solid #F43F5E;padding:10px 12px;border-radius:4px;margin-bottom:8px">
           <div style="font-size:13px;color:#e2e8f0">QuickBooks integration requires manual intervention rather than real-time sync, adding tedious steps to customer account setup and ongoing billing workflows.</div>
         </div></div>
 
@@ -1198,18 +1192,18 @@
   </div>
 
   <div id="ipoint" class="section">
-  <div style="float:right;width:220px;background:#061a0e;border:1px solid #3DC57044;border-radius:8px;padding:12px;margin:0 0 16px 20px"><div style="font-size:9px;font-weight:700;text-transform:uppercase;letter-spacing:1.5px;color:#3DC570;margin-bottom:8px">✅ 1 Displaced Customer</div><ul style="list-style:none;margin:0;padding:0"><li style="padding:3px 0;font-size:11px;color:#c8f0dc;border-bottom:1px solid #0d2a0d"><span style="color:#3DC570;margin-right:6px">✓</span>Hames Pro</li></ul></div>
+  <div style="float:right;width:220px;background:#0F172A;border:1px solid rgba(99,102,241,0.3);border-radius:8px;padding:12px;margin:0 0 16px 20px"><div style="font-size:9px;font-weight:700;text-transform:uppercase;letter-spacing:1.5px;color:#818CF8;margin-bottom:8px">✅ 1 Displaced Customer</div><ul style="list-style:none;margin:0;padding:0"><li style="padding:3px 0;font-size:11px;color:#c8f0dc;border-bottom:1px solid #1E293B"><span style="color:#10B981;margin-right:6px">✓</span>Hames Pro</li></ul></div>
 
 <!-- FIELD_INTEL_START:Ipoint updated:2026-05-15 -->
 <div class="section-title">🎙️ Field Intelligence — What Prospects Say (2 raw mentions)</div>
-<div style="margin-bottom:8px"><div style="font-size:11px;color:#ff4466;text-transform:uppercase;letter-spacing:1px;margin-bottom:8px">Key Pain Points</div><div style="background:#1a0808;border-left:3px solid #ff4466;padding:10px 12px;border-radius:4px;margin-bottom:8px">
+<div style="margin-bottom:8px"><div style="font-size:11px;color:#ff4466;text-transform:uppercase;letter-spacing:1px;margin-bottom:8px">Key Pain Points</div><div style="background:#1A060C;border-left:3px solid #F43F5E;padding:10px 12px;border-radius:4px;margin-bottom:8px">
           <div style="font-size:13px;color:#e2e8f0">The mobile app and offline mode are unreliable, causing technicians to lose captured data in the field.</div>
-        </div><div style="background:#1a0808;border-left:3px solid #ff4466;padding:10px 12px;border-radius:4px;margin-bottom:8px">
+        </div><div style="background:#1A060C;border-left:3px solid #F43F5E;padding:10px 12px;border-radius:4px;margin-bottom:8px">
           <div style="font-size:13px;color:#e2e8f0">Labor and time tracking is cumbersome—requiring manual workarounds like building travel as phases—and lacks clear billable vs non-billable efficiency metrics.</div>
-        </div><div style="background:#1a0808;border-left:3px solid #ff4466;padding:10px 12px;border-radius:4px;margin-bottom:8px">
+        </div><div style="background:#1A060C;border-left:3px solid #F43F5E;padding:10px 12px;border-radius:4px;margin-bottom:8px">
           <div style="font-size:13px;color:#e2e8f0">The platform suffers from performance issues (slow, flashing screens) and weak project management with limited notes and history capabilities.</div>
         </div></div>
-<div><div style="font-size:11px;color:#00ff88;text-transform:uppercase;letter-spacing:1px;margin-bottom:8px">Genuine Strengths</div><div style="background:#081a08;border-left:3px solid #00ff88;padding:10px 12px;border-radius:4px;margin-bottom:8px">
+<div><div style="font-size:11px;color:#818CF8;text-transform:uppercase;letter-spacing:1px;margin-bottom:8px">Genuine Strengths</div><div style="background:#0D1A2E;border-left:3px solid #6366F1;padding:10px 12px;border-radius:4px;margin-bottom:8px">
           <div style="font-size:13px;color:#e2e8f0">Recurring billing functionality works, despite being described as 'chunky' and not intuitive.</div>
         </div></div>
 <!-- FIELD_INTEL_END:Ipoint -->
@@ -1219,39 +1213,39 @@
   <div class="overview-item"><div class="label">Founded</div><div class="value">Est. ~2010</div></div><div class="overview-item"><div class="label">HQ</div><div class="value">Kansas, US</div></div><div class="overview-item"><div class="label">Employees</div><div class="value">~10</div></div><div class="overview-item"><div class="label">Revenue</div><div class="value">Private · undisclosed</div></div><div class="overview-item"><div class="label">Target Market</div><div class="value">Audio/Video integrators — end-to-end business management</div></div><div class="overview-item"><div class="label">Ownership</div><div class="value">Private · bootstrapped</div></div></div>
 
   
-  <h2 style="font-size:18px;color:#c8f0dc;margin-bottom:4px">iPoint <span style="font-size:11px;color:#ffcc00;background:#1a1400;border:1px solid #ffcc00;padding:2px 8px;border-radius:10px;margin-left:8px">🎙️ 2 field mentions</span><span style="font-size:11px;color:#3DC570;background:#061a0e;border:1px solid #3DC570;padding:2px 8px;border-radius:10px;margin-left:8px">✅ 1 displaced</span></h2>
+  <h2 style="font-size:18px;color:#c8f0dc;margin-bottom:4px">iPoint <span style="font-size:11px;color:#ffcc00;background:#1a1400;border:1px solid #ffcc00;padding:2px 8px;border-radius:10px;margin-left:8px">🎙️ 2 field mentions</span><span style="font-size:11px;color:#818CF8;background:#0F172A;border:1px solid #3DC570;padding:2px 8px;border-radius:10px;margin-left:8px">✅ 1 displaced</span></h2>
   <p style="color:#2a5a3a;font-size:12px;margin-bottom:16px">Single-platform business management for AV integrators · CE Pro Quest for Quality award winner</p>
 
   <div class="section-title">📋 Overview</div>
-  <div style="background:#060d14;border:1px solid #0a2a1a;border-radius:8px;padding:14px;margin-bottom:20px;font-size:13px;color:#c8f0dc;line-height:1.6">
+  <div style="background:#060d14;border:1px solid rgba(99,102,241,0.1);border-radius:8px;padding:14px;margin-bottom:20px;font-size:13px;color:#c8f0dc;line-height:1.6">
     iPoint is a single-platform business management solution designed specifically for the AV industry. Features include proposals, project management (tracks 400-500 individual process steps), labor cost tracking, scheduling, field service, and lead/email tracking. CE Pro Quest for Quality Award winner. Has Portal.io API integration. Targets residential and commercial AV integrators looking to replace disconnected tools. Positioned as a step up from D-Tools and ProjX360 for growing AV companies.
   </div>
 
   <div class="section-title">⚔️ How to Beat iPoint</div>
-  <div style="background:#1a0808;border-left:3px solid #ff4466;padding:10px 12px;border-radius:4px;margin-bottom:8px;font-size:13px;color:#e2e8f0">Platform performance is a consistent complaint — prospects report screens constantly flashing, very slow load times, and distracting UI behavior that impacts daily usability.</div>
-  <div style="background:#1a0808;border-left:3px solid #ff4466;padding:10px 12px;border-radius:4px;margin-bottom:8px;font-size:13px;color:#e2e8f0">Mobile app reliability problems — offline mode doesn't always capture data, leading to lost information in the field. Labor tracking is difficult and requires building from scratch.</div>
-  <div style="background:#1a0808;border-left:3px solid #ff4466;padding:10px 12px;border-radius:4px;margin-bottom:8px;font-size:13px;color:#e2e8f0">Opportunity management never worked well per prospect feedback — pipeline visibility is weak for AV companies trying to grow sales.</div>
-  <div style="background:#1a0808;border-left:3px solid #ff4466;padding:10px 12px;border-radius:4px;margin-bottom:16px;font-size:13px;color:#e2e8f0">AV-only focus — companies adding monitoring/RMR services or needing alarm dealer billing will hit a wall.</div>
+  <div style="background:#1A060C;border-left:3px solid #F43F5E;padding:10px 12px;border-radius:4px;margin-bottom:8px;font-size:13px;color:#e2e8f0">Platform performance is a consistent complaint — prospects report screens constantly flashing, very slow load times, and distracting UI behavior that impacts daily usability.</div>
+  <div style="background:#1A060C;border-left:3px solid #F43F5E;padding:10px 12px;border-radius:4px;margin-bottom:8px;font-size:13px;color:#e2e8f0">Mobile app reliability problems — offline mode doesn't always capture data, leading to lost information in the field. Labor tracking is difficult and requires building from scratch.</div>
+  <div style="background:#1A060C;border-left:3px solid #F43F5E;padding:10px 12px;border-radius:4px;margin-bottom:8px;font-size:13px;color:#e2e8f0">Opportunity management never worked well per prospect feedback — pipeline visibility is weak for AV companies trying to grow sales.</div>
+  <div style="background:#1A060C;border-left:3px solid #F43F5E;padding:10px 12px;border-radius:4px;margin-bottom:16px;font-size:13px;color:#e2e8f0">AV-only focus — companies adding monitoring/RMR services or needing alarm dealer billing will hit a wall.</div>
 
   <div class="section-title">✅ Genuine Strengths (acknowledge these)</div>
-  <div style="background:#081a08;border-left:3px solid #00ff88;padding:10px 12px;border-radius:4px;margin-bottom:8px;font-size:13px;color:#e2e8f0">Deep AV workflow support — can manage 400-500 individual process steps per project, with labor cost visibility that helps integrators recognize they're undervaluing their labor.</div>
-  <div style="background:#081a08;border-left:3px solid #00ff88;padding:10px 12px;border-radius:4px;margin-bottom:16px;font-size:13px;color:#e2e8f0">CE Pro award recognition gives it credibility in the residential AV market. Portal.io integration is a plus for AV companies already using Portal for product data.</div>
+  <div style="background:#0D1A2E;border-left:3px solid #6366F1;padding:10px 12px;border-radius:4px;margin-bottom:8px;font-size:13px;color:#e2e8f0">Deep AV workflow support — can manage 400-500 individual process steps per project, with labor cost visibility that helps integrators recognize they're undervaluing their labor.</div>
+  <div style="background:#0D1A2E;border-left:3px solid #6366F1;padding:10px 12px;border-radius:4px;margin-bottom:16px;font-size:13px;color:#e2e8f0">CE Pro award recognition gives it credibility in the residential AV market. Portal.io integration is a plus for AV companies already using Portal for product data.</div>
 
   <div class="section-title">🎙️ Field Intelligence — What Prospects Say (2 raw mentions)</div>
-  <div style="background:#1a0808;border-left:3px solid #ff4466;padding:10px 12px;border-radius:4px;margin-bottom:8px;font-size:13px;color:#e2e8f0">Technicians complain about the app — offline mode doesn't always capture data leading to lost information. Labor tracking is difficult and requires building from scratch.</div>
-  <div style="background:#1a0808;border-left:3px solid #ff4466;padding:10px 12px;border-radius:4px;margin-bottom:8px;font-size:13px;color:#e2e8f0">Platform is extremely slow, screens constantly flashing and very distracting. Opportunity management never worked well. Project management weak.</div>
+  <div style="background:#1A060C;border-left:3px solid #F43F5E;padding:10px 12px;border-radius:4px;margin-bottom:8px;font-size:13px;color:#e2e8f0">Technicians complain about the app — offline mode doesn't always capture data leading to lost information. Labor tracking is difficult and requires building from scratch.</div>
+  <div style="background:#1A060C;border-left:3px solid #F43F5E;padding:10px 12px;border-radius:4px;margin-bottom:8px;font-size:13px;color:#e2e8f0">Platform is extremely slow, screens constantly flashing and very distracting. Opportunity management never worked well. Project management weak.</div>
 </div>
 
 <div id="projx360" class="section">
-  <div style="float:right;width:220px;background:#061a0e;border:1px solid #3DC57044;border-radius:8px;padding:12px;margin:0 0 16px 20px"><div style="font-size:9px;font-weight:700;text-transform:uppercase;letter-spacing:1.5px;color:#3DC570;margin-bottom:8px">✅ 1 Displaced Customer</div><ul style="list-style:none;margin:0;padding:0"><li style="padding:3px 0;font-size:11px;color:#c8f0dc;border-bottom:1px solid #0d2a0d"><span style="color:#3DC570;margin-right:6px">✓</span>Creative Vision Tech</li></ul></div>
+  <div style="float:right;width:220px;background:#0F172A;border:1px solid rgba(99,102,241,0.3);border-radius:8px;padding:12px;margin:0 0 16px 20px"><div style="font-size:9px;font-weight:700;text-transform:uppercase;letter-spacing:1.5px;color:#818CF8;margin-bottom:8px">✅ 1 Displaced Customer</div><ul style="list-style:none;margin:0;padding:0"><li style="padding:3px 0;font-size:11px;color:#c8f0dc;border-bottom:1px solid #1E293B"><span style="color:#10B981;margin-right:6px">✓</span>Creative Vision Tech</li></ul></div>
 
 <!-- FIELD_INTEL_START:Projx360 updated:2026-05-15 -->
 <div class="section-title">🎙️ Field Intelligence — What Prospects Say (2 raw mentions)</div>
-<div style="margin-bottom:8px"><div style="font-size:11px;color:#ff4466;text-transform:uppercase;letter-spacing:1px;margin-bottom:8px">Key Pain Points</div><div style="background:#1a0808;border-left:3px solid #ff4466;padding:10px 12px;border-radius:4px;margin-bottom:8px">
+<div style="margin-bottom:8px"><div style="font-size:11px;color:#ff4466;text-transform:uppercase;letter-spacing:1px;margin-bottom:8px">Key Pain Points</div><div style="background:#1A060C;border-left:3px solid #F43F5E;padding:10px 12px;border-radius:4px;margin-bottom:8px">
           <div style="font-size:13px;color:#e2e8f0">Project management workflow is clunky and creates segmented pockets of information, making it difficult to view ticket notes, site history, or historical data without extensive searching and filtering.</div>
-        </div><div style="background:#1a0808;border-left:3px solid #ff4466;padding:10px 12px;border-radius:4px;margin-bottom:8px">
+        </div><div style="background:#1A060C;border-left:3px solid #F43F5E;padding:10px 12px;border-radius:4px;margin-bottom:8px">
           <div style="font-size:13px;color:#e2e8f0">The platform struggles to scale with business growth, forcing companies to transition to other solutions as they expand.</div>
-        </div><div style="background:#1a0808;border-left:3px solid #ff4466;padding:10px 12px;border-radius:4px;margin-bottom:8px">
+        </div><div style="background:#1A060C;border-left:3px solid #F43F5E;padding:10px 12px;border-radius:4px;margin-bottom:8px">
           <div style="font-size:13px;color:#e2e8f0">Implementation is lengthy (9+ months) with limited support, and the product has seen no meaningful upgrades over extended periods.</div>
         </div></div>
 
@@ -1262,26 +1256,26 @@
   <div class="overview-item"><div class="label">Founded</div><div class="value">Est. ~2015 (by veteran integrator Doug Greenwald)</div></div><div class="overview-item"><div class="label">HQ</div><div class="value">Arizona, US</div></div><div class="overview-item"><div class="label">Employees</div><div class="value">Very small team (~5)</div></div><div class="overview-item"><div class="label">Revenue</div><div class="value">Private · undisclosed</div></div><div class="overview-item"><div class="label">Target Market</div><div class="value">Residential AV integrators — location-based project management</div></div><div class="overview-item"><div class="label">Ownership</div><div class="value">Private · owner-operated</div></div></div>
 
   
-  <h2 style="font-size:18px;color:#c8f0dc;margin-bottom:4px">ProjX360 <span style="font-size:11px;color:#ffcc00;background:#1a1400;border:1px solid #ffcc00;padding:2px 8px;border-radius:10px;margin-left:8px">🎙️ 2 field mentions</span><span style="font-size:11px;color:#3DC570;background:#061a0e;border:1px solid #3DC570;padding:2px 8px;border-radius:10px;margin-left:8px">✅ 1 displaced</span></h2>
+  <h2 style="font-size:18px;color:#c8f0dc;margin-bottom:4px">ProjX360 <span style="font-size:11px;color:#ffcc00;background:#1a1400;border:1px solid #ffcc00;padding:2px 8px;border-radius:10px;margin-left:8px">🎙️ 2 field mentions</span><span style="font-size:11px;color:#818CF8;background:#0F172A;border:1px solid #3DC570;padding:2px 8px;border-radius:10px;margin-left:8px">✅ 1 displaced</span></h2>
   <p style="color:#2a5a3a;font-size:12px;margin-bottom:16px">AV integrator project management software · projx360.com · Organizes by location, not project</p>
 
   <div class="section-title">📋 Overview</div>
-  <div style="background:#060d14;border:1px solid #0a2a1a;border-radius:8px;padding:14px;margin-bottom:20px;font-size:13px;color:#c8f0dc;line-height:1.6">
+  <div style="background:#060d14;border:1px solid rgba(99,102,241,0.1);border-radius:8px;padding:14px;margin-bottom:20px;font-size:13px;color:#c8f0dc;line-height:1.6">
     ProjX360 is a project management platform built specifically for AV integrators (Audio/Video, Lighting, Motorized Shades). Its differentiator: organizes everything by client location/building rather than by individual project — so proposals, systems, documentation, and service history all stay tied to one address. Targets the problem of scattered documentation when one home has an AV project, a lighting project, and a shades project in different silos. No RMR billing, no PSA ticketing, no monitoring integration.
   </div>
 
   <div class="section-title">⚔️ How to Beat ProjX360</div>
-  <div style="background:#1a0808;border-left:3px solid #ff4466;padding:10px 12px;border-radius:4px;margin-bottom:8px;font-size:13px;color:#e2e8f0">Can't scale with business growth — prospect tried it after D-Tools and had to move on again. It's a documentation-first tool, not a full business management platform.</div>
-  <div style="background:#1a0808;border-left:3px solid #ff4466;padding:10px 12px;border-radius:4px;margin-bottom:8px;font-size:13px;color:#e2e8f0">Clunky project flow with segmented information pockets — not intuitive for viewing ticket notes or site history, requires too much searching.</div>
-  <div style="background:#1a0808;border-left:3px solid #ff4466;padding:10px 12px;border-radius:4px;margin-bottom:16px;font-size:13px;color:#e2e8f0">No billing, no RMR, no dispatch, no time tracking — AV companies with service contracts or RMR still need another system for everything operational.</div>
+  <div style="background:#1A060C;border-left:3px solid #F43F5E;padding:10px 12px;border-radius:4px;margin-bottom:8px;font-size:13px;color:#e2e8f0">Can't scale with business growth — prospect tried it after D-Tools and had to move on again. It's a documentation-first tool, not a full business management platform.</div>
+  <div style="background:#1A060C;border-left:3px solid #F43F5E;padding:10px 12px;border-radius:4px;margin-bottom:8px;font-size:13px;color:#e2e8f0">Clunky project flow with segmented information pockets — not intuitive for viewing ticket notes or site history, requires too much searching.</div>
+  <div style="background:#1A060C;border-left:3px solid #F43F5E;padding:10px 12px;border-radius:4px;margin-bottom:16px;font-size:13px;color:#e2e8f0">No billing, no RMR, no dispatch, no time tracking — AV companies with service contracts or RMR still need another system for everything operational.</div>
 
   <div class="section-title">✅ Genuine Strengths (acknowledge these)</div>
-  <div style="background:#081a08;border-left:3px solid #00ff88;padding:10px 12px;border-radius:4px;margin-bottom:8px;font-size:13px;color:#e2e8f0">Location-centric organization is genuinely useful for residential AV companies managing multiple systems per home — eliminates the "scavenger hunt" for drawings and system files at service time.</div>
-  <div style="background:#081a08;border-left:3px solid #00ff88;padding:10px 12px;border-radius:4px;margin-bottom:16px;font-size:13px;color:#e2e8f0">Addresses a real pain: documentation scattered across phones, shared drives, and email chains after multi-system installs.</div>
+  <div style="background:#0D1A2E;border-left:3px solid #6366F1;padding:10px 12px;border-radius:4px;margin-bottom:8px;font-size:13px;color:#e2e8f0">Location-centric organization is genuinely useful for residential AV companies managing multiple systems per home — eliminates the "scavenger hunt" for drawings and system files at service time.</div>
+  <div style="background:#0D1A2E;border-left:3px solid #6366F1;padding:10px 12px;border-radius:4px;margin-bottom:16px;font-size:13px;color:#e2e8f0">Addresses a real pain: documentation scattered across phones, shared drives, and email chains after multi-system installs.</div>
 
   <div class="section-title">🎙️ Field Intelligence — What Prospects Say (2 raw mentions)</div>
-  <div style="background:#1a0808;border-left:3px solid #ff4466;padding:10px 12px;border-radius:4px;margin-bottom:8px;font-size:13px;color:#e2e8f0">Project management flow is clunky, creates segmented pockets of information — not intuitive for viewing ticket notes or site history.</div>
-  <div style="background:#1a0808;border-left:3px solid #ff4466;padding:10px 12px;border-radius:4px;margin-bottom:8px;font-size:13px;color:#e2e8f0">After leaving D-Tools, prospect tried ProjX360 but it could never scale with their business growth — forced another platform transition to iPoint.</div>
+  <div style="background:#1A060C;border-left:3px solid #F43F5E;padding:10px 12px;border-radius:4px;margin-bottom:8px;font-size:13px;color:#e2e8f0">Project management flow is clunky, creates segmented pockets of information — not intuitive for viewing ticket notes or site history.</div>
+  <div style="background:#1A060C;border-left:3px solid #F43F5E;padding:10px 12px;border-radius:4px;margin-bottom:8px;font-size:13px;color:#e2e8f0">After leaving D-Tools, prospect tried ProjX360 but it could never scale with their business growth — forced another platform transition to iPoint.</div>
 </div>
 
 <div id="timleybill" class="section">
@@ -1291,30 +1285,30 @@
 
 <!-- FIELD_INTEL_START:Timleybill updated:2026-05-15 -->
 <div class="section-title">🎙️ Field Intelligence — What Prospects Say (6 raw mentions)</div>
-<div style="margin-bottom:8px"><div style="font-size:11px;color:#ff4466;text-transform:uppercase;letter-spacing:1px;margin-bottom:8px">Key Pain Points</div><div style="background:#1a0808;border-left:3px solid #ff4466;padding:10px 12px;border-radius:4px;margin-bottom:8px">
+<div style="margin-bottom:8px"><div style="font-size:11px;color:#ff4466;text-transform:uppercase;letter-spacing:1px;margin-bottom:8px">Key Pain Points</div><div style="background:#1A060C;border-left:3px solid #F43F5E;padding:10px 12px;border-radius:4px;margin-bottom:8px">
           <div style="font-size:13px;color:#e2e8f0">Quoting system is inadequate, forcing customers to subscribe to and pay for a separate Quoter tool on top of their $1000/month fee.</div>
-        </div><div style="background:#1a0808;border-left:3px solid #ff4466;padding:10px 12px;border-radius:4px;margin-bottom:8px">
+        </div><div style="background:#1A060C;border-left:3px solid #F43F5E;padding:10px 12px;border-radius:4px;margin-bottom:8px">
           <div style="font-size:13px;color:#e2e8f0">Integration has clunky elements, particularly when quotes convert to invoices, requiring manual workarounds.</div>
         </div></div>
-<div><div style="font-size:11px;color:#00ff88;text-transform:uppercase;letter-spacing:1px;margin-bottom:8px">Genuine Strengths</div><div style="background:#081a08;border-left:3px solid #00ff88;padding:10px 12px;border-radius:4px;margin-bottom:8px">
+<div><div style="font-size:11px;color:#818CF8;text-transform:uppercase;letter-spacing:1px;margin-bottom:8px">Genuine Strengths</div><div style="background:#0D1A2E;border-left:3px solid #6366F1;padding:10px 12px;border-radius:4px;margin-bottom:8px">
           <div style="font-size:13px;color:#e2e8f0">Customer portal is consistently praised as a nice feature that users appreciate.</div>
         </div></div>
 <!-- FIELD_INTEL_END:Timleybill -->
   </div>
 
   <div id="workhorse" class="section">
-  <div style="float:right;width:220px;background:#061a0e;border:1px solid #3DC57044;border-radius:8px;padding:12px;margin:0 0 16px 20px"><div style="font-size:9px;font-weight:700;text-transform:uppercase;letter-spacing:1.5px;color:#3DC570;margin-bottom:8px">✅ 4 Displaced Customers</div><ul style="list-style:none;margin:0;padding:0"><li style="padding:3px 0;font-size:11px;color:#c8f0dc;border-bottom:1px solid #0d2a0d"><span style="color:#3DC570;margin-right:6px">✓</span>Alarm24</li><li style="padding:3px 0;font-size:11px;color:#c8f0dc;border-bottom:1px solid #0d2a0d"><span style="color:#3DC570;margin-right:6px">✓</span>Castle Security</li><li style="padding:3px 0;font-size:11px;color:#c8f0dc;border-bottom:1px solid #0d2a0d"><span style="color:#3DC570;margin-right:6px">✓</span>Command Corporation</li><li style="padding:3px 0;font-size:11px;color:#c8f0dc;border-bottom:1px solid #0d2a0d"><span style="color:#3DC570;margin-right:6px">✓</span>Electronic Systems Installers</li></ul></div>
+  <div style="float:right;width:220px;background:#0F172A;border:1px solid rgba(99,102,241,0.3);border-radius:8px;padding:12px;margin:0 0 16px 20px"><div style="font-size:9px;font-weight:700;text-transform:uppercase;letter-spacing:1.5px;color:#818CF8;margin-bottom:8px">✅ 4 Displaced Customers</div><ul style="list-style:none;margin:0;padding:0"><li style="padding:3px 0;font-size:11px;color:#c8f0dc;border-bottom:1px solid #1E293B"><span style="color:#10B981;margin-right:6px">✓</span>Alarm24</li><li style="padding:3px 0;font-size:11px;color:#c8f0dc;border-bottom:1px solid #1E293B"><span style="color:#10B981;margin-right:6px">✓</span>Castle Security</li><li style="padding:3px 0;font-size:11px;color:#c8f0dc;border-bottom:1px solid #1E293B"><span style="color:#10B981;margin-right:6px">✓</span>Command Corporation</li><li style="padding:3px 0;font-size:11px;color:#c8f0dc;border-bottom:1px solid #1E293B"><span style="color:#10B981;margin-right:6px">✓</span>Electronic Systems Installers</li></ul></div>
 
 <!-- FIELD_INTEL_START:Workhorse updated:2026-05-15 -->
 <div class="section-title">🎙️ Field Intelligence — What Prospects Say (4 raw mentions)</div>
-<div style="margin-bottom:8px"><div style="font-size:11px;color:#ff4466;text-transform:uppercase;letter-spacing:1px;margin-bottom:8px">Key Pain Points</div><div style="background:#1a0808;border-left:3px solid #ff4466;padding:10px 12px;border-radius:4px;margin-bottom:8px">
+<div style="margin-bottom:8px"><div style="font-size:11px;color:#ff4466;text-transform:uppercase;letter-spacing:1px;margin-bottom:8px">Key Pain Points</div><div style="background:#1A060C;border-left:3px solid #F43F5E;padding:10px 12px;border-radius:4px;margin-bottom:8px">
           <div style="font-size:13px;color:#e2e8f0">Cannot handle line items with different tax rates (GST vs GST/PST), making it a dealbreaker for Canadian operations.</div>
-        </div><div style="background:#1a0808;border-left:3px solid #ff4466;padding:10px 12px;border-radius:4px;margin-bottom:8px">
+        </div><div style="background:#1A060C;border-left:3px solid #F43F5E;padding:10px 12px;border-radius:4px;margin-bottom:8px">
           <div style="font-size:13px;color:#e2e8f0">Lacks automation for customer communications like declined card notifications, forcing manual follow-up to chase down customers for failed payments.</div>
         </div></div>
-<div><div style="font-size:11px;color:#00ff88;text-transform:uppercase;letter-spacing:1px;margin-bottom:8px">Genuine Strengths</div><div style="background:#081a08;border-left:3px solid #00ff88;padding:10px 12px;border-radius:4px;margin-bottom:8px">
+<div><div style="font-size:11px;color:#818CF8;text-transform:uppercase;letter-spacing:1px;margin-bottom:8px">Genuine Strengths</div><div style="background:#0D1A2E;border-left:3px solid #6366F1;padding:10px 12px;border-radius:4px;margin-bottom:8px">
           <div style="font-size:13px;color:#e2e8f0">Strong end-to-end automation from quoting through customer signing, including DocuSign integration and automated data entry.</div>
-        </div><div style="background:#081a08;border-left:3px solid #00ff88;padding:10px 12px;border-radius:4px;margin-bottom:8px">
+        </div><div style="background:#0D1A2E;border-left:3px solid #6366F1;padding:10px 12px;border-radius:4px;margin-bottom:8px">
           <div style="font-size:13px;color:#e2e8f0">Handles recurring billing well with monitoring station agreements and provides declined payment reports.</div>
         </div></div>
 <!-- FIELD_INTEL_END:Workhorse -->
@@ -1324,42 +1318,42 @@
   <div class="overview-item"><div class="label">Founded</div><div class="value">Est. ~2015</div></div><div class="overview-item"><div class="label">HQ</div><div class="value">Not publicly disclosed</div></div><div class="overview-item"><div class="label">Employees</div><div class="value">Very small team (~10)</div></div><div class="overview-item"><div class="label">Revenue</div><div class="value">Private · undisclosed</div></div><div class="overview-item"><div class="label">Target Market</div><div class="value">Life safety and alarm companies with RMR billing (US & Canada)</div></div><div class="overview-item"><div class="label">Ownership</div><div class="value">Private · bootstrapped</div></div></div>
 
   
-  <h2 style="font-size:18px;color:#c8f0dc;margin-bottom:4px">Workhorse <span style="font-size:11px;color:#ffcc00;background:#1a1400;border:1px solid #ffcc00;padding:2px 8px;border-radius:10px;margin-left:8px">🎙️ 4 field mentions</span><span style="font-size:11px;color:#3DC570;background:#061a0e;border:1px solid #3DC570;padding:2px 8px;border-radius:10px;margin-left:8px">✅ 3 displaced</span></h2>
+  <h2 style="font-size:18px;color:#c8f0dc;margin-bottom:4px">Workhorse <span style="font-size:11px;color:#ffcc00;background:#1a1400;border:1px solid #ffcc00;padding:2px 8px;border-radius:10px;margin-left:8px">🎙️ 4 field mentions</span><span style="font-size:11px;color:#818CF8;background:#0F172A;border:1px solid #3DC570;padding:2px 8px;border-radius:10px;margin-left:8px">✅ 3 displaced</span></h2>
   <p style="color:#2a5a3a;font-size:12px;margin-bottom:16px">Alarm company management software for life safety / security dealers · workhorsescs.com</p>
 
   <div class="section-title">📋 Overview</div>
-  <div style="background:#060d14;border:1px solid #0a2a1a;border-radius:8px;padding:14px;margin-bottom:20px;font-size:13px;color:#c8f0dc;line-height:1.6">
+  <div style="background:#060d14;border:1px solid rgba(99,102,241,0.1);border-radius:8px;padding:14px;margin-bottom:20px;font-size:13px;color:#c8f0dc;line-height:1.6">
     Workhorse is an all-in-one CRM and billing platform built specifically for alarm and life safety companies. Positions itself as a "single point of entry" — proposals, accounts on test, signal history, central station data, RMR management, work orders, scheduling, and payment collection all in one place. Targeted at U.S. and Canadian alarm dealers with recurring monthly revenue. Flexible modules that can be tailored per workflow.
   </div>
 
   <div class="section-title">⚔️ How to Beat Workhorse</div>
-  <div style="background:#1a0808;border-left:3px solid #ff4466;padding:10px 12px;border-radius:4px;margin-bottom:8px;font-size:13px;color:#e2e8f0">No automation for customer communications when payments decline — manual chase-down of customers with failed cards. Rev.io Billing handles automated dunning natively.</div>
-  <div style="background:#1a0808;border-left:3px solid #ff4466;padding:10px 12px;border-radius:4px;margin-bottom:8px;font-size:13px;color:#e2e8f0">Lacks automated email notification workflows — doesn't scale well as the business grows beyond a small team.</div>
-  <div style="background:#1a0808;border-left:3px solid #ff4466;padding:10px 12px;border-radius:4px;margin-bottom:16px;font-size:13px;color:#e2e8f0">Alarm/life safety focused — limited PSA capabilities for integrators who also need field service, ticketing, project management, and quoting in one platform.</div>
+  <div style="background:#1A060C;border-left:3px solid #F43F5E;padding:10px 12px;border-radius:4px;margin-bottom:8px;font-size:13px;color:#e2e8f0">No automation for customer communications when payments decline — manual chase-down of customers with failed cards. Rev.io Billing handles automated dunning natively.</div>
+  <div style="background:#1A060C;border-left:3px solid #F43F5E;padding:10px 12px;border-radius:4px;margin-bottom:8px;font-size:13px;color:#e2e8f0">Lacks automated email notification workflows — doesn't scale well as the business grows beyond a small team.</div>
+  <div style="background:#1A060C;border-left:3px solid #F43F5E;padding:10px 12px;border-radius:4px;margin-bottom:16px;font-size:13px;color:#e2e8f0">Alarm/life safety focused — limited PSA capabilities for integrators who also need field service, ticketing, project management, and quoting in one platform.</div>
 
   <div class="section-title">✅ Genuine Strengths (acknowledge these)</div>
-  <div style="background:#081a08;border-left:3px solid #00ff88;padding:10px 12px;border-radius:4px;margin-bottom:8px;font-size:13px;color:#e2e8f0">Handles recurring billing and RMR management well for pure alarm/life safety businesses.</div>
-  <div style="background:#081a08;border-left:3px solid #00ff88;padding:10px 12px;border-radius:4px;margin-bottom:16px;font-size:13px;color:#e2e8f0">E-signature quoting with view/sign notifications and declined payment reporting are valued by small alarm dealers.</div>
+  <div style="background:#0D1A2E;border-left:3px solid #6366F1;padding:10px 12px;border-radius:4px;margin-bottom:8px;font-size:13px;color:#e2e8f0">Handles recurring billing and RMR management well for pure alarm/life safety businesses.</div>
+  <div style="background:#0D1A2E;border-left:3px solid #6366F1;padding:10px 12px;border-radius:4px;margin-bottom:16px;font-size:13px;color:#e2e8f0">E-signature quoting with view/sign notifications and declined payment reporting are valued by small alarm dealers.</div>
 
   <div class="section-title">🎙️ Field Intelligence — What Prospects Say (4 raw mentions)</div>
-  <div style="background:#1a0808;border-left:3px solid #ff4466;padding:10px 12px;border-radius:4px;margin-bottom:8px;font-size:13px;color:#e2e8f0">No automation for customer communications when payments decline, forcing manual chase-down of failed-card customers.</div>
-  <div style="background:#081a08;border-left:3px solid #00ff88;padding:10px 12px;border-radius:4px;margin-bottom:8px;font-size:13px;color:#e2e8f0">Prospects like the end-to-end automation from quoting through customer signing, central station agreements, DocuSign integration, and RMR management.</div>
+  <div style="background:#1A060C;border-left:3px solid #F43F5E;padding:10px 12px;border-radius:4px;margin-bottom:8px;font-size:13px;color:#e2e8f0">No automation for customer communications when payments decline, forcing manual chase-down of failed-card customers.</div>
+  <div style="background:#0D1A2E;border-left:3px solid #6366F1;padding:10px 12px;border-radius:4px;margin-bottom:8px;font-size:13px;color:#e2e8f0">Prospects like the end-to-end automation from quoting through customer signing, central station agreements, DocuSign integration, and RMR management.</div>
 </div>
 
 <!-- ===== SIMPRO ===== -->
 <div id="simpro" class="section">
-  <div style="float:right;width:220px;background:#061a0e;border:1px solid #3DC57044;border-radius:8px;padding:12px;margin:0 0 16px 20px"><div style="font-size:9px;font-weight:700;text-transform:uppercase;letter-spacing:1.5px;color:#3DC570;margin-bottom:8px">✅ 2 Displaced Customers</div><ul style="list-style:none;margin:0;padding:0"><li style="padding:3px 0;font-size:11px;color:#c8f0dc;border-bottom:1px solid #0d2a0d"><span style="color:#3DC570;margin-right:6px">✓</span>Atlantic Companies</li><li style="padding:3px 0;font-size:11px;color:#c8f0dc;border-bottom:1px solid #0d2a0d"><span style="color:#3DC570;margin-right:6px">✓</span>Highline Integrated Security</li></ul></div>
+  <div style="float:right;width:220px;background:#0F172A;border:1px solid rgba(99,102,241,0.3);border-radius:8px;padding:12px;margin:0 0 16px 20px"><div style="font-size:9px;font-weight:700;text-transform:uppercase;letter-spacing:1.5px;color:#818CF8;margin-bottom:8px">✅ 2 Displaced Customers</div><ul style="list-style:none;margin:0;padding:0"><li style="padding:3px 0;font-size:11px;color:#c8f0dc;border-bottom:1px solid #1E293B"><span style="color:#10B981;margin-right:6px">✓</span>Atlantic Companies</li><li style="padding:3px 0;font-size:11px;color:#c8f0dc;border-bottom:1px solid #1E293B"><span style="color:#10B981;margin-right:6px">✓</span>Highline Integrated Security</li></ul></div>
 
 <!-- FIELD_INTEL_START:Simpro updated:2026-05-15 -->
 <div class="section-title">🎙️ Field Intelligence — What Prospects Say (11 raw mentions)</div>
-<div style="margin-bottom:8px"><div style="font-size:11px;color:#ff4466;text-transform:uppercase;letter-spacing:1px;margin-bottom:8px">Key Pain Points</div><div style="background:#1a0808;border-left:3px solid #ff4466;padding:10px 12px;border-radius:4px;margin-bottom:8px">
+<div style="margin-bottom:8px"><div style="font-size:11px;color:#ff4466;text-transform:uppercase;letter-spacing:1px;margin-bottom:8px">Key Pain Points</div><div style="background:#1A060C;border-left:3px solid #F43F5E;padding:10px 12px;border-radius:4px;margin-bottom:8px">
           <div style="font-size:13px;color:#e2e8f0">Record locking prevents two users from viewing or editing the same job simultaneously, forcing manual requests to unlock before scheduling changes can be made.</div>
-        </div><div style="background:#1a0808;border-left:3px solid #ff4466;padding:10px 12px;border-radius:4px;margin-bottom:8px">
+        </div><div style="background:#1A060C;border-left:3px solid #F43F5E;padding:10px 12px;border-radius:4px;margin-bottom:8px">
           <div style="font-size:13px;color:#e2e8f0">No project management capabilities and a limited mobile app that only handles service jobs, forcing teams to rely on external tools like Trello and creating copy-paste inefficiencies.</div>
-        </div><div style="background:#1a0808;border-left:3px solid #ff4466;padding:10px 12px;border-radius:4px;margin-bottom:8px">
+        </div><div style="background:#1A060C;border-left:3px solid #F43F5E;padding:10px 12px;border-radius:4px;margin-bottom:8px">
           <div style="font-size:13px;color:#e2e8f0">Every added feature costs extra money—field payment collection alone runs hundreds more per month—frustrating prospects who want all-inclusive pricing.</div>
         </div></div>
-<div><div style="font-size:11px;color:#00ff88;text-transform:uppercase;letter-spacing:1px;margin-bottom:8px">Genuine Strengths</div><div style="background:#081a08;border-left:3px solid #00ff88;padding:10px 12px;border-radius:4px;margin-bottom:8px">
+<div><div style="font-size:11px;color:#818CF8;text-transform:uppercase;letter-spacing:1px;margin-bottom:8px">Genuine Strengths</div><div style="background:#0D1A2E;border-left:3px solid #6366F1;padding:10px 12px;border-radius:4px;margin-bottom:8px">
           <div style="font-size:13px;color:#e2e8f0">Handles annualized payments and periodic quarterly inspections well, understanding the recurring billing needs of the security industry.</div>
         </div></div>
 <!-- FIELD_INTEL_END:Simpro -->
@@ -1449,20 +1443,20 @@
 
 <!-- ===== SEDONA ===== -->
 <div id="sedona" class="section">
-  <div style="float:right;width:220px;background:#061a0e;border:1px solid #3DC57044;border-radius:8px;padding:12px;margin:0 0 16px 20px"><div style="font-size:9px;font-weight:700;text-transform:uppercase;letter-spacing:1.5px;color:#3DC570;margin-bottom:8px">✅ 1 Displaced Customer</div><ul style="list-style:none;margin:0;padding:0"><li style="padding:3px 0;font-size:11px;color:#c8f0dc;border-bottom:1px solid #0d2a0d"><span style="color:#3DC570;margin-right:6px">✓</span>DFW Security</li></ul></div>
+  <div style="float:right;width:220px;background:#0F172A;border:1px solid rgba(99,102,241,0.3);border-radius:8px;padding:12px;margin:0 0 16px 20px"><div style="font-size:9px;font-weight:700;text-transform:uppercase;letter-spacing:1.5px;color:#818CF8;margin-bottom:8px">✅ 1 Displaced Customer</div><ul style="list-style:none;margin:0;padding:0"><li style="padding:3px 0;font-size:11px;color:#c8f0dc;border-bottom:1px solid #1E293B"><span style="color:#10B981;margin-right:6px">✓</span>DFW Security</li></ul></div>
 
 <!-- FIELD_INTEL_START:Sedona updated:2026-05-15 -->
 <div class="section-title">🎙️ Field Intelligence — What Prospects Say (15 raw mentions)</div>
-<div style="margin-bottom:8px"><div style="font-size:11px;color:#ff4466;text-transform:uppercase;letter-spacing:1px;margin-bottom:8px">Key Pain Points</div><div style="background:#1a0808;border-left:3px solid #ff4466;padding:10px 12px;border-radius:4px;margin-bottom:8px">
+<div style="margin-bottom:8px"><div style="font-size:11px;color:#ff4466;text-transform:uppercase;letter-spacing:1px;margin-bottom:8px">Key Pain Points</div><div style="background:#1A060C;border-left:3px solid #F43F5E;padding:10px 12px;border-radius:4px;margin-bottom:8px">
           <div style="font-size:13px;color:#e2e8f0">Sedona lacks meaningful automation capabilities—prospects are forced to build manual workarounds for task workflows, scheduling notifications, and two-way customer communication.</div>
-        </div><div style="background:#1a0808;border-left:3px solid #ff4466;padding:10px 12px;border-radius:4px;margin-bottom:8px">
+        </div><div style="background:#1A060C;border-left:3px solid #F43F5E;padding:10px 12px;border-radius:4px;margin-bottom:8px">
           <div style="font-size:13px;color:#e2e8f0">Time tracking and pricing integrations are broken—billing can't isolate non-billable time, and there's no real-time pricing sync with quoting tools, forcing manual verification on every product.</div>
-        </div><div style="background:#1a0808;border-left:3px solid #ff4466;padding:10px 12px;border-radius:4px;margin-bottom:8px">
+        </div><div style="background:#1A060C;border-left:3px solid #F43F5E;padding:10px 12px;border-radius:4px;margin-bottom:8px">
           <div style="font-size:13px;color:#e2e8f0">Subscription fees keep increasing while prospects see no meaningful R&D or platform innovation, making them question the value they're getting.</div>
         </div></div>
-<div><div style="font-size:11px;color:#00ff88;text-transform:uppercase;letter-spacing:1px;margin-bottom:8px">Genuine Strengths</div><div style="background:#081a08;border-left:3px solid #00ff88;padding:10px 12px;border-radius:4px;margin-bottom:8px">
+<div><div style="font-size:11px;color:#818CF8;text-transform:uppercase;letter-spacing:1px;margin-bottom:8px">Genuine Strengths</div><div style="background:#0D1A2E;border-left:3px solid #6366F1;padding:10px 12px;border-radius:4px;margin-bottom:8px">
           <div style="font-size:13px;color:#e2e8f0">Sedona handles accounting natively on top of field service operations, which is a genuine differentiator for companies wanting an all-in-one system.</div>
-        </div><div style="background:#081a08;border-left:3px solid #00ff88;padding:10px 12px;border-radius:4px;margin-bottom:8px">
+        </div><div style="background:#0D1A2E;border-left:3px solid #6366F1;padding:10px 12px;border-radius:4px;margin-bottom:8px">
           <div style="font-size:13px;color:#e2e8f0">Processes recurring revenue and billing effectively—prospects with 70% recurring services run it all through Sedona.</div>
         </div></div>
 <!-- FIELD_INTEL_END:Sedona -->
@@ -1520,7 +1514,7 @@
   </table>
 
   <div class="section-title">🔥 Bold Group / EverCommerce Positioning</div>
-  <div style="background:#1a0808;border-left:3px solid #ff4466;padding:14px 16px;border-radius:6px;margin-bottom:20px;">
+  <div style="background:#1A060C;border-left:3px solid #F43F5E;padding:14px 16px;border-radius:6px;margin-bottom:20px;">
     <div style="font-size:13px;color:#e2e8f0;line-height:1.6">Bold Group owns <strong style="color:#ffcc00;">SedonaOffice, AlarmBiller, AND Managely</strong> — three separate platforms, all stagnating. If a prospect is on any Bold Group product, the pitch is simple: <em>"You're on a platform that isn't being invested in, by a company that clearly can't pick one product to build. Rev.io is the opposite — one platform, actively developed, with 400+ integrator customers telling us what to build next."</em></div>
   </div>
 
@@ -1559,20 +1553,20 @@
 
 <!-- ===== HOUSECALL PRO ===== -->
 <div id="housecall-pro" class="section">
-  <div style="float:right;width:220px;background:#061a0e;border:1px solid #3DC57044;border-radius:8px;padding:12px;margin:0 0 16px 20px"><div style="font-size:9px;font-weight:700;text-transform:uppercase;letter-spacing:1.5px;color:#3DC570;margin-bottom:8px">✅ 4 Displaced Customers</div><ul style="list-style:none;margin:0;padding:0"><li style="padding:3px 0;font-size:11px;color:#c8f0dc;border-bottom:1px solid #0d2a0d"><span style="color:#3DC570;margin-right:6px">✓</span>Acoustical Design</li><li style="padding:3px 0;font-size:11px;color:#c8f0dc;border-bottom:1px solid #0d2a0d"><span style="color:#3DC570;margin-right:6px">✓</span>Leading Edge Security</li><li style="padding:3px 0;font-size:11px;color:#c8f0dc;border-bottom:1px solid #0d2a0d"><span style="color:#3DC570;margin-right:6px">✓</span>TREIN Management</li><li style="padding:3px 0;font-size:11px;color:#c8f0dc;border-bottom:1px solid #0d2a0d"><span style="color:#3DC570;margin-right:6px">✓</span>Total Temp</li></ul></div>
+  <div style="float:right;width:220px;background:#0F172A;border:1px solid rgba(99,102,241,0.3);border-radius:8px;padding:12px;margin:0 0 16px 20px"><div style="font-size:9px;font-weight:700;text-transform:uppercase;letter-spacing:1.5px;color:#818CF8;margin-bottom:8px">✅ 4 Displaced Customers</div><ul style="list-style:none;margin:0;padding:0"><li style="padding:3px 0;font-size:11px;color:#c8f0dc;border-bottom:1px solid #1E293B"><span style="color:#10B981;margin-right:6px">✓</span>Acoustical Design</li><li style="padding:3px 0;font-size:11px;color:#c8f0dc;border-bottom:1px solid #1E293B"><span style="color:#10B981;margin-right:6px">✓</span>Leading Edge Security</li><li style="padding:3px 0;font-size:11px;color:#c8f0dc;border-bottom:1px solid #1E293B"><span style="color:#10B981;margin-right:6px">✓</span>TREIN Management</li><li style="padding:3px 0;font-size:11px;color:#c8f0dc;border-bottom:1px solid #1E293B"><span style="color:#10B981;margin-right:6px">✓</span>Total Temp</li></ul></div>
 
 <!-- FIELD_INTEL_START:Housecall Pro updated:2026-05-15 -->
 <div class="section-title">🎙️ Field Intelligence — What Prospects Say (23 raw mentions)</div>
-<div style="margin-bottom:8px"><div style="font-size:11px;color:#ff4466;text-transform:uppercase;letter-spacing:1px;margin-bottom:8px">Key Pain Points</div><div style="background:#1a0808;border-left:3px solid #ff4466;padding:10px 12px;border-radius:4px;margin-bottom:8px">
+<div style="margin-bottom:8px"><div style="font-size:11px;color:#ff4466;text-transform:uppercase;letter-spacing:1px;margin-bottom:8px">Key Pain Points</div><div style="background:#1A060C;border-left:3px solid #F43F5E;padding:10px 12px;border-radius:4px;margin-bottom:8px">
           <div style="font-size:13px;color:#e2e8f0">Lacks emergency/priority management—no color coding, one-click priority changes, or automatic technician notifications for urgent jobs.</div>
-        </div><div style="background:#1a0808;border-left:3px solid #ff4466;padding:10px 12px;border-radius:4px;margin-bottom:8px">
+        </div><div style="background:#1A060C;border-left:3px solid #F43F5E;padding:10px 12px;border-radius:4px;margin-bottom:8px">
           <div style="font-size:13px;color:#e2e8f0">Cannot track multi-stage projects or job profitability—prospects describe tracking revenue as 'just guessing' and dashboards get messy with complex jobs.</div>
-        </div><div style="background:#1a0808;border-left:3px solid #ff4466;padding:10px 12px;border-radius:4px;margin-bottom:8px">
+        </div><div style="background:#1A060C;border-left:3px solid #F43F5E;padding:10px 12px;border-radius:4px;margin-bottom:8px">
           <div style="font-size:13px;color:#e2e8f0">Only integrates with QuickBooks Online, not Desktop, and nickel-and-dimes for features like recurring billing, service plans, and project management that competitors include.</div>
         </div></div>
-<div><div style="font-size:11px;color:#00ff88;text-transform:uppercase;letter-spacing:1px;margin-bottom:8px">Genuine Strengths</div><div style="background:#081a08;border-left:3px solid #00ff88;padding:10px 12px;border-radius:4px;margin-bottom:8px">
+<div><div style="font-size:11px;color:#818CF8;text-transform:uppercase;letter-spacing:1px;margin-bottom:8px">Genuine Strengths</div><div style="background:#0D1A2E;border-left:3px solid #6366F1;padding:10px 12px;border-radius:4px;margin-bottom:8px">
           <div style="font-size:13px;color:#e2e8f0">Exceptional value at $189/month for 5 users—prospects call it a 'smoking deal that nobody can touch' for basic operations.</div>
-        </div><div style="background:#081a08;border-left:3px solid #00ff88;padding:10px 12px;border-radius:4px;margin-bottom:8px">
+        </div><div style="background:#0D1A2E;border-left:3px solid #6366F1;padding:10px 12px;border-radius:4px;margin-bottom:8px">
           <div style="font-size:13px;color:#e2e8f0">Simple and reliable for core functions like quoting, scheduling, dispatch, mobile payments, and QuickBooks Online sync—long-term users report no major issues.</div>
         </div></div>
 <!-- FIELD_INTEL_END:Housecall Pro -->
@@ -1664,18 +1658,18 @@
 
 <!-- ===== JOBBER ===== -->
 <div id="jobber" class="section">
-  <div style="float:right;width:220px;background:#061a0e;border:1px solid #3DC57044;border-radius:8px;padding:12px;margin:0 0 16px 20px"><div style="font-size:9px;font-weight:700;text-transform:uppercase;letter-spacing:1.5px;color:#3DC570;margin-bottom:8px">✅ 5 Displaced Customers</div><ul style="list-style:none;margin:0;padding:0"><li style="padding:3px 0;font-size:11px;color:#c8f0dc;border-bottom:1px solid #0d2a0d"><span style="color:#3DC570;margin-right:6px">✓</span>Cinemascape</li><li style="padding:3px 0;font-size:11px;color:#c8f0dc;border-bottom:1px solid #0d2a0d"><span style="color:#3DC570;margin-right:6px">✓</span>Guardian Advanced Solutions</li><li style="padding:3px 0;font-size:11px;color:#c8f0dc;border-bottom:1px solid #0d2a0d"><span style="color:#3DC570;margin-right:6px">✓</span>Hawkeye Protection</li><li style="padding:3px 0;font-size:11px;color:#c8f0dc;border-bottom:1px solid #0d2a0d"><span style="color:#3DC570;margin-right:6px">✓</span>Kellsec Security Solutions</li><li style="padding:3px 0;font-size:11px;color:#c8f0dc;border-bottom:1px solid #0d2a0d"><span style="color:#3DC570;margin-right:6px">✓</span>Shinntek Solutions</li></ul></div>
+  <div style="float:right;width:220px;background:#0F172A;border:1px solid rgba(99,102,241,0.3);border-radius:8px;padding:12px;margin:0 0 16px 20px"><div style="font-size:9px;font-weight:700;text-transform:uppercase;letter-spacing:1.5px;color:#818CF8;margin-bottom:8px">✅ 5 Displaced Customers</div><ul style="list-style:none;margin:0;padding:0"><li style="padding:3px 0;font-size:11px;color:#c8f0dc;border-bottom:1px solid #1E293B"><span style="color:#10B981;margin-right:6px">✓</span>Cinemascape</li><li style="padding:3px 0;font-size:11px;color:#c8f0dc;border-bottom:1px solid #1E293B"><span style="color:#10B981;margin-right:6px">✓</span>Guardian Advanced Solutions</li><li style="padding:3px 0;font-size:11px;color:#c8f0dc;border-bottom:1px solid #1E293B"><span style="color:#10B981;margin-right:6px">✓</span>Hawkeye Protection</li><li style="padding:3px 0;font-size:11px;color:#c8f0dc;border-bottom:1px solid #1E293B"><span style="color:#10B981;margin-right:6px">✓</span>Kellsec Security Solutions</li><li style="padding:3px 0;font-size:11px;color:#c8f0dc;border-bottom:1px solid #1E293B"><span style="color:#10B981;margin-right:6px">✓</span>Shinntek Solutions</li></ul></div>
 
 <!-- FIELD_INTEL_START:Jobber updated:2026-05-15 -->
 <div class="section-title">🎙️ Field Intelligence — What Prospects Say (17 raw mentions)</div>
-<div style="margin-bottom:8px"><div style="font-size:11px;color:#ff4466;text-transform:uppercase;letter-spacing:1px;margin-bottom:8px">Key Pain Points</div><div style="background:#1a0808;border-left:3px solid #ff4466;padding:10px 12px;border-radius:4px;margin-bottom:8px">
+<div style="margin-bottom:8px"><div style="font-size:11px;color:#ff4466;text-transform:uppercase;letter-spacing:1px;margin-bottom:8px">Key Pain Points</div><div style="background:#1A060C;border-left:3px solid #F43F5E;padding:10px 12px;border-radius:4px;margin-bottom:8px">
           <div style="font-size:13px;color:#e2e8f0">Jobber lacks meaningful integrations, forcing manual processes across QuickBooks, email, and other systems with no unified view of customer data or job history.</div>
-        </div><div style="background:#1a0808;border-left:3px solid #ff4466;padding:10px 12px;border-radius:4px;margin-bottom:8px">
+        </div><div style="background:#1A060C;border-left:3px solid #F43F5E;padding:10px 12px;border-radius:4px;margin-bottom:8px">
           <div style="font-size:13px;color:#e2e8f0">Jobber has no inventory management functionality, forcing businesses to use multiple apps that technicians won't adopt consistently.</div>
-        </div><div style="background:#1a0808;border-left:3px solid #ff4466;padding:10px 12px;border-radius:4px;margin-bottom:8px">
+        </div><div style="background:#1A060C;border-left:3px solid #F43F5E;padding:10px 12px;border-radius:4px;margin-bottom:8px">
           <div style="font-size:13px;color:#e2e8f0">Jobber doesn't understand recurring revenue billing models, making it a poor fit for security and other RMR-based businesses despite being designed for landscaping/plumbing dispatch work.</div>
         </div></div>
-<div><div style="font-size:11px;color:#00ff88;text-transform:uppercase;letter-spacing:1px;margin-bottom:8px">Genuine Strengths</div><div style="background:#081a08;border-left:3px solid #00ff88;padding:10px 12px;border-radius:4px;margin-bottom:8px">
+<div><div style="font-size:11px;color:#818CF8;text-transform:uppercase;letter-spacing:1px;margin-bottom:8px">Genuine Strengths</div><div style="background:#0D1A2E;border-left:3px solid #6366F1;padding:10px 12px;border-radius:4px;margin-bottom:8px">
           <div style="font-size:13px;color:#e2e8f0">Jobber's quoting interface is praised as fast, clean, and intuitive with easy good-better-best options and simple accept/deny for customers.</div>
         </div></div>
 <!-- FIELD_INTEL_END:Jobber -->
