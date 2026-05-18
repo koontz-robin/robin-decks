@@ -139,11 +139,10 @@
   .seg-btn.active { background:rgba(56,189,248,0.1); border-color:#38bdf8; color:#38bdf8; }
   .nav-tab.hidden { display:none !important; }
 
-
-  /* Displaced customers sidebar */
-  .bc-layout { display: grid; grid-template-columns: 1fr 230px; gap: 28px; align-items: start; }
-  .bc-main { min-width: 0; }
-  .displaced-bar {
+  /* ── Displaced customers sidebar layout ── */
+  .section-grid { display: grid; grid-template-columns: 1fr 240px; gap: 28px; align-items: start; }
+  .section-grid-main { min-width: 0; }
+  .section-sidebar {
     position: sticky;
     top: 130px;
     background: #061a0e;
@@ -151,7 +150,7 @@
     border-radius: 10px;
     padding: 14px 12px;
   }
-  .displaced-bar .d-header {
+  .section-sidebar .sb-header {
     font-size: 9px;
     font-weight: 700;
     text-transform: uppercase;
@@ -161,8 +160,8 @@
     padding-bottom: 8px;
     border-bottom: 1px solid #3DC57033;
   }
-  .displaced-bar ul { list-style: none; margin: 0; padding: 0; }
-  .displaced-bar ul li {
+  .section-sidebar ul { list-style: none; margin: 0; padding: 0; }
+  .section-sidebar ul li {
     padding: 5px 0;
     font-size: 11px;
     color: #c8f0dc;
@@ -172,8 +171,12 @@
     gap: 6px;
     line-height: 1.4;
   }
-  .displaced-bar ul li:last-child { border-bottom: none; }
-  .displaced-bar .chk { color: #3DC570; font-weight: 700; flex-shrink: 0; }
+  .section-sidebar ul li:last-child { border-bottom: none; }
+  .section-sidebar .chk { color: #3DC570; font-weight: 700; flex-shrink: 0; }
+  @media (max-width: 900px) {
+    .section-grid { grid-template-columns: 1fr; }
+    .section-sidebar { position: static; }
+  }
 
 </style>
 </head>
@@ -230,7 +233,7 @@
   <div style="float:right;width:220px;background:#061a0e;border:1px solid #3DC57044;border-radius:8px;padding:12px;margin:0 0 16px 20px"><div style="font-size:9px;font-weight:700;text-transform:uppercase;letter-spacing:1.5px;color:#3DC570;margin-bottom:8px">✅ 14 Displaced Customers</div><ul style="list-style:none;margin:0;padding:0"><li style="padding:3px 0;font-size:11px;color:#c8f0dc;border-bottom:1px solid #0d2a0d"><span style="color:#3DC570;margin-right:6px">✓</span>Ameritel</li><li style="padding:3px 0;font-size:11px;color:#c8f0dc;border-bottom:1px solid #0d2a0d"><span style="color:#3DC570;margin-right:6px">✓</span>Avalora</li><li style="padding:3px 0;font-size:11px;color:#c8f0dc;border-bottom:1px solid #0d2a0d"><span style="color:#3DC570;margin-right:6px">✓</span>Bullfrog Group</li><li style="padding:3px 0;font-size:11px;color:#c8f0dc;border-bottom:1px solid #0d2a0d"><span style="color:#3DC570;margin-right:6px">✓</span>C1st Technologies</li><li style="padding:3px 0;font-size:11px;color:#c8f0dc;border-bottom:1px solid #0d2a0d"><span style="color:#3DC570;margin-right:6px">✓</span>Class 5 Technologies</li><li style="padding:3px 0;font-size:11px;color:#c8f0dc;border-bottom:1px solid #0d2a0d"><span style="color:#3DC570;margin-right:6px">✓</span>CompuCarolina</li><li style="padding:3px 0;font-size:11px;color:#c8f0dc;border-bottom:1px solid #0d2a0d"><span style="color:#3DC570;margin-right:6px">✓</span>Digital Market POS</li><li style="padding:3px 0;font-size:11px;color:#c8f0dc;border-bottom:1px solid #0d2a0d"><span style="color:#3DC570;margin-right:6px">✓</span>Integrated Technology & Security</li><li style="padding:3px 0;font-size:11px;color:#c8f0dc;border-bottom:1px solid #0d2a0d"><span style="color:#3DC570;margin-right:6px">✓</span>JMF Solutions/Prestige Healthcare</li><li style="padding:3px 0;font-size:11px;color:#c8f0dc;border-bottom:1px solid #0d2a0d"><span style="color:#3DC570;margin-right:6px">✓</span>Lavish Automation</li><li style="padding:3px 0;font-size:11px;color:#c8f0dc;border-bottom:1px solid #0d2a0d"><span style="color:#3DC570;margin-right:6px">✓</span>Losh Network Services</li><li style="padding:3px 0;font-size:11px;color:#c8f0dc;border-bottom:1px solid #0d2a0d"><span style="color:#3DC570;margin-right:6px">✓</span>NetWatch</li><li style="padding:3px 0;font-size:11px;color:#c8f0dc;border-bottom:1px solid #0d2a0d"><span style="color:#3DC570;margin-right:6px">✓</span>Remote Technology</li><li style="padding:3px 0;font-size:11px;color:#c8f0dc;border-bottom:1px solid #0d2a0d"><span style="color:#3DC570;margin-right:6px">✓</span>TruLine Technologies</li></ul></div>
   <div class="overview-grid">
     <div class="overview-item"><div class="label">Competitor</div><div class="value">ConnectWise PSA</div></div>
-  <div style="float:right;width:220px;background:#061a0e;border:1px solid #3DC57044;border-radius:8px;padding:12px;margin:0 0 16px 20px"><div style="font-size:9px;font-weight:700;text-transform:uppercase;letter-spacing:1.5px;color:#3DC570;margin-bottom:8px">✅ 14 Displaced Customers</div><ul style="list-style:none;margin:0;padding:0"><li style="padding:3px 0;font-size:11px;color:#c8f0dc;border-bottom:1px solid #0d2a0d"><span style="color:#3DC570;margin-right:6px">✓</span>Ameritel</li><li style="padding:3px 0;font-size:11px;color:#c8f0dc;border-bottom:1px solid #0d2a0d"><span style="color:#3DC570;margin-right:6px">✓</span>Avalora</li><li style="padding:3px 0;font-size:11px;color:#c8f0dc;border-bottom:1px solid #0d2a0d"><span style="color:#3DC570;margin-right:6px">✓</span>Bullfrog Group</li><li style="padding:3px 0;font-size:11px;color:#c8f0dc;border-bottom:1px solid #0d2a0d"><span style="color:#3DC570;margin-right:6px">✓</span>C1st Technologies</li><li style="padding:3px 0;font-size:11px;color:#c8f0dc;border-bottom:1px solid #0d2a0d"><span style="color:#3DC570;margin-right:6px">✓</span>Class 5 Technologies</li><li style="padding:3px 0;font-size:11px;color:#c8f0dc;border-bottom:1px solid #0d2a0d"><span style="color:#3DC570;margin-right:6px">✓</span>CompuCarolina</li><li style="padding:3px 0;font-size:11px;color:#c8f0dc;border-bottom:1px solid #0d2a0d"><span style="color:#3DC570;margin-right:6px">✓</span>Digital Market POS</li><li style="padding:3px 0;font-size:11px;color:#c8f0dc;border-bottom:1px solid #0d2a0d"><span style="color:#3DC570;margin-right:6px">✓</span>Integrated Technology & Security</li><li style="padding:3px 0;font-size:11px;color:#c8f0dc;border-bottom:1px solid #0d2a0d"><span style="color:#3DC570;margin-right:6px">✓</span>JMF Solutions/Prestige Healthcare</li><li style="padding:3px 0;font-size:11px;color:#c8f0dc;border-bottom:1px solid #0d2a0d"><span style="color:#3DC570;margin-right:6px">✓</span>Lavish Automation</li><li style="padding:3px 0;font-size:11px;color:#c8f0dc;border-bottom:1px solid #0d2a0d"><span style="color:#3DC570;margin-right:6px">✓</span>Losh Network Services</li><li style="padding:3px 0;font-size:11px;color:#c8f0dc;border-bottom:1px solid #0d2a0d"><span style="color:#3DC570;margin-right:6px">✓</span>NetWatch</li><li style="padding:3px 0;font-size:11px;color:#c8f0dc;border-bottom:1px solid #0d2a0d"><span style="color:#3DC570;margin-right:6px">✓</span>Remote Technology</li><li style="padding:3px 0;font-size:11px;color:#c8f0dc;border-bottom:1px solid #0d2a0d"><span style="color:#3DC570;margin-right:6px">✓</span>TruLine Technologies</li></ul></div>
+  
 
   
 <!-- FIELD_INTEL_START:ConnectWise updated:2026-05-15 -->
@@ -350,7 +353,7 @@
   <div style="float:right;width:220px;background:#061a0e;border:1px solid #3DC57044;border-radius:8px;padding:12px;margin:0 0 16px 20px"><div style="font-size:9px;font-weight:700;text-transform:uppercase;letter-spacing:1.5px;color:#3DC570;margin-bottom:8px">✅ 3 Displaced Customers</div><ul style="list-style:none;margin:0;padding:0"><li style="padding:3px 0;font-size:11px;color:#c8f0dc;border-bottom:1px solid #0d2a0d"><span style="color:#3DC570;margin-right:6px">✓</span>Automated Telecom</li><li style="padding:3px 0;font-size:11px;color:#c8f0dc;border-bottom:1px solid #0d2a0d"><span style="color:#3DC570;margin-right:6px">✓</span>Grahek Technology</li><li style="padding:3px 0;font-size:11px;color:#c8f0dc;border-bottom:1px solid #0d2a0d"><span style="color:#3DC570;margin-right:6px">✓</span>Tolleson Inc</li></ul></div>
   <div class="overview-grid">
     <div class="overview-item"><div class="label">Competitor</div><div class="value">Datto Autotask PSA (Kaseya)</div></div>
-  <div style="float:right;width:220px;background:#061a0e;border:1px solid #3DC57044;border-radius:8px;padding:12px;margin:0 0 16px 20px"><div style="font-size:9px;font-weight:700;text-transform:uppercase;letter-spacing:1.5px;color:#3DC570;margin-bottom:8px">✅ 3 Displaced Customers</div><ul style="list-style:none;margin:0;padding:0"><li style="padding:3px 0;font-size:11px;color:#c8f0dc;border-bottom:1px solid #0d2a0d"><span style="color:#3DC570;margin-right:6px">✓</span>Automated Telecom</li><li style="padding:3px 0;font-size:11px;color:#c8f0dc;border-bottom:1px solid #0d2a0d"><span style="color:#3DC570;margin-right:6px">✓</span>Grahek Technology</li><li style="padding:3px 0;font-size:11px;color:#c8f0dc;border-bottom:1px solid #0d2a0d"><span style="color:#3DC570;margin-right:6px">✓</span>Tolleson Inc</li></ul></div>
+  
 
   
 <!-- FIELD_INTEL_START:Autotask updated:2026-05-15 -->
@@ -458,7 +461,7 @@
 <!-- FIELD_INTEL_END:Halo PSA -->
   <div class="overview-grid">
     <div class="overview-item"><div class="label">Competitor</div><div class="value">HaloPSA</div></div>
-  <div style="float:right;width:220px;background:#061a0e;border:1px solid #3DC57044;border-radius:8px;padding:12px;margin:0 0 16px 20px"><div style="font-size:9px;font-weight:700;text-transform:uppercase;letter-spacing:1.5px;color:#3DC570;margin-bottom:8px">✅ 5 Displaced Customers</div><ul style="list-style:none;margin:0;padding:0"><li style="padding:3px 0;font-size:11px;color:#c8f0dc;border-bottom:1px solid #0d2a0d"><span style="color:#3DC570;margin-right:6px">✓</span>First Class Technology (MI)</li><li style="padding:3px 0;font-size:11px;color:#c8f0dc;border-bottom:1px solid #0d2a0d"><span style="color:#3DC570;margin-right:6px">✓</span>GuentherTech</li><li style="padding:3px 0;font-size:11px;color:#c8f0dc;border-bottom:1px solid #0d2a0d"><span style="color:#3DC570;margin-right:6px">✓</span>JONROG technology</li><li style="padding:3px 0;font-size:11px;color:#c8f0dc;border-bottom:1px solid #0d2a0d"><span style="color:#3DC570;margin-right:6px">✓</span>Novalera</li><li style="padding:3px 0;font-size:11px;color:#c8f0dc;border-bottom:1px solid #0d2a0d"><span style="color:#3DC570;margin-right:6px">✓</span>Ravguard</li></ul></div>
+  
 
   
 <!-- FIELD_INTEL_START:Halo updated:2026-05-15 -->
@@ -555,7 +558,7 @@
   <div style="float:right;width:220px;background:#061a0e;border:1px solid #3DC57044;border-radius:8px;padding:12px;margin:0 0 16px 20px"><div style="font-size:9px;font-weight:700;text-transform:uppercase;letter-spacing:1.5px;color:#3DC570;margin-bottom:8px">✅ 2 Displaced Customers</div><ul style="list-style:none;margin:0;padding:0"><li style="padding:3px 0;font-size:11px;color:#c8f0dc;border-bottom:1px solid #0d2a0d"><span style="color:#3DC570;margin-right:6px">✓</span>CMP Consulting Services</li><li style="padding:3px 0;font-size:11px;color:#c8f0dc;border-bottom:1px solid #0d2a0d"><span style="color:#3DC570;margin-right:6px">✓</span>Xact Communications</li></ul></div>
   <div class="overview-grid">
     <div class="overview-item"><div class="label">Competitor</div><div class="value">Syncro</div></div>
-  <div style="float:right;width:220px;background:#061a0e;border:1px solid #3DC57044;border-radius:8px;padding:12px;margin:0 0 16px 20px"><div style="font-size:9px;font-weight:700;text-transform:uppercase;letter-spacing:1.5px;color:#3DC570;margin-bottom:8px">✅ 2 Displaced Customers</div><ul style="list-style:none;margin:0;padding:0"><li style="padding:3px 0;font-size:11px;color:#c8f0dc;border-bottom:1px solid #0d2a0d"><span style="color:#3DC570;margin-right:6px">✓</span>CMP Consulting Services</li><li style="padding:3px 0;font-size:11px;color:#c8f0dc;border-bottom:1px solid #0d2a0d"><span style="color:#3DC570;margin-right:6px">✓</span>Xact Communications</li></ul></div>
+  
 
   
 <!-- FIELD_INTEL_START:Syncro updated:2026-05-15 -->
@@ -729,7 +732,7 @@
   <div class="objection"><div class="q">SuperOps has AI built in — Monica is amazing</div><div class="a">AI for ticket triage is nice, but AI doesn't solve your billing problem. Rev.io automates the entire revenue lifecycle — quoting, complex billing, and payment collection. That's where the real business impact is.</div></div>
   <div class="objection"><div class="q">SuperOps includes RMM and PSA in one platform</div><div class="a">So you get monitoring and ticketing together — great. But what about billing, payments, and multi-service quoting? Those are separate systems you still need. Rev.io consolidates the revenue side.</div></div>
   <div class="objection"><div class="q">SuperOps is the future — modern and AI-first</div><div class="a">Modern UI is great, but your business runs on revenue. Can SuperOps bill for VoIP usage, process payments, and give you a single invoice for IT + telecom + cloud? Rev.io can — and we've been doing complex billing for years, not months.</div></div>
-</div><div style="float:right;width:220px;background:#061a0e;border:1px solid #3DC57044;border-radius:8px;padding:12px;margin:0 0 16px 20px"><div style="font-size:9px;font-weight:700;text-transform:uppercase;letter-spacing:1.5px;color:#3DC570;margin-bottom:8px">✅ 3 Displaced Customers</div><ul style="list-style:none;margin:0;padding:0"><li style="padding:3px 0;font-size:11px;color:#c8f0dc;border-bottom:1px solid #0d2a0d"><span style="color:#3DC570;margin-right:6px">✓</span>Half Past Five Technologies</li><li style="padding:3px 0;font-size:11px;color:#c8f0dc;border-bottom:1px solid #0d2a0d"><span style="color:#3DC570;margin-right:6px">✓</span>Intek Technology Solutions</li><li style="padding:3px 0;font-size:11px;color:#c8f0dc;border-bottom:1px solid #0d2a0d"><span style="color:#3DC570;margin-right:6px">✓</span>Loricca</li></ul></div>
+</div>
 
 
 </div>
@@ -817,7 +820,7 @@
     <!-- Jobber -->
     <div style="background:var(--card); border:1px solid var(--border); border-left:3px solid var(--red); border-radius:8px; padding:14px;">
       <div style="font-weight:700; color:var(--accent); margin-bottom:8px;">Jobber <span style="font-size:11px;color:#3DC570;background:#061a0e;border:1px solid #3DC57066;padding:2px 8px;border-radius:10px;margin-left:8px">✅ 5 displaced</span></div><div class="overview-grid"><div class="overview-item"><div class="label">Competitor</div><div class="value">Jobber</div></div><div class="overview-item"><div class="label">Founded</div><div class="value">2011</div></div><div class="overview-item"><div class="label">HQ</div><div class="value">Edmonton, Alberta, Canada</div></div><div class="overview-item"><div class="label">Employees</div><div class="value">~670</div></div><div class="overview-item"><div class="label">Revenue</div><div class="value">~$167.5M (2024)</div></div><div class="overview-item"><div class="label">Funding</div><div class="value">$183.5M total raised</div></div><div class="overview-item"><div class="label">Target Market</div><div class="value">Small home service businesses (<30 techs) — 100K+ customers in 43 countries</div></div><div class="overview-item"><div class="label">Ownership</div><div class="value">Private · VC-backed</div></div></div>
-<div style="float:right;width:220px;background:#061a0e;border:1px solid #3DC57044;border-radius:8px;padding:12px;margin:0 0 16px 20px"><div style="font-size:9px;font-weight:700;text-transform:uppercase;letter-spacing:1.5px;color:#3DC570;margin-bottom:8px">✅ 5 Displaced Customers</div><ul style="list-style:none;margin:0;padding:0"><li style="padding:3px 0;font-size:11px;color:#c8f0dc;border-bottom:1px solid #0d2a0d"><span style="color:#3DC570;margin-right:6px">✓</span>Cinemascape</li><li style="padding:3px 0;font-size:11px;color:#c8f0dc;border-bottom:1px solid #0d2a0d"><span style="color:#3DC570;margin-right:6px">✓</span>Guardian Advanced Solutions</li><li style="padding:3px 0;font-size:11px;color:#c8f0dc;border-bottom:1px solid #0d2a0d"><span style="color:#3DC570;margin-right:6px">✓</span>Hawkeye Protection</li><li style="padding:3px 0;font-size:11px;color:#c8f0dc;border-bottom:1px solid #0d2a0d"><span style="color:#3DC570;margin-right:6px">✓</span>Kellsec Security Solutions</li><li style="padding:3px 0;font-size:11px;color:#c8f0dc;border-bottom:1px solid #0d2a0d"><span style="color:#3DC570;margin-right:6px">✓</span>Shinntek Solutions</li></ul></div>
+
       <ul style="list-style:none; font-size:13px;">
         <li style="padding:3px 0; border-bottom:1px solid #1a2540;">✗ Catered to smaller companies (~$200–300/mo pricing)</li>
         <li style="padding:3px 0; border-bottom:1px solid #1a2540;">✗ No true dispatch board or tech grouping</li>
@@ -890,7 +893,7 @@
     <!-- Sedona -->
     <div style="background:var(--card); border:1px solid var(--border); border-left:3px solid var(--red); border-radius:8px; padding:14px;">
       <div style="font-weight:700; color:var(--accent); margin-bottom:8px;">Sedona <span style="font-size:11px;color:#3DC570;background:#061a0e;border:1px solid #3DC57066;padding:2px 8px;border-radius:10px;margin-left:8px">✅ 1 displaced</span> <span style="font-size:11px; color:var(--muted); font-weight:400;">(Bold Group)</span></div><div class="overview-grid"><div class="overview-item"><div class="label">Competitor</div><div class="value">Sedona (SedonaOffice by Bold Group)</div></div><div class="overview-item"><div class="label">Founded</div><div class="value">40+ years (Bold Group)</div></div><div class="overview-item"><div class="label">HQ</div><div class="value">Colorado Springs, CO</div></div><div class="overview-item"><div class="label">Employees</div><div class="value">~130 (Bold Group total)</div></div><div class="overview-item"><div class="label">Revenue</div><div class="value">~$7.4M (Bold Group)</div></div><div class="overview-item"><div class="label">Target Market</div><div class="value">Mid-to-large alarm dealers — full back-office accounting & RMR</div></div><div class="overview-item"><div class="label">Ownership</div><div class="value">Private · Bold Group (also owns AlarmBiller)</div></div></div>
-<div style="float:right;width:220px;background:#061a0e;border:1px solid #3DC57044;border-radius:8px;padding:12px;margin:0 0 16px 20px"><div style="font-size:9px;font-weight:700;text-transform:uppercase;letter-spacing:1.5px;color:#3DC570;margin-bottom:8px">✅ 1 Displaced Customer</div><ul style="list-style:none;margin:0;padding:0"><li style="padding:3px 0;font-size:11px;color:#c8f0dc;border-bottom:1px solid #0d2a0d"><span style="color:#3DC570;margin-right:6px">✓</span>DFW Security</li></ul></div>
+
       <ul style="list-style:none; font-size:13px;">
         <li style="padding:3px 0; border-bottom:1px solid #1a2540;">✗ Poor support; platform is stagnant</li>
         <li style="padding:3px 0; border-bottom:1px solid #1a2540;">✗ No true inventory management</li>
@@ -916,7 +919,7 @@
     <!-- Simpro -->
     <div style="background:var(--card); border:1px solid var(--border); border-left:3px solid var(--red); border-radius:8px; padding:14px;">
       <div style="font-weight:700; color:var(--accent); margin-bottom:8px;">Simpro <span style="font-size:11px;color:#3DC570;background:#061a0e;border:1px solid #3DC57066;padding:2px 8px;border-radius:10px;margin-left:8px">✅ 2 displaced</span></div><div class="overview-grid"><div class="overview-item"><div class="label">Competitor</div><div class="value">Simpro</div></div><div class="overview-item"><div class="label">Founded</div><div class="value">2002</div></div><div class="overview-item"><div class="label">HQ</div><div class="value">Brisbane, QLD, Australia (US office: Broomfield, CO)</div></div><div class="overview-item"><div class="label">Employees</div><div class="value">~490</div></div><div class="overview-item"><div class="label">Revenue</div><div class="value">~$54M</div></div><div class="overview-item"><div class="label">Target Market</div><div class="value">Electrical, HVAC, plumbing, fire — commercial trade contractors</div></div><div class="overview-item"><div class="label">Ownership</div><div class="value">Private · PE-backed</div></div></div>
-<div style="float:right;width:220px;background:#061a0e;border:1px solid #3DC57044;border-radius:8px;padding:12px;margin:0 0 16px 20px"><div style="font-size:9px;font-weight:700;text-transform:uppercase;letter-spacing:1.5px;color:#3DC570;margin-bottom:8px">✅ 2 Displaced Customers</div><ul style="list-style:none;margin:0;padding:0"><li style="padding:3px 0;font-size:11px;color:#c8f0dc;border-bottom:1px solid #0d2a0d"><span style="color:#3DC570;margin-right:6px">✓</span>Atlantic Companies</li><li style="padding:3px 0;font-size:11px;color:#c8f0dc;border-bottom:1px solid #0d2a0d"><span style="color:#3DC570;margin-right:6px">✓</span>Highline Integrated Security</li></ul></div>
+
       <ul style="list-style:none; font-size:13px;">
         <li style="padding:3px 0; border-bottom:1px solid #1a2540;">✗ Weak tech management — hard to track utilization and schedule</li>
         <li style="padding:3px 0; border-bottom:1px solid #1a2540;">✗ Can't manage POs across multiple vendors/inventory items</li>
@@ -995,7 +998,7 @@
 <div id="service-fusion" class="section">
   <div style="float:right;width:220px;background:#061a0e;border:1px solid #3DC57044;border-radius:8px;padding:12px;margin:0 0 16px 20px"><div style="font-size:9px;font-weight:700;text-transform:uppercase;letter-spacing:1.5px;color:#3DC570;margin-bottom:8px">✅ 6 Displaced Customers</div><ul style="list-style:none;margin:0;padding:0"><li style="padding:3px 0;font-size:11px;color:#c8f0dc;border-bottom:1px solid #0d2a0d"><span style="color:#3DC570;margin-right:6px">✓</span>A&B Security</li><li style="padding:3px 0;font-size:11px;color:#c8f0dc;border-bottom:1px solid #0d2a0d"><span style="color:#3DC570;margin-right:6px">✓</span>Aaron's Lock & Security</li><li style="padding:3px 0;font-size:11px;color:#c8f0dc;border-bottom:1px solid #0d2a0d"><span style="color:#3DC570;margin-right:6px">✓</span>Alliance Communication & Technologies</li><li style="padding:3px 0;font-size:11px;color:#c8f0dc;border-bottom:1px solid #0d2a0d"><span style="color:#3DC570;margin-right:6px">✓</span>ITR-Systems</li><li style="padding:3px 0;font-size:11px;color:#c8f0dc;border-bottom:1px solid #0d2a0d"><span style="color:#3DC570;margin-right:6px">✓</span>Nevada Security Company</li><li style="padding:3px 0;font-size:11px;color:#c8f0dc;border-bottom:1px solid #0d2a0d"><span style="color:#3DC570;margin-right:6px">✓</span>TCG Tech</li></ul></div>
   <div class="overview-grid"><div class="overview-item"><div class="label">Competitor</div><div class="value">Service Fusion</div></div>
-  <div style="float:right;width:220px;background:#061a0e;border:1px solid #3DC57044;border-radius:8px;padding:12px;margin:0 0 16px 20px"><div style="font-size:9px;font-weight:700;text-transform:uppercase;letter-spacing:1.5px;color:#3DC570;margin-bottom:8px">✅ 6 Displaced Customers</div><ul style="list-style:none;margin:0;padding:0"><li style="padding:3px 0;font-size:11px;color:#c8f0dc;border-bottom:1px solid #0d2a0d"><span style="color:#3DC570;margin-right:6px">✓</span>A&B Security</li><li style="padding:3px 0;font-size:11px;color:#c8f0dc;border-bottom:1px solid #0d2a0d"><span style="color:#3DC570;margin-right:6px">✓</span>Aaron's Lock & Security</li><li style="padding:3px 0;font-size:11px;color:#c8f0dc;border-bottom:1px solid #0d2a0d"><span style="color:#3DC570;margin-right:6px">✓</span>Alliance Communication & Technologies</li><li style="padding:3px 0;font-size:11px;color:#c8f0dc;border-bottom:1px solid #0d2a0d"><span style="color:#3DC570;margin-right:6px">✓</span>ITR-Systems</li><li style="padding:3px 0;font-size:11px;color:#c8f0dc;border-bottom:1px solid #0d2a0d"><span style="color:#3DC570;margin-right:6px">✓</span>Nevada Security Company</li><li style="padding:3px 0;font-size:11px;color:#c8f0dc;border-bottom:1px solid #0d2a0d"><span style="color:#3DC570;margin-right:6px">✓</span>TCG Tech</li></ul></div>
+  
 
   
 
@@ -1023,7 +1026,7 @@
 <div id="alarmbiller" class="section">
   <div style="float:right;width:220px;background:#061a0e;border:1px solid #3DC57044;border-radius:8px;padding:12px;margin:0 0 16px 20px"><div style="font-size:9px;font-weight:700;text-transform:uppercase;letter-spacing:1.5px;color:#3DC570;margin-bottom:8px">✅ 8 Displaced Customers</div><ul style="list-style:none;margin:0;padding:0"><li style="padding:3px 0;font-size:11px;color:#c8f0dc;border-bottom:1px solid #0d2a0d"><span style="color:#3DC570;margin-right:6px">✓</span>ACS Fire & Security</li><li style="padding:3px 0;font-size:11px;color:#c8f0dc;border-bottom:1px solid #0d2a0d"><span style="color:#3DC570;margin-right:6px">✓</span>Alarm Security Inc</li><li style="padding:3px 0;font-size:11px;color:#c8f0dc;border-bottom:1px solid #0d2a0d"><span style="color:#3DC570;margin-right:6px">✓</span>Alarmtech</li><li style="padding:3px 0;font-size:11px;color:#c8f0dc;border-bottom:1px solid #0d2a0d"><span style="color:#3DC570;margin-right:6px">✓</span>Fastrack Virtual Guard</li><li style="padding:3px 0;font-size:11px;color:#c8f0dc;border-bottom:1px solid #0d2a0d"><span style="color:#3DC570;margin-right:6px">✓</span>Morgan Alarm Systems</li><li style="padding:3px 0;font-size:11px;color:#c8f0dc;border-bottom:1px solid #0d2a0d"><span style="color:#3DC570;margin-right:6px">✓</span>Mule Security & Electric</li><li style="padding:3px 0;font-size:11px;color:#c8f0dc;border-bottom:1px solid #0d2a0d"><span style="color:#3DC570;margin-right:6px">✓</span>Security Vision</li><li style="padding:3px 0;font-size:11px;color:#c8f0dc;border-bottom:1px solid #0d2a0d"><span style="color:#3DC570;margin-right:6px">✓</span>Silent Knight Security</li></ul></div>
   <div class="overview-grid"><div class="overview-item"><div class="label">Competitor</div><div class="value">AlarmBiller (Bold Group)</div></div>
-  <div style="float:right;width:220px;background:#061a0e;border:1px solid #3DC57044;border-radius:8px;padding:12px;margin:0 0 16px 20px"><div style="font-size:9px;font-weight:700;text-transform:uppercase;letter-spacing:1.5px;color:#3DC570;margin-bottom:8px">✅ 8 Displaced Customers</div><ul style="list-style:none;margin:0;padding:0"><li style="padding:3px 0;font-size:11px;color:#c8f0dc;border-bottom:1px solid #0d2a0d"><span style="color:#3DC570;margin-right:6px">✓</span>ACS Fire & Security</li><li style="padding:3px 0;font-size:11px;color:#c8f0dc;border-bottom:1px solid #0d2a0d"><span style="color:#3DC570;margin-right:6px">✓</span>Alarm Security Inc</li><li style="padding:3px 0;font-size:11px;color:#c8f0dc;border-bottom:1px solid #0d2a0d"><span style="color:#3DC570;margin-right:6px">✓</span>Alarmtech</li><li style="padding:3px 0;font-size:11px;color:#c8f0dc;border-bottom:1px solid #0d2a0d"><span style="color:#3DC570;margin-right:6px">✓</span>Fastrack Virtual Guard</li><li style="padding:3px 0;font-size:11px;color:#c8f0dc;border-bottom:1px solid #0d2a0d"><span style="color:#3DC570;margin-right:6px">✓</span>Morgan Alarm Systems</li><li style="padding:3px 0;font-size:11px;color:#c8f0dc;border-bottom:1px solid #0d2a0d"><span style="color:#3DC570;margin-right:6px">✓</span>Mule Security & Electric</li><li style="padding:3px 0;font-size:11px;color:#c8f0dc;border-bottom:1px solid #0d2a0d"><span style="color:#3DC570;margin-right:6px">✓</span>Security Vision</li><li style="padding:3px 0;font-size:11px;color:#c8f0dc;border-bottom:1px solid #0d2a0d"><span style="color:#3DC570;margin-right:6px">✓</span>Silent Knight Security</li></ul></div>
+  
 
   <div class="overview-item"><div class="label">Founded</div><div class="value">1980s (Bold Group); 40+ years in security software</div></div><div class="overview-item"><div class="label">HQ</div><div class="value">Colorado Springs, CO</div></div><div class="overview-item"><div class="label">Employees</div><div class="value">~130 (Bold Group total)</div></div><div class="overview-item"><div class="label">Revenue</div><div class="value">~$7.4M (Bold Group)</div></div><div class="overview-item"><div class="label">Target Market</div><div class="value">Alarm dealers and security companies with RMR billing</div></div><div class="overview-item"><div class="label">Ownership</div><div class="value">Private · Bold Group portfolio (also owns SedonaOffice)</div></div></div>
 
@@ -1107,7 +1110,7 @@
         </div></div>
 <!-- FIELD_INTEL_END:Monday -->
   <div class="overview-grid"><div class="overview-item"><div class="label">Competitor</div><div class="value">Monday.com</div></div>
-  <div style="float:right;width:220px;background:#061a0e;border:1px solid #3DC57044;border-radius:8px;padding:12px;margin:0 0 16px 20px"><div style="font-size:9px;font-weight:700;text-transform:uppercase;letter-spacing:1.5px;color:#3DC570;margin-bottom:8px">✅ 5 Displaced Customers</div><ul style="list-style:none;margin:0;padding:0"><li style="padding:3px 0;font-size:11px;color:#c8f0dc;border-bottom:1px solid #0d2a0d"><span style="color:#3DC570;margin-right:6px">✓</span>Audio Video Integrations</li><li style="padding:3px 0;font-size:11px;color:#c8f0dc;border-bottom:1px solid #0d2a0d"><span style="color:#3DC570;margin-right:6px">✓</span>Aviation Communications Ltd</li><li style="padding:3px 0;font-size:11px;color:#c8f0dc;border-bottom:1px solid #0d2a0d"><span style="color:#3DC570;margin-right:6px">✓</span>Global Data Technologies</li><li style="padding:3px 0;font-size:11px;color:#c8f0dc;border-bottom:1px solid #0d2a0d"><span style="color:#3DC570;margin-right:6px">✓</span>Patriot Cyber</li><li style="padding:3px 0;font-size:11px;color:#c8f0dc;border-bottom:1px solid #0d2a0d"><span style="color:#3DC570;margin-right:6px">✓</span>Sound Design Inc</li></ul></div>
+  
 
   <div class="overview-item"><div class="label">Founded</div><div class="value">2012</div></div><div class="overview-item"><div class="label">HQ</div><div class="value">Tel Aviv, Israel (US office: New York, NY)</div></div><div class="overview-item"><div class="label">Employees</div><div class="value">~2,000+</div></div><div class="overview-item"><div class="label">Revenue</div><div class="value">$906M ARR (2024)</div></div><div class="overview-item"><div class="label">Funding</div><div class="value">Public (MNDY) · IPO 2021 · raised $574M pre-IPO</div></div><div class="overview-item"><div class="label">Target Market</div><div class="value">Horizontal work management — Fortune 500 to SMB, all industries</div></div><div class="overview-item"><div class="label">Ownership</div><div class="value">Public (Nasdaq: MNDY)</div></div></div>
 
@@ -1211,7 +1214,7 @@
         </div></div>
 <!-- FIELD_INTEL_END:Ipoint -->
   <div class="overview-grid"><div class="overview-item"><div class="label">Competitor</div><div class="value">iPoint (iPoint LLC)</div></div>
-  <div style="float:right;width:220px;background:#061a0e;border:1px solid #3DC57044;border-radius:8px;padding:12px;margin:0 0 16px 20px"><div style="font-size:9px;font-weight:700;text-transform:uppercase;letter-spacing:1.5px;color:#3DC570;margin-bottom:8px">✅ 1 Displaced Customer</div><ul style="list-style:none;margin:0;padding:0"><li style="padding:3px 0;font-size:11px;color:#c8f0dc;border-bottom:1px solid #0d2a0d"><span style="color:#3DC570;margin-right:6px">✓</span>Hames Pro</li></ul></div>
+  
 
   <div class="overview-item"><div class="label">Founded</div><div class="value">Est. ~2010</div></div><div class="overview-item"><div class="label">HQ</div><div class="value">Kansas, US</div></div><div class="overview-item"><div class="label">Employees</div><div class="value">~10</div></div><div class="overview-item"><div class="label">Revenue</div><div class="value">Private · undisclosed</div></div><div class="overview-item"><div class="label">Target Market</div><div class="value">Audio/Video integrators — end-to-end business management</div></div><div class="overview-item"><div class="label">Ownership</div><div class="value">Private · bootstrapped</div></div></div>
 
@@ -1254,7 +1257,7 @@
 
 <!-- FIELD_INTEL_END:Projx360 -->
   <div class="overview-grid"><div class="overview-item"><div class="label">Competitor</div><div class="value">ProjX360</div></div>
-  <div style="float:right;width:220px;background:#061a0e;border:1px solid #3DC57044;border-radius:8px;padding:12px;margin:0 0 16px 20px"><div style="font-size:9px;font-weight:700;text-transform:uppercase;letter-spacing:1.5px;color:#3DC570;margin-bottom:8px">✅ 1 Displaced Customer</div><ul style="list-style:none;margin:0;padding:0"><li style="padding:3px 0;font-size:11px;color:#c8f0dc;border-bottom:1px solid #0d2a0d"><span style="color:#3DC570;margin-right:6px">✓</span>Creative Vision Tech</li></ul></div>
+  
 
   <div class="overview-item"><div class="label">Founded</div><div class="value">Est. ~2015 (by veteran integrator Doug Greenwald)</div></div><div class="overview-item"><div class="label">HQ</div><div class="value">Arizona, US</div></div><div class="overview-item"><div class="label">Employees</div><div class="value">Very small team (~5)</div></div><div class="overview-item"><div class="label">Revenue</div><div class="value">Private · undisclosed</div></div><div class="overview-item"><div class="label">Target Market</div><div class="value">Residential AV integrators — location-based project management</div></div><div class="overview-item"><div class="label">Ownership</div><div class="value">Private · owner-operated</div></div></div>
 
@@ -1316,7 +1319,7 @@
         </div></div>
 <!-- FIELD_INTEL_END:Workhorse -->
   <div class="overview-grid"><div class="overview-item"><div class="label">Competitor</div><div class="value">WorkHorse SCS</div></div>
-  <div style="float:right;width:220px;background:#061a0e;border:1px solid #3DC57044;border-radius:8px;padding:12px;margin:0 0 16px 20px"><div style="font-size:9px;font-weight:700;text-transform:uppercase;letter-spacing:1.5px;color:#3DC570;margin-bottom:8px">✅ 3 Displaced Customers</div><ul style="list-style:none;margin:0;padding:0"><li style="padding:3px 0;font-size:11px;color:#c8f0dc;border-bottom:1px solid #0d2a0d"><span style="color:#3DC570;margin-right:6px">✓</span>Alarm24</li><li style="padding:3px 0;font-size:11px;color:#c8f0dc;border-bottom:1px solid #0d2a0d"><span style="color:#3DC570;margin-right:6px">✓</span>Castle Security</li><li style="padding:3px 0;font-size:11px;color:#c8f0dc;border-bottom:1px solid #0d2a0d"><span style="color:#3DC570;margin-right:6px">✓</span>Command Corporation</li></ul></div>
+  
 
   <div class="overview-item"><div class="label">Founded</div><div class="value">Est. ~2015</div></div><div class="overview-item"><div class="label">HQ</div><div class="value">Not publicly disclosed</div></div><div class="overview-item"><div class="label">Employees</div><div class="value">Very small team (~10)</div></div><div class="overview-item"><div class="label">Revenue</div><div class="value">Private · undisclosed</div></div><div class="overview-item"><div class="label">Target Market</div><div class="value">Life safety and alarm companies with RMR billing (US & Canada)</div></div><div class="overview-item"><div class="label">Ownership</div><div class="value">Private · bootstrapped</div></div></div>
 
@@ -1813,27 +1816,22 @@ document.addEventListener('DOMContentLoaded', function() {
 });
 </script>
 
-<!-- bust:1775595820.6929584 --><script id="displaced-fix">
+<!-- bust:1775595820.6929584 -->
+<script id="sidebar-layout">
 (function() {
-  function fixSection(section) {
-    // Find the float:right displaced div anywhere in the section
-    var displaced = null;
-    var all = section.querySelectorAll('div');
-    for (var i = 0; i < all.length; i++) {
-      var s = all[i].getAttribute('style') || '';
-      if (s.indexOf('float:right') !== -1 && s.indexOf('220px') !== -1) {
-        displaced = all[i];
-        break;
-      }
-    }
-    if (!displaced) return;
-
-    // Build new displaced bar
-    var header = '';
-    var hEl = displaced.querySelector('div');
-    if (hEl) header = hEl.textContent.trim();
-
-    var items = displaced.querySelectorAll('li');
+  function buildSidebar(floatDiv) {
+    var headerEl = floatDiv.querySelector('div');
+    var header = headerEl ? headerEl.textContent.trim() : '';
+    var items = floatDiv.querySelectorAll('li');
+    
+    var sb = document.createElement('div');
+    sb.className = 'section-sidebar';
+    
+    var hd = document.createElement('div');
+    hd.className = 'sb-header';
+    hd.textContent = header;
+    sb.appendChild(hd);
+    
     var ul = document.createElement('ul');
     items.forEach(function(li) {
       var name = li.textContent.replace(/^✓\s*/, '').trim();
@@ -1842,37 +1840,45 @@ document.addEventListener('DOMContentLoaded', function() {
       chk.className = 'chk';
       chk.textContent = '✓';
       newLi.appendChild(chk);
-      newLi.appendChild(document.createTextNode(name));
+      newLi.appendChild(document.createTextNode(' ' + name));
       ul.appendChild(newLi);
     });
+    sb.appendChild(ul);
+    return sb;
+  }
 
-    var bar = document.createElement('div');
-    bar.className = 'displaced-bar';
-    var dHead = document.createElement('div');
-    dHead.className = 'd-header';
-    dHead.textContent = header;
-    bar.appendChild(dHead);
-    bar.appendChild(ul);
+  document.querySelectorAll('.section').forEach(function(section) {
+    // Find float:right displaced div (direct child or near-top)
+    var floatDiv = null;
+    var children = section.children;
+    for (var i = 0; i < Math.min(children.length, 5); i++) {
+      var s = children[i].getAttribute('style') || '';
+      if (s.indexOf('float:right') !== -1) {
+        floatDiv = children[i];
+        break;
+      }
+    }
+    if (!floatDiv) return;
 
-    // Remove old displaced div from its parent
-    displaced.parentNode.removeChild(displaced);
+    // Build sidebar
+    var sidebar = buildSidebar(floatDiv);
 
-    // Wrap section contents in bc-layout
-    var layout = document.createElement('div');
-    layout.className = 'bc-layout';
+    // Remove the float div
+    floatDiv.parentNode.removeChild(floatDiv);
+
+    // Wrap section content in grid
+    var grid = document.createElement('div');
+    grid.className = 'section-grid';
     var main = document.createElement('div');
-    main.className = 'bc-main';
+    main.className = 'section-grid-main';
 
-    // Move all section children into main
     while (section.firstChild) {
       main.appendChild(section.firstChild);
     }
-    layout.appendChild(main);
-    layout.appendChild(bar);
-    section.appendChild(layout);
-  }
-
-  document.querySelectorAll('.section').forEach(fixSection);
+    grid.appendChild(main);
+    grid.appendChild(sidebar);
+    section.appendChild(grid);
+  });
 })();
 </script>
 </body>
