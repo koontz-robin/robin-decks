@@ -107,7 +107,10 @@ Last updated: 2026-05-08
 - URL: https://koontz-robin.github.io/robin-decks/forecast.html
 - Repo: git@github.com:koontz-robin/robin-decks.git (remote: robin-decks)
 - Branch: push-q2-board → pushes to master
-- Sent weekly to: evanr@rev.io, brentm@rev.io
+- Sent weekly to: evanr@rev.io, brentm@rev.io (always CC ryank@rev.io)
+- **Weekly cron job:** Every Monday 11 AM ET (cron ID: 8f1f1d63-d0fd-443c-869f-c17051e2e024)
+- Script: send_forecast_email.py — refreshes SF data, rebuilds forecast.html, sends email
+- First run: Monday May 25, 2026
 - Opp tags come from SF Forecast_Status__c field
 - Marketing influence: q2_reengagement_baseline.json (account name matching)
 - May 2026 quotas: PSA $36,000 | Billing/Odin $10,252 | Payments $11,040 | Cyber+CommerceHub $7,434
