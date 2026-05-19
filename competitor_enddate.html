@@ -1,0 +1,795 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Competitor Contract End Dates — Rev.io</title>
+<style>
+  :root {
+    --bg: #0f1117;
+    --surface: #1a1d27;
+    --surface2: #21263a;
+    --border: #2e3452;
+    --text: #e8eaf6;
+    --text-muted: #8890b5;
+    --accent: #6c8ef5;
+    --urgent: #ef5350;
+    --soon: #ffa726;
+    --moderate: #66bb6a;
+    --future: #42a5f5;
+    --past: #9e9e9e;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+    font-size: 14px;
+    line-height: 1.5;
+  }
+  .header {
+    background: linear-gradient(135deg, #1a1d27 0%, #1f2440 100%);
+    border-bottom: 1px solid var(--border);
+    padding: 24px 32px;
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    box-shadow: 0 2px 12px rgba(0,0,0,0.4);
+  }
+  .header-top {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 16px;
+    flex-wrap: wrap;
+  }
+  .title { font-size: 22px; font-weight: 700; color: #fff; }
+  .subtitle { font-size: 13px; color: var(--text-muted); margin-top: 2px; }
+  .stat-pills {
+    display: flex;
+    gap: 10px;
+    flex-wrap: wrap;
+    align-items: center;
+  }
+  .stat-pill {
+    background: var(--surface2);
+    border: 1px solid var(--border);
+    border-radius: 20px;
+    padding: 4px 14px;
+    font-size: 12px;
+    font-weight: 600;
+    color: var(--text-muted);
+  }
+  .stat-pill span { color: var(--text); }
+  .nav-bar {
+    background: var(--surface);
+    border-bottom: 1px solid var(--border);
+    padding: 10px 32px;
+    display: flex;
+    gap: 8px;
+    flex-wrap: wrap;
+    overflow-x: auto;
+  }
+  .nav-link {
+    color: var(--text-muted);
+    text-decoration: none;
+    padding: 4px 12px;
+    border-radius: 14px;
+    font-size: 12px;
+    font-weight: 500;
+    border: 1px solid var(--border);
+    transition: all 0.15s;
+    white-space: nowrap;
+  }
+  .nav-link:hover { background: var(--accent); color: #fff; border-color: var(--accent); }
+  .content { padding: 24px 32px; max-width: 1200px; }
+  .legend {
+    display: flex;
+    gap: 16px;
+    flex-wrap: wrap;
+    margin-bottom: 24px;
+    padding: 12px 16px;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    align-items: center;
+  }
+  .legend-title { font-size: 12px; font-weight: 600; color: var(--text-muted); margin-right: 4px; }
+  .legend-item { display: flex; align-items: center; gap: 6px; font-size: 12px; color: var(--text-muted); }
+  .legend-dot { width: 10px; height: 10px; border-radius: 50%; }
+  .owner-section {
+    margin-bottom: 32px;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    overflow: hidden;
+  }
+  .owner-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 16px 20px;
+    background: var(--surface2);
+    border-bottom: 1px solid var(--border);
+    gap: 12px;
+    flex-wrap: wrap;
+  }
+  .owner-name { font-size: 16px; font-weight: 700; color: #fff; }
+  .owner-meta { display: flex; gap: 8px; align-items: center; flex-wrap: wrap; }
+  .count-badge {
+    background: rgba(108,142,245,0.15);
+    color: var(--accent);
+    border: 1px solid rgba(108,142,245,0.3);
+    border-radius: 12px;
+    padding: 2px 10px;
+    font-size: 12px;
+    font-weight: 600;
+  }
+  .pill {
+    border-radius: 12px;
+    padding: 2px 10px;
+    font-size: 11px;
+    font-weight: 600;
+  }
+  .urgent-pill { background: rgba(239,83,80,0.15); color: #ef9a9a; border: 1px solid rgba(239,83,80,0.3); }
+  .soon-pill { background: rgba(255,167,38,0.15); color: #ffcc80; border: 1px solid rgba(255,167,38,0.3); }
+  table {
+    width: 100%;
+    border-collapse: collapse;
+  }
+  thead tr {
+    background: rgba(255,255,255,0.03);
+  }
+  th {
+    text-align: left;
+    padding: 10px 16px;
+    font-size: 11px;
+    font-weight: 600;
+    color: var(--text-muted);
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    border-bottom: 1px solid var(--border);
+  }
+  td {
+    padding: 10px 16px;
+    border-bottom: 1px solid rgba(46,52,82,0.5);
+    vertical-align: middle;
+  }
+  tbody tr:last-child td { border-bottom: none; }
+  tbody tr:hover { background: rgba(255,255,255,0.03); }
+  .row-urgent { border-left: 3px solid var(--urgent); }
+  .row-soon { border-left: 3px solid var(--soon); }
+  .row-moderate { border-left: 3px solid var(--moderate); }
+  .row-future { border-left: 3px solid var(--future); }
+  .row-past { border-left: 3px solid var(--past); opacity: 0.7; }
+  .acct-link { color: var(--accent); text-decoration: none; font-weight: 500; }
+  .acct-link:hover { text-decoration: underline; }
+  .badge {
+    display: inline-block;
+    padding: 2px 8px;
+    border-radius: 10px;
+    font-size: 11px;
+    font-weight: 700;
+  }
+  .urgent-badge { background: rgba(239,83,80,0.2); color: #ef5350; }
+  .soon-badge { background: rgba(255,167,38,0.2); color: #ffa726; }
+  .moderate-badge { background: rgba(102,187,106,0.2); color: #66bb6a; }
+  .future-badge { background: rgba(66,165,245,0.2); color: #42a5f5; }
+  .past-badge { background: rgba(158,158,158,0.2); color: #9e9e9e; }
+  .updated { font-size: 11px; color: var(--text-muted); margin-top: 4px; }
+  @media (max-width: 700px) {
+    .header, .nav-bar, .content { padding-left: 16px; padding-right: 16px; }
+    th:nth-child(4), td:nth-child(4),
+    th:nth-child(5), td:nth-child(5) { display: none; }
+  }
+</style>
+</head>
+<body>
+
+<div class="header">
+  <div class="header-top">
+    <div>
+      <div class="title">🗓️ Competitor Contract End Dates</div>
+      <div class="subtitle">Accounts with upcoming competitor renewals — sorted by rep & date</div>
+    </div>
+    <div class="stat-pills">
+      <div class="stat-pill">Total <span>43</span></div>
+      <div class="stat-pill">Reps <span>10</span></div>
+    </div>
+  </div>
+  <div class="updated">Last refreshed: May 19, 2026 at 02:20 PM UTC</div>
+</div>
+
+<div class="nav-bar">
+  <a href="#owner-jamie-butler" class="nav-link">Jamie</a> <a href="#owner-ingrid-beard" class="nav-link">Ingrid</a> <a href="#owner-joseph-abarno" class="nav-link">Joseph</a> <a href="#owner-connor-flynn" class="nav-link">Connor</a> <a href="#owner-marketing-revio" class="nav-link">Marketing</a> <a href="#owner-andy-whisenant" class="nav-link">Andy</a> <a href="#owner-cam-sharpe" class="nav-link">Cam</a> <a href="#owner-davis-herndon" class="nav-link">Davis</a> <a href="#owner-jake-borah" class="nav-link">Jake</a> <a href="#owner-patrick-davies" class="nav-link">Patrick</a>
+</div>
+
+<div class="content">
+
+  <div class="legend">
+    <span class="legend-title">Color key:</span>
+    <span class="legend-item"><span class="legend-dot" style="background:var(--urgent)"></span> ≤30 days</span>
+    <span class="legend-item"><span class="legend-dot" style="background:var(--soon)"></span> 31–90 days</span>
+    <span class="legend-item"><span class="legend-dot" style="background:var(--moderate)"></span> 91–180 days</span>
+    <span class="legend-item"><span class="legend-dot" style="background:var(--future)"></span> 180+ days</span>
+    <span class="legend-item"><span class="legend-dot" style="background:var(--past)"></span> Past</span>
+  </div>
+
+  
+    <div class="owner-section" id="owner-jamie-butler">
+      <div class="owner-header">
+        <div class="owner-name">Jamie Butler</div>
+        <div class="owner-meta">
+          <span class="count-badge">13 accounts</span>
+          <span class="pill soon-pill">🟡 1 within 90d</span>
+        </div>
+      </div>
+      <table>
+        <thead>
+          <tr>
+            <th>Account Name</th>
+            <th>Competitor Contract End Date</th>
+            <th>Time Until</th>
+            <th>Industry</th>
+            <th>State</th>
+          </tr>
+        </thead>
+        <tbody>
+          
+        <tr class="row-past">
+          <td><a href="https://rev-io.my.salesforce.com/0016O000036loqaQAA" target="_blank" class="acct-link">Hudson InfoSys</a></td>
+          <td>May 01, 2026</td>
+          <td><span class="badge past-badge">18d ago</span></td>
+          <td>UCaaS / Voip</td>
+          <td>NY</td>
+        </tr>
+
+        <tr class="row-soon">
+          <td><a href="https://rev-io.my.salesforce.com/001PX000001reoXYAQ" target="_blank" class="acct-link">PowerSolution.com</a></td>
+          <td>Jul 01, 2026</td>
+          <td><span class="badge soon-badge">43d</span></td>
+          <td>MSP - No Voice</td>
+          <td>NJ</td>
+        </tr>
+
+        <tr class="row-future">
+          <td><a href="https://rev-io.my.salesforce.com/001PX00000PMBT5YAP" target="_blank" class="acct-link">SelTec</a></td>
+          <td>Dec 01, 2026</td>
+          <td><span class="badge future-badge">196d</span></td>
+          <td>MSP - No Voice</td>
+          <td>MD</td>
+        </tr>
+
+        <tr class="row-future">
+          <td><a href="https://rev-io.my.salesforce.com/001PX000004hU2dYAE" target="_blank" class="acct-link">Virtual Support Teks</a></td>
+          <td>Dec 01, 2026</td>
+          <td><span class="badge future-badge">196d</span></td>
+          <td>MSP - No Voice</td>
+          <td>OH</td>
+        </tr>
+
+        <tr class="row-future">
+          <td><a href="https://rev-io.my.salesforce.com/0011500001HNQKbAAP" target="_blank" class="acct-link">SC Telcom</a></td>
+          <td>Jan 01, 2027</td>
+          <td><span class="badge future-badge">227d</span></td>
+          <td>MSP - UCaaS / Voip</td>
+          <td>KS</td>
+        </tr>
+
+        <tr class="row-future">
+          <td><a href="https://rev-io.my.salesforce.com/0016O00003edXGCQA2" target="_blank" class="acct-link">Silver Linings Technology</a></td>
+          <td>Feb 01, 2027</td>
+          <td><span class="badge future-badge">258d</span></td>
+          <td>MSP - No Voice</td>
+          <td>NY</td>
+        </tr>
+
+        <tr class="row-future">
+          <td><a href="https://rev-io.my.salesforce.com/0016O00003ebhRUQAY" target="_blank" class="acct-link">True Blue Technology</a></td>
+          <td>Mar 31, 2027</td>
+          <td><span class="badge future-badge">316d</span></td>
+          <td>UCaaS / Voip</td>
+          <td>OH</td>
+        </tr>
+
+        <tr class="row-future">
+          <td><a href="https://rev-io.my.salesforce.com/0016O00003dmoY3QAI" target="_blank" class="acct-link">Dioguardi Consultation Group</a></td>
+          <td>May 01, 2027</td>
+          <td><span class="badge future-badge">347d</span></td>
+          <td>MSP - No Voice</td>
+          <td>NY</td>
+        </tr>
+
+        <tr class="row-future">
+          <td><a href="https://rev-io.my.salesforce.com/0016O00003ebh09QAA" target="_blank" class="acct-link">Merkem</a></td>
+          <td>Jun 01, 2027</td>
+          <td><span class="badge future-badge">378d</span></td>
+          <td>UCaaS / Voip</td>
+          <td>NJ</td>
+        </tr>
+
+        <tr class="row-future">
+          <td><a href="https://rev-io.my.salesforce.com/001PX00000UqqvkYAB" target="_blank" class="acct-link">myOfficeCloud</a></td>
+          <td>Jun 01, 2027</td>
+          <td><span class="badge future-badge">378d</span></td>
+          <td>UCaaS / Voip</td>
+          <td>MA</td>
+        </tr>
+
+        <tr class="row-future">
+          <td><a href="https://rev-io.my.salesforce.com/0011C0000323bbAQAQ" target="_blank" class="acct-link">NorthStar Technology Services</a></td>
+          <td>Oct 01, 2027</td>
+          <td><span class="badge future-badge">500d</span></td>
+          <td>MSP - No Voice</td>
+          <td>NJ</td>
+        </tr>
+
+        <tr class="row-future">
+          <td><a href="https://rev-io.my.salesforce.com/0011500001HNPpDAAX" target="_blank" class="acct-link">Access One</a></td>
+          <td>Jan 01, 2028</td>
+          <td><span class="badge future-badge">592d</span></td>
+          <td>MSP - UCaaS / Voip</td>
+          <td>IL</td>
+        </tr>
+
+        <tr class="row-future">
+          <td><a href="https://rev-io.my.salesforce.com/0016O00003bj1hNQAQ" target="_blank" class="acct-link">BlueTower Technical</a></td>
+          <td>Oct 01, 2028</td>
+          <td><span class="badge future-badge">866d</span></td>
+          <td>MSP - No Voice</td>
+          <td>NY</td>
+        </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="owner-section" id="owner-ingrid-beard">
+      <div class="owner-header">
+        <div class="owner-name">Ingrid Beard</div>
+        <div class="owner-meta">
+          <span class="count-badge">3 accounts</span>
+          <span class="pill soon-pill">🟡 1 within 90d</span>
+        </div>
+      </div>
+      <table>
+        <thead>
+          <tr>
+            <th>Account Name</th>
+            <th>Competitor Contract End Date</th>
+            <th>Time Until</th>
+            <th>Industry</th>
+            <th>State</th>
+          </tr>
+        </thead>
+        <tbody>
+          
+        <tr class="row-soon">
+          <td><a href="https://rev-io.my.salesforce.com/0011500001HNQNnAAP" target="_blank" class="acct-link">Scipio Technologies (Peace Communications)</a></td>
+          <td>Jul 01, 2026</td>
+          <td><span class="badge soon-badge">43d</span></td>
+          <td>MSP - UCaaS / Voip</td>
+          <td>TN</td>
+        </tr>
+
+        <tr class="row-future">
+          <td><a href="https://rev-io.my.salesforce.com/0011500001iqSgqAAE" target="_blank" class="acct-link">Midwest Telecom of America</a></td>
+          <td>Feb 01, 2027</td>
+          <td><span class="badge future-badge">258d</span></td>
+          <td>UCaaS / Voip</td>
+          <td>IN</td>
+        </tr>
+
+        <tr class="row-future">
+          <td><a href="https://rev-io.my.salesforce.com/0011500001HNQKxAAP" target="_blank" class="acct-link">Epic.io</a></td>
+          <td>Nov 30, 2027</td>
+          <td><span class="badge future-badge">560d</span></td>
+          <td>IoT / M2M</td>
+          <td>OR</td>
+        </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="owner-section" id="owner-joseph-abarno">
+      <div class="owner-header">
+        <div class="owner-name">Joseph Abarno</div>
+        <div class="owner-meta">
+          <span class="count-badge">2 accounts</span>
+          
+        </div>
+      </div>
+      <table>
+        <thead>
+          <tr>
+            <th>Account Name</th>
+            <th>Competitor Contract End Date</th>
+            <th>Time Until</th>
+            <th>Industry</th>
+            <th>State</th>
+          </tr>
+        </thead>
+        <tbody>
+          
+        <tr class="row-moderate">
+          <td><a href="https://rev-io.my.salesforce.com/001PX00000GUSArYAP" target="_blank" class="acct-link">Smartology</a></td>
+          <td>Oct 01, 2026</td>
+          <td><span class="badge moderate-badge">135d</span></td>
+          <td>MSP - No Voice</td>
+          <td>CA</td>
+        </tr>
+
+        <tr class="row-future">
+          <td><a href="https://rev-io.my.salesforce.com/001PX00000gLc6wYAC" target="_blank" class="acct-link">Tech Unlimited</a></td>
+          <td>Feb 01, 2027</td>
+          <td><span class="badge future-badge">258d</span></td>
+          <td>MSP - No Voice</td>
+          <td>MN</td>
+        </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="owner-section" id="owner-connor-flynn">
+      <div class="owner-header">
+        <div class="owner-name">Connor Flynn</div>
+        <div class="owner-meta">
+          <span class="count-badge">9 accounts</span>
+          
+        </div>
+      </div>
+      <table>
+        <thead>
+          <tr>
+            <th>Account Name</th>
+            <th>Competitor Contract End Date</th>
+            <th>Time Until</th>
+            <th>Industry</th>
+            <th>State</th>
+          </tr>
+        </thead>
+        <tbody>
+          
+        <tr class="row-future">
+          <td><a href="https://rev-io.my.salesforce.com/0016O00003ebhTQQAY" target="_blank" class="acct-link">IntelligIS</a></td>
+          <td>Dec 10, 2026</td>
+          <td><span class="badge future-badge">205d</span></td>
+          <td>MSP - No Voice</td>
+          <td>GA</td>
+        </tr>
+
+        <tr class="row-future">
+          <td><a href="https://rev-io.my.salesforce.com/0016O00003TybNUQAZ" target="_blank" class="acct-link">TotalBC</a></td>
+          <td>Jan 29, 2027</td>
+          <td><span class="badge future-badge">255d</span></td>
+          <td>MSP - UCaaS / Voip</td>
+          <td>NC</td>
+        </tr>
+
+        <tr class="row-future">
+          <td><a href="https://rev-io.my.salesforce.com/001PX00000BJpoTYAT" target="_blank" class="acct-link">Brightside</a></td>
+          <td>Feb 10, 2027</td>
+          <td><span class="badge future-badge">267d</span></td>
+          <td>MSP - No Voice</td>
+          <td>GA</td>
+        </tr>
+
+        <tr class="row-future">
+          <td><a href="https://rev-io.my.salesforce.com/001PX00000hvvX4YAI" target="_blank" class="acct-link">Next Level IT Pros</a></td>
+          <td>Jun 23, 2027</td>
+          <td><span class="badge future-badge">400d</span></td>
+          <td>UCaaS / Voip</td>
+          <td>FL</td>
+        </tr>
+
+        <tr class="row-future">
+          <td><a href="https://rev-io.my.salesforce.com/0016O00003dmpV0QAI" target="_blank" class="acct-link">Teamspring, Inc.</a></td>
+          <td>Jun 24, 2027</td>
+          <td><span class="badge future-badge">401d</span></td>
+          <td>MSP - No Voice</td>
+          <td>GA</td>
+        </tr>
+
+        <tr class="row-future">
+          <td><a href="https://rev-io.my.salesforce.com/001PX00000kXMLzYAO" target="_blank" class="acct-link">iTech</a></td>
+          <td>Nov 04, 2027</td>
+          <td><span class="badge future-badge">534d</span></td>
+          <td>MSP - No Voice</td>
+          <td>WV</td>
+        </tr>
+
+        <tr class="row-future">
+          <td><a href="https://rev-io.my.salesforce.com/0016O00003eaXctQAE" target="_blank" class="acct-link">AVLA.net</a></td>
+          <td>Mar 10, 2028</td>
+          <td><span class="badge future-badge">661d</span></td>
+          <td>UCaaS / Voip</td>
+          <td>FL</td>
+        </tr>
+
+        <tr class="row-future">
+          <td><a href="https://rev-io.my.salesforce.com/001PX00000Yggh5YAB" target="_blank" class="acct-link">SNS Technologies</a></td>
+          <td>May 07, 2029</td>
+          <td><span class="badge future-badge">1084d</span></td>
+          <td>MSP - No Voice</td>
+          <td>SC</td>
+        </tr>
+
+        <tr class="row-future">
+          <td><a href="https://rev-io.my.salesforce.com/0016O00003AUSrXQAX" target="_blank" class="acct-link">SBK telecom</a></td>
+          <td>Apr 20, 2031</td>
+          <td><span class="badge future-badge">1797d</span></td>
+          <td>MSP - UCaaS / Voip</td>
+          <td>AL</td>
+        </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="owner-section" id="owner-marketing-revio">
+      <div class="owner-header">
+        <div class="owner-name">Marketing Rev.io</div>
+        <div class="owner-meta">
+          <span class="count-badge">3 accounts</span>
+          
+        </div>
+      </div>
+      <table>
+        <thead>
+          <tr>
+            <th>Account Name</th>
+            <th>Competitor Contract End Date</th>
+            <th>Time Until</th>
+            <th>Industry</th>
+            <th>State</th>
+          </tr>
+        </thead>
+        <tbody>
+          
+        <tr class="row-future">
+          <td><a href="https://rev-io.my.salesforce.com/0016O00003dmoGVQAY" target="_blank" class="acct-link">Hudson Valley Wireless</a></td>
+          <td>Jan 01, 2027</td>
+          <td><span class="badge future-badge">227d</span></td>
+          <td>Other</td>
+          <td>NY</td>
+        </tr>
+
+        <tr class="row-future">
+          <td><a href="https://rev-io.my.salesforce.com/0011500001HNQ8nAAH" target="_blank" class="acct-link">D4US</a></td>
+          <td>Dec 01, 2027</td>
+          <td><span class="badge future-badge">561d</span></td>
+          <td>MSP - UCaaS / Voip</td>
+          <td>CA</td>
+        </tr>
+
+        <tr class="row-future">
+          <td><a href="https://rev-io.my.salesforce.com/001PX000001jsmSYAQ" target="_blank" class="acct-link">Zirkle Tech</a></td>
+          <td>May 01, 2028</td>
+          <td><span class="badge future-badge">713d</span></td>
+          <td>Other</td>
+          <td>OH</td>
+        </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="owner-section" id="owner-andy-whisenant">
+      <div class="owner-header">
+        <div class="owner-name">Andy Whisenant</div>
+        <div class="owner-meta">
+          <span class="count-badge">9 accounts</span>
+          
+        </div>
+      </div>
+      <table>
+        <thead>
+          <tr>
+            <th>Account Name</th>
+            <th>Competitor Contract End Date</th>
+            <th>Time Until</th>
+            <th>Industry</th>
+            <th>State</th>
+          </tr>
+        </thead>
+        <tbody>
+          
+        <tr class="row-future">
+          <td><a href="https://rev-io.my.salesforce.com/001PX00000CkbsLYAR" target="_blank" class="acct-link">Texas Infotech</a></td>
+          <td>Jan 07, 2027</td>
+          <td><span class="badge future-badge">233d</span></td>
+          <td>MSP - No Voice</td>
+          <td>TX</td>
+        </tr>
+
+        <tr class="row-future">
+          <td><a href="https://rev-io.my.salesforce.com/0016O00003MAGSxQAP" target="_blank" class="acct-link">Absolute</a></td>
+          <td>Jan 31, 2027</td>
+          <td><span class="badge future-badge">257d</span></td>
+          <td>UCaaS / Voip</td>
+          <td>TX</td>
+        </tr>
+
+        <tr class="row-future">
+          <td><a href="https://rev-io.my.salesforce.com/0016O00003dmoLPQAY" target="_blank" class="acct-link">Cytek</a></td>
+          <td>Feb 01, 2027</td>
+          <td><span class="badge future-badge">258d</span></td>
+          <td>MSP - No Voice</td>
+          <td>MO</td>
+        </tr>
+
+        <tr class="row-future">
+          <td><a href="https://rev-io.my.salesforce.com/0016O00003dmowyQAA" target="_blank" class="acct-link">Telesis IT</a></td>
+          <td>Apr 27, 2027</td>
+          <td><span class="badge future-badge">343d</span></td>
+          <td>UCaaS / Voip</td>
+          <td>LA</td>
+        </tr>
+
+        <tr class="row-future">
+          <td><a href="https://rev-io.my.salesforce.com/0016O00003dnA6SQAU" target="_blank" class="acct-link">Tanches Global Management, Inc.</a></td>
+          <td>Apr 28, 2027</td>
+          <td><span class="badge future-badge">344d</span></td>
+          <td>MSP - No Voice</td>
+          <td>TX</td>
+        </tr>
+
+        <tr class="row-future">
+          <td><a href="https://rev-io.my.salesforce.com/001PX00000at1bSYAQ" target="_blank" class="acct-link">Solid Base Information Technology</a></td>
+          <td>May 20, 2027</td>
+          <td><span class="badge future-badge">366d</span></td>
+          <td>MSP - No Voice</td>
+          <td>UT</td>
+        </tr>
+
+        <tr class="row-future">
+          <td><a href="https://rev-io.my.salesforce.com/0016O00003ee5SdQAI" target="_blank" class="acct-link">Nehring Technology</a></td>
+          <td>Oct 28, 2027</td>
+          <td><span class="badge future-badge">527d</span></td>
+          <td>MSP - No Voice</td>
+          <td>TX</td>
+        </tr>
+
+        <tr class="row-future">
+          <td><a href="https://rev-io.my.salesforce.com/001PX00000LXalNYAT" target="_blank" class="acct-link">StarOne Technologies</a></td>
+          <td>Jan 28, 2028</td>
+          <td><span class="badge future-badge">619d</span></td>
+          <td>UCaaS / Voip</td>
+          <td>AZ</td>
+        </tr>
+
+        <tr class="row-future">
+          <td><a href="https://rev-io.my.salesforce.com/0016O00003dmoYfQAI" target="_blank" class="acct-link">SolutionPartner</a></td>
+          <td>Apr 29, 2028</td>
+          <td><span class="badge future-badge">711d</span></td>
+          <td>MSP - No Voice</td>
+          <td>AZ</td>
+        </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="owner-section" id="owner-cam-sharpe">
+      <div class="owner-header">
+        <div class="owner-name">Cam Sharpe</div>
+        <div class="owner-meta">
+          <span class="count-badge">1 account</span>
+          
+        </div>
+      </div>
+      <table>
+        <thead>
+          <tr>
+            <th>Account Name</th>
+            <th>Competitor Contract End Date</th>
+            <th>Time Until</th>
+            <th>Industry</th>
+            <th>State</th>
+          </tr>
+        </thead>
+        <tbody>
+          
+        <tr class="row-future">
+          <td><a href="https://rev-io.my.salesforce.com/001PX00000keIYRYA2" target="_blank" class="acct-link">Peach State IT</a></td>
+          <td>Mar 01, 2027</td>
+          <td><span class="badge future-badge">286d</span></td>
+          <td>MSP - No Voice</td>
+          <td>GA</td>
+        </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="owner-section" id="owner-davis-herndon">
+      <div class="owner-header">
+        <div class="owner-name">Davis Herndon</div>
+        <div class="owner-meta">
+          <span class="count-badge">1 account</span>
+          
+        </div>
+      </div>
+      <table>
+        <thead>
+          <tr>
+            <th>Account Name</th>
+            <th>Competitor Contract End Date</th>
+            <th>Time Until</th>
+            <th>Industry</th>
+            <th>State</th>
+          </tr>
+        </thead>
+        <tbody>
+          
+        <tr class="row-future">
+          <td><a href="https://rev-io.my.salesforce.com/001PX0000043MrJYAU" target="_blank" class="acct-link">Capitol Communication Concepts</a></td>
+          <td>Mar 01, 2027</td>
+          <td><span class="badge future-badge">286d</span></td>
+          <td>Structured Cabling</td>
+          <td>OH</td>
+        </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="owner-section" id="owner-jake-borah">
+      <div class="owner-header">
+        <div class="owner-name">Jake Borah</div>
+        <div class="owner-meta">
+          <span class="count-badge">1 account</span>
+          
+        </div>
+      </div>
+      <table>
+        <thead>
+          <tr>
+            <th>Account Name</th>
+            <th>Competitor Contract End Date</th>
+            <th>Time Until</th>
+            <th>Industry</th>
+            <th>State</th>
+          </tr>
+        </thead>
+        <tbody>
+          
+        <tr class="row-future">
+          <td><a href="https://rev-io.my.salesforce.com/001PX0000078I88YAE" target="_blank" class="acct-link">Tech Solutions Group</a></td>
+          <td>Mar 01, 2027</td>
+          <td><span class="badge future-badge">286d</span></td>
+          <td>Security Integrator</td>
+          <td>TX</td>
+        </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="owner-section" id="owner-patrick-davies">
+      <div class="owner-header">
+        <div class="owner-name">Patrick Davies</div>
+        <div class="owner-meta">
+          <span class="count-badge">1 account</span>
+          
+        </div>
+      </div>
+      <table>
+        <thead>
+          <tr>
+            <th>Account Name</th>
+            <th>Competitor Contract End Date</th>
+            <th>Time Until</th>
+            <th>Industry</th>
+            <th>State</th>
+          </tr>
+        </thead>
+        <tbody>
+          
+        <tr class="row-future">
+          <td><a href="https://rev-io.my.salesforce.com/001PX00000CLpNCYA1" target="_blank" class="acct-link">Pro-Tec Design</a></td>
+          <td>Apr 02, 2029</td>
+          <td><span class="badge future-badge">1049d</span></td>
+          <td>Security Integrator</td>
+          <td>MN</td>
+        </tr>
+        </tbody>
+      </table>
+    </div>
+
+</div>
+</body>
+</html>
