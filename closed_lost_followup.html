@@ -1,0 +1,2789 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Closed Lost Follow-up Dates — Rev.io</title>
+<style>
+  :root {
+    --bg: #0f1117;
+    --surface: #1a1d27;
+    --surface2: #21263a;
+    --border: #2e3452;
+    --text: #e8eaf6;
+    --text-muted: #8890b5;
+    --accent: #6c8ef5;
+    --urgent: #ef5350;
+    --soon: #ffa726;
+    --moderate: #66bb6a;
+    --future: #42a5f5;
+    --past: #ff7043;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+    font-size: 14px;
+    line-height: 1.5;
+  }
+  .header {
+    background: linear-gradient(135deg, #1a1d27 0%, #1f2440 100%);
+    border-bottom: 1px solid var(--border);
+    padding: 24px 32px;
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    box-shadow: 0 2px 12px rgba(0,0,0,0.4);
+  }
+  .header-top {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 16px;
+    flex-wrap: wrap;
+  }
+  .title { font-size: 22px; font-weight: 700; color: #fff; }
+  .subtitle { font-size: 13px; color: var(--text-muted); margin-top: 2px; }
+  .stat-pills { display: flex; gap: 10px; flex-wrap: wrap; align-items: center; }
+  .stat-pill {
+    background: var(--surface2);
+    border: 1px solid var(--border);
+    border-radius: 20px;
+    padding: 4px 14px;
+    font-size: 12px;
+    font-weight: 600;
+    color: var(--text-muted);
+  }
+  .stat-pill span { color: var(--text); }
+  .stat-pill.warn span { color: var(--past); }
+  .stat-pill.hot span { color: var(--urgent); }
+  .nav-bar {
+    background: var(--surface);
+    border-bottom: 1px solid var(--border);
+    padding: 10px 32px;
+    display: flex;
+    gap: 8px;
+    flex-wrap: wrap;
+  }
+  .nav-link {
+    color: var(--text-muted);
+    text-decoration: none;
+    padding: 4px 12px;
+    border-radius: 14px;
+    font-size: 12px;
+    font-weight: 500;
+    border: 1px solid var(--border);
+    transition: all 0.15s;
+    white-space: nowrap;
+  }
+  .nav-link:hover { background: var(--accent); color: #fff; border-color: var(--accent); }
+  .content { padding: 24px 32px; max-width: 1300px; }
+  .legend {
+    display: flex;
+    gap: 16px;
+    flex-wrap: wrap;
+    margin-bottom: 24px;
+    padding: 12px 16px;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    align-items: center;
+  }
+  .legend-title { font-size: 12px; font-weight: 600; color: var(--text-muted); margin-right: 4px; }
+  .legend-item { display: flex; align-items: center; gap: 6px; font-size: 12px; color: var(--text-muted); }
+  .legend-dot { width: 10px; height: 10px; border-radius: 50%; }
+  .owner-section {
+    margin-bottom: 32px;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    overflow: hidden;
+  }
+  .owner-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 16px 20px;
+    background: var(--surface2);
+    border-bottom: 1px solid var(--border);
+    gap: 12px;
+    flex-wrap: wrap;
+  }
+  .owner-name { font-size: 16px; font-weight: 700; color: #fff; }
+  .owner-meta { display: flex; gap: 8px; align-items: center; flex-wrap: wrap; }
+  .count-badge {
+    background: rgba(108,142,245,0.15);
+    color: var(--accent);
+    border: 1px solid rgba(108,142,245,0.3);
+    border-radius: 12px;
+    padding: 2px 10px;
+    font-size: 12px;
+    font-weight: 600;
+  }
+  .arr-badge {
+    background: rgba(102,187,106,0.1);
+    color: #81c784;
+    border: 1px solid rgba(102,187,106,0.25);
+    border-radius: 12px;
+    padding: 2px 10px;
+    font-size: 12px;
+    font-weight: 600;
+  }
+  .pill {
+    border-radius: 12px;
+    padding: 2px 10px;
+    font-size: 11px;
+    font-weight: 600;
+  }
+  .past-pill { background: rgba(255,112,67,0.15); color: #ff8a65; border: 1px solid rgba(255,112,67,0.3); }
+  .urgent-pill { background: rgba(239,83,80,0.15); color: #ef9a9a; border: 1px solid rgba(239,83,80,0.3); }
+  .soon-pill { background: rgba(255,167,38,0.15); color: #ffcc80; border: 1px solid rgba(255,167,38,0.3); }
+  table { width: 100%; border-collapse: collapse; }
+  thead tr { background: rgba(255,255,255,0.03); }
+  th {
+    text-align: left;
+    padding: 10px 16px;
+    font-size: 11px;
+    font-weight: 600;
+    color: var(--text-muted);
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    border-bottom: 1px solid var(--border);
+    white-space: nowrap;
+  }
+  td {
+    padding: 10px 16px;
+    border-bottom: 1px solid rgba(46,52,82,0.5);
+    vertical-align: middle;
+  }
+  tbody tr:last-child td { border-bottom: none; }
+  tbody tr:hover { background: rgba(255,255,255,0.03); }
+  .row-urgent { border-left: 3px solid var(--urgent); }
+  .row-soon { border-left: 3px solid var(--soon); }
+  .row-moderate { border-left: 3px solid var(--moderate); }
+  .row-future { border-left: 3px solid var(--future); }
+  .row-past { border-left: 3px solid var(--past); }
+  .opp-link { color: var(--accent); text-decoration: none; font-weight: 500; }
+  .opp-link:hover { text-decoration: underline; }
+  .acct-cell { color: var(--text-muted); font-size: 13px; }
+  .amount { font-family: 'SF Mono', 'Fira Code', monospace; font-size: 13px; }
+  .badge {
+    display: inline-block;
+    padding: 2px 8px;
+    border-radius: 10px;
+    font-size: 11px;
+    font-weight: 700;
+    white-space: nowrap;
+  }
+  .urgent-badge { background: rgba(239,83,80,0.2); color: #ef5350; }
+  .soon-badge { background: rgba(255,167,38,0.2); color: #ffa726; }
+  .moderate-badge { background: rgba(102,187,106,0.2); color: #66bb6a; }
+  .future-badge { background: rgba(66,165,245,0.2); color: #42a5f5; }
+  .past-badge { background: rgba(255,112,67,0.2); color: #ff7043; }
+  .updated { font-size: 11px; color: var(--text-muted); margin-top: 4px; }
+  @media (max-width: 800px) {
+    .header, .nav-bar, .content { padding-left: 16px; padding-right: 16px; }
+    th:nth-child(5), td:nth-child(5),
+    th:nth-child(7), td:nth-child(7) { display: none; }
+  }
+</style>
+</head>
+<body>
+
+<div class="header">
+  <div class="header-top">
+    <div>
+      <div class="title">♻️ Closed Lost — Follow-up Dates</div>
+      <div class="subtitle">Re-engagement pipeline sorted by rep &amp; follow-up date, nearest first</div>
+    </div>
+    <div class="stat-pills">
+      <div class="stat-pill">Total <span>217</span></div>
+      <div class="stat-pill">ARR <span>$169,244</span></div>
+      <div class="stat-pill warn">⚠️ Overdue <span>145</span></div>
+      <div class="stat-pill hot">🔴 This week <span>3</span></div>
+      <div class="stat-pill">🟡 This month <span>35</span></div>
+    </div>
+  </div>
+  <div class="updated">Last refreshed: May 19, 2026 at 02:23 PM UTC</div>
+</div>
+
+<div class="nav-bar">
+  <a href="#owner-davis-herndon" class="nav-link">Davis</a> <a href="#owner-patrick-davies" class="nav-link">Patrick</a> <a href="#owner-ingrid-beard" class="nav-link">Ingrid</a> <a href="#owner-jaylin-bender" class="nav-link">Jaylin</a> <a href="#owner-joseph-abarno" class="nav-link">Joseph</a> <a href="#owner-justin-lee" class="nav-link">Justin</a> <a href="#owner-connor-flynn" class="nav-link">Connor</a> <a href="#owner-nassim-filoso" class="nav-link">Nassim</a> <a href="#owner-patrick-dahlstrom" class="nav-link">Patrick</a> <a href="#owner-andy-whisenant" class="nav-link">Andy</a> <a href="#owner-jake-borah" class="nav-link">Jake</a> <a href="#owner-jake-mitchell" class="nav-link">Jake</a> <a href="#owner-jamie-butler" class="nav-link">Jamie</a> <a href="#owner-husam-zalmiyar" class="nav-link">Husam</a> <a href="#owner-rachael-buchtan" class="nav-link">Rachael</a>
+</div>
+
+<div class="content">
+
+  <div class="legend">
+    <span class="legend-title">Follow-up timing:</span>
+    <span class="legend-item"><span class="legend-dot" style="background:var(--past)"></span> Overdue</span>
+    <span class="legend-item"><span class="legend-dot" style="background:var(--urgent)"></span> ≤7 days</span>
+    <span class="legend-item"><span class="legend-dot" style="background:var(--soon)"></span> 8–30 days</span>
+    <span class="legend-item"><span class="legend-dot" style="background:var(--moderate)"></span> 31–90 days</span>
+    <span class="legend-item"><span class="legend-dot" style="background:var(--future)"></span> 90+ days</span>
+  </div>
+
+  
+    <div class="owner-section" id="owner-davis-herndon">
+      <div class="owner-header">
+        <div class="owner-name">Davis Herndon</div>
+        <div class="owner-meta">
+          <span class="count-badge">14 opps</span>
+          <span class="arr-badge">$10,520 ARR</span>
+          <span class="pill past-pill">⚠️ 14 overdue</span>
+        </div>
+      </div>
+      <table>
+        <thead>
+          <tr>
+            <th>Opportunity</th>
+            <th>Account</th>
+            <th>Follow-up Date</th>
+            <th>Time Until</th>
+            <th>Product</th>
+            <th>Amount</th>
+            <th>Closed Lost</th>
+          </tr>
+        </thead>
+        <tbody>
+          
+        <tr class="row-past">
+          <td><a href="https://rev-io.my.salesforce.com/006PX00000WDy2MYAT" target="_blank" class="opp-link">Lifestyles Electronic</a></td>
+          <td class="acct-cell">Lifestyles Electronic</td>
+          <td>Jan 22, 2026</td>
+          <td><span class="badge past-badge">117d overdue</span></td>
+          <td>PSA 2.0</td>
+          <td class="amount">$500</td>
+          <td>Feb 12, 2026</td>
+        </tr>
+
+        <tr class="row-past">
+          <td><a href="https://rev-io.my.salesforce.com/006PX00000Wn43FYAR" target="_blank" class="opp-link">Audio Plus Sound & Security</a></td>
+          <td class="acct-cell">Audio Plus Sound & Security</td>
+          <td>Feb 25, 2026</td>
+          <td><span class="badge past-badge">83d overdue</span></td>
+          <td>PSA 2.0</td>
+          <td class="amount">$500</td>
+          <td>Feb 24, 2026</td>
+        </tr>
+
+        <tr class="row-past">
+          <td><a href="https://rev-io.my.salesforce.com/006PX00000Wi8vVYAR" target="_blank" class="opp-link">Snouffer's Fire & Safety</a></td>
+          <td class="acct-cell">Snouffer's Fire & Safety</td>
+          <td>Feb 25, 2026</td>
+          <td><span class="badge past-badge">83d overdue</span></td>
+          <td>PSA 2.0</td>
+          <td class="amount">$500</td>
+          <td>Feb 24, 2026</td>
+        </tr>
+
+        <tr class="row-past">
+          <td><a href="https://rev-io.my.salesforce.com/006PX00000W5XP7YAN" target="_blank" class="opp-link">TDO Home Entertainment</a></td>
+          <td class="acct-cell">TDO Home Entertainment</td>
+          <td>Feb 26, 2026</td>
+          <td><span class="badge past-badge">82d overdue</span></td>
+          <td>PSA 2.0</td>
+          <td class="amount">$500</td>
+          <td>Feb 12, 2026</td>
+        </tr>
+
+        <tr class="row-past">
+          <td><a href="https://rev-io.my.salesforce.com/006PX00000Wg5FNYAZ" target="_blank" class="opp-link">Lynn's Audio Video</a></td>
+          <td class="acct-cell">Lynn's Audio Video</td>
+          <td>Mar 04, 2026</td>
+          <td><span class="badge past-badge">76d overdue</span></td>
+          <td>PSA 2.0</td>
+          <td class="amount">$500</td>
+          <td>Mar 03, 2026</td>
+        </tr>
+
+        <tr class="row-past">
+          <td><a href="https://rev-io.my.salesforce.com/006PX00000Wezf3YAB" target="_blank" class="opp-link">Gokeyless PSA</a></td>
+          <td class="acct-cell">Gokeyless</td>
+          <td>Mar 10, 2026</td>
+          <td><span class="badge past-badge">70d overdue</span></td>
+          <td>PSA 2.0</td>
+          <td class="amount">$700</td>
+          <td>Mar 03, 2026</td>
+        </tr>
+
+        <tr class="row-past">
+          <td><a href="https://rev-io.my.salesforce.com/006PX00000XnyXuYAJ" target="_blank" class="opp-link">BSN Security - PSA Web 2</a></td>
+          <td class="acct-cell">BSN Security</td>
+          <td>Mar 11, 2026</td>
+          <td><span class="badge past-badge">69d overdue</span></td>
+          <td>PSA 2.0</td>
+          <td class="amount">$700</td>
+          <td>Apr 01, 2026</td>
+        </tr>
+
+        <tr class="row-past">
+          <td><a href="https://rev-io.my.salesforce.com/006PX00000WKFuvYAH" target="_blank" class="opp-link">Imagine Audio & Video</a></td>
+          <td class="acct-cell">Imagine Audio & Video</td>
+          <td>Mar 17, 2026</td>
+          <td><span class="badge past-badge">63d overdue</span></td>
+          <td>PSA 2.0</td>
+          <td class="amount">$605</td>
+          <td>Mar 03, 2026</td>
+        </tr>
+
+        <tr class="row-past">
+          <td><a href="https://rev-io.my.salesforce.com/006PX00000WwaDcYAJ" target="_blank" class="opp-link">Gemini Electronic Systems</a></td>
+          <td class="acct-cell">Gemini Electronic Systems</td>
+          <td>Mar 18, 2026</td>
+          <td><span class="badge past-badge">62d overdue</span></td>
+          <td>PSA 2.0</td>
+          <td class="amount">$500</td>
+          <td>Feb 24, 2026</td>
+        </tr>
+
+        <tr class="row-past">
+          <td><a href="https://rev-io.my.salesforce.com/006PX00000WB31mYAD" target="_blank" class="opp-link">Pure AV</a></td>
+          <td class="acct-cell">Pure AV</td>
+          <td>Mar 19, 2026</td>
+          <td><span class="badge past-badge">61d overdue</span></td>
+          <td>PSA 2.0</td>
+          <td class="amount">$990</td>
+          <td>Mar 18, 2026</td>
+        </tr>
+
+        <tr class="row-past">
+          <td><a href="https://rev-io.my.salesforce.com/006PX00000XI8c1YAD" target="_blank" class="opp-link">Underdog Fire & Security</a></td>
+          <td class="acct-cell">Underdog Fire & Security</td>
+          <td>Mar 23, 2026</td>
+          <td><span class="badge past-badge">57d overdue</span></td>
+          <td>PSA 2.0</td>
+          <td class="amount">$840</td>
+          <td>Mar 04, 2026</td>
+        </tr>
+
+        <tr class="row-past">
+          <td><a href="https://rev-io.my.salesforce.com/006PX00000XwQGrYAN" target="_blank" class="opp-link">GoView</a></td>
+          <td class="acct-cell">GoView</td>
+          <td>Mar 25, 2026</td>
+          <td><span class="badge past-badge">55d overdue</span></td>
+          <td>PSA 2.0</td>
+          <td class="amount">$590</td>
+          <td>Mar 13, 2026</td>
+        </tr>
+
+        <tr class="row-past">
+          <td><a href="https://rev-io.my.salesforce.com/006PX00000XfYifYAF" target="_blank" class="opp-link">Lifestyle Electronics 2</a></td>
+          <td class="acct-cell">Lifestyle Electronics</td>
+          <td>Mar 31, 2026</td>
+          <td><span class="badge past-badge">49d overdue</span></td>
+          <td>PSA 2.0</td>
+          <td class="amount">$2,595</td>
+          <td>Mar 18, 2026</td>
+        </tr>
+
+        <tr class="row-past">
+          <td><a href="https://rev-io.my.salesforce.com/006PX00000WWLF0YAP" target="_blank" class="opp-link">Audio Integrations</a></td>
+          <td class="acct-cell">Audio Integrations</td>
+          <td>Apr 02, 2026</td>
+          <td><span class="badge past-badge">47d overdue</span></td>
+          <td>PSA 2.0</td>
+          <td class="amount">$500</td>
+          <td>Feb 18, 2026</td>
+        </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="owner-section" id="owner-patrick-davies">
+      <div class="owner-header">
+        <div class="owner-name">Patrick Davies</div>
+        <div class="owner-meta">
+          <span class="count-badge">2 opps</span>
+          <span class="arr-badge">$2,130 ARR</span>
+          <span class="pill past-pill">⚠️ 1 overdue</span>
+        </div>
+      </div>
+      <table>
+        <thead>
+          <tr>
+            <th>Opportunity</th>
+            <th>Account</th>
+            <th>Follow-up Date</th>
+            <th>Time Until</th>
+            <th>Product</th>
+            <th>Amount</th>
+            <th>Closed Lost</th>
+          </tr>
+        </thead>
+        <tbody>
+          
+        <tr class="row-past">
+          <td><a href="https://rev-io.my.salesforce.com/006PX00000Vd83vYAB" target="_blank" class="opp-link">Security Designs</a></td>
+          <td class="acct-cell">Security Designs</td>
+          <td>Feb 11, 2026</td>
+          <td><span class="badge past-badge">97d overdue</span></td>
+          <td>PSA 2.0</td>
+          <td class="amount">$1,080</td>
+          <td>Jan 20, 2026</td>
+        </tr>
+
+        <tr class="row-moderate">
+          <td><a href="https://rev-io.my.salesforce.com/006PX00000Z2IslYAF" target="_blank" class="opp-link">ABCom</a></td>
+          <td class="acct-cell">ABCom</td>
+          <td>Jul 15, 2026</td>
+          <td><span class="badge moderate-badge">57d</span></td>
+          <td>PSA 2.0</td>
+          <td class="amount">$1,050</td>
+          <td>May 12, 2026</td>
+        </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="owner-section" id="owner-ingrid-beard">
+      <div class="owner-header">
+        <div class="owner-name">Ingrid Beard</div>
+        <div class="owner-meta">
+          <span class="count-badge">22 opps</span>
+          <span class="arr-badge">$9,934 ARR</span>
+          <span class="pill past-pill">⚠️ 15 overdue</span><span class="pill urgent-pill">🔴 1 this week</span><span class="pill soon-pill">🟡 4 this month</span>
+        </div>
+      </div>
+      <table>
+        <thead>
+          <tr>
+            <th>Opportunity</th>
+            <th>Account</th>
+            <th>Follow-up Date</th>
+            <th>Time Until</th>
+            <th>Product</th>
+            <th>Amount</th>
+            <th>Closed Lost</th>
+          </tr>
+        </thead>
+        <tbody>
+          
+        <tr class="row-past">
+          <td><a href="https://rev-io.my.salesforce.com/006PX00000TRHKDYA5" target="_blank" class="opp-link">Zulty's AR Payments</a></td>
+          <td class="acct-cell">Zultys</td>
+          <td>Feb 13, 2026</td>
+          <td><span class="badge past-badge">95d overdue</span></td>
+          <td>Payments AR</td>
+          <td class="amount">$2,620</td>
+          <td>Feb 11, 2026</td>
+        </tr>
+
+        <tr class="row-past">
+          <td><a href="https://rev-io.my.salesforce.com/006PX00000VfxDZYAZ" target="_blank" class="opp-link">Grid4 - QBO Integration</a></td>
+          <td class="acct-cell">Grid4 Communications</td>
+          <td>Feb 20, 2026</td>
+          <td><span class="badge past-badge">88d overdue</span></td>
+          <td>Billing</td>
+          <td class="amount">$200</td>
+          <td>Feb 19, 2026</td>
+        </tr>
+
+        <tr class="row-past">
+          <td><a href="https://rev-io.my.salesforce.com/006PX00000Uia8AYAR" target="_blank" class="opp-link">Integration Engineers AR Payments</a></td>
+          <td class="acct-cell">Integration Engineers</td>
+          <td>Feb 23, 2026</td>
+          <td><span class="badge past-badge">85d overdue</span></td>
+          <td>Payments AR</td>
+          <td class="amount">$377</td>
+          <td>Feb 18, 2026</td>
+        </tr>
+
+        <tr class="row-past">
+          <td><a href="https://rev-io.my.salesforce.com/006PX00000VXJ6uYAH" target="_blank" class="opp-link">Ucometel - ECP</a></td>
+          <td class="acct-cell">Ucomtel</td>
+          <td>Mar 09, 2026</td>
+          <td><span class="badge past-badge">71d overdue</span></td>
+          <td>Billing</td>
+          <td class="amount">$500</td>
+          <td>Mar 20, 2026</td>
+        </tr>
+
+        <tr class="row-past">
+          <td><a href="https://rev-io.my.salesforce.com/006PX00000WNaWcYAL" target="_blank" class="opp-link">Diversified Digital - Cyber Protect</a></td>
+          <td class="acct-cell">Diversified Digital Group - Main</td>
+          <td>Mar 23, 2026</td>
+          <td><span class="badge past-badge">57d overdue</span></td>
+          <td>Cyber Protect</td>
+          <td class="amount">$1,662</td>
+          <td>Mar 10, 2026</td>
+        </tr>
+
+        <tr class="row-past">
+          <td><a href="https://rev-io.my.salesforce.com/006PX00000W4vi2YAB" target="_blank" class="opp-link">TotalCX - Netsuite Integration</a></td>
+          <td class="acct-cell">TotalCX</td>
+          <td>Mar 23, 2026</td>
+          <td><span class="badge past-badge">57d overdue</span></td>
+          <td>Billing</td>
+          <td class="amount">$350</td>
+          <td>Mar 09, 2026</td>
+        </tr>
+
+        <tr class="row-past">
+          <td><a href="https://rev-io.my.salesforce.com/006PX00000X2PybYAF" target="_blank" class="opp-link">Kellsec Security Solutions - AR Payments</a></td>
+          <td class="acct-cell">Kellsec Security Solutions</td>
+          <td>Apr 06, 2026</td>
+          <td><span class="badge past-badge">43d overdue</span></td>
+          <td>Payments AR</td>
+          <td class="amount">$50</td>
+          <td>Mar 09, 2026</td>
+        </tr>
+
+        <tr class="row-past">
+          <td><a href="https://rev-io.my.salesforce.com/006PX00000Wm4OgYAJ" target="_blank" class="opp-link">Ucomtel - Monthly Minimum Increase</a></td>
+          <td class="acct-cell">Ucomtel</td>
+          <td>Apr 06, 2026</td>
+          <td><span class="badge past-badge">43d overdue</span></td>
+          <td>Billing</td>
+          <td class="amount">$284</td>
+          <td>Mar 06, 2026</td>
+        </tr>
+
+        <tr class="row-past">
+          <td><a href="https://rev-io.my.salesforce.com/006PX00000X0e7KYAR" target="_blank" class="opp-link">Cinemascape - AR PAyments</a></td>
+          <td class="acct-cell">Cinemascape</td>
+          <td>Apr 07, 2026</td>
+          <td><span class="badge past-badge">42d overdue</span></td>
+          <td>Payments AR</td>
+          <td class="amount">—</td>
+          <td>Feb 23, 2026</td>
+        </tr>
+
+        <tr class="row-past">
+          <td><a href="https://rev-io.my.salesforce.com/006PX00000Xy5ReYAJ" target="_blank" class="opp-link">Guenther - AR Payments (CA)</a></td>
+          <td class="acct-cell">GuentherTech</td>
+          <td>Apr 15, 2026</td>
+          <td><span class="badge past-badge">34d overdue</span></td>
+          <td>Payments AR</td>
+          <td class="amount">$50</td>
+          <td>Apr 08, 2026</td>
+        </tr>
+
+        <tr class="row-past">
+          <td><a href="https://rev-io.my.salesforce.com/006PX00000WWOuPYAX" target="_blank" class="opp-link">Atron - Cyber Protect</a></td>
+          <td class="acct-cell">Atron Solutions, LLC</td>
+          <td>Apr 20, 2026</td>
+          <td><span class="badge past-badge">29d overdue</span></td>
+          <td>Cyber Protect</td>
+          <td class="amount">$500</td>
+          <td>Mar 11, 2026</td>
+        </tr>
+
+        <tr class="row-past">
+          <td><a href="https://rev-io.my.salesforce.com/006PX00000Y7d13YAB" target="_blank" class="opp-link">Alarm & Security - AR Payments</a></td>
+          <td class="acct-cell">Alarm & Security Cameras</td>
+          <td>Apr 28, 2026</td>
+          <td><span class="badge past-badge">21d overdue</span></td>
+          <td>Payments AR</td>
+          <td class="amount">$50</td>
+          <td>Apr 23, 2026</td>
+        </tr>
+
+        <tr class="row-past">
+          <td><a href="https://rev-io.my.salesforce.com/006PX00000ZRpyMYAT" target="_blank" class="opp-link">A&B - AR Payments</a></td>
+          <td class="acct-cell">A&B Security</td>
+          <td>Apr 30, 2026</td>
+          <td><span class="badge past-badge">19d overdue</span></td>
+          <td>Payments AR</td>
+          <td class="amount">$50</td>
+          <td>Apr 28, 2026</td>
+        </tr>
+
+        <tr class="row-past">
+          <td><a href="https://rev-io.my.salesforce.com/006PX00000Xi94cYAB" target="_blank" class="opp-link">Dialog - NetSuite Integration</a></td>
+          <td class="acct-cell">Dialog Telecommunications, Inc.</td>
+          <td>May 01, 2026</td>
+          <td><span class="badge past-badge">18d overdue</span></td>
+          <td>Billing</td>
+          <td class="amount">$250</td>
+          <td>Mar 06, 2026</td>
+        </tr>
+
+        <tr class="row-past">
+          <td><a href="https://rev-io.my.salesforce.com/006PX00000YYtBPYA1" target="_blank" class="opp-link">Comm-Core - BoB</a></td>
+          <td class="acct-cell">Comm-Core</td>
+          <td>May 11, 2026</td>
+          <td><span class="badge past-badge">8d overdue</span></td>
+          <td>Billing</td>
+          <td class="amount">$500</td>
+          <td>Apr 02, 2026</td>
+        </tr>
+
+        <tr class="row-urgent">
+          <td><a href="https://rev-io.my.salesforce.com/006PX00000ZGJAbYAP" target="_blank" class="opp-link">ITR - AR Payments</a></td>
+          <td class="acct-cell">ITR-Systems</td>
+          <td>May 19, 2026</td>
+          <td><span class="badge urgent-badge">Today!</span></td>
+          <td>Payments AR</td>
+          <td class="amount">$50</td>
+          <td>May 05, 2026</td>
+        </tr>
+
+        <tr class="row-soon">
+          <td><a href="https://rev-io.my.salesforce.com/006PX00000XiPSlYAN" target="_blank" class="opp-link">POS Innovations - AR Payments</a></td>
+          <td class="acct-cell">POS Innovation</td>
+          <td>May 29, 2026</td>
+          <td><span class="badge soon-badge">10d</span></td>
+          <td>Payments AR</td>
+          <td class="amount">$50</td>
+          <td>May 05, 2026</td>
+        </tr>
+
+        <tr class="row-soon">
+          <td><a href="https://rev-io.my.salesforce.com/006PX00000XxahCYAR" target="_blank" class="opp-link">Grid4 - QBO Integration</a></td>
+          <td class="acct-cell">Grid4 Communications</td>
+          <td>Jun 08, 2026</td>
+          <td><span class="badge soon-badge">20d</span></td>
+          <td>Billing Add-on</td>
+          <td class="amount">$200</td>
+          <td>Mar 27, 2026</td>
+        </tr>
+
+        <tr class="row-soon">
+          <td><a href="https://rev-io.my.salesforce.com/006PX00000ZFxWgYAL" target="_blank" class="opp-link">GymPhone - QBO</a></td>
+          <td class="acct-cell">GymPhone</td>
+          <td>Jun 08, 2026</td>
+          <td><span class="badge soon-badge">20d</span></td>
+          <td>Billing</td>
+          <td class="amount">$200</td>
+          <td>Apr 17, 2026</td>
+        </tr>
+
+        <tr class="row-soon">
+          <td><a href="https://rev-io.my.salesforce.com/006PX00000XchKHYAZ" target="_blank" class="opp-link">Centra IP - ECP</a></td>
+          <td class="acct-cell">Centra IP Networks</td>
+          <td>Jun 15, 2026</td>
+          <td><span class="badge soon-badge">27d</span></td>
+          <td>Billing</td>
+          <td class="amount">$500</td>
+          <td>Mar 24, 2026</td>
+        </tr>
+
+        <tr class="row-moderate">
+          <td><a href="https://rev-io.my.salesforce.com/006PX00000Xu0VOYAZ" target="_blank" class="opp-link">Exabar - AR Payments</a></td>
+          <td class="acct-cell">Exabar Telecom</td>
+          <td>Aug 03, 2026</td>
+          <td><span class="badge moderate-badge">76d</span></td>
+          <td>Payments AR</td>
+          <td class="amount">$50</td>
+          <td>Mar 18, 2026</td>
+        </tr>
+
+        <tr class="row-future">
+          <td><a href="https://rev-io.my.salesforce.com/006PX00000WjObdYAF" target="_blank" class="opp-link">Positive Tech - Cyber Protect</a></td>
+          <td class="acct-cell">Positive Technologies</td>
+          <td>Dec 07, 2026</td>
+          <td><span class="badge future-badge">202d</span></td>
+          <td>Cyber Protect</td>
+          <td class="amount">$1,440</td>
+          <td>Mar 11, 2026</td>
+        </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="owner-section" id="owner-jaylin-bender">
+      <div class="owner-header">
+        <div class="owner-name">Jaylin Bender</div>
+        <div class="owner-meta">
+          <span class="count-badge">46 opps</span>
+          <span class="arr-badge">$41,380 ARR</span>
+          <span class="pill past-pill">⚠️ 42 overdue</span><span class="pill urgent-pill">🔴 1 this week</span><span class="pill soon-pill">🟡 1 this month</span>
+        </div>
+      </div>
+      <table>
+        <thead>
+          <tr>
+            <th>Opportunity</th>
+            <th>Account</th>
+            <th>Follow-up Date</th>
+            <th>Time Until</th>
+            <th>Product</th>
+            <th>Amount</th>
+            <th>Closed Lost</th>
+          </tr>
+        </thead>
+        <tbody>
+          
+        <tr class="row-past">
+          <td><a href="https://rev-io.my.salesforce.com/006PX00000WiDVOYA3" target="_blank" class="opp-link">Diversity Security IT Solutions PSA</a></td>
+          <td class="acct-cell">Diversity Security IT Solutions</td>
+          <td>Feb 16, 2026</td>
+          <td><span class="badge past-badge">92d overdue</span></td>
+          <td>PSA 2.0</td>
+          <td class="amount">$660</td>
+          <td>Feb 19, 2026</td>
+        </tr>
+
+        <tr class="row-past">
+          <td><a href="https://rev-io.my.salesforce.com/006PX00000WfbduYAB" target="_blank" class="opp-link">Integrated Media Systems</a></td>
+          <td class="acct-cell">Integrated Media Systems</td>
+          <td>Feb 23, 2026</td>
+          <td><span class="badge past-badge">85d overdue</span></td>
+          <td>PSA 2.0</td>
+          <td class="amount">$725</td>
+          <td>Feb 23, 2026</td>
+        </tr>
+
+        <tr class="row-past">
+          <td><a href="https://rev-io.my.salesforce.com/006PX00000WB61HYAT" target="_blank" class="opp-link">Elite Connect PSA</a></td>
+          <td class="acct-cell">Elite Connect</td>
+          <td>Feb 24, 2026</td>
+          <td><span class="badge past-badge">84d overdue</span></td>
+          <td>PSA 2.0</td>
+          <td class="amount">$500</td>
+          <td>Feb 23, 2026</td>
+        </tr>
+
+        <tr class="row-past">
+          <td><a href="https://rev-io.my.salesforce.com/006PX00000W1gveYAB" target="_blank" class="opp-link">Integrated Installations</a></td>
+          <td class="acct-cell">Integrated Installations</td>
+          <td>Feb 27, 2026</td>
+          <td><span class="badge past-badge">81d overdue</span></td>
+          <td>PSA 2.0</td>
+          <td class="amount">$500</td>
+          <td>Feb 23, 2026</td>
+        </tr>
+
+        <tr class="row-past">
+          <td><a href="https://rev-io.my.salesforce.com/006PX00000XOk6pYAD" target="_blank" class="opp-link">Vultron</a></td>
+          <td class="acct-cell">Vultron Audio & Visual</td>
+          <td>Mar 03, 2026</td>
+          <td><span class="badge past-badge">77d overdue</span></td>
+          <td>PSA 2.0</td>
+          <td class="amount">$590</td>
+          <td>Mar 05, 2026</td>
+        </tr>
+
+        <tr class="row-past">
+          <td><a href="https://rev-io.my.salesforce.com/006PX00000X3PBnYAN" target="_blank" class="opp-link">Fire Wire 3</a></td>
+          <td class="acct-cell">FireWire</td>
+          <td>Mar 04, 2026</td>
+          <td><span class="badge past-badge">76d overdue</span></td>
+          <td>PSA 2.0</td>
+          <td class="amount">—</td>
+          <td>Mar 03, 2026</td>
+        </tr>
+
+        <tr class="row-past">
+          <td><a href="https://rev-io.my.salesforce.com/006PX00000WiRV7YAN" target="_blank" class="opp-link">Amped Up</a></td>
+          <td class="acct-cell">Amped Up</td>
+          <td>Mar 05, 2026</td>
+          <td><span class="badge past-badge">75d overdue</span></td>
+          <td>PSA 2.0</td>
+          <td class="amount">$500</td>
+          <td>Mar 12, 2026</td>
+        </tr>
+
+        <tr class="row-past">
+          <td><a href="https://rev-io.my.salesforce.com/006PX00000XfnrNYAR" target="_blank" class="opp-link">Piedmont Security Systems 3</a></td>
+          <td class="acct-cell">Piedmont Security Systems</td>
+          <td>Mar 09, 2026</td>
+          <td><span class="badge past-badge">71d overdue</span></td>
+          <td>PSA 2.0</td>
+          <td class="amount">$1,175</td>
+          <td>Apr 13, 2026</td>
+        </tr>
+
+        <tr class="row-past">
+          <td><a href="https://rev-io.my.salesforce.com/006PX00000XcMe2YAF" target="_blank" class="opp-link">Cat Techs Plus 4</a></td>
+          <td class="acct-cell">Cat Techs Plus</td>
+          <td>Mar 10, 2026</td>
+          <td><span class="badge past-badge">70d overdue</span></td>
+          <td>PSA 2.0</td>
+          <td class="amount">$575</td>
+          <td>Mar 24, 2026</td>
+        </tr>
+
+        <tr class="row-past">
+          <td><a href="https://rev-io.my.salesforce.com/006PX00000XfK9TYAV" target="_blank" class="opp-link">Silver Shield Security</a></td>
+          <td class="acct-cell">Silver Shield Security</td>
+          <td>Mar 12, 2026</td>
+          <td><span class="badge past-badge">68d overdue</span></td>
+          <td>PSA 2.0</td>
+          <td class="amount">$695</td>
+          <td>Mar 25, 2026</td>
+        </tr>
+
+        <tr class="row-past">
+          <td><a href="https://rev-io.my.salesforce.com/006PX00000XrIYUYA3" target="_blank" class="opp-link">AIT Life Safety</a></td>
+          <td class="acct-cell">AIT Life Safety</td>
+          <td>Mar 13, 2026</td>
+          <td><span class="badge past-badge">67d overdue</span></td>
+          <td>PSA 2.0</td>
+          <td class="amount">$2,000</td>
+          <td>Mar 19, 2026</td>
+        </tr>
+
+        <tr class="row-past">
+          <td><a href="https://rev-io.my.salesforce.com/006PX00000WQGLFYA5" target="_blank" class="opp-link">CelPlan</a></td>
+          <td class="acct-cell">CelPlan</td>
+          <td>Mar 18, 2026</td>
+          <td><span class="badge past-badge">62d overdue</span></td>
+          <td>PSA 2.0</td>
+          <td class="amount">$1,650</td>
+          <td>Feb 18, 2026</td>
+        </tr>
+
+        <tr class="row-past">
+          <td><a href="https://rev-io.my.salesforce.com/006PX00000YKgynYAD" target="_blank" class="opp-link">Awerx Holdings</a></td>
+          <td class="acct-cell">Awerx Holdings</td>
+          <td>Mar 24, 2026</td>
+          <td><span class="badge past-badge">56d overdue</span></td>
+          <td>PSA 2.0</td>
+          <td class="amount">$1,025</td>
+          <td>Mar 30, 2026</td>
+        </tr>
+
+        <tr class="row-past">
+          <td><a href="https://rev-io.my.salesforce.com/006PX00000XuhnHYAR" target="_blank" class="opp-link">Tritech Integrated Solutions 3</a></td>
+          <td class="acct-cell">Tritech Integrated Solutions</td>
+          <td>Mar 24, 2026</td>
+          <td><span class="badge past-badge">56d overdue</span></td>
+          <td>PSA 2.0</td>
+          <td class="amount">$635</td>
+          <td>Mar 13, 2026</td>
+        </tr>
+
+        <tr class="row-past">
+          <td><a href="https://rev-io.my.salesforce.com/006PX00000XOyCvYAL" target="_blank" class="opp-link">Protection Systems</a></td>
+          <td class="acct-cell">Protection Systems</td>
+          <td>Mar 26, 2026</td>
+          <td><span class="badge past-badge">54d overdue</span></td>
+          <td>PSA 2.0</td>
+          <td class="amount">$1,320</td>
+          <td>Mar 18, 2026</td>
+        </tr>
+
+        <tr class="row-past">
+          <td><a href="https://rev-io.my.salesforce.com/006PX00000WJNrLYAX" target="_blank" class="opp-link">Phoenix Loss Prevention</a></td>
+          <td class="acct-cell">Phoenix Loss Prevention</td>
+          <td>Mar 27, 2026</td>
+          <td><span class="badge past-badge">53d overdue</span></td>
+          <td>PSA 2.0</td>
+          <td class="amount">$500</td>
+          <td>Mar 10, 2026</td>
+        </tr>
+
+        <tr class="row-past">
+          <td><a href="https://rev-io.my.salesforce.com/006PX00000Y77Z4YAJ" target="_blank" class="opp-link">New Age Alarms & Communications</a></td>
+          <td class="acct-cell">New Age Alarms & Communications</td>
+          <td>Mar 27, 2026</td>
+          <td><span class="badge past-badge">53d overdue</span></td>
+          <td>PSA 2.0</td>
+          <td class="amount">$500</td>
+          <td>Apr 07, 2026</td>
+        </tr>
+
+        <tr class="row-past">
+          <td><a href="https://rev-io.my.salesforce.com/006PX00000Yo8gLYAR" target="_blank" class="opp-link">The Huff Company</a></td>
+          <td class="acct-cell">The Huff Company</td>
+          <td>Apr 01, 2026</td>
+          <td><span class="badge past-badge">48d overdue</span></td>
+          <td>PSA 2.0</td>
+          <td class="amount">$575</td>
+          <td>Apr 07, 2026</td>
+        </tr>
+
+        <tr class="row-past">
+          <td><a href="https://rev-io.my.salesforce.com/006PX00000X3fWfYAJ" target="_blank" class="opp-link">Av-Tech Media Solutions</a></td>
+          <td class="acct-cell">AV-Tech Media Solutions</td>
+          <td>Apr 01, 2026</td>
+          <td><span class="badge past-badge">48d overdue</span></td>
+          <td>PSA 2.0</td>
+          <td class="amount">$2,000</td>
+          <td>Mar 03, 2026</td>
+        </tr>
+
+        <tr class="row-past">
+          <td><a href="https://rev-io.my.salesforce.com/006PX00000YnmKtYAJ" target="_blank" class="opp-link">Powers Protection</a></td>
+          <td class="acct-cell">Powers Protection</td>
+          <td>Apr 02, 2026</td>
+          <td><span class="badge past-badge">47d overdue</span></td>
+          <td>PSA 2.0</td>
+          <td class="amount">$1,035</td>
+          <td>Apr 15, 2026</td>
+        </tr>
+
+        <tr class="row-past">
+          <td><a href="https://rev-io.my.salesforce.com/006PX00000Yx3BFYAZ" target="_blank" class="opp-link">BSN Security 6</a></td>
+          <td class="acct-cell">BSN Security</td>
+          <td>Apr 07, 2026</td>
+          <td><span class="badge past-badge">42d overdue</span></td>
+          <td>PSA 2.0</td>
+          <td class="amount">$700</td>
+          <td>Apr 23, 2026</td>
+        </tr>
+
+        <tr class="row-past">
+          <td><a href="https://rev-io.my.salesforce.com/006PX00000YwUoXYAV" target="_blank" class="opp-link">Lifestyle Electronics 3</a></td>
+          <td class="acct-cell">Lifestyle Electronics</td>
+          <td>Apr 09, 2026</td>
+          <td><span class="badge past-badge">40d overdue</span></td>
+          <td>PSA 2.0</td>
+          <td class="amount">$2,000</td>
+          <td>Apr 15, 2026</td>
+        </tr>
+
+        <tr class="row-past">
+          <td><a href="https://rev-io.my.salesforce.com/006PX00000ZC5e5YAD" target="_blank" class="opp-link">Integrated Installations 6</a></td>
+          <td class="acct-cell">Integrated Installations</td>
+          <td>Apr 13, 2026</td>
+          <td><span class="badge past-badge">36d overdue</span></td>
+          <td>PSA 2.0</td>
+          <td class="amount">$575</td>
+          <td>Apr 17, 2026</td>
+        </tr>
+
+        <tr class="row-past">
+          <td><a href="https://rev-io.my.salesforce.com/006PX00000Z8plxYAB" target="_blank" class="opp-link">HDSS</a></td>
+          <td class="acct-cell">HDSS</td>
+          <td>Apr 14, 2026</td>
+          <td><span class="badge past-badge">35d overdue</span></td>
+          <td>PSA 2.0</td>
+          <td class="amount">$605</td>
+          <td>Apr 14, 2026</td>
+        </tr>
+
+        <tr class="row-past">
+          <td><a href="https://rev-io.my.salesforce.com/006PX00000ZStQRYA1" target="_blank" class="opp-link">Multi-System</a></td>
+          <td class="acct-cell">Multi-System</td>
+          <td>Apr 16, 2026</td>
+          <td><span class="badge past-badge">33d overdue</span></td>
+          <td>PSA 2.0</td>
+          <td class="amount">—</td>
+          <td>Apr 16, 2026</td>
+        </tr>
+
+        <tr class="row-past">
+          <td><a href="https://rev-io.my.salesforce.com/006PX00000YdBmQYAV" target="_blank" class="opp-link">Premier Security</a></td>
+          <td class="acct-cell">Premier Security</td>
+          <td>Apr 17, 2026</td>
+          <td><span class="badge past-badge">32d overdue</span></td>
+          <td>PSA 2.0</td>
+          <td class="amount">$750</td>
+          <td>Apr 17, 2026</td>
+        </tr>
+
+        <tr class="row-past">
+          <td><a href="https://rev-io.my.salesforce.com/006PX00000ZLf2PYAT" target="_blank" class="opp-link">Executive Communications Group</a></td>
+          <td class="acct-cell">Executive Communications Group</td>
+          <td>Apr 20, 2026</td>
+          <td><span class="badge past-badge">29d overdue</span></td>
+          <td>PSA 2.0</td>
+          <td class="amount">$1,300</td>
+          <td>May 05, 2026</td>
+        </tr>
+
+        <tr class="row-past">
+          <td><a href="https://rev-io.my.salesforce.com/006PX00000ZWEenYAH" target="_blank" class="opp-link">Silver Shield Security</a></td>
+          <td class="acct-cell">Silver Shield Security</td>
+          <td>Apr 22, 2026</td>
+          <td><span class="badge past-badge">27d overdue</span></td>
+          <td>PSA 2.0</td>
+          <td class="amount">$695</td>
+          <td>Apr 23, 2026</td>
+        </tr>
+
+        <tr class="row-past">
+          <td><a href="https://rev-io.my.salesforce.com/006PX00000ZkjsQYAR" target="_blank" class="opp-link">Security Center USA</a></td>
+          <td class="acct-cell">Security Center USA</td>
+          <td>Apr 22, 2026</td>
+          <td><span class="badge past-badge">27d overdue</span></td>
+          <td>PSA 2.0</td>
+          <td class="amount">$1,950</td>
+          <td>Apr 22, 2026</td>
+        </tr>
+
+        <tr class="row-past">
+          <td><a href="https://rev-io.my.salesforce.com/006PX00000ZVj9aYAD" target="_blank" class="opp-link">Integrated Media Systems</a></td>
+          <td class="acct-cell">Integrated Media Systems</td>
+          <td>Apr 24, 2026</td>
+          <td><span class="badge past-badge">25d overdue</span></td>
+          <td>PSA 2.0</td>
+          <td class="amount">$785</td>
+          <td>May 06, 2026</td>
+        </tr>
+
+        <tr class="row-past">
+          <td><a href="https://rev-io.my.salesforce.com/006PX00000ZnFcrYAF" target="_blank" class="opp-link">Digitronics 3</a></td>
+          <td class="acct-cell">Digitronics</td>
+          <td>Apr 24, 2026</td>
+          <td><span class="badge past-badge">25d overdue</span></td>
+          <td>PSA 2.0</td>
+          <td class="amount">$1,550</td>
+          <td>Apr 30, 2026</td>
+        </tr>
+
+        <tr class="row-past">
+          <td><a href="https://rev-io.my.salesforce.com/006PX00000Zkz19YAB" target="_blank" class="opp-link">SeeClear</a></td>
+          <td class="acct-cell">SeeClear</td>
+          <td>Apr 24, 2026</td>
+          <td><span class="badge past-badge">25d overdue</span></td>
+          <td>PSA 2.0</td>
+          <td class="amount">$500</td>
+          <td>May 14, 2026</td>
+        </tr>
+
+        <tr class="row-past">
+          <td><a href="https://rev-io.my.salesforce.com/006PX00000WiDwoYAF" target="_blank" class="opp-link">Empire AV</a></td>
+          <td class="acct-cell">Empire AV</td>
+          <td>May 01, 2026</td>
+          <td><span class="badge past-badge">18d overdue</span></td>
+          <td>PSA 2.0</td>
+          <td class="amount">$725</td>
+          <td>Feb 19, 2026</td>
+        </tr>
+
+        <tr class="row-past">
+          <td><a href="https://rev-io.my.salesforce.com/006PX00000YjgqjYAB" target="_blank" class="opp-link">Delmi Training Institute</a></td>
+          <td class="acct-cell">Delmi Training Institute</td>
+          <td>May 01, 2026</td>
+          <td><span class="badge past-badge">18d overdue</span></td>
+          <td>PSA 2.0</td>
+          <td class="amount">$725</td>
+          <td>Apr 16, 2026</td>
+        </tr>
+
+        <tr class="row-past">
+          <td><a href="https://rev-io.my.salesforce.com/006PX00000Yw2XJYAZ" target="_blank" class="opp-link">Security Solutions Integration 6</a></td>
+          <td class="acct-cell">Security Solutions Integration</td>
+          <td>May 01, 2026</td>
+          <td><span class="badge past-badge">18d overdue</span></td>
+          <td>PSA 2.0</td>
+          <td class="amount">$695</td>
+          <td>Apr 30, 2026</td>
+        </tr>
+
+        <tr class="row-past">
+          <td><a href="https://rev-io.my.salesforce.com/006PX00000ZjkqaYAB" target="_blank" class="opp-link">Digital Guards Security Systems</a></td>
+          <td class="acct-cell">Digital Guards Security Systems</td>
+          <td>May 01, 2026</td>
+          <td><span class="badge past-badge">18d overdue</span></td>
+          <td>PSA 2.0</td>
+          <td class="amount">$575</td>
+          <td>May 04, 2026</td>
+        </tr>
+
+        <tr class="row-past">
+          <td><a href="https://rev-io.my.salesforce.com/006PX00000VLSPHYA5" target="_blank" class="opp-link">Onyx AudioVisual</a></td>
+          <td class="acct-cell">Onyx AudioVisual</td>
+          <td>May 01, 2026</td>
+          <td><span class="badge past-badge">18d overdue</span></td>
+          <td>PSA 2.0</td>
+          <td class="amount">$1,650</td>
+          <td>Feb 20, 2026</td>
+        </tr>
+
+        <tr class="row-past">
+          <td><a href="https://rev-io.my.salesforce.com/006PX00000Yd8F6YAJ" target="_blank" class="opp-link">Unwired Engineering</a></td>
+          <td class="acct-cell">Unwired Engineering</td>
+          <td>May 05, 2026</td>
+          <td><span class="badge past-badge">14d overdue</span></td>
+          <td>PSA 2.0</td>
+          <td class="amount">$700</td>
+          <td>Apr 09, 2026</td>
+        </tr>
+
+        <tr class="row-past">
+          <td><a href="https://rev-io.my.salesforce.com/006PX00000aIPT3YAO" target="_blank" class="opp-link">Security Pro Systems</a></td>
+          <td class="acct-cell">Security Pro Systems</td>
+          <td>May 06, 2026</td>
+          <td><span class="badge past-badge">13d overdue</span></td>
+          <td>PSA 2.0</td>
+          <td class="amount">$875</td>
+          <td>May 18, 2026</td>
+        </tr>
+
+        <tr class="row-past">
+          <td><a href="https://rev-io.my.salesforce.com/006PX00000aKRiUYAW" target="_blank" class="opp-link">Nard's</a></td>
+          <td class="acct-cell">Nard's</td>
+          <td>May 07, 2026</td>
+          <td><span class="badge past-badge">12d overdue</span></td>
+          <td>PSA 2.0</td>
+          <td class="amount">$1,010</td>
+          <td>May 08, 2026</td>
+        </tr>
+
+        <tr class="row-past">
+          <td><a href="https://rev-io.my.salesforce.com/006PX00000aLaDSYA0" target="_blank" class="opp-link">Tison Inc.</a></td>
+          <td class="acct-cell">Tison Inc.</td>
+          <td>May 11, 2026</td>
+          <td><span class="badge past-badge">8d overdue</span></td>
+          <td>PSA 2.0</td>
+          <td class="amount">$1,260</td>
+          <td>May 18, 2026</td>
+        </tr>
+
+        <tr class="row-past">
+          <td><a href="https://rev-io.my.salesforce.com/006PX00000aHqaAYAS" target="_blank" class="opp-link">Williams Fire Sprinkler 3</a></td>
+          <td class="acct-cell">Williams Fire Sprinkler</td>
+          <td>May 14, 2026</td>
+          <td><span class="badge past-badge">5d overdue</span></td>
+          <td>PSA 2.0</td>
+          <td class="amount">$2,070</td>
+          <td>May 13, 2026</td>
+        </tr>
+
+        <tr class="row-urgent">
+          <td><a href="https://rev-io.my.salesforce.com/006PX00000X67i9YAB" target="_blank" class="opp-link">Hensinger Audio Video</a></td>
+          <td class="acct-cell">Hensinger Audio Video</td>
+          <td>May 22, 2026</td>
+          <td><span class="badge urgent-badge">3d</span></td>
+          <td>PSA 2.0</td>
+          <td class="amount">$575</td>
+          <td>Mar 12, 2026</td>
+        </tr>
+
+        <tr class="row-soon">
+          <td><a href="https://rev-io.my.salesforce.com/006PX00000aX9CfYAK" target="_blank" class="opp-link">RM Integrations</a></td>
+          <td class="acct-cell">RM Integrations</td>
+          <td>May 29, 2026</td>
+          <td><span class="badge soon-badge">10d</span></td>
+          <td>PSA 2.0</td>
+          <td class="amount">$575</td>
+          <td>May 19, 2026</td>
+        </tr>
+
+        <tr class="row-moderate">
+          <td><a href="https://rev-io.my.salesforce.com/006PX00000XfblNYAR" target="_blank" class="opp-link">Sage Security Solutions 3</a></td>
+          <td class="acct-cell">Sage Security Solutions</td>
+          <td>Aug 01, 2026</td>
+          <td><span class="badge moderate-badge">74d</span></td>
+          <td>PSA 2.0</td>
+          <td class="amount">$650</td>
+          <td>Apr 16, 2026</td>
+        </tr>
+
+        <tr class="row-moderate">
+          <td><a href="https://rev-io.my.salesforce.com/006PX00000ZzfoYYAR" target="_blank" class="opp-link">Palm Beach Audio Visions 3</a></td>
+          <td class="acct-cell">Palm Beach Audio Visions</td>
+          <td>Aug 01, 2026</td>
+          <td><span class="badge moderate-badge">74d</span></td>
+          <td>PSA 2.0</td>
+          <td class="amount">$725</td>
+          <td>Apr 30, 2026</td>
+        </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="owner-section" id="owner-joseph-abarno">
+      <div class="owner-header">
+        <div class="owner-name">Joseph Abarno</div>
+        <div class="owner-meta">
+          <span class="count-badge">4 opps</span>
+          <span class="arr-badge">$3,120 ARR</span>
+          <span class="pill past-pill">⚠️ 4 overdue</span>
+        </div>
+      </div>
+      <table>
+        <thead>
+          <tr>
+            <th>Opportunity</th>
+            <th>Account</th>
+            <th>Follow-up Date</th>
+            <th>Time Until</th>
+            <th>Product</th>
+            <th>Amount</th>
+            <th>Closed Lost</th>
+          </tr>
+        </thead>
+        <tbody>
+          
+        <tr class="row-past">
+          <td><a href="https://rev-io.my.salesforce.com/006PX00000WitnzYAB" target="_blank" class="opp-link">Advantage Telecom</a></td>
+          <td class="acct-cell">Advantage Telecom</td>
+          <td>Feb 23, 2026</td>
+          <td><span class="badge past-badge">85d overdue</span></td>
+          <td>PSA</td>
+          <td class="amount">$575</td>
+          <td>Mar 03, 2026</td>
+        </tr>
+
+        <tr class="row-past">
+          <td><a href="https://rev-io.my.salesforce.com/006PX00000WKZyTYAX" target="_blank" class="opp-link">B&T Telecom PSA I</a></td>
+          <td class="acct-cell">B&T Telecom</td>
+          <td>Feb 27, 2026</td>
+          <td><span class="badge past-badge">81d overdue</span></td>
+          <td>PSA 2.0</td>
+          <td class="amount">$575</td>
+          <td>Mar 02, 2026</td>
+        </tr>
+
+        <tr class="row-past">
+          <td><a href="https://rev-io.my.salesforce.com/006PX00000VWz05YAD" target="_blank" class="opp-link">Integrated Technologies</a></td>
+          <td class="acct-cell">Integrated Technologies</td>
+          <td>Mar 16, 2026</td>
+          <td><span class="badge past-badge">64d overdue</span></td>
+          <td>PSA 2.0</td>
+          <td class="amount">$1,470</td>
+          <td>Mar 02, 2026</td>
+        </tr>
+
+        <tr class="row-past">
+          <td><a href="https://rev-io.my.salesforce.com/006PX00000WjZTpYAN" target="_blank" class="opp-link">FinWell Business Technology Solutions</a></td>
+          <td class="acct-cell">FinWell Business Technology Solutions</td>
+          <td>Apr 27, 2026</td>
+          <td><span class="badge past-badge">22d overdue</span></td>
+          <td>PSA 2.0</td>
+          <td class="amount">$500</td>
+          <td>Mar 02, 2026</td>
+        </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="owner-section" id="owner-justin-lee">
+      <div class="owner-header">
+        <div class="owner-name">Justin Lee</div>
+        <div class="owner-meta">
+          <span class="count-badge">23 opps</span>
+          <span class="arr-badge">$6,341 ARR</span>
+          <span class="pill past-pill">⚠️ 20 overdue</span><span class="pill soon-pill">🟡 1 this month</span>
+        </div>
+      </div>
+      <table>
+        <thead>
+          <tr>
+            <th>Opportunity</th>
+            <th>Account</th>
+            <th>Follow-up Date</th>
+            <th>Time Until</th>
+            <th>Product</th>
+            <th>Amount</th>
+            <th>Closed Lost</th>
+          </tr>
+        </thead>
+        <tbody>
+          
+        <tr class="row-past">
+          <td><a href="https://rev-io.my.salesforce.com/006PX00000WcVGTYA3" target="_blank" class="opp-link">Grahek Technology - Cyber Protect</a></td>
+          <td class="acct-cell">Grahek Technology</td>
+          <td>Feb 24, 2026</td>
+          <td><span class="badge past-badge">84d overdue</span></td>
+          <td>Cyber Protect</td>
+          <td class="amount">$250</td>
+          <td>Feb 24, 2026</td>
+        </tr>
+
+        <tr class="row-past">
+          <td><a href="https://rev-io.my.salesforce.com/006PX00000VrRTGYA3" target="_blank" class="opp-link">CSI Video Security Sound & Theater - AR Payments</a></td>
+          <td class="acct-cell">CSI Video Security Sound & Theater</td>
+          <td>Mar 04, 2026</td>
+          <td><span class="badge past-badge">76d overdue</span></td>
+          <td>Payments AR</td>
+          <td class="amount">$50</td>
+          <td>Feb 27, 2026</td>
+        </tr>
+
+        <tr class="row-past">
+          <td><a href="https://rev-io.my.salesforce.com/006PX00000XAyPiYAL" target="_blank" class="opp-link">Novalera - AR Payments</a></td>
+          <td class="acct-cell">Novalera</td>
+          <td>Mar 06, 2026</td>
+          <td><span class="badge past-badge">74d overdue</span></td>
+          <td>Payments AR</td>
+          <td class="amount">$50</td>
+          <td>Mar 03, 2026</td>
+        </tr>
+
+        <tr class="row-past">
+          <td><a href="https://rev-io.my.salesforce.com/006PX00000WlFcKYAV" target="_blank" class="opp-link">OIT, LLC - Analytics</a></td>
+          <td class="acct-cell">OIT, LLC</td>
+          <td>Mar 06, 2026</td>
+          <td><span class="badge past-badge">74d overdue</span></td>
+          <td>Billing</td>
+          <td class="amount">$500</td>
+          <td>Mar 03, 2026</td>
+        </tr>
+
+        <tr class="row-past">
+          <td><a href="https://rev-io.my.salesforce.com/006PX00000VdRcoYAF" target="_blank" class="opp-link">Xact Communications - Monthly Minimum Increase</a></td>
+          <td class="acct-cell">Xact Communications</td>
+          <td>Mar 11, 2026</td>
+          <td><span class="badge past-badge">69d overdue</span></td>
+          <td>Billing</td>
+          <td class="amount">$500</td>
+          <td>Mar 05, 2026</td>
+        </tr>
+
+        <tr class="row-past">
+          <td><a href="https://rev-io.my.salesforce.com/006PX00000Vc0OdYAJ" target="_blank" class="opp-link">TREIN Management - AR Payments</a></td>
+          <td class="acct-cell">TREIN Management</td>
+          <td>Mar 11, 2026</td>
+          <td><span class="badge past-badge">69d overdue</span></td>
+          <td>Payments AR</td>
+          <td class="amount">$50</td>
+          <td>Feb 24, 2026</td>
+        </tr>
+
+        <tr class="row-past">
+          <td><a href="https://rev-io.my.salesforce.com/006PX00000WiOx3YAF" target="_blank" class="opp-link">Broadstar - QBO Integration</a></td>
+          <td class="acct-cell">Sunshine Communications Mgt LLC - Broadstar</td>
+          <td>Mar 27, 2026</td>
+          <td><span class="badge past-badge">53d overdue</span></td>
+          <td>Billing</td>
+          <td class="amount">$200</td>
+          <td>Mar 10, 2026</td>
+        </tr>
+
+        <tr class="row-past">
+          <td><a href="https://rev-io.my.salesforce.com/006PX00000WKJiPYAX" target="_blank" class="opp-link">TruLine Technologies - AR Payments</a></td>
+          <td class="acct-cell">TruLine Technologies</td>
+          <td>Mar 27, 2026</td>
+          <td><span class="badge past-badge">53d overdue</span></td>
+          <td>Payments AR</td>
+          <td class="amount">$50</td>
+          <td>Mar 17, 2026</td>
+        </tr>
+
+        <tr class="row-past">
+          <td><a href="https://rev-io.my.salesforce.com/006PX00000WfVqEYAV" target="_blank" class="opp-link">Numhub - AP Dashboard</a></td>
+          <td class="acct-cell">Numhub</td>
+          <td>Mar 31, 2026</td>
+          <td><span class="badge past-badge">49d overdue</span></td>
+          <td>Payments AP</td>
+          <td class="amount">$500</td>
+          <td>Mar 19, 2026</td>
+        </tr>
+
+        <tr class="row-past">
+          <td><a href="https://rev-io.my.salesforce.com/006PX00000WhmTZYAZ" target="_blank" class="opp-link">AltiGen Communications - Analytics</a></td>
+          <td class="acct-cell">AltiGen Communications, Inc.</td>
+          <td>Mar 31, 2026</td>
+          <td><span class="badge past-badge">49d overdue</span></td>
+          <td>Billing</td>
+          <td class="amount">$500</td>
+          <td>Mar 19, 2026</td>
+        </tr>
+
+        <tr class="row-past">
+          <td><a href="https://rev-io.my.salesforce.com/006PX00000XB1YrYAL" target="_blank" class="opp-link">Edge Communications Solutions - Monthly Minimum Increase</a></td>
+          <td class="acct-cell">Edge Communications Solutions, LLC</td>
+          <td>Mar 31, 2026</td>
+          <td><span class="badge past-badge">49d overdue</span></td>
+          <td>Billing</td>
+          <td class="amount">$291</td>
+          <td>Mar 19, 2026</td>
+        </tr>
+
+        <tr class="row-past">
+          <td><a href="https://rev-io.my.salesforce.com/006PX00000XFsDBYA1" target="_blank" class="opp-link">Shinntek Solutions - AR Payments</a></td>
+          <td class="acct-cell">Shinntek Solutions</td>
+          <td>Mar 31, 2026</td>
+          <td><span class="badge past-badge">49d overdue</span></td>
+          <td>Payments AR</td>
+          <td class="amount">$50</td>
+          <td>Mar 19, 2026</td>
+        </tr>
+
+        <tr class="row-past">
+          <td><a href="https://rev-io.my.salesforce.com/006PX00000XuCedYAF" target="_blank" class="opp-link">SoundLine - Analytics</a></td>
+          <td class="acct-cell">SoundLine Communications</td>
+          <td>Apr 10, 2026</td>
+          <td><span class="badge past-badge">39d overdue</span></td>
+          <td>Billing Add-on</td>
+          <td class="amount">$500</td>
+          <td>Mar 16, 2026</td>
+        </tr>
+
+        <tr class="row-past">
+          <td><a href="https://rev-io.my.salesforce.com/006PX00000YSRRWYA5" target="_blank" class="opp-link">Broadstar - QBO Integration</a></td>
+          <td class="acct-cell">Sunshine Communications Mgt LLC - Broadstar</td>
+          <td>Apr 10, 2026</td>
+          <td><span class="badge past-badge">39d overdue</span></td>
+          <td>Billing Add-on</td>
+          <td class="amount">$200</td>
+          <td>Apr 14, 2026</td>
+        </tr>
+
+        <tr class="row-past">
+          <td><a href="https://rev-io.my.salesforce.com/006PX00000WbqZuYAJ" target="_blank" class="opp-link">Ahoy Telecom - AR Payments</a></td>
+          <td class="acct-cell">Ahoy Telecom</td>
+          <td>Apr 17, 2026</td>
+          <td><span class="badge past-badge">32d overdue</span></td>
+          <td>Payments AR</td>
+          <td class="amount">$194</td>
+          <td>Mar 17, 2026</td>
+        </tr>
+
+        <tr class="row-past">
+          <td><a href="https://rev-io.my.salesforce.com/006PX00000XAz5dYAD" target="_blank" class="opp-link">Remote Technologies - AR Payments (Portal)</a></td>
+          <td class="acct-cell">Remote Technology</td>
+          <td>Apr 17, 2026</td>
+          <td><span class="badge past-badge">32d overdue</span></td>
+          <td>Payments AR</td>
+          <td class="amount">$50</td>
+          <td>Mar 18, 2026</td>
+        </tr>
+
+        <tr class="row-past">
+          <td><a href="https://rev-io.my.salesforce.com/006PX00000XAeCXYA1" target="_blank" class="opp-link">Total Tem - AR Payments</a></td>
+          <td class="acct-cell">Total Temp</td>
+          <td>Apr 30, 2026</td>
+          <td><span class="badge past-badge">19d overdue</span></td>
+          <td>Payments AR</td>
+          <td class="amount">$50</td>
+          <td>Mar 06, 2026</td>
+        </tr>
+
+        <tr class="row-past">
+          <td><a href="https://rev-io.my.salesforce.com/006PX00000WiH5yYAF" target="_blank" class="opp-link">Broadstar - Cyber Protect</a></td>
+          <td class="acct-cell">Sunshine Communications Mgt LLC - Broadstar</td>
+          <td>Apr 30, 2026</td>
+          <td><span class="badge past-badge">19d overdue</span></td>
+          <td>Cyber Protect</td>
+          <td class="amount">$250</td>
+          <td>Mar 10, 2026</td>
+        </tr>
+
+        <tr class="row-past">
+          <td><a href="https://rev-io.my.salesforce.com/006PX00000X2Ws1YAF" target="_blank" class="opp-link">RunCentral - AR Payments</a></td>
+          <td class="acct-cell">RunCentral</td>
+          <td>Apr 30, 2026</td>
+          <td><span class="badge past-badge">19d overdue</span></td>
+          <td>Payments AR</td>
+          <td class="amount">$50</td>
+          <td>Mar 10, 2026</td>
+        </tr>
+
+        <tr class="row-past">
+          <td><a href="https://rev-io.my.salesforce.com/006PX00000WfX2PYAV" target="_blank" class="opp-link">Call Harbor - International Suretax Licenses</a></td>
+          <td class="acct-cell">CallHarbor</td>
+          <td>Apr 30, 2026</td>
+          <td><span class="badge past-badge">19d overdue</span></td>
+          <td>Billing</td>
+          <td class="amount">$450</td>
+          <td>Mar 03, 2026</td>
+        </tr>
+
+        <tr class="row-soon">
+          <td><a href="https://rev-io.my.salesforce.com/006PX00000WK7UMYA1" target="_blank" class="opp-link">SpectrumVoIP - ConnectWise Integration</a></td>
+          <td class="acct-cell">SpectrumVoIP</td>
+          <td>May 28, 2026</td>
+          <td><span class="badge soon-badge">9d</span></td>
+          <td>Billing</td>
+          <td class="amount">$600</td>
+          <td>Feb 26, 2026</td>
+        </tr>
+
+        <tr class="row-moderate">
+          <td><a href="https://rev-io.my.salesforce.com/006PX00000WjKL8YAN" target="_blank" class="opp-link">Atlantic Companies - AR Payments</a></td>
+          <td class="acct-cell">Atlantic Companies</td>
+          <td>Aug 03, 2026</td>
+          <td><span class="badge moderate-badge">76d</span></td>
+          <td>Payments AR</td>
+          <td class="amount">$956</td>
+          <td>Feb 27, 2026</td>
+        </tr>
+
+        <tr class="row-moderate">
+          <td><a href="https://rev-io.my.salesforce.com/006PX00000ZNzxtYAD" target="_blank" class="opp-link">Compu-Tech - AR Payments (Portal)</a></td>
+          <td class="acct-cell">Compu-Tech, Inc.</td>
+          <td>Aug 10, 2026</td>
+          <td><span class="badge moderate-badge">83d</span></td>
+          <td>Payments AR</td>
+          <td class="amount">$50</td>
+          <td>Apr 27, 2026</td>
+        </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="owner-section" id="owner-connor-flynn">
+      <div class="owner-header">
+        <div class="owner-name">Connor Flynn</div>
+        <div class="owner-meta">
+          <span class="count-badge">15 opps</span>
+          <span class="arr-badge">$11,540 ARR</span>
+          <span class="pill past-pill">⚠️ 7 overdue</span><span class="pill soon-pill">🟡 3 this month</span>
+        </div>
+      </div>
+      <table>
+        <thead>
+          <tr>
+            <th>Opportunity</th>
+            <th>Account</th>
+            <th>Follow-up Date</th>
+            <th>Time Until</th>
+            <th>Product</th>
+            <th>Amount</th>
+            <th>Closed Lost</th>
+          </tr>
+        </thead>
+        <tbody>
+          
+        <tr class="row-past">
+          <td><a href="https://rev-io.my.salesforce.com/006PX00000WNuTiYAL" target="_blank" class="opp-link">Omni Technologies PSA</a></td>
+          <td class="acct-cell">OmniTech</td>
+          <td>Mar 02, 2026</td>
+          <td><span class="badge past-badge">78d overdue</span></td>
+          <td>Billing</td>
+          <td class="amount">$700</td>
+          <td>Feb 12, 2026</td>
+        </tr>
+
+        <tr class="row-past">
+          <td><a href="https://rev-io.my.salesforce.com/006PX00000X3pZFYAZ" target="_blank" class="opp-link">Converged Networks PSA</a></td>
+          <td class="acct-cell">Converged Networks</td>
+          <td>Mar 04, 2026</td>
+          <td><span class="badge past-badge">76d overdue</span></td>
+          <td>PSA 2.0</td>
+          <td class="amount">—</td>
+          <td>Feb 25, 2026</td>
+        </tr>
+
+        <tr class="row-past">
+          <td><a href="https://rev-io.my.salesforce.com/006PX00000X0dWEYAZ" target="_blank" class="opp-link">Byte Size</a></td>
+          <td class="acct-cell">Byte Size</td>
+          <td>Mar 16, 2026</td>
+          <td><span class="badge past-badge">64d overdue</span></td>
+          <td>PSA 2.0</td>
+          <td class="amount">$575</td>
+          <td>Mar 04, 2026</td>
+        </tr>
+
+        <tr class="row-past">
+          <td><a href="https://rev-io.my.salesforce.com/006PX00000XnpxeYAB" target="_blank" class="opp-link">Managed IT Solutions</a></td>
+          <td class="acct-cell">Managed IT Solutions</td>
+          <td>Apr 06, 2026</td>
+          <td><span class="badge past-badge">43d overdue</span></td>
+          <td>PSA 2.0</td>
+          <td class="amount">$700</td>
+          <td>Mar 10, 2026</td>
+        </tr>
+
+        <tr class="row-past">
+          <td><a href="https://rev-io.my.salesforce.com/006PX00000XPxGPYA1" target="_blank" class="opp-link">Attentive IT</a></td>
+          <td class="acct-cell">Attentive IT</td>
+          <td>Apr 14, 2026</td>
+          <td><span class="badge past-badge">35d overdue</span></td>
+          <td>Billing</td>
+          <td class="amount">$500</td>
+          <td>Mar 31, 2026</td>
+        </tr>
+
+        <tr class="row-past">
+          <td><a href="https://rev-io.my.salesforce.com/006PX00000XcIybYAF" target="_blank" class="opp-link">Global Telecom Exchange</a></td>
+          <td class="acct-cell">Global Telecom Exchange</td>
+          <td>Apr 15, 2026</td>
+          <td><span class="badge past-badge">34d overdue</span></td>
+          <td>Billing</td>
+          <td class="amount">$1,500</td>
+          <td>Mar 16, 2026</td>
+        </tr>
+
+        <tr class="row-past">
+          <td><a href="https://rev-io.my.salesforce.com/006PX00000a9X3FYAU" target="_blank" class="opp-link">Integrated Tech Services</a></td>
+          <td class="acct-cell">Integrated Technology Services</td>
+          <td>May 18, 2026</td>
+          <td><span class="badge past-badge">1d overdue</span></td>
+          <td>Billing</td>
+          <td class="amount">$500</td>
+          <td>May 07, 2026</td>
+        </tr>
+
+        <tr class="row-soon">
+          <td><a href="https://rev-io.my.salesforce.com/006PX00000aNvdZYAS" target="_blank" class="opp-link">BalsamWest Fibernet - PSA</a></td>
+          <td class="acct-cell">BalsamWest Fibernet, LLC</td>
+          <td>Jun 01, 2026</td>
+          <td><span class="badge soon-badge">13d</span></td>
+          <td>PSA 2.0</td>
+          <td class="amount">—</td>
+          <td>May 07, 2026</td>
+        </tr>
+
+        <tr class="row-soon">
+          <td><a href="https://rev-io.my.salesforce.com/006PX00000ZfAwwYAF" target="_blank" class="opp-link">CloudNexus Technologies</a></td>
+          <td class="acct-cell">CloudNexus Technologies</td>
+          <td>Jun 03, 2026</td>
+          <td><span class="badge soon-badge">15d</span></td>
+          <td>PSA 2.0</td>
+          <td class="amount">$575</td>
+          <td>Apr 23, 2026</td>
+        </tr>
+
+        <tr class="row-soon">
+          <td><a href="https://rev-io.my.salesforce.com/006PX00000Z9czZYAR" target="_blank" class="opp-link">MCG</a></td>
+          <td class="acct-cell">MCG</td>
+          <td>Jun 10, 2026</td>
+          <td><span class="badge soon-badge">22d</span></td>
+          <td>PSA 2.0</td>
+          <td class="amount">$660</td>
+          <td>May 06, 2026</td>
+        </tr>
+
+        <tr class="row-future">
+          <td><a href="https://rev-io.my.salesforce.com/006PX00000X0PLCYA3" target="_blank" class="opp-link">Vision CTS PSA II</a></td>
+          <td class="acct-cell">Vision CTS</td>
+          <td>Aug 19, 2026</td>
+          <td><span class="badge future-badge">92d</span></td>
+          <td>PSA 2.0</td>
+          <td class="amount">$1,260</td>
+          <td>Mar 12, 2026</td>
+        </tr>
+
+        <tr class="row-future">
+          <td><a href="https://rev-io.my.salesforce.com/006PX00000YquP8YAJ" target="_blank" class="opp-link">Business Communication Systems</a></td>
+          <td class="acct-cell">Business Communication Systems</td>
+          <td>Aug 31, 2026</td>
+          <td><span class="badge future-badge">104d</span></td>
+          <td>PSA 2.0</td>
+          <td class="amount">$1,575</td>
+          <td>Apr 22, 2026</td>
+        </tr>
+
+        <tr class="row-future">
+          <td><a href="https://rev-io.my.salesforce.com/006PX00000a94KcYAI" target="_blank" class="opp-link">SIP Oasis (PSA)</a></td>
+          <td class="acct-cell">SIP Oasis</td>
+          <td>Sep 01, 2026</td>
+          <td><span class="badge future-badge">105d</span></td>
+          <td>PSA 2.0</td>
+          <td class="amount">$1,170</td>
+          <td>May 13, 2026</td>
+        </tr>
+
+        <tr class="row-future">
+          <td><a href="https://rev-io.my.salesforce.com/006PX00000akHXNYA2" target="_blank" class="opp-link">RingBlue</a></td>
+          <td class="acct-cell">East Kentucky Telecom</td>
+          <td>Oct 05, 2026</td>
+          <td><span class="badge future-badge">139d</span></td>
+          <td>PSA 2.0</td>
+          <td class="amount">$575</td>
+          <td>May 18, 2026</td>
+        </tr>
+
+        <tr class="row-future">
+          <td><a href="https://rev-io.my.salesforce.com/006PX00000ZnxNlYAJ" target="_blank" class="opp-link">JMARK</a></td>
+          <td class="acct-cell">JMARK</td>
+          <td>Jan 04, 2027</td>
+          <td><span class="badge future-badge">230d</span></td>
+          <td>Billing</td>
+          <td class="amount">$1,250</td>
+          <td>May 07, 2026</td>
+        </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="owner-section" id="owner-nassim-filoso">
+      <div class="owner-header">
+        <div class="owner-name">Nassim Filoso</div>
+        <div class="owner-meta">
+          <span class="count-badge">1 opp</span>
+          <span class="arr-badge">$50 ARR</span>
+          <span class="pill past-pill">⚠️ 1 overdue</span>
+        </div>
+      </div>
+      <table>
+        <thead>
+          <tr>
+            <th>Opportunity</th>
+            <th>Account</th>
+            <th>Follow-up Date</th>
+            <th>Time Until</th>
+            <th>Product</th>
+            <th>Amount</th>
+            <th>Closed Lost</th>
+          </tr>
+        </thead>
+        <tbody>
+          
+        <tr class="row-past">
+          <td><a href="https://rev-io.my.salesforce.com/006PX00000WbfRaYAJ" target="_blank" class="opp-link">BerryComm - AR Payments</a></td>
+          <td class="acct-cell">BerryComm</td>
+          <td>Mar 04, 2026</td>
+          <td><span class="badge past-badge">76d overdue</span></td>
+          <td>Payments AR</td>
+          <td class="amount">$50</td>
+          <td>Feb 18, 2026</td>
+        </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="owner-section" id="owner-patrick-dahlstrom">
+      <div class="owner-header">
+        <div class="owner-name">Patrick Dahlstrom</div>
+        <div class="owner-meta">
+          <span class="count-badge">4 opps</span>
+          <span class="arr-badge">$4,845 ARR</span>
+          <span class="pill past-pill">⚠️ 4 overdue</span>
+        </div>
+      </div>
+      <table>
+        <thead>
+          <tr>
+            <th>Opportunity</th>
+            <th>Account</th>
+            <th>Follow-up Date</th>
+            <th>Time Until</th>
+            <th>Product</th>
+            <th>Amount</th>
+            <th>Closed Lost</th>
+          </tr>
+        </thead>
+        <tbody>
+          
+        <tr class="row-past">
+          <td><a href="https://rev-io.my.salesforce.com/006PX00000Wm6gcYAB" target="_blank" class="opp-link">Agility Telecom Billing</a></td>
+          <td class="acct-cell">Agility Telecom</td>
+          <td>Mar 04, 2026</td>
+          <td><span class="badge past-badge">76d overdue</span></td>
+          <td>Billing</td>
+          <td class="amount">$1,250</td>
+          <td>Feb 18, 2026</td>
+        </tr>
+
+        <tr class="row-past">
+          <td><a href="https://rev-io.my.salesforce.com/006PX00000W50JWYAZ" target="_blank" class="opp-link">Wildcard MSP PSA I</a></td>
+          <td class="acct-cell">Wildcard MSP</td>
+          <td>Mar 06, 2026</td>
+          <td><span class="badge past-badge">74d overdue</span></td>
+          <td>PSA 2.0</td>
+          <td class="amount">$575</td>
+          <td>Feb 20, 2026</td>
+        </tr>
+
+        <tr class="row-past">
+          <td><a href="https://rev-io.my.salesforce.com/006PX00000WcWcMYAV" target="_blank" class="opp-link">Frontier Computer Corp</a></td>
+          <td class="acct-cell">Frontier Computer Corp</td>
+          <td>Mar 10, 2026</td>
+          <td><span class="badge past-badge">70d overdue</span></td>
+          <td>PSA 2.0</td>
+          <td class="amount">$500</td>
+          <td>Feb 18, 2026</td>
+        </tr>
+
+        <tr class="row-past">
+          <td><a href="https://rev-io.my.salesforce.com/006PX00000W4JUjYAN" target="_blank" class="opp-link">Anderson Technologies PSA I</a></td>
+          <td class="acct-cell">Anderson Technologies</td>
+          <td>Mar 18, 2026</td>
+          <td><span class="badge past-badge">62d overdue</span></td>
+          <td>PSA 2.0</td>
+          <td class="amount">$2,520</td>
+          <td>Feb 20, 2026</td>
+        </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="owner-section" id="owner-andy-whisenant">
+      <div class="owner-header">
+        <div class="owner-name">Andy Whisenant</div>
+        <div class="owner-meta">
+          <span class="count-badge">27 opps</span>
+          <span class="arr-badge">$25,525 ARR</span>
+          <span class="pill past-pill">⚠️ 11 overdue</span><span class="pill soon-pill">🟡 9 this month</span>
+        </div>
+      </div>
+      <table>
+        <thead>
+          <tr>
+            <th>Opportunity</th>
+            <th>Account</th>
+            <th>Follow-up Date</th>
+            <th>Time Until</th>
+            <th>Product</th>
+            <th>Amount</th>
+            <th>Closed Lost</th>
+          </tr>
+        </thead>
+        <tbody>
+          
+        <tr class="row-past">
+          <td><a href="https://rev-io.my.salesforce.com/006PX00000WTaDqYAL" target="_blank" class="opp-link">WPS Technology Solutions</a></td>
+          <td class="acct-cell">WPS Technology Solutions</td>
+          <td>Mar 09, 2026</td>
+          <td><span class="badge past-badge">71d overdue</span></td>
+          <td>PSA 2.0</td>
+          <td class="amount">$500</td>
+          <td>Feb 11, 2026</td>
+        </tr>
+
+        <tr class="row-past">
+          <td><a href="https://rev-io.my.salesforce.com/006PX00000Xnq7JYAR" target="_blank" class="opp-link">CTI Communications Tech Inc</a></td>
+          <td class="acct-cell">CTI Communications Tech</td>
+          <td>Apr 01, 2026</td>
+          <td><span class="badge past-badge">48d overdue</span></td>
+          <td>PSA 2.0</td>
+          <td class="amount">$2,415</td>
+          <td>Mar 17, 2026</td>
+        </tr>
+
+        <tr class="row-past">
+          <td><a href="https://rev-io.my.salesforce.com/006PX00000XVr8JYAT" target="_blank" class="opp-link">KDIT</a></td>
+          <td class="acct-cell">KDIT</td>
+          <td>Apr 01, 2026</td>
+          <td><span class="badge past-badge">48d overdue</span></td>
+          <td>PSA 2.0</td>
+          <td class="amount">$575</td>
+          <td>Mar 25, 2026</td>
+        </tr>
+
+        <tr class="row-past">
+          <td><a href="https://rev-io.my.salesforce.com/006PX00000XWH7bYAH" target="_blank" class="opp-link">Mirrored Storage</a></td>
+          <td class="acct-cell">Mirrored Storage</td>
+          <td>Apr 01, 2026</td>
+          <td><span class="badge past-badge">48d overdue</span></td>
+          <td>PSA 2.0</td>
+          <td class="amount">$575</td>
+          <td>Mar 05, 2026</td>
+        </tr>
+
+        <tr class="row-past">
+          <td><a href="https://rev-io.my.salesforce.com/006PX00000Wg4PlYAJ" target="_blank" class="opp-link">Segler PSA</a></td>
+          <td class="acct-cell">Segler</td>
+          <td>Apr 01, 2026</td>
+          <td><span class="badge past-badge">48d overdue</span></td>
+          <td>PSA 2.0</td>
+          <td class="amount">$575</td>
+          <td>Mar 25, 2026</td>
+        </tr>
+
+        <tr class="row-past">
+          <td><a href="https://rev-io.my.salesforce.com/006PX00000XYDJDYA5" target="_blank" class="opp-link">Evolve</a></td>
+          <td class="acct-cell">Evolve</td>
+          <td>Apr 13, 2026</td>
+          <td><span class="badge past-badge">36d overdue</span></td>
+          <td>PSA 2.0</td>
+          <td class="amount">$575</td>
+          <td>Mar 24, 2026</td>
+        </tr>
+
+        <tr class="row-past">
+          <td><a href="https://rev-io.my.salesforce.com/006PX00000WhicsYAB" target="_blank" class="opp-link">IPRO</a></td>
+          <td class="acct-cell">IPRO Media</td>
+          <td>Apr 20, 2026</td>
+          <td><span class="badge past-badge">29d overdue</span></td>
+          <td>Billing</td>
+          <td class="amount">$500</td>
+          <td>Mar 18, 2026</td>
+        </tr>
+
+        <tr class="row-past">
+          <td><a href="https://rev-io.my.salesforce.com/006PX00000X0PmbYAF" target="_blank" class="opp-link">RTC Communications Billin I</a></td>
+          <td class="acct-cell">RTC Communications</td>
+          <td>May 01, 2026</td>
+          <td><span class="badge past-badge">18d overdue</span></td>
+          <td>Billing</td>
+          <td class="amount">$1,500</td>
+          <td>Apr 01, 2026</td>
+        </tr>
+
+        <tr class="row-past">
+          <td><a href="https://rev-io.my.salesforce.com/006PX00000ZlWLFYA3" target="_blank" class="opp-link">Tavanca Networks</a></td>
+          <td class="acct-cell">Tavanca Networks</td>
+          <td>May 11, 2026</td>
+          <td><span class="badge past-badge">8d overdue</span></td>
+          <td>PSA 2.0</td>
+          <td class="amount">$880</td>
+          <td>May 04, 2026</td>
+        </tr>
+
+        <tr class="row-past">
+          <td><a href="https://rev-io.my.salesforce.com/006PX00000YwDvmYAF" target="_blank" class="opp-link">E2E Technology</a></td>
+          <td class="acct-cell">E2E Technology, LLC</td>
+          <td>May 13, 2026</td>
+          <td><span class="badge past-badge">6d overdue</span></td>
+          <td>PSA 2.0</td>
+          <td class="amount">$575</td>
+          <td>Apr 29, 2026</td>
+        </tr>
+
+        <tr class="row-past">
+          <td><a href="https://rev-io.my.salesforce.com/006PX00000Z91C7YAJ" target="_blank" class="opp-link">Stay Ready Tech</a></td>
+          <td class="acct-cell">Stay Ready Tech</td>
+          <td>May 14, 2026</td>
+          <td><span class="badge past-badge">5d overdue</span></td>
+          <td>Billing</td>
+          <td class="amount">$500</td>
+          <td>Apr 22, 2026</td>
+        </tr>
+
+        <tr class="row-soon">
+          <td><a href="https://rev-io.my.salesforce.com/006PX00000Z92UgYAJ" target="_blank" class="opp-link">Qovo Solutions Inc</a></td>
+          <td class="acct-cell">Qovo Solutions Inc</td>
+          <td>Jun 01, 2026</td>
+          <td><span class="badge soon-badge">13d</span></td>
+          <td>PSA 2.0</td>
+          <td class="amount">$1,875</td>
+          <td>Apr 29, 2026</td>
+        </tr>
+
+        <tr class="row-soon">
+          <td><a href="https://rev-io.my.salesforce.com/006PX00000a9FKsYAM" target="_blank" class="opp-link">Netiia</a></td>
+          <td class="acct-cell">Netiia</td>
+          <td>Jun 01, 2026</td>
+          <td><span class="badge soon-badge">13d</span></td>
+          <td>PSA 2.0</td>
+          <td class="amount">$575</td>
+          <td>May 05, 2026</td>
+        </tr>
+
+        <tr class="row-soon">
+          <td><a href="https://rev-io.my.salesforce.com/006PX00000Zkg9lYAB" target="_blank" class="opp-link">Digital Global Telecom</a></td>
+          <td class="acct-cell">Digital Global Telecom</td>
+          <td>Jun 01, 2026</td>
+          <td><span class="badge soon-badge">13d</span></td>
+          <td>Billing</td>
+          <td class="amount">$500</td>
+          <td>May 07, 2026</td>
+        </tr>
+
+        <tr class="row-soon">
+          <td><a href="https://rev-io.my.salesforce.com/006PX00000YGRblYAH" target="_blank" class="opp-link">Absolute - PSA</a></td>
+          <td class="acct-cell">Absolute</td>
+          <td>Jun 01, 2026</td>
+          <td><span class="badge soon-badge">13d</span></td>
+          <td>PSA 2.0</td>
+          <td class="amount">$1,300</td>
+          <td>Apr 03, 2026</td>
+        </tr>
+
+        <tr class="row-soon">
+          <td><a href="https://rev-io.my.salesforce.com/006PX00000YqvWWYAZ" target="_blank" class="opp-link">OMCT</a></td>
+          <td class="acct-cell">Organ Mountain Cabling and Technology L.L.C.</td>
+          <td>Jun 01, 2026</td>
+          <td><span class="badge soon-badge">13d</span></td>
+          <td>PSA 2.0</td>
+          <td class="amount">$660</td>
+          <td>Apr 06, 2026</td>
+        </tr>
+
+        <tr class="row-soon">
+          <td><a href="https://rev-io.my.salesforce.com/006PX00000WQmJVYA1" target="_blank" class="opp-link">Compsys - Billing</a></td>
+          <td class="acct-cell">Compsys</td>
+          <td>Jun 01, 2026</td>
+          <td><span class="badge soon-badge">13d</span></td>
+          <td>Billing</td>
+          <td class="amount">$1,500</td>
+          <td>May 04, 2026</td>
+        </tr>
+
+        <tr class="row-soon">
+          <td><a href="https://rev-io.my.salesforce.com/006PX00000WQrhNYAT" target="_blank" class="opp-link">Geeks 2 U PSA I</a></td>
+          <td class="acct-cell">Geeks 2 U</td>
+          <td>Jun 01, 2026</td>
+          <td><span class="badge soon-badge">13d</span></td>
+          <td>PSA 2.0</td>
+          <td class="amount">$500</td>
+          <td>Feb 26, 2026</td>
+        </tr>
+
+        <tr class="row-soon">
+          <td><a href="https://rev-io.my.salesforce.com/006PX00000Z991VYAR" target="_blank" class="opp-link">Brightside</a></td>
+          <td class="acct-cell">Brightside</td>
+          <td>Jun 01, 2026</td>
+          <td><span class="badge soon-badge">13d</span></td>
+          <td>PSA 2.0</td>
+          <td class="amount">$1,470</td>
+          <td>May 04, 2026</td>
+        </tr>
+
+        <tr class="row-soon">
+          <td><a href="https://rev-io.my.salesforce.com/006PX00000aIMWoYAO" target="_blank" class="opp-link">MMO Techno</a></td>
+          <td class="acct-cell">MMO Techno</td>
+          <td>Jun 15, 2026</td>
+          <td><span class="badge soon-badge">27d</span></td>
+          <td>PSA 2.0</td>
+          <td class="amount">$770</td>
+          <td>May 18, 2026</td>
+        </tr>
+
+        <tr class="row-moderate">
+          <td><a href="https://rev-io.my.salesforce.com/006PX00000XYlMTYA1" target="_blank" class="opp-link">Bespoke Communications</a></td>
+          <td class="acct-cell">Bespoke Communications</td>
+          <td>Aug 03, 2026</td>
+          <td><span class="badge moderate-badge">76d</span></td>
+          <td>Billing</td>
+          <td class="amount">$1,500</td>
+          <td>Mar 11, 2026</td>
+        </tr>
+
+        <tr class="row-moderate">
+          <td><a href="https://rev-io.my.salesforce.com/006PX00000X0TmzYAF" target="_blank" class="opp-link">PWR Technologies - Billing</a></td>
+          <td class="acct-cell">PWR Technologies</td>
+          <td>Aug 03, 2026</td>
+          <td><span class="badge moderate-badge">76d</span></td>
+          <td>Billing</td>
+          <td class="amount">$500</td>
+          <td>Feb 19, 2026</td>
+        </tr>
+
+        <tr class="row-moderate">
+          <td><a href="https://rev-io.my.salesforce.com/006PX00000WoZoBYAV" target="_blank" class="opp-link">PWR Technologies - PSA</a></td>
+          <td class="acct-cell">PWR Technologies</td>
+          <td>Aug 03, 2026</td>
+          <td><span class="badge moderate-badge">76d</span></td>
+          <td>PSA 2.0</td>
+          <td class="amount">$560</td>
+          <td>Feb 19, 2026</td>
+        </tr>
+
+        <tr class="row-future">
+          <td><a href="https://rev-io.my.salesforce.com/006PX00000Ya2xPYAR" target="_blank" class="opp-link">RWA</a></td>
+          <td class="acct-cell">RWA</td>
+          <td>Sep 01, 2026</td>
+          <td><span class="badge future-badge">105d</span></td>
+          <td>PSA 2.0</td>
+          <td class="amount">$1,260</td>
+          <td>Apr 07, 2026</td>
+        </tr>
+
+        <tr class="row-future">
+          <td><a href="https://rev-io.my.salesforce.com/006PX00000WWxDpYAL" target="_blank" class="opp-link">Quest Tech</a></td>
+          <td class="acct-cell">Quest Tech</td>
+          <td>Sep 01, 2026</td>
+          <td><span class="badge future-badge">105d</span></td>
+          <td>PSA 2.0</td>
+          <td class="amount">$1,100</td>
+          <td>Feb 13, 2026</td>
+        </tr>
+
+        <tr class="row-future">
+          <td><a href="https://rev-io.my.salesforce.com/006PX00000ZBjP3YAL" target="_blank" class="opp-link">Kinetix</a></td>
+          <td class="acct-cell">Kinetix</td>
+          <td>Oct 01, 2026</td>
+          <td><span class="badge future-badge">135d</span></td>
+          <td>PSA 2.0</td>
+          <td class="amount">$1,785</td>
+          <td>Apr 27, 2026</td>
+        </tr>
+
+        <tr class="row-future">
+          <td><a href="https://rev-io.my.salesforce.com/006PX00000Z8qEzYAJ" target="_blank" class="opp-link">Amazing7</a></td>
+          <td class="acct-cell">Amazing7</td>
+          <td>Nov 02, 2026</td>
+          <td><span class="badge future-badge">167d</span></td>
+          <td>Billing</td>
+          <td class="amount">$500</td>
+          <td>Apr 09, 2026</td>
+        </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="owner-section" id="owner-jake-borah">
+      <div class="owner-header">
+        <div class="owner-name">Jake Borah</div>
+        <div class="owner-meta">
+          <span class="count-badge">11 opps</span>
+          <span class="arr-badge">$9,775 ARR</span>
+          <span class="pill past-pill">⚠️ 5 overdue</span><span class="pill urgent-pill">🔴 1 this week</span><span class="pill soon-pill">🟡 2 this month</span>
+        </div>
+      </div>
+      <table>
+        <thead>
+          <tr>
+            <th>Opportunity</th>
+            <th>Account</th>
+            <th>Follow-up Date</th>
+            <th>Time Until</th>
+            <th>Product</th>
+            <th>Amount</th>
+            <th>Closed Lost</th>
+          </tr>
+        </thead>
+        <tbody>
+          
+        <tr class="row-past">
+          <td><a href="https://rev-io.my.salesforce.com/006PX00000Vd5PPYAZ" target="_blank" class="opp-link">Edgeworth Security</a></td>
+          <td class="acct-cell">Edgeworth Security</td>
+          <td>Mar 23, 2026</td>
+          <td><span class="badge past-badge">57d overdue</span></td>
+          <td>PSA 2.0</td>
+          <td class="amount">$2,600</td>
+          <td>Feb 19, 2026</td>
+        </tr>
+
+        <tr class="row-past">
+          <td><a href="https://rev-io.my.salesforce.com/006PX00000XYw50YAD" target="_blank" class="opp-link">Lubbock Audio Visual</a></td>
+          <td class="acct-cell">Lubbock Audio Visual</td>
+          <td>Mar 31, 2026</td>
+          <td><span class="badge past-badge">49d overdue</span></td>
+          <td>PSA 2.0</td>
+          <td class="amount">$605</td>
+          <td>Mar 10, 2026</td>
+        </tr>
+
+        <tr class="row-past">
+          <td><a href="https://rev-io.my.salesforce.com/006PX00000Xxf0vYAB" target="_blank" class="opp-link">Advanced Systems & Alarm Services</a></td>
+          <td class="acct-cell">Advanced Systems & Alarm Services</td>
+          <td>Apr 27, 2026</td>
+          <td><span class="badge past-badge">22d overdue</span></td>
+          <td>PSA 2.0</td>
+          <td class="amount">$930</td>
+          <td>Apr 13, 2026</td>
+        </tr>
+
+        <tr class="row-past">
+          <td><a href="https://rev-io.my.salesforce.com/006PX00000XVuqvYAD" target="_blank" class="opp-link">Harmonyx</a></td>
+          <td class="acct-cell">Harmonyx</td>
+          <td>May 01, 2026</td>
+          <td><span class="badge past-badge">18d overdue</span></td>
+          <td>PSA 2.0</td>
+          <td class="amount">$575</td>
+          <td>Mar 09, 2026</td>
+        </tr>
+
+        <tr class="row-past">
+          <td><a href="https://rev-io.my.salesforce.com/006PX00000XxfTxYAJ" target="_blank" class="opp-link">Native Smart Properties</a></td>
+          <td class="acct-cell">Native Smart Properties</td>
+          <td>May 18, 2026</td>
+          <td><span class="badge past-badge">1d overdue</span></td>
+          <td>PSA 2.0</td>
+          <td class="amount">$990</td>
+          <td>Apr 27, 2026</td>
+        </tr>
+
+        <tr class="row-urgent">
+          <td><a href="https://rev-io.my.salesforce.com/006PX00000aakHJYAY" target="_blank" class="opp-link">Prism Systems</a></td>
+          <td class="acct-cell">Prism Systems</td>
+          <td>May 26, 2026</td>
+          <td><span class="badge urgent-badge">7d</span></td>
+          <td>PSA 2.0</td>
+          <td class="amount">$840</td>
+          <td>May 12, 2026</td>
+        </tr>
+
+        <tr class="row-soon">
+          <td><a href="https://rev-io.my.salesforce.com/006PX00000X06YfYAJ" target="_blank" class="opp-link">SecuCast</a></td>
+          <td class="acct-cell">SecuCast</td>
+          <td>Jun 01, 2026</td>
+          <td><span class="badge soon-badge">13d</span></td>
+          <td>PSA 2.0</td>
+          <td class="amount">$575</td>
+          <td>Feb 20, 2026</td>
+        </tr>
+
+        <tr class="row-soon">
+          <td><a href="https://rev-io.my.salesforce.com/006PX00000Zzg6VYAR" target="_blank" class="opp-link">G&T Alarm Company</a></td>
+          <td class="acct-cell">G&T Alarm Company</td>
+          <td>Jun 15, 2026</td>
+          <td><span class="badge soon-badge">27d</span></td>
+          <td>PSA 2.0</td>
+          <td class="amount">$575</td>
+          <td>Apr 28, 2026</td>
+        </tr>
+
+        <tr class="row-moderate">
+          <td><a href="https://rev-io.my.salesforce.com/006PX00000ZiYUrYAN" target="_blank" class="opp-link">Arizona Sound and Communications</a></td>
+          <td class="acct-cell">Arizona Sound and Communications</td>
+          <td>Jul 20, 2026</td>
+          <td><span class="badge moderate-badge">62d</span></td>
+          <td>PSA 2.0</td>
+          <td class="amount">$935</td>
+          <td>May 18, 2026</td>
+        </tr>
+
+        <tr class="row-future">
+          <td><a href="https://rev-io.my.salesforce.com/006PX00000ap171YAA" target="_blank" class="opp-link">Ubertas Controls</a></td>
+          <td class="acct-cell">Ubertas Controls</td>
+          <td>Oct 01, 2026</td>
+          <td><span class="badge future-badge">135d</span></td>
+          <td>PSA 2.0</td>
+          <td class="amount">$575</td>
+          <td>May 18, 2026</td>
+        </tr>
+
+        <tr class="row-future">
+          <td><a href="https://rev-io.my.salesforce.com/006PX00000XiHq9YAF" target="_blank" class="opp-link">Lakeway Security</a></td>
+          <td class="acct-cell">Lakeway Security</td>
+          <td>Nov 03, 2026</td>
+          <td><span class="badge future-badge">168d</span></td>
+          <td>PSA 2.0</td>
+          <td class="amount">$575</td>
+          <td>Mar 17, 2026</td>
+        </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="owner-section" id="owner-jake-mitchell">
+      <div class="owner-header">
+        <div class="owner-name">Jake Mitchell</div>
+        <div class="owner-meta">
+          <span class="count-badge">3 opps</span>
+          <span class="arr-badge">$8,700 ARR</span>
+          <span class="pill past-pill">⚠️ 2 overdue</span>
+        </div>
+      </div>
+      <table>
+        <thead>
+          <tr>
+            <th>Opportunity</th>
+            <th>Account</th>
+            <th>Follow-up Date</th>
+            <th>Time Until</th>
+            <th>Product</th>
+            <th>Amount</th>
+            <th>Closed Lost</th>
+          </tr>
+        </thead>
+        <tbody>
+          
+        <tr class="row-past">
+          <td><a href="https://rev-io.my.salesforce.com/006PX00000VKuaTYAT" target="_blank" class="opp-link">Security Pros 1/26</a></td>
+          <td class="acct-cell">Security Pros</td>
+          <td>Mar 23, 2026</td>
+          <td><span class="badge past-badge">57d overdue</span></td>
+          <td>PSA 2.0</td>
+          <td class="amount">$700</td>
+          <td>Feb 06, 2026</td>
+        </tr>
+
+        <tr class="row-past">
+          <td><a href="https://rev-io.my.salesforce.com/006PX00000X3g7lYAB" target="_blank" class="opp-link">Telsco Security Systems</a></td>
+          <td class="acct-cell">Telsco Security Systems inc.</td>
+          <td>Apr 01, 2026</td>
+          <td><span class="badge past-badge">48d overdue</span></td>
+          <td>PSA 2.0</td>
+          <td class="amount">$2,000</td>
+          <td>Mar 02, 2026</td>
+        </tr>
+
+        <tr class="row-moderate">
+          <td><a href="https://rev-io.my.salesforce.com/006PX00000V1VO7YAN" target="_blank" class="opp-link">AV-Tech Media Solutions</a></td>
+          <td class="acct-cell">AV-Tech Media Solutions</td>
+          <td>Jul 01, 2026</td>
+          <td><span class="badge moderate-badge">43d</span></td>
+          <td>PSA 2.0</td>
+          <td class="amount">$6,000</td>
+          <td>Feb 17, 2026</td>
+        </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="owner-section" id="owner-jamie-butler">
+      <div class="owner-header">
+        <div class="owner-name">Jamie Butler</div>
+        <div class="owner-meta">
+          <span class="count-badge">11 opps</span>
+          <span class="arr-badge">$11,285 ARR</span>
+          <span class="pill past-pill">⚠️ 2 overdue</span><span class="pill soon-pill">🟡 3 this month</span>
+        </div>
+      </div>
+      <table>
+        <thead>
+          <tr>
+            <th>Opportunity</th>
+            <th>Account</th>
+            <th>Follow-up Date</th>
+            <th>Time Until</th>
+            <th>Product</th>
+            <th>Amount</th>
+            <th>Closed Lost</th>
+          </tr>
+        </thead>
+        <tbody>
+          
+        <tr class="row-past">
+          <td><a href="https://rev-io.my.salesforce.com/006PX00000WiikTYAR" target="_blank" class="opp-link">The Villages Technology Solutions Group</a></td>
+          <td class="acct-cell">The Villages Technology Solutions Group</td>
+          <td>Mar 30, 2026</td>
+          <td><span class="badge past-badge">50d overdue</span></td>
+          <td>PSA 2.0</td>
+          <td class="amount">$1,100</td>
+          <td>Mar 16, 2026</td>
+        </tr>
+
+        <tr class="row-past">
+          <td><a href="https://rev-io.my.salesforce.com/006PX00000X5sUbYAJ" target="_blank" class="opp-link">Lyra Communications PSA</a></td>
+          <td class="acct-cell">Telco Experts</td>
+          <td>Apr 01, 2026</td>
+          <td><span class="badge past-badge">48d overdue</span></td>
+          <td>PSA 2.0</td>
+          <td class="amount">$1,350</td>
+          <td>Mar 31, 2026</td>
+        </tr>
+
+        <tr class="row-soon">
+          <td><a href="https://rev-io.my.salesforce.com/006PX00000YQZ0DYAX" target="_blank" class="opp-link">IT Meristem</a></td>
+          <td class="acct-cell">IT Meristem</td>
+          <td>Jun 01, 2026</td>
+          <td><span class="badge soon-badge">13d</span></td>
+          <td>Billing</td>
+          <td class="amount">$500</td>
+          <td>Apr 17, 2026</td>
+        </tr>
+
+        <tr class="row-soon">
+          <td><a href="https://rev-io.my.salesforce.com/006PX00000ZqpFDYAZ" target="_blank" class="opp-link">JAS Communications</a></td>
+          <td class="acct-cell">JAS Communications</td>
+          <td>Jun 01, 2026</td>
+          <td><span class="badge soon-badge">13d</span></td>
+          <td>Billing</td>
+          <td class="amount">$3,000</td>
+          <td>May 04, 2026</td>
+        </tr>
+
+        <tr class="row-soon">
+          <td><a href="https://rev-io.my.salesforce.com/006PX00000a3q8cYAA" target="_blank" class="opp-link">UVoice</a></td>
+          <td class="acct-cell">Uvoice</td>
+          <td>Jun 01, 2026</td>
+          <td><span class="badge soon-badge">13d</span></td>
+          <td>Billing</td>
+          <td class="amount">$1,250</td>
+          <td>May 19, 2026</td>
+        </tr>
+
+        <tr class="row-moderate">
+          <td><a href="https://rev-io.my.salesforce.com/006PX00000Zi954YAB" target="_blank" class="opp-link">SelTec</a></td>
+          <td class="acct-cell">SelTec</td>
+          <td>Jun 30, 2026</td>
+          <td><span class="badge moderate-badge">42d</span></td>
+          <td>PSA 2.0</td>
+          <td class="amount">$575</td>
+          <td>May 06, 2026</td>
+        </tr>
+
+        <tr class="row-moderate">
+          <td><a href="https://rev-io.my.salesforce.com/006PX00000Z5mvtYAB" target="_blank" class="opp-link">Linear Technologies</a></td>
+          <td class="acct-cell">Linear Technologies</td>
+          <td>Aug 01, 2026</td>
+          <td><span class="badge moderate-badge">74d</span></td>
+          <td>PSA 2.0</td>
+          <td class="amount">—</td>
+          <td>Apr 07, 2026</td>
+        </tr>
+
+        <tr class="row-future">
+          <td><a href="https://rev-io.my.salesforce.com/006PX00000aH0QIYA0" target="_blank" class="opp-link">ZirkleTech</a></td>
+          <td class="acct-cell">Zirkle Tech</td>
+          <td>Nov 01, 2026</td>
+          <td><span class="badge future-badge">166d</span></td>
+          <td>PSA 2.0</td>
+          <td class="amount">$575</td>
+          <td>May 08, 2026</td>
+        </tr>
+
+        <tr class="row-future">
+          <td><a href="https://rev-io.my.salesforce.com/006PX00000a3nx9YAA" target="_blank" class="opp-link">Virtual Support Techs</a></td>
+          <td class="acct-cell">Virtual Support Teks</td>
+          <td>Dec 01, 2026</td>
+          <td><span class="badge future-badge">196d</span></td>
+          <td>Billing</td>
+          <td class="amount">$660</td>
+          <td>May 01, 2026</td>
+        </tr>
+
+        <tr class="row-future">
+          <td><a href="https://rev-io.my.salesforce.com/006PX00000YntURYAZ" target="_blank" class="opp-link">The Tech Consultants</a></td>
+          <td class="acct-cell">The Tech Consultants</td>
+          <td>Jan 01, 2027</td>
+          <td><span class="badge future-badge">227d</span></td>
+          <td>PSA 2.0</td>
+          <td class="amount">$1,615</td>
+          <td>Apr 08, 2026</td>
+        </tr>
+
+        <tr class="row-future">
+          <td><a href="https://rev-io.my.salesforce.com/006PX00000YDKwbYAH" target="_blank" class="opp-link">IT In Demand</a></td>
+          <td class="acct-cell">IT In Demand</td>
+          <td>Mar 01, 2027</td>
+          <td><span class="badge future-badge">286d</span></td>
+          <td>PSA 2.0</td>
+          <td class="amount">$660</td>
+          <td>Mar 18, 2026</td>
+        </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="owner-section" id="owner-husam-zalmiyar">
+      <div class="owner-header">
+        <div class="owner-name">Husam Zalmiyar</div>
+        <div class="owner-meta">
+          <span class="count-badge">33 opps</span>
+          <span class="arr-badge">$24,100 ARR</span>
+          <span class="pill past-pill">⚠️ 16 overdue</span><span class="pill soon-pill">🟡 12 this month</span>
+        </div>
+      </div>
+      <table>
+        <thead>
+          <tr>
+            <th>Opportunity</th>
+            <th>Account</th>
+            <th>Follow-up Date</th>
+            <th>Time Until</th>
+            <th>Product</th>
+            <th>Amount</th>
+            <th>Closed Lost</th>
+          </tr>
+        </thead>
+        <tbody>
+          
+        <tr class="row-past">
+          <td><a href="https://rev-io.my.salesforce.com/006PX00000WxnqHYAR" target="_blank" class="opp-link">Safeco Risk Control</a></td>
+          <td class="acct-cell">Safeco Risk Control</td>
+          <td>Apr 01, 2026</td>
+          <td><span class="badge past-badge">48d overdue</span></td>
+          <td>PSA 2.0</td>
+          <td class="amount">$1,025</td>
+          <td>Mar 11, 2026</td>
+        </tr>
+
+        <tr class="row-past">
+          <td><a href="https://rev-io.my.salesforce.com/006PX00000WzOB3YAN" target="_blank" class="opp-link">Northeast Two Way Radio Corp.</a></td>
+          <td class="acct-cell">Northeast Two Way Radio Corp.</td>
+          <td>Apr 01, 2026</td>
+          <td><span class="badge past-badge">48d overdue</span></td>
+          <td>PSA 2.0</td>
+          <td class="amount">$700</td>
+          <td>Mar 11, 2026</td>
+        </tr>
+
+        <tr class="row-past">
+          <td><a href="https://rev-io.my.salesforce.com/006PX00000XboajYAB" target="_blank" class="opp-link">Simon Security Systems</a></td>
+          <td class="acct-cell">Simon Security Systems</td>
+          <td>Apr 01, 2026</td>
+          <td><span class="badge past-badge">48d overdue</span></td>
+          <td>PSA 2.0</td>
+          <td class="amount">$575</td>
+          <td>Mar 26, 2026</td>
+        </tr>
+
+        <tr class="row-past">
+          <td><a href="https://rev-io.my.salesforce.com/006PX00000XCOl7YAH" target="_blank" class="opp-link">Levines Lights</a></td>
+          <td class="acct-cell">Levines Lights</td>
+          <td>Apr 01, 2026</td>
+          <td><span class="badge past-badge">48d overdue</span></td>
+          <td>PSA 2.0</td>
+          <td class="amount">$575</td>
+          <td>Mar 16, 2026</td>
+        </tr>
+
+        <tr class="row-past">
+          <td><a href="https://rev-io.my.salesforce.com/006PX00000YZ9WKYA1" target="_blank" class="opp-link">Effective Alarm Systems</a></td>
+          <td class="acct-cell">Effective Alarm Systems</td>
+          <td>Apr 16, 2026</td>
+          <td><span class="badge past-badge">33d overdue</span></td>
+          <td>PSA 2.0</td>
+          <td class="amount">$1,110</td>
+          <td>Apr 09, 2026</td>
+        </tr>
+
+        <tr class="row-past">
+          <td><a href="https://rev-io.my.salesforce.com/006PX00000YELqbYAH" target="_blank" class="opp-link">National Security & Alarm Installers</a></td>
+          <td class="acct-cell">National Security & Alarm Installers</td>
+          <td>Apr 30, 2026</td>
+          <td><span class="badge past-badge">19d overdue</span></td>
+          <td>PSA 2.0</td>
+          <td class="amount">$605</td>
+          <td>Apr 09, 2026</td>
+        </tr>
+
+        <tr class="row-past">
+          <td><a href="https://rev-io.my.salesforce.com/006PX00000XttVWYAZ" target="_blank" class="opp-link">GCSI Security Group</a></td>
+          <td class="acct-cell">GCSI Security Group</td>
+          <td>Apr 30, 2026</td>
+          <td><span class="badge past-badge">19d overdue</span></td>
+          <td>PSA 2.0</td>
+          <td class="amount">$575</td>
+          <td>Apr 01, 2026</td>
+        </tr>
+
+        <tr class="row-past">
+          <td><a href="https://rev-io.my.salesforce.com/006PX00000XxhQvYAJ" target="_blank" class="opp-link">The Monahan Group</a></td>
+          <td class="acct-cell">The Monahan Group</td>
+          <td>May 01, 2026</td>
+          <td><span class="badge past-badge">18d overdue</span></td>
+          <td>PSA 2.0</td>
+          <td class="amount">$665</td>
+          <td>Mar 17, 2026</td>
+        </tr>
+
+        <tr class="row-past">
+          <td><a href="https://rev-io.my.salesforce.com/006PX00000Yjo3VYAR" target="_blank" class="opp-link">Smart Tech on Demand</a></td>
+          <td class="acct-cell">Smart Tech on Demand</td>
+          <td>May 01, 2026</td>
+          <td><span class="badge past-badge">18d overdue</span></td>
+          <td>PSA 2.0</td>
+          <td class="amount">$575</td>
+          <td>Apr 09, 2026</td>
+        </tr>
+
+        <tr class="row-past">
+          <td><a href="https://rev-io.my.salesforce.com/006PX00000Yjp61YAB" target="_blank" class="opp-link">Protective Services Inc</a></td>
+          <td class="acct-cell">Protective Services Inc</td>
+          <td>May 01, 2026</td>
+          <td><span class="badge past-badge">18d overdue</span></td>
+          <td>PSA 2.0</td>
+          <td class="amount">$840</td>
+          <td>Apr 01, 2026</td>
+        </tr>
+
+        <tr class="row-past">
+          <td><a href="https://rev-io.my.salesforce.com/006PX00000YHbveYAD" target="_blank" class="opp-link">iAV Design</a></td>
+          <td class="acct-cell">iAV Design</td>
+          <td>May 01, 2026</td>
+          <td><span class="badge past-badge">18d overdue</span></td>
+          <td>PSA 2.0</td>
+          <td class="amount">$575</td>
+          <td>Apr 09, 2026</td>
+        </tr>
+
+        <tr class="row-past">
+          <td><a href="https://rev-io.my.salesforce.com/006PX00000ZKvpBYAT" target="_blank" class="opp-link">ECM Security Systems</a></td>
+          <td class="acct-cell">ECM Security Systems</td>
+          <td>May 01, 2026</td>
+          <td><span class="badge past-badge">18d overdue</span></td>
+          <td>PSA 2.0</td>
+          <td class="amount">$700</td>
+          <td>Apr 30, 2026</td>
+        </tr>
+
+        <tr class="row-past">
+          <td><a href="https://rev-io.my.salesforce.com/006PX00000YkQFFYA3" target="_blank" class="opp-link">Innova Global Technology Inc.</a></td>
+          <td class="acct-cell">Innova Global Technology Inc.</td>
+          <td>May 04, 2026</td>
+          <td><span class="badge past-badge">15d overdue</span></td>
+          <td>PSA 2.0</td>
+          <td class="amount">$500</td>
+          <td>Apr 30, 2026</td>
+        </tr>
+
+        <tr class="row-past">
+          <td><a href="https://rev-io.my.salesforce.com/006PX00000ZenInYAJ" target="_blank" class="opp-link">Automated Abode - Smart Home Automation Specialist</a></td>
+          <td class="acct-cell">Automated Abode - Smart Home Automation Specialist</td>
+          <td>May 11, 2026</td>
+          <td><span class="badge past-badge">8d overdue</span></td>
+          <td>PSA 2.0</td>
+          <td class="amount">$755</td>
+          <td>May 06, 2026</td>
+        </tr>
+
+        <tr class="row-past">
+          <td><a href="https://rev-io.my.salesforce.com/006PX00000YjSEIYA3" target="_blank" class="opp-link">Innovative Media Systems</a></td>
+          <td class="acct-cell">Innovative Media Systems</td>
+          <td>May 11, 2026</td>
+          <td><span class="badge past-badge">8d overdue</span></td>
+          <td>PSA 2.0</td>
+          <td class="amount">$575</td>
+          <td>Apr 20, 2026</td>
+        </tr>
+
+        <tr class="row-past">
+          <td><a href="https://rev-io.my.salesforce.com/006PX00000ZCn8sYAD" target="_blank" class="opp-link">Interactive Control Systems</a></td>
+          <td class="acct-cell">Interactive Control Systems</td>
+          <td>May 18, 2026</td>
+          <td><span class="badge past-badge">1d overdue</span></td>
+          <td>PSA 2.0</td>
+          <td class="amount">$575</td>
+          <td>May 15, 2026</td>
+        </tr>
+
+        <tr class="row-soon">
+          <td><a href="https://rev-io.my.salesforce.com/006PX00000YkEqqYAF" target="_blank" class="opp-link">Modern Wave Systems</a></td>
+          <td class="acct-cell">Modern Wave Systems</td>
+          <td>Jun 01, 2026</td>
+          <td><span class="badge soon-badge">13d</span></td>
+          <td>PSA 2.0</td>
+          <td class="amount">$575</td>
+          <td>Apr 16, 2026</td>
+        </tr>
+
+        <tr class="row-soon">
+          <td><a href="https://rev-io.my.salesforce.com/006PX00000YkQdRYAV" target="_blank" class="opp-link">American Eagle Security Systems</a></td>
+          <td class="acct-cell">American Eagle Security Systems</td>
+          <td>Jun 01, 2026</td>
+          <td><span class="badge soon-badge">13d</span></td>
+          <td>PSA 2.0</td>
+          <td class="amount">$1,250</td>
+          <td>Apr 14, 2026</td>
+        </tr>
+
+        <tr class="row-soon">
+          <td><a href="https://rev-io.my.salesforce.com/006PX00000ZlnXOYAZ" target="_blank" class="opp-link">Artistic Video & Sound</a></td>
+          <td class="acct-cell">Artistic Video & Sound</td>
+          <td>Jun 01, 2026</td>
+          <td><span class="badge soon-badge">13d</span></td>
+          <td>PSA 2.0</td>
+          <td class="amount">$665</td>
+          <td>Apr 30, 2026</td>
+        </tr>
+
+        <tr class="row-soon">
+          <td><a href="https://rev-io.my.salesforce.com/006PX00000aEBBnYAO" target="_blank" class="opp-link">Infiniti Technologies</a></td>
+          <td class="acct-cell">Infiniti Technologies</td>
+          <td>Jun 01, 2026</td>
+          <td><span class="badge soon-badge">13d</span></td>
+          <td>PSA 2.0</td>
+          <td class="amount">$1,180</td>
+          <td>May 04, 2026</td>
+        </tr>
+
+        <tr class="row-soon">
+          <td><a href="https://rev-io.my.salesforce.com/006PX00000ZD2FxYAL" target="_blank" class="opp-link">Hugh's Innovative AV Solutions</a></td>
+          <td class="acct-cell">Hugh's Innovative AV Solutions</td>
+          <td>Jun 01, 2026</td>
+          <td><span class="badge soon-badge">13d</span></td>
+          <td>PSA 2.0</td>
+          <td class="amount">$605</td>
+          <td>May 06, 2026</td>
+        </tr>
+
+        <tr class="row-soon">
+          <td><a href="https://rev-io.my.salesforce.com/006PX00000aHsiPYAS" target="_blank" class="opp-link">Diversified Home Installations</a></td>
+          <td class="acct-cell">Diversified Home Installations</td>
+          <td>Jun 01, 2026</td>
+          <td><span class="badge soon-badge">13d</span></td>
+          <td>PSA 2.0</td>
+          <td class="amount">$830</td>
+          <td>May 05, 2026</td>
+        </tr>
+
+        <tr class="row-soon">
+          <td><a href="https://rev-io.my.salesforce.com/006PX00000aLbBBYA0" target="_blank" class="opp-link">BCI Security & Investigations</a></td>
+          <td class="acct-cell">BCI Security & Investigations</td>
+          <td>Jun 01, 2026</td>
+          <td><span class="badge soon-badge">13d</span></td>
+          <td>PSA 2.0</td>
+          <td class="amount">$660</td>
+          <td>May 08, 2026</td>
+        </tr>
+
+        <tr class="row-soon">
+          <td><a href="https://rev-io.my.salesforce.com/006PX00000ZCurvYAD" target="_blank" class="opp-link">Security Specialists</a></td>
+          <td class="acct-cell">Security Specialists</td>
+          <td>Jun 01, 2026</td>
+          <td><span class="badge soon-badge">13d</span></td>
+          <td>PSA 2.0</td>
+          <td class="amount">$2,025</td>
+          <td>May 06, 2026</td>
+        </tr>
+
+        <tr class="row-soon">
+          <td><a href="https://rev-io.my.salesforce.com/006PX00000Y9d4zYAB" target="_blank" class="opp-link">EyeLock</a></td>
+          <td class="acct-cell">EyeLock</td>
+          <td>Jun 01, 2026</td>
+          <td><span class="badge soon-badge">13d</span></td>
+          <td>PSA 2.0</td>
+          <td class="amount">$665</td>
+          <td>Mar 18, 2026</td>
+        </tr>
+
+        <tr class="row-soon">
+          <td><a href="https://rev-io.my.salesforce.com/006PX00000a0smsYAA" target="_blank" class="opp-link">Sage Integration</a></td>
+          <td class="acct-cell">Sage Integration</td>
+          <td>Jun 01, 2026</td>
+          <td><span class="badge soon-badge">13d</span></td>
+          <td>PSA 2.0</td>
+          <td class="amount">$700</td>
+          <td>May 07, 2026</td>
+        </tr>
+
+        <tr class="row-soon">
+          <td><a href="https://rev-io.my.salesforce.com/006PX00000aBTLLYA4" target="_blank" class="opp-link">Exceed AV</a></td>
+          <td class="acct-cell">Exceed AV</td>
+          <td>Jun 01, 2026</td>
+          <td><span class="badge soon-badge">13d</span></td>
+          <td>PSA 2.0</td>
+          <td class="amount">$575</td>
+          <td>May 18, 2026</td>
+        </tr>
+
+        <tr class="row-soon">
+          <td><a href="https://rev-io.my.salesforce.com/006PX00000YjpijYAB" target="_blank" class="opp-link">Epic Systems</a></td>
+          <td class="acct-cell">Epic Systems</td>
+          <td>Jun 11, 2026</td>
+          <td><span class="badge soon-badge">23d</span></td>
+          <td>PSA 2.0</td>
+          <td class="amount">$635</td>
+          <td>Mar 31, 2026</td>
+        </tr>
+
+        <tr class="row-moderate">
+          <td><a href="https://rev-io.my.salesforce.com/006PX00000ZP6inYAD" target="_blank" class="opp-link">Advanced Home AV</a></td>
+          <td class="acct-cell">Advanced Home AV</td>
+          <td>Jul 01, 2026</td>
+          <td><span class="badge moderate-badge">43d</span></td>
+          <td>PSA 2.0</td>
+          <td class="amount">—</td>
+          <td>Apr 14, 2026</td>
+        </tr>
+
+        <tr class="row-moderate">
+          <td><a href="https://rev-io.my.salesforce.com/006PX00000YwRIpYAN" target="_blank" class="opp-link">Mango Security Systems</a></td>
+          <td class="acct-cell">Mango Security Systems</td>
+          <td>Jul 01, 2026</td>
+          <td><span class="badge moderate-badge">43d</span></td>
+          <td>PSA 2.0</td>
+          <td class="amount">—</td>
+          <td>Apr 03, 2026</td>
+        </tr>
+
+        <tr class="row-moderate">
+          <td><a href="https://rev-io.my.salesforce.com/006PX00000a6LQ5YAM" target="_blank" class="opp-link">Electronic Security Group</a></td>
+          <td class="acct-cell">Electronic Security Group</td>
+          <td>Aug 03, 2026</td>
+          <td><span class="badge moderate-badge">76d</span></td>
+          <td>PSA 2.0</td>
+          <td class="amount">$1,120</td>
+          <td>May 15, 2026</td>
+        </tr>
+
+        <tr class="row-moderate">
+          <td><a href="https://rev-io.my.salesforce.com/006PX00000aMAX3YAO" target="_blank" class="opp-link">Green Valley Lock & Safe</a></td>
+          <td class="acct-cell">Green Valley Lock & Safe</td>
+          <td>Aug 03, 2026</td>
+          <td><span class="badge moderate-badge">76d</span></td>
+          <td>PSA 2.0</td>
+          <td class="amount">$815</td>
+          <td>May 18, 2026</td>
+        </tr>
+
+        <tr class="row-future">
+          <td><a href="https://rev-io.my.salesforce.com/006PX00000XySuTYAV" target="_blank" class="opp-link">Security Unlimited</a></td>
+          <td class="acct-cell">Security Unlimited</td>
+          <td>Jan 01, 2027</td>
+          <td><span class="badge future-badge">227d</span></td>
+          <td>PSA 2.0</td>
+          <td class="amount">$875</td>
+          <td>Mar 16, 2026</td>
+        </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="owner-section" id="owner-rachael-buchtan">
+      <div class="owner-header">
+        <div class="owner-name">Rachael Buchtan</div>
+        <div class="owner-meta">
+          <span class="count-badge">1 opp</span>
+          <span class="arr-badge">$0 ARR</span>
+          <span class="pill past-pill">⚠️ 1 overdue</span>
+        </div>
+      </div>
+      <table>
+        <thead>
+          <tr>
+            <th>Opportunity</th>
+            <th>Account</th>
+            <th>Follow-up Date</th>
+            <th>Time Until</th>
+            <th>Product</th>
+            <th>Amount</th>
+            <th>Closed Lost</th>
+          </tr>
+        </thead>
+        <tbody>
+          
+        <tr class="row-past">
+          <td><a href="https://rev-io.my.salesforce.com/006PX00000Wf4bVYAR" target="_blank" class="opp-link">Ucomtel - 1 Year Renewal</a></td>
+          <td class="acct-cell">Ucomtel</td>
+          <td>Apr 06, 2026</td>
+          <td><span class="badge past-badge">43d overdue</span></td>
+          <td>Billing</td>
+          <td class="amount">$0</td>
+          <td>Mar 06, 2026</td>
+        </tr>
+        </tbody>
+      </table>
+    </div>
+
+</div>
+</body>
+</html>
