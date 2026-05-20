@@ -1,0 +1,371 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Rox AI Platform — Business Case | Rev.io</title>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; background: #f4f6f9; color: #1a1a2e; }
+
+  .header {
+    background: linear-gradient(135deg, #1a1a2e 0%, #16213e 60%, #0f3460 100%);
+    color: white;
+    padding: 48px 40px 40px;
+  }
+  .header-inner { max-width: 960px; margin: 0 auto; }
+  .header-label { font-size: 12px; letter-spacing: 2px; text-transform: uppercase; color: #a0aec0; margin-bottom: 12px; }
+  .header h1 { font-size: 36px; font-weight: 700; line-height: 1.2; margin-bottom: 10px; }
+  .header .sub { font-size: 16px; color: #cbd5e0; margin-bottom: 24px; }
+  .header-meta { display: flex; gap: 32px; font-size: 13px; color: #a0aec0; flex-wrap: wrap; }
+  .header-meta span strong { color: white; }
+
+  .container { max-width: 960px; margin: 0 auto; padding: 40px 24px; }
+
+  /* Summary cards */
+  .summary-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 16px; margin-bottom: 40px; }
+  .summary-card {
+    background: white;
+    border-radius: 12px;
+    padding: 20px;
+    text-align: center;
+    box-shadow: 0 1px 4px rgba(0,0,0,0.08);
+    border-top: 4px solid #0f3460;
+  }
+  .summary-card.green { border-top-color: #38a169; }
+  .summary-card.blue { border-top-color: #3182ce; }
+  .summary-card.orange { border-top-color: #dd6b20; }
+  .summary-card .num { font-size: 28px; font-weight: 800; color: #1a1a2e; line-height: 1; margin-bottom: 6px; }
+  .summary-card .num.green { color: #276749; }
+  .summary-card .num.orange { color: #c05621; }
+  .summary-card .label { font-size: 12px; color: #718096; text-transform: uppercase; letter-spacing: 0.5px; }
+
+  /* Sections */
+  .section { background: white; border-radius: 12px; padding: 32px; margin-bottom: 24px; box-shadow: 0 1px 4px rgba(0,0,0,0.07); }
+  .section h2 { font-size: 20px; font-weight: 700; color: #1a1a2e; margin-bottom: 6px; display: flex; align-items: center; gap: 10px; }
+  .section h2 .icon { font-size: 22px; }
+  .section .section-sub { font-size: 13px; color: #718096; margin-bottom: 20px; padding-bottom: 16px; border-bottom: 1px solid #edf2f7; }
+  .section p { font-size: 15px; line-height: 1.7; color: #4a5568; margin-bottom: 12px; }
+  .section p:last-child { margin-bottom: 0; }
+
+  /* Cost comparison */
+  .cost-table { width: 100%; border-collapse: collapse; margin-top: 16px; }
+  .cost-table th { text-align: left; padding: 10px 14px; font-size: 12px; text-transform: uppercase; letter-spacing: 0.5px; color: #718096; background: #f7fafc; border-bottom: 2px solid #e2e8f0; }
+  .cost-table td { padding: 14px; font-size: 15px; border-bottom: 1px solid #edf2f7; vertical-align: top; }
+  .cost-table tr:last-child td { border-bottom: none; }
+  .cost-table .label-col { font-weight: 600; color: #2d3748; width: 40%; }
+  .cost-table .fte-col { color: #c05621; }
+  .cost-table .rox-col { color: #276749; font-weight: 600; }
+  .cost-table .savings-col { color: #276749; font-weight: 700; }
+  .cost-table tr.total-row td { background: #f0fff4; font-weight: 700; font-size: 16px; }
+
+  /* Use cases */
+  .use-case-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-top: 16px; }
+  .use-case-card { background: #f7fafc; border-radius: 10px; padding: 18px; border-left: 4px solid #0f3460; }
+  .use-case-card h4 { font-size: 14px; font-weight: 700; color: #2d3748; margin-bottom: 6px; }
+  .use-case-card p { font-size: 13px; color: #4a5568; margin-bottom: 8px; }
+  .use-case-card .outcome { font-size: 13px; font-weight: 700; color: #276749; background: #f0fff4; padding: 4px 10px; border-radius: 20px; display: inline-block; }
+
+  /* ROI */
+  .roi-row { display: flex; justify-content: space-between; align-items: center; padding: 12px 0; border-bottom: 1px solid #edf2f7; }
+  .roi-row:last-child { border-bottom: none; }
+  .roi-row .roi-label { font-size: 15px; color: #4a5568; }
+  .roi-row .roi-val { font-size: 16px; font-weight: 700; color: #1a1a2e; }
+  .roi-row .roi-val.green { color: #276749; }
+  .roi-row .roi-val.blue { color: #2b6cb0; }
+
+  /* Risk table */
+  .risk-grid { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 14px; margin-top: 16px; }
+  .risk-card { background: #fff5f5; border-radius: 10px; padding: 16px; border-left: 4px solid #fc8181; }
+  .risk-card.medium { background: #fffaf0; border-left-color: #f6ad55; }
+  .risk-card.low { background: #f0fff4; border-left-color: #68d391; }
+  .risk-card h4 { font-size: 13px; font-weight: 700; color: #2d3748; margin-bottom: 4px; }
+  .risk-card p { font-size: 12px; color: #718096; margin-bottom: 6px; }
+  .risk-card .mitigation { font-size: 12px; color: #4a5568; font-style: italic; }
+  .risk-tag { font-size: 10px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px; padding: 2px 8px; border-radius: 10px; display: inline-block; margin-bottom: 8px; }
+  .risk-tag.high { background: #fed7d7; color: #c53030; }
+  .risk-tag.medium { background: #feebc8; color: #c05621; }
+  .risk-tag.low { background: #c6f6d5; color: #276749; }
+
+  /* Recommendation */
+  .rec-box { background: linear-gradient(135deg, #0f3460 0%, #1a1a2e 100%); color: white; border-radius: 12px; padding: 32px; }
+  .rec-box h3 { font-size: 22px; font-weight: 700; margin-bottom: 12px; }
+  .rec-box p { font-size: 15px; line-height: 1.7; color: #cbd5e0; margin-bottom: 12px; }
+  .rec-bullets { list-style: none; margin-top: 16px; }
+  .rec-bullets li { font-size: 14px; color: #e2e8f0; padding: 6px 0 6px 20px; position: relative; }
+  .rec-bullets li::before { content: "✓"; position: absolute; left: 0; color: #68d391; font-weight: 700; }
+
+  /* Pipeline math */
+  .pipeline-math { background: #ebf8ff; border-radius: 10px; padding: 20px; margin-top: 16px; border: 1px solid #bee3f8; }
+  .pipeline-math h4 { font-size: 14px; font-weight: 700; color: #2b6cb0; margin-bottom: 12px; }
+  .math-row { display: flex; justify-content: space-between; font-size: 14px; padding: 5px 0; color: #2c5282; }
+  .math-row.result { font-weight: 700; font-size: 16px; border-top: 1px solid #90cdf4; margin-top: 6px; padding-top: 10px; color: #1a365d; }
+
+  .note { font-size: 12px; color: #718096; font-style: italic; margin-top: 8px; }
+
+  .footer { text-align: center; padding: 32px; color: #a0aec0; font-size: 13px; }
+
+  @media (max-width: 680px) {
+    .summary-grid { grid-template-columns: repeat(2, 1fr); }
+    .use-case-grid { grid-template-columns: 1fr; }
+    .risk-grid { grid-template-columns: 1fr; }
+    .header h1 { font-size: 26px; }
+  }
+</style>
+</head>
+<body>
+
+<div class="header">
+  <div class="header-inner">
+    <div class="header-label">Internal Business Case</div>
+    <h1>Rox AI Revenue Agent Platform</h1>
+    <div class="sub">Replacing a planned FTE hire with AI-powered pipeline generation</div>
+    <div class="header-meta">
+      <span><strong>Prepared by:</strong> Ryan Koontz, SVP Sales</span>
+      <span><strong>Date:</strong> May 2026</span>
+      <span><strong>Vendor:</strong> Rox Data Corp</span>
+      <span><strong>Contract Value:</strong> $64,680 / year</span>
+    </div>
+  </div>
+</div>
+
+<div class="container">
+
+  <!-- Summary Cards -->
+  <div class="summary-grid">
+    <div class="summary-card green">
+      <div class="num green">$26K+</div>
+      <div class="label">Year 1 Cost Savings vs. FTE</div>
+    </div>
+    <div class="summary-card blue">
+      <div class="num">$3.84M</div>
+      <div class="label">Projected Pipeline Created</div>
+    </div>
+    <div class="summary-card">
+      <div class="num">5+</div>
+      <div class="label">New Meetings / Week</div>
+    </div>
+    <div class="summary-card orange">
+      <div class="num orange">4–5x</div>
+      <div class="label">Response Rate vs. Outreach</div>
+    </div>
+  </div>
+
+  <!-- Executive Summary -->
+  <div class="section">
+    <h2><span class="icon">📋</span> Executive Summary</h2>
+    <div class="section-sub">The opportunity in one paragraph</div>
+    <p>Rev.io has an approved headcount for a pipeline-generating role to support H2 targets and our expanding MSP motion. Instead of filling that seat with a traditional hire, this proposal recommends investing $64,680 in the Rox AI Revenue Agent Platform — a purpose-built agentic outbound system that will research 20,000 accounts, identify buying signals, and send personalized outreach at scale across 4 users.</p>
+    <p>The result: more pipeline generated at a lower cost, no ramp time, no turnover risk, and a system that runs continuously. Rox projects 5+ new meetings per week and $3.84M in annual pipeline creation — output that would require multiple SDRs to replicate manually. The platform costs 28% less than a single fully-loaded FTE, and delivers compounding efficiency gains across the existing team.</p>
+  </div>
+
+  <!-- Problem -->
+  <div class="section">
+    <h2><span class="icon">⚡</span> Why We Need to Act Now</h2>
+    <div class="section-sub">The business context driving this decision</div>
+    <p><strong>Large H2 Revenue Targets:</strong> We need pipeline built now to close revenue in Q3 and Q4. The lag between outbound activity and closed revenue means any delay in starting has a direct downstream impact on hitting number.</p>
+    <p><strong>MSP Motion is Harder to Crack:</strong> Our MSP segment doesn't respond well to traditional cold outreach. We need personalized, signal-based messaging that understands the account — exactly what Rox is built to deliver.</p>
+    <p><strong>Churn Risk in New Product:</strong> We've moved to month-to-month contracts on new product lines. Onboarding coverage and proactive engagement during early tenure is critical to retention — a workflow Rox can automate.</p>
+    <p><strong>Stack is Fragmented:</strong> We run SFDC, Outreach, Clay, ZoomInfo, Notion, and internal tooling. Data is siloed, reps spend hours on manual research, and there's no unified layer connecting signals to action. Rox fixes this.</p>
+  </div>
+
+  <!-- Cost Comparison -->
+  <div class="section">
+    <h2><span class="icon">💰</span> Cost Comparison: Rox vs. FTE</h2>
+    <div class="section-sub">Fully-loaded annual cost of a new hire vs. the Rox platform</div>
+
+    <table class="cost-table">
+      <thead>
+        <tr>
+          <th>Cost Component</th>
+          <th class="fte-col">New FTE Hire (SDR/Sales Ops)</th>
+          <th class="rox-col">Rox AI Platform</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td class="label-col">Base Salary / License Fee</td>
+          <td class="fte-col">$60,000 – $65,000</td>
+          <td class="rox-col">$64,680</td>
+        </tr>
+        <tr>
+          <td class="label-col">Benefits & Payroll Taxes (~25%)</td>
+          <td class="fte-col">$15,000 – $16,250</td>
+          <td class="rox-col">—</td>
+        </tr>
+        <tr>
+          <td class="label-col">Equipment & Software</td>
+          <td class="fte-col">$3,000 – $5,000</td>
+          <td class="rox-col">—</td>
+        </tr>
+        <tr>
+          <td class="label-col">Onboarding / Training</td>
+          <td class="fte-col">$2,000 – $4,000</td>
+          <td class="rox-col">Included (Rox FDE team)</td>
+        </tr>
+        <tr>
+          <td class="label-col">Ramp Time (3–4 months at ~50% productivity)</td>
+          <td class="fte-col">$20,000 – $25,000 in lost output</td>
+          <td class="rox-col">Live in weeks</td>
+        </tr>
+        <tr class="total-row">
+          <td class="label-col">Total Fully-Loaded Year 1 Cost</td>
+          <td class="fte-col">~$90,000 – $115,000</td>
+          <td class="rox-col savings-col">$64,680</td>
+        </tr>
+      </tbody>
+    </table>
+    <p class="note">* FTE estimates based on market comp for an SDR or Sales Ops Analyst. Update salary range to match the specific role budgeted.</p>
+  </div>
+
+  <!-- Use Cases -->
+  <div class="section">
+    <h2><span class="icon">🤖</span> What Rox Does — Key Use Cases</h2>
+    <div class="section-sub">Pre-built agents for pipeline, deal execution, and renewals</div>
+    <div class="use-case-grid">
+      <div class="use-case-card">
+        <h4>Account Prioritization</h4>
+        <p>Identifies prospects most likely to buy based on public signals, internal data, and compound scoring across 20K accounts.</p>
+        <span class="outcome">+10–20% more opportunities</span>
+      </div>
+      <div class="use-case-card">
+        <h4>Personalized Outbound at Scale</h4>
+        <p>Sends 1,000 personalized emails/week with context pulled from account research, internal data, and Rev.io product knowledge.</p>
+        <span class="outcome">4–5x response rate vs. Outreach</span>
+      </div>
+      <div class="use-case-card">
+        <h4>Meeting Prep & Follow-up</h4>
+        <p>Automates pre-meeting research briefs and post-meeting follow-up emails, freeing reps to focus on the conversation.</p>
+        <span class="outcome">+20% rep efficiency</span>
+      </div>
+      <div class="use-case-card">
+        <h4>Renewal & Upsell Coverage</h4>
+        <p>Monitors usage signals and triggers renewal/upsell workflows — critical given our shift to month-to-month contracts.</p>
+        <span class="outcome">Reduced churn risk</span>
+      </div>
+      <div class="use-case-card">
+        <h4>MSP-Specific Outreach</h4>
+        <p>Signal-based messaging built on real events and stakeholder pain — not templated copy. Designed for buyers who ignore traditional cold outreach.</p>
+        <span class="outcome">Breaks into new segment</span>
+      </div>
+      <div class="use-case-card">
+        <h4>Stack Unification</h4>
+        <p>Connects SFDC, Outreach, Email/Cal, Clay, and Notion into one context layer — eliminating data silos that cost reps hours per week.</p>
+        <span class="outcome">One agent per account</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- Pipeline Math -->
+  <div class="section">
+    <h2><span class="icon">📈</span> ROI Analysis</h2>
+    <div class="section-sub">Projecting the return on the $64,680 investment</div>
+
+    <div class="pipeline-math">
+      <h4>Outbound Agent — Pipeline Math (Rox Projections)</h4>
+      <div class="math-row"><span>Emails sent per week</span><span>1,000</span></div>
+      <div class="math-row"><span>Response rate</span><span>0.5%</span></div>
+      <div class="math-row"><span>Meetings booked per week</span><span>5+</span></div>
+      <div class="math-row"><span>Meetings per year</span><span>260</span></div>
+      <div class="math-row"><span>Average deal size</span><span>$16,000</span></div>
+      <div class="math-row"><span>Close rate from first meeting</span><span>7%</span></div>
+      <div class="math-row result"><span>Projected closed revenue (annual)</span><span>~$291,200</span></div>
+      <div class="math-row result"><span>Projected pipeline created (annual)</span><span>$3,840,000</span></div>
+    </div>
+
+    <div style="margin-top: 20px;">
+      <div class="roi-row">
+        <span class="roi-label">Platform cost (annual)</span>
+        <span class="roi-val">$64,680</span>
+      </div>
+      <div class="roi-row">
+        <span class="roi-label">Cost savings vs. planned FTE (Year 1)</span>
+        <span class="roi-val green">$25,000 – $50,000</span>
+      </div>
+      <div class="roi-row">
+        <span class="roi-label">Pipeline generated (Rox projection)</span>
+        <span class="roi-val blue">$3,840,000</span>
+      </div>
+      <div class="roi-row">
+        <span class="roi-label">Projected closed revenue at 7% close rate</span>
+        <span class="roi-val blue">~$291,000</span>
+      </div>
+      <div class="roi-row">
+        <span class="roi-label">Revenue ROI on platform cost (if projections hold)</span>
+        <span class="roi-val green">~4.5x</span>
+      </div>
+      <div class="roi-row">
+        <span class="roi-label">Break-even (deals needed to cover cost)</span>
+        <span class="roi-val">5 deals at $16K avg</span>
+      </div>
+    </div>
+    <p class="note">* Revenue projections are Rox's estimates based on their customer data. Actual results will vary. Close rate and deal size should be adjusted to Rev.io's actuals as data becomes available.</p>
+  </div>
+
+  <!-- Risk -->
+  <div class="section">
+    <h2><span class="icon">⚠️</span> Risks & Mitigations</h2>
+    <div class="section-sub">Known risks and how they're managed</div>
+    <div class="risk-grid">
+      <div class="risk-card medium">
+        <div class="risk-tag medium">Medium</div>
+        <h4>Adoption Risk</h4>
+        <p>Reps don't engage with the platform or don't trust AI-generated outreach.</p>
+        <p class="mitigation">Mitigation: Rox includes a dedicated Growth Strategist + Forward Deployed Engineer. Weekly cadence during rollout, cohort training included in contract.</p>
+      </div>
+      <div class="risk-card medium">
+        <div class="risk-tag medium">Medium</div>
+        <h4>Projection Accuracy</h4>
+        <p>Rox's pipeline projections are based on aggregate customer data, not Rev.io-specific performance.</p>
+        <p class="mitigation">Mitigation: 12-month contract allows time to validate and tune. Even at 25% of projected pipeline, ROI is positive.</p>
+      </div>
+      <div class="risk-card low">
+        <div class="risk-tag low">Low</div>
+        <h4>Integration Complexity</h4>
+        <p>Connecting SFDC, Outreach, email, and other tools may delay deployment.</p>
+        <p class="mitigation">Mitigation: Rox FDE team handles all technical setup. SFDC, email/cal, and Notion integrations are pre-built.</p>
+      </div>
+      <div class="risk-card low">
+        <div class="risk-tag low">Low</div>
+        <h4>Contract Terms</h4>
+        <p>Annual commitment, no rollover of unused Agent Actions, upfront payment required.</p>
+        <p class="mitigation">Mitigation: 5.88M actions budgeted for 4 users over 12 months. Overage at $0.014/action. No auto-renewal per MSA.</p>
+      </div>
+      <div class="risk-card low">
+        <div class="risk-tag low">Low</div>
+        <h4>Email Deliverability</h4>
+        <p>High-volume outbound at 1,000 emails/week could affect domain reputation.</p>
+        <p class="mitigation">Mitigation: Rox manages sequencing and volume controls. Signal-based targeting reduces blast volume vs. traditional sequences.</p>
+      </div>
+      <div class="risk-card low">
+        <div class="risk-tag low">Low</div>
+        <h4>Replacing a Hire</h4>
+        <p>AI platform can't fully replicate a human's relationship-building capability.</p>
+        <p class="mitigation">Mitigation: Rox handles the top-of-funnel research and outreach. Human reps handle the meeting and close — this is an amplifier, not a full replacement.</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- Recommendation -->
+  <div class="rec-box">
+    <h3>✅ Recommendation: Approve Rox at $64,680</h3>
+    <p>The math is clear: Rox costs less than a single FTE, starts generating pipeline in weeks rather than months, and scales to 20,000 accounts in ways a human hire simply cannot. Even conservative assumptions show a positive ROI within the first contract year.</p>
+    <p>This is not a replacement for our sales team — it's an amplifier. Rox handles the research, signal detection, and personalized outreach so our reps can spend more time in conversations and less time in spreadsheets.</p>
+    <ul class="rec-bullets">
+      <li>$64,680 annual cost vs. $90K–$115K for a fully-loaded FTE — immediate savings</li>
+      <li>5+ qualified meetings per week projected from day one of full deployment</li>
+      <li>Covers MSP motion, renewal risk, and outbound pipeline simultaneously</li>
+      <li>No ramp time — Rox FDE team handles setup and onboarding, live in weeks</li>
+      <li>Backed by Sequoia, GV, General Catalyst — 750+ customers including NVIDIA, Ramp, Intel</li>
+      <li>12-month term with no auto-renewal — low commitment, clear exit if results don't materialize</li>
+    </ul>
+  </div>
+
+</div>
+
+<div class="footer">
+  Rev.io Internal | Prepared by Ryan Koontz, SVP Sales | May 2026 | Confidential
+</div>
+
+</body>
+</html>
