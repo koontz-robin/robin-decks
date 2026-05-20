@@ -1,0 +1,1857 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Rev.io PSA — Competitor Battle Cards</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
+  :root {
+    --indigo: #6366F1;
+    --indigo-light: #818CF8;
+    --indigo-dim: rgba(99,102,241,0.15);
+    --green: #6366F1;
+    --cyan: #818CF8;
+    --bg: #0A0F1A;
+    --surface: #0D1117;
+    --border: #1E293B;
+    --border2: #111827;
+    --text: #E2E8F0;
+    --muted: #64748B;
+    --card: #0F172A;
+    --accent: #6366F1;
+    --red: #F43F5E;
+    --yellow: #F59E0B;
+    --win: #0A1F0E;
+    --lose: #1A060C;
+    --emerald: #10B981;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { background: var(--bg); color: var(--text); font-family: 'Inter', 'Segoe UI', system-ui, sans-serif; font-size: 14px; line-height: 1.5; }
+
+  /* HEADER */
+  header { background: linear-gradient(135deg, #0D1117 0%, #131929 100%); border-bottom: 1px solid #1E293B; padding: 20px 30px; display: flex; align-items: center; justify-content: space-between; position: sticky; top: 0; z-index: 100; }
+  header h1 { font-size: 20px; color: #E2E8F0; text-transform: uppercase; letter-spacing: 2px; }
+  header .badge { background: rgba(99,102,241,0.12); border: 1px solid rgba(99,102,241,0.4); color: #818CF8; padding: 4px 12px; border-radius: 20px; font-size: 11px; text-transform: uppercase; letter-spacing: 1px; }
+
+  /* NAV TABS */
+  .nav-tabs { display: flex; gap: 6px; padding: 12px 30px; background: #0D1117; border-bottom: 1px solid #1E293B; overflow-x: auto; flex-wrap: nowrap; position:sticky; top:73px; z-index:99; }
+  .nav-tab { background: transparent; border: 1px solid #1E293B; color: #64748B; padding: 6px 16px; border-radius: 20px; cursor: pointer; font-size: 12px; font-weight: 600; letter-spacing:0.3px; white-space: nowrap; transition: all 0.2s; text-transform: uppercase; }
+  .nav-tab:hover { color: #E2E8F0; border-color: #6366F1; }
+  .nav-tab.active { background: rgba(99,102,241,0.15); color: #818CF8; border-color: #6366F1; }
+
+  /* MAIN */
+  main { padding: 30px; max-width: 1200px; margin: 0 auto; position:relative;z-index:1; }
+  .section { display: none; }
+  .section.active { display: block; }
+
+  /* OVERVIEW CARD */
+  .overview-grid { display: flex; flex-wrap: wrap; gap: 4px 24px; margin-bottom: 20px; padding: 10px 14px; background: var(--card); border: 1px solid var(--border); border-radius: 8px; }
+  .overview-item { display: flex; align-items: baseline; gap: 6px; white-space: nowrap; }
+  .overview-item .label { font-size: 10px; text-transform: uppercase; letter-spacing: 1px; color: var(--muted); font-weight: 700; }
+  .overview-item .value { font-size: 12px; color: var(--text); font-weight: 500; }
+
+  /* SECTION HEADERS */
+  .section-title { font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 2px; color: #64748b; border-bottom: 1px solid #0f172a; padding-bottom: 8px; margin: 24px 0 14px; }
+
+  /* SW TABLE (strengths/weaknesses) */
+    /* SW TABLE — AE capacity style */
+  .sw-table { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-bottom: 20px; }
+  .sw-col { background: #111827; border-radius: 12px; padding: 20px; position:relative; overflow:hidden; }
+  .sw-col::before { content:''; position:absolute; top:0; left:0; right:0; height:4px; }
+  .sw-col.strengths::before { background: var(--green); }
+  .sw-col.weaknesses::before { background: var(--red); }
+  .sw-col h4 { font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 1.5px; margin-bottom: 14px; }
+  .sw-col.strengths h4 { color: #818CF8; }
+  .sw-col.weaknesses h4 { color: var(--red); }
+  .sw-col ul { list-style: none; }
+  .sw-col ul li { padding: 7px 0; border-bottom: 1px solid rgba(99,102,241,0.08); font-size: 13px; color: #c8f0dc; display:flex; gap:8px; align-items:flex-start; line-height:1.45; }
+  .sw-col ul li:last-child { border-bottom: none; }
+  .sw-col.strengths ul li::before { content: '✓'; color: #818CF8; font-weight:700; flex-shrink:0; }
+  .sw-col.weaknesses ul li::before { content: '✗'; color: var(--red); font-weight:700; flex-shrink:0; }
+  .sw-col ul li strong { color: var(--yellow); }
+
+  /* CAPABILITY TABLE */
+  .cap-table { width: 100%; border-collapse: collapse; background: var(--card); border-radius: 8px; overflow: hidden; margin-bottom: 8px; }
+  .cap-table th { background: #111827; color: #818CF8; font-size: 12px; text-transform: uppercase; letter-spacing: 1px; padding: 10px 14px; text-align: left; }
+  .cap-table th:first-child { width: 40%; }
+  .cap-table td { padding: 9px 14px; border-bottom: 1px solid #0f172a; font-size: 13px; vertical-align: top; }
+  .cap-table tr:last-child td { border-bottom: none; }
+  .cap-table tr:hover td { background: rgba(99,102,241,0.05); }
+  .cap-table td:first-child { color: var(--muted); }
+  .win-cell { color: #10B981; }
+  .lose-cell { color: #F43F5E; }
+  .warn-cell { color: #F59E0B; }
+
+  /* DISCOVERY QUESTIONS */
+  .questions-list { list-style: none; counter-reset: q; }
+  .questions-list li { counter-increment: q; display: flex; gap: 12px; padding: 10px 14px; background: var(--card); border-left: 3px solid #6366F1; border-radius: 0 6px 6px 0; margin-bottom: 8px; font-size: 13px; }
+  .questions-list li::before { content: counter(q); color: #818CF8; font-weight: 700; font-size: 13px; min-width: 16px; }
+
+  /* WIN/LOSE */
+  .win-lose-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 8px; }
+  .win-col { background: #0A1F0E; border: 1px solid rgba(16,185,129,0.2); border-radius: 8px; padding: 14px; }
+  .lose-col { background: #1A060C; border: 1px solid rgba(244,63,94,0.2); border-radius: 8px; padding: 14px; }
+  .win-col h4 { color: #10B981; font-size: 12px; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 8px; }
+  .lose-col h4 { color: var(--red); font-size: 12px; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 8px; }
+  .win-col ul, .lose-col ul { list-style: none; }
+  .win-col ul li, .lose-col ul li { padding: 4px 0; font-size: 13px; border-bottom: 1px solid rgba(255,255,255,0.05); }
+  .win-col ul li:last-child, .lose-col ul li:last-child { border-bottom: none; }
+
+  /* OBJECTIONS */
+  .objection { background: var(--card); border: 1px solid var(--border); border-radius: 8px; padding: 14px; margin-bottom: 10px; }
+  .objection .q { color: var(--yellow); font-weight: 600; margin-bottom: 6px; font-size: 13px; }
+  .objection .q::before { content: '❝ '; }
+  .objection .a { color: var(--text); font-size: 13px; padding-left: 12px; border-left: 2px solid var(--accent); }
+
+  /* VOICE OF CUSTOMER */
+  .voc-card { background: #111827; border: 1px solid rgba(99,102,241,0.3); border-radius: 8px; padding: 14px; margin-bottom: 10px; }
+  .voc-quote { font-style: italic; color: var(--text); font-size: 14px; margin-bottom: 6px; }
+  .voc-attr { color: var(--muted); font-size: 12px; text-align: right; }
+
+  /* QUICK REF TABLE */
+  .quick-table { width: 100%; border-collapse: collapse; background: var(--card); border-radius: 8px; overflow: hidden; }
+  .quick-table th { background: #111827; color: #818CF8; font-size: 12px; text-transform: uppercase; letter-spacing: 1px; padding: 10px 14px; text-align: left; }
+  .quick-table td { padding: 10px 14px; border-bottom: 1px solid #0a1a10; font-size: 13px; }
+  .quick-table tr:last-child td { border-bottom: none; }
+  .quick-table tr:hover td { background: rgba(99,102,241,0.05); }
+  .pill { display: inline-block; padding: 2px 8px; border-radius: 4px; font-size: 11px; font-weight: 600; background: rgba(99,102,241,0.12); color: #818CF8; }
+
+  /* UPDATED TAG */
+  footer { text-align: center; color: var(--muted); font-size: 12px; padding: 30px; border-top: 1px solid var(--border); margin-top: 40px; }
+
+  @media (max-width: 640px) {
+    .sw-table, .win-lose-grid { grid-template-columns: 1fr; }
+    main { padding: 16px; }
+    header { padding: 14px 16px; }
+    header h1 { font-size: 15px; }
+    .nav-tabs { display: flex; gap: 6px; padding: 12px 30px; background: #0D1117; border-bottom: 1px solid #1E293B; overflow-x: auto; flex-wrap: nowrap; position:sticky; top:73px; z-index:99; }
+  }
+
+  .seg-btn { background:transparent; border:1px solid #1E293B; color:#64748B; padding:6px 20px; border-radius:20px; cursor:pointer; font-size:12px; font-weight:600; letter-spacing:0.5px; text-transform:uppercase; transition:all 0.2s; margin-bottom:10px; }
+  .seg-btn:hover { border-color:#6366F1; color:#E2E8F0; }
+  .seg-btn.active { background:rgba(99,102,241,0.15); border-color:#6366F1; color:#818CF8; }
+  .nav-tab.hidden { display:none !important; }
+
+  /* ── Displaced customers sidebar layout ── */
+  .section-grid { display: grid; grid-template-columns: 1fr 240px; gap: 28px; align-items: start; }
+  .section-grid-main { min-width: 0; }
+  .section-sidebar {
+    position: sticky;
+    top: 130px;
+    background: #0F172A;
+    border: 1px solid rgba(99,102,241,0.3);
+    border-radius: 10px;
+    padding: 14px 12px;
+  }
+  .section-sidebar .sb-header {
+    font-size: 9px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 1.5px;
+    color: #818CF8;
+    margin-bottom: 10px;
+    padding-bottom: 8px;
+    border-bottom: 1px solid #3DC57033;
+  }
+  .section-sidebar ul { list-style: none; margin: 0; padding: 0; }
+  .section-sidebar ul li {
+    padding: 5px 0;
+    font-size: 11px;
+    color: #c8f0dc;
+    border-bottom: 1px solid #1E293B;
+    display: flex;
+    align-items: flex-start;
+    gap: 6px;
+    line-height: 1.4;
+  }
+  .section-sidebar ul li:last-child { border-bottom: none; }
+  .section-sidebar .chk { color: #10B981; font-weight: 700; flex-shrink: 0; }
+  @media (max-width: 900px) {
+    .section-grid { grid-template-columns: 1fr; }
+    .section-sidebar { position: static; }
+  }
+
+</style>
+</head>
+<body>
+<div id="robin-refresh-btn" style="position:fixed;top:12px;right:16px;z-index:9999;">
+  <button onclick="window.location.reload(true)" title="Refresh dashboard" style="background:#1e293b;color:#f8fafc;border:1px solid #334155;border-radius:8px;padding:7px 14px;font-size:13px;font-family:sans-serif;cursor:pointer;display:flex;align-items:center;gap:6px;box-shadow:0 2px 8px rgba(0,0,0,0.3);transition:background 0.15s;" onmouseover="this.style.background='#334155'" onmouseout="this.style.background='#1e293b'">
+    <span style="font-size:15px;line-height:1">↻</span> Refresh
+  </button>
+</div>
+
+<header style="background:linear-gradient(135deg,#000000 0%,#0f172a 50%,#000000 100%);border-bottom:2px solid #818CF8;padding:18px 32px;display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;z-index:100;backdrop-filter:blur(8px)">
+  <div style="display:flex;align-items:center;gap:16px">
+    <img src="https://koontz-robin.github.io/robin-decks/revio-logo.png" style="height:36px;opacity:0.95" alt="rev.io">
+    <div>
+      <div style="font-size:11px;font-weight:700;letter-spacing:3px;text-transform:uppercase;color:#34d399">COMPETITOR BATTLE CARDS</div>
+      <div style="font-size:11px;color:#2a5a3a;letter-spacing:1px;margin-top:2px">REV.IO PSA · INTERNAL USE ONLY</div>
+    </div>
+  </div>
+  <div style="font-size:11px;padding:4px 12px;border:1px solid #818CF8;border-radius:20px;color:#818CF8;letter-spacing:1px;background:rgba(56,189,248,0.05)">SALES INTEL</div>
+</header>
+
+<div id="segment-bar" style="background:#000;border-bottom:1px solid #1e293b;padding:12px 30px 0;display:flex;gap:8px;align-items:center;position:sticky;top:73px;z-index:100">
+  <span style="font-size:11px;color:#2a5a3a;letter-spacing:2px;text-transform:uppercase;margin-right:4px">Segment:</span>
+  <button id="seg-msp" class="seg-btn active" onclick="filterSegment('msp')">MSP</button>
+  <button id="seg-integrator" class="seg-btn" onclick="filterSegment('integrator')">Integrator</button>
+  <button id="seg-all" class="seg-btn" onclick="filterSegment('all')">All</button>
+</div>
+<div class="nav-tabs" style="top:110px">
+  <button class="nav-tab active" data-segment="msp" onclick="showTab('connectwise')">ConnectWise</button>
+  <button class="nav-tab" data-segment="msp" onclick="showTab('autotask')">Autotask</button>
+  <button class="nav-tab" data-segment="msp" onclick="showTab('halo')">HaloPSA</button>
+  <button class="nav-tab" data-segment="msp" onclick="showTab('syncro')">Syncro</button>
+  <button class="nav-tab" data-segment="msp" onclick="showTab('superops')">SuperOps</button>
+  <button class="nav-tab" data-segment="integrator" onclick="showTab('integrators')">Integrators</button>
+  <button class="nav-tab" data-segment="both" onclick="showTab('quickref')">Quick Reference</button>
+  <button class="nav-tab" data-segment="integrator" onclick="showTab('service-fusion')">Service Fusion</button>
+  <button class="nav-tab" data-segment="integrator" onclick="showTab('alarmbiller')">AlarmBiller</button>
+  <button class="nav-tab" data-segment="integrator" onclick="showTab('jetbuilt')">Jetbuilt</button>
+  <button class="nav-tab" data-segment="integrator" onclick="showTab('workhorse')">Workhorse</button>
+  <button class="nav-tab" data-segment="integrator" onclick="showTab('monday')">Monday</button>
+  <button class="nav-tab" data-segment="integrator" onclick="showTab('projx360')">Projx360</button>
+  <button class="nav-tab" data-segment="integrator" onclick="showTab('ipoint')">iPoint</button>
+  <button class="nav-tab" data-segment="integrator" onclick="showTab('simpro')">Simpro</button>
+  <button class="nav-tab" data-segment="integrator" onclick="showTab('sedona')">Sedona</button>
+  <button class="nav-tab" data-segment="integrator" onclick="showTab('housecall-pro')">Housecall Pro</button>
+  <button class="nav-tab" data-segment="integrator" onclick="showTab('jobber')">Jobber</button>
+
+</div>
+
+<main>
+
+<!-- ===== CONNECTWISE ===== -->
+<div class="section active" id="connectwise">
+<div class="section-grid"><div class="section-grid-main">
+  
+  <div class="overview-grid">
+    <div class="overview-item"><div class="label">Competitor</div><div class="value">ConnectWise PSA</div></div>
+  
+
+  
+<!-- FIELD_INTEL_START:ConnectWise updated:2026-05-15 -->
+<div class="section-title">🎙️ Field Intelligence — What Prospects Say (83 raw mentions)</div>
+<div style="margin-bottom:8px"><div style="font-size:11px;color:#ff4466;text-transform:uppercase;letter-spacing:1px;margin-bottom:8px">Key Pain Points</div><div style="background:#1A060C;border-left:3px solid #F43F5E;padding:10px 12px;border-radius:4px;margin-bottom:8px">
+          <div style="font-size:13px;color:#e2e8f0">Quoting tool is so cumbersome and slow that prospects find it faster to manually search distributors directly, leading many to abandon the feature entirely.</div>
+        </div><div style="background:#1A060C;border-left:3px solid #F43F5E;padding:10px 12px;border-radius:4px;margin-bottom:8px">
+          <div style="font-size:13px;color:#e2e8f0">Platform feels disjointed with acquired products that don't integrate well—data doesn't flow automatically between modules (CPQ to PSA), causing manual work and downstream reporting problems.</div>
+        </div><div style="background:#1A060C;border-left:3px solid #F43F5E;padding:10px 12px;border-radius:4px;margin-bottom:8px">
+          <div style="font-size:13px;color:#e2e8f0">System is described as overkill and not user-friendly, with prospects feeling locked into an ecosystem they can't easily migrate away from despite wanting to leave.</div>
+        </div></div>
+
+<!-- FIELD_INTEL_END:ConnectWise -->
+
+
+  <div class="section-title">Strengths vs. Weaknesses</div>
+  <div class="sw-table">
+    <div class="sw-col strengths">
+      <h4>Strengths</h4>
+      <ul>
+        <li>Largest MSP ecosystem — most 3rd-party integrations</li>
+        <li>Deep functionality — covers nearly every MSP workflow</li>
+        <li>Strong community (IT Nation, peer groups)</li>
+        <li>Mature product with long track record</li>
+        <li>ConnectWise Sell provides quoting/CPQ</li>
+        <li>Large partner network and training resources</li>
+      </ul>
+    </div>
+    <div class="sw-col weaknesses">
+      <h4>Weaknesses</h4>
+      <ul>
+        <li>Aggressive lock-in contracts (multi-year, auto-renew, hard to exit)</li>
+        <li>Bloated and complex UI — steep learning curve, feels outdated</li>
+        <li>Billing module is basic — no native usage-based or telecom billing</li>
+        <li>Over-promises on new features (Asio/Sidekick AI still in preview)</li>
+        <li>No integrated payment processing — requires third-party</li>
+        <li>Security concerns (ScreenConnect vulnerability 2024)</li>
+        <li>Pricing has increased significantly; nickel-and-dime add-on model</li>
+        <li><strong>Project billing broken</strong> — labor lines convert to generic "fixed fee," stripping scope/description. Manual copy-paste every invoice.</li>
+        <li><strong>Project conversion bug (unfixed since onboarding)</strong> — estimated labor time/cost never auto-populates on finance tab. Manual calculator math required.</li>
+        <li><strong>Agreement invoicing is 100% manual</strong> — CW recommends against auto-generation. No way to set generation date separate from billing period start. Costs admins ~1 full day/month.</li>
+        <li><strong>Quote data doesn't flow to invoices</strong> — quote reference #, scope notes, and labor line descriptions must be manually re-entered every time.</li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="section-title">Capability Comparison</div>
+  <table class="cap-table">
+    <thead><tr><th>Capability</th><th>Rev.io PSA</th><th>ConnectWise PSA</th></tr></thead>
+    <tbody>
+      <tr><td>Complex billing (recurring + usage-based + one-time)</td><td class="win-cell">✅ Native — purpose-built for telecom/multi-service billing</td><td class="lose-cell">❌ Basic T&M billing only; no native usage-based</td></tr>
+      <tr><td>Integrated payment processing</td><td class="win-cell">✅ Rev.io Payments (TRX Services) built-in</td><td class="lose-cell">❌ Requires third-party (ConnectBooster, etc.)</td></tr>
+      <tr><td>Quote-to-cash automation</td><td class="win-cell">✅ End-to-end: quote → project/contract → billing → payment</td><td class="warn-cell">⚠️ Partial — ConnectWise Sell is separate product/cost</td></tr>
+      <tr><td>Multi-service provider support (IT + VoIP + internet)</td><td class="win-cell">✅ Built for MSPs selling bundled services</td><td class="lose-cell">❌ IT-only focus; no telecom billing capabilities</td></tr>
+      <tr><td>Ticketing &amp; service desk</td><td class="win-cell">✅ Full ticketing, SLAs, dispatch</td><td class="win-cell">✅ Mature and deep ticketing</td></tr>
+      <tr><td>Project management</td><td class="win-cell">✅ Included</td><td class="win-cell">✅ Included</td></tr>
+      <tr><td>CRM / sales pipeline</td><td class="win-cell">✅ Included</td><td class="warn-cell">⚠️ Basic — ConnectWise Sell is separate</td></tr>
+      <tr><td>RMM integration</td><td class="warn-cell">⚠️ Integrates with third-party RMMs</td><td class="win-cell">✅ Native (ConnectWise Automate)</td></tr>
+      <tr><td>Inventory &amp; asset management</td><td class="win-cell">✅ With supply chain tracking</td><td class="win-cell">✅ Procurement module available</td></tr>
+      <tr><td>Ease of implementation</td><td class="win-cell">✅ Modern platform, faster deployment</td><td class="lose-cell">❌ Notoriously long and complex implementations</td></tr>
+    </tbody>
+  </table>
+
+  <div class="section-title">🎤 Voice of Customer — Real Discovery Call</div>
+  <div class="voc-card"><div class="voc-quote">"This ConnectWise thing aggravates the [heck] out of me. It's the most worthless thing I've ever associated with."</div><div class="voc-attr">— Marty (owner/estimator), active prospect</div></div>
+  <div class="voc-card"><div class="voc-quote">"I think it's still broken because when I go to convert a project, it doesn't estimate the labor for me. I remember during our onboarding him saying that's broken and they've never fixed it."</div><div class="voc-attr">— Brandi (billing admin), same prospect</div></div>
+  <div class="voc-card"><div class="voc-quote">"I would get a whole day back every month, probably."</div><div class="voc-attr">— Brandi, on what automated agreement invoicing would mean for her workflow</div></div>
+  <div class="voc-card"><div class="voc-quote">"It's super fun." [sarcastically]</div><div class="voc-attr">— Brandi, on manually calculating labor estimates with a calculator for every project conversion</div></div>
+
+  <div class="section-title">Discovery Questions (Landmines)</div>
+  <ol class="questions-list">
+    <li>"How are you currently billing for non-managed-IT services like VoIP, internet, or cloud? Is that in your PSA or a separate system?"</li>
+    <li>"What does your payment collection process look like? How many days does it take from invoice to cash?"</li>
+    <li>"How much are you spending on ConnectWise add-ons (Sell, ConnectBooster, etc.) on top of your PSA license?"</li>
+    <li>"If you wanted to add a new recurring service with usage-based billing, how would you handle that today?"</li>
+    <li>"How confident are you that you could exit your ConnectWise contract if you found a better solution?"</li>
+    <li>"How many hours per month does your team spend on billing reconciliation across multiple systems?"</li>
+    <li>"When you bill for a project, does the scope from your quote automatically appear on the invoice — or does someone have to re-enter it?"</li>
+    <li>"Can you set your agreement invoices to auto-generate on a specific date, like the 15th, for a billing period that starts the 1st?"</li>
+  </ol>
+
+  <div class="section-title">Why We Win / Why We Lose</div>
+  <div class="win-lose-grid">
+    <div class="win-col"><h4>🟢 Why We Win</h4><ul>
+      <li>MSPs adding telecom/VoIP/internet need billing CW can't do</li>
+      <li>Integrated payments eliminate ConnectBooster cost &amp; complexity</li>
+      <li>Single platform for quote-to-cash vs. CW's fragmented product suite</li>
+      <li>Faster implementation and modern UX</li>
+      <li>No predatory contract terms</li>
+    </ul></div>
+    <div class="lose-col"><h4>🔴 Why We Lose</h4><ul>
+      <li>MSPs deeply embedded in CW ecosystem (Automate + Control + Sell) — switching cost is enormous</li>
+      <li>CW's massive integration marketplace has more third-party options</li>
+      <li>"Nobody gets fired for buying ConnectWise" mentality</li>
+      <li>Large MSPs (100+ techs) may want CW's depth in project management</li>
+      <li>IT Nation community and peer groups create social lock-in</li>
+    </ul></div>
+  </div>
+
+  <div class="section-title">Objection Handling</div>
+  <div class="objection"><div class="q">ConnectWise has the most integrations</div><div class="a">Integrations matter, but how many do you actually use? And how much are you paying for them? Rev.io gives you billing, payments, and quoting natively — that's 2–3 fewer integrations to manage and pay for.</div></div>
+  <div class="objection"><div class="q">We've been on ConnectWise for years, switching is too risky</div><div class="a">We understand — that's exactly why ConnectWise can charge what they charge. But consider: how much are you spending on add-ons, and what's the cost of NOT being able to bill for new services? We offer guided migration and can run parallel during transition.</div></div>
+  <div class="objection"><div class="q">ConnectWise PSA is the industry standard</div><div class="a">It's the standard for pure-play managed IT. But you're not just doing managed IT anymore. When you add VoIP, internet, or cloud services, you need a platform built for that complexity. ConnectWise wasn't.</div></div>
+
+  
+    <div class="overview-item"><div class="label">Founded</div><div class="value">1982</div></div>
+    <div class="overview-item"><div class="label">HQ</div><div class="value">Tampa, FL</div></div>
+    <div class="overview-item"><div class="label">Target Market</div><div class="value">SMB–mid-market MSPs (15–100+ techs)</div></div>
+    <div class="overview-item"><div class="label">Pricing</div><div class="value">~$89–$125/user/mo (quote-based)</div></div>
+    <div class="overview-item"><div class="label">Customers</div><div class="value">~40,000+ MSP partners globally</div></div>
+  </div>
+  <p style="color:var(--muted); font-size:13px; margin-bottom:20px;">The 800-lb gorilla of the MSP PSA market. Comprehensive platform with deep ecosystem of integrations. Acquired by Thoma Bravo (PE) in 2019. Known for breadth but also complexity, aggressive contracts, and slow innovation.</p>
+</div>
+
+<!-- ===== AUTOTASK ===== -->
+</div><div class="section-sidebar"><div class="sb-header">✅ 14 Displaced Customers</div><ul><li><span class="chk">✓</span> Ameritel</li><li><span class="chk">✓</span> Avalora</li><li><span class="chk">✓</span> Bullfrog Group</li><li><span class="chk">✓</span> C1st Technologies</li><li><span class="chk">✓</span> Class 5 Technologies</li><li><span class="chk">✓</span> CompuCarolina</li><li><span class="chk">✓</span> Digital Market POS</li><li><span class="chk">✓</span> Integrated Technology & Security</li><li><span class="chk">✓</span> JMF Solutions/Prestige Healthcare</li><li><span class="chk">✓</span> Lavish Automation</li><li><span class="chk">✓</span> Losh Network Services</li><li><span class="chk">✓</span> NetWatch</li><li><span class="chk">✓</span> Remote Technology</li><li><span class="chk">✓</span> TruLine Technologies</li></ul></div></div>
+<div class="section" id="autotask">
+<div class="section-grid"><div class="section-grid-main">
+  
+  <div class="overview-grid">
+    <div class="overview-item"><div class="label">Competitor</div><div class="value">Datto Autotask PSA (Kaseya)</div></div>
+  
+
+  
+<!-- FIELD_INTEL_START:Autotask updated:2026-05-15 -->
+<div class="section-title">🎙️ Field Intelligence — What Prospects Say (59 raw mentions)</div>
+<div style="margin-bottom:8px"><div style="font-size:11px;color:#ff4466;text-transform:uppercase;letter-spacing:1px;margin-bottom:8px">Key Pain Points</div><div style="background:#1A060C;border-left:3px solid #F43F5E;padding:10px 12px;border-radius:4px;margin-bottom:8px">
+          <div style="font-size:13px;color:#e2e8f0">Autotask is described as overly complicated with 'death by a million clicks' - too extensive for small/medium MSPs despite demos suggesting otherwise.</div>
+        </div><div style="background:#1A060C;border-left:3px solid #F43F5E;padding:10px 12px;border-radius:4px;margin-bottom:8px">
+          <div style="font-size:13px;color:#e2e8f0">Technicians hate using Autotask despite it managing data well - companies invest in workaround interfaces like Thread, and notes don't translate into time entries causing missed billable time.</div>
+        </div><div style="background:#1A060C;border-left:3px solid #F43F5E;padding:10px 12px;border-radius:4px;margin-bottom:8px">
+          <div style="font-size:13px;color:#e2e8f0">Autotask is viewed as a 'big bloated behemoth' legacy platform that MSPs want to move away from, grouped with ConnectWise as systems to avoid.</div>
+        </div></div>
+<div><div style="font-size:11px;color:#818CF8;text-transform:uppercase;letter-spacing:1px;margin-bottom:8px">Genuine Strengths</div><div style="background:#0D1A2E;border-left:3px solid #6366F1;padding:10px 12px;border-radius:4px;margin-bottom:8px">
+          <div style="font-size:13px;color:#e2e8f0">Strong Kaseya ecosystem integration - users appreciate seamless clicks from tickets to RMM to EDR, with integration quality improving significantly over the past two years.</div>
+        </div><div style="background:#0D1A2E;border-left:3px solid #6366F1;padding:10px 12px;border-radius:4px;margin-bottom:8px">
+          <div style="font-size:13px;color:#e2e8f0">Effective dashboards and reporting for ticket resolution times, response metrics, and color-coded status indicators that users genuinely liked.</div>
+        </div></div>
+<!-- FIELD_INTEL_END:Autotask -->
+
+
+  <div class="section-title">Strengths vs. Weaknesses</div>
+  <div class="sw-table">
+    <div class="sw-col strengths"><h4>Strengths</h4><ul>
+      <li>Cloud-native from the start</li>
+      <li>Tight integration with Datto RMM + IT Glue</li>
+      <li>Solid ticketing and workflow automation</li>
+      <li>Good reporting and dashboards out of the box</li>
+      <li>Kaseya 365 bundle can be cost-effective</li>
+    </ul></div>
+    <div class="sw-col weaknesses"><h4>Weaknesses</h4><ul>
+      <li>Post-Kaseya acquisition: support quality has declined (widely reported)</li>
+      <li>UI feels dated and slow compared to modern alternatives</li>
+      <li>Billing is basic — no usage-based or telecom billing</li>
+      <li>Kaseya's aggressive contract and renewal practices</li>
+      <li>Limited flexibility for non-IT services</li>
+      <li>Innovation has slowed under Kaseya ownership</li>
+    </ul></div>
+  </div>
+
+  <div class="section-title">Capability Comparison</div>
+  <table class="cap-table">
+    <thead><tr><th>Capability</th><th>Rev.io PSA</th><th>Autotask PSA</th></tr></thead>
+    <tbody>
+      <tr><td>Complex billing (recurring + usage-based + one-time)</td><td class="win-cell">✅ Native telecom-grade billing complexity</td><td class="lose-cell">❌ Basic billing; no usage-based rating engine</td></tr>
+      <tr><td>Integrated payment processing</td><td class="win-cell">✅ Rev.io Payments (TRX Services)</td><td class="lose-cell">❌ Requires third-party payment integration</td></tr>
+      <tr><td>Quote-to-cash automation</td><td class="win-cell">✅ Full lifecycle</td><td class="warn-cell">⚠️ Quoting exists but limited; no payment integration</td></tr>
+      <tr><td>Multi-service provider support</td><td class="win-cell">✅ Built for IT + VoIP + internet + cloud</td><td class="lose-cell">❌ IT-only MSP workflows</td></tr>
+      <tr><td>Ticketing &amp; service desk</td><td class="win-cell">✅ Full featured</td><td class="win-cell">✅ Mature — one of Autotask's strongest areas</td></tr>
+      <tr><td>RMM integration</td><td class="warn-cell">⚠️ Third-party RMM integrations</td><td class="win-cell">✅ Native with Datto RMM</td></tr>
+      <tr><td>IT documentation</td><td class="warn-cell">⚠️ Integrates with third-party tools</td><td class="win-cell">✅ Native via IT Glue</td></tr>
+      <tr><td>Contract management</td><td class="win-cell">✅ Complex contracts with multiple billing types</td><td class="warn-cell">⚠️ Standard contract types only</td></tr>
+    </tbody>
+  </table>
+
+  <div class="section-title">Discovery Questions (Landmines)</div>
+  <ol class="questions-list">
+    <li>"Since the Kaseya acquisition, have you noticed any changes in support quality or pricing?"</li>
+    <li>"How do you handle billing for services that aren't standard managed IT — like VoIP lines, bandwidth, or per-user cloud services?"</li>
+    <li>"Are you locked into a Kaseya bundle, and do you actually use all the products in it?"</li>
+    <li>"What's your process for collecting payments from clients? How automated is it?"</li>
+    <li>"If a prospect asks for a quote that includes IT support + VoIP + internet in a single invoice, how do you produce that today?"</li>
+  </ol>
+
+  <div class="section-title">Why We Win / Why We Lose</div>
+  <div class="win-lose-grid">
+    <div class="win-col"><h4>🟢 Why We Win</h4><ul>
+      <li>MSPs adding service lines beyond IT can't bill in Autotask</li>
+      <li>Integrated payments vs. none in Autotask</li>
+      <li>No Kaseya-style contract traps</li>
+      <li>Modern platform vs. aging Autotask UI</li>
+      <li>Quote-to-cash eliminates manual billing reconciliation</li>
+    </ul></div>
+    <div class="lose-col"><h4>🔴 Why We Lose</h4><ul>
+      <li>Datto/Kaseya ecosystem is sticky — RMM + PSA + IT Glue + BCDR all integrated</li>
+      <li>Autotask's ticketing is very mature and well-understood</li>
+      <li>Kaseya 365 bundle pricing can be hard to beat on per-unit cost</li>
+      <li>MSPs who only do managed IT don't need Rev.io's billing power</li>
+    </ul></div>
+  </div>
+
+  <div class="section-title">Objection Handling</div>
+  <div class="objection"><div class="q">We're locked into Kaseya 365 bundle</div><div class="a">We hear that a lot — and it's exactly the lock-in Kaseya designed. But what's the cost of staying? Can Autotask bill for your growing VoIP or cloud business? Run the numbers on what you're losing in billing leakage and manual work.</div></div>
+  <div class="objection"><div class="q">Autotask works fine for our ticketing</div><div class="a">Ticketing is table stakes — every PSA does it. The question is: can your PSA also handle complex billing, payment collection, and multi-service quoting? That's where the real revenue impact is.</div></div>
+  <div class="objection"><div class="q">Datto RMM integration is critical for us</div><div class="a">Rev.io integrates with leading RMM tools. You don't have to give up your RMM — you gain a billing and payments engine that Autotask will never have.</div></div>
+
+  
+    <div class="overview-item"><div class="label">Founded</div><div class="value">2001 (Autotask); Kaseya acq. 2022</div></div>
+    <div class="overview-item"><div class="label">HQ</div><div class="value">Miami, FL (Kaseya)</div></div>
+    <div class="overview-item"><div class="label">Target Market</div><div class="value">SMB MSPs (10–75 techs), pure managed IT</div></div>
+    <div class="overview-item"><div class="label">Pricing</div><div class="value">~$65–$125/user/mo (not public)</div></div>
+    <div class="overview-item"><div class="label">Customers</div><div class="value">~10,000+ MSP partners</div></div>
+  </div>
+  <p style="color:var(--muted); font-size:13px; margin-bottom:20px;">Cloud-native PSA built for MSPs. Acquired by Datto (2019), then Kaseya (2022) for $6.2B. Under Kaseya, focus has shifted to bundling and aggressive sales tactics. Support quality widely reported to have declined.</p>
+</div>
+
+<!-- ===== HALO ===== -->
+</div><div class="section-sidebar"><div class="sb-header">✅ 3 Displaced Customers</div><ul><li><span class="chk">✓</span> Automated Telecom</li><li><span class="chk">✓</span> Grahek Technology</li><li><span class="chk">✓</span> Tolleson Inc</li></ul></div></div>
+<div class="section" id="halo">
+<div class="section-grid"><div class="section-grid-main"><div class="overview-grid">
+    <div class="overview-item"><div class="label">Competitor</div><div class="value">HaloPSA</div></div>
+  
+
+<!-- FIELD_INTEL_START:Halo PSA updated:2026-05-15 -->
+<div class="section-title">🎙️ Field Intelligence — What Prospects Say (3 raw mentions)</div>
+<div style="margin-bottom:8px"><div style="font-size:11px;color:#ff4466;text-transform:uppercase;letter-spacing:1px;margin-bottom:8px">Key Pain Points</div><div style="background:#1A060C;border-left:3px solid #F43F5E;padding:10px 12px;border-radius:4px;margin-bottom:8px">
+          <div style="font-size:13px;color:#e2e8f0">Prospects report not getting the full value that was pitched during the sales process, leading to disappointment with actual ROI.</div>
+        </div></div>
+
+<!-- FIELD_INTEL_END:Halo PSA -->
+  
+  
+
+  
+<!-- FIELD_INTEL_START:Halo updated:2026-05-15 -->
+<div class="section-title">🎙️ Field Intelligence — What Prospects Say (19 raw mentions)</div>
+
+<div><div style="font-size:11px;color:#818CF8;text-transform:uppercase;letter-spacing:1px;margin-bottom:8px">Genuine Strengths</div><div style="background:#0D1A2E;border-left:3px solid #6366F1;padding:10px 12px;border-radius:4px;margin-bottom:8px">
+          <div style="font-size:13px;color:#e2e8f0">Halo is widely recognized as the benchmark for modern PSA design, with prospects noting that 'everyone right now is copying Halo' for its sleek, modern UX.</div>
+        </div><div style="background:#0D1A2E;border-left:3px solid #6366F1;padding:10px 12px;border-radius:4px;margin-bottom:8px">
+          <div style="font-size:13px;color:#e2e8f0">Halo has successfully pulled significant business from ConnectWise by offering a more modern interface that other PSA vendors are now trying to emulate.</div>
+        </div></div>
+<!-- FIELD_INTEL_END:Halo -->
+  
+    <div class="overview-item"><div class="label">Founded</div><div class="value">1994 (Halo); HaloPSA ~2020</div></div>
+    <div class="overview-item"><div class="label">HQ</div><div class="value">Stowmarket, Suffolk, UK</div></div>
+    <div class="overview-item"><div class="label">Target Market</div><div class="value">SMB–mid-market MSPs (5–100 techs), UK/EU + growing NA</div></div>
+    <div class="overview-item"><div class="label">Pricing</div><div class="value">~$69–$119/agent/mo, all-inclusive</div></div>
+    <div class="overview-item"><div class="label">Customers</div><div class="value">~3,000–5,000 MSPs (fast growing)</div></div>
+  </div>
+  <p style="color:var(--muted); font-size:13px; margin-bottom:20px;">UK-based PSA gaining significant traction as a modern alternative. All-inclusive pricing, clean UI, rapid development. Popular "anti-ConnectWise" option — but no complex billing engine for multi-service providers.</p>
+
+
+  <div class="section-title">Strengths vs. Weaknesses</div>
+  <div class="sw-table">
+    <div class="sw-col strengths"><h4>Strengths</h4><ul>
+      <li>All-inclusive pricing — no feature gating or hidden costs</li>
+      <li>Modern, clean UI — best-in-class among PSAs</li>
+      <li>Rapid feature development, responsive dev team</li>
+      <li>Strong integrations (RMMs, M365, IT Glue, etc.)</li>
+      <li>AI-powered features included at no extra cost</li>
+      <li>On-premise deployment option available</li>
+      <li>Highly customizable workflows</li>
+    </ul></div>
+    <div class="sw-col weaknesses"><h4>Weaknesses</h4><ul>
+      <li>No native complex billing engine (no usage-based, telecom, or multi-service billing)</li>
+      <li>No integrated payment processing</li>
+      <li>UK-based — North American MSPs report timezone support challenges</li>
+      <li>Smaller company — less brand recognition, fewer implementation partners</li>
+      <li>Reporting can be complex to configure</li>
+      <li>Asset/inventory management less robust than competitors</li>
+    </ul></div>
+  </div>
+
+  <div class="section-title">Capability Comparison</div>
+  <table class="cap-table">
+    <thead><tr><th>Capability</th><th>Rev.io PSA</th><th>HaloPSA</th></tr></thead>
+    <tbody>
+      <tr><td>Complex billing (recurring + usage-based + one-time)</td><td class="win-cell">✅ Native telecom-grade billing engine</td><td class="lose-cell">❌ Basic invoicing; no usage-based billing</td></tr>
+      <tr><td>Integrated payment processing</td><td class="win-cell">✅ Rev.io Payments (TRX Services)</td><td class="lose-cell">❌ No native payments; integrates with Stripe/GoCardless</td></tr>
+      <tr><td>Quote-to-cash automation</td><td class="win-cell">✅ Full quote → contract → billing → payment</td><td class="warn-cell">⚠️ Quoting exists but no payment automation</td></tr>
+      <tr><td>Multi-service provider support</td><td class="win-cell">✅ Built for IT + telecom + cloud</td><td class="lose-cell">❌ IT-focused; no telecom billing</td></tr>
+      <tr><td>Ticketing &amp; service desk</td><td class="win-cell">✅ Full featured</td><td class="win-cell">✅ Excellent — modern UI, AI features</td></tr>
+      <tr><td>All-inclusive pricing</td><td class="warn-cell">⚠️ Contact for pricing</td><td class="win-cell">✅ All features included, transparent pricing</td></tr>
+      <tr><td>UI/UX modernness</td><td class="win-cell">✅ Modern platform</td><td class="win-cell">✅ Very modern — often cited as best PSA UI</td></tr>
+      <tr><td>On-premise option</td><td class="lose-cell">❌ Cloud only</td><td class="win-cell">✅ Available</td></tr>
+    </tbody>
+  </table>
+
+  <div class="section-title">Discovery Questions (Landmines)</div>
+  <ol class="questions-list">
+    <li>"HaloPSA is great for ticketing — but how are you handling billing for bundled services that include usage-based components?"</li>
+    <li>"When you invoice a client for managed IT + VoIP + internet, how many systems are involved?"</li>
+    <li>"How do you currently process payments? Is it automated from invoice to collection?"</li>
+    <li>"If you need to rate CDR (call detail records) or bandwidth usage for billing, how would you do that?"</li>
+    <li>"As you scale beyond pure managed IT, does HaloPSA grow with you or do you need additional billing systems?"</li>
+  </ol>
+
+  <div class="section-title">Why We Win / Why We Lose</div>
+  <div class="win-lose-grid">
+    <div class="win-col"><h4>🟢 Why We Win</h4><ul>
+      <li>Multi-service MSPs need billing HaloPSA simply doesn't have</li>
+      <li>Integrated payments vs. none</li>
+      <li>Quote-to-cash for complex service bundles</li>
+      <li>Single invoice for IT + telecom + cloud services</li>
+      <li>Purpose-built for revenue operations, not just service delivery</li>
+    </ul></div>
+    <div class="lose-col"><h4>🔴 Why We Lose</h4><ul>
+      <li>HaloPSA's UI/UX is genuinely best-in-class — hard to compete on ticketing experience</li>
+      <li>All-inclusive transparent pricing is very attractive</li>
+      <li>MSPs doing only managed IT may not need Rev.io's billing power</li>
+      <li>HaloPSA has strong momentum ("anti-ConnectWise" goodwill)</li>
+      <li>Rapid development pace means feature gaps close quickly</li>
+    </ul></div>
+  </div>
+
+  <div class="section-title">Objection Handling</div>
+  <div class="objection"><div class="q">HaloPSA has the best UI and all features included</div><div class="a">We agree HaloPSA is a great product for pure managed IT. But "all features included" doesn't include the one feature you need most: complex billing for multi-service revenue. That's not a roadmap item for them — it's our DNA.</div></div>
+  <div class="objection"><div class="q">HaloPSA is cheaper</div><div class="a">Compare total cost: HaloPSA + a separate billing system + a separate payment processor + manual reconciliation labor. Rev.io replaces all of that in one platform.</div></div>
+  <div class="objection"><div class="q">We just switched to HaloPSA from ConnectWise</div><div class="a">Smart move for ticketing. But as you add VoIP or cloud services, you'll hit the same billing wall. Rev.io can be your billing and revenue engine alongside or replacing HaloPSA when you're ready.</div></div>
+</div>
+
+
+<!-- ===== SYNCRO ===== -->
+</div><div class="section-sidebar"><div class="sb-header">✅ 5 Displaced Customers</div><ul><li><span class="chk">✓</span> First Class Technology (MI)</li><li><span class="chk">✓</span> GuentherTech</li><li><span class="chk">✓</span> JONROG technology</li><li><span class="chk">✓</span> Novalera</li><li><span class="chk">✓</span> Ravguard</li></ul></div></div>
+<div class="section" id="syncro">
+<div class="section-grid"><div class="section-grid-main">
+  
+  <div class="overview-grid">
+    <div class="overview-item"><div class="label">Competitor</div><div class="value">Syncro</div></div>
+  
+
+  
+<!-- FIELD_INTEL_START:Syncro updated:2026-05-15 -->
+<div class="section-title">🎙️ Field Intelligence — What Prospects Say (11 raw mentions)</div>
+<div style="margin-bottom:8px"><div style="font-size:11px;color:#ff4466;text-transform:uppercase;letter-spacing:1px;margin-bottom:8px">Key Pain Points</div><div style="background:#1A060C;border-left:3px solid #F43F5E;padding:10px 12px;border-radius:4px;margin-bottom:8px">
+          <div style="font-size:13px;color:#e2e8f0">Project management is broken - projects are handled as regular tickets with no way to separate them from SLAs, causing long-running projects to destroy time-to-resolution metrics and make reporting look terrible.</div>
+        </div><div style="background:#1A060C;border-left:3px solid #F43F5E;padding:10px 12px;border-radius:4px;margin-bottom:8px">
+          <div style="font-size:13px;color:#e2e8f0">The UI looks dated compared to modern PSA platforms prospects are seeing at industry events like MSP Summit, making Syncro feel behind the competition visually.</div>
+        </div></div>
+<div><div style="font-size:11px;color:#818CF8;text-transform:uppercase;letter-spacing:1px;margin-bottom:8px">Genuine Strengths</div><div style="background:#0D1A2E;border-left:3px solid #6366F1;padding:10px 12px;border-radius:4px;margin-bottom:8px">
+          <div style="font-size:13px;color:#e2e8f0">Prospects consistently say Syncro 'does everything they need' for core PSA/RMM functions with no major complaints about day-to-day functionality.</div>
+        </div><div style="background:#0D1A2E;border-left:3px solid #6366F1;padding:10px 12px;border-radius:4px;margin-bottom:8px">
+          <div style="font-size:13px;color:#e2e8f0">The combined PSA and RMM in a single platform is attractive to prospects evaluating their stack.</div>
+        </div></div>
+<!-- FIELD_INTEL_END:Syncro -->
+  
+    <div class="overview-item"><div class="label">Founded</div><div class="value">2017</div></div>
+    <div class="overview-item"><div class="label">HQ</div><div class="value">Seattle, WA</div></div>
+    <div class="overview-item"><div class="label">Target Market</div><div class="value">Small MSPs (1–25 techs), break-fix shops</div></div>
+    <div class="overview-item"><div class="label">Pricing</div><div class="value">$129–$189/user/mo, no contracts</div></div>
+    <div class="overview-item"><div class="label">Customers</div><div class="value">~5,000–8,000 MSPs</div></div>
+  </div>
+  <p style="color:var(--muted); font-size:13px; margin-bottom:20px;">Combined RMM + PSA platform designed for small MSPs. Known for simple, transparent pricing and ease of use. Good for smaller MSPs but MSPs typically outgrow it at 20–30 techs when they start adding service lines.</p>
+
+
+  <div class="section-title">Strengths vs. Weaknesses</div>
+  <div class="sw-table">
+    <div class="sw-col strengths"><h4>Strengths</h4><ul>
+      <li>Simple, transparent pricing — no contracts, unlimited endpoints</li>
+      <li>Easy to set up and use — fast time to value</li>
+      <li>Combined RMM + PSA in one platform</li>
+      <li>Good for small MSPs just getting started</li>
+      <li>50+ integrations (Pax8, IT Glue, Domotz, etc.)</li>
+      <li>No contracts — month-to-month flexibility</li>
+      <li>AI-powered ticket search and guided resolution</li>
+    </ul></div>
+    <div class="sw-col weaknesses"><h4>Weaknesses</h4><ul>
+      <li>Limited billing — basic invoicing and recurring billing only</li>
+      <li>Not built for multi-service providers (no telecom/usage billing)</li>
+      <li>Lacks depth for larger/more complex MSPs</li>
+      <li>Payment processing via third-party only (Worldpay, Stripe)</li>
+      <li>Reporting is basic compared to CW/Autotask</li>
+      <li>Project management is minimal</li>
+      <li>MSPs typically outgrow Syncro at 20–30 techs</li>
+    </ul></div>
+  </div>
+
+  <div class="section-title">Capability Comparison</div>
+  <table class="cap-table">
+    <thead><tr><th>Capability</th><th>Rev.io PSA</th><th>Syncro</th></tr></thead>
+    <tbody>
+      <tr><td>Complex billing</td><td class="win-cell">✅ Native telecom-grade billing</td><td class="lose-cell">❌ Basic recurring billing and invoicing only</td></tr>
+      <tr><td>Integrated payment processing</td><td class="win-cell">✅ Rev.io Payments (TRX Services)</td><td class="warn-cell">⚠️ Third-party (Worldpay, Stripe)</td></tr>
+      <tr><td>Quote-to-cash automation</td><td class="win-cell">✅ Full lifecycle automation</td><td class="lose-cell">❌ Basic estimates/invoices; no automated quote-to-cash</td></tr>
+      <tr><td>Multi-service provider support</td><td class="win-cell">✅ IT + VoIP + internet + cloud</td><td class="lose-cell">❌ Managed IT only</td></tr>
+      <tr><td>RMM capabilities</td><td class="warn-cell">⚠️ Third-party integrations</td><td class="win-cell">✅ Native RMM built-in (unlimited endpoints)</td></tr>
+      <tr><td>Project management</td><td class="win-cell">✅ Included</td><td class="lose-cell">❌ Very basic</td></tr>
+      <tr><td>Contract management</td><td class="win-cell">✅ Complex multi-service contracts</td><td class="warn-cell">⚠️ Basic recurring contracts</td></tr>
+      <tr><td>Scalability for growth</td><td class="win-cell">✅ Scales with service complexity</td><td class="lose-cell">❌ MSPs typically outgrow at 20–30 techs</td></tr>
+    </tbody>
+  </table>
+
+  <div class="section-title">Discovery Questions (Landmines)</div>
+  <ol class="questions-list">
+    <li>"Syncro is great for getting started — but now that you're growing and adding services beyond managed IT, is it keeping up?"</li>
+    <li>"How do you bill clients who have a mix of per-device, per-user, and usage-based services on one invoice?"</li>
+    <li>"What happens when you need to quote a prospect a bundle of managed IT + VoIP + cloud? Can Syncro handle that?"</li>
+    <li>"How much time does your team spend on billing and payment follow-up each month?"</li>
+    <li>"Do you feel like you've outgrown Syncro? Where are the pain points?"</li>
+  </ol>
+
+  <div class="section-title">Why We Win / Why We Lose</div>
+  <div class="win-lose-grid">
+    <div class="win-col"><h4>🟢 Why We Win</h4><ul>
+      <li>Growing MSPs adding services will hit Syncro's ceiling fast</li>
+      <li>Complex billing and payments built-in vs. Syncro's basic invoicing</li>
+      <li>Quote-to-cash for multi-service bundles</li>
+      <li>Rev.io scales with the MSP as they grow</li>
+      <li>Single system for all revenue operations</li>
+    </ul></div>
+    <div class="lose-col"><h4>🔴 Why We Lose</h4><ul>
+      <li>Syncro's simplicity and pricing are hard to beat for small IT-only MSPs</li>
+      <li>Syncro includes RMM — Rev.io doesn't, meaning additional cost</li>
+      <li>No-contract, month-to-month flexibility is very appealing to small shops</li>
+      <li>MSPs under 10 techs doing only managed IT don't need Rev.io's power</li>
+    </ul></div>
+  </div>
+
+  <div class="section-title">Objection Handling</div>
+  <div class="objection"><div class="q">Syncro is simpler and includes RMM</div><div class="a">Syncro is great for pure managed IT shops under 20 techs. But you're growing and adding services. Simple becomes limiting when you can't bill for VoIP or automate payment collection. Rev.io is where you graduate to.</div></div>
+  <div class="objection"><div class="q">Syncro is cheaper</div><div class="a">Syncro's pricing looks good until you add: a separate billing system for telecom, a payment processor, and the labor cost of manual reconciliation. Rev.io consolidates all of that.</div></div>
+  <div class="objection"><div class="q">We don't want to switch — too much effort</div><div class="a">The cost of staying on a platform you've outgrown is higher than the cost of switching. How much revenue are you leaving on the table because you can't easily bill for new services?</div></div>
+</div>
+
+
+<!-- ===== SUPEROPS ===== -->
+</div><div class="section-sidebar"><div class="sb-header">✅ 2 Displaced Customers</div><ul><li><span class="chk">✓</span> CMP Consulting Services</li><li><span class="chk">✓</span> Xact Communications</li></ul></div></div>
+<div class="section" id="superops">
+<div class="section-grid"><div class="section-grid-main">
+  
+  <div class="overview-grid">
+    <div class="overview-item"><div class="label">Competitor</div><div class="value">SuperOps</div></div>
+  
+  <p style="color:var(--muted); font-size:13px; margin-bottom:20px;">AI-first, modern PSA+RMM platform built from scratch by ex-Zoho engineers. Unified platform with Monica AI assistant. Growing fast but still early-stage. No complex billing or payment processing.</p>
+
+
+  <div class="section-title">Strengths vs. Weaknesses</div>
+  <div class="sw-table">
+    <div class="sw-col strengths"><h4>Strengths</h4><ul>
+      <li>Modern, AI-native platform — built from scratch</li>
+      <li>Unified PSA + RMM + documentation in one platform</li>
+      <li>Monica AI assistant for ticket handling and automation</li>
+      <li>Clean, modern UI — appeals to younger MSP owners</li>
+      <li>Flexible pricing including per-endpoint model</li>
+      <li>MDM for Apple and Android included in higher tiers</li>
+      <li>30% first-year discount for MSP startups</li>
+    </ul></div>
+    <div class="sw-col weaknesses"><h4>Weaknesses</h4><ul>
+      <li>Young product — still maturing; some features are shallow</li>
+      <li>Small customer base — less proven at scale</li>
+      <li>No complex billing engine — basic invoicing only</li>
+      <li>No integrated payment processing</li>
+      <li>Limited integration ecosystem vs. CW/Autotask</li>
+      <li>No telecom/multi-service billing capabilities</li>
+      <li>Support can be inconsistent (India-based timezone challenges)</li>
+    </ul></div>
+  </div>
+
+  <div class="section-title">Capability Comparison</div>
+  <table class="cap-table">
+    <thead><tr><th>Capability</th><th>Rev.io PSA</th><th>SuperOps</th></tr></thead>
+    <tbody>
+      <tr><td>Complex billing</td><td class="win-cell">✅ Native telecom-grade billing</td><td class="lose-cell">❌ Basic automated invoicing only</td></tr>
+      <tr><td>Integrated payment processing</td><td class="win-cell">✅ Rev.io Payments (TRX Services)</td><td class="lose-cell">❌ No native payments</td></tr>
+      <tr><td>Quote-to-cash automation</td><td class="win-cell">✅ Full lifecycle</td><td class="lose-cell">❌ Basic quoting; no end-to-end automation</td></tr>
+      <tr><td>Multi-service provider support</td><td class="win-cell">✅ IT + VoIP + internet + cloud</td><td class="lose-cell">❌ IT/MSP-only focus</td></tr>
+      <tr><td>AI features</td><td class="warn-cell">⚠️ Developing</td><td class="win-cell">✅ Monica AI is a differentiator</td></tr>
+      <tr><td>RMM capabilities</td><td class="warn-cell">⚠️ Third-party integrations</td><td class="win-cell">✅ Native RMM built-in</td></tr>
+      <tr><td>IT documentation</td><td class="warn-cell">⚠️ Third-party integrations</td><td class="win-cell">✅ Built-in documentation</td></tr>
+      <tr><td>MDM</td><td class="lose-cell">❌ Not included</td><td class="win-cell">✅ Apple + Android MDM in Super Plus</td></tr>
+      <tr><td>Contract complexity</td><td class="win-cell">✅ Multi-service, usage-based contracts</td><td class="warn-cell">⚠️ Standard MSP contracts only</td></tr>
+    </tbody>
+  </table>
+
+  <div class="section-title">Discovery Questions (Landmines)</div>
+  <ol class="questions-list">
+    <li>"SuperOps has great AI and RMM — but how are you handling billing for anything beyond flat-rate managed IT?"</li>
+    <li>"When you add VoIP or internet to your service stack, can SuperOps generate a single invoice with usage-based charges?"</li>
+    <li>"How mature is SuperOps' reporting? Can you get the financial visibility you need for multi-service revenue?"</li>
+    <li>"What's your payment collection workflow? How long from invoice to cash?"</li>
+    <li>"SuperOps is a startup — how comfortable are you with their long-term viability and roadmap execution?"</li>
+  </ol>
+
+  <div class="section-title">Why We Win / Why We Lose</div>
+  <div class="win-lose-grid">
+    <div class="win-col"><h4>🟢 Why We Win</h4><ul>
+      <li>MSPs diversifying into telecom/cloud need billing SuperOps can't provide</li>
+      <li>Integrated payments — SuperOps has nothing for payment collection</li>
+      <li>Rev.io has deep telecom/billing DNA — proven at scale</li>
+      <li>Established company vs. startup risk</li>
+      <li>Quote-to-cash for complex service bundles</li>
+    </ul></div>
+    <div class="lose-col"><h4>🔴 Why We Lose</h4><ul>
+      <li>SuperOps' unified PSA+RMM+docs+AI is compelling for IT-only MSPs</li>
+      <li>Monica AI is genuinely ahead of most PSAs</li>
+      <li>Modern UI appeals to MSPs tired of legacy tools</li>
+      <li>Per-endpoint pricing can be cheaper for large endpoint counts</li>
+      <li>MSPs who only need managed IT + RMM may find SuperOps sufficient</li>
+    </ul></div>
+  </div>
+
+  <div class="section-title">Objection Handling</div>
+  <div class="objection"><div class="q">SuperOps has AI built in — Monica is amazing</div><div class="a">AI for ticket triage is nice, but AI doesn't solve your billing problem. Rev.io automates the entire revenue lifecycle — quoting, complex billing, and payment collection. That's where the real business impact is.</div></div>
+  <div class="objection"><div class="q">SuperOps includes RMM and PSA in one platform</div><div class="a">So you get monitoring and ticketing together — great. But what about billing, payments, and multi-service quoting? Those are separate systems you still need. Rev.io consolidates the revenue side.</div></div>
+  <div class="objection"><div class="q">SuperOps is the future — modern and AI-first</div><div class="a">Modern UI is great, but your business runs on revenue. Can SuperOps bill for VoIP usage, process payments, and give you a single invoice for IT + telecom + cloud? Rev.io can — and we've been doing complex billing for years, not months.</div></div>
+</div>
+
+
+</div>
+<!-- ===== INTEGRATORS ===== -->
+</div><div class="section-sidebar"><div class="sb-header">✅ 3 Displaced Customers</div><ul><li><span class="chk">✓</span> Half Past Five Technologies</li><li><span class="chk">✓</span> Intek Technology Solutions</li><li><span class="chk">✓</span> Loricca</li></ul></div></div>
+<div class="section" id="integrators">
+  <p style="color:var(--muted); font-size:13px; margin-bottom:20px;">Rev.io PSA competes in the security/AV integrator vertical against field service management and industry-specific platforms. Rev.io's edge: native RMR automation, robust inventory + PO management, project management, and built-in payment processing — most competitors lack 2–3 of these.</p>
+
+  <div class="section-title">Competitor Overview</div>
+  <div style="display:grid; grid-template-columns: repeat(auto-fill, minmax(340px, 1fr)); gap:14px; margin-bottom:24px;">
+
+    <!-- AlarmBiller -->
+    <div style="background:var(--card); border:1px solid var(--border); border-left:3px solid var(--red); border-radius:8px; padding:14px;">
+      <div style="font-weight:700; color:var(--accent); margin-bottom:8px;">AlarmBiller <span style="font-size:11px; color:var(--muted); font-weight:400;">(Bold Group)</span></div>
+      <ul style="list-style:none; font-size:13px;">
+        <li style="padding:3px 0; border-bottom:1px solid #1a2540;">✗ Outdated — mobile app is glitchy and non-responsive</li>
+        <li style="padding:3px 0; border-bottom:1px solid #1a2540;">✗ Manual RMR billing</li>
+        <li style="padding:3px 0; border-bottom:1px solid #1a2540;">✗ No inventory management</li>
+        <li style="padding:3px 0; border-bottom:1px solid #1a2540;">✗ No quote-from-opportunity workflow</li>
+        <li style="padding:3px 0;">✗ Weak CRM — can't track full customer history</li>
+      </ul>
+    </div>
+
+    <!-- BuildOps -->
+    <div style="background:var(--card); border:1px solid var(--border); border-left:3px solid var(--red); border-radius:8px; padding:14px;">
+      <div style="font-weight:700; color:var(--accent); margin-bottom:8px;">BuildOps</div>
+      <ul style="list-style:none; font-size:13px;">
+        <li style="padding:3px 0; border-bottom:1px solid #1a2540;">✗ Not specific to Security/AV — contractor-focused software</li>
+        <li style="padding:3px 0; border-bottom:1px solid #1a2540;">✗ No DocuSign integration</li>
+        <li style="padding:3px 0; border-bottom:1px solid #1a2540;">✗ Weaker tech management — can't group/schedule techs with flexibility</li>
+        <li style="padding:3px 0;">✗ Inventory management less robust; no PO creation in PSA</li>
+      </ul>
+    </div>
+
+    <!-- Cornerstone -->
+    <div style="background:var(--card); border:1px solid var(--border); border-left:3px solid var(--red); border-radius:8px; padding:14px;">
+      <div style="font-weight:700; color:var(--accent); margin-bottom:8px;">Cornerstone</div>
+      <ul style="list-style:none; font-size:13px;">
+        <li style="padding:3px 0; border-bottom:1px solid #1a2540;">✗ Billing is manual — they mail out bills</li>
+        <li style="padding:3px 0; border-bottom:1px solid #1a2540;">✗ Outdated, hard-to-navigate UI</li>
+        <li style="padding:3px 0; border-bottom:1px solid #1a2540;">✗ No AI throughout platform</li>
+        <li style="padding:3px 0; border-bottom:1px solid #1a2540;">✗ No bi-directional QBO sync</li>
+        <li style="padding:3px 0; border-bottom:1px solid #1a2540;">✗ No customer payment portal</li>
+        <li style="padding:3px 0;">✗ RMR is manual</li>
+      </ul>
+    </div>
+
+    <!-- FieldEdge -->
+    <div style="background:var(--card); border:1px solid var(--border); border-left:3px solid var(--red); border-radius:8px; padding:14px;">
+      <div style="font-weight:700; color:var(--accent); margin-bottom:8px;">FieldEdge</div>
+      <ul style="list-style:none; font-size:13px;">
+        <li style="padding:3px 0; border-bottom:1px solid #1a2540;">✗ No true inventory management</li>
+        <li style="padding:3px 0; border-bottom:1px solid #1a2540;">✗ No project management — can't track long projects by phases</li>
+        <li style="padding:3px 0; border-bottom:1px solid #1a2540;">✗ Non-responsive support</li>
+        <li style="padding:3px 0;">✗ Quoting has significant bugs and doesn't work properly</li>
+      </ul>
+    </div>
+
+    <!-- Housecall Pro -->
+    <div style="background:var(--card); border:1px solid var(--border); border-left:3px solid var(--red); border-radius:8px; padding:14px;">
+      <div style="font-weight:700; color:var(--accent); margin-bottom:8px;">Housecall Pro <span style="font-size:11px;color:#818CF8;background:#0F172A;border:1px solid rgba(99,102,241,0.4);padding:2px 8px;border-radius:10px;margin-left:8px">✅ 4 displaced</span></div><div class="overview-grid"><div class="overview-item"><div class="label">Competitor</div><div class="value">Housecall Pro</div></div><div class="overview-item"><div class="label">Founded</div><div class="value">2013</div></div><div class="overview-item"><div class="label">HQ</div><div class="value">San Diego, CA (Denver, CO office)</div></div><div class="overview-item"><div class="label">Employees</div><div class="value">~1,400</div></div><div class="overview-item"><div class="label">Revenue</div><div class="value">Private · $125M funding round (2025)</div></div><div class="overview-item"><div class="label">Funding</div><div class="value">$125M from Permira + Vista (Oct 2025)</div></div><div class="overview-item"><div class="label">Target Market</div><div class="value">25,000+ home service companies — residential HVAC, plumbing, cleaning</div></div><div class="overview-item"><div class="label">Ownership</div><div class="value">Private · Permira-backed</div></div></div>
+      <ul style="list-style:none; font-size:13px;">
+        <li style="padding:3px 0; border-bottom:1px solid #1a2540;">✗ Self-serve onboarding — no dedicated onboarding resource</li>
+        <li style="padding:3px 0; border-bottom:1px solid #1a2540;">✗ Catered to smaller companies; limited scalability</li>
+        <li style="padding:3px 0; border-bottom:1px solid #1a2540;">✗ No project management</li>
+        <li style="padding:3px 0; border-bottom:1px solid #1a2540;">✗ Outsourced support</li>
+        <li style="padding:3px 0; border-bottom:1px solid #1a2540;">✗ Inferior inventory management</li>
+        <li style="padding:3px 0;">✗ Payment processing is inaccurate/glitchy — slows cash flow</li>
+      </ul>
+    </div>
+
+    <!-- iPoint -->
+    <div style="background:var(--card); border:1px solid var(--border); border-left:3px solid var(--red); border-radius:8px; padding:14px;">
+      <div style="font-weight:700; color:var(--accent); margin-bottom:8px;">iPoint</div>
+      <ul style="list-style:none; font-size:13px;">
+        <li style="padding:3px 0; border-bottom:1px solid #1a2540;">✗ CRM can't manage opportunities like PSA</li>
+        <li style="padding:3px 0; border-bottom:1px solid #1a2540;">✗ Can't reserve inventory to specific customer locations</li>
+        <li style="padding:3px 0; border-bottom:1px solid #1a2540;">✗ Mobile app is glitchy and non-functional</li>
+        <li style="padding:3px 0; border-bottom:1px solid #1a2540;">✗ Service order management is manual — no templates to streamline</li>
+        <li style="padding:3px 0; border-bottom:1px solid #1a2540;">✗ No project management</li>
+        <li style="padding:3px 0;">✗ Invoicing is inaccurate/manual — no RMR automation</li>
+      </ul>
+    </div>
+
+    <!-- Jobber -->
+    <div style="background:var(--card); border:1px solid var(--border); border-left:3px solid var(--red); border-radius:8px; padding:14px;">
+      <div style="font-weight:700; color:var(--accent); margin-bottom:8px;">Jobber <span style="font-size:11px;color:#818CF8;background:#0F172A;border:1px solid rgba(99,102,241,0.4);padding:2px 8px;border-radius:10px;margin-left:8px">✅ 5 displaced</span></div><div class="overview-grid"><div class="overview-item"><div class="label">Competitor</div><div class="value">Jobber</div></div><div class="overview-item"><div class="label">Founded</div><div class="value">2011</div></div><div class="overview-item"><div class="label">HQ</div><div class="value">Edmonton, Alberta, Canada</div></div><div class="overview-item"><div class="label">Employees</div><div class="value">~670</div></div><div class="overview-item"><div class="label">Revenue</div><div class="value">~$167.5M (2024)</div></div><div class="overview-item"><div class="label">Funding</div><div class="value">$183.5M total raised</div></div><div class="overview-item"><div class="label">Target Market</div><div class="value">Small home service businesses (<30 techs) — 100K+ customers in 43 countries</div></div><div class="overview-item"><div class="label">Ownership</div><div class="value">Private · VC-backed</div></div></div>
+
+      <ul style="list-style:none; font-size:13px;">
+        <li style="padding:3px 0; border-bottom:1px solid #1a2540;">✗ Catered to smaller companies (~$200–300/mo pricing)</li>
+        <li style="padding:3px 0; border-bottom:1px solid #1a2540;">✗ No true dispatch board or tech grouping</li>
+        <li style="padding:3px 0; border-bottom:1px solid #1a2540;">✗ No custom report builder</li>
+        <li style="padding:3px 0; border-bottom:1px solid #1a2540;">✗ No project management</li>
+        <li style="padding:3px 0;">✗ No inventory management</li>
+      </ul>
+    </div>
+
+    <!-- Managely -->
+    <div style="background:var(--card); border:1px solid var(--border); border-left:3px solid var(--red); border-radius:8px; padding:14px;">
+      <div style="font-weight:700; color:var(--accent); margin-bottom:8px;">Managely <span style="font-size:11px; color:var(--muted); font-weight:400;">(Bold Group)</span></div>
+      <ul style="list-style:none; font-size:13px;">
+        <li style="padding:3px 0; border-bottom:1px solid #1a2540;">✗ Inventory glitches — one prospect lost $8K+ due to bugs</li>
+        <li style="padding:3px 0; border-bottom:1px solid #1a2540;">✗ CRM can't manage opportunities</li>
+        <li style="padding:3px 0; border-bottom:1px solid #1a2540;">✗ No project management</li>
+        <li style="padding:3px 0; border-bottom:1px solid #1a2540;">✗ No QBO integration</li>
+        <li style="padding:3px 0;">✗ Platform is stagnant — no meaningful updates being made</li>
+      </ul>
+    </div>
+
+    <!-- Microkey -->
+    <div style="background:var(--card); border:1px solid var(--border); border-left:3px solid var(--red); border-radius:8px; padding:14px;">
+      <div style="font-weight:700; color:var(--accent); margin-bottom:8px;">Microkey</div>
+      <ul style="list-style:none; font-size:13px;">
+        <li style="padding:3px 0; border-bottom:1px solid #1a2540;">✗ Modular — pricing often doubles once all needed modules are added</li>
+        <li style="padding:3px 0; border-bottom:1px solid #1a2540;">✗ No inventory management</li>
+        <li style="padding:3px 0; border-bottom:1px solid #1a2540;">✗ No sales opportunity management</li>
+        <li style="padding:3px 0; border-bottom:1px solid #1a2540;">✗ Scheduling is difficult</li>
+        <li style="padding:3px 0;">✗ RMR billing is manual; poor customer history tracking</li>
+      </ul>
+    </div>
+
+    <!-- Portal.io -->
+    <div style="background:var(--card); border:1px solid var(--border); border-left:3px solid var(--red); border-radius:8px; padding:14px;">
+      <div style="font-weight:700; color:var(--accent); margin-bottom:8px;">Portal.io</div>
+      <ul style="list-style:none; font-size:13px;">
+        <li style="padding:3px 0; border-bottom:1px solid #1a2540;">✗ Focused mainly on quoting — operational side is underdeveloped</li>
+        <li style="padding:3px 0; border-bottom:1px solid #1a2540;">✗ No AI throughout platform</li>
+        <li style="padding:3px 0; border-bottom:1px solid #1a2540;">✗ RMR is manual</li>
+        <li style="padding:3px 0; border-bottom:1px solid #1a2540;">✗ No full inventory suite or multi-location PO management</li>
+        <li style="padding:3px 0;">✗ No bi-directional QBO sync</li>
+      </ul>
+    </div>
+
+    <!-- Project360 -->
+    <div style="background:var(--card); border:1px solid var(--border); border-left:3px solid var(--red); border-radius:8px; padding:14px;">
+      <div style="font-weight:700; color:var(--accent); margin-bottom:8px;">Project360</div>
+      <ul style="list-style:none; font-size:13px;">
+        <li style="padding:3px 0; border-bottom:1px solid #1a2540;">✗ All billing is manual — no RMR automation</li>
+        <li style="padding:3px 0; border-bottom:1px solid #1a2540;">✗ No inventory management; can't pull pricing from vendors</li>
+        <li style="padding:3px 0; border-bottom:1px solid #1a2540;">✗ QBO integration doesn't work well</li>
+        <li style="padding:3px 0; border-bottom:1px solid #1a2540;">✗ No true project management</li>
+        <li style="padding:3px 0; border-bottom:1px solid #1a2540;">✗ Hard to navigate UI; platform is stagnant</li>
+        <li style="padding:3px 0;">✗ Can't manage multi-location accounts or multi-location inventory</li>
+      </ul>
+    </div>
+
+    <!-- Security Trax -->
+    <div style="background:var(--card); border:1px solid var(--border); border-left:3px solid var(--red); border-radius:8px; padding:14px;">
+      <div style="font-weight:700; color:var(--accent); margin-bottom:8px;">Security Trax</div>
+      <ul style="list-style:none; font-size:13px;">
+        <li style="padding:3px 0; border-bottom:1px solid #1a2540;">✗ Modular pricing — charged per customer (typically save 60%+ by switching)</li>
+        <li style="padding:3px 0; border-bottom:1px solid #1a2540;">✗ No RMR automation</li>
+        <li style="padding:3px 0; border-bottom:1px solid #1a2540;">✗ QBO integration costs extra</li>
+        <li style="padding:3px 0;">✗ Non-responsive support</li>
+      </ul>
+    </div>
+
+    <!-- Sedona -->
+    <div style="background:var(--card); border:1px solid var(--border); border-left:3px solid var(--red); border-radius:8px; padding:14px;">
+      <div style="font-weight:700; color:var(--accent); margin-bottom:8px;">Sedona <span style="font-size:11px;color:#818CF8;background:#0F172A;border:1px solid rgba(99,102,241,0.4);padding:2px 8px;border-radius:10px;margin-left:8px">✅ 1 displaced</span> <span style="font-size:11px; color:var(--muted); font-weight:400;">(Bold Group)</span></div><div class="overview-grid"><div class="overview-item"><div class="label">Competitor</div><div class="value">Sedona (SedonaOffice by Bold Group)</div></div><div class="overview-item"><div class="label">Founded</div><div class="value">40+ years (Bold Group)</div></div><div class="overview-item"><div class="label">HQ</div><div class="value">Colorado Springs, CO</div></div><div class="overview-item"><div class="label">Employees</div><div class="value">~130 (Bold Group total)</div></div><div class="overview-item"><div class="label">Revenue</div><div class="value">~$7.4M (Bold Group)</div></div><div class="overview-item"><div class="label">Target Market</div><div class="value">Mid-to-large alarm dealers — full back-office accounting & RMR</div></div><div class="overview-item"><div class="label">Ownership</div><div class="value">Private · Bold Group (also owns AlarmBiller)</div></div></div>
+
+      <ul style="list-style:none; font-size:13px;">
+        <li style="padding:3px 0; border-bottom:1px solid #1a2540;">✗ Poor support; platform is stagnant</li>
+        <li style="padding:3px 0; border-bottom:1px solid #1a2540;">✗ No true inventory management</li>
+        <li style="padding:3px 0; border-bottom:1px solid #1a2540;">✗ Mobile app is lacking and glitchy</li>
+        <li style="padding:3px 0; border-bottom:1px solid #1a2540;">✗ No project management</li>
+        <li style="padding:3px 0;">✗ Dispatching is manual and cumbersome; RMR is manual</li>
+      </ul>
+    </div>
+
+    <!-- Service Fusion -->
+    <div style="background:var(--card); border:1px solid var(--border); border-left:3px solid var(--red); border-radius:8px; padding:14px;">
+      <div style="font-weight:700; color:var(--accent); margin-bottom:8px;">Service Fusion</div>
+      <ul style="list-style:none; font-size:13px;">
+        <li style="padding:3px 0; border-bottom:1px solid #1a2540;">✗ Inaccurate customer/quoting data</li>
+        <li style="padding:3px 0; border-bottom:1px solid #1a2540;">✗ Can't break out travel vs. work time; poor time tracking</li>
+        <li style="padding:3px 0; border-bottom:1px solid #1a2540;">✗ RMR is manual</li>
+        <li style="padding:3px 0; border-bottom:1px solid #1a2540;">✗ Dispatch is manual — tickets must be created and assigned manually</li>
+        <li style="padding:3px 0; border-bottom:1px solid #1a2540;">✗ No multi-location asset tracking</li>
+        <li style="padding:3px 0;">✗ No project management; weak inventory</li>
+      </ul>
+    </div>
+
+    <!-- Simpro -->
+    <div style="background:var(--card); border:1px solid var(--border); border-left:3px solid var(--red); border-radius:8px; padding:14px;">
+      <div style="font-weight:700; color:var(--accent); margin-bottom:8px;">Simpro <span style="font-size:11px;color:#818CF8;background:#0F172A;border:1px solid rgba(99,102,241,0.4);padding:2px 8px;border-radius:10px;margin-left:8px">✅ 2 displaced</span></div><div class="overview-grid"><div class="overview-item"><div class="label">Competitor</div><div class="value">Simpro</div></div><div class="overview-item"><div class="label">Founded</div><div class="value">2002</div></div><div class="overview-item"><div class="label">HQ</div><div class="value">Brisbane, QLD, Australia (US office: Broomfield, CO)</div></div><div class="overview-item"><div class="label">Employees</div><div class="value">~490</div></div><div class="overview-item"><div class="label">Revenue</div><div class="value">~$54M</div></div><div class="overview-item"><div class="label">Target Market</div><div class="value">Electrical, HVAC, plumbing, fire — commercial trade contractors</div></div><div class="overview-item"><div class="label">Ownership</div><div class="value">Private · PE-backed</div></div></div>
+
+      <ul style="list-style:none; font-size:13px;">
+        <li style="padding:3px 0; border-bottom:1px solid #1a2540;">✗ Weak tech management — hard to track utilization and schedule</li>
+        <li style="padding:3px 0; border-bottom:1px solid #1a2540;">✗ Can't manage POs across multiple vendors/inventory items</li>
+        <li style="padding:3px 0; border-bottom:1px solid #1a2540;">✗ CRM can't track sales opportunities</li>
+        <li style="padding:3px 0;">✗ No native payment processing — forced to use specific vendors</li>
+      </ul>
+    </div>
+
+    <!-- Workhorse -->
+    <div style="background:var(--card); border:1px solid var(--border); border-left:3px solid var(--red); border-radius:8px; padding:14px;">
+      <div style="font-weight:700; color:var(--accent); margin-bottom:8px;">Workhorse</div>
+      <ul style="list-style:none; font-size:13px;">
+        <li style="padding:3px 0; border-bottom:1px solid #1a2540;">✗ Can't cut POs from system — inventory management is inefficient</li>
+        <li style="padding:3px 0; border-bottom:1px solid #1a2540;">✗ Outsourced support</li>
+        <li style="padding:3px 0; border-bottom:1px solid #1a2540;">✗ QBO integration doesn't work</li>
+        <li style="padding:3px 0; border-bottom:1px solid #1a2540;">✗ Very small company (5–10 employees) — stability risk</li>
+        <li style="padding:3px 0;">✗ Pricing catered to smaller integrators; doesn't scale</li>
+      </ul>
+    </div>
+
+    <!-- Zoho -->
+    <div style="background:var(--card); border:1px solid var(--border); border-left:3px solid var(--red); border-radius:8px; padding:14px;">
+      <div style="font-weight:700; color:var(--accent); margin-bottom:8px;">Zoho</div>
+      <ul style="list-style:none; font-size:13px;">
+        <li style="padding:3px 0; border-bottom:1px solid #1a2540;">✗ Modular — must pay per sales module/field service module (adds up fast)</li>
+        <li style="padding:3px 0; border-bottom:1px solid #1a2540;">✗ Not industry-specific to security/AV</li>
+        <li style="padding:3px 0; border-bottom:1px solid #1a2540;">✗ Inferior inventory management; no PO management</li>
+        <li style="padding:3px 0; border-bottom:1px solid #1a2540;">✗ No RMR automation</li>
+        <li style="padding:3px 0; border-bottom:1px solid #1a2540;">✗ No flexibility with service ticket templates</li>
+        <li style="padding:3px 0;">✗ Mobile app less robust — can't add inventory via mobile</li>
+      </ul>
+    </div>
+
+  </div>
+
+  <div class="section-title">Rev.io PSA — Integrator Advantages (Universal)</div>
+  <div style="display:grid; grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); gap:10px; margin-bottom:24px;">
+    <div style="background:var(--win); border:1px solid rgba(99,102,241,0.25); border-radius:8px; padding:12px; font-size:13px;"><span style="color:#818CF8; font-weight:700;">✓ RMR Automation</span><br><span style="color:var(--muted);">Automated recurring billing — no manual monthly process</span></div>
+    <div style="background:var(--win); border:1px solid rgba(99,102,241,0.25); border-radius:8px; padding:12px; font-size:13px;"><span style="color:#818CF8; font-weight:700;">✓ Full Inventory Suite</span><br><span style="color:var(--muted);">POs, multi-location inventory, serialized assets, reserve to job</span></div>
+    <div style="background:var(--win); border:1px solid rgba(99,102,241,0.25); border-radius:8px; padding:12px; font-size:13px;"><span style="color:#818CF8; font-weight:700;">✓ Native Payments</span><br><span style="color:var(--muted);">Built-in payment processing via TRX Services — no third-party</span></div>
+    <div style="background:var(--win); border:1px solid rgba(99,102,241,0.25); border-radius:8px; padding:12px; font-size:13px;"><span style="color:#818CF8; font-weight:700;">✓ Project Management</span><br><span style="color:var(--muted);">Track long projects by phase — milestone and progressive billing</span></div>
+    <div style="background:var(--win); border:1px solid rgba(99,102,241,0.25); border-radius:8px; padding:12px; font-size:13px;"><span style="color:#818CF8; font-weight:700;">✓ AI Throughout Platform</span><br><span style="color:var(--muted);">Omni-present AI — quoting, tickets, invoices, grammar/spelling</span></div>
+    <div style="background:var(--win); border:1px solid rgba(99,102,241,0.25); border-radius:8px; padding:12px; font-size:13px;"><span style="color:#818CF8; font-weight:700;">✓ Bi-Directional QBO Sync</span><br><span style="color:var(--muted);">Real-time sync — no manual export/import to QuickBooks</span></div>
+    <div style="background:var(--win); border:1px solid rgba(99,102,241,0.25); border-radius:8px; padding:12px; font-size:13px;"><span style="color:#818CF8; font-weight:700;">✓ Customer Portal</span><br><span style="color:var(--muted);">Self-service payments, invoice viewing, and service requests</span></div>
+    <div style="background:var(--win); border:1px solid rgba(99,102,241,0.25); border-radius:8px; padding:12px; font-size:13px;"><span style="color:#818CF8; font-weight:700;">✓ 400+ Integrators</span><br><span style="color:var(--muted);">Proven across the industry — we know your workflows</span></div>
+    <div style="background:var(--win); border:1px solid rgba(99,102,241,0.25); border-radius:8px; padding:12px; font-size:13px;"><span style="color:#818CF8; font-weight:700;">✓ Robust CRM</span><br><span style="color:var(--muted);">Full customer history, file folders, opportunity management</span></div>
+    <div style="background:var(--win); border:1px solid rgba(99,102,241,0.25); border-radius:8px; padding:12px; font-size:13px;"><span style="color:#818CF8; font-weight:700;">✓ Dedicated Onboarding</span><br><span style="color:var(--muted);">PM + solutions analyst + data engineer — not self-serve</span></div>
+  </div>
+
+  <div class="section-title">Bold Group Note</div>
+  <div style="background:#1a1000; border:1px solid #ffcc0040; border-radius:8px; padding:14px; font-size:13px; color:var(--text);">
+    <span style="color:var(--yellow); font-weight:700;">⚠️ Bold Group owns AlarmBiller, Managely, and Sedona</span> — three separate platforms, all stagnating. If a prospect is on any Bold Group product, the pitch is simple: you're on a platform that isn't being invested in, by a company that clearly can't pick one product to build. Rev.io is the opposite — one platform, actively developed, with 400+ integrator customers telling us what to build next.
+  </div>
+</div>
+
+<!-- ===== QUICK REFERENCE ===== -->
+<div class="section" id="quickref">
+  <div class="section-title">Quick Reference: When to Use Each Battle Card</div>
+  <table class="quick-table">
+    <thead><tr><th>Scenario</th><th>Primary Competitor</th><th>Key Angle</th></tr></thead>
+    <tbody>
+      <tr><td>MSP deep in ConnectWise ecosystem, frustrated with costs/contracts</td><td><span class="pill">ConnectWise PSA</span></td><td>Total cost of ownership; contract flexibility; native billing</td></tr>
+      <tr><td>MSP in Kaseya/Datto stack, concerned about direction post-acquisition</td><td><span class="pill">Autotask PSA</span></td><td>Post-acquisition quality decline; billing limitations</td></tr>
+      <tr><td>MSP evaluating modern alternatives, loves HaloPSA's UI</td><td><span class="pill">HaloPSA</span></td><td>"Great for ticketing, but where's the billing?"</td></tr>
+      <tr><td>Small MSP outgrowing their first PSA tool</td><td><span class="pill">Syncro</span></td><td>Graduation story; scaling beyond IT-only</td></tr>
+      <tr><td>Tech-forward MSP attracted to AI/modern platforms</td><td><span class="pill">SuperOps</span></td><td>"AI is nice, revenue automation is essential"</td></tr>
+    </tbody>
+  </table>
+
+  <div class="section-title" style="margin-top: 32px;">The Universal Close</div>
+  <div style="background: #111827; border: 1px solid rgba(99,102,241,0.3); border-radius: 8px; padding: 20px; font-size: 15px; line-height: 1.7; color: var(--text);">
+    <p style="color:var(--muted); font-size:11px; text-transform:uppercase; letter-spacing:1px; margin-bottom:8px;">Use against any competitor</p>
+    "Every PSA on this list was built for pure managed IT. Rev.io was built from the ground up for companies that sell <em>more</em> — IT, VoIP, internet, cloud, security — and need one platform to quote, bill, and collect for all of it. When you're ready to stop duct-taping systems together, that's when you call us."
+  </div>
+</div>
+<div id="service-fusion" class="section">
+<div class="section-grid"><div class="section-grid-main">
+  
+  <div class="overview-grid"><div class="overview-item"><div class="label">Competitor</div><div class="value">Service Fusion</div></div>
+  
+
+  
+
+
+
+<!-- FIELD_INTEL_START:Service Fusion updated:2026-05-15 -->
+<div class="section-title">🎙️ Field Intelligence — What Prospects Say (31 raw mentions)</div>
+<div style="margin-bottom:8px"><div style="font-size:11px;color:#ff4466;text-transform:uppercase;letter-spacing:1px;margin-bottom:8px">Key Pain Points</div><div style="background:#1A060C;border-left:3px solid #F43F5E;padding:10px 12px;border-radius:4px;margin-bottom:8px">
+          <div style="font-size:13px;color:#e2e8f0">Inventory management is poorly implemented - no movement tracking history, no min/max reorder reports, partial POs don't work properly, and field workers can't add inventory from the mobile app.</div>
+        </div><div style="background:#1A060C;border-left:3px solid #F43F5E;padding:10px 12px;border-radius:4px;margin-bottom:8px">
+          <div style="font-size:13px;color:#e2e8f0">Mobile app is consistently described as 'garbage' with insufficient capabilities, forcing users to adopt workarounds like separate time tracking tools and causing double data entry.</div>
+        </div><div style="background:#1A060C;border-left:3px solid #F43F5E;padding:10px 12px;border-radius:4px;margin-bottom:8px">
+          <div style="font-size:13px;color:#e2e8f0">Support is described as terrible with unresolved reporting glitches after platform changes, and the system requires excessive manual work - one prospect said they could do the same work with spreadsheets in half the time.</div>
+        </div></div>
+<div><div style="font-size:11px;color:#818CF8;text-transform:uppercase;letter-spacing:1px;margin-bottom:8px">Genuine Strengths</div><div style="background:#0D1A2E;border-left:3px solid #6366F1;padding:10px 12px;border-radius:4px;margin-bottom:8px">
+          <div style="font-size:13px;color:#e2e8f0">Custom fields, automated customer texting for appointments, document storage, and reporting capabilities are appreciated by users who are deeply embedded in the platform.</div>
+        </div><div style="background:#0D1A2E;border-left:3px solid #6366F1;padding:10px 12px;border-radius:4px;margin-bottom:8px">
+          <div style="font-size:13px;color:#e2e8f0">Mobile app visibility for technicians to see job and customer information in the field is valued by current users.</div>
+        </div></div>
+<!-- FIELD_INTEL_END:Service Fusion -->
+    <h2 style="font-size:18px;color:#c8f0dc;margin-bottom:4px">Service Fusion <span style="font-size:11px;color:#ffcc00;background:#1a1400;border:1px solid #ffcc00;padding:2px 8px;border-radius:10px;margin-left:8px">🎙️ 5 field mentions</span><span style="font-size:11px;color:#818CF8;background:#0F172A;border:1px solid #3DC570;padding:2px 8px;border-radius:10px;margin-left:8px">✅ 6 displaced</span></h2>
+    <p style="color:#2a5a3a;font-size:12px;margin-bottom:20px">Field intelligence only — no static battle card yet</p>
+  </div>
+</div>
+</div><div class="section-sidebar"><div class="sb-header">✅ 6 Displaced Customers</div><ul><li><span class="chk">✓</span> A&B Security</li><li><span class="chk">✓</span> Aaron's Lock & Security</li><li><span class="chk">✓</span> Alliance Communication & Technologies</li><li><span class="chk">✓</span> ITR-Systems</li><li><span class="chk">✓</span> Nevada Security Company</li><li><span class="chk">✓</span> TCG Tech</li></ul></div></div>
+<div id="alarmbiller" class="section">
+<div class="section-grid"><div class="section-grid-main">
+  
+  <div class="overview-grid"><div class="overview-item"><div class="label">Competitor</div><div class="value">AlarmBiller (Bold Group)</div></div>
+  
+
+  <div class="overview-item"><div class="label">Founded</div><div class="value">1980s (Bold Group); 40+ years in security software</div></div><div class="overview-item"><div class="label">HQ</div><div class="value">Colorado Springs, CO</div></div><div class="overview-item"><div class="label">Employees</div><div class="value">~130 (Bold Group total)</div></div><div class="overview-item"><div class="label">Revenue</div><div class="value">~$7.4M (Bold Group)</div></div><div class="overview-item"><div class="label">Target Market</div><div class="value">Alarm dealers and security companies with RMR billing</div></div><div class="overview-item"><div class="label">Ownership</div><div class="value">Private · Bold Group portfolio (also owns SedonaOffice)</div></div></div>
+
+  
+
+
+
+<!-- FIELD_INTEL_START:AlarmBiller updated:2026-05-15 -->
+<div class="section-title">🎙️ Field Intelligence — What Prospects Say (9 raw mentions)</div>
+<div style="margin-bottom:8px"><div style="font-size:11px;color:#ff4466;text-transform:uppercase;letter-spacing:1px;margin-bottom:8px">Key Pain Points</div><div style="background:#1A060C;border-left:3px solid #F43F5E;padding:10px 12px;border-radius:4px;margin-bottom:8px">
+          <div style="font-size:13px;color:#e2e8f0">No mobile app forces technicians to use laptops or clunky browser workarounds, limiting field mobility and efficiency.</div>
+        </div><div style="background:#1A060C;border-left:3px solid #F43F5E;padding:10px 12px;border-radius:4px;margin-bottom:8px">
+          <div style="font-size:13px;color:#e2e8f0">No integrated GPS tracking capability, which is a key driver pushing prospects to evaluate alternatives.</div>
+        </div><div style="background:#1A060C;border-left:3px solid #F43F5E;padding:10px 12px;border-radius:4px;margin-bottom:8px">
+          <div style="font-size:13px;color:#e2e8f0">Platform described as 'ancient' and stagnant — hasn't been updated in years and lacks modern features like AI, making it feel dated.</div>
+        </div></div>
+<div><div style="font-size:11px;color:#818CF8;text-transform:uppercase;letter-spacing:1px;margin-bottom:8px">Genuine Strengths</div><div style="background:#0D1A2E;border-left:3px solid #6366F1;padding:10px 12px;border-radius:4px;margin-bottom:8px">
+          <div style="font-size:13px;color:#e2e8f0">Described as 'rock solid' and super functional for core security industry RMR billing workflows.</div>
+        </div><div style="background:#0D1A2E;border-left:3px solid #6366F1;padding:10px 12px;border-radius:4px;margin-bottom:8px">
+          <div style="font-size:13px;color:#e2e8f0">Prospects who used it previously noted they weren't having issues with most processes and had a relatively stable experience.</div>
+        </div></div>
+<!-- FIELD_INTEL_END:AlarmBiller -->
+    <h2 style="font-size:18px;color:#c8f0dc;margin-bottom:4px">AlarmBiller <span style="font-size:11px;color:#ffcc00;background:#1a1400;border:1px solid #ffcc00;padding:2px 8px;border-radius:10px;margin-left:8px">🎙️ 5 field mentions</span><span style="font-size:11px;color:#818CF8;background:#0F172A;border:1px solid #3DC570;padding:2px 8px;border-radius:10px;margin-left:8px">✅ 8 displaced</span></h2>
+    <p style="color:#2a5a3a;font-size:12px;margin-bottom:20px">Field intelligence only — no static battle card yet</p>
+  </div>
+</div><div class="section-sidebar"><div class="sb-header">✅ 8 Displaced Customers</div><ul><li><span class="chk">✓</span> ACS Fire & Security</li><li><span class="chk">✓</span> Alarm Security Inc</li><li><span class="chk">✓</span> Alarmtech</li><li><span class="chk">✓</span> Fastrack Virtual Guard</li><li><span class="chk">✓</span> Morgan Alarm Systems</li><li><span class="chk">✓</span> Mule Security & Electric</li><li><span class="chk">✓</span> Security Vision</li><li><span class="chk">✓</span> Silent Knight Security</li></ul></div></div>
+<div id="jetbuilt" class="section">
+<div class="section-grid"><div class="section-grid-main">
+  <div class="overview-grid"><div class="overview-item"><div class="label">Competitor</div><div class="value">Jetbuilt</div></div>
+  <div class="overview-item"><div class="label">HQ</div><div class="value">Not publicly disclosed</div></div><div class="overview-item"><div class="label">Employees</div><div class="value"><50 (estimated)</div></div><div class="overview-item"><div class="label">Revenue</div><div class="value">Private · undisclosed</div></div><div class="overview-item"><div class="label">Target Market</div><div class="value">AV, IT, Security & Structured Cabling — proposal/project software</div></div><div class="overview-item"><div class="label">Ownership</div><div class="value">Private · bootstrapped</div></div></div>
+
+  
+
+
+
+<!-- FIELD_INTEL_START:Jetbuilt updated:2026-05-15 -->
+<div class="section-title">🎙️ Field Intelligence — What Prospects Say (6 raw mentions)</div>
+<div style="margin-bottom:8px"><div style="font-size:11px;color:#ff4466;text-transform:uppercase;letter-spacing:1px;margin-bottom:8px">Key Pain Points</div><div style="background:#1A060C;border-left:3px solid #F43F5E;padding:10px 12px;border-radius:4px;margin-bottom:8px">
+          <div style="font-size:13px;color:#e2e8f0">Jetbuilt is limited to proposals only — no mobile functionality for field work, no time tracking, no project management, and no CRM integration, forcing teams to manage everything else in separate platforms.</div>
+        </div><div style="background:#1A060C;border-left:3px solid #F43F5E;padding:10px 12px;border-radius:4px;margin-bottom:8px">
+          <div style="font-size:13px;color:#e2e8f0">Feature development has stagnated despite years of customer requests, with the company seeming more focused on expanding into new areas than improving existing functionality.</div>
+        </div><div style="background:#1A060C;border-left:3px solid #F43F5E;padding:10px 12px;border-radius:4px;margin-bottom:8px">
+          <div style="font-size:13px;color:#e2e8f0">Inventory tracking and service contract management capabilities are too shallow to confidently scale service operations.</div>
+        </div></div>
+<div><div style="font-size:11px;color:#818CF8;text-transform:uppercase;letter-spacing:1px;margin-bottom:8px">Genuine Strengths</div><div style="background:#0D1A2E;border-left:3px solid #6366F1;padding:10px 12px;border-radius:4px;margin-bottom:8px">
+          <div style="font-size:13px;color:#e2e8f0">The product database and proposal generation produce polished, professional-looking client proposals that consistently earn compliments.</div>
+        </div><div style="background:#0D1A2E;border-left:3px solid #6366F1;padding:10px 12px;border-radius:4px;margin-bottom:8px">
+          <div style="font-size:13px;color:#e2e8f0">Replaced error-prone Excel/Word workflows with a standardized quoting process that reduces mistakes and improves consistency.</div>
+        </div></div>
+<!-- FIELD_INTEL_END:Jetbuilt -->
+    <h2 style="font-size:18px;color:#c8f0dc;margin-bottom:4px">Jetbuilt <span style="font-size:11px;color:#ffcc00;background:#1a1400;border:1px solid #ffcc00;padding:2px 8px;border-radius:10px;margin-left:8px">🎙️ 3 field mentions</span><span style="font-size:11px;color:#818CF8;background:#0F172A;border:1px solid #3DC570;padding:2px 8px;border-radius:10px;margin-left:8px">✅ 1 displaced</span></h2>
+    <p style="color:#2a5a3a;font-size:12px;margin-bottom:20px">Field intelligence only — no static battle card yet</p>
+  </div>
+</div><div class="section-sidebar"><div class="sb-header">✅ 1 Displaced Customer</div><ul><li><span class="chk">✓</span> CSI Video Security Sound & Theater</li></ul></div></div>
+<div id="servicenow" class="section">
+<div class="overview-grid"><div class="overview-item"><div class="label">Competitor</div><div class="value">ServiceNow</div></div><div class="overview-item"><div class="label">Founded</div><div class="value">2004</div></div><div class="overview-item"><div class="label">HQ</div><div class="value">Santa Clara, CA</div></div><div class="overview-item"><div class="label">Employees</div><div class="value">25,000+</div></div><div class="overview-item"><div class="label">Revenue</div><div class="value">$10.98B ARR (2024)</div></div><div class="overview-item"><div class="label">Funding</div><div class="value">Public (NYSE: NOW)</div></div><div class="overview-item"><div class="label">Target Market</div><div class="value">Enterprise IT service management — large org ITSM & field service</div></div><div class="overview-item"><div class="label">Ownership</div><div class="value">Public</div></div></div>
+
+  
+<!-- FIELD_INTEL_START:ServiceNow updated:2026-05-15 -->
+<div class="section-title">🎙️ Field Intelligence — What Prospects Say (5 raw mentions)</div>
+<div style="margin-bottom:8px"><div style="font-size:11px;color:#ff4466;text-transform:uppercase;letter-spacing:1px;margin-bottom:8px">Key Pain Points</div><div style="background:#1A060C;border-left:3px solid #F43F5E;padding:10px 12px;border-radius:4px;margin-bottom:8px">
+          <div style="font-size:13px;color:#e2e8f0">ServiceNow's pricing is prohibitively expensive for small-to-mid-sized field service companies, causing them to abandon evaluation despite having needed features like GPS tracking.</div>
+        </div><div style="background:#1A060C;border-left:3px solid #F43F5E;padding:10px 12px;border-radius:4px;margin-bottom:8px">
+          <div style="font-size:13px;color:#e2e8f0">ServiceNow is perceived as oversized and overly complex for smaller organizations, with prospects viewing it as built for 'huge companies' rather than their scale of business.</div>
+        </div></div>
+<div><div style="font-size:11px;color:#818CF8;text-transform:uppercase;letter-spacing:1px;margin-bottom:8px">Genuine Strengths</div><div style="background:#0D1A2E;border-left:3px solid #6366F1;padding:10px 12px;border-radius:4px;margin-bottom:8px">
+          <div style="font-size:13px;color:#e2e8f0">ServiceNow is the dominant platform that large enterprise customers (especially major hospitality brands) require their vendors to integrate with for ticket activity syncing.</div>
+        </div></div>
+<!-- FIELD_INTEL_END:ServiceNow -->
+    <h2 style="font-size:18px;color:#e2e8f0;margin-bottom:4px">ServiceNow <span style="font-size:11px;color:#ffcc00;background:#1a1400;border:1px solid #ffcc00;padding:2px 8px;border-radius:10px;margin-left:8px">🎙️ 2 field mentions</span></h2>
+    <p style="color:#94a3b8;font-size:12px;margin-bottom:20px">Field intelligence only — no static battle card yet</p>
+  </div>
+
+  <div id="monday" class="section">
+<div class="section-grid"><div class="section-grid-main"><div class="overview-grid"><div class="overview-item"><div class="label">Competitor</div><div class="value">Monday.com</div></div>
+  
+
+<!-- FIELD_INTEL_START:Monday updated:2026-05-15 -->
+<div class="section-title">🎙️ Field Intelligence — What Prospects Say (4 raw mentions)</div>
+<div style="margin-bottom:8px"><div style="font-size:11px;color:#ff4466;text-transform:uppercase;letter-spacing:1px;margin-bottom:8px">Key Pain Points</div><div style="background:#1A060C;border-left:3px solid #F43F5E;padding:10px 12px;border-radius:4px;margin-bottom:8px">
+          <div style="font-size:13px;color:#e2e8f0">Monday.com is a flexible general-purpose tool but lacks industry-specific functionality for trades and specialized verticals.</div>
+        </div><div style="background:#1A060C;border-left:3px solid #F43F5E;padding:10px 12px;border-radius:4px;margin-bottom:8px">
+          <div style="font-size:13px;color:#e2e8f0">Prospects are using Monday.com primarily for high-level tracking rather than comprehensive project management, suggesting it may not go deep enough for full operational needs.</div>
+        </div></div>
+<div><div style="font-size:11px;color:#818CF8;text-transform:uppercase;letter-spacing:1px;margin-bottom:8px">Genuine Strengths</div><div style="background:#0D1A2E;border-left:3px solid #6366F1;padding:10px 12px;border-radius:4px;margin-bottom:8px">
+          <div style="font-size:13px;color:#e2e8f0">Prospects appreciate Monday.com's flexibility and configurability, allowing them to set it up exactly how they want for their specific workflows.</div>
+        </div></div>
+<!-- FIELD_INTEL_END:Monday -->
+  
+  
+
+  <div class="overview-item"><div class="label">Founded</div><div class="value">2012</div></div><div class="overview-item"><div class="label">HQ</div><div class="value">Tel Aviv, Israel (US office: New York, NY)</div></div><div class="overview-item"><div class="label">Employees</div><div class="value">~2,000+</div></div><div class="overview-item"><div class="label">Revenue</div><div class="value">$906M ARR (2024)</div></div><div class="overview-item"><div class="label">Funding</div><div class="value">Public (MNDY) · IPO 2021 · raised $574M pre-IPO</div></div><div class="overview-item"><div class="label">Target Market</div><div class="value">Horizontal work management — Fortune 500 to SMB, all industries</div></div><div class="overview-item"><div class="label">Ownership</div><div class="value">Public (Nasdaq: MNDY)</div></div></div>
+
+  
+  <h2 style="font-size:18px;color:#c8f0dc;margin-bottom:4px">Monday.com <span style="font-size:11px;color:#ffcc00;background:#1a1400;border:1px solid #ffcc00;padding:2px 8px;border-radius:10px;margin-left:8px">🎙️ 4 field mentions</span><span style="font-size:11px;color:#818CF8;background:#0F172A;border:1px solid #3DC570;padding:2px 8px;border-radius:10px;margin-left:8px">✅ 5 displaced</span></h2>
+  <p style="color:#2a5a3a;font-size:12px;margin-bottom:16px">Horizontal work management / project board platform · monday.com · Trusted by 60%+ of Fortune 500</p>
+
+  <div class="section-title">📋 Overview</div>
+  <div style="background:#060d14;border:1px solid rgba(99,102,241,0.1);border-radius:8px;padding:14px;margin-bottom:20px;font-size:13px;color:#c8f0dc;line-height:1.6">
+    Monday.com is a general-purpose work management and project tracking platform — NOT a PSA or field service tool. Positioned as an "AI Work Platform" with boards, automations, CRM, and AI agents. Pricing is per-seat with a free plan. Used by integrators for high-level project tracking, not for ticketing, RMR billing, scheduling, or field dispatch. Trusted by 60%+ of Fortune 500. Plans start at 3 users, monthly or annual billing.
+  </div>
+
+  <div class="section-title">⚔️ How to Beat Monday.com</div>
+  <div style="background:#1A060C;border-left:3px solid #F43F5E;padding:10px 12px;border-radius:4px;margin-bottom:8px;font-size:13px;color:#e2e8f0">Not a PSA — has zero support for ticketing, RMR billing, monitoring station integration, field dispatch, or service contract management. Prospects using it for project boards still need a separate system for their actual operations.</div>
+  <div style="background:#1A060C;border-left:3px solid #F43F5E;padding:10px 12px;border-radius:4px;margin-bottom:8px;font-size:13px;color:#e2e8f0">Generic platform not built for integrators — requires heavy configuration just to approximate industry workflows, and any rep change or team turnover means starting over.</div>
+  <div style="background:#1A060C;border-left:3px solid #F43F5E;padding:10px 12px;border-radius:4px;margin-bottom:16px;font-size:13px;color:#e2e8f0">Prospects using Monday alongside another PSA are running a fragmented stack — Rev.io replaces both the board tracking AND the operational system in one platform.</div>
+
+  <div class="section-title">✅ Genuine Strengths (acknowledge these)</div>
+  <div style="background:#0D1A2E;border-left:3px solid #6366F1;padding:10px 12px;border-radius:4px;margin-bottom:8px;font-size:13px;color:#e2e8f0">Highly configurable boards — prospects who have set it up exactly how they want it have real switching cost.</div>
+  <div style="background:#0D1A2E;border-left:3px solid #6366F1;padding:10px 12px;border-radius:4px;margin-bottom:16px;font-size:13px;color:#e2e8f0">Strong visual project status tracking and incoming work visibility for small teams.</div>
+
+  <div class="section-title">🎙️ Field Intelligence — What Prospects Say (4 raw mentions)</div>
+  <div style="background:#0D1A2E;border-left:3px solid #6366F1;padding:10px 12px;border-radius:4px;margin-bottom:8px;font-size:13px;color:#e2e8f0">Prospects actively using Monday like how they've configured it — it's their "board they keep up all the time" for tracking emails, calls, and incoming work.</div>
+  <div style="background:#060d14;border-left:3px solid #475569;padding:10px 12px;border-radius:4px;margin-bottom:8px;font-size:13px;color:#e2e8f0">Security and AV departments using Monday for high-level project tracking, noting it's an upgrade from Excel — but still not a full PSA replacement.</div>
+</div>
+
+</div><div class="section-sidebar"><div class="sb-header">✅ 5 Displaced Customers</div><ul><li><span class="chk">✓</span> Audio Video Integrations</li><li><span class="chk">✓</span> Aviation Communications Ltd</li><li><span class="chk">✓</span> Global Data Technologies</li><li><span class="chk">✓</span> Patriot Cyber</li><li><span class="chk">✓</span> Sound Design Inc</li></ul></div></div>
+<div id="d-tools" class="section">
+<div class="overview-grid"><div class="overview-item"><div class="label">Competitor</div><div class="value">D-Tools</div></div><div class="overview-item"><div class="label">Founded</div><div class="value">1998</div></div><div class="overview-item"><div class="label">HQ</div><div class="value">Pleasanton, CA</div></div><div class="overview-item"><div class="label">Employees</div><div class="value">~50–100</div></div><div class="overview-item"><div class="label">Revenue</div><div class="value">Private · undisclosed</div></div><div class="overview-item"><div class="label">Funding</div><div class="value">Private · bootstrapped</div></div><div class="overview-item"><div class="label">Target Market</div><div class="value">AV/systems integrators — design, proposal & project management</div></div><div class="overview-item"><div class="label">Ownership</div><div class="value">Private</div></div></div>
+
+  <h2 style="font-size:18px;color:#e2e8f0;margin-bottom:4px">D-tools <span style="font-size:11px;color:#ffcc00;background:#1a1400;border:1px solid #ffcc00;padding:2px 8px;border-radius:10px;margin-left:8px">🎙️ 22 field mentions</span></h2>
+    <p style="color:#94a3b8;font-size:12px;margin-bottom:20px">Field intelligence only — no static battle card yet</p>
+    
+
+<!-- FIELD_INTEL_START:D-tools updated:2026-05-15 -->
+<div class="section-title">🎙️ Field Intelligence — What Prospects Say (22 raw mentions)</div>
+<div style="margin-bottom:8px"><div style="font-size:11px;color:#ff4466;text-transform:uppercase;letter-spacing:1px;margin-bottom:8px">Key Pain Points</div><div style="background:#1A060C;border-left:3px solid #F43F5E;padding:10px 12px;border-radius:4px;margin-bottom:8px">
+          <div style="font-size:13px;color:#e2e8f0">Field service and mobile capabilities are consistently described as lacking — prospects cite poor communication with field teams, no usable app, and an experience that's 'very archaic' compared to desktop.</div>
+        </div><div style="background:#1A060C;border-left:3px solid #F43F5E;padding:10px 12px;border-radius:4px;margin-bottom:8px">
+          <div style="font-size:13px;color:#e2e8f0">Integration and data sync failures create operational chaos — multiple prospects describe working across 4-5 platforms where D-tools won't sync with QuickBooks, inventory systems, or service tools, calling it 'a mess' with high error risk.</div>
+        </div><div style="background:#1A060C;border-left:3px solid #F43F5E;padding:10px 12px;border-radius:4px;margin-bottom:8px">
+          <div style="font-size:13px;color:#e2e8f0">The platform requires heavy manual effort where automation should exist — prospects describe 'manually pushing the process along,' quotes taking up to 8 hours, and clunky project management that's time-consuming to set up.</div>
+        </div></div>
+<div><div style="font-size:11px;color:#818CF8;text-transform:uppercase;letter-spacing:1px;margin-bottom:8px">Genuine Strengths</div><div style="background:#0D1A2E;border-left:3px solid #6366F1;padding:10px 12px;border-radius:4px;margin-bottom:8px">
+          <div style="font-size:13px;color:#e2e8f0">Widely recognized as the strongest tool for design, quoting, and proposal depth — long-term users (10-15 years) consistently say no other all-in-one platform matches D-tools for detailed project proposals.</div>
+        </div><div style="background:#0D1A2E;border-left:3px solid #6366F1;padding:10px 12px;border-radius:4px;margin-bottom:8px">
+          <div style="font-size:13px;color:#e2e8f0">Catalog integration with vendors/manufacturers for parts ordering is a sticky feature that prospects don't want to lose when considering alternatives.</div>
+        </div></div>
+<!-- FIELD_INTEL_END:D-tools -->
+  </div>
+
+  <div id="onebill" class="section">
+<div class="overview-grid"><div class="overview-item"><div class="label">Competitor</div><div class="value">OneBill</div></div><div class="overview-item"><div class="label">Founded</div><div class="value">~2010</div></div><div class="overview-item"><div class="label">HQ</div><div class="value">San Jose, CA</div></div><div class="overview-item"><div class="label">Employees</div><div class="value">~50–100</div></div><div class="overview-item"><div class="label">Revenue</div><div class="value">Private · undisclosed</div></div><div class="overview-item"><div class="label">Funding</div><div class="value">Private</div></div><div class="overview-item"><div class="label">Target Market</div><div class="value">Telecoms & ISPs — subscription billing & revenue management</div></div><div class="overview-item"><div class="label">Ownership</div><div class="value">Private</div></div></div>
+
+  <h2 style="font-size:18px;color:#e2e8f0;margin-bottom:4px">Onebill <span style="font-size:11px;color:#ffcc00;background:#1a1400;border:1px solid #ffcc00;padding:2px 8px;border-radius:10px;margin-left:8px">🎙️ 9 field mentions</span></h2>
+    <p style="color:#94a3b8;font-size:12px;margin-bottom:20px">Field intelligence only — no static battle card yet</p>
+    
+
+<!-- FIELD_INTEL_START:Onebill updated:2026-05-15 -->
+<div class="section-title">🎙️ Field Intelligence — What Prospects Say (9 raw mentions)</div>
+<div style="margin-bottom:8px"><div style="font-size:11px;color:#ff4466;text-transform:uppercase;letter-spacing:1px;margin-bottom:8px">Key Pain Points</div><div style="background:#1A060C;border-left:3px solid #F43F5E;padding:10px 12px;border-radius:4px;margin-bottom:8px">
+          <div style="font-size:13px;color:#e2e8f0">Service order handling is a weakness - prospects report needing to use ConnectWise to cover gaps in OneBill's service order functionality.</div>
+        </div><div style="background:#1A060C;border-left:3px solid #F43F5E;padding:10px 12px;border-radius:4px;margin-bottom:8px">
+          <div style="font-size:13px;color:#e2e8f0">Integration challenges with PSA tools like ConnectWise - historically required manual entries, though this may have improved.</div>
+        </div></div>
+<div><div style="font-size:11px;color:#818CF8;text-transform:uppercase;letter-spacing:1px;margin-bottom:8px">Genuine Strengths</div><div style="background:#0D1A2E;border-left:3px solid #6366F1;padding:10px 12px;border-radius:4px;margin-bottom:8px">
+          <div style="font-size:13px;color:#e2e8f0">Reliable and low-maintenance once configured - prospects describe it as 'set it up and it works, don't think about it.'</div>
+        </div><div style="background:#0D1A2E;border-left:3px solid #6366F1;padding:10px 12px;border-radius:4px;margin-bottom:8px">
+          <div style="font-size:13px;color:#e2e8f0">Responsive partnership approach - prospects report OneBill works collaboratively with them to resolve issues when they arise.</div>
+        </div></div>
+<!-- FIELD_INTEL_END:Onebill -->
+  </div>
+
+  <div id="datagate" class="section">
+<div class="overview-grid"><div class="overview-item"><div class="label">Competitor</div><div class="value">Datagate</div></div><div class="overview-item"><div class="label">Founded</div><div class="value">2012</div></div><div class="overview-item"><div class="label">HQ</div><div class="value">Auckland, New Zealand</div></div><div class="overview-item"><div class="label">Employees</div><div class="value">~20–50</div></div><div class="overview-item"><div class="label">Revenue</div><div class="value">Private · undisclosed</div></div><div class="overview-item"><div class="label">Funding</div><div class="value">Private · bootstrapped</div></div><div class="overview-item"><div class="label">Target Market</div><div class="value">MSPs & telecom resellers — usage-based telecom billing</div></div><div class="overview-item"><div class="label">Ownership</div><div class="value">Private</div></div></div>
+
+  <h2 style="font-size:18px;color:#e2e8f0;margin-bottom:4px">Datagate <span style="font-size:11px;color:#ffcc00;background:#1a1400;border:1px solid #ffcc00;padding:2px 8px;border-radius:10px;margin-left:8px">🎙️ 13 field mentions</span></h2>
+    <p style="color:#94a3b8;font-size:12px;margin-bottom:20px">Field intelligence only — no static battle card yet</p>
+    
+
+<!-- FIELD_INTEL_START:Datagate updated:2026-05-15 -->
+<div class="section-title">🎙️ Field Intelligence — What Prospects Say (13 raw mentions)</div>
+<div style="margin-bottom:8px"><div style="font-size:11px;color:#ff4466;text-transform:uppercase;letter-spacing:1px;margin-bottom:8px">Key Pain Points</div><div style="background:#1A060C;border-left:3px solid #F43F5E;padding:10px 12px;border-radius:4px;margin-bottom:8px">
+          <div style="font-size:13px;color:#e2e8f0">No automated payment reminders or collections - prospects report spending 2 full days monthly manually emailing and calling past due customers.</div>
+        </div><div style="background:#1A060C;border-left:3px solid #F43F5E;padding:10px 12px;border-radius:4px;margin-bottom:8px">
+          <div style="font-size:13px;color:#e2e8f0">Poor dashboards and reporting - no clear visibility into 30/60/90 day aging, MRR, or revenue before/after taxes.</div>
+        </div><div style="background:#1A060C;border-left:3px solid #F43F5E;padding:10px 12px;border-radius:4px;margin-bottom:8px">
+          <div style="font-size:13px;color:#e2e8f0">QuickBooks integration requires manual intervention rather than real-time sync, adding tedious steps to customer account setup and ongoing billing workflows.</div>
+        </div></div>
+
+<!-- FIELD_INTEL_END:Datagate -->
+  </div>
+
+  <div id="ipoint" class="section">
+<div class="section-grid"><div class="section-grid-main"><div class="overview-grid"><div class="overview-item"><div class="label">Competitor</div><div class="value">iPoint (iPoint LLC)</div></div>
+  
+
+<!-- FIELD_INTEL_START:Ipoint updated:2026-05-15 -->
+<div class="section-title">🎙️ Field Intelligence — What Prospects Say (2 raw mentions)</div>
+<div style="margin-bottom:8px"><div style="font-size:11px;color:#ff4466;text-transform:uppercase;letter-spacing:1px;margin-bottom:8px">Key Pain Points</div><div style="background:#1A060C;border-left:3px solid #F43F5E;padding:10px 12px;border-radius:4px;margin-bottom:8px">
+          <div style="font-size:13px;color:#e2e8f0">The mobile app and offline mode are unreliable, causing technicians to lose captured data in the field.</div>
+        </div><div style="background:#1A060C;border-left:3px solid #F43F5E;padding:10px 12px;border-radius:4px;margin-bottom:8px">
+          <div style="font-size:13px;color:#e2e8f0">Labor and time tracking is cumbersome—requiring manual workarounds like building travel as phases—and lacks clear billable vs non-billable efficiency metrics.</div>
+        </div><div style="background:#1A060C;border-left:3px solid #F43F5E;padding:10px 12px;border-radius:4px;margin-bottom:8px">
+          <div style="font-size:13px;color:#e2e8f0">The platform suffers from performance issues (slow, flashing screens) and weak project management with limited notes and history capabilities.</div>
+        </div></div>
+<div><div style="font-size:11px;color:#818CF8;text-transform:uppercase;letter-spacing:1px;margin-bottom:8px">Genuine Strengths</div><div style="background:#0D1A2E;border-left:3px solid #6366F1;padding:10px 12px;border-radius:4px;margin-bottom:8px">
+          <div style="font-size:13px;color:#e2e8f0">Recurring billing functionality works, despite being described as 'chunky' and not intuitive.</div>
+        </div></div>
+<!-- FIELD_INTEL_END:Ipoint -->
+  
+  
+
+  <div class="overview-item"><div class="label">Founded</div><div class="value">Est. ~2010</div></div><div class="overview-item"><div class="label">HQ</div><div class="value">Kansas, US</div></div><div class="overview-item"><div class="label">Employees</div><div class="value">~10</div></div><div class="overview-item"><div class="label">Revenue</div><div class="value">Private · undisclosed</div></div><div class="overview-item"><div class="label">Target Market</div><div class="value">Audio/Video integrators — end-to-end business management</div></div><div class="overview-item"><div class="label">Ownership</div><div class="value">Private · bootstrapped</div></div></div>
+
+  
+  <h2 style="font-size:18px;color:#c8f0dc;margin-bottom:4px">iPoint <span style="font-size:11px;color:#ffcc00;background:#1a1400;border:1px solid #ffcc00;padding:2px 8px;border-radius:10px;margin-left:8px">🎙️ 2 field mentions</span><span style="font-size:11px;color:#818CF8;background:#0F172A;border:1px solid #3DC570;padding:2px 8px;border-radius:10px;margin-left:8px">✅ 1 displaced</span></h2>
+  <p style="color:#2a5a3a;font-size:12px;margin-bottom:16px">Single-platform business management for AV integrators · CE Pro Quest for Quality award winner</p>
+
+  <div class="section-title">📋 Overview</div>
+  <div style="background:#060d14;border:1px solid rgba(99,102,241,0.1);border-radius:8px;padding:14px;margin-bottom:20px;font-size:13px;color:#c8f0dc;line-height:1.6">
+    iPoint is a single-platform business management solution designed specifically for the AV industry. Features include proposals, project management (tracks 400-500 individual process steps), labor cost tracking, scheduling, field service, and lead/email tracking. CE Pro Quest for Quality Award winner. Has Portal.io API integration. Targets residential and commercial AV integrators looking to replace disconnected tools. Positioned as a step up from D-Tools and ProjX360 for growing AV companies.
+  </div>
+
+  <div class="section-title">⚔️ How to Beat iPoint</div>
+  <div style="background:#1A060C;border-left:3px solid #F43F5E;padding:10px 12px;border-radius:4px;margin-bottom:8px;font-size:13px;color:#e2e8f0">Platform performance is a consistent complaint — prospects report screens constantly flashing, very slow load times, and distracting UI behavior that impacts daily usability.</div>
+  <div style="background:#1A060C;border-left:3px solid #F43F5E;padding:10px 12px;border-radius:4px;margin-bottom:8px;font-size:13px;color:#e2e8f0">Mobile app reliability problems — offline mode doesn't always capture data, leading to lost information in the field. Labor tracking is difficult and requires building from scratch.</div>
+  <div style="background:#1A060C;border-left:3px solid #F43F5E;padding:10px 12px;border-radius:4px;margin-bottom:8px;font-size:13px;color:#e2e8f0">Opportunity management never worked well per prospect feedback — pipeline visibility is weak for AV companies trying to grow sales.</div>
+  <div style="background:#1A060C;border-left:3px solid #F43F5E;padding:10px 12px;border-radius:4px;margin-bottom:16px;font-size:13px;color:#e2e8f0">AV-only focus — companies adding monitoring/RMR services or needing alarm dealer billing will hit a wall.</div>
+
+  <div class="section-title">✅ Genuine Strengths (acknowledge these)</div>
+  <div style="background:#0D1A2E;border-left:3px solid #6366F1;padding:10px 12px;border-radius:4px;margin-bottom:8px;font-size:13px;color:#e2e8f0">Deep AV workflow support — can manage 400-500 individual process steps per project, with labor cost visibility that helps integrators recognize they're undervaluing their labor.</div>
+  <div style="background:#0D1A2E;border-left:3px solid #6366F1;padding:10px 12px;border-radius:4px;margin-bottom:16px;font-size:13px;color:#e2e8f0">CE Pro award recognition gives it credibility in the residential AV market. Portal.io integration is a plus for AV companies already using Portal for product data.</div>
+
+  <div class="section-title">🎙️ Field Intelligence — What Prospects Say (2 raw mentions)</div>
+  <div style="background:#1A060C;border-left:3px solid #F43F5E;padding:10px 12px;border-radius:4px;margin-bottom:8px;font-size:13px;color:#e2e8f0">Technicians complain about the app — offline mode doesn't always capture data leading to lost information. Labor tracking is difficult and requires building from scratch.</div>
+  <div style="background:#1A060C;border-left:3px solid #F43F5E;padding:10px 12px;border-radius:4px;margin-bottom:8px;font-size:13px;color:#e2e8f0">Platform is extremely slow, screens constantly flashing and very distracting. Opportunity management never worked well. Project management weak.</div>
+</div>
+
+</div><div class="section-sidebar"><div class="sb-header">✅ 1 Displaced Customer</div><ul><li><span class="chk">✓</span> Hames Pro</li></ul></div></div>
+<div id="projx360" class="section">
+<div class="section-grid"><div class="section-grid-main"><div class="overview-grid"><div class="overview-item"><div class="label">Competitor</div><div class="value">ProjX360</div></div>
+  
+
+<!-- FIELD_INTEL_START:Projx360 updated:2026-05-15 -->
+<div class="section-title">🎙️ Field Intelligence — What Prospects Say (2 raw mentions)</div>
+<div style="margin-bottom:8px"><div style="font-size:11px;color:#ff4466;text-transform:uppercase;letter-spacing:1px;margin-bottom:8px">Key Pain Points</div><div style="background:#1A060C;border-left:3px solid #F43F5E;padding:10px 12px;border-radius:4px;margin-bottom:8px">
+          <div style="font-size:13px;color:#e2e8f0">Project management workflow is clunky and creates segmented pockets of information, making it difficult to view ticket notes, site history, or historical data without extensive searching and filtering.</div>
+        </div><div style="background:#1A060C;border-left:3px solid #F43F5E;padding:10px 12px;border-radius:4px;margin-bottom:8px">
+          <div style="font-size:13px;color:#e2e8f0">The platform struggles to scale with business growth, forcing companies to transition to other solutions as they expand.</div>
+        </div><div style="background:#1A060C;border-left:3px solid #F43F5E;padding:10px 12px;border-radius:4px;margin-bottom:8px">
+          <div style="font-size:13px;color:#e2e8f0">Implementation is lengthy (9+ months) with limited support, and the product has seen no meaningful upgrades over extended periods.</div>
+        </div></div>
+
+<!-- FIELD_INTEL_END:Projx360 -->
+  
+  
+
+  <div class="overview-item"><div class="label">Founded</div><div class="value">Est. ~2015 (by veteran integrator Doug Greenwald)</div></div><div class="overview-item"><div class="label">HQ</div><div class="value">Arizona, US</div></div><div class="overview-item"><div class="label">Employees</div><div class="value">Very small team (~5)</div></div><div class="overview-item"><div class="label">Revenue</div><div class="value">Private · undisclosed</div></div><div class="overview-item"><div class="label">Target Market</div><div class="value">Residential AV integrators — location-based project management</div></div><div class="overview-item"><div class="label">Ownership</div><div class="value">Private · owner-operated</div></div></div>
+
+  
+  <h2 style="font-size:18px;color:#c8f0dc;margin-bottom:4px">ProjX360 <span style="font-size:11px;color:#ffcc00;background:#1a1400;border:1px solid #ffcc00;padding:2px 8px;border-radius:10px;margin-left:8px">🎙️ 2 field mentions</span><span style="font-size:11px;color:#818CF8;background:#0F172A;border:1px solid #3DC570;padding:2px 8px;border-radius:10px;margin-left:8px">✅ 1 displaced</span></h2>
+  <p style="color:#2a5a3a;font-size:12px;margin-bottom:16px">AV integrator project management software · projx360.com · Organizes by location, not project</p>
+
+  <div class="section-title">📋 Overview</div>
+  <div style="background:#060d14;border:1px solid rgba(99,102,241,0.1);border-radius:8px;padding:14px;margin-bottom:20px;font-size:13px;color:#c8f0dc;line-height:1.6">
+    ProjX360 is a project management platform built specifically for AV integrators (Audio/Video, Lighting, Motorized Shades). Its differentiator: organizes everything by client location/building rather than by individual project — so proposals, systems, documentation, and service history all stay tied to one address. Targets the problem of scattered documentation when one home has an AV project, a lighting project, and a shades project in different silos. No RMR billing, no PSA ticketing, no monitoring integration.
+  </div>
+
+  <div class="section-title">⚔️ How to Beat ProjX360</div>
+  <div style="background:#1A060C;border-left:3px solid #F43F5E;padding:10px 12px;border-radius:4px;margin-bottom:8px;font-size:13px;color:#e2e8f0">Can't scale with business growth — prospect tried it after D-Tools and had to move on again. It's a documentation-first tool, not a full business management platform.</div>
+  <div style="background:#1A060C;border-left:3px solid #F43F5E;padding:10px 12px;border-radius:4px;margin-bottom:8px;font-size:13px;color:#e2e8f0">Clunky project flow with segmented information pockets — not intuitive for viewing ticket notes or site history, requires too much searching.</div>
+  <div style="background:#1A060C;border-left:3px solid #F43F5E;padding:10px 12px;border-radius:4px;margin-bottom:16px;font-size:13px;color:#e2e8f0">No billing, no RMR, no dispatch, no time tracking — AV companies with service contracts or RMR still need another system for everything operational.</div>
+
+  <div class="section-title">✅ Genuine Strengths (acknowledge these)</div>
+  <div style="background:#0D1A2E;border-left:3px solid #6366F1;padding:10px 12px;border-radius:4px;margin-bottom:8px;font-size:13px;color:#e2e8f0">Location-centric organization is genuinely useful for residential AV companies managing multiple systems per home — eliminates the "scavenger hunt" for drawings and system files at service time.</div>
+  <div style="background:#0D1A2E;border-left:3px solid #6366F1;padding:10px 12px;border-radius:4px;margin-bottom:16px;font-size:13px;color:#e2e8f0">Addresses a real pain: documentation scattered across phones, shared drives, and email chains after multi-system installs.</div>
+
+  <div class="section-title">🎙️ Field Intelligence — What Prospects Say (2 raw mentions)</div>
+  <div style="background:#1A060C;border-left:3px solid #F43F5E;padding:10px 12px;border-radius:4px;margin-bottom:8px;font-size:13px;color:#e2e8f0">Project management flow is clunky, creates segmented pockets of information — not intuitive for viewing ticket notes or site history.</div>
+  <div style="background:#1A060C;border-left:3px solid #F43F5E;padding:10px 12px;border-radius:4px;margin-bottom:8px;font-size:13px;color:#e2e8f0">After leaving D-Tools, prospect tried ProjX360 but it could never scale with their business growth — forced another platform transition to iPoint.</div>
+</div>
+
+</div><div class="section-sidebar"><div class="sb-header">✅ 1 Displaced Customer</div><ul><li><span class="chk">✓</span> Creative Vision Tech</li></ul></div></div>
+<div id="timleybill" class="section">
+<div class="overview-grid"><div class="overview-item"><div class="label">Competitor</div><div class="value">TimleyBill</div></div><div class="overview-item"><div class="label">Founded</div><div class="value">Est. ~2015</div></div><div class="overview-item"><div class="label">HQ</div><div class="value">Not publicly disclosed</div></div><div class="overview-item"><div class="label">Employees</div><div class="value">Very small team (<20)</div></div><div class="overview-item"><div class="label">Revenue</div><div class="value">Private · undisclosed</div></div><div class="overview-item"><div class="label">Funding</div><div class="value">Private · bootstrapped</div></div><div class="overview-item"><div class="label">Target Market</div><div class="value">Field service / security integrators — billing & quoting</div></div><div class="overview-item"><div class="label">Ownership</div><div class="value">Private</div></div></div>
+
+  <h2 style="font-size:18px;color:#e2e8f0;margin-bottom:4px">Timleybill <span style="font-size:11px;color:#ffcc00;background:#1a1400;border:1px solid #ffcc00;padding:2px 8px;border-radius:10px;margin-left:8px">🎙️ 6 field mentions</span></h2>
+    <p style="color:#94a3b8;font-size:12px;margin-bottom:20px">Field intelligence only — no static battle card yet</p>
+    
+
+<!-- FIELD_INTEL_START:Timleybill updated:2026-05-15 -->
+<div class="section-title">🎙️ Field Intelligence — What Prospects Say (6 raw mentions)</div>
+<div style="margin-bottom:8px"><div style="font-size:11px;color:#ff4466;text-transform:uppercase;letter-spacing:1px;margin-bottom:8px">Key Pain Points</div><div style="background:#1A060C;border-left:3px solid #F43F5E;padding:10px 12px;border-radius:4px;margin-bottom:8px">
+          <div style="font-size:13px;color:#e2e8f0">Quoting system is inadequate, forcing customers to subscribe to and pay for a separate Quoter tool on top of their $1000/month fee.</div>
+        </div><div style="background:#1A060C;border-left:3px solid #F43F5E;padding:10px 12px;border-radius:4px;margin-bottom:8px">
+          <div style="font-size:13px;color:#e2e8f0">Integration has clunky elements, particularly when quotes convert to invoices, requiring manual workarounds.</div>
+        </div></div>
+<div><div style="font-size:11px;color:#818CF8;text-transform:uppercase;letter-spacing:1px;margin-bottom:8px">Genuine Strengths</div><div style="background:#0D1A2E;border-left:3px solid #6366F1;padding:10px 12px;border-radius:4px;margin-bottom:8px">
+          <div style="font-size:13px;color:#e2e8f0">Customer portal is consistently praised as a nice feature that users appreciate.</div>
+        </div></div>
+<!-- FIELD_INTEL_END:Timleybill -->
+  </div>
+
+  <div id="workhorse" class="section">
+<div class="section-grid"><div class="section-grid-main"><div class="overview-grid"><div class="overview-item"><div class="label">Competitor</div><div class="value">WorkHorse SCS</div></div>
+  
+
+<!-- FIELD_INTEL_START:Workhorse updated:2026-05-15 -->
+<div class="section-title">🎙️ Field Intelligence — What Prospects Say (4 raw mentions)</div>
+<div style="margin-bottom:8px"><div style="font-size:11px;color:#ff4466;text-transform:uppercase;letter-spacing:1px;margin-bottom:8px">Key Pain Points</div><div style="background:#1A060C;border-left:3px solid #F43F5E;padding:10px 12px;border-radius:4px;margin-bottom:8px">
+          <div style="font-size:13px;color:#e2e8f0">Cannot handle line items with different tax rates (GST vs GST/PST), making it a dealbreaker for Canadian operations.</div>
+        </div><div style="background:#1A060C;border-left:3px solid #F43F5E;padding:10px 12px;border-radius:4px;margin-bottom:8px">
+          <div style="font-size:13px;color:#e2e8f0">Lacks automation for customer communications like declined card notifications, forcing manual follow-up to chase down customers for failed payments.</div>
+        </div></div>
+<div><div style="font-size:11px;color:#818CF8;text-transform:uppercase;letter-spacing:1px;margin-bottom:8px">Genuine Strengths</div><div style="background:#0D1A2E;border-left:3px solid #6366F1;padding:10px 12px;border-radius:4px;margin-bottom:8px">
+          <div style="font-size:13px;color:#e2e8f0">Strong end-to-end automation from quoting through customer signing, including DocuSign integration and automated data entry.</div>
+        </div><div style="background:#0D1A2E;border-left:3px solid #6366F1;padding:10px 12px;border-radius:4px;margin-bottom:8px">
+          <div style="font-size:13px;color:#e2e8f0">Handles recurring billing well with monitoring station agreements and provides declined payment reports.</div>
+        </div></div>
+<!-- FIELD_INTEL_END:Workhorse -->
+  
+  
+
+  <div class="overview-item"><div class="label">Founded</div><div class="value">Est. ~2015</div></div><div class="overview-item"><div class="label">HQ</div><div class="value">Not publicly disclosed</div></div><div class="overview-item"><div class="label">Employees</div><div class="value">Very small team (~10)</div></div><div class="overview-item"><div class="label">Revenue</div><div class="value">Private · undisclosed</div></div><div class="overview-item"><div class="label">Target Market</div><div class="value">Life safety and alarm companies with RMR billing (US & Canada)</div></div><div class="overview-item"><div class="label">Ownership</div><div class="value">Private · bootstrapped</div></div></div>
+
+  
+  <h2 style="font-size:18px;color:#c8f0dc;margin-bottom:4px">Workhorse <span style="font-size:11px;color:#ffcc00;background:#1a1400;border:1px solid #ffcc00;padding:2px 8px;border-radius:10px;margin-left:8px">🎙️ 4 field mentions</span><span style="font-size:11px;color:#818CF8;background:#0F172A;border:1px solid #3DC570;padding:2px 8px;border-radius:10px;margin-left:8px">✅ 3 displaced</span></h2>
+  <p style="color:#2a5a3a;font-size:12px;margin-bottom:16px">Alarm company management software for life safety / security dealers · workhorsescs.com</p>
+
+  <div class="section-title">📋 Overview</div>
+  <div style="background:#060d14;border:1px solid rgba(99,102,241,0.1);border-radius:8px;padding:14px;margin-bottom:20px;font-size:13px;color:#c8f0dc;line-height:1.6">
+    Workhorse is an all-in-one CRM and billing platform built specifically for alarm and life safety companies. Positions itself as a "single point of entry" — proposals, accounts on test, signal history, central station data, RMR management, work orders, scheduling, and payment collection all in one place. Targeted at U.S. and Canadian alarm dealers with recurring monthly revenue. Flexible modules that can be tailored per workflow.
+  </div>
+
+  <div class="section-title">⚔️ How to Beat Workhorse</div>
+  <div style="background:#1A060C;border-left:3px solid #F43F5E;padding:10px 12px;border-radius:4px;margin-bottom:8px;font-size:13px;color:#e2e8f0">No automation for customer communications when payments decline — manual chase-down of customers with failed cards. Rev.io Billing handles automated dunning natively.</div>
+  <div style="background:#1A060C;border-left:3px solid #F43F5E;padding:10px 12px;border-radius:4px;margin-bottom:8px;font-size:13px;color:#e2e8f0">Lacks automated email notification workflows — doesn't scale well as the business grows beyond a small team.</div>
+  <div style="background:#1A060C;border-left:3px solid #F43F5E;padding:10px 12px;border-radius:4px;margin-bottom:16px;font-size:13px;color:#e2e8f0">Alarm/life safety focused — limited PSA capabilities for integrators who also need field service, ticketing, project management, and quoting in one platform.</div>
+
+  <div class="section-title">✅ Genuine Strengths (acknowledge these)</div>
+  <div style="background:#0D1A2E;border-left:3px solid #6366F1;padding:10px 12px;border-radius:4px;margin-bottom:8px;font-size:13px;color:#e2e8f0">Handles recurring billing and RMR management well for pure alarm/life safety businesses.</div>
+  <div style="background:#0D1A2E;border-left:3px solid #6366F1;padding:10px 12px;border-radius:4px;margin-bottom:16px;font-size:13px;color:#e2e8f0">E-signature quoting with view/sign notifications and declined payment reporting are valued by small alarm dealers.</div>
+
+  <div class="section-title">🎙️ Field Intelligence — What Prospects Say (4 raw mentions)</div>
+  <div style="background:#1A060C;border-left:3px solid #F43F5E;padding:10px 12px;border-radius:4px;margin-bottom:8px;font-size:13px;color:#e2e8f0">No automation for customer communications when payments decline, forcing manual chase-down of failed-card customers.</div>
+  <div style="background:#0D1A2E;border-left:3px solid #6366F1;padding:10px 12px;border-radius:4px;margin-bottom:8px;font-size:13px;color:#e2e8f0">Prospects like the end-to-end automation from quoting through customer signing, central station agreements, DocuSign integration, and RMR management.</div>
+</div>
+
+<!-- ===== SIMPRO ===== -->
+</div><div class="section-sidebar"><div class="sb-header">✅ 4 Displaced Customers</div><ul><li><span class="chk">✓</span> Alarm24</li><li><span class="chk">✓</span> Castle Security</li><li><span class="chk">✓</span> Command Corporation</li><li><span class="chk">✓</span> Electronic Systems Installers</li></ul></div></div>
+<div id="simpro" class="section">
+<div class="section-grid"><div class="section-grid-main"><div class="overview-grid">
+    <div class="overview-item"><div class="label">Competitor</div><div class="value">Simpro</div></div>
+  
+
+<!-- FIELD_INTEL_START:Simpro updated:2026-05-15 -->
+<div class="section-title">🎙️ Field Intelligence — What Prospects Say (11 raw mentions)</div>
+<div style="margin-bottom:8px"><div style="font-size:11px;color:#ff4466;text-transform:uppercase;letter-spacing:1px;margin-bottom:8px">Key Pain Points</div><div style="background:#1A060C;border-left:3px solid #F43F5E;padding:10px 12px;border-radius:4px;margin-bottom:8px">
+          <div style="font-size:13px;color:#e2e8f0">Record locking prevents two users from viewing or editing the same job simultaneously, forcing manual requests to unlock before scheduling changes can be made.</div>
+        </div><div style="background:#1A060C;border-left:3px solid #F43F5E;padding:10px 12px;border-radius:4px;margin-bottom:8px">
+          <div style="font-size:13px;color:#e2e8f0">No project management capabilities and a limited mobile app that only handles service jobs, forcing teams to rely on external tools like Trello and creating copy-paste inefficiencies.</div>
+        </div><div style="background:#1A060C;border-left:3px solid #F43F5E;padding:10px 12px;border-radius:4px;margin-bottom:8px">
+          <div style="font-size:13px;color:#e2e8f0">Every added feature costs extra money—field payment collection alone runs hundreds more per month—frustrating prospects who want all-inclusive pricing.</div>
+        </div></div>
+<div><div style="font-size:11px;color:#818CF8;text-transform:uppercase;letter-spacing:1px;margin-bottom:8px">Genuine Strengths</div><div style="background:#0D1A2E;border-left:3px solid #6366F1;padding:10px 12px;border-radius:4px;margin-bottom:8px">
+          <div style="font-size:13px;color:#e2e8f0">Handles annualized payments and periodic quarterly inspections well, understanding the recurring billing needs of the security industry.</div>
+        </div></div>
+<!-- FIELD_INTEL_END:Simpro -->
+  
+    <div class="overview-item"><div class="label">Founded</div><div class="value">2002 (Australia)</div></div>
+    <div class="overview-item"><div class="label">HQ</div><div class="value">Brisbane, AU / Denver, CO</div></div>
+    <div class="overview-item"><div class="label">Target Market</div><div class="value">Mid-market trade contractors (20–200 techs)</div></div>
+    <div class="overview-item"><div class="label">Pricing</div><div class="value">Quote-based; ~$24–$169+/user/mo office; ~$39/mo field user</div></div>
+    <div class="overview-item"><div class="label">Key Verticals</div><div class="value">Electrical, plumbing, HVAC, security, fire</div></div>
+  </div>
+  <p style="color:var(--muted); font-size:13px; margin-bottom:20px;">Australian-built field service management platform for complex commercial trade contractors. Strong in job costing, progress billing, and multi-stage project management. Growing in North America. Costs compound fast with per-user licensing for office + field users + add-on modules.</p>
+
+  <div class="section-title">Strengths vs. Weaknesses</div>
+  <div class="sw-table">
+    <div class="sw-col strengths">
+      <h4>Strengths</h4>
+      <ul>
+        <li>Deep job costing and progress billing — purpose-built for complex commercial projects</li>
+        <li>Strong supplier catalog integration for estimating</li>
+        <li>Multi-stage project tracking with variation orders</li>
+        <li>Solid scheduling and dispatch for large field teams</li>
+        <li>Mature platform with strong Australian market track record</li>
+        <li>Dedicated implementation and training support</li>
+      </ul>
+    </div>
+    <div class="sw-col weaknesses">
+      <h4>Weaknesses</h4>
+      <ul>
+        <li>No RMR/recurring billing engine — not built for subscription or monitoring revenue</li>
+        <li>No integrated payment processing — requires third-party</li>
+        <li>Steep learning curve — complex onboarding, requires a dedicated admin</li>
+        <li>Per-user pricing escalates fast (office + field users + modules = sticker shock)</li>
+        <li>Pricing not published — must contact sales for every quote</li>
+        <li>Designed for commercial trades, not security/AV integrators with RMR</li>
+        <li>Reports are complex to configure; limited out-of-the-box dashboards</li>
+        <li>Over-built for smaller integrators — most features go unused</li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="section-title">Capability Comparison</div>
+  <table class="cap-table">
+    <thead><tr><th>Capability</th><th>Rev.io PSA</th><th>Simpro</th></tr></thead>
+    <tbody>
+      <tr><td>RMR / recurring billing automation</td><td class="win-cell">✅ Purpose-built — auto-generates recurring invoices</td><td class="lose-cell">❌ No RMR engine — built for project billing, not subscriptions</td></tr>
+      <tr><td>Integrated payment processing</td><td class="win-cell">✅ Rev.io Payments (TRX Services) built-in</td><td class="lose-cell">❌ Requires third-party payment integration</td></tr>
+      <tr><td>Job costing &amp; project billing</td><td class="win-cell">✅ Full project billing</td><td class="win-cell">✅ Best-in-class for complex commercial projects</td></tr>
+      <tr><td>Scheduling &amp; dispatch</td><td class="win-cell">✅ Full featured</td><td class="win-cell">✅ Strong for large field teams</td></tr>
+      <tr><td>Monitoring/RMR business model support</td><td class="win-cell">✅ Native — handles alarm dealer billing, RMR, and monitoring</td><td class="lose-cell">❌ Not designed for recurring monitoring revenue</td></tr>
+      <tr><td>Ease of implementation</td><td class="win-cell">✅ Modern platform, faster deployment</td><td class="lose-cell">❌ Complex — requires dedicated admin, long onboarding</td></tr>
+      <tr><td>Transparent pricing</td><td class="win-cell">✅ Clear pricing model</td><td class="lose-cell">❌ Quote-only — pricing hidden until sales engagement</td></tr>
+      <tr><td>Inventory &amp; supply chain</td><td class="win-cell">✅ Included with PO management</td><td class="win-cell">✅ Strong supplier catalog integration</td></tr>
+    </tbody>
+  </table>
+
+  <div class="section-title">Discovery Questions (Landmines)</div>
+  <ol class="questions-list">
+    <li>"How do you bill for your monitoring or RMR revenue — is that handled in Simpro or a separate system?"</li>
+    <li>"What does your recurring invoice process look like for alarm monitoring agreements? How automated is it?"</li>
+    <li>"How many users are paying for Simpro licenses — office staff, field techs, and any add-ons?"</li>
+    <li>"When you need to collect payment from a customer, how many steps does that take?"</li>
+    <li>"If a project runs long and scope changes, how do you manage billing adjustments and get paid faster?"</li>
+  </ol>
+
+  <div class="section-title">Why We Win / Why We Lose</div>
+  <div class="win-lose-grid">
+    <div class="win-col"><h4>🟢 Why We Win</h4><ul>
+      <li>Integrators with alarm monitoring / RMR need billing Simpro can't do</li>
+      <li>Integrated payments eliminate third-party processing cost and complexity</li>
+      <li>Simpler implementation — less admin overhead to run the platform</li>
+      <li>Better total cost — no per-field-user licensing stacking up</li>
+      <li>Built for the security/AV integrator business model, not just trade contractors</li>
+    </ul></div>
+    <div class="lose-col"><h4>🔴 Why We Lose</h4><ul>
+      <li>Pure commercial trade contractors (electrical, plumbing) find Simpro's project billing superior</li>
+      <li>Simpro's job costing depth is hard to match for large multi-stage commercial builds</li>
+      <li>Strong Australian market presence creates brand familiarity internationally</li>
+    </ul></div>
+  </div>
+
+  <div class="section-title">Objection Handling</div>
+  <div class="objection"><div class="q">Simpro handles our project billing really well</div><div class="a">For pure commercial project work, Simpro is solid. But as soon as you add alarm monitoring, RMR, or recurring service agreements, you're either building workarounds or managing a second system. Rev.io handles both — project billing and recurring revenue — in one platform.</div></div>
+  <div class="objection"><div class="q">We've already invested in Simpro implementation</div><div class="a">We understand the switching cost feels high. But what's the cost of managing two systems for the next 5 years? How much time is your team spending on manual recurring invoicing that Rev.io would automate?</div></div>
+  <div class="objection"><div class="q">Simpro is industry standard for trade contractors</div><div class="a">For electrical and plumbing contractors doing pure commercial builds, yes. But security and AV integrators have a fundamentally different revenue model with monitoring and RMR. Rev.io is purpose-built for that.</div></div>
+</div>
+
+<!-- ===== SEDONA ===== -->
+</div><div class="section-sidebar"><div class="sb-header">✅ 2 Displaced Customers</div><ul><li><span class="chk">✓</span> Atlantic Companies</li><li><span class="chk">✓</span> Highline Integrated Security</li></ul></div></div>
+<div id="sedona" class="section">
+<div class="section-grid"><div class="section-grid-main"><div class="overview-grid">
+    <div class="overview-item"><div class="label">Competitor</div><div class="value">SedonaOffice (Bold Group)</div></div>
+  
+
+<!-- FIELD_INTEL_START:Sedona updated:2026-05-15 -->
+<div class="section-title">🎙️ Field Intelligence — What Prospects Say (15 raw mentions)</div>
+<div style="margin-bottom:8px"><div style="font-size:11px;color:#ff4466;text-transform:uppercase;letter-spacing:1px;margin-bottom:8px">Key Pain Points</div><div style="background:#1A060C;border-left:3px solid #F43F5E;padding:10px 12px;border-radius:4px;margin-bottom:8px">
+          <div style="font-size:13px;color:#e2e8f0">Sedona lacks meaningful automation capabilities—prospects are forced to build manual workarounds for task workflows, scheduling notifications, and two-way customer communication.</div>
+        </div><div style="background:#1A060C;border-left:3px solid #F43F5E;padding:10px 12px;border-radius:4px;margin-bottom:8px">
+          <div style="font-size:13px;color:#e2e8f0">Time tracking and pricing integrations are broken—billing can't isolate non-billable time, and there's no real-time pricing sync with quoting tools, forcing manual verification on every product.</div>
+        </div><div style="background:#1A060C;border-left:3px solid #F43F5E;padding:10px 12px;border-radius:4px;margin-bottom:8px">
+          <div style="font-size:13px;color:#e2e8f0">Subscription fees keep increasing while prospects see no meaningful R&D or platform innovation, making them question the value they're getting.</div>
+        </div></div>
+<div><div style="font-size:11px;color:#818CF8;text-transform:uppercase;letter-spacing:1px;margin-bottom:8px">Genuine Strengths</div><div style="background:#0D1A2E;border-left:3px solid #6366F1;padding:10px 12px;border-radius:4px;margin-bottom:8px">
+          <div style="font-size:13px;color:#e2e8f0">Sedona handles accounting natively on top of field service operations, which is a genuine differentiator for companies wanting an all-in-one system.</div>
+        </div><div style="background:#0D1A2E;border-left:3px solid #6366F1;padding:10px 12px;border-radius:4px;margin-bottom:8px">
+          <div style="font-size:13px;color:#e2e8f0">Processes recurring revenue and billing effectively—prospects with 70% recurring services run it all through Sedona.</div>
+        </div></div>
+<!-- FIELD_INTEL_END:Sedona -->
+  
+    <div class="overview-item"><div class="label">Parent Company</div><div class="value">Bold Group / EverCommerce</div></div>
+    <div class="overview-item"><div class="label">HQ</div><div class="value">Colorado Springs, CO</div></div>
+    <div class="overview-item"><div class="label">Target Market</div><div class="value">Security alarm dealers and integrators</div></div>
+    <div class="overview-item"><div class="label">Pricing</div><div class="value">Quote-based; not publicly listed</div></div>
+    <div class="overview-item"><div class="label">Key Products</div><div class="value">SedonaOffice, AlarmBiller, Managely</div></div>
+  </div>
+  <p style="color:var(--muted); font-size:13px; margin-bottom:20px;">The legacy enterprise accounting and business management platform specifically built for security companies. Owned by Bold Group (EverCommerce). Positioned as the only enterprise-level solution for the alarm industry — but users consistently describe it as the "best of the worst" and note stagnating innovation under corporate ownership.</p>
+
+  <div class="section-title">Strengths vs. Weaknesses</div>
+  <div class="sw-table">
+    <div class="sw-col strengths">
+      <h4>Strengths</h4>
+      <ul>
+        <li>Purpose-built for security alarm dealers — understands RMR, monitoring, and alarm industry workflows</li>
+        <li>Enterprise-level accounting with alarm industry-specific billing logic</li>
+        <li>Established track record — widely deployed across the security industry</li>
+        <li>Integrates with central station monitoring software</li>
+        <li>Strong RMR tracking and dealer management features</li>
+      </ul>
+    </div>
+    <div class="sw-col weaknesses">
+      <h4>Weaknesses</h4>
+      <ul>
+        <li><strong>Stagnating innovation</strong> — Bold Group owns SedonaOffice, AlarmBiller, AND Managely; three platforms, none being actively developed</li>
+        <li>Reporting is terrible — no customization, no refresh, must fully re-run every report</li>
+        <li>No payroll integration that works reliably</li>
+        <li>No GPS integration that works reliably</li>
+        <li>STAGES integration "still does not work" per user reviews</li>
+        <li>Support takes days or weeks to respond — and always a different person</li>
+        <li>UI feels like legacy software — not intuitive compared to modern tools</li>
+        <li>Users call it "best of the worst" — chosen because nothing better existed, not because it's good</li>
+        <li>EverCommerce ownership means focus is financial extraction, not product investment</li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="section-title">Capability Comparison</div>
+  <table class="cap-table">
+    <thead><tr><th>Capability</th><th>Rev.io PSA</th><th>SedonaOffice</th></tr></thead>
+    <tbody>
+      <tr><td>RMR / recurring billing automation</td><td class="win-cell">✅ Native — modern billing engine</td><td class="win-cell">✅ Core strength — alarm industry billing</td></tr>
+      <tr><td>Integrated payment processing</td><td class="win-cell">✅ Rev.io Payments (TRX Services) built-in</td><td class="warn-cell">⚠️ Limited — Forte payment integration, not seamless</td></tr>
+      <tr><td>Reporting &amp; dashboards</td><td class="win-cell">✅ Modern reporting and dashboards</td><td class="lose-cell">❌ Terrible — no customization, no refresh, must re-run every report</td></tr>
+      <tr><td>Support quality</td><td class="win-cell">✅ Dedicated support</td><td class="lose-cell">❌ Days/weeks response time, always a different person</td></tr>
+      <tr><td>Modern UI/UX</td><td class="win-cell">✅ Modern platform</td><td class="lose-cell">❌ Legacy UI — steep learning curve</td></tr>
+      <tr><td>GPS integration</td><td class="win-cell">✅ Integrates with leading GPS tools</td><td class="lose-cell">❌ No GPS integration that works reliably</td></tr>
+      <tr><td>Payroll integration</td><td class="win-cell">✅ Integrates cleanly</td><td class="lose-cell">❌ No reliable payroll integration</td></tr>
+      <tr><td>Product investment / roadmap</td><td class="win-cell">✅ Actively developed</td><td class="lose-cell">❌ Stagnating — Bold Group splitting focus across 3 platforms</td></tr>
+    </tbody>
+  </table>
+
+  <div class="section-title">🔥 Bold Group / EverCommerce Positioning</div>
+  <div style="background:#1A060C;border-left:3px solid #F43F5E;padding:14px 16px;border-radius:6px;margin-bottom:20px;">
+    <div style="font-size:13px;color:#e2e8f0;line-height:1.6">Bold Group owns <strong style="color:#ffcc00;">SedonaOffice, AlarmBiller, AND Managely</strong> — three separate platforms, all stagnating. If a prospect is on any Bold Group product, the pitch is simple: <em>"You're on a platform that isn't being invested in, by a company that clearly can't pick one product to build. Rev.io is the opposite — one platform, actively developed, with 400+ integrator customers telling us what to build next."</em></div>
+  </div>
+
+  <div class="section-title">Discovery Questions (Landmines)</div>
+  <ol class="questions-list">
+    <li>"When did SedonaOffice last release a significant new feature that changed how you work?"</li>
+    <li>"How long does it take to get a support ticket resolved? Do you get the same person each time?"</li>
+    <li>"How do you run reports today — and how long does it take to get the data you actually need?"</li>
+    <li>"Are you using GPS tracking? How well does that integrate with Sedona today?"</li>
+    <li>"Bold Group also owns AlarmBiller and Managely — do you ever wonder which one they're actually investing in?"</li>
+    <li>"What's your payment collection process? How automated is it from invoice to collected cash?"</li>
+  </ol>
+
+  <div class="section-title">Why We Win / Why We Lose</div>
+  <div class="win-lose-grid">
+    <div class="win-col"><h4>🟢 Why We Win</h4><ul>
+      <li>Frustration with stagnant product and poor support is the #1 trigger — Sedona users actively looking to leave</li>
+      <li>Modern reporting vs. Sedona's terrible, inflexible reports</li>
+      <li>Integrated payments vs. Sedona's clunky third-party Forte integration</li>
+      <li>Single actively-developed platform vs. Bold Group's three-platform mess</li>
+      <li>GPS and payroll integrations that actually work</li>
+    </ul></div>
+    <div class="lose-col"><h4>🔴 Why We Lose</h4><ul>
+      <li>Deep alarm-industry-specific workflows that Sedona has 20+ years of building</li>
+      <li>Central station monitoring integrations Sedona has built over time</li>
+      <li>"Nobody gets fired for buying Sedona" in the alarm dealer world</li>
+      <li>Large accounts with deeply embedded data — migration feels daunting</li>
+    </ul></div>
+  </div>
+
+  <div class="section-title">Objection Handling</div>
+  <div class="objection"><div class="q">Sedona is built specifically for the alarm industry</div><div class="a">"It was — 20 years ago. Bold Group now owns SedonaOffice, AlarmBiller, AND Managely. They can't pick one to invest in. That's why your product hasn't meaningfully improved in years. Rev.io is purpose-built for integrators too, and we're actively developing with 400+ customers telling us what to build."</div></div>
+  <div class="objection"><div class="q">Switching would be too disruptive</div><div class="a">"We hear that. But staying on Sedona has a cost too — in support lag, in bad reporting, in manual workarounds. How much time is your team spending working around Sedona's limitations every month?"</div></div>
+  <div class="objection"><div class="q">We've been on Sedona for 15 years</div><div class="a">"Loyalty is understandable. But is Sedona as good today as it was 5 years ago — or worse? EverCommerce buys products for financial return, not to invest in them. Your 15-year relationship is with a product that's being milked, not grown."</div></div>
+</div>
+
+<!-- ===== HOUSECALL PRO ===== -->
+</div><div class="section-sidebar"><div class="sb-header">✅ 1 Displaced Customer</div><ul><li><span class="chk">✓</span> DFW Security</li></ul></div></div>
+<div id="housecall-pro" class="section">
+<div class="section-grid"><div class="section-grid-main"><div class="overview-grid">
+    <div class="overview-item"><div class="label">Competitor</div><div class="value">Housecall Pro</div></div>
+  
+
+<!-- FIELD_INTEL_START:Housecall Pro updated:2026-05-15 -->
+<div class="section-title">🎙️ Field Intelligence — What Prospects Say (23 raw mentions)</div>
+<div style="margin-bottom:8px"><div style="font-size:11px;color:#ff4466;text-transform:uppercase;letter-spacing:1px;margin-bottom:8px">Key Pain Points</div><div style="background:#1A060C;border-left:3px solid #F43F5E;padding:10px 12px;border-radius:4px;margin-bottom:8px">
+          <div style="font-size:13px;color:#e2e8f0">Lacks emergency/priority management—no color coding, one-click priority changes, or automatic technician notifications for urgent jobs.</div>
+        </div><div style="background:#1A060C;border-left:3px solid #F43F5E;padding:10px 12px;border-radius:4px;margin-bottom:8px">
+          <div style="font-size:13px;color:#e2e8f0">Cannot track multi-stage projects or job profitability—prospects describe tracking revenue as 'just guessing' and dashboards get messy with complex jobs.</div>
+        </div><div style="background:#1A060C;border-left:3px solid #F43F5E;padding:10px 12px;border-radius:4px;margin-bottom:8px">
+          <div style="font-size:13px;color:#e2e8f0">Only integrates with QuickBooks Online, not Desktop, and nickel-and-dimes for features like recurring billing, service plans, and project management that competitors include.</div>
+        </div></div>
+<div><div style="font-size:11px;color:#818CF8;text-transform:uppercase;letter-spacing:1px;margin-bottom:8px">Genuine Strengths</div><div style="background:#0D1A2E;border-left:3px solid #6366F1;padding:10px 12px;border-radius:4px;margin-bottom:8px">
+          <div style="font-size:13px;color:#e2e8f0">Exceptional value at $189/month for 5 users—prospects call it a 'smoking deal that nobody can touch' for basic operations.</div>
+        </div><div style="background:#0D1A2E;border-left:3px solid #6366F1;padding:10px 12px;border-radius:4px;margin-bottom:8px">
+          <div style="font-size:13px;color:#e2e8f0">Simple and reliable for core functions like quoting, scheduling, dispatch, mobile payments, and QuickBooks Online sync—long-term users report no major issues.</div>
+        </div></div>
+<!-- FIELD_INTEL_END:Housecall Pro -->
+  
+    <div class="overview-item"><div class="label">Founded</div><div class="value">2013</div></div>
+    <div class="overview-item"><div class="label">HQ</div><div class="value">San Diego, CA</div></div>
+    <div class="overview-item"><div class="label">Target Market</div><div class="value">Small home service businesses (1–20 techs)</div></div>
+    <div class="overview-item"><div class="label">Pricing</div><div class="value">Basic $59/mo · Essentials $149/mo · Max $299/mo</div></div>
+    <div class="overview-item"><div class="label">Key Verticals</div><div class="value">HVAC, plumbing, electrical, cleaning, landscaping</div></div>
+  </div>
+  <p style="color:var(--muted); font-size:13px; margin-bottom:20px;">Consumer-grade home service software for small trades businesses. 200K+ users across 50+ trades. Strong scheduling, dispatch, invoicing, and consumer marketing features. Built for simple, high-volume residential service calls — not complex recurring billing, RMR, or multi-service integrators. Backed by PE firm Vista Equity Partners.</p>
+
+  <div class="section-title">Strengths vs. Weaknesses</div>
+  <div class="sw-table">
+    <div class="sw-col strengths">
+      <h4>Strengths</h4>
+      <ul>
+        <li>Very easy to use — fast time to value for small service teams</li>
+        <li>Strong consumer-facing features: online booking, review management, marketing campaigns</li>
+        <li>Built-in payment processing (Stripe-powered)</li>
+        <li>QuickBooks integration on mid-tier plans</li>
+        <li>200K+ users — proven at scale for home services</li>
+        <li>GPS vehicle tracking add-on available</li>
+        <li>Recurring service plan add-on available</li>
+      </ul>
+    </div>
+    <div class="sw-col weaknesses">
+      <h4>Weaknesses</h4>
+      <ul>
+        <li>No RMR/alarm monitoring billing — not built for recurring subscription revenue</li>
+        <li>Add-on fatigue — many core features (service plans, proposals, GPS) cost extra</li>
+        <li>Designed for residential home service, not commercial integrators or alarm dealers</li>
+        <li>No project management for complex multi-phase jobs</li>
+        <li>Pricing escalates sharply with team size — not cost-effective at 15+ techs</li>
+        <li>Limited reporting — Advanced reporting only on Max plan ($299/mo)</li>
+        <li>Not industry-specific — no alarm, AV, or security integrator workflow support</li>
+        <li>Consumer-focused features (review management, marketing) irrelevant to B2B integrators</li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="section-title">Capability Comparison</div>
+  <table class="cap-table">
+    <thead><tr><th>Capability</th><th>Rev.io PSA</th><th>Housecall Pro</th></tr></thead>
+    <tbody>
+      <tr><td>RMR / recurring alarm billing</td><td class="win-cell">✅ Native recurring billing engine</td><td class="lose-cell">❌ No RMR capability — residential service only</td></tr>
+      <tr><td>Integrated payment processing</td><td class="win-cell">✅ Rev.io Payments (TRX Services)</td><td class="warn-cell">⚠️ Stripe-powered — not as integrated or configurable</td></tr>
+      <tr><td>Project management</td><td class="win-cell">✅ Full multi-phase project tracking</td><td class="lose-cell">❌ No project management — job-focused only</td></tr>
+      <tr><td>Security/AV integrator workflows</td><td class="win-cell">✅ Purpose-built for integrators</td><td class="lose-cell">❌ Built for residential trades (HVAC, plumbing, cleaning)</td></tr>
+      <tr><td>Scheduling &amp; dispatch</td><td class="win-cell">✅ Full featured</td><td class="win-cell">✅ Strong for small teams</td></tr>
+      <tr><td>Scalability for growing teams</td><td class="win-cell">✅ Scales with complexity</td><td class="lose-cell">❌ Cost escalates sharply past 10–15 techs</td></tr>
+      <tr><td>Reporting &amp; analytics</td><td class="win-cell">✅ Full reporting included</td><td class="lose-cell">❌ Advanced reporting only on $299/mo Max plan</td></tr>
+      <tr><td>Consumer marketing features</td><td class="warn-cell">⚠️ Not a focus</td><td class="win-cell">✅ Strong — campaigns, review management, online booking</td></tr>
+    </tbody>
+  </table>
+
+  <div class="section-title">Discovery Questions (Landmines)</div>
+  <ol class="questions-list">
+    <li>"How do you bill for your monitoring or recurring service agreements in Housecall Pro?"</li>
+    <li>"How many add-ons are you paying for on top of your base plan — service plans, GPS, proposals?"</li>
+    <li>"When you do a multi-phase installation project, how do you track progress billing in Housecall Pro?"</li>
+    <li>"As your team has grown, how has your Housecall Pro bill changed?"</li>
+    <li>"Your business serves commercial clients — does Housecall Pro support the complexity of those relationships?"</li>
+  </ol>
+
+  <div class="section-title">Why We Win / Why We Lose</div>
+  <div class="win-lose-grid">
+    <div class="win-col"><h4>🟢 Why We Win</h4><ul>
+      <li>Any integrator with RMR/monitoring revenue needs billing Housecall Pro simply doesn't have</li>
+      <li>Commercial integrators outgrow Housecall Pro's residential-focused feature set</li>
+      <li>No project management in HCP — Rev.io handles complex installations</li>
+      <li>Better total cost once add-ons stack up on HCP</li>
+      <li>Rev.io is built for the integrator business model, not home services</li>
+    </ul></div>
+    <div class="lose-col"><h4>🔴 Why We Lose</h4><ul>
+      <li>Housecall Pro is extremely easy to use — switching feels risky for small teams</li>
+      <li>Strong consumer marketing features have no Rev.io equivalent</li>
+      <li>200K user base means lots of peer referrals and community familiarity</li>
+      <li>Very small integrators doing only residential installs may not need Rev.io's power</li>
+    </ul></div>
+  </div>
+
+  <div class="section-title">Objection Handling</div>
+  <div class="objection"><div class="q">Housecall Pro is simple and our team loves it</div><div class="a">"Simple is great for residential HVAC dispatch. But you're running an integration business with monitoring agreements, RMR, and complex multi-phase installs. Housecall Pro wasn't built for that — you're likely managing your recurring billing in a spreadsheet or separate system right now."</div></div>
+  <div class="objection"><div class="q">Housecall Pro is cheaper</div><div class="a">"Take a look at your actual bill with all your add-ons — service plans, proposals, GPS. Then add the cost of whatever you're using for RMR billing outside HCP. Rev.io often comes out ahead once you count everything."</div></div>
+  <div class="objection"><div class="q">We don't need all the features Rev.io has</div><div class="a">"You might not today. But your monitoring base is growing. At some point, manual recurring billing is going to break. Rev.io lets you run your full business — installs, service, and monitoring — without cobbling together multiple tools."</div></div>
+</div>
+
+<!-- ===== JOBBER ===== -->
+</div><div class="section-sidebar"><div class="sb-header">✅ 4 Displaced Customers</div><ul><li><span class="chk">✓</span> Acoustical Design</li><li><span class="chk">✓</span> Leading Edge Security</li><li><span class="chk">✓</span> TREIN Management</li><li><span class="chk">✓</span> Total Temp</li></ul></div></div>
+<div id="jobber" class="section">
+<div class="section-grid"><div class="section-grid-main"><div class="overview-grid">
+    <div class="overview-item"><div class="label">Competitor</div><div class="value">Jobber</div></div>
+  
+
+<!-- FIELD_INTEL_START:Jobber updated:2026-05-15 -->
+<div class="section-title">🎙️ Field Intelligence — What Prospects Say (17 raw mentions)</div>
+<div style="margin-bottom:8px"><div style="font-size:11px;color:#ff4466;text-transform:uppercase;letter-spacing:1px;margin-bottom:8px">Key Pain Points</div><div style="background:#1A060C;border-left:3px solid #F43F5E;padding:10px 12px;border-radius:4px;margin-bottom:8px">
+          <div style="font-size:13px;color:#e2e8f0">Jobber lacks meaningful integrations, forcing manual processes across QuickBooks, email, and other systems with no unified view of customer data or job history.</div>
+        </div><div style="background:#1A060C;border-left:3px solid #F43F5E;padding:10px 12px;border-radius:4px;margin-bottom:8px">
+          <div style="font-size:13px;color:#e2e8f0">Jobber has no inventory management functionality, forcing businesses to use multiple apps that technicians won't adopt consistently.</div>
+        </div><div style="background:#1A060C;border-left:3px solid #F43F5E;padding:10px 12px;border-radius:4px;margin-bottom:8px">
+          <div style="font-size:13px;color:#e2e8f0">Jobber doesn't understand recurring revenue billing models, making it a poor fit for security and other RMR-based businesses despite being designed for landscaping/plumbing dispatch work.</div>
+        </div></div>
+<div><div style="font-size:11px;color:#818CF8;text-transform:uppercase;letter-spacing:1px;margin-bottom:8px">Genuine Strengths</div><div style="background:#0D1A2E;border-left:3px solid #6366F1;padding:10px 12px;border-radius:4px;margin-bottom:8px">
+          <div style="font-size:13px;color:#e2e8f0">Jobber's quoting interface is praised as fast, clean, and intuitive with easy good-better-best options and simple accept/deny for customers.</div>
+        </div></div>
+<!-- FIELD_INTEL_END:Jobber -->
+  
+    <div class="overview-item"><div class="label">Founded</div><div class="value">2011 (Edmonton, Canada)</div></div>
+    <div class="overview-item"><div class="label">HQ</div><div class="value">Edmonton, AB / Austin, TX</div></div>
+    <div class="overview-item"><div class="label">Target Market</div><div class="value">Small home/trade service businesses (1–30 techs)</div></div>
+    <div class="overview-item"><div class="label">Pricing</div><div class="value">Core $29/mo · Connect $99/mo · Grow $149/mo · Scale (custom); +$29/user/mo overage</div></div>
+    <div class="overview-item"><div class="label">Key Verticals</div><div class="value">Landscaping, cleaning, HVAC, plumbing, pest control</div></div>
+  </div>
+  <p style="color:var(--muted); font-size:13px; margin-bottom:20px;">Canadian-founded small business field service software. Very popular for home service and trade businesses under 30 technicians. Known for ease of use, clean UI, and strong QuickBooks + Stripe integrations. The go-to "first software" for service companies coming off spreadsheets. Not designed for commercial integrators, RMR, or complex recurring billing.</p>
+
+  <div class="section-title">Strengths vs. Weaknesses</div>
+  <div class="sw-table">
+    <div class="sw-col strengths">
+      <h4>Strengths</h4>
+      <ul>
+        <li>Extremely easy to use — fastest onboarding in the category</li>
+        <li>Clean, modern UI — strong mobile app for field techs</li>
+        <li>Transparent, affordable pricing for small teams</li>
+        <li>Strong QuickBooks integration (two-way sync)</li>
+        <li>Built-in client hub — customers can approve quotes and pay online</li>
+        <li>No contracts — month-to-month flexibility</li>
+        <li>7,000+ app integrations via Zapier</li>
+        <li>Free trial on all plans</li>
+      </ul>
+    </div>
+    <div class="sw-col weaknesses">
+      <h4>Weaknesses</h4>
+      <ul>
+        <li>No RMR or recurring alarm/monitoring billing — zero support for subscription revenue</li>
+        <li>No integrated payment processing — relies on Stripe, not native</li>
+        <li>Per-user pricing escalates fast beyond plan limits ($29/user/mo overage)</li>
+        <li>Multi-day / multi-phase project tracking is weak — job forms reset every visit</li>
+        <li>No inventory or parts management</li>
+        <li>Route optimization is basic — no AI or skill-based dispatching</li>
+        <li>Reporting is limited — no advanced dashboards or financial analytics</li>
+        <li>Not built for commercial or B2B integrator workflows</li>
+        <li>Outgrown quickly — teams past 20 techs routinely move off</li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="section-title">Capability Comparison</div>
+  <table class="cap-table">
+    <thead><tr><th>Capability</th><th>Rev.io PSA</th><th>Jobber</th></tr></thead>
+    <tbody>
+      <tr><td>RMR / recurring monitoring billing</td><td class="win-cell">✅ Native recurring billing engine</td><td class="lose-cell">❌ No RMR support — residential service only</td></tr>
+      <tr><td>Integrated payment processing</td><td class="win-cell">✅ Rev.io Payments (TRX Services)</td><td class="warn-cell">⚠️ Stripe integration — not native or configurable</td></tr>
+      <tr><td>Multi-phase project tracking</td><td class="win-cell">✅ Full project management</td><td class="lose-cell">❌ Weak — job forms reset per visit, no progress billing</td></tr>
+      <tr><td>Inventory / parts management</td><td class="win-cell">✅ Full inventory with PO tracking</td><td class="lose-cell">❌ No inventory management</td></tr>
+      <tr><td>Scheduling &amp; dispatch</td><td class="win-cell">✅ Full featured</td><td class="win-cell">✅ Clean and easy for small teams</td></tr>
+      <tr><td>Route optimization</td><td class="win-cell">✅ Included</td><td class="lose-cell">❌ Basic — no AI or skill-based routing</td></tr>
+      <tr><td>Scalability</td><td class="win-cell">✅ Built to scale with business complexity</td><td class="lose-cell">❌ Per-user costs balloon; teams outgrow it at 20+ techs</td></tr>
+      <tr><td>Commercial/B2B workflow support</td><td class="win-cell">✅ Purpose-built for integrators</td><td class="lose-cell">❌ Designed for residential home service</td></tr>
+    </tbody>
+  </table>
+
+  <div class="section-title">Discovery Questions (Landmines)</div>
+  <ol class="questions-list">
+    <li>"How do you handle billing for your monitoring agreements or recurring service contracts in Jobber?"</li>
+    <li>"As your team has grown past 10 techs, how has your Jobber cost changed?"</li>
+    <li>"When you have a multi-day installation, how do you track job progress and bill in stages in Jobber?"</li>
+    <li>"How do you manage parts and inventory for your installs? Does Jobber handle that?"</li>
+    <li>"If you wanted to add a second service line — say, managed IT or a monitoring tier — could Jobber bill for that automatically?"</li>
+  </ol>
+
+  <div class="section-title">Why We Win / Why We Lose</div>
+  <div class="win-lose-grid">
+    <div class="win-col"><h4>🟢 Why We Win</h4><ul>
+      <li>Any integrator with RMR/monitoring revenue is a layup — Jobber has nothing for this</li>
+      <li>Integrators doing complex commercial installs outgrow Jobber's project tracking</li>
+      <li>Inventory management for parts and equipment — Jobber has zero</li>
+      <li>Better total cost once per-user overages and missing features stack up</li>
+      <li>Rev.io handles the full integrator lifecycle — install, service, monitor, bill, collect</li>
+    </ul></div>
+    <div class="lose-col"><h4>🔴 Why We Lose</h4><ul>
+      <li>Jobber is the easiest software in the market — switching feels painful</li>
+      <li>Low price point is very hard to beat for very small teams</li>
+      <li>Month-to-month, no-contract flexibility is very appealing</li>
+      <li>Strong peer community and referral network among small trades businesses</li>
+    </ul></div>
+  </div>
+
+  <div class="section-title">Objection Handling</div>
+  <div class="objection"><div class="q">Jobber is easy and our team already knows it</div><div class="a">"Jobber is a great starting point — we hear that all the time. But you've grown past what Jobber was built for. Your monitoring agreements, your inventory, your multi-phase installs — none of that fits cleanly in Jobber. You're probably doing it in spreadsheets alongside Jobber right now."</div></div>
+  <div class="objection"><div class="q">Jobber is much cheaper</div><div class="a">"At face value, yes. But count up your actual users — once you hit plan limits it's $29/user/mo on top. Then add whatever you're using for RMR billing, inventory tracking, and project management outside Jobber. Rev.io consolidates all of that."</div></div>
+  <div class="objection"><div class="q">We don't want to lose the simplicity</div><div class="a">"Simplicity is a feature — we get it. Rev.io is built to be intuitive, but it won't hold you back the way Jobber does. The question isn't whether Jobber is easy; it's whether it can run your business as it actually is today — not as it was when you were 5 techs doing residential calls."</div></div>
+</div>
+</main>
+
+<footer>
+  Rev.io PSA — Battle Cards &nbsp;|&nbsp; Internal Use Only &nbsp;|&nbsp; Updated March 2026
+</footer>
+
+<script>
+function showTab(id) {
+  document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
+  document.querySelectorAll('.nav-tab').forEach(t => t.classList.remove('active'));
+  var section = document.getElementById(id);
+  if (section) section.classList.add('active');
+  // Mark the clicked tab active
+  var tab = document.querySelector('.nav-tab[onclick*="' + id + '"]');
+  if (tab) tab.classList.add('active');
+}
+
+function filterSegment(seg) {
+  // Update segment button styles
+  document.querySelectorAll('.seg-btn').forEach(b => b.classList.remove('active'));
+  var btn = document.getElementById('seg-' + seg);
+  if (btn) btn.classList.add('active');
+
+  // Show/hide tabs based on segment
+  var tabs = document.querySelectorAll('.nav-tab[data-segment]');
+  tabs.forEach(function(t) {
+    var ts = t.getAttribute('data-segment');
+    if (seg === 'all' || ts === seg || ts === 'both') {
+      t.classList.remove('hidden');
+    } else {
+      t.classList.add('hidden');
+    }
+  });
+
+  // Switch to first visible tab in the new segment
+  var firstVisible = document.querySelector('.nav-tab[data-segment="' + seg + '"]:not(.hidden)');
+  if (!firstVisible) firstVisible = document.querySelector('.nav-tab:not(.hidden)');
+  if (firstVisible) {
+    var onclickAttr = firstVisible.getAttribute('onclick');
+    var match = onclickAttr && onclickAttr.match(/showTab\(['"]([^'"]+)['"]\)/);
+    if (match) showTab(match[1]);
+    // Tab styling handled by showTab
+  }
+}
+
+document.addEventListener('DOMContentLoaded', function() {
+  filterSegment('msp');
+});
+</script>
+
+<!-- bust:1775595820.6929584 -->
+</body>
+</html>
+<!-- v1775594028 -->
+</div><div class="section-sidebar"><div class="sb-header">✅ 5 Displaced Customers</div><ul><li><span class="chk">✓</span> Cinemascape</li><li><span class="chk">✓</span> Guardian Advanced Solutions</li><li><span class="chk">✓</span> Hawkeye Protection</li><li><span class="chk">✓</span> Kellsec Security Solutions</li><li><span class="chk">✓</span> Shinntek Solutions</li></ul></div></div>
