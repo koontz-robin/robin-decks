@@ -234,12 +234,13 @@ def pull_canceled_clients():
         date_canceled = ((props.get("DateCanceled") or {}).get("date") or {}).get("start","")
         onboard_type = ((props.get("Onboarding Type") or {}).get("select") or {}).get("name","")
         rts_notes = "".join(t.get("plain_text","") for t in (props.get("RTS Notes") or {}).get("rich_text",[]))
+        notion_notes = "".join(t.get("plain_text","") for t in (props.get("Notes") or {}).get("rich_text",[]))
         notion_url = f"https://www.notion.so/{p['id'].replace('-','')}"
         clients.append({
             "name": name, "status": status, "sales_rep": sales_rep, "sa": sa,
             "mrr": fees, "date_sold": date_sold[:10] if date_sold else "",
             "date_canceled": date_canceled[:10] if date_canceled else "",
-            "onboard_type": onboard_type, "notes": rts_notes, "url": notion_url,
+            "onboard_type": onboard_type, "notes": rts_notes, "notion_notes": notion_notes, "url": notion_url,
         })
     # Filter to 2026 only
     clients = [c for c in clients if (c.get("date_canceled","") or "").startswith("2026")]
@@ -322,7 +323,7 @@ def build_rts_section(clients):
         su_date = (su.get("date") or "").strip()
         su_author = (su.get("author") or "").strip()
         if sn_notion:
-            sn_display = sn_notion[:120] + ("…" if len(sn_notion) > 120 else "")
+            sn_display = sn_notion[:200] + ("…" if len(sn_notion) > 200 else "")
             sales_update_cell = f'<td style="font-size:12px;color:#e2e8f0;max-width:220px;border-left:2px solid #1e3a5f">{sn_display}</td>'
         elif su_text:
             su_attribution = f'<div style="font-size:10px;color:#475569;margin-top:2px">{su_date} · {su_author}</div>' if (su_date or su_author) else ""
@@ -361,7 +362,21 @@ def build_rts_section(clients):
             f'<td style="color:#64748b;font-size:12px">{notes}</td>'
             f'</tr>'
             f'<tr id="a_{row_id}" style="display:none"><td colspan="11" style="padding:0 12px 12px 24px">'
-            f'<div style="background:#0a0f1a;border-radius:8px;overflow:hidden"><table style="width:100%;border-collapse:collapse">'
+            + (
+                f'<div style="background:#0f172a;border-left:3px solid #38bdf8;border-radius:6px;padding:10px 14px;margin-bottom:8px">'
+                f'<div style="font-size:10px;font-weight:700;color:#38bdf8;letter-spacing:1px;text-transform:uppercase;margin-bottom:6px">📝 Notion Notes</div>'
+                f'<div style="font-size:12px;color:#cbd5e1;white-space:pre-wrap;line-height:1.6">{(c.get("sales_notes") or "").strip()}</div>'
+                f'</div>'
+                if (c.get("sales_notes") or "").strip() else ""
+            )
+            + (
+                f'<div style="background:#0f172a;border-left:3px solid #a78bfa;border-radius:6px;padding:10px 14px;margin-bottom:8px">'
+                f'<div style="font-size:10px;font-weight:700;color:#a78bfa;letter-spacing:1px;text-transform:uppercase;margin-bottom:6px">🔵 RTS Notes</div>'
+                f'<div style="font-size:12px;color:#cbd5e1;white-space:pre-wrap;line-height:1.6">{(c.get("rts_notes") or "").strip()}</div>'
+                f'</div>'
+                if (c.get("rts_notes") or "").strip() else ""
+            )
+            + f'<div style="background:#0a0f1a;border-radius:8px;overflow:hidden"><table style="width:100%;border-collapse:collapse">'
             f'<thead><tr style="background:#1e293b"><th style="padding:6px 10px;font-size:10px;color:#475569;text-align:left;text-transform:uppercase">Date</th>'
             f'<th style="padding:6px 10px;font-size:10px;color:#475569;text-align:left;text-transform:uppercase">Type</th>'
             f'<th style="padding:6px 10px;font-size:10px;color:#475569;text-align:left;text-transform:uppercase">Subject</th>'
@@ -417,20 +432,22 @@ def build_canceled_section(clients):
         # Month header row
         rows += (
             f'<tr style="background:#0f172a">'
-            f'<td colspan="9" style="padding:10px 12px;font-size:12px;font-weight:700;color:#94a3b8;letter-spacing:1px;text-transform:uppercase">'
+            f'<td colspan="10" style="padding:10px 12px;font-size:12px;font-weight:700;color:#94a3b8;letter-spacing:1px;text-transform:uppercase">'
             f'{month_label} &nbsp;·&nbsp; {len(month_clients)} accounts &nbsp;·&nbsp; {mrr_fmt(month_mrr)} lost MRR'
             f'</td></tr>'
         )
 
         for _, c in sorted(month_clients, key=lambda x: x[1].get("date_canceled",""), reverse=True):
             sc = status_color(c["status"])
-            notes = (c["notes"][:70]+"…" if len(c.get("notes","")) > 70 else c.get("notes","")) if c.get("notes") else "—"
             churn_reason = c.get("churn_reason","") or "—"
             churn_detail = (c.get("churn_detail","") or "")[:80]
             if len(c.get("churn_detail","") or "") > 80:
                 churn_detail += "…"
             if not churn_detail:
                 churn_detail = "—"
+            raw_notes = (c.get("notion_notes") or c.get("notes") or "").strip()
+            notes_preview = (raw_notes[:160] + "…") if len(raw_notes) > 160 else raw_notes
+            notes_cell = f'<td style="font-size:12px;color:#e2e8f0;max-width:240px;white-space:pre-wrap">{notes_preview}</td>' if notes_preview else '<td style="color:#334155;font-style:italic;font-size:12px">—</td>'
             safe_id = c["name"].replace(" ","_").replace(",","").replace(".","").replace("/","").replace("'","")
             rows += (
                 f'<tr style="border-bottom:1px solid #0f172a">'
@@ -443,6 +460,7 @@ def build_canceled_section(clients):
                 f'<td style="color:#64748b;font-size:12px">{c["onboard_type"] or "—"}</td>'
                 f'<td style="color:#f97316;font-size:12px;font-weight:600">{churn_reason}</td>'
                 f'<td style="color:#64748b;font-size:12px;max-width:200px">{churn_detail}</td>'
+                f'{notes_cell}'
                 f'<td style="text-align:center">'
                 f'<input type="checkbox" id="cb_{safe_id}" onchange="saveClawback(\'{safe_id}\')" '
                 f'style="width:16px;height:16px;cursor:pointer;accent-color:#f87171">'
@@ -573,7 +591,7 @@ html = f"""<!DOCTYPE html><html lang="en"><head><meta charset="UTF-8">
   <div class="sec-title">All Canceled Accounts — sorted by cancel date</div>
   <table><thead><tr>
     <th>Client</th><th>Reason</th><th>Sales Rep</th><th>SA</th>
-    <th>MRR</th><th>Date Sold</th><th>Date Canceled</th><th>Onboard Type</th><th>Churn Reason (SF)</th><th>Churn Detail (SF)</th>
+    <th>MRR</th><th>Date Sold</th><th>Date Canceled</th><th>Onboard Type</th><th>Churn Reason (SF)</th><th>Churn Detail (SF)</th><th style="color:#38bdf8;min-width:160px">Notes</th>
     <th style="text-align:center">Clawback</th><th>Clawback Date</th>
   </tr></thead><tbody>{can['rows']}</tbody></table>
 </div>

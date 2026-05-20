@@ -27,6 +27,7 @@ Repo: `git@github.com:koontz-robin/robin-decks.git`
 | Monthly Pipeline Dashboard | monthly-pipeline-dashboard.html | https://koontz-robin.github.io/robin-decks/monthly-pipeline-dashboard.html | On demand |
 | RTS Dashboard | rts-dashboard.html | https://koontz-robin.github.io/robin-decks/rts-dashboard.html | On demand |
 | Q2 Re-engagement Tracker | q2-reengagement-tracker.html | https://koontz-robin.github.io/robin-decks/q2-reengagement-tracker.html | On demand |
+| PSA SMC Re-engagement Tracker | smc-reengagement-tracker.html | https://koontz-robin.github.io/robin-decks/smc-reengagement-tracker.html | On demand | 214 accounts, Software Missing Capabilities, since July 2025, includes Reason Lost Detail from SF |
 
 ---
 
@@ -91,6 +92,7 @@ Repo: `git@github.com:koontz-robin/robin-decks.git`
 | Robin Impact | robin-impact.html | https://koontz-robin.github.io/robin-decks/robin-impact.html | |
 | Territory Map | territory-map.html | https://koontz-robin.github.io/robin-decks/territory-map.html | |
 | Tradeshow MQL | tradeshow-mql.html | https://koontz-robin.github.io/robin-decks/tradeshow-mql.html | |
+| Motorola 2026 Addendum (Consolidated) | motorola_2026_addendum_consolidated.html | https://koontz-robin.github.io/robin-decks/motorola_2026_addendum_consolidated.html | 5-location consolidated addendum — 253 licenses, $53,638.08/yr |
 
 ---
 

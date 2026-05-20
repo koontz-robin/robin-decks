@@ -83,9 +83,9 @@ def build_may_tab():
     total_pipe = sum(o.get('Amount',0) or 0 for o in opps if o.get('StageName') != 'Closed Won')
     total_cw   = sum(buckets[p]['closed'] for p in PRODUCTS)
     open_count = sum(len(buckets[p]['opps']) for p in PRODUCTS)
-    total_worst  = sum(o.get('Amount',0) or 0 for p in PRODUCTS for o in buckets[p]['opps'] if o.get('Forecast_Status__c') == 'Worst Case')
-    total_likely = sum(o.get('Amount',0) or 0 for p in PRODUCTS for o in buckets[p]['opps'] if o.get('Forecast_Status__c') in ('Worst Case','Most Likely'))
-    total_best   = sum(o.get('Amount',0) or 0 for p in PRODUCTS for o in buckets[p]['opps'] if o.get('Forecast_Status__c') in ('Worst Case','Most Likely','Best Case'))
+    total_worst  = total_cw + sum(o.get('Amount',0) or 0 for p in PRODUCTS for o in buckets[p]['opps'] if o.get('Forecast_Status__c') == 'Worst Case')
+    total_likely = total_cw + sum(o.get('Amount',0) or 0 for p in PRODUCTS for o in buckets[p]['opps'] if o.get('Forecast_Status__c') in ('Worst Case','Most Likely'))
+    total_best   = total_cw + sum(o.get('Amount',0) or 0 for p in PRODUCTS for o in buckets[p]['opps'] if o.get('Forecast_Status__c') in ('Worst Case','Most Likely','Best Case'))
     lines.append(f'''    <div class="summary-bar">
       <div class="sum-item"><div class="sum-label">May Pipeline</div><div class="sum-val">{fmt(total_pipe)}</div></div>
       <div class="sum-item"><div class="sum-label">Open Opps</div><div class="sum-val">{open_count}</div></div>
@@ -105,9 +105,9 @@ def build_may_tab():
         cw    = b['closed']
         tagged   = [o for o in opp_list if o.get('Forecast_Status__c')]
         mkt_opps = [o for o in opp_list if o.get('_mkt')]
-        worst  = sum(o.get('Amount',0) or 0 for o in opp_list if o.get('Forecast_Status__c') == 'Worst Case')
-        likely = sum(o.get('Amount',0) or 0 for o in opp_list if o.get('Forecast_Status__c') in ('Worst Case','Most Likely'))
-        best   = sum(o.get('Amount',0) or 0 for o in opp_list if o.get('Forecast_Status__c') in ('Worst Case','Most Likely','Best Case'))
+        worst  = cw + sum(o.get('Amount',0) or 0 for o in opp_list if o.get('Forecast_Status__c') == 'Worst Case')
+        likely = cw + sum(o.get('Amount',0) or 0 for o in opp_list if o.get('Forecast_Status__c') in ('Worst Case','Most Likely'))
+        best   = cw + sum(o.get('Amount',0) or 0 for o in opp_list if o.get('Forecast_Status__c') in ('Worst Case','Most Likely','Best Case'))
         quota  = MAY_QUOTAS[p]
         cw_pct     = min(cw/quota*100,100) if quota else 0
         likely_pct = min(likely/quota*100,100) if quota else 0

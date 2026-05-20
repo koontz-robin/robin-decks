@@ -14,24 +14,18 @@ FORECAST_HTML = f'{WORKSPACE}/forecast.html'
 
 SF_INSTANCE = "https://rev-io.my.salesforce.com"
 
-# ── Step 1: Authenticate via refresh token ───────────────────────────────────
-print("🔐 Authenticating to Salesforce...")
-with open(SF_TOKEN_FILE) as f:
-    t = json.load(f)
+SF_CLIENT_ID     = "3MVG91ftikjGaMd.NAf5_nx2GISRurI0fIm1aTgGSe.jNIN4bOdlqn95rfrur3RACkqjIZlDG8iCTnKzFRa.N"
+SF_CLIENT_SECRET = "FA7C3F3F72D6A1786F374CF966B505DB9B07AE43D69A6D54F127B2397713716E"
 
+# ── Step 1: Authenticate via client credentials ──────────────────────────────
+print("🔐 Authenticating to Salesforce...")
 r = requests.post(f"{SF_INSTANCE}/services/oauth2/token", data={
-    "grant_type": "refresh_token",
-    "refresh_token": t["refresh_token"],
-    "client_id": t["client_id"],
-    "client_secret": t["client_secret"],
+    "grant_type": "client_credentials",
+    "client_id": SF_CLIENT_ID,
+    "client_secret": SF_CLIENT_SECRET,
 })
 r.raise_for_status()
 nt = r.json()
-nt["refresh_token"] = t["refresh_token"]
-nt["client_id"] = t["client_id"]
-nt["client_secret"] = t["client_secret"]
-with open(SF_TOKEN_FILE, 'w') as f:
-    json.dump(nt, f, indent=2)
 
 BASE = nt['instance_url']
 HEADERS = {"Authorization": f"Bearer {nt['access_token']}"}
@@ -49,8 +43,7 @@ print(f"📅 Fetching opps for {month_start} → {month_end}")
 # ── Step 3: Fetch opps from Salesforce ───────────────────────────────────────
 query = f"""
 SELECT Id, Name, StageName, Amount, Product_Type__c, Probability,
-       CloseDate, Forecast_Status__c,
-       Account.Name, Owner.Name
+       CloseDate, Forecast_Status__c, Account.Name, Owner.Name
 FROM Opportunity
 WHERE CloseDate >= {month_start}
   AND CloseDate <= {month_end}
@@ -68,14 +61,12 @@ while True:
         print(f"❌ SF query failed: {resp.status_code} {resp.text[:200]}")
         sys.exit(1)
     data = resp.json()
-    records = data.get('records', [])
-    all_records.extend(records)
-    print(f"  Fetched {len(records)} records (total: {len(all_records)})")
+    all_records.extend(data.get('records', []))
+    print(f"  Fetched {len(data.get('records',[]))} records (total: {len(all_records)})")
     if data.get('done', True):
         break
     url = BASE + data['nextRecordsUrl']
     params = {}
-
 print(f"✅ Total opps fetched: {len(all_records)}")
 
 # Flatten Account/Owner sub-objects

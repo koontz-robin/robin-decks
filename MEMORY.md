@@ -119,6 +119,9 @@ Last updated: 2026-05-08
 
 ## GitHub Pages
 - Repo: koontz-robin/robin-decks
+- **Repo root = `/home/openclaw/.openclaw/workspace/` (NOT the `robin-decks/` subdirectory)**
+- Write new HTML files to `/home/openclaw/.openclaw/workspace/<filename>.html` — NOT to `robin-decks/<filename>.html`
+- The `robin-decks/` subdirectory inside the workspace is part of the repo but files there serve at `.../robin-decks/<filename>` (double-nested, 404)
 - Push protection blocks secrets in commit history — need to unblock via GitHub security UI when hitting it
 - Pages URL pattern: https://koontz-robin.github.io/robin-decks/<filename>.html
 
