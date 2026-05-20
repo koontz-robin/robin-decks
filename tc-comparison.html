@@ -1,0 +1,355 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>T&C Comparison — Rev.io | Old vs. New</title>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; background: #f4f6f9; color: #1a1a2e; }
+
+  .header { background: linear-gradient(135deg, #1a1a2e, #0f3460); color: white; padding: 40px 32px; }
+  .header-inner { max-width: 1000px; margin: 0 auto; }
+  .header-label { font-size: 11px; letter-spacing: 2px; text-transform: uppercase; color: #a0aec0; margin-bottom: 10px; }
+  .header h1 { font-size: 28px; font-weight: 800; margin-bottom: 6px; }
+  .header .sub { font-size: 14px; color: #cbd5e0; }
+
+  .container { max-width: 1000px; margin: 0 auto; padding: 32px 24px; }
+
+  /* Structure note */
+  .struct-box { background: #fffbeb; border: 1px solid #f6d860; border-radius: 10px; padding: 18px 20px; margin-bottom: 28px; }
+  .struct-box h3 { font-size: 14px; font-weight: 700; color: #92400e; margin-bottom: 8px; }
+  .struct-box p { font-size: 13px; color: #78350f; line-height: 1.6; }
+  .struct-box ul { margin-top: 8px; padding-left: 18px; }
+  .struct-box li { font-size: 13px; color: #78350f; margin-bottom: 4px; }
+
+  /* Summary badges */
+  .badge-row { display: flex; gap: 12px; flex-wrap: wrap; margin-bottom: 28px; }
+  .badge { padding: 8px 16px; border-radius: 20px; font-size: 13px; font-weight: 700; }
+  .badge.red { background: #fed7d7; color: #c53030; }
+  .badge.yellow { background: #fefcbf; color: #744210; }
+  .badge.green { background: #c6f6d5; color: #22543d; }
+
+  /* Section headers */
+  .section-title { font-size: 12px; text-transform: uppercase; letter-spacing: 1.5px; color: #999; margin: 28px 0 12px; font-weight: 700; }
+
+  /* Change rows */
+  .change { background: white; border-radius: 10px; margin-bottom: 10px; box-shadow: 0 1px 3px rgba(0,0,0,0.07); overflow: hidden; }
+  .change-header { display: flex; align-items: center; gap: 12px; padding: 14px 18px; border-bottom: 1px solid #f0f0f0; }
+  .change-header h3 { font-size: 15px; font-weight: 700; color: #1a1a2e; flex: 1; }
+  .tag { font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px; padding: 3px 10px; border-radius: 20px; white-space: nowrap; }
+  .tag.worse { background: #fed7d7; color: #c53030; }
+  .tag.better { background: #c6f6d5; color: #22543d; }
+  .tag.watch { background: #fefcbf; color: #744210; }
+  .tag.removed { background: #e2e8f0; color: #4a5568; }
+
+  .change-body { display: grid; grid-template-columns: 1fr 1fr; }
+  .change-col { padding: 14px 18px; font-size: 13px; line-height: 1.6; }
+  .change-col:first-child { border-right: 1px solid #f0f0f0; background: #fffaf9; }
+  .change-col:last-child { background: #f9fff9; }
+  .change-col .col-label { font-size: 10px; text-transform: uppercase; letter-spacing: 1px; color: #aaa; margin-bottom: 6px; font-weight: 700; }
+  .change-col p { color: #4a5568; }
+  .change-col strong { color: #1a1a2e; }
+  .change-col .gone { color: #c53030; text-decoration: line-through; font-style: italic; }
+  .change-col .new-text { color: #276749; font-style: italic; }
+
+  /* Note rows */
+  .note-row { background: white; border-radius: 10px; padding: 14px 18px; margin-bottom: 10px; box-shadow: 0 1px 3px rgba(0,0,0,0.07); display: flex; gap: 12px; align-items: flex-start; }
+  .note-row .icon { font-size: 18px; margin-top: 1px; flex-shrink: 0; }
+  .note-row p { font-size: 13px; line-height: 1.6; color: #4a5568; }
+  .note-row p strong { color: #1a1a2e; }
+
+  @media (max-width: 640px) {
+    .change-body { grid-template-columns: 1fr; }
+    .change-col:first-child { border-right: none; border-bottom: 1px solid #f0f0f0; }
+  }
+</style>
+</head>
+<body>
+
+<div class="header">
+  <div class="header-inner">
+    <div class="header-label">Internal Reference — Legal Review</div>
+    <h1>T&C Comparison: Old vs. New</h1>
+    <div class="sub">Old: Rev.io T&C July 15, 2025 &nbsp;·&nbsp; New: Schedule A/B Doc + act.rev.io/rev.io-terms-conditions (Jan 2026)</div>
+  </div>
+</div>
+
+<div class="container">
+
+  <div class="struct-box">
+    <h3>⚠️ Structural Change — This Is the First Thing to Understand</h3>
+    <p>The old T&C was a single self-contained document. The new version is <strong>split across two sources</strong> — creating potential conflicts and ambiguity about which governs in a dispute:</p>
+    <ul>
+      <li><strong>Online T&Cs</strong> (act.rev.io/rev.io-terms-conditions, Jan 2026) — the master terms, can be updated by Rev.io unilaterally</li>
+      <li><strong>Schedule A/B Document</strong> (Billing_Schedule_A_B) — billing-specific supplement with SLA details, liquidated damages, and pricing mechanics</li>
+    </ul>
+    <p style="margin-top:8px;">The online T&Cs can change at any time without a contract amendment. Any customer signing under this structure should <strong>request that the Schedule A/B be explicitly incorporated by reference and that the online T&Cs be frozen at signing</strong>, or negotiate for a fully offline T&C document.</p>
+  </div>
+
+  <div class="badge-row">
+    <div class="badge red">7 Changes Worse for Customers</div>
+    <div class="badge yellow">3 Items to Watch</div>
+    <div class="badge green">5 Changes Better for Customers</div>
+  </div>
+
+  <!-- WORSE FOR CUSTOMERS -->
+  <div class="section-title">🔴 Changes Worse for Customers</div>
+
+  <div class="change">
+    <div class="change-header">
+      <h3>Price Increase Cap: 5% → 7%</h3>
+      <span class="tag worse">Worse</span>
+    </div>
+    <div class="change-body">
+      <div class="change-col">
+        <div class="col-label">Old</div>
+        <p>Rev.io may increase Charges up to <strong>5%</strong> per fiscal year. Unused increase capacity carries forward — Rev.io can retroactively catch up missed increases in future years.</p>
+      </div>
+      <div class="change-col">
+        <div class="col-label">New (Online T&C §3.1)</div>
+        <p>Cap increased to <strong>7%</strong> per fiscal year. Retroactive catch-up language removed. Applies to both Initial and Renewal Terms.</p>
+      </div>
+    </div>
+  </div>
+
+  <div class="change">
+    <div class="change-header">
+      <h3>Phone Support Now Costs Extra</h3>
+      <span class="tag worse">Worse</span>
+    </div>
+    <div class="change-body">
+      <div class="change-col">
+        <div class="col-label">Old</div>
+        <p>Email <strong>and telephone</strong> access to help desk included. M–F, 9:00 AM – 5:30 PM ET. Up to 2 authorized support contacts. After-hours escalation to Account Manager or VP Client Services.</p>
+      </div>
+      <div class="change-col">
+        <div class="col-label">New (Online T&C §4.1)</div>
+        <p><strong>Email only</strong> in base contract. <span class="gone">"Phone support is available for an additional fee."</span> Support hours listed as 9am–5pm ET. No mention of authorized contact limit or after-hours escalation in online T&Cs.</p>
+      </div>
+    </div>
+  </div>
+
+  <div class="change">
+    <div class="change-header">
+      <h3>"Hotlined" Removed from Active Customer Definition</h3>
+      <span class="tag worse">Worse</span>
+    </div>
+    <div class="change-body">
+      <div class="change-col">
+        <div class="col-label">Old</div>
+        <p>Active Customer = any subscriber with an <strong>active, suspended, or hotlined</strong> service in the billing month.</p>
+      </div>
+      <div class="change-col">
+        <div class="col-label">New (Online T&C §1.1)</div>
+        <p>Active Customer = any subscriber with an <strong>active or suspended</strong> service. <span class="gone">Hotlined removed.</span> If your platform tracks hotlined accounts, this changes what counts toward billing.</p>
+      </div>
+    </div>
+  </div>
+
+  <div class="change">
+    <div class="change-header">
+      <h3>CDR (Call Detail Record) Definition Removed</h3>
+      <span class="tag worse">Worse</span>
+    </div>
+    <div class="change-body">
+      <div class="change-col">
+        <div class="col-label">Old</div>
+        <p>CDR explicitly defined: a computer record of a phone call. <strong>Billable CDR = any CDR retrieved or received into and processed by the Rev.io system.</strong></p>
+      </div>
+      <div class="change-col">
+        <div class="col-label">New (Both Docs)</div>
+        <p><span class="gone">CDR definition removed entirely.</span> If pricing is CDR-based, this creates ambiguity about what constitutes a billable CDR in a dispute. Needs to be defined in the ordering document.</p>
+      </div>
+    </div>
+  </div>
+
+  <div class="change">
+    <div class="change-header">
+      <h3>Uptime SLA Weakened in Online T&Cs</h3>
+      <span class="tag worse">Worse</span>
+    </div>
+    <div class="change-body">
+      <div class="change-col">
+        <div class="col-label">Old (and New Schedule A/B)</div>
+        <p>Explicit <strong>99.9% uptime guarantee.</strong> Credits: 1/30th of monthly fee per 60-min outage, max 20% per month. Right to terminate if 2 separate 8-hour outages occur in one calendar month.</p>
+      </div>
+      <div class="change-col">
+        <div class="col-label">New (Online T&C §4.3–4.4)</div>
+        <p><span class="gone">99.9% guarantee gone.</span> Replaced with "commercially reasonable efforts." Credits: "sole remedy limited to SLA if applicable or as agreed in writing." <strong>Note:</strong> Schedule A/B doc retains the 99.9% SLA — but only if it's contractually controlling.</p>
+      </div>
+    </div>
+  </div>
+
+  <div class="change">
+    <div class="change-header">
+      <h3>Corporate Change Notification Window Shortened</h3>
+      <span class="tag worse">Worse</span>
+    </div>
+    <div class="change-body">
+      <div class="change-col">
+        <div class="col-label">Old</div>
+        <p>Must notify Rev.io within <strong>30 days</strong> of corporate change (acquisition, merger, reorganization). Must execute addendum within 30 days of notification to avoid suspension.</p>
+      </div>
+      <div class="change-col">
+        <div class="col-label">New (Online T&C §2.2)</div>
+        <p>Must notify within <strong>10 business days</strong>. Failure = immediate material breach and automatic acknowledgement of continuation. No addendum process — stricter consequence for missing the window.</p>
+      </div>
+    </div>
+  </div>
+
+  <div class="change">
+    <div class="change-header">
+      <h3>Subpoena: Rev.io May Not Notify You</h3>
+      <span class="tag worse">Worse</span>
+    </div>
+    <div class="change-body">
+      <div class="change-col">
+        <div class="col-label">Old</div>
+        <p>If Rev.io receives a subpoena for your data, Licensee reimburses Rev.io's professional time. Rev.io <strong>"may or may not inform the Licensee"</strong> depending on court direction.</p>
+      </div>
+      <div class="change-col">
+        <div class="col-label">New (Online T&C §3.2)</div>
+        <p>Rev.io <strong>shall notify Licensee in writing if legally permissible</strong> — an improvement in language, but the operative phrase is still "if legally permissible." Reimbursement of Rev.io's costs still required. Overall slightly better framing but same practical outcome.</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- WATCH -->
+  <div class="section-title">🟡 Items to Watch</div>
+
+  <div class="note-row">
+    <div class="icon">👁️</div>
+    <p><strong>Online T&Cs can change without your consent.</strong> The master terms live at a URL Rev.io controls. Unlike a Schedule attached to a signed agreement, the online T&Cs could be updated by Rev.io unilaterally. Customers should push for a version freeze at signing or require 60-day notice of material changes with opt-out rights.</p>
+  </div>
+
+  <div class="note-row">
+    <div class="icon">👁️</div>
+    <p><strong>Authorized User definition removed from both new documents.</strong> The old T&C defined who could access the platform. The new version has no such definition in either the online T&Cs or the Schedule A/B. If per-user access becomes a billing or compliance issue, there's no definition to anchor the dispute.</p>
+  </div>
+
+  <div class="note-row">
+    <div class="icon">👁️</div>
+    <p><strong>Liquidated damages (95%) and reinstatement fee (20%) are in Schedule A/B — but not the online T&Cs.</strong> If a dispute arises, expect Rev.io to invoke Schedule A/B. Customers should confirm in writing which document governs in a conflict, and ensure Schedule A/B is explicitly incorporated by reference with Schedule A/B controlling on billing matters.</p>
+  </div>
+
+  <!-- BETTER FOR CUSTOMERS -->
+  <div class="section-title">🟢 Changes Better for Customers</div>
+
+  <div class="change">
+    <div class="change-header">
+      <h3>Explicit IP Indemnification by Rev.io — NEW</h3>
+      <span class="tag better">Better</span>
+    </div>
+    <div class="change-body">
+      <div class="change-col">
+        <div class="col-label">Old</div>
+        <p>No explicit IP indemnification in the T&C.</p>
+      </div>
+      <div class="change-col">
+        <div class="col-label">New (Online T&C §8.4)</div>
+        <p>Rev.io will <strong>defend, indemnify, and hold harmless</strong> Licensee from third-party IP infringement claims against the Licensed Products. Standard carve-outs for Licensee modifications and Licensee Data.</p>
+      </div>
+    </div>
+  </div>
+
+  <div class="change">
+    <div class="change-header">
+      <h3>Explicit Liability Cap — NEW</h3>
+      <span class="tag better">Better</span>
+    </div>
+    <div class="change-body">
+      <div class="change-col">
+        <div class="col-label">Old</div>
+        <p>No explicit cap on Rev.io's liability in the T&C.</p>
+      </div>
+      <div class="change-col">
+        <div class="col-label">New (Online T&C §8.3)</div>
+        <p>Rev.io's total liability capped at <strong>amounts paid in the prior 12 months.</strong> Also explicitly excludes indirect/consequential damages. Mutual cap — cuts both ways.</p>
+      </div>
+    </div>
+  </div>
+
+  <div class="change">
+    <div class="change-header">
+      <h3>Non-Solicitation Clause Removed</h3>
+      <span class="tag better">Better</span>
+    </div>
+    <div class="change-body">
+      <div class="change-col">
+        <div class="col-label">Old</div>
+        <p>Licensee could not solicit or hire any Rev.io employee during the Term or for 12 months after. Penalty: 50% of employee's starting salary.</p>
+      </div>
+      <div class="change-col">
+        <div class="col-label">New</div>
+        <p><span class="new-text">Removed from both new documents.</span> Customers are free to hire Rev.io employees without contractual penalty.</p>
+      </div>
+    </div>
+  </div>
+
+  <div class="change">
+    <div class="change-header">
+      <h3>Professional Conduct Clause Removed</h3>
+      <span class="tag better">Better</span>
+    </div>
+    <div class="change-body">
+      <div class="change-col">
+        <div class="col-label">Old</div>
+        <p>"Licensee shall at all times act in a professional and respectful manner toward Rev.io and its employees. Violation of this duty shall be a <strong>material breach</strong> of this Agreement."</p>
+      </div>
+      <div class="change-col">
+        <div class="col-label">New</div>
+        <p><span class="new-text">Removed.</span> The old clause gave Rev.io broad discretion to declare material breach based on subjective conduct standards.</p>
+      </div>
+    </div>
+  </div>
+
+  <div class="change">
+    <div class="change-header">
+      <h3>Explicit Licensee Data Ownership — NEW</h3>
+      <span class="tag better">Better</span>
+    </div>
+    <div class="change-body">
+      <div class="change-col">
+        <div class="col-label">Old</div>
+        <p>Rev.io's right to use Licensee Data was described; Licensee's ownership was implied but not stated explicitly.</p>
+      </div>
+      <div class="change-col">
+        <div class="col-label">New (Online T&C §10.2)</div>
+        <p><strong>Licensee explicitly retains all right, title, and interest in Licensee Data.</strong> Rev.io's license is scoped to what's needed to provide the service only.</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- Summary -->
+  <div class="section-title">📋 Key Action Items</div>
+
+  <div class="note-row">
+    <div class="icon">1️⃣</div>
+    <p><strong>Confirm which document governs in a conflict.</strong> Get written confirmation that Schedule A/B controls on billing, SLA, and liquidated damages — not the online T&Cs. The 99.9% SLA and 95% liquidated damages only exist in Schedule A/B.</p>
+  </div>
+  <div class="note-row">
+    <div class="icon">2️⃣</div>
+    <p><strong>Address the CDR definition gap.</strong> If any product's pricing is CDR-based, the definition needs to be in the ordering document or addendum. The old T&C defined it; neither new document does.</p>
+  </div>
+  <div class="note-row">
+    <div class="icon">3️⃣</div>
+    <p><strong>Confirm phone support is included (or price it).</strong> The online T&Cs now list phone support as an add-on fee. If existing customers assume it's included, this is a silent service reduction. Confirm whether existing contracts are grandfathered.</p>
+  </div>
+  <div class="note-row">
+    <div class="icon">4️⃣</div>
+    <p><strong>Note the price cap increase.</strong> Old cap was 5%; new is 7%. For customers on annual contracts this is a material change — worth surfacing to customers or negotiating back to 5% if possible.</p>
+  </div>
+  <div class="note-row">
+    <div class="icon">5️⃣</div>
+    <p><strong>Lock the online T&Cs version.</strong> Any new agreement should reference a specific dated version of the online T&Cs (Jan 2026) and require 60-day written notice before Rev.io can substitute a new version.</p>
+  </div>
+
+</div>
+
+<div style="text-align:center; padding: 24px; color: #aaa; font-size: 12px;">
+  Rev.io Internal · Prepared by Robin · May 2026 · Confidential
+</div>
+
+</body>
+</html>
