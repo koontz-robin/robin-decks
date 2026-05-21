@@ -1,0 +1,607 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Rev.io Sales · May Update</title>
+<link href="https://fonts.googleapis.com/css2?family=Open+Sans:wght@400;600;700;800&family=Montserrat:wght@700;800;900&display=swap" rel="stylesheet">
+<style>
+* { margin: 0; padding: 0; box-sizing: border-box; }
+html, body { height: 100%; overflow: hidden; background: #0d1b2a; font-family: 'Open Sans', Arial, sans-serif; }
+
+/* ── Slide Container ── */
+.deck { width: 100vw; height: 100vh; position: relative; }
+.slide {
+  position: absolute; inset: 0;
+  opacity: 0; pointer-events: none;
+  transition: opacity 0.35s ease;
+  display: flex; flex-direction: column;
+}
+.slide.active { opacity: 1; pointer-events: all; }
+
+/* ── Nav Bar ── */
+.nav-bar {
+  position: fixed; bottom: 0; left: 0; right: 0;
+  background: rgba(13,27,42,0.95);
+  border-top: 1px solid rgba(255,255,255,0.08);
+  padding: 10px 32px;
+  display: flex; align-items: center; justify-content: space-between;
+  z-index: 9999;
+  backdrop-filter: blur(8px);
+}
+.nav-title { font-size: 11px; font-weight: 700; color: rgba(255,255,255,0.35); letter-spacing: 2px; text-transform: uppercase; }
+.nav-controls { display: flex; align-items: center; gap: 12px; }
+.nav-btn {
+  background: rgba(255,255,255,0.08); border: 1px solid rgba(255,255,255,0.15);
+  color: #fff; border-radius: 8px; padding: 6px 18px;
+  font-size: 13px; font-weight: 700; cursor: pointer;
+  transition: background 0.15s, border-color 0.15s;
+}
+.nav-btn:hover { background: rgba(255,255,255,0.15); border-color: rgba(255,255,255,0.3); }
+.nav-btn:disabled { opacity: 0.25; cursor: default; }
+.nav-counter { font-family: 'Montserrat', sans-serif; font-size: 13px; font-weight: 800; color: rgba(255,255,255,0.5); min-width: 48px; text-align: center; }
+.nav-dots { display: flex; gap: 6px; }
+.dot {
+  width: 7px; height: 7px; border-radius: 50%;
+  background: rgba(255,255,255,0.2); cursor: pointer; transition: background 0.2s;
+}
+.dot.active { background: #6EBE4F; }
+.nav-logo { height: 20px; opacity: 0.4; filter: brightness(0) invert(1); }
+
+/* ═══════════════════════════════════════════════
+   SLIDE 1 — COVER
+═══════════════════════════════════════════════ */
+#slide-1 {
+  background: linear-gradient(145deg, #0d1b2a 0%, #0f2a1e 100%);
+  justify-content: center; align-items: center;
+  position: relative; overflow: hidden;
+}
+#slide-1::before {
+  content: '';
+  position: absolute; inset: 0;
+  background-image:
+    linear-gradient(rgba(110,190,79,0.06) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(110,190,79,0.06) 1px, transparent 1px);
+  background-size: 48px 48px;
+}
+.cover-inner { position: relative; z-index: 1; text-align: center; max-width: 900px; padding: 0 48px; }
+.cover-tag {
+  display: inline-block;
+  font-size: 11px; font-weight: 700; letter-spacing: 3px; text-transform: uppercase;
+  color: #6EBE4F; border: 1px solid rgba(110,190,79,0.35);
+  padding: 6px 18px; border-radius: 20px; margin-bottom: 24px;
+  background: rgba(110,190,79,0.08);
+}
+.cover-logo { height: 44px; margin-bottom: 32px; filter: brightness(0) invert(1); opacity: 0.9; }
+.cover-title {
+  font-family: 'Montserrat', sans-serif;
+  font-size: 64px; font-weight: 900; color: #fff; line-height: 1.05;
+  letter-spacing: -2px; margin-bottom: 16px;
+}
+.cover-title span { color: #6EBE4F; text-shadow: 0 0 40px rgba(110,190,79,0.4); }
+.cover-sub { font-size: 18px; color: rgba(255,255,255,0.45); margin-bottom: 48px; }
+.cover-chips { display: flex; gap: 16px; justify-content: center; flex-wrap: wrap; }
+.cover-chip {
+  background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.12);
+  border-radius: 10px; padding: 14px 24px; text-align: center; min-width: 160px;
+}
+.chip-val { font-family: 'Montserrat', sans-serif; font-size: 28px; font-weight: 900; color: #fff; }
+.chip-val.green { color: #6EBE4F; }
+.chip-val.teal { color: #2399B5; }
+.chip-label { font-size: 10px; font-weight: 700; letter-spacing: 1.5px; text-transform: uppercase; color: rgba(255,255,255,0.35); margin-top: 4px; }
+.cover-date { position: absolute; bottom: 70px; left: 0; right: 0; text-align: center; font-size: 11px; color: rgba(255,255,255,0.2); letter-spacing: 1px; }
+
+/* ═══════════════════════════════════════════════
+   SLIDE 2 & 3 — IFRAME SLIDES
+═══════════════════════════════════════════════ */
+.iframe-slide { display: flex; flex-direction: column; background: #0d1b2a; }
+.iframe-header {
+  background: #1D3756; padding: 10px 32px;
+  display: flex; align-items: center; justify-content: space-between;
+  border-bottom: 3px solid #6EBE4F; flex-shrink: 0;
+}
+.iframe-header-left { display: flex; align-items: center; gap: 12px; }
+.iframe-slide-tag { font-size: 10px; font-weight: 700; letter-spacing: 2px; text-transform: uppercase; color: #6EBE4F; }
+.iframe-slide-title { font-family: 'Montserrat', sans-serif; font-size: 16px; font-weight: 800; color: #fff; }
+.iframe-header img { height: 24px; filter: brightness(0) invert(1); opacity: 0.8; }
+.iframe-wrap { flex: 1; overflow: hidden; padding-bottom: 48px; }
+.iframe-wrap iframe { width: 100%; height: 100%; border: none; background: #fff; }
+
+/* ═══════════════════════════════════════════════
+   SLIDE 4 — MAY PIPELINE SNAPSHOT
+═══════════════════════════════════════════════ */
+#slide-4 { background: #f5f7fa; flex-direction: column; }
+.may-header {
+  background: #1D3756; padding: 16px 48px;
+  display: flex; align-items: center; justify-content: space-between;
+}
+.may-header-left .tag { font-size: 10px; font-weight: 700; letter-spacing: 2px; text-transform: uppercase; color: #6EBE4F; margin-bottom: 4px; }
+.may-header-left h2 { font-family: 'Montserrat', sans-serif; font-size: 20px; font-weight: 800; color: #fff; }
+.may-header img { height: 28px; filter: brightness(0) invert(1); opacity: 0.8; }
+.may-body { flex: 1; padding: 24px 48px 72px; overflow: auto; }
+.top-stripe { height: 4px; background: linear-gradient(90deg, #2399B5, #6EBE4F); }
+
+.kpi-row { display: grid; grid-template-columns: repeat(4, 1fr); gap: 16px; margin-bottom: 24px; }
+.kpi-card {
+  background: #fff; border-radius: 10px; padding: 20px 18px;
+  border: 1px solid #e8edf3; box-shadow: 0 1px 4px rgba(29,55,86,0.06);
+  position: relative; overflow: hidden;
+}
+.kpi-card::before {
+  content: ''; position: absolute; top: 0; left: 0; right: 0; height: 4px;
+  background: var(--accent);
+}
+.kpi-card.teal { --accent: #2399B5; }
+.kpi-card.green { --accent: #6EBE4F; }
+.kpi-card.navy { --accent: #1D3756; }
+.kpi-card.orange { --accent: #e67e22; }
+.kpi-label { font-size: 10px; font-weight: 700; letter-spacing: 1.5px; text-transform: uppercase; color: #8da0b4; margin-bottom: 8px; }
+.kpi-val { font-family: 'Montserrat', sans-serif; font-size: 36px; font-weight: 900; color: #1D3756; line-height: 1; }
+.kpi-val.teal { color: #2399B5; }
+.kpi-val.green { color: #6EBE4F; }
+.kpi-sub { font-size: 11px; color: #8da0b4; margin-top: 6px; }
+
+.section-hdr { display: flex; align-items: center; gap: 10px; margin-bottom: 14px; }
+.section-lbl { font-size: 10px; font-weight: 700; letter-spacing: 2px; text-transform: uppercase; color: #2399B5; }
+.section-rule { flex: 1; height: 1px; background: #dce4ed; }
+
+.product-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px; }
+.prod-card {
+  background: #fff; border-radius: 10px; padding: 16px;
+  border: 1px solid #e8edf3; box-shadow: 0 1px 4px rgba(29,55,86,0.06);
+}
+.prod-name { font-size: 11px; font-weight: 700; color: #1D3756; margin-bottom: 10px; text-transform: uppercase; letter-spacing: 1px; }
+.prod-row { display: flex; justify-content: space-between; font-size: 11px; padding: 3px 0; border-bottom: 1px solid #f0f4f8; }
+.prod-row:last-child { border: none; }
+.prod-row-lbl { color: #8da0b4; }
+.prod-row-val { font-weight: 700; color: #1D3756; }
+.prod-row-val.green { color: #6EBE4F; }
+.prod-row-val.teal { color: #2399B5; }
+.quota-bar-wrap { margin-top: 8px; }
+.quota-bar-bg { background: #f0f4f8; border-radius: 4px; height: 6px; overflow: hidden; }
+.quota-bar-fill { height: 100%; border-radius: 4px; background: #6EBE4F; transition: width 0.5s; }
+.quota-bar-fill.low { background: #e74c3c; }
+.quota-bar-fill.mid { background: #e67e22; }
+.quota-pct { font-size: 10px; color: #8da0b4; margin-top: 3px; text-align: right; }
+
+/* ═══════════════════════════════════════════════
+   SLIDE 5 — Q2 MOMENTUM
+═══════════════════════════════════════════════ */
+#slide-5 { background: #f5f7fa; flex-direction: column; }
+
+.trend-card {
+  background: #fff; border-radius: 10px; border: 1px solid #e8edf3;
+  box-shadow: 0 1px 4px rgba(29,55,86,0.06); overflow: hidden;
+}
+.trend-card-head {
+  background: var(--accent); padding: 8px 14px;
+  display: flex; justify-content: space-between; align-items: center;
+}
+.trend-card.jan { --accent: #2399B5; }
+.trend-card.feb { --accent: #1D3756; }
+.trend-card.mar { --accent: #6EBE4F; }
+.trend-card.apr { --accent: #1D3756; }
+.trend-card.may { --accent: #2399B5; }
+.trend-card-head-month { font-size: 13px; font-weight: 800; color: #fff; }
+.trend-card-head-status { font-size: 9px; font-weight: 700; letter-spacing: 1px; text-transform: uppercase; background: rgba(255,255,255,0.2); color: #fff; padding: 2px 8px; border-radius: 10px; }
+.trend-card-body { padding: 14px; }
+.tc-row { display: flex; justify-content: space-between; font-size: 11px; padding: 3px 0; border-bottom: 1px solid #f0f4f8; }
+.tc-row:last-child { border: none; }
+.tc-lbl { color: #8da0b4; }
+.tc-val { font-weight: 700; color: #1D3756; }
+.tc-val.green { color: #6EBE4F; }
+.tc-val.teal { color: #2399B5; }
+.tc-val.orange { color: #e67e22; }
+.tc-footer { margin: 8px 14px 14px; background: #f5f7fa; border-radius: 8px; padding: 8px 12px; display: flex; justify-content: space-between; border: 1px solid #e8edf3; }
+.tc-footer-left .tc-footer-val { font-family: 'Montserrat', sans-serif; font-size: 20px; font-weight: 800; }
+.tc-footer-left .tc-footer-val.bad { color: #e74c3c; }
+.tc-footer-left .tc-footer-val.ok { color: #e67e22; }
+.tc-footer-left .tc-footer-val.good { color: #6EBE4F; }
+.tc-footer-left .tc-footer-val.mtd { color: #2399B5; }
+.tc-footer-lbl { font-size: 9px; color: #8da0b4; text-transform: uppercase; letter-spacing: 1px; margin-top: 2px; }
+.tc-footer-right .tc-footer-val { text-align: right; }
+
+.insight-banner {
+  background: #1D3756; border-radius: 10px; padding: 14px 20px;
+  display: flex; align-items: center; gap: 16px; margin-bottom: 20px;
+}
+.insight-text { font-size: 13px; color: rgba(255,255,255,0.75); flex: 1; line-height: 1.5; }
+.insight-text strong { color: #6EBE4F; }
+.insight-stats { display: flex; }
+.i-stat { text-align: center; padding: 0 20px; border-left: 1px solid rgba(255,255,255,0.1); }
+.i-stat-val { font-family: 'Montserrat', sans-serif; font-size: 20px; font-weight: 800; color: #fff; }
+.i-stat-val.green { color: #6EBE4F; }
+.i-stat-val.teal { color: #2399B5; }
+.i-stat-lbl { font-size: 9px; color: rgba(255,255,255,0.4); text-transform: uppercase; letter-spacing: 1px; margin-top: 2px; }
+</style>
+</head>
+<body>
+
+<div class="deck">
+
+  <!-- ════════════════════════════════════
+       SLIDE 1 — COVER
+  ════════════════════════════════════ -->
+  <div class="slide active" id="slide-1">
+    <div class="cover-inner">
+      <img src="https://7091219.fs1.hubspotusercontent-na1.net/hubfs/7091219/email-assets/logo-revio-white.png" alt="Rev.io" class="cover-logo">
+      <div class="cover-tag">Sales Leadership Update · May 2026</div>
+      <div class="cover-title">Rev.io Sales<br><span>May Update</span></div>
+      <div class="cover-sub">Q2 2026 Progress · Pipeline · Team Performance</div>
+      <div class="cover-chips">
+        <div class="cover-chip">
+          <div class="chip-val green">$20,059</div>
+          <div class="chip-label">April Closed Won MRR</div>
+        </div>
+        <div class="cover-chip">
+          <div class="chip-val teal">$53,114</div>
+          <div class="chip-label">May Open Pipeline</div>
+        </div>
+        <div class="cover-chip">
+          <div class="chip-val">16</div>
+          <div class="chip-label">May Deals Won (MTD)</div>
+        </div>
+        <div class="cover-chip">
+          <div class="chip-val green">8.0×</div>
+          <div class="chip-label">April SDR ROI</div>
+        </div>
+      </div>
+    </div>
+    <div class="cover-date">May 21, 2026 · Rev.io Sales Leadership</div>
+  </div>
+
+  <!-- ════════════════════════════════════
+       SLIDE 2 — FORECAST DASHBOARD
+  ════════════════════════════════════ -->
+  <div class="slide" id="slide-2">
+    <div class="top-stripe"></div>
+    <div class="iframe-header">
+      <div class="iframe-header-left">
+        <div>
+          <div class="iframe-slide-tag">Slide 2 · Forecast</div>
+          <div class="iframe-slide-title">Q2 2026 Sales Forecast Dashboard</div>
+        </div>
+      </div>
+      <img src="https://7091219.fs1.hubspotusercontent-na1.net/hubfs/7091219/email-assets/logo-revio-white.png" alt="Rev.io">
+    </div>
+    <div class="iframe-wrap">
+      <iframe src="forecast.html" title="Q2 Forecast Dashboard" loading="lazy"></iframe>
+    </div>
+  </div>
+
+  <!-- ════════════════════════════════════
+       SLIDE 3 — SALES EFFICIENCY
+  ════════════════════════════════════ -->
+  <div class="slide" id="slide-3">
+    <div class="top-stripe"></div>
+    <div class="iframe-header">
+      <div class="iframe-header-left">
+        <div>
+          <div class="iframe-slide-tag">Slide 3 · Efficiency</div>
+          <div class="iframe-slide-title">Q2 2026 Sales Team Efficiency</div>
+        </div>
+      </div>
+      <img src="https://7091219.fs1.hubspotusercontent-na1.net/hubfs/7091219/email-assets/logo-revio-white.png" alt="Rev.io">
+    </div>
+    <div class="iframe-wrap">
+      <iframe src="q2-board-slide-1-efficiency-branded.html" title="Sales Efficiency Dashboard" loading="lazy"></iframe>
+    </div>
+  </div>
+
+  <!-- ════════════════════════════════════
+       SLIDE 4 — MAY PIPELINE SNAPSHOT
+  ════════════════════════════════════ -->
+  <div class="slide" id="slide-4">
+    <div class="top-stripe"></div>
+    <div class="may-header">
+      <div class="may-header-left">
+        <div class="tag">Slide 4 · May MTD</div>
+        <h2>May Pipeline Snapshot</h2>
+      </div>
+      <img src="https://7091219.fs1.hubspotusercontent-na1.net/hubfs/7091219/email-assets/logo-revio-white.png" alt="Rev.io">
+    </div>
+    <div class="may-body">
+
+      <div class="kpi-row">
+        <div class="kpi-card teal">
+          <div class="kpi-label">Deals Won (MTD)</div>
+          <div class="kpi-val teal">16</div>
+          <div class="kpi-sub">vs. 38 final in April</div>
+        </div>
+        <div class="kpi-card green">
+          <div class="kpi-label">Closed Won MRR</div>
+          <div class="kpi-val green">$7,414</div>
+          <div class="kpi-sub">Month-to-date</div>
+        </div>
+        <div class="kpi-card navy">
+          <div class="kpi-label">Open Pipeline</div>
+          <div class="kpi-val">95</div>
+          <div class="kpi-sub">opps · $53,114 value</div>
+        </div>
+        <div class="kpi-card orange">
+          <div class="kpi-label">Verbal Commits</div>
+          <div class="kpi-val" style="color:#e67e22">9</div>
+          <div class="kpi-sub">High-probability close</div>
+        </div>
+      </div>
+
+      <div class="section-hdr">
+        <div class="section-lbl">Pipeline by Product — Quota Attainment</div>
+        <div class="section-rule"></div>
+      </div>
+
+      <div class="product-grid">
+        <div class="prod-card">
+          <div class="prod-name">PSA 2.0</div>
+          <div class="prod-row"><span class="prod-row-lbl">Won MRR</span><span class="prod-row-val green">$6,215</span></div>
+          <div class="prod-row"><span class="prod-row-lbl">Open Pipeline</span><span class="prod-row-val teal">$35,315</span></div>
+          <div class="prod-row"><span class="prod-row-lbl">Deals Won</span><span class="prod-row-val">8</span></div>
+          <div class="prod-row"><span class="prod-row-lbl">Monthly Quota</span><span class="prod-row-val">$36,000</span></div>
+          <div class="quota-bar-wrap">
+            <div class="quota-bar-bg"><div class="quota-bar-fill mid" style="width:17%"></div></div>
+            <div class="quota-pct">17% attained</div>
+          </div>
+        </div>
+        <div class="prod-card">
+          <div class="prod-name">Billing / Odin</div>
+          <div class="prod-row"><span class="prod-row-lbl">Won MRR</span><span class="prod-row-val green">$700</span></div>
+          <div class="prod-row"><span class="prod-row-lbl">Open Pipeline</span><span class="prod-row-val teal">$13,877</span></div>
+          <div class="prod-row"><span class="prod-row-lbl">Deals Won</span><span class="prod-row-val">3</span></div>
+          <div class="prod-row"><span class="prod-row-lbl">Monthly Quota</span><span class="prod-row-val">$10,252</span></div>
+          <div class="quota-bar-wrap">
+            <div class="quota-bar-bg"><div class="quota-bar-fill low" style="width:7%"></div></div>
+            <div class="quota-pct">7% attained</div>
+          </div>
+        </div>
+        <div class="prod-card">
+          <div class="prod-name">Payments AR</div>
+          <div class="prod-row"><span class="prod-row-lbl">Won MRR</span><span class="prod-row-val green">$499</span></div>
+          <div class="prod-row"><span class="prod-row-lbl">Open Pipeline</span><span class="prod-row-val teal">$2,972</span></div>
+          <div class="prod-row"><span class="prod-row-lbl">Deals Won</span><span class="prod-row-val">4</span></div>
+          <div class="prod-row"><span class="prod-row-lbl">Monthly Quota</span><span class="prod-row-val">$11,040</span></div>
+          <div class="quota-bar-wrap">
+            <div class="quota-bar-bg"><div class="quota-bar-fill low" style="width:5%"></div></div>
+            <div class="quota-pct">5% attained</div>
+          </div>
+        </div>
+        <div class="prod-card">
+          <div class="prod-name">Cyber + CommerceHub</div>
+          <div class="prod-row"><span class="prod-row-lbl">Won MRR</span><span class="prod-row-val green">$0</span></div>
+          <div class="prod-row"><span class="prod-row-lbl">Open Pipeline</span><span class="prod-row-val teal">$950</span></div>
+          <div class="prod-row"><span class="prod-row-lbl">Deals Won</span><span class="prod-row-val">0</span></div>
+          <div class="prod-row"><span class="prod-row-lbl">Monthly Quota</span><span class="prod-row-val">$7,434</span></div>
+          <div class="quota-bar-wrap">
+            <div class="quota-bar-bg"><div class="quota-bar-fill low" style="width:1%"></div></div>
+            <div class="quota-pct">0% attained (10 days left)</div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- ════════════════════════════════════
+       SLIDE 5 — Q2 MOMENTUM
+  ════════════════════════════════════ -->
+  <div class="slide" id="slide-5">
+    <div class="top-stripe"></div>
+    <div class="may-header">
+      <div class="may-header-left">
+        <div class="tag">Slide 5 · Q2 Trend</div>
+        <h2>Q2 2026 Momentum — Jan Through May</h2>
+      </div>
+      <img src="https://7091219.fs1.hubspotusercontent-na1.net/hubfs/7091219/email-assets/logo-revio-white.png" alt="Rev.io">
+    </div>
+    <div class="may-body">
+
+      <div class="insight-banner">
+        <div class="insight-text">
+          MRR/SDR grew <strong>40×</strong> from January ($100) to April ($4,012). April's <strong>38 deals</strong> and <strong>$20,059 MRR</strong> were the strongest month of Q2. May is on pace with 10 days remaining and <strong>$53K open pipeline</strong> to close.
+        </div>
+        <div class="insight-stats">
+          <div class="i-stat">
+            <div class="i-stat-val teal">$100</div>
+            <div class="i-stat-lbl">Jan MRR/SDR</div>
+          </div>
+          <div class="i-stat">
+            <div class="i-stat-val green">$4,012</div>
+            <div class="i-stat-lbl">Apr MRR/SDR</div>
+          </div>
+          <div class="i-stat">
+            <div class="i-stat-val green">40×</div>
+            <div class="i-stat-lbl">Improvement</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="section-hdr">
+        <div class="section-lbl">SDR Performance — Q2 Month-by-Month</div>
+        <div class="section-rule"></div>
+      </div>
+
+      <div style="display:grid; grid-template-columns: repeat(5,1fr); gap:14px;">
+
+        <div class="trend-card jan">
+          <div class="trend-card-head">
+            <span class="trend-card-head-month">January</span>
+            <span class="trend-card-head-status">Closed</span>
+          </div>
+          <div class="trend-card-body">
+            <div class="tc-row"><span class="tc-lbl">Opps</span><span class="tc-val teal">92</span></div>
+            <div class="tc-row"><span class="tc-lbl">Deals Won</span><span class="tc-val">1</span></div>
+            <div class="tc-row"><span class="tc-lbl">Closed MRR</span><span class="tc-val">$500</span></div>
+            <div class="tc-row"><span class="tc-lbl">SDRs</span><span class="tc-val">5</span></div>
+            <div class="tc-row"><span class="tc-lbl">MRR/SDR</span><span class="tc-val">$100</span></div>
+          </div>
+          <div class="tc-footer">
+            <div class="tc-footer-left">
+              <div class="tc-footer-val bad">0.2×</div>
+              <div class="tc-footer-lbl">ROI</div>
+            </div>
+            <div class="tc-footer-right">
+              <div class="tc-footer-val" style="font-family:'Montserrat',sans-serif;font-size:18px;font-weight:800;color:#1D3756;text-align:right">2%</div>
+              <div class="tc-footer-lbl">Conv.</div>
+            </div>
+          </div>
+        </div>
+
+        <div class="trend-card feb">
+          <div class="trend-card-head">
+            <span class="trend-card-head-month">February</span>
+            <span class="trend-card-head-status">Closed</span>
+          </div>
+          <div class="trend-card-body">
+            <div class="tc-row"><span class="tc-lbl">Opps</span><span class="tc-val teal">73</span></div>
+            <div class="tc-row"><span class="tc-lbl">Deals Won</span><span class="tc-val">5</span></div>
+            <div class="tc-row"><span class="tc-lbl">Closed MRR</span><span class="tc-val">$3,450</span></div>
+            <div class="tc-row"><span class="tc-lbl">SDRs</span><span class="tc-val">6</span></div>
+            <div class="tc-row"><span class="tc-lbl">MRR/SDR</span><span class="tc-val">$575</span></div>
+          </div>
+          <div class="tc-footer">
+            <div class="tc-footer-left">
+              <div class="tc-footer-val ok">1.15×</div>
+              <div class="tc-footer-lbl">ROI</div>
+            </div>
+            <div class="tc-footer-right">
+              <div class="tc-footer-val" style="font-family:'Montserrat',sans-serif;font-size:18px;font-weight:800;color:#1D3756;text-align:right">11%</div>
+              <div class="tc-footer-lbl">Conv.</div>
+            </div>
+          </div>
+        </div>
+
+        <div class="trend-card mar">
+          <div class="trend-card-head">
+            <span class="trend-card-head-month">March</span>
+            <span class="trend-card-head-status">Closed</span>
+          </div>
+          <div class="trend-card-body">
+            <div class="tc-row"><span class="tc-lbl">Opps</span><span class="tc-val teal">83</span></div>
+            <div class="tc-row"><span class="tc-lbl">Deals Won</span><span class="tc-val">7</span></div>
+            <div class="tc-row"><span class="tc-lbl">Closed MRR</span><span class="tc-val">$7,780</span></div>
+            <div class="tc-row"><span class="tc-lbl">SDRs</span><span class="tc-val">6</span></div>
+            <div class="tc-row"><span class="tc-lbl">MRR/SDR</span><span class="tc-val">$1,297</span></div>
+          </div>
+          <div class="tc-footer">
+            <div class="tc-footer-left">
+              <div class="tc-footer-val good">2.6×</div>
+              <div class="tc-footer-lbl">ROI</div>
+            </div>
+            <div class="tc-footer-right">
+              <div class="tc-footer-val" style="font-family:'Montserrat',sans-serif;font-size:18px;font-weight:800;color:#1D3756;text-align:right">10%</div>
+              <div class="tc-footer-lbl">Conv.</div>
+            </div>
+          </div>
+        </div>
+
+        <div class="trend-card apr">
+          <div class="trend-card-head">
+            <span class="trend-card-head-month">April</span>
+            <span class="trend-card-head-status">Final</span>
+          </div>
+          <div class="trend-card-body">
+            <div class="tc-row"><span class="tc-lbl">Opps</span><span class="tc-val teal">189</span></div>
+            <div class="tc-row"><span class="tc-lbl">Deals Won</span><span class="tc-val">38</span></div>
+            <div class="tc-row"><span class="tc-lbl">Closed MRR</span><span class="tc-val green">$20,059</span></div>
+            <div class="tc-row"><span class="tc-lbl">SDRs</span><span class="tc-val">5</span></div>
+            <div class="tc-row"><span class="tc-lbl">MRR/SDR</span><span class="tc-val green">$4,012</span></div>
+          </div>
+          <div class="tc-footer">
+            <div class="tc-footer-left">
+              <div class="tc-footer-val good">8.0×</div>
+              <div class="tc-footer-lbl">ROI</div>
+            </div>
+            <div class="tc-footer-right">
+              <div class="tc-footer-val" style="font-family:'Montserrat',sans-serif;font-size:18px;font-weight:800;color:#6EBE4F;text-align:right">20%</div>
+              <div class="tc-footer-lbl">Conv.</div>
+            </div>
+          </div>
+        </div>
+
+        <div class="trend-card may">
+          <div class="trend-card-head">
+            <span class="trend-card-head-month">May</span>
+            <span class="trend-card-head-status">MTD</span>
+          </div>
+          <div class="trend-card-body">
+            <div class="tc-row"><span class="tc-lbl">Opps</span><span class="tc-val teal">111</span></div>
+            <div class="tc-row"><span class="tc-lbl">Deals Won</span><span class="tc-val">16</span></div>
+            <div class="tc-row"><span class="tc-lbl">Closed MRR</span><span class="tc-val orange">$7,414</span></div>
+            <div class="tc-row"><span class="tc-lbl">Open Pipeline</span><span class="tc-val teal">$53,114</span></div>
+            <div class="tc-row"><span class="tc-lbl">Verbal Commits</span><span class="tc-val">9 opps</span></div>
+          </div>
+          <div class="tc-footer">
+            <div class="tc-footer-left">
+              <div class="tc-footer-val mtd">~1.5×</div>
+              <div class="tc-footer-lbl">ROI · In Progress</div>
+            </div>
+            <div class="tc-footer-right">
+              <div class="tc-footer-val" style="font-family:'Montserrat',sans-serif;font-size:18px;font-weight:800;color:#2399B5;text-align:right">14%</div>
+              <div class="tc-footer-lbl">Conv. MTD</div>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </div>
+
+</div><!-- end deck -->
+
+<!-- ════════════════════════════════════
+     NAV BAR
+════════════════════════════════════ -->
+<div class="nav-bar">
+  <div class="nav-title">Rev.io Sales · May Update</div>
+  <div class="nav-controls">
+    <button class="nav-btn" id="btn-prev" onclick="goSlide(-1)" disabled>← Prev</button>
+    <div class="nav-dots" id="nav-dots"></div>
+    <span class="nav-counter" id="nav-counter">1 / 5</span>
+    <button class="nav-btn" id="btn-next" onclick="goSlide(1)">Next →</button>
+  </div>
+  <img src="https://7091219.fs1.hubspotusercontent-na1.net/hubfs/7091219/email-assets/logo-revio-white.png" alt="Rev.io" class="nav-logo">
+</div>
+
+<script>
+const TOTAL = 5;
+let cur = 1;
+
+const LABELS = ['Cover', 'Forecast', 'Efficiency', 'May Pipeline', 'Q2 Trend'];
+
+function buildDots() {
+  const wrap = document.getElementById('nav-dots');
+  for (let i = 1; i <= TOTAL; i++) {
+    const d = document.createElement('div');
+    d.className = 'dot' + (i === 1 ? ' active' : '');
+    d.title = LABELS[i-1];
+    d.onclick = () => jumpSlide(i);
+    d.id = 'dot-' + i;
+    wrap.appendChild(d);
+  }
+}
+
+function jumpSlide(n) {
+  document.getElementById('slide-' + cur).classList.remove('active');
+  document.getElementById('dot-' + cur).classList.remove('active');
+  cur = n;
+  document.getElementById('slide-' + cur).classList.add('active');
+  document.getElementById('dot-' + cur).classList.add('active');
+  document.getElementById('nav-counter').textContent = cur + ' / ' + TOTAL;
+  document.getElementById('btn-prev').disabled = (cur === 1);
+  document.getElementById('btn-next').disabled = (cur === TOTAL);
+}
+
+function goSlide(dir) {
+  const next = cur + dir;
+  if (next < 1 || next > TOTAL) return;
+  jumpSlide(next);
+}
+
+document.addEventListener('keydown', e => {
+  if (e.key === 'ArrowRight' || e.key === 'ArrowDown') goSlide(1);
+  if (e.key === 'ArrowLeft' || e.key === 'ArrowUp') goSlide(-1);
+});
+
+buildDots();
+</script>
+</body>
+</html>
