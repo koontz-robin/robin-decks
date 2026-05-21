@@ -1,6 +1,6 @@
 # MEMORY.md — Robin's Long-Term Memory
 
-Last updated: 2026-05-08
+Last updated: 2026-05-21
 
 ---
 
@@ -96,12 +96,36 @@ Last updated: 2026-05-08
 
 ## Decks & Dashboard Library
 - Full library: `/home/openclaw/.openclaw/workspace/DECKS-LIBRARY.md`
-- 55 files catalogued as of 2026-05-08
+- Last updated: 2026-05-21
+- 57+ files catalogued
 - GitHub Pages base: `https://koontz-robin.github.io/robin-decks/`
 - **Rule:** Every new deck/dashboard Robin creates MUST be added to DECKS-LIBRARY.md before it's considered done
 - Never use htmlpreview.github.io or raw.githack.com — flagged by Proofpoint
 
 ---
+
+## May Update Deck
+- URL: https://koontz-robin.github.io/robin-decks/may-update-deck.html
+- 5 slides: Cover → Efficiency → Pipeline Trends → Closed Lost → May Pipeline Snapshot
+- Dark navy theme with animated particle background
+- Slide 5 includes Software Missing Capabilities breakdown (last 60 days)
+- SDR metric source: `SDR_Influence__c != 'None'` (picklist stores blank as literal 'None')
+- Opps sourced = CreatedDate that month; Deals won = CloseDate that month
+- Effective SDRs: Jan=5, Feb=6, Mar=6, Apr=6, May=6
+- AE meetings/AE/day uses per-month Mon-Fri business day counts (no holiday deduction)
+
+## Efficiency Dashboard
+- URL: https://koontz-robin.github.io/robin-decks/q2-board-slide-1-efficiency-branded.html
+- Restyled to dark navy theme (matches May Update deck)
+- May AE meetings: 204 (Ryan confirmed), 7 AEs, 1.94/AE/day
+- March: 8 Active AEs (updated May 21)
+- April: 256 meetings, 6 SDRs, 8 deals won, $5,520 MRR, $920/SDR, 1.84× ROI
+- May: 63 opps influenced, 61 discovery calls, 5 deals won, $3,565 MRR, $594/SDR, 1.19× ROI
+
+## AE Capacity Dashboard
+- URL: https://koontz-robin.github.io/robin-decks/ae-capacity-dashboard.html
+- Refreshed May 21: 179 MTD meetings, 11 active AEs, projected 251
+- New AEs added: Emily Petraglia, Blake Boatright, Ingrid Beard, Justin Lee, etc.
 
 ## Forecast Dashboard
 - URL: https://koontz-robin.github.io/robin-decks/forecast.html
