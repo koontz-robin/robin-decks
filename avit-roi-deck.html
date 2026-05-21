@@ -17,20 +17,13 @@
     --text-sub: #4A5568;
     --border: #E2E8F0;
   }
-
   * { box-sizing: border-box; margin: 0; padding: 0; }
-
-  body {
-    font-family: 'Segoe UI', -apple-system, BlinkMacSystemFont, sans-serif;
-    background: #F0F4FF;
-    color: var(--text-main);
-  }
+  body { font-family: 'Segoe UI', -apple-system, BlinkMacSystemFont, sans-serif; background: #F0F4FF; color: var(--text-main); }
 
   /* NAV */
   nav {
     position: fixed; top: 0; left: 0; right: 0; z-index: 100;
-    background: rgba(10,15,30,0.97);
-    backdrop-filter: blur(12px);
+    background: rgba(10,15,30,0.97); backdrop-filter: blur(12px);
     display: flex; align-items: center; justify-content: space-between;
     padding: 0 32px; height: 56px;
     border-bottom: 1px solid rgba(255,255,255,0.08);
@@ -38,223 +31,164 @@
   nav .logo { color: #fff; font-weight: 700; font-size: 15px; letter-spacing: -0.3px; }
   nav .logo span { color: var(--rev-accent); }
   nav .nav-pills { display: flex; gap: 4px; }
-  nav .pill {
-    background: transparent; border: none; color: rgba(255,255,255,0.55);
-    font-size: 12px; font-weight: 500; padding: 5px 12px; border-radius: 20px;
-    cursor: pointer; transition: all .2s;
-  }
+  nav .pill { background: transparent; border: none; color: rgba(255,255,255,0.55); font-size: 12px; font-weight: 500; padding: 5px 12px; border-radius: 20px; cursor: pointer; transition: all .2s; text-decoration: none; }
   nav .pill:hover, nav .pill.active { background: rgba(0,87,255,0.25); color: #fff; }
 
-  /* SLIDE SYSTEM */
+  /* SLIDES */
   .slide-container { padding-top: 56px; }
-  .slide {
-    min-height: 100vh;
-    display: flex; flex-direction: column; justify-content: center; align-items: center;
-    padding: 48px 32px; position: relative; overflow: hidden;
-  }
-
-  /* HERO SLIDE */
-  .slide-hero {
-    background: linear-gradient(135deg, var(--rev-dark) 0%, #0A1A3E 50%, #051025 100%);
-    color: #fff;
-  }
-  .slide-hero::before {
-    content: ''; position: absolute; inset: 0;
-    background: radial-gradient(ellipse at 20% 50%, rgba(0,87,255,0.2) 0%, transparent 60%),
-                radial-gradient(ellipse at 80% 20%, rgba(0,194,255,0.12) 0%, transparent 50%);
-  }
-  .hero-content { position: relative; z-index: 1; text-align: center; max-width: 800px; }
-  .hero-badge {
-    display: inline-block; background: rgba(0,87,255,0.25); border: 1px solid rgba(0,87,255,0.5);
-    color: var(--rev-accent); font-size: 11px; font-weight: 700; letter-spacing: 1.5px;
-    padding: 5px 16px; border-radius: 20px; text-transform: uppercase; margin-bottom: 24px;
-  }
-  .hero-title {
-    font-size: clamp(36px, 6vw, 64px); font-weight: 800; line-height: 1.05;
-    letter-spacing: -1.5px; margin-bottom: 16px;
-  }
-  .hero-title .highlight { color: var(--rev-accent); }
-  .hero-sub { font-size: 18px; color: rgba(255,255,255,0.65); margin-bottom: 40px; line-height: 1.6; }
-  .hero-stats {
-    display: grid; grid-template-columns: repeat(3, 1fr); gap: 24px; margin-top: 32px;
-  }
-  .hero-stat {
-    background: rgba(255,255,255,0.06); border: 1px solid rgba(255,255,255,0.1);
-    border-radius: 16px; padding: 20px;
-  }
-  .hero-stat .num { font-size: 36px; font-weight: 800; color: var(--rev-accent); }
-  .hero-stat .label { font-size: 12px; color: rgba(255,255,255,0.6); margin-top: 4px; }
-
-  /* SECTION SLIDES */
+  .slide { min-height: 100vh; display: flex; flex-direction: column; justify-content: center; align-items: center; padding: 64px 32px; position: relative; overflow: hidden; }
+  .slide-hero { background: linear-gradient(135deg, var(--rev-dark) 0%, #0A1A3E 50%, #051025 100%); color: #fff; }
+  .slide-hero::before { content: ''; position: absolute; inset: 0; background: radial-gradient(ellipse at 20% 50%, rgba(0,87,255,0.2) 0%, transparent 60%), radial-gradient(ellipse at 80% 20%, rgba(0,194,255,0.12) 0%, transparent 50%); }
   .slide-white { background: #fff; }
   .slide-light { background: var(--rev-light); }
   .slide-dark { background: var(--rev-dark); color: #fff; }
 
-  .section-header {
-    text-align: center; max-width: 700px; margin: 0 auto 48px;
-  }
-  .section-tag {
-    display: inline-block; background: rgba(0,87,255,0.1); color: var(--rev-blue);
-    font-size: 11px; font-weight: 700; letter-spacing: 1.5px;
-    padding: 4px 14px; border-radius: 20px; text-transform: uppercase; margin-bottom: 12px;
-  }
+  .hero-content { position: relative; z-index: 1; text-align: center; max-width: 860px; }
+  .hero-badge { display: inline-block; background: rgba(0,87,255,0.25); border: 1px solid rgba(0,87,255,0.5); color: var(--rev-accent); font-size: 11px; font-weight: 700; letter-spacing: 1.5px; padding: 5px 16px; border-radius: 20px; text-transform: uppercase; margin-bottom: 24px; }
+  .hero-eyebrow { font-size: 13px; color: rgba(255,255,255,0.5); margin-bottom: 10px; letter-spacing: 0.5px; }
+  .hero-title { font-size: clamp(34px, 5.5vw, 60px); font-weight: 800; line-height: 1.05; letter-spacing: -1.5px; margin-bottom: 16px; }
+  .hero-title .highlight { color: var(--rev-accent); }
+  .hero-sub { font-size: 17px; color: rgba(255,255,255,0.65); margin-bottom: 40px; line-height: 1.65; max-width: 680px; margin-left: auto; margin-right: auto; }
+  .hero-stats { display: grid; grid-template-columns: repeat(4, 1fr); gap: 16px; margin-top: 32px; }
+  .hero-stat { background: rgba(255,255,255,0.06); border: 1px solid rgba(255,255,255,0.1); border-radius: 14px; padding: 20px 16px; }
+  .hero-stat .num { font-size: 32px; font-weight: 800; color: var(--rev-accent); line-height: 1; }
+  .hero-stat .label { font-size: 11px; color: rgba(255,255,255,0.55); margin-top: 6px; line-height: 1.4; }
+
+  .content-max { width: 100%; max-width: 1040px; }
+  .section-header { text-align: center; max-width: 720px; margin: 0 auto 48px; }
+  .section-tag { display: inline-block; background: rgba(0,87,255,0.1); color: var(--rev-blue); font-size: 11px; font-weight: 700; letter-spacing: 1.5px; padding: 4px 14px; border-radius: 20px; text-transform: uppercase; margin-bottom: 12px; }
   .section-tag.green { background: rgba(0,217,126,0.1); color: var(--rev-green); }
   .section-tag.orange { background: rgba(255,107,53,0.1); color: var(--rev-orange); }
-  .section-title { font-size: clamp(28px, 4vw, 42px); font-weight: 800; letter-spacing: -1px; line-height: 1.15; }
-  .section-sub { font-size: 16px; color: var(--text-sub); margin-top: 10px; line-height: 1.6; }
+  .section-tag.cyan { background: rgba(0,194,255,0.1); color: var(--rev-accent); }
+  .section-title { font-size: clamp(26px, 3.5vw, 40px); font-weight: 800; letter-spacing: -1px; line-height: 1.15; }
+  .section-sub { font-size: 16px; color: var(--text-sub); margin-top: 10px; line-height: 1.65; }
+  .section-title.white { color: #fff; }
+  .section-sub.white { color: rgba(255,255,255,0.6); }
 
-  .content-max { width: 100%; max-width: 1000px; }
+  /* ACCOUNT SNAPSHOT */
+  .snapshot-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 16px; }
+  .snapshot-card { background: #fff; border: 1px solid var(--border); border-radius: 14px; padding: 20px; display: flex; gap: 14px; align-items: flex-start; box-shadow: 0 2px 8px rgba(0,0,0,0.04); }
+  .snapshot-icon { font-size: 22px; flex-shrink: 0; margin-top: 2px; }
+  .snapshot-label { font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 1px; color: var(--text-sub); margin-bottom: 4px; }
+  .snapshot-val { font-size: 14px; font-weight: 600; color: var(--text-main); line-height: 1.4; }
 
-  /* PAIN CARDS */
-  .pain-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 20px; }
-  .pain-card {
-    background: #fff; border: 1px solid var(--border); border-radius: 16px; padding: 24px;
-    border-left: 4px solid var(--rev-orange);
-    box-shadow: 0 2px 12px rgba(0,0,0,0.05);
-    transition: transform .2s, box-shadow .2s;
-  }
+  /* QUOTE BLOCK */
+  .quote-block { background: linear-gradient(135deg, #0A0F1E, #0A1A3E); border-radius: 20px; padding: 36px 40px; color: #fff; max-width: 800px; margin: 0 auto 40px; position: relative; }
+  .quote-block::before { content: '"'; position: absolute; top: -10px; left: 24px; font-size: 100px; color: rgba(0,194,255,0.15); font-family: Georgia, serif; line-height: 1; }
+  .quote-text { font-size: 18px; line-height: 1.7; color: rgba(255,255,255,0.9); font-style: italic; position: relative; z-index: 1; }
+  .quote-attr { margin-top: 16px; font-size: 13px; color: var(--rev-accent); font-weight: 600; font-style: normal; }
+
+  /* PAIN GRID */
+  .pain-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 20px; }
+  .pain-card { background: #fff; border: 1px solid var(--border); border-radius: 16px; padding: 24px; border-left: 4px solid var(--rev-orange); box-shadow: 0 2px 12px rgba(0,0,0,0.05); transition: transform .2s, box-shadow .2s; }
   .pain-card:hover { transform: translateY(-2px); box-shadow: 0 8px 24px rgba(0,0,0,0.1); }
-  .pain-icon { font-size: 28px; margin-bottom: 12px; }
-  .pain-title { font-size: 16px; font-weight: 700; margin-bottom: 8px; }
-  .pain-desc { font-size: 14px; color: var(--text-sub); line-height: 1.6; }
-  .pain-cost {
-    margin-top: 12px; display: inline-block;
-    background: rgba(255,107,53,0.1); color: var(--rev-orange);
-    font-size: 12px; font-weight: 700; padding: 3px 10px; border-radius: 20px;
-  }
+  .pain-icon { font-size: 26px; margin-bottom: 12px; }
+  .pain-title { font-size: 15px; font-weight: 700; margin-bottom: 8px; }
+  .pain-desc { font-size: 13px; color: var(--text-sub); line-height: 1.6; }
+  .pain-quote { margin-top: 10px; padding: 8px 12px; background: rgba(255,107,53,0.06); border-left: 3px solid var(--rev-orange); font-size: 12px; color: var(--rev-orange); font-style: italic; border-radius: 0 6px 6px 0; }
+  .pain-cost { margin-top: 10px; display: inline-block; background: rgba(255,107,53,0.1); color: var(--rev-orange); font-size: 12px; font-weight: 700; padding: 3px 10px; border-radius: 20px; }
 
   /* ROI TABLE */
+  .roi-wrap { overflow-x: auto; border-radius: 16px; box-shadow: 0 4px 20px rgba(0,0,0,0.08); margin-bottom: 24px; }
   .roi-table { width: 100%; border-collapse: collapse; }
-  .roi-table th {
-    background: var(--rev-dark); color: #fff; font-size: 12px; font-weight: 700;
-    text-transform: uppercase; letter-spacing: 1px; padding: 14px 20px; text-align: left;
-  }
+  .roi-table th { background: var(--rev-dark); color: #fff; font-size: 12px; font-weight: 700; text-transform: uppercase; letter-spacing: 1px; padding: 14px 20px; text-align: left; }
   .roi-table th:last-child, .roi-table td:last-child { text-align: right; }
-  .roi-table td { padding: 14px 20px; font-size: 14px; border-bottom: 1px solid var(--border); }
+  .roi-table td { padding: 14px 20px; font-size: 14px; border-bottom: 1px solid var(--border); vertical-align: top; }
   .roi-table tr:last-child td { border-bottom: none; }
   .roi-table .positive { color: var(--rev-green); font-weight: 700; }
   .roi-table .negative { color: var(--rev-orange); font-weight: 700; }
-  .roi-table tr.total-row td {
-    background: rgba(0,87,255,0.05); font-weight: 700; font-size: 15px;
-    border-top: 2px solid var(--rev-blue);
-  }
+  .roi-table tr.total-row td { background: rgba(0,87,255,0.05); font-weight: 700; font-size: 15px; border-top: 2px solid var(--rev-blue); }
   .roi-table tr:nth-child(even) td { background: #FAFBFF; }
+  .sub-note { font-size: 11px; color: var(--text-sub); margin-top: 3px; font-style: italic; font-weight: 400; display: block; }
 
   /* VALUE CARDS */
-  .value-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 20px; }
-  .value-card {
-    background: rgba(255,255,255,0.07); border: 1px solid rgba(255,255,255,0.12);
-    border-radius: 16px; padding: 24px; text-align: center;
-  }
-  .value-card .v-icon { font-size: 32px; margin-bottom: 12px; }
-  .value-card .v-num { font-size: 32px; font-weight: 800; color: var(--rev-accent); }
-  .value-card .v-label { font-size: 13px; color: rgba(255,255,255,0.65); margin-top: 4px; }
+  .value-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 20px; }
+  .value-card { background: rgba(255,255,255,0.07); border: 1px solid rgba(255,255,255,0.12); border-radius: 16px; padding: 24px; text-align: center; }
+  .value-card .v-icon { font-size: 30px; margin-bottom: 10px; }
+  .value-card .v-num { font-size: 30px; font-weight: 800; color: var(--rev-accent); }
+  .value-card .v-label { font-size: 12px; color: rgba(255,255,255,0.6); margin-top: 4px; line-height: 1.4; }
 
   /* COMPARE */
-  .compare-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 24px; width: 100%; max-width: 900px; }
-  .compare-card {
-    border-radius: 20px; padding: 32px; border: 2px solid transparent;
-  }
-  .compare-card.old {
-    background: #FFF8F5; border-color: var(--rev-orange);
-  }
-  .compare-card.new {
-    background: #F0FFF8; border-color: var(--rev-green);
-  }
-  .compare-label {
-    font-size: 11px; font-weight: 700; letter-spacing: 1.5px; text-transform: uppercase;
-    margin-bottom: 12px;
-  }
+  .compare-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 24px; width: 100%; max-width: 940px; }
+  .compare-card { border-radius: 20px; padding: 30px; border: 2px solid transparent; }
+  .compare-card.old { background: #FFF8F5; border-color: var(--rev-orange); }
+  .compare-card.new { background: #F0FFF8; border-color: var(--rev-green); }
+  .compare-label { font-size: 11px; font-weight: 700; letter-spacing: 1.5px; text-transform: uppercase; margin-bottom: 10px; }
   .compare-card.old .compare-label { color: var(--rev-orange); }
   .compare-card.new .compare-label { color: var(--rev-green); }
-  .compare-title { font-size: 22px; font-weight: 800; margin-bottom: 20px; }
-  .compare-item {
-    display: flex; align-items: flex-start; gap: 10px;
-    font-size: 14px; margin-bottom: 12px; line-height: 1.5;
-  }
-  .compare-item .bullet { font-size: 16px; flex-shrink: 0; }
+  .compare-title { font-size: 20px; font-weight: 800; margin-bottom: 18px; }
+  .compare-item { display: flex; align-items: flex-start; gap: 10px; font-size: 13px; margin-bottom: 10px; line-height: 1.5; }
+  .compare-item .bullet { flex-shrink: 0; margin-top: 1px; }
 
-  /* INVESTMENT CARD */
-  .investment-hero {
-    background: linear-gradient(135deg, #0057FF 0%, #0040CC 100%);
-    border-radius: 24px; padding: 40px; color: #fff; text-align: center;
-    max-width: 600px; margin: 0 auto;
-    box-shadow: 0 20px 60px rgba(0,87,255,0.35);
-  }
-  .investment-hero .inv-label { font-size: 12px; letter-spacing: 2px; text-transform: uppercase; opacity: .7; }
-  .investment-hero .inv-amount { font-size: 72px; font-weight: 900; letter-spacing: -3px; margin: 8px 0; }
-  .investment-hero .inv-sub { font-size: 15px; opacity: .8; }
-  .inv-breakdown {
-    display: flex; gap: 16px; justify-content: center; margin-top: 24px; flex-wrap: wrap;
-  }
-  .inv-chip {
-    background: rgba(255,255,255,0.15); border: 1px solid rgba(255,255,255,0.25);
-    border-radius: 10px; padding: 8px 16px; font-size: 13px; font-weight: 600;
-  }
+  /* REQS GRID */
+  .req-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 16px; }
+  .req-card { background: #fff; border: 1px solid var(--border); border-radius: 14px; padding: 20px; box-shadow: 0 2px 8px rgba(0,0,0,0.04); }
+  .req-header { display: flex; align-items: center; gap: 10px; margin-bottom: 10px; }
+  .req-icon { font-size: 20px; }
+  .req-title { font-size: 14px; font-weight: 700; }
+  .req-status { margin-left: auto; font-size: 11px; font-weight: 700; padding: 2px 9px; border-radius: 20px; }
+  .req-status.yes { background: rgba(0,217,126,0.1); color: var(--rev-green); }
+  .req-status.wip { background: rgba(255,107,53,0.1); color: var(--rev-orange); }
+  .req-desc { font-size: 12px; color: var(--text-sub); line-height: 1.55; }
 
-  /* PAYBACK */
-  .payback-bar-wrap { width: 100%; max-width: 700px; margin: 0 auto; }
-  .payback-bar-label { display: flex; justify-content: space-between; font-size: 13px; margin-bottom: 8px; }
-  .payback-bar { background: rgba(255,255,255,0.1); border-radius: 8px; height: 28px; overflow: hidden; margin-bottom: 20px; }
-  .payback-fill { height: 100%; border-radius: 8px; display: flex; align-items: center; padding-left: 12px; font-size: 12px; font-weight: 700; color: #fff; transition: width 1.5s ease; }
-  .payback-fill.blue { background: linear-gradient(90deg, #0057FF, #00C2FF); }
-  .payback-fill.green { background: linear-gradient(90deg, #00D97E, #00FF99); }
-  .payback-fill.gray { background: rgba(255,255,255,0.2); }
+  /* INVESTMENT */
+  .invest-layout { display: grid; grid-template-columns: 1fr 1fr; gap: 32px; max-width: 880px; width: 100%; align-items: start; }
+  .investment-hero { background: linear-gradient(135deg, #0057FF 0%, #0040CC 100%); border-radius: 24px; padding: 36px; color: #fff; box-shadow: 0 20px 60px rgba(0,87,255,0.35); }
+  .investment-hero .inv-label { font-size: 11px; letter-spacing: 2px; text-transform: uppercase; opacity: .7; }
+  .investment-hero .inv-amount { font-size: 58px; font-weight: 900; letter-spacing: -3px; margin: 8px 0; }
+  .investment-hero .inv-sub { font-size: 13px; opacity: .8; }
+  .inv-breakdown { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 20px; }
+  .inv-chip { background: rgba(255,255,255,0.15); border: 1px solid rgba(255,255,255,0.25); border-radius: 10px; padding: 6px 14px; font-size: 12px; font-weight: 600; }
+  .payback-section { display: flex; flex-direction: column; gap: 16px; justify-content: center; }
+  .pb-item-label { display: flex; justify-content: space-between; font-size: 13px; margin-bottom: 6px; }
+  .pb-item-label .pb-val { font-weight: 700; color: var(--rev-green); }
+  .pb-bar { background: #E8EDF8; border-radius: 8px; height: 24px; overflow: hidden; }
+  .pb-fill { height: 100%; border-radius: 8px; display: flex; align-items: center; padding-left: 10px; font-size: 11px; font-weight: 700; color: #fff; }
 
   /* NEXT STEPS */
-  .steps-list { display: flex; flex-direction: column; gap: 16px; width: 100%; max-width: 700px; }
-  .step-item {
-    display: flex; gap: 20px; align-items: flex-start;
-    background: #fff; border-radius: 14px; padding: 20px 24px;
-    border: 1px solid var(--border); box-shadow: 0 2px 8px rgba(0,0,0,0.04);
-  }
-  .step-num {
-    width: 36px; height: 36px; border-radius: 10px; background: var(--rev-blue);
-    color: #fff; font-weight: 800; font-size: 16px;
-    display: flex; align-items: center; justify-content: center; flex-shrink: 0;
-  }
+  .steps-list { display: flex; flex-direction: column; gap: 16px; width: 100%; max-width: 720px; }
+  .step-item { display: flex; gap: 20px; align-items: flex-start; background: #fff; border-radius: 14px; padding: 20px 24px; border: 1px solid var(--border); box-shadow: 0 2px 8px rgba(0,0,0,0.04); }
+  .step-num { width: 36px; height: 36px; border-radius: 10px; background: var(--rev-blue); color: #fff; font-weight: 800; font-size: 16px; display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
   .step-content .step-title { font-weight: 700; font-size: 15px; }
-  .step-content .step-sub { font-size: 13px; color: var(--text-sub); margin-top: 3px; }
-  .step-content .step-date {
-    display: inline-block; margin-top: 6px;
-    background: rgba(0,87,255,0.1); color: var(--rev-blue);
-    font-size: 11px; font-weight: 700; padding: 2px 8px; border-radius: 20px;
-  }
+  .step-content .step-sub { font-size: 13px; color: var(--text-sub); margin-top: 4px; line-height: 1.5; }
+  .step-content .step-date { display: inline-block; margin-top: 7px; background: rgba(0,87,255,0.1); color: var(--rev-blue); font-size: 11px; font-weight: 700; padding: 2px 8px; border-radius: 20px; }
+
+  /* DM CARD */
+  .dm-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 14px; }
+  .dm-card { background: rgba(255,255,255,0.07); border: 1px solid rgba(255,255,255,0.12); border-radius: 14px; padding: 18px; text-align: center; }
+  .dm-avatar { width: 44px; height: 44px; border-radius: 50%; background: linear-gradient(135deg, #0057FF, #00C2FF); display: flex; align-items: center; justify-content: center; font-size: 16px; font-weight: 800; color: #fff; margin: 0 auto 10px; }
+  .dm-name { font-size: 13px; font-weight: 700; color: #fff; }
+  .dm-role { font-size: 11px; color: rgba(255,255,255,0.5); margin-top: 3px; }
+  .dm-tag { margin-top: 8px; font-size: 10px; font-weight: 700; padding: 2px 8px; border-radius: 20px; display: inline-block; }
+  .dm-tag.active { background: rgba(0,217,126,0.15); color: var(--rev-green); }
+  .dm-tag.later { background: rgba(255,107,53,0.15); color: var(--rev-orange); }
+  .dm-tag.finance { background: rgba(0,194,255,0.15); color: var(--rev-accent); }
+
+  /* SCROLL */
+  .scroll-hint { position: absolute; bottom: 24px; left: 50%; transform: translateX(-50%); color: rgba(255,255,255,0.4); font-size: 12px; text-align: center; animation: bounce 2s infinite; }
+  @keyframes bounce { 0%, 100% { transform: translateX(-50%) translateY(0); } 50% { transform: translateX(-50%) translateY(6px); } }
 
   /* FOOTER */
-  .deck-footer {
-    background: var(--rev-dark); color: rgba(255,255,255,0.5);
-    text-align: center; padding: 20px; font-size: 12px;
-  }
+  .deck-footer { background: var(--rev-dark); color: rgba(255,255,255,0.4); text-align: center; padding: 20px; font-size: 12px; }
 
-  /* SCROLL INDICATOR */
-  .scroll-hint {
-    position: absolute; bottom: 24px; left: 50%; transform: translateX(-50%);
-    color: rgba(255,255,255,0.4); font-size: 12px; text-align: center;
-    animation: bounce 2s infinite;
-  }
-  @keyframes bounce {
-    0%, 100% { transform: translateX(-50%) translateY(0); }
-    50% { transform: translateX(-50%) translateY(6px); }
-  }
-
-  @media (max-width: 600px) {
-    .hero-stats { grid-template-columns: 1fr; }
+  @media (max-width: 700px) {
+    .hero-stats { grid-template-columns: 1fr 1fr; }
     .compare-grid { grid-template-columns: 1fr; }
+    .invest-layout { grid-template-columns: 1fr; }
     nav .nav-pills { display: none; }
   }
 </style>
 </head>
 <body>
 
-<!-- NAV -->
 <nav>
   <div class="logo">rev<span>.</span>io × AVIT</div>
   <div class="nav-pills">
     <a href="#hero" class="pill active">Overview</a>
-    <a href="#pain" class="pill">Current State</a>
+    <a href="#account" class="pill">Account</a>
+    <a href="#pain" class="pill">Pain Points</a>
     <a href="#roi" class="pill">ROI</a>
-    <a href="#compare" class="pill">PSA 2.0</a>
+    <a href="#fit" class="pill">Product Fit</a>
     <a href="#invest" class="pill">Investment</a>
     <a href="#next" class="pill">Next Steps</a>
   </div>
@@ -265,333 +199,617 @@
 <!-- SLIDE 1: HERO -->
 <section class="slide slide-hero" id="hero">
   <div class="hero-content">
-    <div class="hero-badge">ROI Business Case · May 2026</div>
+    <div class="hero-badge">ROI Business Case · June 2026</div>
+    <div class="hero-eyebrow">Audio Visual &amp; Information Technology · Tampa, FL</div>
     <h1 class="hero-title">
-      The business case for<br><span class="highlight">AVIT + Rev.io PSA 2.0</span>
+      Why AVIT's next PSA<br>should be <span class="highlight">Rev.io PSA 2.0</span>
     </h1>
     <p class="hero-sub">
-      A 14-person MSP running ConnectWise is leaving efficiency on the table.<br>
-      Here's exactly what switching to PSA 2.0 is worth.
+      AVIT has outgrown ConnectWise. A modern platform purpose-built for AV+IT+MSP operators — with native NetSuite integration, intelligent parent-child hierarchies, and AI-first design — is the path forward.
     </p>
     <div class="hero-stats">
       <div class="hero-stat">
-        <div class="num">$41K+</div>
-        <div class="label">Estimated Year-1 Value</div>
+        <div class="num">130</div>
+        <div class="label">Desired platform users (70 currently blocked by CW pricing)</div>
       </div>
       <div class="hero-stat">
-        <div class="num">&lt; 2 mo</div>
-        <div class="label">Payback Period</div>
+        <div class="num">30–40</div>
+        <div class="label">Integrations to consolidate</div>
       </div>
       <div class="hero-stat">
-        <div class="num">6.3×</div>
-        <div class="label">First-Year ROI</div>
+        <div class="num">$170K+</div>
+        <div class="label">Est. annual ConnectWise spend at full user count</div>
+      </div>
+      <div class="hero-stat">
+        <div class="num">Dec '26</div>
+        <div class="label">ConnectWise contract renewal deadline</div>
       </div>
     </div>
   </div>
   <div class="scroll-hint">↓ scroll to explore</div>
 </section>
 
-<!-- SLIDE 2: CURRENT STATE / PAIN -->
-<section class="slide slide-light" id="pain">
+<!-- SLIDE 2: ACCOUNT SNAPSHOT -->
+<section class="slide slide-light" id="account">
   <div class="content-max">
     <div class="section-header">
-      <div class="section-tag orange">Current State</div>
-      <h2 class="section-title">What ConnectWise is costing AVIT</h2>
-      <p class="section-sub">As a 14-person MSP-no-voice shop, every hour of admin overhead hits margin hard.</p>
+      <div class="section-tag">Account Snapshot</div>
+      <h2 class="section-title">Who is AVIT?</h2>
+      <p class="section-sub">AVIT = Audio Visual + Information Technology. A full-stack managed services company with deep roots in hospitality, security, and AV — an inch deep, a mile wide.</p>
     </div>
-    <div class="pain-grid">
-      <div class="pain-card">
-        <div class="pain-icon">💸</div>
-        <div class="pain-title">Bloated Licensing Cost</div>
-        <div class="pain-desc">ConnectWise PSA runs $79–$119/seat/month. At 14 seats, that's $13K–$20K/year in platform fees — for a tool that's overbuilt for an MSP your size.</div>
-        <div class="pain-cost">~$16,800/yr estimated</div>
+
+    <div class="quote-block">
+      <p class="quote-text">"I am not thrilled in being handcuffed by my software. We are complex. We are big enough where we deserve to have a conversation... I don't need what Dave and Artie cooked up in the mid-90s to be my main platform. Show me innovation."</p>
+      <div class="quote-attr">— AVIT leadership, Discovery Call</div>
+    </div>
+
+    <div class="snapshot-grid">
+      <div class="snapshot-card">
+        <div class="snapshot-icon">📍</div>
+        <div>
+          <div class="snapshot-label">Location</div>
+          <div class="snapshot-val">Tampa, FL</div>
+        </div>
       </div>
-      <div class="pain-card">
-        <div class="pain-icon">⏱️</div>
-        <div class="pain-title">Admin Time Drain</div>
-        <div class="pain-desc">Manual billing reconciliation, ticket grooming, and reporting in ConnectWise eats 3–5 hrs/tech/week. At 10 techs, that's 40+ hrs/week of non-billable time.</div>
-        <div class="pain-cost">~$52K/yr in lost labor</div>
+      <div class="snapshot-card">
+        <div class="snapshot-icon">🏢</div>
+        <div>
+          <div class="snapshot-label">Industry</div>
+          <div class="snapshot-val">MSP + AV + Security + UCaaS</div>
+        </div>
       </div>
-      <div class="pain-card">
-        <div class="pain-icon">🔌</div>
-        <div class="pain-title">Integration Tax</div>
-        <div class="pain-desc">Stitching ConnectWise to billing, RMM, and reporting tools requires middleware, custom APIs, or expensive add-ons. Every integration is another failure point.</div>
-        <div class="pain-cost">$3–6K/yr in add-ons</div>
+      <div class="snapshot-card">
+        <div class="snapshot-icon">🎯</div>
+        <div>
+          <div class="snapshot-label">Primary Vertical</div>
+          <div class="snapshot-val">Hospitality / Restaurants (franchise model)</div>
+        </div>
       </div>
-      <div class="pain-card">
-        <div class="pain-icon">📊</div>
-        <div class="pain-title">Blind Spots in Billing</div>
-        <div class="pain-desc">Without native billing intelligence, MSPs consistently underbill 5–8% of contracted services. On $1M ARR, that's $50–80K walking out the door unnoticed.</div>
-        <div class="pain-cost">Revenue leakage risk</div>
+      <div class="snapshot-card">
+        <div class="snapshot-icon">👥</div>
+        <div>
+          <div class="snapshot-label">Team Size</div>
+          <div class="snapshot-val">~130 desired platform users</div>
+        </div>
       </div>
-      <div class="pain-card">
-        <div class="pain-icon">🐌</div>
-        <div class="pain-title">Slow Onboarding</div>
-        <div class="pain-desc">New client setup in ConnectWise requires manual configuration across multiple modules. Automation gaps mean slower time-to-revenue on new accounts.</div>
-        <div class="pain-cost">Days vs. hours</div>
+      <div class="snapshot-card">
+        <div class="snapshot-icon">🖥️</div>
+        <div>
+          <div class="snapshot-label">Current PSA</div>
+          <div class="snapshot-val">ConnectWise Manage</div>
+        </div>
       </div>
-      <div class="pain-card">
-        <div class="pain-icon">📞</div>
-        <div class="pain-title">No Voice — Twice the Vendors</div>
-        <div class="pain-desc">Running a separate voice/UC billing stack alongside ConnectWise PSA doubles your vendor overhead and creates reconciliation gaps every billing cycle.</div>
-        <div class="pain-cost">Complexity &amp; risk</div>
+      <div class="snapshot-card">
+        <div class="snapshot-icon">🔧</div>
+        <div>
+          <div class="snapshot-label">Current RMM</div>
+          <div class="snapshot-val">ConnectWise Automate</div>
+        </div>
+      </div>
+      <div class="snapshot-card">
+        <div class="snapshot-icon">🧾</div>
+        <div>
+          <div class="snapshot-label">ERP</div>
+          <div class="snapshot-val">NetSuite (live since Jan 2024)</div>
+        </div>
+      </div>
+      <div class="snapshot-card">
+        <div class="snapshot-icon">📞</div>
+        <div>
+          <div class="snapshot-label">Voice</div>
+          <div class="snapshot-val">White-label Nextiva (on-paper)</div>
+        </div>
+      </div>
+      <div class="snapshot-card">
+        <div class="snapshot-icon">📚</div>
+        <div>
+          <div class="snapshot-label">Documentation</div>
+          <div class="snapshot-val">IT Glue</div>
+        </div>
+      </div>
+      <div class="snapshot-card">
+        <div class="snapshot-icon">💳</div>
+        <div>
+          <div class="snapshot-label">Payments</div>
+          <div class="snapshot-val">Paystand</div>
+        </div>
+      </div>
+      <div class="snapshot-card">
+        <div class="snapshot-icon">🗓️</div>
+        <div>
+          <div class="snapshot-label">CW Contract</div>
+          <div class="snapshot-val">Annual renewal · December 2026</div>
+        </div>
+      </div>
+      <div class="snapshot-card">
+        <div class="snapshot-icon">🤝</div>
+        <div>
+          <div class="snapshot-label">Referral</div>
+          <div class="snapshot-val">Rob Ray (Rev.io board member)</div>
+        </div>
       </div>
     </div>
   </div>
 </section>
 
-<!-- SLIDE 3: ROI BREAKDOWN -->
-<section class="slide slide-white" id="roi">
+<!-- SLIDE 3: PAIN POINTS -->
+<section class="slide slide-white" id="pain">
+  <div class="content-max">
+    <div class="section-header">
+      <div class="section-tag orange">Current State Pain</div>
+      <h2 class="section-title">What ConnectWise is actually costing AVIT</h2>
+      <p class="section-sub">These aren't hypothetical problems — they came straight from AVIT's leadership in discovery.</p>
+    </div>
+    <div class="pain-grid">
+      <div class="pain-card">
+        <div class="pain-icon">🔒</div>
+        <div class="pain-title">Field Tech Access Blocked</div>
+        <div class="pain-desc">AVIT wants 130 users on the platform. They're capped at 70 because ConnectWise's per-seat pricing makes it cost-prohibitive to give field techs access. Workaround: QuickBooks T-sheets + Microsoft Teams messages.</div>
+        <div class="pain-quote">"I have technicians that don't have access that I want to have access... that's a limitation because of their terrible software."</div>
+        <div class="pain-cost">60 users × $109/mo = $78K/yr gap</div>
+      </div>
+      <div class="pain-card">
+        <div class="pain-icon">🌳</div>
+        <div class="pain-title">Broken Parent-Child Hierarchy</div>
+        <div class="pain-desc">AVIT's hospitality clients are complex franchise structures — corporate billing for recurring, location billing for break-fix. ConnectWise's "simplistic 90s view of parent-child" forces manual workarounds every billing cycle.</div>
+        <div class="pain-quote">"It's a very simplistic 90s view of parent-child."</div>
+        <div class="pain-cost">Hours of manual reconciliation/month</div>
+      </div>
+      <div class="pain-card">
+        <div class="pain-icon">🔗</div>
+        <div class="pain-title">No Native NetSuite Integration</div>
+        <div class="pain-desc">AVIT migrated to NetSuite in Jan 2024 for accounting + HR. They need parts/labor from tickets to flow directly into NetSuite. ConnectWise requires custom middleware — another integration to manage in their 30–40 integration stack.</div>
+        <div class="pain-quote">"Parts and labor integration with NetSuite for tickets [is needed]."</div>
+        <div class="pain-cost">Custom dev + ongoing maintenance</div>
+      </div>
+      <div class="pain-card">
+        <div class="pain-icon">📄</div>
+        <div class="pain-title">No Subcontractor Portal</div>
+        <div class="pain-desc">AVIT uses third-party subcontractors on installs and needs digital customer sign-offs — without issuing full platform licenses. Today: paper forms. TigerPaw had a free subcontractor portal. ConnectWise doesn't.</div>
+        <div class="pain-quote">"I want a third party subcontractor to be able to get a customer sign off without having to print out a piece of paper."</div>
+        <div class="pain-cost">Operational inefficiency + liability risk</div>
+      </div>
+      <div class="pain-card">
+        <div class="pain-icon">📝</div>
+        <div class="pain-title">CPQ Complexity + Change Orders</div>
+        <div class="pain-desc">AVIT regularly generates multi-million dollar proposals with variable pricing, tabbed-out proposals, and the need to hide MSRP. Change order management is critical. ConnectWise CPQ is rigid and doesn't flex to their deal structure.</div>
+        <div class="pain-quote">"Numerous trials and making modifications to support multi-million dollar proposals."</div>
+        <div class="pain-cost">Lost deal velocity</div>
+      </div>
+      <div class="pain-card">
+        <div class="pain-icon">🚀</div>
+        <div class="pain-title">Platform Stagnation</div>
+        <div class="pain-desc">AVIT's leadership is watching ConnectWise fall behind on AI and innovation. The company was partly sold on ASIO — which has since stalled. They're actively evaluating everything: PSA, RMM, "anything and everything in between."</div>
+        <div class="pain-quote">"I am going to be looking at anything and everything when it comes to PSA, RMM... I want to be not playing this game come November of next year."</div>
+        <div class="pain-cost">Strategic risk of staying</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- SLIDE 4: ROI -->
+<section class="slide slide-light" id="roi">
   <div class="content-max">
     <div class="section-header">
       <div class="section-tag green">ROI Analysis</div>
-      <h2 class="section-title">Show me the money</h2>
-      <p class="section-sub">Conservative estimates based on AVIT's size and industry benchmarks for MSPs migrating from ConnectWise.</p>
+      <h2 class="section-title">The financial case for switching</h2>
+      <p class="section-sub">Based on AVIT's disclosed user count, ConnectWise contract structure, and industry benchmarks for MSPs in their revenue tier.</p>
     </div>
 
-    <div style="overflow-x:auto; border-radius: 16px; box-shadow: 0 4px 20px rgba(0,0,0,0.08); margin-bottom: 32px;">
+    <div class="roi-wrap">
       <table class="roi-table">
         <thead>
           <tr>
             <th>Value Driver</th>
-            <th>How We Calculated It</th>
+            <th>Basis</th>
             <th>Annual Value</th>
           </tr>
         </thead>
         <tbody>
           <tr>
-            <td><strong>Platform Cost Savings</strong></td>
-            <td>CW PSA ~$1,200/mo vs. PSA 2.0 at $6,500/yr</td>
-            <td class="positive">+$7,900</td>
+            <td>
+              <strong>Platform License Savings</strong>
+              <span class="sub-note">CW Manage at ~$109/seat × 130 users = ~$170K. Rev.io PSA 2.0 flat-rate model for same footprint.</span>
+            </td>
+            <td>Estimated gap based on disclosed 130-user need</td>
+            <td class="positive">+$60,000–$90,000</td>
           </tr>
           <tr>
-            <td><strong>Tech Admin Time Recovered</strong></td>
-            <td>2 hrs/tech/wk × 10 techs × $25/hr × 50 wks</td>
-            <td class="positive">+$25,000</td>
+            <td>
+              <strong>Field Tech Workaround Elimination</strong>
+              <span class="sub-note">QuickBooks T-sheets ($8–10/user/mo × 60 techs) + Teams admin overhead removed</span>
+            </td>
+            <td>60 blocked field techs at current workaround cost</td>
+            <td class="positive">+$7,200</td>
           </tr>
           <tr>
-            <td><strong>Billing Accuracy Improvement</strong></td>
-            <td>2% billing leakage recovered on est. $600K billed ARR</td>
-            <td class="positive">+$12,000</td>
+            <td>
+              <strong>NetSuite Integration Build &amp; Maintenance</strong>
+              <span class="sub-note">Custom middleware or API work to connect CW tickets to NetSuite P/L — eliminated with native PSA 2.0 integration</span>
+            </td>
+            <td>1 dev sprint to build + ongoing maintenance</td>
+            <td class="positive">+$15,000–$25,000</td>
           </tr>
           <tr>
-            <td><strong>Integration Add-on Elimination</strong></td>
-            <td>Middleware/connector tools no longer needed</td>
-            <td class="positive">+$4,200</td>
+            <td>
+              <strong>Admin Time Recovered (Billing Reconciliation)</strong>
+              <span class="sub-note">Manual billing reconciliation across parent-child franchise hierarchy → automated in PSA 2.0</span>
+            </td>
+            <td>Est. 4 hrs/wk × $75/hr billing staff × 50 wks</td>
+            <td class="positive">+$15,000</td>
           </tr>
           <tr>
-            <td><strong>Faster Client Onboarding</strong></td>
-            <td>2 new clients/yr × 4 hrs saved × $150/hr</td>
-            <td class="positive">+$1,200</td>
+            <td>
+              <strong>Billing Accuracy / Leakage Recovery</strong>
+              <span class="sub-note">Industry avg 3–5% underbilling on managed services. Conservative 2% on est. $3M+ in managed ARR</span>
+            </td>
+            <td>2% of $3M ARR recovered</td>
+            <td class="positive">+$60,000</td>
           </tr>
           <tr>
-            <td><strong>Rev.io PSA 2.0 Investment</strong></td>
-            <td>Annual subscription</td>
-            <td class="negative">–$6,500</td>
+            <td>
+              <strong>CPQ + Change Order Efficiency</strong>
+              <span class="sub-note">Faster quote-to-cash cycle on large AV/IT projects. 1 day saved per deal × 20 deals/yr at avg AE cost</span>
+            </td>
+            <td>20 deals × 1 day × $500 AE day rate</td>
+            <td class="positive">+$10,000</td>
+          </tr>
+          <tr>
+            <td>
+              <strong>Integration Stack Reduction</strong>
+              <span class="sub-note">Eliminating connectors, middleware licenses, and maintenance for tools replaced natively by PSA 2.0</span>
+            </td>
+            <td>Est. 5–8 integrations consolidated at $2K avg each</td>
+            <td class="positive">+$10,000–$16,000</td>
+          </tr>
+          <tr>
+            <td>
+              <strong>Rev.io PSA 2.0 Investment</strong>
+              <span class="sub-note">Annual subscription · $0 migration fee · $0 setup fee · Month-to-month terms</span>
+            </td>
+            <td>Quoted annual value</td>
+            <td class="negative">TBD at scoping</td>
           </tr>
           <tr class="total-row">
-            <td><strong>Net First-Year Value</strong></td>
-            <td>Conservative case</td>
-            <td class="positive">+$43,800</td>
+            <td><strong>Estimated Net First-Year Value</strong></td>
+            <td>Conservative case, AVIT-specific</td>
+            <td class="positive">$177K–$223K+</td>
           </tr>
         </tbody>
       </table>
     </div>
 
-    <div style="background: linear-gradient(135deg, #0057FF08, #00C2FF08); border: 1px solid #0057FF22; border-radius: 16px; padding: 24px; text-align: center;">
-      <p style="font-size: 14px; color: var(--text-sub); line-height: 1.7;">
-        <strong>Assumptions:</strong> 10 billable techs at $25/hr fully loaded cost · CW PSA at $100/seat/mo · $600K annual billed ARR · 2% billing leakage rate (industry avg 5–8%) · 2 hrs/tech/wk admin time saved (conservative vs. industry 3–5 hrs)
+    <div style="background: rgba(0,87,255,0.04); border: 1px solid rgba(0,87,255,0.15); border-radius: 14px; padding: 20px; text-align: center;">
+      <p style="font-size: 13px; color: var(--text-sub); line-height: 1.7;">
+        <strong>Note:</strong> License savings range is wide because final PSA 2.0 pricing for AVIT's full 130-user footprint (including limited-user tier for field techs) needs to be scoped. Even at the conservative end, the ROI case is overwhelming. The biggest single driver is billing leakage recovery — a 3–5% improvement on $3M+ ARR is a six-figure gain by itself.
       </p>
     </div>
   </div>
 </section>
 
-<!-- SLIDE 4: DARK VALUE SUMMARY -->
-<section class="slide slide-dark" id="value">
+<!-- SLIDE 5: DARK VALUE NUMBERS -->
+<section class="slide slide-dark">
   <div class="content-max">
     <div class="section-header">
-      <div class="section-tag" style="background:rgba(0,194,255,0.15);color:var(--rev-accent)">By The Numbers</div>
-      <h2 class="section-title" style="color:#fff">What PSA 2.0 delivers for AVIT</h2>
+      <div class="section-tag cyan">By The Numbers</div>
+      <h2 class="section-title white">What PSA 2.0 unlocks for AVIT</h2>
     </div>
     <div class="value-grid">
       <div class="value-card">
-        <div class="v-icon">⚡</div>
-        <div class="v-num">40+</div>
-        <div class="v-label">Hours/week of admin time freed</div>
-      </div>
-      <div class="value-card">
         <div class="v-icon">💰</div>
-        <div class="v-num">$43.8K</div>
-        <div class="v-label">Net Year-1 value (conservative)</div>
+        <div class="v-num">$177K+</div>
+        <div class="v-label">Conservative Year-1 value</div>
       </div>
       <div class="value-card">
-        <div class="v-icon">📈</div>
-        <div class="v-num">6.7×</div>
-        <div class="v-label">Return on investment, Year 1</div>
+        <div class="v-icon">👷</div>
+        <div class="v-num">60</div>
+        <div class="v-label">Field techs finally get proper platform access</div>
       </div>
       <div class="value-card">
-        <div class="v-icon">🗓️</div>
-        <div class="v-num">&lt;7 wks</div>
-        <div class="v-label">Payback period on subscription cost</div>
+        <div class="v-icon">🔗</div>
+        <div class="v-num">Native</div>
+        <div class="v-label">NetSuite integration — no middleware needed</div>
       </div>
       <div class="value-card">
-        <div class="v-icon">🔒</div>
-        <div class="v-num">2%+</div>
-        <div class="v-label">Billing leakage recovered</div>
+        <div class="v-icon">🌳</div>
+        <div class="v-num">Fixed</div>
+        <div class="v-label">Parent-child hierarchy built for franchise billing</div>
+      </div>
+      <div class="value-card">
+        <div class="v-icon">🤖</div>
+        <div class="v-num">AI-first</div>
+        <div class="v-label">Built from the ground up with AI — not bolted on</div>
       </div>
       <div class="value-card">
         <div class="v-icon">🚀</div>
-        <div class="v-num">Day 1</div>
-        <div class="v-label">Automation benefits begin</div>
+        <div class="v-num">$0</div>
+        <div class="v-label">Migration fee. Full CW data migration included</div>
       </div>
     </div>
   </div>
 </section>
 
-<!-- SLIDE 5: COMPARE -->
-<section class="slide slide-light" id="compare">
-  <div class="content-max" style="display:flex;flex-direction:column;align-items:center">
+<!-- SLIDE 6: PRODUCT FIT -->
+<section class="slide slide-light" id="fit">
+  <div class="content-max">
     <div class="section-header">
-      <div class="section-tag">Platform Comparison</div>
-      <h2 class="section-title">ConnectWise vs. Rev.io PSA 2.0</h2>
-      <p class="section-sub">For a 14-person MSP, the difference isn't just cost — it's operational velocity.</p>
+      <div class="section-tag">Product Fit</div>
+      <h2 class="section-title">AVIT's requirements vs. PSA 2.0</h2>
+      <p class="section-sub">Every major requirement from the discovery call, mapped to Rev.io's capability.</p>
     </div>
-    <div class="compare-grid">
-      <div class="compare-card old">
-        <div class="compare-label">⚠ ConnectWise PSA (Today)</div>
-        <div class="compare-title">Built for enterprise complexity</div>
-        <div class="compare-item"><span class="bullet">❌</span> $100+/seat/month licensing</div>
-        <div class="compare-item"><span class="bullet">❌</span> Heavy UI, steep learning curve for new hires</div>
-        <div class="compare-item"><span class="bullet">❌</span> Manual billing reconciliation every cycle</div>
-        <div class="compare-item"><span class="bullet">❌</span> Requires middleware for billing integration</div>
-        <div class="compare-item"><span class="bullet">❌</span> Support backlog + escalation headaches</div>
-        <div class="compare-item"><span class="bullet">❌</span> Feature bloat you pay for but don't use</div>
+    <div class="req-grid">
+      <div class="req-card">
+        <div class="req-header">
+          <div class="req-icon">🌳</div>
+          <div class="req-title">Parent-Child Franchise Billing</div>
+          <div class="req-status yes">✓ Native</div>
+        </div>
+        <div class="req-desc">Corporate recurring → parent. Break-fix → child location. Related sibling accounts for complex ownership structures. No workarounds needed.</div>
       </div>
-      <div class="compare-card new">
-        <div class="compare-label">✓ Rev.io PSA 2.0 (Future State)</div>
-        <div class="compare-title">Purpose-built for MSP scale</div>
-        <div class="compare-item"><span class="bullet">✅</span> Flat annual rate — no per-seat shock</div>
-        <div class="compare-item"><span class="bullet">✅</span> Clean, modern UI — faster onboarding for staff</div>
-        <div class="compare-item"><span class="bullet">✅</span> Automated billing tied to service delivery</div>
-        <div class="compare-item"><span class="bullet">✅</span> Native Rev.io billing stack integration</div>
-        <div class="compare-item"><span class="bullet">✅</span> US-based support with dedicated CSM</div>
-        <div class="compare-item"><span class="bullet">✅</span> Right-sized for MSPs — no bloat to manage</div>
+      <div class="req-card">
+        <div class="req-header">
+          <div class="req-icon">🧾</div>
+          <div class="req-title">NetSuite Integration</div>
+          <div class="req-status yes">✓ In Roadmap</div>
+        </div>
+        <div class="req-desc">Parts and labor from tickets flowing directly into NetSuite. Rev.io is a NetSuite house — we went through the same migration AVIT did.</div>
+      </div>
+      <div class="req-card">
+        <div class="req-header">
+          <div class="req-icon">📱</div>
+          <div class="req-title">Field Tech Mobile App</div>
+          <div class="req-status yes">✓ Live Now</div>
+        </div>
+        <div class="req-desc">Limited-user tier for field techs (time tracking, tickets, documentation). Customer sign-offs in the mobile app. GPS tracking + geofencing live now.</div>
+      </div>
+      <div class="req-card">
+        <div class="req-header">
+          <div class="req-icon">📋</div>
+          <div class="req-title">Subcontractor Portal</div>
+          <div class="req-status wip">⏳ In Development</div>
+        </div>
+        <div class="req-desc">TigerPaw had a best-in-class subcontractor portal. We're rebuilding it for PSA 2.0. Digital sign-offs without full platform access — no more paper.</div>
+      </div>
+      <div class="req-card">
+        <div class="req-header">
+          <div class="req-icon">📝</div>
+          <div class="req-title">CPQ + Multi-Million $ Proposals</div>
+          <div class="req-status yes">✓ Native</div>
+        </div>
+        <div class="req-desc">Full quote builder with e-signature (DocuSign native). Variable pricing, MSRP hide, tabbed proposals. Change order management included.</div>
+      </div>
+      <div class="req-card">
+        <div class="req-header">
+          <div class="req-icon">🏪</div>
+          <div class="req-title">Customer Portal</div>
+          <div class="req-status yes">✓ Native</div>
+        </div>
+        <div class="req-desc">Full customer portal for ticket submission and management. Parent-child hierarchy extends to portal access — franchise locations see their own data.</div>
+      </div>
+      <div class="req-card">
+        <div class="req-header">
+          <div class="req-icon">🔌</div>
+          <div class="req-title">ConnectWise RMM Integration</div>
+          <div class="req-status wip">⏳ In Progress</div>
+        </div>
+        <div class="req-desc">ConnectWise RMM integration actively in development. Ninja, Enable, and Acronis already done. CW Automate is next in queue.</div>
+      </div>
+      <div class="req-card">
+        <div class="req-header">
+          <div class="req-icon">🛒</div>
+          <div class="req-title">Pax8 / Distributor EDI</div>
+          <div class="req-status yes">✓ CommerceHub</div>
+        </div>
+        <div class="req-desc">CommerceHub marketplace gives AVIT access to Pax8, hardware distributors, and communications partners — directly inside PSA 2.0.</div>
+      </div>
+      <div class="req-card">
+        <div class="req-header">
+          <div class="req-icon">🎫</div>
+          <div class="req-title">ServiceNow / Jira Integration</div>
+          <div class="req-status yes">✓ Native</div>
+        </div>
+        <div class="req-desc">Third-party ticketing integrations (ServiceNow, Jira) available for co-managed and enterprise clients.</div>
+      </div>
+      <div class="req-card">
+        <div class="req-header">
+          <div class="req-icon">☁️</div>
+          <div class="req-title">CSP (Microsoft + Google)</div>
+          <div class="req-status yes">✓ Native</div>
+        </div>
+        <div class="req-desc">CSP billing for Microsoft and Google managed directly within the platform — ConnectWise-level integration.</div>
+      </div>
+      <div class="req-card">
+        <div class="req-header">
+          <div class="req-icon">🤖</div>
+          <div class="req-title">AI-Native Platform</div>
+          <div class="req-status yes">✓ Core Feature</div>
+        </div>
+        <div class="req-desc">AI built into the first line of code — not retrofitted. Automated ticket routing, summarization, and tech dispatch recommendations.</div>
+      </div>
+      <div class="req-card">
+        <div class="req-header">
+          <div class="req-icon">📦</div>
+          <div class="req-title">Full Inventory Management</div>
+          <div class="req-status yes">✓ Native</div>
+        </div>
+        <div class="req-desc">Asset lifecycle from PO to customer site install. Purchase orders, inventory tracking by location, customer-level asset management.</div>
       </div>
     </div>
   </div>
 </section>
 
-<!-- SLIDE 6: INVESTMENT -->
+<!-- SLIDE 7: DECISION MAKERS -->
+<section class="slide slide-dark">
+  <div class="content-max">
+    <div class="section-header">
+      <div class="section-tag cyan">Buying Committee</div>
+      <h2 class="section-title white">Who makes this decision</h2>
+      <p class="section-sub white">3 of 5 decision makers were on the discovery call. CEO doesn't appear until it's a baked deal.</p>
+    </div>
+    <div class="dm-grid">
+      <div class="dm-card">
+        <div class="dm-avatar">C</div>
+        <div class="dm-name">Connor's Contact</div>
+        <div class="dm-role">Business Systems</div>
+        <div class="dm-tag active">✓ Engaged</div>
+      </div>
+      <div class="dm-card">
+        <div class="dm-avatar">S</div>
+        <div class="dm-name">Steve</div>
+        <div class="dm-role">CIO</div>
+        <div class="dm-tag active">✓ On Discovery Call</div>
+      </div>
+      <div class="dm-card">
+        <div class="dm-avatar">A</div>
+        <div class="dm-name">Adam</div>
+        <div class="dm-role">Service Delivery</div>
+        <div class="dm-tag active">✓ On Discovery Call</div>
+      </div>
+      <div class="dm-card">
+        <div class="dm-avatar">S</div>
+        <div class="dm-name">Sara Braddock</div>
+        <div class="dm-role">Finance</div>
+        <div class="dm-tag finance">Loop in later</div>
+      </div>
+      <div class="dm-card">
+        <div class="dm-avatar">👑</div>
+        <div class="dm-name">CEO</div>
+        <div class="dm-role">Final Approval</div>
+        <div class="dm-tag later">Won't appear until baked</div>
+      </div>
+    </div>
+    <div style="margin-top: 32px; background: rgba(255,255,255,0.06); border: 1px solid rgba(255,255,255,0.12); border-radius: 16px; padding: 20px 24px; max-width: 700px; margin-left: auto; margin-right: auto;">
+      <p style="font-size: 14px; color: rgba(255,255,255,0.8); line-height: 1.7; text-align: center;">
+        🗓️ AVIT target decision date: <strong style="color:#fff">June 1, 2026</strong><br>
+        <span style="font-size: 13px; opacity: .6;">"By June 1st, I'm going to have a decision from my leadership team on the direction we're going to go."</span>
+      </p>
+    </div>
+  </div>
+</section>
+
+<!-- SLIDE 8: INVESTMENT -->
 <section class="slide slide-white" id="invest">
   <div class="content-max" style="display:flex;flex-direction:column;align-items:center">
     <div class="section-header">
       <div class="section-tag">Investment</div>
-      <h2 class="section-title">Simple pricing. Clear payback.</h2>
-      <p class="section-sub">No surprise per-seat fees as you hire. One annual investment with clear ROI from day one.</p>
+      <h2 class="section-title">What it costs to switch</h2>
+      <p class="section-sub">Month-to-month. Zero setup. Zero migration fees. Rev.io handles the full CW data migration at no charge.</p>
     </div>
 
-    <div class="investment-hero">
-      <div class="inv-label">Annual Investment</div>
-      <div class="inv-amount">$6,500</div>
-      <div class="inv-sub">Rev.io PSA 2.0 · Annual subscription</div>
-      <div class="inv-breakdown">
-        <div class="inv-chip">✅ PSA 2.0 Platform</div>
-        <div class="inv-chip">✅ Billing Integration</div>
-        <div class="inv-chip">✅ Onboarding Support</div>
-        <div class="inv-chip">✅ Unlimited Tickets</div>
+    <div class="invest-layout">
+      <div class="investment-hero">
+        <div class="inv-label">Quoted Annual Value</div>
+        <div class="inv-amount">$0</div>
+        <div class="inv-sub">Migration cost. Zero. We do it for you.</div>
+        <div style="height: 1px; background: rgba(255,255,255,0.15); margin: 20px 0;"></div>
+        <div class="inv-label">Platform</div>
+        <div style="font-size: 22px; font-weight: 800; margin: 6px 0;">Scoped at full user count</div>
+        <div class="inv-sub">Flat rate model · Limited-user tier for field techs</div>
+        <div class="inv-breakdown">
+          <div class="inv-chip">✅ Full CW Migration</div>
+          <div class="inv-chip">✅ $0 Setup</div>
+          <div class="inv-chip">✅ Month-to-Month</div>
+          <div class="inv-chip">✅ 130 Users</div>
+          <div class="inv-chip">✅ Limited-user field tech tier</div>
+        </div>
       </div>
-    </div>
+      <div class="payback-section">
+        <h3 style="font-size: 17px; font-weight: 700; margin-bottom: 4px;">What AVIT gets vs. ConnectWise</h3>
+        <p style="font-size: 13px; color: var(--text-sub); margin-bottom: 20px;">Value delivered that CW simply can't match at AVIT's scale.</p>
 
-    <div style="margin-top: 40px; width: 100%; max-width: 700px;">
-      <h3 style="font-size: 18px; font-weight: 700; margin-bottom: 20px; text-align: center;">How fast does it pay back?</h3>
-      <div class="payback-bar-label">
-        <span>Platform savings</span><span style="color:var(--rev-green);font-weight:700">Pays back in ~1 month</span>
+        <div>
+          <div class="pb-item-label"><span>Field tech access (60 blocked users)</span><span class="pb-val">Unlocked Day 1</span></div>
+          <div class="pb-bar"><div class="pb-fill" style="width:100%;background:linear-gradient(90deg,#0057FF,#00C2FF);">60 techs online</div></div>
+        </div>
+        <div>
+          <div class="pb-item-label"><span>NetSuite integration</span><span class="pb-val">$15K–25K saved</span></div>
+          <div class="pb-bar"><div class="pb-fill" style="width:85%;background:linear-gradient(90deg,#00D97E,#00FF99);color:#004">Native</div></div>
+        </div>
+        <div>
+          <div class="pb-item-label"><span>Billing leakage recovered (2%)</span><span class="pb-val">$60K/yr</span></div>
+          <div class="pb-bar"><div class="pb-fill" style="width:92%;background:linear-gradient(90deg,#0057FF,#004ACC);">Automated billing</div></div>
+        </div>
+        <div>
+          <div class="pb-item-label"><span>License savings vs. 130 CW seats</span><span class="pb-val">$60K–90K/yr</span></div>
+          <div class="pb-bar"><div class="pb-fill" style="width:78%;background:linear-gradient(90deg,#FF6B35,#FF9A6C);">CW gap</div></div>
+        </div>
       </div>
-      <div class="payback-bar"><div class="payback-fill blue" style="width:92%">$7,900 savings</div></div>
-
-      <div class="payback-bar-label">
-        <span>Admin time recovered</span><span style="color:var(--rev-green);font-weight:700">3.1× on cost alone</span>
-      </div>
-      <div class="payback-bar"><div class="payback-fill green" style="width:100%">$25,000 value</div></div>
-
-      <div class="payback-bar-label">
-        <span>Billing leakage recovered</span><span style="color:var(--rev-green);font-weight:700">Almost 2× the subscription</span>
-      </div>
-      <div class="payback-bar" style="background:#f0f4ff"><div class="payback-fill" style="width:85%;background:linear-gradient(90deg,#0057FF,#004ACC);">$12,000 value</div></div>
     </div>
   </div>
 </section>
 
-<!-- SLIDE 7: NEXT STEPS -->
+<!-- SLIDE 9: NEXT STEPS -->
 <section class="slide slide-light" id="next">
   <div class="content-max" style="display:flex;flex-direction:column;align-items:center">
     <div class="section-header">
       <div class="section-tag">Next Steps</div>
-      <h2 class="section-title">How we get AVIT live</h2>
-      <p class="section-sub">Onsite visit scheduled — here's the path from demo to go-live.</p>
+      <h2 class="section-title">Path to a decision by June 1</h2>
+      <p class="section-sub">AVIT's self-imposed deadline is June 1st. Here's how we get there.</p>
     </div>
     <div class="steps-list">
       <div class="step-item">
         <div class="step-num">1</div>
         <div class="step-content">
-          <div class="step-title">Onsite Discovery + Deep Demo</div>
-          <div class="step-sub">Walk through AVIT's current ConnectWise setup, identify migration scope, and demo PSA 2.0 against real workflows</div>
-          <div class="step-date">📅 Week of May 21, 2026</div>
+          <div class="step-title">Tampa Onsite — Full Platform Demo</div>
+          <div class="step-sub">Deep dive on parent-child hierarchy, field tech mobile app, NetSuite integration story, CPQ + change order workflows, and customer portal. Bring Steve (CIO) and Adam (Service Delivery) in the room.</div>
+          <div class="step-date">📅 June 4, 2026 · Tampa, FL</div>
         </div>
       </div>
       <div class="step-item">
         <div class="step-num">2</div>
         <div class="step-content">
-          <div class="step-title">Tailored ROI Model + Proposal</div>
-          <div class="step-sub">Refine the numbers with actual AVIT billing data — build a customer-specific ROI model with real payback timeline</div>
-          <div class="step-date">📅 Within 5 business days of discovery</div>
+          <div class="step-title">Scoped Proposal + Tailored ROI Model</div>
+          <div class="step-sub">Full-user pricing for 130 seats (full + limited-user tiers). Customer-specific ROI model using AVIT's actual billing data. Something Sara Braddock can sign off on.</div>
+          <div class="step-date">📅 Within 5 days of onsite</div>
         </div>
       </div>
       <div class="step-item">
         <div class="step-num">3</div>
         <div class="step-content">
-          <div class="step-title">Pilot / POC Agreement</div>
-          <div class="step-sub">30-day structured pilot with defined success criteria — reduce decision risk and let the ROI speak for itself</div>
-          <div class="step-date">📅 Target: June 2026</div>
+          <div class="step-title">Leadership Presentation</div>
+          <div class="step-sub">Package the ROI case for the CEO intro — baked-in recommendation from the 3 internal champions. Loop in Sara Braddock on the financial model.</div>
+          <div class="step-date">📅 Target: Before June 1 decision</div>
         </div>
       </div>
       <div class="step-item">
         <div class="step-num">4</div>
         <div class="step-content">
-          <div class="step-title">Migration + Go-Live</div>
-          <div class="step-sub">Rev.io migration team handles data transfer from ConnectWise — AVIT team onboarded and live on PSA 2.0</div>
-          <div class="step-date">📅 Target: Q3 2026</div>
+          <div class="step-title">Pilot Agreement</div>
+          <div class="step-sub">30-day structured pilot with AVIT's most complex accounts (franchise hierarchy). Let PSA 2.0 prove itself against their real workflows. Month-to-month terms mean zero commitment risk.</div>
+          <div class="step-date">📅 Target: June–July 2026</div>
+        </div>
+      </div>
+      <div class="step-item">
+        <div class="step-num">5</div>
+        <div class="step-content">
+          <div class="step-title">Full Migration + Go-Live</div>
+          <div class="step-sub">Rev.io migration team handles full ConnectWise data migration. AVIT live before December CW renewal — no need to pay for another year of CW.</div>
+          <div class="step-date">📅 Target: Q3–Q4 2026 · Beat December CW renewal</div>
         </div>
       </div>
     </div>
   </div>
 </section>
 
-<!-- FOOTER -->
-<footer class="deck-footer">
-  Prepared by Rev.io Sales · Connor Flynn · <a href="https://rev.io" style="color:inherit">rev.io</a> · Confidential — For AVIT internal use only
-</footer>
-
 </div>
 
+<footer class="deck-footer">
+  Prepared by Rev.io Sales · Connor Flynn · Account Executive, Southeast · <a href="https://rev.io" style="color:inherit">rev.io</a> · Confidential — For AVIT internal use only
+</footer>
+
 <script>
-  // Nav active state on scroll
   const sections = document.querySelectorAll('section[id]');
   const pills = document.querySelectorAll('.pill');
-  
   const obs = new IntersectionObserver((entries) => {
     entries.forEach(e => {
       if (e.isIntersecting) {
         pills.forEach(p => p.classList.remove('active'));
-        const active = document.querySelector(`.pill[href="#${e.target.id}"]`);
-        if (active) active.classList.add('active');
+        const a = document.querySelector(`.pill[href="#${e.target.id}"]`);
+        if (a) a.classList.add('active');
       }
     });
-  }, { threshold: 0.4 });
-  
+  }, { threshold: 0.35 });
   sections.forEach(s => obs.observe(s));
-
-  // Smooth scroll
   document.querySelectorAll('a[href^="#"]').forEach(a => {
     a.addEventListener('click', e => {
       e.preventDefault();
