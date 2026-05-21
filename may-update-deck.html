@@ -22,7 +22,7 @@ html, body { height: 100%; overflow: hidden; background: #0d1b2a; font-family: '
 /* ── Nav Bar ── */
 .nav-bar {
   position: fixed; bottom: 0; left: 0; right: 0;
-  background: rgba(13,27,42,0.95);
+  background: rgba(29,55,86,0.97);
   border-top: 1px solid rgba(255,255,255,0.08);
   padding: 10px 32px;
   display: flex; align-items: center; justify-content: space-between;
@@ -32,21 +32,33 @@ html, body { height: 100%; overflow: hidden; background: #0d1b2a; font-family: '
 .nav-title { font-size: 11px; font-weight: 700; color: rgba(255,255,255,0.35); letter-spacing: 2px; text-transform: uppercase; }
 .nav-controls { display: flex; align-items: center; gap: 12px; }
 .nav-btn {
-  background: rgba(255,255,255,0.08); border: 1px solid rgba(255,255,255,0.15);
+  background: rgba(255,255,255,0.08); border: 1px solid rgba(255,255,255,0.2);
   color: #fff; border-radius: 8px; padding: 6px 18px;
   font-size: 13px; font-weight: 700; cursor: pointer;
   transition: background 0.15s, border-color 0.15s;
 }
-.nav-btn:hover { background: rgba(255,255,255,0.15); border-color: rgba(255,255,255,0.3); }
+.nav-btn:hover { background: rgba(255,255,255,0.18); border-color: rgba(255,255,255,0.35); }
 .nav-btn:disabled { opacity: 0.25; cursor: default; }
 .nav-counter { font-family: 'Montserrat', sans-serif; font-size: 13px; font-weight: 800; color: rgba(255,255,255,0.5); min-width: 48px; text-align: center; }
 .nav-dots { display: flex; gap: 6px; }
-.dot {
-  width: 7px; height: 7px; border-radius: 50%;
-  background: rgba(255,255,255,0.2); cursor: pointer; transition: background 0.2s;
-}
+.dot { width: 7px; height: 7px; border-radius: 50%; background: rgba(255,255,255,0.2); cursor: pointer; transition: background 0.2s; }
 .dot.active { background: #6EBE4F; }
 .nav-logo { height: 20px; opacity: 0.4; filter: brightness(0) invert(1); }
+
+/* ── Shared Light Slide Elements ── */
+.top-stripe { height: 4px; background: linear-gradient(90deg, #2399B5, #6EBE4F); flex-shrink: 0; }
+.slide-header {
+  background: #1D3756; padding: 14px 48px;
+  display: flex; align-items: center; justify-content: space-between; flex-shrink: 0;
+}
+.slide-header-left .slide-tag { font-size: 10px; font-weight: 700; letter-spacing: 2px; text-transform: uppercase; color: #6EBE4F; margin-bottom: 3px; }
+.slide-header-left h2 { font-family: 'Montserrat', sans-serif; font-size: 19px; font-weight: 800; color: #fff; }
+.slide-header img { height: 26px; filter: brightness(0) invert(1); opacity: 0.85; }
+.slide-body { flex: 1; padding: 22px 48px 60px; overflow-y: auto; background: #f5f7fa; }
+.section-hdr { display: flex; align-items: center; gap: 10px; margin-bottom: 14px; margin-top: 20px; }
+.section-hdr:first-child { margin-top: 0; }
+.section-lbl { font-size: 10px; font-weight: 700; letter-spacing: 2px; text-transform: uppercase; color: #2399B5; white-space: nowrap; }
+.section-rule { flex: 1; height: 1px; background: #dce4ed; }
 
 /* ═══════════════════════════════════════════════
    SLIDE 1 — COVER
@@ -57,80 +69,38 @@ html, body { height: 100%; overflow: hidden; background: #0d1b2a; font-family: '
   position: relative; overflow: hidden;
 }
 #slide-1::before {
-  content: '';
-  position: absolute; inset: 0;
+  content: ''; position: absolute; inset: 0;
   background-image:
     linear-gradient(rgba(110,190,79,0.06) 1px, transparent 1px),
     linear-gradient(90deg, rgba(110,190,79,0.06) 1px, transparent 1px);
   background-size: 48px 48px;
 }
 .cover-inner { position: relative; z-index: 1; text-align: center; max-width: 900px; padding: 0 48px; }
-.cover-tag {
-  display: inline-block;
-  font-size: 11px; font-weight: 700; letter-spacing: 3px; text-transform: uppercase;
-  color: #6EBE4F; border: 1px solid rgba(110,190,79,0.35);
-  padding: 6px 18px; border-radius: 20px; margin-bottom: 24px;
-  background: rgba(110,190,79,0.08);
-}
+.cover-tag { display: inline-block; font-size: 11px; font-weight: 700; letter-spacing: 3px; text-transform: uppercase; color: #6EBE4F; border: 1px solid rgba(110,190,79,0.35); padding: 6px 18px; border-radius: 20px; margin-bottom: 24px; background: rgba(110,190,79,0.08); }
 .cover-logo { height: 44px; margin-bottom: 32px; filter: brightness(0) invert(1); opacity: 0.9; }
-.cover-title {
-  font-family: 'Montserrat', sans-serif;
-  font-size: 64px; font-weight: 900; color: #fff; line-height: 1.05;
-  letter-spacing: -2px; margin-bottom: 16px;
-}
+.cover-title { font-family: 'Montserrat', sans-serif; font-size: 64px; font-weight: 900; color: #fff; line-height: 1.05; letter-spacing: -2px; margin-bottom: 16px; }
 .cover-title span { color: #6EBE4F; text-shadow: 0 0 40px rgba(110,190,79,0.4); }
 .cover-sub { font-size: 18px; color: rgba(255,255,255,0.45); margin-bottom: 48px; }
 .cover-chips { display: flex; gap: 16px; justify-content: center; flex-wrap: wrap; }
-.cover-chip {
-  background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.12);
-  border-radius: 10px; padding: 14px 24px; text-align: center; min-width: 160px;
-}
+.cover-chip { background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.12); border-radius: 10px; padding: 14px 24px; text-align: center; min-width: 160px; }
 .chip-val { font-family: 'Montserrat', sans-serif; font-size: 28px; font-weight: 900; color: #fff; }
 .chip-val.green { color: #6EBE4F; }
 .chip-val.teal { color: #2399B5; }
 .chip-label { font-size: 10px; font-weight: 700; letter-spacing: 1.5px; text-transform: uppercase; color: rgba(255,255,255,0.35); margin-top: 4px; }
-.cover-date { position: absolute; bottom: 70px; left: 0; right: 0; text-align: center; font-size: 11px; color: rgba(255,255,255,0.2); letter-spacing: 1px; }
+.cover-date { position: absolute; bottom: 60px; left: 0; right: 0; text-align: center; font-size: 11px; color: rgba(255,255,255,0.2); letter-spacing: 1px; }
 
 /* ═══════════════════════════════════════════════
-   SLIDE 2 & 3 — IFRAME SLIDES
+   SLIDE 2 — EFFICIENCY IFRAME
 ═══════════════════════════════════════════════ */
-.iframe-slide { display: flex; flex-direction: column; background: #0d1b2a; }
-.iframe-header {
-  background: #1D3756; padding: 10px 32px;
-  display: flex; align-items: center; justify-content: space-between;
-  border-bottom: 3px solid #6EBE4F; flex-shrink: 0;
-}
-.iframe-header-left { display: flex; align-items: center; gap: 12px; }
-.iframe-slide-tag { font-size: 10px; font-weight: 700; letter-spacing: 2px; text-transform: uppercase; color: #6EBE4F; }
-.iframe-slide-title { font-family: 'Montserrat', sans-serif; font-size: 16px; font-weight: 800; color: #fff; }
-.iframe-header img { height: 24px; filter: brightness(0) invert(1); opacity: 0.8; }
 .iframe-wrap { flex: 1; overflow: hidden; padding-bottom: 48px; }
-.iframe-wrap iframe { width: 100%; height: 100%; border: none; background: #fff; }
+.iframe-wrap iframe { width: 100%; height: 100%; border: none; }
 
 /* ═══════════════════════════════════════════════
-   SLIDE 4 — MAY PIPELINE SNAPSHOT
+   SLIDES 3 & 4 — KPI / TREND CARDS
 ═══════════════════════════════════════════════ */
-#slide-4 { background: #f5f7fa; flex-direction: column; }
-.may-header {
-  background: #1D3756; padding: 16px 48px;
-  display: flex; align-items: center; justify-content: space-between;
-}
-.may-header-left .tag { font-size: 10px; font-weight: 700; letter-spacing: 2px; text-transform: uppercase; color: #6EBE4F; margin-bottom: 4px; }
-.may-header-left h2 { font-family: 'Montserrat', sans-serif; font-size: 20px; font-weight: 800; color: #fff; }
-.may-header img { height: 28px; filter: brightness(0) invert(1); opacity: 0.8; }
-.may-body { flex: 1; padding: 24px 48px 72px; overflow: auto; }
-.top-stripe { height: 4px; background: linear-gradient(90deg, #2399B5, #6EBE4F); }
-
-.kpi-row { display: grid; grid-template-columns: repeat(4, 1fr); gap: 16px; margin-bottom: 24px; }
-.kpi-card {
-  background: #fff; border-radius: 10px; padding: 20px 18px;
-  border: 1px solid #e8edf3; box-shadow: 0 1px 4px rgba(29,55,86,0.06);
-  position: relative; overflow: hidden;
-}
-.kpi-card::before {
-  content: ''; position: absolute; top: 0; left: 0; right: 0; height: 4px;
-  background: var(--accent);
-}
+.kpi-row { display: grid; grid-template-columns: repeat(4, 1fr); gap: 16px; margin-bottom: 20px; }
+.kpi-card { background: #fff; border-radius: 10px; padding: 20px 18px; border: 1px solid #e8edf3; box-shadow: 0 1px 4px rgba(29,55,86,0.06); position: relative; overflow: hidden; }
+.kpi-card::before { content: ''; position: absolute; top: 0; left: 0; right: 0; height: 4px; background: var(--accent); }
 .kpi-card.teal { --accent: #2399B5; }
 .kpi-card.green { --accent: #6EBE4F; }
 .kpi-card.navy { --accent: #1D3756; }
@@ -141,15 +111,8 @@ html, body { height: 100%; overflow: hidden; background: #0d1b2a; font-family: '
 .kpi-val.green { color: #6EBE4F; }
 .kpi-sub { font-size: 11px; color: #8da0b4; margin-top: 6px; }
 
-.section-hdr { display: flex; align-items: center; gap: 10px; margin-bottom: 14px; }
-.section-lbl { font-size: 10px; font-weight: 700; letter-spacing: 2px; text-transform: uppercase; color: #2399B5; }
-.section-rule { flex: 1; height: 1px; background: #dce4ed; }
-
 .product-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px; }
-.prod-card {
-  background: #fff; border-radius: 10px; padding: 16px;
-  border: 1px solid #e8edf3; box-shadow: 0 1px 4px rgba(29,55,86,0.06);
-}
+.prod-card { background: #fff; border-radius: 10px; padding: 16px; border: 1px solid #e8edf3; box-shadow: 0 1px 4px rgba(29,55,86,0.06); }
 .prod-name { font-size: 11px; font-weight: 700; color: #1D3756; margin-bottom: 10px; text-transform: uppercase; letter-spacing: 1px; }
 .prod-row { display: flex; justify-content: space-between; font-size: 11px; padding: 3px 0; border-bottom: 1px solid #f0f4f8; }
 .prod-row:last-child { border: none; }
@@ -159,24 +122,23 @@ html, body { height: 100%; overflow: hidden; background: #0d1b2a; font-family: '
 .prod-row-val.teal { color: #2399B5; }
 .quota-bar-wrap { margin-top: 8px; }
 .quota-bar-bg { background: #f0f4f8; border-radius: 4px; height: 6px; overflow: hidden; }
-.quota-bar-fill { height: 100%; border-radius: 4px; background: #6EBE4F; transition: width 0.5s; }
+.quota-bar-fill { height: 100%; border-radius: 4px; background: #6EBE4F; }
 .quota-bar-fill.low { background: #e74c3c; }
 .quota-bar-fill.mid { background: #e67e22; }
 .quota-pct { font-size: 10px; color: #8da0b4; margin-top: 3px; text-align: right; }
 
-/* ═══════════════════════════════════════════════
-   SLIDE 5 — Q2 MOMENTUM
-═══════════════════════════════════════════════ */
-#slide-5 { background: #f5f7fa; flex-direction: column; }
+.insight-banner { background: #1D3756; border-radius: 10px; padding: 14px 20px; display: flex; align-items: center; gap: 16px; margin-bottom: 20px; }
+.insight-text { font-size: 13px; color: rgba(255,255,255,0.75); flex: 1; line-height: 1.5; }
+.insight-text strong { color: #6EBE4F; }
+.insight-stats { display: flex; }
+.i-stat { text-align: center; padding: 0 20px; border-left: 1px solid rgba(255,255,255,0.1); }
+.i-stat-val { font-family: 'Montserrat', sans-serif; font-size: 20px; font-weight: 800; color: #fff; }
+.i-stat-val.green { color: #6EBE4F; }
+.i-stat-val.teal { color: #2399B5; }
+.i-stat-lbl { font-size: 9px; color: rgba(255,255,255,0.4); text-transform: uppercase; letter-spacing: 1px; margin-top: 2px; }
 
-.trend-card {
-  background: #fff; border-radius: 10px; border: 1px solid #e8edf3;
-  box-shadow: 0 1px 4px rgba(29,55,86,0.06); overflow: hidden;
-}
-.trend-card-head {
-  background: var(--accent); padding: 8px 14px;
-  display: flex; justify-content: space-between; align-items: center;
-}
+.trend-card { background: #fff; border-radius: 10px; border: 1px solid #e8edf3; box-shadow: 0 1px 4px rgba(29,55,86,0.06); overflow: hidden; }
+.trend-card-head { background: var(--accent); padding: 8px 14px; display: flex; justify-content: space-between; align-items: center; }
 .trend-card.jan { --accent: #2399B5; }
 .trend-card.feb { --accent: #1D3756; }
 .trend-card.mar { --accent: #6EBE4F; }
@@ -193,35 +155,59 @@ html, body { height: 100%; overflow: hidden; background: #0d1b2a; font-family: '
 .tc-val.teal { color: #2399B5; }
 .tc-val.orange { color: #e67e22; }
 .tc-footer { margin: 8px 14px 14px; background: #f5f7fa; border-radius: 8px; padding: 8px 12px; display: flex; justify-content: space-between; border: 1px solid #e8edf3; }
-.tc-footer-left .tc-footer-val { font-family: 'Montserrat', sans-serif; font-size: 20px; font-weight: 800; }
-.tc-footer-left .tc-footer-val.bad { color: #e74c3c; }
-.tc-footer-left .tc-footer-val.ok { color: #e67e22; }
-.tc-footer-left .tc-footer-val.good { color: #6EBE4F; }
-.tc-footer-left .tc-footer-val.mtd { color: #2399B5; }
 .tc-footer-lbl { font-size: 9px; color: #8da0b4; text-transform: uppercase; letter-spacing: 1px; margin-top: 2px; }
-.tc-footer-right .tc-footer-val { text-align: right; }
+.roi-val { font-family: 'Montserrat', sans-serif; font-size: 20px; font-weight: 800; }
+.roi-val.bad { color: #e74c3c; }
+.roi-val.ok { color: #e67e22; }
+.roi-val.good { color: #6EBE4F; }
+.roi-val.mtd { color: #2399B5; }
 
-.insight-banner {
-  background: #1D3756; border-radius: 10px; padding: 14px 20px;
-  display: flex; align-items: center; gap: 16px; margin-bottom: 20px;
-}
-.insight-text { font-size: 13px; color: rgba(255,255,255,0.75); flex: 1; line-height: 1.5; }
-.insight-text strong { color: #6EBE4F; }
-.insight-stats { display: flex; }
-.i-stat { text-align: center; padding: 0 20px; border-left: 1px solid rgba(255,255,255,0.1); }
-.i-stat-val { font-family: 'Montserrat', sans-serif; font-size: 20px; font-weight: 800; color: #fff; }
-.i-stat-val.green { color: #6EBE4F; }
-.i-stat-val.teal { color: #2399B5; }
-.i-stat-lbl { font-size: 9px; color: rgba(255,255,255,0.4); text-transform: uppercase; letter-spacing: 1px; margin-top: 2px; }
+/* ═══════════════════════════════════════════════
+   SLIDE 5 — FORECAST (LIGHT THEME)
+═══════════════════════════════════════════════ */
+.fc-summary { display: grid; grid-template-columns: repeat(6, 1fr); gap: 10px; margin-bottom: 20px; }
+.fc-sum-box { background: #fff; border-radius: 10px; padding: 14px 12px; text-align: center; border: 1px solid #e8edf3; box-shadow: 0 1px 4px rgba(29,55,86,0.06); }
+.fc-sum-box.highlight { border-color: #dce4ed; background: #fff; }
+.fc-sum-lbl { font-size: 9px; font-weight: 700; letter-spacing: 1.5px; text-transform: uppercase; color: #8da0b4; margin-bottom: 6px; }
+.fc-sum-val { font-family: 'Montserrat', sans-serif; font-size: 22px; font-weight: 900; color: #1D3756; }
+.fc-sum-val.red { color: #e74c3c; }
+.fc-sum-val.yellow { color: #e67e22; }
+.fc-sum-val.green { color: #6EBE4F; }
+.fc-sum-val.teal { color: #2399B5; }
+
+.fc-grid { display: grid; grid-template-columns: repeat(5, 1fr); gap: 12px; }
+.fc-prod { background: #fff; border-radius: 10px; border: 1px solid #e8edf3; box-shadow: 0 1px 4px rgba(29,55,86,0.06); overflow: hidden; }
+.fc-prod-head { padding: 10px 14px; border-bottom: 1px solid #edf1f6; display: flex; align-items: center; justify-content: space-between; }
+.fc-prod-name { font-size: 12px; font-weight: 800; color: #1D3756; }
+.fc-prod-quota { font-size: 10px; color: #8da0b4; font-weight: 600; }
+.fc-scenarios { display: grid; grid-template-columns: repeat(4,1fr); border-bottom: 1px solid #edf1f6; }
+.fc-scen { padding: 8px 6px; text-align: center; border-right: 1px solid #edf1f6; }
+.fc-scen:last-child { border-right: none; }
+.fc-scen-lbl { font-size: 8px; font-weight: 700; letter-spacing: 1px; text-transform: uppercase; margin-bottom: 3px; }
+.fc-scen.worst .fc-scen-lbl { color: #e74c3c; }
+.fc-scen.likely .fc-scen-lbl { color: #e67e22; }
+.fc-scen.best .fc-scen-lbl { color: #6EBE4F; }
+.fc-scen.closed .fc-scen-lbl { color: #2399B5; }
+.fc-scen-val { font-family: 'Montserrat', sans-serif; font-size: 13px; font-weight: 800; }
+.fc-scen.worst .fc-scen-val { color: #e74c3c; }
+.fc-scen.likely .fc-scen-val { color: #e67e22; }
+.fc-scen.best .fc-scen-val { color: #6EBE4F; }
+.fc-scen.closed .fc-scen-val { color: #2399B5; }
+.fc-quota-bar { padding: 10px 14px; }
+.fc-bar-track { height: 6px; background: #f0f4f8; border-radius: 4px; position: relative; overflow: visible; margin-bottom: 5px; }
+.fc-bar-cw { position: absolute; left: 0; top: 0; height: 100%; border-radius: 4px; background: #2399B5; }
+.fc-bar-likely { position: absolute; top: -3px; width: 2px; height: 12px; background: #e67e22; border-radius: 2px; }
+.fc-bar-labels { display: flex; justify-content: space-between; font-size: 9px; color: #8da0b4; }
+.fc-bar-pct-cw { color: #2399B5; font-weight: 700; }
+.fc-bar-pct-likely { color: #e67e22; font-weight: 700; }
 </style>
 </head>
 <body>
-
 <div class="deck">
 
-  <!-- ════════════════════════════════════
+  <!-- ════════════════════════
        SLIDE 1 — COVER
-  ════════════════════════════════════ -->
+  ════════════════════════ -->
   <div class="slide active" id="slide-1">
     <div class="cover-inner">
       <img src="https://7091219.fs1.hubspotusercontent-na1.net/hubfs/7091219/email-assets/logo-revio-white.png" alt="Rev.io" class="cover-logo">
@@ -250,36 +236,15 @@ html, body { height: 100%; overflow: hidden; background: #0d1b2a; font-family: '
     <div class="cover-date">May 21, 2026 · Rev.io Sales Leadership</div>
   </div>
 
-  <!-- ════════════════════════════════════
-       SLIDE 2 — FORECAST DASHBOARD
-  ════════════════════════════════════ -->
+  <!-- ════════════════════════
+       SLIDE 2 — EFFICIENCY
+  ════════════════════════ -->
   <div class="slide" id="slide-2">
     <div class="top-stripe"></div>
-    <div class="iframe-header">
-      <div class="iframe-header-left">
-        <div>
-          <div class="iframe-slide-tag">Slide 2 · Forecast</div>
-          <div class="iframe-slide-title">Q2 2026 Sales Forecast Dashboard</div>
-        </div>
-      </div>
-      <img src="https://7091219.fs1.hubspotusercontent-na1.net/hubfs/7091219/email-assets/logo-revio-white.png" alt="Rev.io">
-    </div>
-    <div class="iframe-wrap">
-      <iframe src="forecast.html" title="Q2 Forecast Dashboard" loading="lazy"></iframe>
-    </div>
-  </div>
-
-  <!-- ════════════════════════════════════
-       SLIDE 3 — SALES EFFICIENCY
-  ════════════════════════════════════ -->
-  <div class="slide" id="slide-3">
-    <div class="top-stripe"></div>
-    <div class="iframe-header">
-      <div class="iframe-header-left">
-        <div>
-          <div class="iframe-slide-tag">Slide 3 · Efficiency</div>
-          <div class="iframe-slide-title">Q2 2026 Sales Team Efficiency</div>
-        </div>
+    <div class="slide-header">
+      <div class="slide-header-left">
+        <div class="slide-tag">Slide 2 · Efficiency</div>
+        <h2>Q2 2026 Sales Team Efficiency</h2>
       </div>
       <img src="https://7091219.fs1.hubspotusercontent-na1.net/hubfs/7091219/email-assets/logo-revio-white.png" alt="Rev.io">
     </div>
@@ -288,20 +253,19 @@ html, body { height: 100%; overflow: hidden; background: #0d1b2a; font-family: '
     </div>
   </div>
 
-  <!-- ════════════════════════════════════
-       SLIDE 4 — MAY PIPELINE SNAPSHOT
-  ════════════════════════════════════ -->
-  <div class="slide" id="slide-4">
+  <!-- ════════════════════════
+       SLIDE 3 — MAY PIPELINE
+  ════════════════════════ -->
+  <div class="slide" id="slide-3">
     <div class="top-stripe"></div>
-    <div class="may-header">
-      <div class="may-header-left">
-        <div class="tag">Slide 4 · May MTD</div>
+    <div class="slide-header">
+      <div class="slide-header-left">
+        <div class="slide-tag">Slide 3 · May MTD</div>
         <h2>May Pipeline Snapshot</h2>
       </div>
       <img src="https://7091219.fs1.hubspotusercontent-na1.net/hubfs/7091219/email-assets/logo-revio-white.png" alt="Rev.io">
     </div>
-    <div class="may-body">
-
+    <div class="slide-body">
       <div class="kpi-row">
         <div class="kpi-card teal">
           <div class="kpi-label">Deals Won (MTD)</div>
@@ -324,12 +288,10 @@ html, body { height: 100%; overflow: hidden; background: #0d1b2a; font-family: '
           <div class="kpi-sub">High-probability close</div>
         </div>
       </div>
-
       <div class="section-hdr">
         <div class="section-lbl">Pipeline by Product — Quota Attainment</div>
         <div class="section-rule"></div>
       </div>
-
       <div class="product-grid">
         <div class="prod-card">
           <div class="prod-name">PSA 2.0</div>
@@ -372,60 +334,43 @@ html, body { height: 100%; overflow: hidden; background: #0d1b2a; font-family: '
           <div class="prod-row"><span class="prod-row-lbl">Monthly Quota</span><span class="prod-row-val">$7,434</span></div>
           <div class="quota-bar-wrap">
             <div class="quota-bar-bg"><div class="quota-bar-fill low" style="width:1%"></div></div>
-            <div class="quota-pct">0% attained (10 days left)</div>
+            <div class="quota-pct">0% attained</div>
           </div>
         </div>
       </div>
-
     </div>
   </div>
 
-  <!-- ════════════════════════════════════
-       SLIDE 5 — Q2 MOMENTUM
-  ════════════════════════════════════ -->
-  <div class="slide" id="slide-5">
+  <!-- ════════════════════════
+       SLIDE 4 — Q2 MOMENTUM
+  ════════════════════════ -->
+  <div class="slide" id="slide-4">
     <div class="top-stripe"></div>
-    <div class="may-header">
-      <div class="may-header-left">
-        <div class="tag">Slide 5 · Q2 Trend</div>
+    <div class="slide-header">
+      <div class="slide-header-left">
+        <div class="slide-tag">Slide 4 · Q2 Trend</div>
         <h2>Q2 2026 Momentum — Jan Through May</h2>
       </div>
       <img src="https://7091219.fs1.hubspotusercontent-na1.net/hubfs/7091219/email-assets/logo-revio-white.png" alt="Rev.io">
     </div>
-    <div class="may-body">
-
+    <div class="slide-body">
       <div class="insight-banner">
         <div class="insight-text">
           MRR/SDR grew <strong>40×</strong> from January ($100) to April ($4,012). April's <strong>38 deals</strong> and <strong>$20,059 MRR</strong> were the strongest month of Q2. May is on pace with 10 days remaining and <strong>$53K open pipeline</strong> to close.
         </div>
         <div class="insight-stats">
-          <div class="i-stat">
-            <div class="i-stat-val teal">$100</div>
-            <div class="i-stat-lbl">Jan MRR/SDR</div>
-          </div>
-          <div class="i-stat">
-            <div class="i-stat-val green">$4,012</div>
-            <div class="i-stat-lbl">Apr MRR/SDR</div>
-          </div>
-          <div class="i-stat">
-            <div class="i-stat-val green">40×</div>
-            <div class="i-stat-lbl">Improvement</div>
-          </div>
+          <div class="i-stat"><div class="i-stat-val teal">$100</div><div class="i-stat-lbl">Jan MRR/SDR</div></div>
+          <div class="i-stat"><div class="i-stat-val green">$4,012</div><div class="i-stat-lbl">Apr MRR/SDR</div></div>
+          <div class="i-stat"><div class="i-stat-val green">40×</div><div class="i-stat-lbl">Improvement</div></div>
         </div>
       </div>
-
       <div class="section-hdr">
         <div class="section-lbl">SDR Performance — Q2 Month-by-Month</div>
         <div class="section-rule"></div>
       </div>
-
       <div style="display:grid; grid-template-columns: repeat(5,1fr); gap:14px;">
-
         <div class="trend-card jan">
-          <div class="trend-card-head">
-            <span class="trend-card-head-month">January</span>
-            <span class="trend-card-head-status">Closed</span>
-          </div>
+          <div class="trend-card-head"><span class="trend-card-head-month">January</span><span class="trend-card-head-status">Closed</span></div>
           <div class="trend-card-body">
             <div class="tc-row"><span class="tc-lbl">Opps</span><span class="tc-val teal">92</span></div>
             <div class="tc-row"><span class="tc-lbl">Deals Won</span><span class="tc-val">1</span></div>
@@ -434,22 +379,12 @@ html, body { height: 100%; overflow: hidden; background: #0d1b2a; font-family: '
             <div class="tc-row"><span class="tc-lbl">MRR/SDR</span><span class="tc-val">$100</span></div>
           </div>
           <div class="tc-footer">
-            <div class="tc-footer-left">
-              <div class="tc-footer-val bad">0.2×</div>
-              <div class="tc-footer-lbl">ROI</div>
-            </div>
-            <div class="tc-footer-right">
-              <div class="tc-footer-val" style="font-family:'Montserrat',sans-serif;font-size:18px;font-weight:800;color:#1D3756;text-align:right">2%</div>
-              <div class="tc-footer-lbl">Conv.</div>
-            </div>
+            <div><div class="roi-val bad">0.2×</div><div class="tc-footer-lbl">ROI</div></div>
+            <div><div style="font-family:'Montserrat',sans-serif;font-size:18px;font-weight:800;color:#1D3756;text-align:right">2%</div><div class="tc-footer-lbl" style="text-align:right">Conv.</div></div>
           </div>
         </div>
-
         <div class="trend-card feb">
-          <div class="trend-card-head">
-            <span class="trend-card-head-month">February</span>
-            <span class="trend-card-head-status">Closed</span>
-          </div>
+          <div class="trend-card-head"><span class="trend-card-head-month">February</span><span class="trend-card-head-status">Closed</span></div>
           <div class="trend-card-body">
             <div class="tc-row"><span class="tc-lbl">Opps</span><span class="tc-val teal">73</span></div>
             <div class="tc-row"><span class="tc-lbl">Deals Won</span><span class="tc-val">5</span></div>
@@ -458,22 +393,12 @@ html, body { height: 100%; overflow: hidden; background: #0d1b2a; font-family: '
             <div class="tc-row"><span class="tc-lbl">MRR/SDR</span><span class="tc-val">$575</span></div>
           </div>
           <div class="tc-footer">
-            <div class="tc-footer-left">
-              <div class="tc-footer-val ok">1.15×</div>
-              <div class="tc-footer-lbl">ROI</div>
-            </div>
-            <div class="tc-footer-right">
-              <div class="tc-footer-val" style="font-family:'Montserrat',sans-serif;font-size:18px;font-weight:800;color:#1D3756;text-align:right">11%</div>
-              <div class="tc-footer-lbl">Conv.</div>
-            </div>
+            <div><div class="roi-val ok">1.15×</div><div class="tc-footer-lbl">ROI</div></div>
+            <div><div style="font-family:'Montserrat',sans-serif;font-size:18px;font-weight:800;color:#1D3756;text-align:right">11%</div><div class="tc-footer-lbl" style="text-align:right">Conv.</div></div>
           </div>
         </div>
-
         <div class="trend-card mar">
-          <div class="trend-card-head">
-            <span class="trend-card-head-month">March</span>
-            <span class="trend-card-head-status">Closed</span>
-          </div>
+          <div class="trend-card-head"><span class="trend-card-head-month">March</span><span class="trend-card-head-status">Closed</span></div>
           <div class="trend-card-body">
             <div class="tc-row"><span class="tc-lbl">Opps</span><span class="tc-val teal">83</span></div>
             <div class="tc-row"><span class="tc-lbl">Deals Won</span><span class="tc-val">7</span></div>
@@ -482,22 +407,12 @@ html, body { height: 100%; overflow: hidden; background: #0d1b2a; font-family: '
             <div class="tc-row"><span class="tc-lbl">MRR/SDR</span><span class="tc-val">$1,297</span></div>
           </div>
           <div class="tc-footer">
-            <div class="tc-footer-left">
-              <div class="tc-footer-val good">2.6×</div>
-              <div class="tc-footer-lbl">ROI</div>
-            </div>
-            <div class="tc-footer-right">
-              <div class="tc-footer-val" style="font-family:'Montserrat',sans-serif;font-size:18px;font-weight:800;color:#1D3756;text-align:right">10%</div>
-              <div class="tc-footer-lbl">Conv.</div>
-            </div>
+            <div><div class="roi-val good">2.6×</div><div class="tc-footer-lbl">ROI</div></div>
+            <div><div style="font-family:'Montserrat',sans-serif;font-size:18px;font-weight:800;color:#1D3756;text-align:right">10%</div><div class="tc-footer-lbl" style="text-align:right">Conv.</div></div>
           </div>
         </div>
-
         <div class="trend-card apr">
-          <div class="trend-card-head">
-            <span class="trend-card-head-month">April</span>
-            <span class="trend-card-head-status">Final</span>
-          </div>
+          <div class="trend-card-head"><span class="trend-card-head-month">April</span><span class="trend-card-head-status">Final</span></div>
           <div class="trend-card-body">
             <div class="tc-row"><span class="tc-lbl">Opps</span><span class="tc-val teal">189</span></div>
             <div class="tc-row"><span class="tc-lbl">Deals Won</span><span class="tc-val">38</span></div>
@@ -506,22 +421,12 @@ html, body { height: 100%; overflow: hidden; background: #0d1b2a; font-family: '
             <div class="tc-row"><span class="tc-lbl">MRR/SDR</span><span class="tc-val green">$4,012</span></div>
           </div>
           <div class="tc-footer">
-            <div class="tc-footer-left">
-              <div class="tc-footer-val good">8.0×</div>
-              <div class="tc-footer-lbl">ROI</div>
-            </div>
-            <div class="tc-footer-right">
-              <div class="tc-footer-val" style="font-family:'Montserrat',sans-serif;font-size:18px;font-weight:800;color:#6EBE4F;text-align:right">20%</div>
-              <div class="tc-footer-lbl">Conv.</div>
-            </div>
+            <div><div class="roi-val good">8.0×</div><div class="tc-footer-lbl">ROI</div></div>
+            <div><div style="font-family:'Montserrat',sans-serif;font-size:18px;font-weight:800;color:#6EBE4F;text-align:right">20%</div><div class="tc-footer-lbl" style="text-align:right">Conv.</div></div>
           </div>
         </div>
-
         <div class="trend-card may">
-          <div class="trend-card-head">
-            <span class="trend-card-head-month">May</span>
-            <span class="trend-card-head-status">MTD</span>
-          </div>
+          <div class="trend-card-head"><span class="trend-card-head-month">May</span><span class="trend-card-head-status">MTD</span></div>
           <div class="trend-card-body">
             <div class="tc-row"><span class="tc-lbl">Opps</span><span class="tc-val teal">111</span></div>
             <div class="tc-row"><span class="tc-lbl">Deals Won</span><span class="tc-val">16</span></div>
@@ -530,13 +435,184 @@ html, body { height: 100%; overflow: hidden; background: #0d1b2a; font-family: '
             <div class="tc-row"><span class="tc-lbl">Verbal Commits</span><span class="tc-val">9 opps</span></div>
           </div>
           <div class="tc-footer">
-            <div class="tc-footer-left">
-              <div class="tc-footer-val mtd">~1.5×</div>
-              <div class="tc-footer-lbl">ROI · In Progress</div>
+            <div><div class="roi-val mtd">~1.5×</div><div class="tc-footer-lbl">ROI · In Progress</div></div>
+            <div><div style="font-family:'Montserrat',sans-serif;font-size:18px;font-weight:800;color:#2399B5;text-align:right">14%</div><div class="tc-footer-lbl" style="text-align:right">Conv. MTD</div></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ════════════════════════
+       SLIDE 5 — MAY FORECAST
+  ════════════════════════ -->
+  <div class="slide" id="slide-5">
+    <div class="top-stripe"></div>
+    <div class="slide-header">
+      <div class="slide-header-left">
+        <div class="slide-tag">Slide 5 · Forecast</div>
+        <h2>May 2026 Forecast — Scenarios by Product</h2>
+      </div>
+      <img src="https://7091219.fs1.hubspotusercontent-na1.net/hubfs/7091219/email-assets/logo-revio-white.png" alt="Rev.io">
+    </div>
+    <div class="slide-body">
+
+      <!-- Summary bar -->
+      <div class="fc-summary">
+        <div class="fc-sum-box">
+          <div class="fc-sum-lbl">May Pipeline</div>
+          <div class="fc-sum-val teal">$53,114</div>
+        </div>
+        <div class="fc-sum-box">
+          <div class="fc-sum-lbl">Open Opps</div>
+          <div class="fc-sum-val">87</div>
+        </div>
+        <div class="fc-sum-box">
+          <div class="fc-sum-lbl">Closed Won MTD</div>
+          <div class="fc-sum-val teal">$7,414</div>
+        </div>
+        <div class="fc-sum-box highlight">
+          <div class="fc-sum-lbl">Worst Case</div>
+          <div class="fc-sum-val red">$13,503</div>
+        </div>
+        <div class="fc-sum-box highlight">
+          <div class="fc-sum-lbl">Most Likely</div>
+          <div class="fc-sum-val yellow">$20,084</div>
+        </div>
+        <div class="fc-sum-box highlight">
+          <div class="fc-sum-lbl">Best Case</div>
+          <div class="fc-sum-val green">$33,324</div>
+        </div>
+      </div>
+
+      <div class="section-hdr">
+        <div class="section-lbl">Product Breakdown — Worst / Most Likely / Best / Closed Won</div>
+        <div class="section-rule"></div>
+      </div>
+
+      <div class="fc-grid">
+
+        <!-- PSA -->
+        <div class="fc-prod">
+          <div class="fc-prod-head">
+            <span class="fc-prod-name">PSA 2.0</span>
+            <span class="fc-prod-quota">Quota: $36,000</span>
+          </div>
+          <div class="fc-scenarios">
+            <div class="fc-scen worst"><div class="fc-scen-lbl">Worst</div><div class="fc-scen-val">$9,175</div></div>
+            <div class="fc-scen likely"><div class="fc-scen-lbl">Likely</div><div class="fc-scen-val">$13,180</div></div>
+            <div class="fc-scen best"><div class="fc-scen-lbl">Best</div><div class="fc-scen-val">$20,970</div></div>
+            <div class="fc-scen closed"><div class="fc-scen-lbl">CW MTD</div><div class="fc-scen-val">$6,215</div></div>
+          </div>
+          <div class="fc-quota-bar">
+            <div class="fc-bar-track">
+              <div class="fc-bar-cw" style="width:17.3%"></div>
+              <div class="fc-bar-likely" style="left:36.6%"></div>
             </div>
-            <div class="tc-footer-right">
-              <div class="tc-footer-val" style="font-family:'Montserrat',sans-serif;font-size:18px;font-weight:800;color:#2399B5;text-align:right">14%</div>
-              <div class="tc-footer-lbl">Conv. MTD</div>
+            <div class="fc-bar-labels">
+              <span class="fc-bar-pct-cw">CW: 17%</span>
+              <span class="fc-bar-pct-likely">Likely: 37%</span>
+              <span style="color:#6EBE4F;font-weight:700">Best: 58%</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Billing -->
+        <div class="fc-prod">
+          <div class="fc-prod-head">
+            <span class="fc-prod-name">Billing / Odin</span>
+            <span class="fc-prod-quota">Quota: $10,252</span>
+          </div>
+          <div class="fc-scenarios">
+            <div class="fc-scen worst"><div class="fc-scen-lbl">Worst</div><div class="fc-scen-val">$2,700</div></div>
+            <div class="fc-scen likely"><div class="fc-scen-lbl">Likely</div><div class="fc-scen-val">$5,002</div></div>
+            <div class="fc-scen best"><div class="fc-scen-lbl">Best</div><div class="fc-scen-val">$10,002</div></div>
+            <div class="fc-scen closed"><div class="fc-scen-lbl">CW MTD</div><div class="fc-scen-val">$700</div></div>
+          </div>
+          <div class="fc-quota-bar">
+            <div class="fc-bar-track">
+              <div class="fc-bar-cw" style="width:6.8%"></div>
+              <div class="fc-bar-likely" style="left:48.8%"></div>
+            </div>
+            <div class="fc-bar-labels">
+              <span class="fc-bar-pct-cw">CW: 7%</span>
+              <span class="fc-bar-pct-likely">Likely: 49%</span>
+              <span style="color:#6EBE4F;font-weight:700">Best: 98%</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Payments -->
+        <div class="fc-prod">
+          <div class="fc-prod-head">
+            <span class="fc-prod-name">Payments AR</span>
+            <span class="fc-prod-quota">Quota: $11,040</span>
+          </div>
+          <div class="fc-scenarios">
+            <div class="fc-scen worst"><div class="fc-scen-lbl">Worst</div><div class="fc-scen-val">$1,628</div></div>
+            <div class="fc-scen likely"><div class="fc-scen-lbl">Likely</div><div class="fc-scen-val">$1,902</div></div>
+            <div class="fc-scen best"><div class="fc-scen-lbl">Best</div><div class="fc-scen-val">$2,102</div></div>
+            <div class="fc-scen closed"><div class="fc-scen-lbl">CW MTD</div><div class="fc-scen-val">$499</div></div>
+          </div>
+          <div class="fc-quota-bar">
+            <div class="fc-bar-track">
+              <div class="fc-bar-cw" style="width:4.5%"></div>
+              <div class="fc-bar-likely" style="left:17.2%"></div>
+            </div>
+            <div class="fc-bar-labels">
+              <span class="fc-bar-pct-cw">CW: 5%</span>
+              <span class="fc-bar-pct-likely">Likely: 17%</span>
+              <span style="color:#6EBE4F;font-weight:700">Best: 19%</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Cyber -->
+        <div class="fc-prod">
+          <div class="fc-prod-head">
+            <span class="fc-prod-name">Cyber Protect</span>
+            <span class="fc-prod-quota">Quota: $2,478</span>
+          </div>
+          <div class="fc-scenarios">
+            <div class="fc-scen worst"><div class="fc-scen-lbl">Worst</div><div class="fc-scen-val">$0</div></div>
+            <div class="fc-scen likely"><div class="fc-scen-lbl">Likely</div><div class="fc-scen-val">$0</div></div>
+            <div class="fc-scen best"><div class="fc-scen-lbl">Best</div><div class="fc-scen-val">$250</div></div>
+            <div class="fc-scen closed"><div class="fc-scen-lbl">CW MTD</div><div class="fc-scen-val">$0</div></div>
+          </div>
+          <div class="fc-quota-bar">
+            <div class="fc-bar-track">
+              <div class="fc-bar-cw" style="width:0%"></div>
+              <div class="fc-bar-likely" style="left:0%"></div>
+            </div>
+            <div class="fc-bar-labels">
+              <span class="fc-bar-pct-cw">CW: 0%</span>
+              <span class="fc-bar-pct-likely">Likely: 0%</span>
+              <span style="color:#6EBE4F;font-weight:700">Best: 10%</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- CommerceHub -->
+        <div class="fc-prod">
+          <div class="fc-prod-head">
+            <span class="fc-prod-name">CommerceHub</span>
+            <span class="fc-prod-quota">Quota: $2,956</span>
+          </div>
+          <div class="fc-scenarios">
+            <div class="fc-scen worst"><div class="fc-scen-lbl">Worst</div><div class="fc-scen-val">$0</div></div>
+            <div class="fc-scen likely"><div class="fc-scen-lbl">Likely</div><div class="fc-scen-val">$0</div></div>
+            <div class="fc-scen best"><div class="fc-scen-lbl">Best</div><div class="fc-scen-val">$0</div></div>
+            <div class="fc-scen closed"><div class="fc-scen-lbl">CW MTD</div><div class="fc-scen-val">$0</div></div>
+          </div>
+          <div class="fc-quota-bar">
+            <div class="fc-bar-track">
+              <div class="fc-bar-cw" style="width:0%"></div>
+              <div class="fc-bar-likely" style="left:0%"></div>
+            </div>
+            <div class="fc-bar-labels">
+              <span class="fc-bar-pct-cw">CW: 0%</span>
+              <span class="fc-bar-pct-likely">Likely: 0%</span>
+              <span style="color:#e74c3c;font-weight:700">Best: 0%</span>
             </div>
           </div>
         </div>
@@ -547,9 +623,7 @@ html, body { height: 100%; overflow: hidden; background: #0d1b2a; font-family: '
 
 </div><!-- end deck -->
 
-<!-- ════════════════════════════════════
-     NAV BAR
-════════════════════════════════════ -->
+<!-- NAV BAR -->
 <div class="nav-bar">
   <div class="nav-title">Rev.io Sales · May Update</div>
   <div class="nav-controls">
@@ -564,8 +638,7 @@ html, body { height: 100%; overflow: hidden; background: #0d1b2a; font-family: '
 <script>
 const TOTAL = 5;
 let cur = 1;
-
-const LABELS = ['Cover', 'Forecast', 'Efficiency', 'May Pipeline', 'Q2 Trend'];
+const LABELS = ['Cover', 'Efficiency', 'May Pipeline', 'Q2 Momentum', 'Forecast'];
 
 function buildDots() {
   const wrap = document.getElementById('nav-dots');
@@ -578,7 +651,6 @@ function buildDots() {
     wrap.appendChild(d);
   }
 }
-
 function jumpSlide(n) {
   document.getElementById('slide-' + cur).classList.remove('active');
   document.getElementById('dot-' + cur).classList.remove('active');
@@ -589,18 +661,15 @@ function jumpSlide(n) {
   document.getElementById('btn-prev').disabled = (cur === 1);
   document.getElementById('btn-next').disabled = (cur === TOTAL);
 }
-
 function goSlide(dir) {
   const next = cur + dir;
   if (next < 1 || next > TOTAL) return;
   jumpSlide(next);
 }
-
 document.addEventListener('keydown', e => {
   if (e.key === 'ArrowRight' || e.key === 'ArrowDown') goSlide(1);
   if (e.key === 'ArrowLeft' || e.key === 'ArrowUp') goSlide(-1);
 });
-
 buildDots();
 </script>
 </body>
