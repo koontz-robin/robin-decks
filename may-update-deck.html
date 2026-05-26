@@ -78,20 +78,20 @@ html, body { height: 100%; overflow: hidden; background: #0a1628; font-family: '
    SLIDE 1 — COVER
 ═══════════════════════════════════════════════ */
 #slide-2 { justify-content: center; align-items: center; position: relative; overflow: hidden; background: transparent; }
-.cover-inner { position: relative; z-index: 1; text-align: center; max-width: 900px; padding: 0 48px; }
-.cover-top { position: relative; width: min(620px, 100%); min-height: 42px; margin: 0 auto 18px; display: flex; align-items: center; justify-content: center; }
+.cover-inner { position: relative; z-index: 1; text-align: center; width: min(960px, 100%); padding: 0 48px; transform: translateY(14px); }
+.cover-top { width: 100%; margin: 0 auto 18px; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 14px; }
 .cover-tag { display: inline-block; font-size: 11px; font-weight: 700; letter-spacing: 3px; text-transform: uppercase; color: #00d4f0; border: 1px solid rgba(0,212,240,0.3); padding: 6px 18px; border-radius: 20px; background: rgba(0,212,240,0.06); }
-.cover-logo { position: absolute; left: 0; top: 50%; transform: translateY(-50%); height: 40px; filter: brightness(0) invert(1); opacity: 0.9; }
+.cover-logo { height: 42px; filter: brightness(0) invert(1); opacity: 0.9; }
 .cover-title { font-family: 'Montserrat', sans-serif; font-size: 64px; font-weight: 900; color: #fff; line-height: 1.05; letter-spacing: -2px; margin-bottom: 12px; }
 .cover-title span { color: #00d4f0; text-shadow: 0 0 40px rgba(0,212,240,0.5); }
-.cover-sub { font-size: 16px; color: rgba(255,255,255,0.4); margin-bottom: 32px; }
-.cover-chips { display: flex; gap: 16px; justify-content: center; flex-wrap: wrap; }
-.cover-chip { background: rgba(255,255,255,0.04); border: 1px solid rgba(255,255,255,0.1); border-radius: 10px; padding: 14px 24px; text-align: center; min-width: 160px; backdrop-filter: blur(4px); }
+.cover-sub { font-size: 16px; color: rgba(255,255,255,0.4); margin-bottom: 38px; }
+.cover-chips { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 14px; justify-content: center; }
+.cover-chip { background: rgba(255,255,255,0.04); border: 1px solid rgba(255,255,255,0.1); border-radius: 10px; padding: 14px 18px; text-align: center; min-width: 0; min-height: 82px; backdrop-filter: blur(4px); display: flex; flex-direction: column; justify-content: center; }
 .chip-val { font-family: 'Montserrat', sans-serif; font-size: 28px; font-weight: 900; color: #fff; }
 .chip-val.green { color: #3ddc97; }
 .chip-val.teal { color: #00d4f0; }
 .chip-label { font-size: 10px; font-weight: 700; letter-spacing: 1.5px; text-transform: uppercase; color: rgba(255,255,255,0.3); margin-top: 4px; }
-.cover-date { position: absolute; bottom: 60px; left: 0; right: 0; text-align: center; font-size: 11px; color: rgba(255,255,255,0.18); letter-spacing: 1px; }
+.cover-date { position: static; margin-top: 18px; text-align: center; font-size: 11px; color: rgba(255,255,255,0.18); letter-spacing: 1px; }
 
 /* ═══════════════════════════════════════════════
    SLIDE 2 — EFFICIENCY IFRAME
@@ -243,6 +243,10 @@ html, body { height: 100%; overflow: hidden; background: #0a1628; font-family: '
         <div class="cover-chip">
           <div class="chip-val green">$20,059</div>
           <div class="chip-label">April Closed Won MRR</div>
+        </div>
+        <div class="cover-chip">
+          <div class="chip-val">38</div>
+          <div class="chip-label">April Deals Won</div>
         </div>
         <div class="cover-chip">
           <div class="chip-val teal">$19,884</div>
