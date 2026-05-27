@@ -630,6 +630,7 @@ function sortTable(th, colIdx) {{
 </body>
 </html>"""
 
+    os.makedirs(REPO_PATH, exist_ok=True)
     with open(OUTPUT_FILE, "w") as f:
         f.write(html)
     print(f"Built: {len(html):,} chars")
