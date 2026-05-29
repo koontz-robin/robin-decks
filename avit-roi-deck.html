@@ -164,6 +164,22 @@
   .dm-tag.later { background: rgba(255,107,53,0.15); color: var(--rev-orange); }
   .dm-tag.finance { background: rgba(0,194,255,0.15); color: var(--rev-accent); }
 
+  /* JOURNEY */
+  .journey-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 24px; width: 100%; }
+  .journey-card { background: #fff; border: 1px solid var(--border); border-radius: 18px; padding: 26px; box-shadow: 0 4px 18px rgba(0,0,0,0.06); }
+  .journey-label { font-size: 11px; font-weight: 800; letter-spacing: 1.4px; text-transform: uppercase; color: var(--rev-blue); margin-bottom: 8px; }
+  .journey-title { font-size: 20px; font-weight: 800; margin-bottom: 14px; }
+  .journey-flow { display: grid; grid-template-columns: 1fr auto 1fr; gap: 12px; align-items: center; margin: 18px 0; }
+  .journey-box { border: 1px solid var(--border); background: #F8FAFF; border-radius: 12px; padding: 14px; min-height: 94px; display: flex; flex-direction: column; justify-content: center; }
+  .journey-box.old { background: #FFF8F5; border-color: rgba(255,107,53,0.3); }
+  .journey-box.new { background: #F0FFF8; border-color: rgba(0,217,126,0.3); }
+  .journey-box .box-kicker { font-size: 10px; font-weight: 800; text-transform: uppercase; letter-spacing: 1px; color: var(--text-sub); margin-bottom: 5px; }
+  .journey-box .box-main { font-size: 13px; line-height: 1.45; font-weight: 650; }
+  .journey-arrow { color: var(--rev-blue); font-weight: 900; font-size: 22px; }
+  .journey-list { list-style: none; display: grid; gap: 8px; margin-top: 12px; }
+  .journey-list li { font-size: 13px; color: var(--text-sub); line-height: 1.55; padding-left: 18px; position: relative; }
+  .journey-list li::before { content: '✓'; position: absolute; left: 0; color: var(--rev-green); font-weight: 800; }
+
   /* SCROLL */
   .scroll-hint { position: absolute; bottom: 24px; left: 50%; transform: translateX(-50%); color: rgba(255,255,255,0.4); font-size: 12px; text-align: center; animation: bounce 2s infinite; }
   @keyframes bounce { 0%, 100% { transform: translateX(-50%) translateY(0); } 50% { transform: translateX(-50%) translateY(6px); } }
@@ -175,6 +191,9 @@
     .hero-stats { grid-template-columns: 1fr 1fr; }
     .compare-grid { grid-template-columns: 1fr; }
     .invest-layout { grid-template-columns: 1fr; }
+    .journey-grid { grid-template-columns: 1fr; }
+    .journey-flow { grid-template-columns: 1fr; }
+    .journey-arrow { transform: rotate(90deg); text-align: center; }
     nav .nav-pills { display: none; }
   }
 </style>
@@ -189,6 +208,7 @@
     <a href="#pain" class="pill">Pain Points</a>
     <a href="#roi" class="pill">ROI</a>
     <a href="#fit" class="pill">Product Fit</a>
+    <a href="#journey" class="pill">Migration</a>
     <a href="#invest" class="pill">Investment</a>
     <a href="#next" class="pill">Next Steps</a>
   </div>
@@ -210,19 +230,19 @@
     <div class="hero-stats">
       <div class="hero-stat">
         <div class="num">130</div>
-        <div class="label">Desired platform users (70 currently blocked by CW pricing)</div>
+        <div class="label">Desired platform users (60 currently blocked by CW pricing)</div>
       </div>
       <div class="hero-stat">
-        <div class="num">30–40</div>
-        <div class="label">Integrations to consolidate</div>
+        <div class="num">75</div>
+        <div class="label">Integration endpoints to rationalize</div>
       </div>
       <div class="hero-stat">
-        <div class="num">$170K+</div>
-        <div class="label">Est. annual ConnectWise spend at full user count</div>
+        <div class="num">100K+</div>
+        <div class="label">Tickets per year that need structured flow</div>
       </div>
       <div class="hero-stat">
-        <div class="num">Dec '26</div>
-        <div class="label">ConnectWise contract renewal deadline</div>
+        <div class="num">$183K</div>
+        <div class="label">Estimated annual ROI impact</div>
       </div>
     </div>
   </div>
@@ -269,7 +289,7 @@
         <div class="snapshot-icon">👥</div>
         <div>
           <div class="snapshot-label">Team Size</div>
-          <div class="snapshot-val">~130 desired platform users</div>
+          <div class="snapshot-val">~130 total users · 70 licensed today</div>
         </div>
       </div>
       <div class="snapshot-card">
@@ -315,6 +335,27 @@
         </div>
       </div>
       <div class="snapshot-card">
+        <div class="snapshot-icon">🎫</div>
+        <div>
+          <div class="snapshot-label">Ticket Volume</div>
+          <div class="snapshot-val">100,000+ tickets per year</div>
+        </div>
+      </div>
+      <div class="snapshot-card">
+        <div class="snapshot-icon">☁️</div>
+        <div>
+          <div class="snapshot-label">CSP Scale</div>
+          <div class="snapshot-val">~2,500 Microsoft + Google accounts</div>
+        </div>
+      </div>
+      <div class="snapshot-card">
+        <div class="snapshot-icon">📦</div>
+        <div>
+          <div class="snapshot-label">Product Catalog</div>
+          <div class="snapshot-val">12,000 mapped SKUs in NetSuite</div>
+        </div>
+      </div>
+      <div class="snapshot-card">
         <div class="snapshot-icon">🗓️</div>
         <div>
           <div class="snapshot-label">CW Contract</div>
@@ -325,7 +366,7 @@
         <div class="snapshot-icon">🤝</div>
         <div>
           <div class="snapshot-label">Referral</div>
-          <div class="snapshot-val">Rob Ray (Rev.io board member)</div>
+          <div class="snapshot-val">Rob Rae (Rev.io board member)</div>
         </div>
       </div>
     </div>
@@ -358,7 +399,7 @@
       <div class="pain-card">
         <div class="pain-icon">🔗</div>
         <div class="pain-title">No Native NetSuite Integration</div>
-        <div class="pain-desc">AVIT migrated to NetSuite in Jan 2024 for accounting + HR. They need parts/labor from tickets to flow directly into NetSuite. ConnectWise requires custom middleware — another integration to manage in their 30–40 integration stack.</div>
+        <div class="pain-desc">AVIT migrated to NetSuite in Jan 2024 for accounting + HR. They need parts/labor from tickets to flow directly into NetSuite. ConnectWise requires custom middleware — another integration to manage in their 75-endpoint stack.</div>
         <div class="pain-quote">"Parts and labor integration with NetSuite for tickets [is needed]."</div>
         <div class="pain-cost">Custom dev + ongoing maintenance</div>
       </div>
@@ -383,6 +424,27 @@
         <div class="pain-quote">"I am going to be looking at anything and everything when it comes to PSA, RMM... I want to be not playing this game come November of next year."</div>
         <div class="pain-cost">Strategic risk of staying</div>
       </div>
+      <div class="pain-card">
+        <div class="pain-icon">📊</div>
+        <div class="pain-title">Limited Profitability Visibility</div>
+        <div class="pain-desc">AVIT cannot easily see agreement profitability, multi-location cost allocation, or customer-level margins without custom exports and reporting workarounds.</div>
+        <div class="pain-quote">Agreement profitability surfaced as a critical pain point in the second demo.</div>
+        <div class="pain-cost">Margin leakage hidden until too late</div>
+      </div>
+      <div class="pain-card">
+        <div class="pain-icon">🧩</div>
+        <div class="pain-title">Integration Sprawl</div>
+        <div class="pain-desc">ConnectWise, NetSuite, IT Glue, Paystand, Nextiva, CSP providers, distributors, ServiceNow, Jira, and field workflows are stitched together across dozens of connectors.</div>
+        <div class="pain-quote">Every connector is another maintenance point and another reconciliation risk.</div>
+        <div class="pain-cost">Operational drag across billing cycles</div>
+      </div>
+      <div class="pain-card">
+        <div class="pain-icon">🛰️</div>
+        <div class="pain-title">No Real-Time Field Visibility</div>
+        <div class="pain-desc">Dispatchers lack real-time visibility into field tech location, route, and job status. Phone, text, Teams, and TSheets become the operating model.</div>
+        <div class="pain-quote">Time has to be reconnected back to tickets for billing after the work is done.</div>
+        <div class="pain-cost">Duplicate entry + billing errors</div>
+      </div>
     </div>
   </div>
 </section>
@@ -393,7 +455,7 @@
     <div class="section-header">
       <div class="section-tag green">ROI Analysis</div>
       <h2 class="section-title">The financial case for switching</h2>
-      <p class="section-sub">Based on AVIT's disclosed user count, ConnectWise contract structure, and industry benchmarks for MSPs in their revenue tier.</p>
+      <p class="section-sub">Based on AVIT's disclosed user count, ConnectWise contract structure, NetSuite needs, and the summarized ROI model from the onsite presentation.</p>
     </div>
 
     <div class="roi-wrap">
@@ -402,78 +464,54 @@
           <tr>
             <th>Value Driver</th>
             <th>Basis</th>
-            <th>Annual Value</th>
+            <th>Monthly Impact</th>
           </tr>
         </thead>
         <tbody>
           <tr>
             <td>
-              <strong>Platform License Savings</strong>
-              <span class="sub-note">CW Manage at ~$109/seat × 130 users = ~$170K. Rev.io PSA 2.0 flat-rate model for same footprint.</span>
+              <strong>Billing Leakage Recovered</strong>
+              <span class="sub-note">Conservative 2% improvement on $3M+ managed ARR from cleaner agreement, ticket, and billing flow</span>
             </td>
-            <td>Estimated gap based on disclosed 130-user need</td>
-            <td class="positive">+$60,000–$90,000</td>
+            <td>2% of $3M ARR recovered</td>
+            <td class="positive">+$5,000/mo</td>
           </tr>
           <tr>
             <td>
-              <strong>Field Tech Workaround Elimination</strong>
-              <span class="sub-note">QuickBooks T-sheets ($8–10/user/mo × 60 techs) + Teams admin overhead removed</span>
+              <strong>Platform License Savings</strong>
+              <span class="sub-note">Savings vs. 130 ConnectWise seats at roughly $109/seat, using Rev.io's flat-rate + field-user model</span>
             </td>
-            <td>60 blocked field techs at current workaround cost</td>
-            <td class="positive">+$7,200</td>
+            <td>Estimated gap based on disclosed 130-user need</td>
+            <td class="positive">+$6,250/mo</td>
           </tr>
           <tr>
             <td>
               <strong>NetSuite Integration Build &amp; Maintenance</strong>
-              <span class="sub-note">Custom middleware or API work to connect CW tickets to NetSuite P/L — eliminated with native PSA 2.0 integration</span>
+              <span class="sub-note">Custom middleware or API work to connect ticket parts/labor, invoicing, and inventory back to NetSuite</span>
             </td>
             <td>1 dev sprint to build + ongoing maintenance</td>
-            <td class="positive">+$15,000–$25,000</td>
+            <td class="positive">+$1,667/mo</td>
           </tr>
           <tr>
             <td>
               <strong>Admin Time Recovered (Billing Reconciliation)</strong>
-              <span class="sub-note">Manual billing reconciliation across parent-child franchise hierarchy → automated in PSA 2.0</span>
+              <span class="sub-note">Manual billing reconciliation across ConnectWise and NetSuite becomes exception-based review</span>
             </td>
             <td>Est. 4 hrs/wk × $75/hr billing staff × 50 wks</td>
-            <td class="positive">+$15,000</td>
-          </tr>
-          <tr>
-            <td>
-              <strong>Billing Accuracy / Leakage Recovery</strong>
-              <span class="sub-note">Industry avg 3–5% underbilling on managed services. Conservative 2% on est. $3M+ in managed ARR</span>
-            </td>
-            <td>2% of $3M ARR recovered</td>
-            <td class="positive">+$60,000</td>
-          </tr>
-          <tr>
-            <td>
-              <strong>CPQ + Change Order Efficiency</strong>
-              <span class="sub-note">Faster quote-to-cash cycle on large AV/IT projects. 1 day saved per deal × 20 deals/yr at avg AE cost</span>
-            </td>
-            <td>20 deals × 1 day × $500 AE day rate</td>
-            <td class="positive">+$10,000</td>
+            <td class="positive">+$1,250/mo</td>
           </tr>
           <tr>
             <td>
               <strong>Integration Stack Reduction</strong>
-              <span class="sub-note">Eliminating connectors, middleware licenses, and maintenance for tools replaced natively by PSA 2.0</span>
+              <span class="sub-note">Eliminating connectors and middleware replaced natively by PSA, CommerceHub, CSP billing, and open API</span>
             </td>
-            <td>Est. 5–8 integrations consolidated at $2K avg each</td>
-            <td class="positive">+$10,000–$16,000</td>
-          </tr>
-          <tr>
-            <td>
-              <strong>Rev.io PSA 2.0 Investment</strong>
-              <span class="sub-note">Annual subscription · $0 migration fee · $0 setup fee · Month-to-month terms</span>
-            </td>
-            <td>Quoted annual value</td>
-            <td class="negative">TBD at scoping</td>
+            <td>Connector and middleware reduction</td>
+            <td class="positive">+$1,083/mo</td>
           </tr>
           <tr class="total-row">
-            <td><strong>Estimated Net First-Year Value</strong></td>
-            <td>Conservative case, AVIT-specific</td>
-            <td class="positive">$177K–$223K+</td>
+            <td><strong>Estimated ROI Impact</strong></td>
+            <td>Conservative AVIT-specific value model</td>
+            <td class="positive">$15,250/mo · $183K/yr</td>
           </tr>
         </tbody>
       </table>
@@ -481,7 +519,7 @@
 
     <div style="background: rgba(0,87,255,0.04); border: 1px solid rgba(0,87,255,0.15); border-radius: 14px; padding: 20px; text-align: center;">
       <p style="font-size: 13px; color: var(--text-sub); line-height: 1.7;">
-        <strong>Note:</strong> License savings range is wide because final PSA 2.0 pricing for AVIT's full 130-user footprint (including limited-user tier for field techs) needs to be scoped. Even at the conservative end, the ROI case is overwhelming. The biggest single driver is billing leakage recovery — a 3–5% improvement on $3M+ ARR is a six-figure gain by itself.
+        <strong>Note:</strong> This model uses the onsite deck's conservative ROI assumptions. It excludes softer upside from quote speed, fewer field-service errors, stronger customer portal adoption, and cleaner reporting for large franchise customers.
       </p>
     </div>
   </div>
@@ -497,8 +535,8 @@
     <div class="value-grid">
       <div class="value-card">
         <div class="v-icon">💰</div>
-        <div class="v-num">$177K+</div>
-        <div class="v-label">Conservative Year-1 value</div>
+        <div class="v-num">$15.25K</div>
+        <div class="v-label">Estimated monthly ROI impact</div>
       </div>
       <div class="value-card">
         <div class="v-icon">👷</div>
@@ -507,8 +545,8 @@
       </div>
       <div class="value-card">
         <div class="v-icon">🔗</div>
-        <div class="v-num">Native</div>
-        <div class="v-label">NetSuite integration — no middleware needed</div>
+        <div class="v-num">75+</div>
+        <div class="v-label">Reports + open API visibility replacing spreadsheet workarounds</div>
       </div>
       <div class="value-card">
         <div class="v-icon">🌳</div>
@@ -522,8 +560,8 @@
       </div>
       <div class="value-card">
         <div class="v-icon">🚀</div>
-        <div class="v-num">$0</div>
-        <div class="v-label">Migration fee. Full CW data migration included</div>
+        <div class="v-num">2,500</div>
+        <div class="v-label">CSP accounts to reconcile across Microsoft + Google</div>
       </div>
     </div>
   </div>
@@ -550,9 +588,9 @@
         <div class="req-header">
           <div class="req-icon">🧾</div>
           <div class="req-title">NetSuite Integration</div>
-          <div class="req-status yes">✓ In Roadmap</div>
+          <div class="req-status wip">⏳ In Roadmap</div>
         </div>
-        <div class="req-desc">Parts and labor from tickets flowing directly into NetSuite. Rev.io is a NetSuite house — we went through the same migration AVIT did.</div>
+        <div class="req-desc">Parts, labor, invoicing, and inventory flowing directly into NetSuite. AVIT's ideal is NetSuite on-hand inventory surfaced where service and quoting teams need it.</div>
       </div>
       <div class="req-card">
         <div class="req-header">
@@ -576,7 +614,7 @@
           <div class="req-title">CPQ + Multi-Million $ Proposals</div>
           <div class="req-status yes">✓ Native</div>
         </div>
-        <div class="req-desc">Full quote builder with e-signature (DocuSign native). Variable pricing, MSRP hide, tabbed proposals. Change order management included.</div>
+        <div class="req-desc">Full quote builder with native DocuSign e-signature, variable pricing, MSRP hide, tabbed proposals, and line-item image roadmap support for AV proposals.</div>
       </div>
       <div class="req-card">
         <div class="req-header">
@@ -584,7 +622,7 @@
           <div class="req-title">Customer Portal</div>
           <div class="req-status yes">✓ Native</div>
         </div>
-        <div class="req-desc">Full customer portal for ticket submission and management. Parent-child hierarchy extends to portal access — franchise locations see their own data.</div>
+        <div class="req-desc">Full customer portal for ticket submission, status, and management. Enterprise portal reporting supports multi-location cost allocation and parent-child visibility.</div>
       </div>
       <div class="req-card">
         <div class="req-header">
@@ -600,7 +638,7 @@
           <div class="req-title">Pax8 / Distributor EDI</div>
           <div class="req-status yes">✓ CommerceHub</div>
         </div>
-        <div class="req-desc">CommerceHub marketplace gives AVIT access to Pax8, hardware distributors, and communications partners — directly inside PSA 2.0.</div>
+        <div class="req-desc">CommerceHub gives AVIT access to Pax8, distributors, CSP providers, and communications partners directly inside PSA 2.0.</div>
       </div>
       <div class="req-card">
         <div class="req-header">
@@ -616,7 +654,7 @@
           <div class="req-title">CSP (Microsoft + Google)</div>
           <div class="req-status yes">✓ Native</div>
         </div>
-        <div class="req-desc">CSP billing for Microsoft and Google managed directly within the platform — ConnectWise-level integration.</div>
+        <div class="req-desc">CSP billing and reconciliation for roughly 2,500 Microsoft and Google accounts, including mass updates and agreement sync.</div>
       </div>
       <div class="req-card">
         <div class="req-header">
@@ -632,13 +670,66 @@
           <div class="req-title">Full Inventory Management</div>
           <div class="req-status yes">✓ Native</div>
         </div>
-        <div class="req-desc">Asset lifecycle from PO to customer site install. Purchase orders, inventory tracking by location, customer-level asset management.</div>
+        <div class="req-desc">Asset lifecycle from PO to customer-site install. Purchase orders, location inventory, deployed inventory, serial history, and customer-level asset management.</div>
       </div>
     </div>
   </div>
 </section>
 
-<!-- SLIDE 7: DECISION MAKERS -->
+<!-- SLIDE 7: MIGRATION JOURNEY -->
+<section class="slide slide-light" id="journey">
+  <div class="content-max">
+    <div class="section-header">
+      <div class="section-tag green">Migration Journey</div>
+      <h2 class="section-title">A phased path from ConnectWise to a unified operating system</h2>
+      <p class="section-sub">The updated onsite deck frames the move in two phases: first replace ConnectWise Manage as the PSA system of record, then consolidate NetSuite and integration workflows around Rev.io's open API.</p>
+    </div>
+    <div class="journey-grid">
+      <div class="journey-card">
+        <div class="journey-label">Phase I</div>
+        <div class="journey-title">ConnectWise Migration</div>
+        <div class="journey-flow">
+          <div class="journey-box old">
+            <div class="box-kicker">Today</div>
+            <div class="box-main">ConnectWise Manage / CW Automate, email, FTP, customer portal gaps, and manual ticket coordination</div>
+          </div>
+          <div class="journey-arrow">→</div>
+          <div class="journey-box new">
+            <div class="box-kicker">Rev.io PSA</div>
+            <div class="box-main">Ticketing, dispatch, field mobile app, parent-child billing, CPQ, e-signature, open API</div>
+          </div>
+        </div>
+        <ul class="journey-list">
+          <li>All 130 users can come online through standard and field-user access tiers.</li>
+          <li>Ticketing, time, documentation, dispatch, and billing share the same operational database.</li>
+          <li>Migration team uses ConnectWise API access to reduce manual data conversion burden.</li>
+        </ul>
+      </div>
+      <div class="journey-card">
+        <div class="journey-label">Phase II</div>
+        <div class="journey-title">NetSuite Consolidation</div>
+        <div class="journey-flow">
+          <div class="journey-box old">
+            <div class="box-kicker">Today</div>
+            <div class="box-main">NetSuite plus 75 integration endpoints, CSP reconciliation, distributors, and custom middleware</div>
+          </div>
+          <div class="journey-arrow">→</div>
+          <div class="journey-box new">
+            <div class="box-kicker">Unified Flow</div>
+            <div class="box-main">NetSuite invoicing and inventory, CSP reconciliation, CommerceHub, asset hub, subcontractor portal</div>
+          </div>
+        </div>
+        <ul class="journey-list">
+          <li>Parts and labor from tickets can connect directly into NetSuite invoicing and inventory workflows.</li>
+          <li>CSP, distributor, and communications partner workflows move closer to the PSA instead of living as separate handoffs.</li>
+          <li>Enterprise portal and reporting replace custom CSV exports for site, franchise, and customer profitability analysis.</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- SLIDE 8: DECISION MAKERS -->
 <section class="slide slide-dark">
   <div class="content-max">
     <div class="section-header">
@@ -680,37 +771,37 @@
     </div>
     <div style="margin-top: 32px; background: rgba(255,255,255,0.06); border: 1px solid rgba(255,255,255,0.12); border-radius: 16px; padding: 20px 24px; max-width: 700px; margin-left: auto; margin-right: auto;">
       <p style="font-size: 14px; color: rgba(255,255,255,0.8); line-height: 1.7; text-align: center;">
-        🗓️ AVIT target decision date: <strong style="color:#fff">June 1, 2026</strong><br>
-        <span style="font-size: 13px; opacity: .6;">"By June 1st, I'm going to have a decision from my leadership team on the direction we're going to go."</span>
+        AVIT is running a methodical, leadership-aligned evaluation.<br>
+        <span style="font-size: 13px; opacity: .6;">The right motion is transparent roadmap commitments, sandbox validation, and a baked recommendation before the CEO is pulled in.</span>
       </p>
     </div>
   </div>
 </section>
 
-<!-- SLIDE 8: INVESTMENT -->
+<!-- SLIDE 9: INVESTMENT -->
 <section class="slide slide-white" id="invest">
   <div class="content-max" style="display:flex;flex-direction:column;align-items:center">
     <div class="section-header">
       <div class="section-tag">Investment</div>
       <h2 class="section-title">What it costs to switch</h2>
-      <p class="section-sub">Month-to-month. Zero setup. Zero migration fees. Rev.io handles the full CW data migration at no charge.</p>
+      <p class="section-sub">Month-to-month recurring PSA pricing with standard setup, full data conversion, and NetSuite integration configuration finalized during scoping.</p>
     </div>
 
     <div class="invest-layout">
       <div class="investment-hero">
-        <div class="inv-label">Quoted Annual Value</div>
-        <div class="inv-amount">$0</div>
-        <div class="inv-sub">Migration cost. Zero. We do it for you.</div>
+        <div class="inv-label">Quoted PSA Recurring Cost</div>
+        <div class="inv-amount">$6.5K</div>
+        <div class="inv-sub">per month · current 100-user pricing model</div>
         <div style="height: 1px; background: rgba(255,255,255,0.15); margin: 20px 0;"></div>
-        <div class="inv-label">Platform</div>
-        <div style="font-size: 22px; font-weight: 800; margin: 6px 0;">Scoped at full user count</div>
-        <div class="inv-sub">Flat rate model · Limited-user tier for field techs</div>
+        <div class="inv-label">Breakdown</div>
+        <div style="font-size: 22px; font-weight: 800; margin: 6px 0;">$5,600 standard + $900 field</div>
+        <div class="inv-sub">70 standard users at $80 · 30 field users at $30</div>
         <div class="inv-breakdown">
-          <div class="inv-chip">✅ Full CW Migration</div>
-          <div class="inv-chip">✅ $0 Setup</div>
+          <div class="inv-chip">✅ All modules included</div>
+          <div class="inv-chip">✅ Standard connector library</div>
           <div class="inv-chip">✅ Month-to-Month</div>
-          <div class="inv-chip">✅ 130 Users</div>
-          <div class="inv-chip">✅ Limited-user field tech tier</div>
+          <div class="inv-chip">✅ Data conversion scoped</div>
+          <div class="inv-chip">✅ NetSuite configuration scoped</div>
         </div>
       </div>
       <div class="payback-section">
@@ -722,15 +813,15 @@
           <div class="pb-bar"><div class="pb-fill" style="width:100%;background:linear-gradient(90deg,#0057FF,#00C2FF);">60 techs online</div></div>
         </div>
         <div>
-          <div class="pb-item-label"><span>NetSuite integration</span><span class="pb-val">$15K–25K saved</span></div>
+          <div class="pb-item-label"><span>NetSuite integration</span><span class="pb-val">$1,667/mo</span></div>
           <div class="pb-bar"><div class="pb-fill" style="width:85%;background:linear-gradient(90deg,#00D97E,#00FF99);color:#004">Native</div></div>
         </div>
         <div>
-          <div class="pb-item-label"><span>Billing leakage recovered (2%)</span><span class="pb-val">$60K/yr</span></div>
+          <div class="pb-item-label"><span>Billing leakage recovered (2%)</span><span class="pb-val">$5,000/mo</span></div>
           <div class="pb-bar"><div class="pb-fill" style="width:92%;background:linear-gradient(90deg,#0057FF,#004ACC);">Automated billing</div></div>
         </div>
         <div>
-          <div class="pb-item-label"><span>License savings vs. 130 CW seats</span><span class="pb-val">$60K–90K/yr</span></div>
+          <div class="pb-item-label"><span>License savings vs. 130 CW seats</span><span class="pb-val">$6,250/mo</span></div>
           <div class="pb-bar"><div class="pb-fill" style="width:78%;background:linear-gradient(90deg,#FF6B35,#FF9A6C);">CW gap</div></div>
         </div>
       </div>
@@ -738,53 +829,53 @@
   </div>
 </section>
 
-<!-- SLIDE 9: NEXT STEPS -->
+<!-- SLIDE 10: NEXT STEPS -->
 <section class="slide slide-light" id="next">
   <div class="content-max" style="display:flex;flex-direction:column;align-items:center">
     <div class="section-header">
       <div class="section-tag">Next Steps</div>
-      <h2 class="section-title">Path to a decision by June 1</h2>
-      <p class="section-sub">AVIT's self-imposed deadline is June 1st. Here's how we get there.</p>
+      <h2 class="section-title">Path to a confident decision</h2>
+      <p class="section-sub">This keeps the schedule out of the page and focuses on the work required to turn the evaluation into a leadership-ready recommendation.</p>
     </div>
     <div class="steps-list">
       <div class="step-item">
         <div class="step-num">1</div>
         <div class="step-content">
-          <div class="step-title">Tampa Onsite — Full Platform Demo</div>
-          <div class="step-sub">Deep dive on parent-child hierarchy, field tech mobile app, NetSuite integration story, CPQ + change order workflows, and customer portal. Bring Steve (CIO) and Adam (Service Delivery) in the room.</div>
-          <div class="step-date">📅 June 4, 2026 · Tampa, FL</div>
+          <div class="step-title">Validate the Sandbox</div>
+          <div class="step-sub">Give Kelly, Adam, Steve, and one additional stakeholder sample data they can actually test: customer creation, ticket flow, field mobile, and parent-child behavior.</div>
+          <div class="step-date">Before final proposal</div>
         </div>
       </div>
       <div class="step-item">
         <div class="step-num">2</div>
         <div class="step-content">
-          <div class="step-title">Scoped Proposal + Tailored ROI Model</div>
-          <div class="step-sub">Full-user pricing for 130 seats (full + limited-user tiers). Customer-specific ROI model using AVIT's actual billing data. Something Sara Braddock can sign off on.</div>
-          <div class="step-date">📅 Within 5 days of onsite</div>
+          <div class="step-title">Map the Integration Stack</div>
+          <div class="step-sub">Use AVIT's ConnectWise API/integration list to split must-have, nice-to-have, native, roadmap, and custom-build items. This is the clearest way to neutralize Halo's 250+ integration message.</div>
+          <div class="step-date">High priority</div>
         </div>
       </div>
       <div class="step-item">
         <div class="step-num">3</div>
         <div class="step-content">
-          <div class="step-title">Leadership Presentation</div>
-          <div class="step-sub">Package the ROI case for the CEO intro — baked-in recommendation from the 3 internal champions. Loop in Sara Braddock on the financial model.</div>
-          <div class="step-date">📅 Target: Before June 1 decision</div>
+          <div class="step-title">Lock Product Commitments</div>
+          <div class="step-sub">Document timing and ownership for NetSuite, IT Glue, Meraki billing, product catalog images, asset hub, milestone billing, floating contacts, and subcontractor portal direction.</div>
+          <div class="step-date">Needed for executive confidence</div>
         </div>
       </div>
       <div class="step-item">
         <div class="step-num">4</div>
         <div class="step-content">
-          <div class="step-title">Pilot Agreement</div>
-          <div class="step-sub">30-day structured pilot with AVIT's most complex accounts (franchise hierarchy). Let PSA 2.0 prove itself against their real workflows. Month-to-month terms mean zero commitment risk.</div>
-          <div class="step-date">📅 Target: June–July 2026</div>
+          <div class="step-title">Finalize Commercial Scope</div>
+          <div class="step-sub">Confirm the 70 standard + 30 field-user recurring model, full 130-user expansion path, standard setup/data conversion, and NetSuite integration configuration.</div>
+          <div class="step-date">Finance-ready version for Sarah Braddock</div>
         </div>
       </div>
       <div class="step-item">
         <div class="step-num">5</div>
         <div class="step-content">
-          <div class="step-title">Full Migration + Go-Live</div>
-          <div class="step-sub">Rev.io migration team handles full ConnectWise data migration. AVIT live before December CW renewal — no need to pay for another year of CW.</div>
-          <div class="step-date">📅 Target: Q3–Q4 2026 · Beat December CW renewal</div>
+          <div class="step-title">Build the Executive Recommendation</div>
+          <div class="step-sub">Package the ROI, technical fit, migration path, and roadmap commitments so Kelly, Steve, and Adam can take a baked recommendation to the CEO.</div>
+          <div class="step-date">Target: after sandbox and integration validation</div>
         </div>
       </div>
     </div>
