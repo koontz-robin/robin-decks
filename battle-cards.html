@@ -440,6 +440,9 @@
 <!-- ===== HALO ===== -->
 </div><div class="section-sidebar"><div class="sb-header">✅ 3 Displaced Customers</div><ul><li><span class="chk">✓</span> Automated Telecom</li><li><span class="chk">✓</span> Grahek Technology</li><li><span class="chk">✓</span> Tolleson Inc</li></ul></div></div>
 <div class="section" id="halo">
+<div class="section-grid"><div class="section-grid-main">
+  <div class="overview-grid">
+    <div class="overview-item"><div class="label">Competitor</div><div class="value">HaloPSA</div></div>
 
 <!-- FIELD_INTEL_START:Halo PSA updated:2026-05-29 -->
 <div class="section-title">Field Intelligence — What Prospects Say (3 raw mentions)</div>
@@ -1872,11 +1875,62 @@ document.addEventListener('DOMContentLoaded', function() {
     return renderMain;
   }
 
+  function normalizeOverview(main) {
+    if (!main.querySelector('.overview-grid') && main.querySelector('.overview-item')) {
+      var generatedGrid = document.createElement('div');
+      generatedGrid.className = 'overview-grid';
+      main.querySelectorAll('.overview-item').forEach(function(item) {
+        generatedGrid.appendChild(item);
+      });
+      main.insertBefore(generatedGrid, main.firstChild);
+    }
+    main.querySelectorAll('.overview-grid').forEach(function(grid) {
+      var misplaced = [];
+      Array.from(grid.children).forEach(function(child) {
+        if (!child.classList || !child.classList.contains('overview-item')) {
+          misplaced.push(child);
+        }
+      });
+      misplaced.reverse().forEach(function(child) {
+        grid.parentNode.insertBefore(child, grid.nextSibling);
+      });
+    });
+  }
+
+  function renderNormalizedSection(id, source) {
+    var raw = document.createElement('div');
+    raw.innerHTML = source.innerHTML;
+    raw.querySelectorAll('.section').forEach(function(nested) { nested.remove(); });
+    raw.querySelectorAll('.section-sidebar').forEach(function(sidebar) { sidebar.remove(); });
+
+    var originalMain = raw.querySelector('.section-grid-main');
+    var main = document.createElement('div');
+    main.className = 'section-grid-main';
+    if (originalMain) {
+      main.innerHTML = originalMain.innerHTML;
+    } else {
+      while (raw.firstChild) main.appendChild(raw.firstChild);
+    }
+    normalizeOverview(main);
+
+    var normalized = document.createElement('div');
+    normalized.className = 'section active normalized-section';
+    normalized.id = id + '-rendered';
+
+    var grid = document.createElement('div');
+    grid.className = 'section-grid';
+    grid.appendChild(main);
+    if (sidebarBySection[id]) grid.insertAdjacentHTML('beforeend', sidebarBySection[id]);
+    normalized.appendChild(grid);
+    return normalized;
+  }
+
   function renderSection(id) {
     var section = document.getElementById(id);
     var target = ensureRenderMain();
     if (!section || !target) return;
-    target.innerHTML = section.innerHTML;
+    target.innerHTML = '';
+    target.appendChild(renderNormalizedSection(id, section));
   }
 
   window.showTab = function(id) {
