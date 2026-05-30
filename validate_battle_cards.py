@@ -15,9 +15,21 @@ Returns exit code 1 if any issues found.
 
 import re, sys
 
-PATH = '/home/openclaw/.openclaw/workspace/battle-cards.html'
+PATH = sys.argv[1] if len(sys.argv) > 1 else '/home/openclaw/.openclaw/workspace/battle-cards.html'
 SKIP_IDS = {'integrators', 'quickref'}  # non-competitor sections, no overview needed
 BAD_SCRIPTS = ['sidebar-layout', 'displaced-fix', 'overview-reorder']
+COMPETITOR_IDS_WITH_SIDEBARS = {
+    'connectwise', 'autotask', 'halo', 'syncro', 'superops',
+    'service-fusion', 'alarmbiller', 'jetbuilt', 'monday', 'ipoint',
+    'projx360', 'workhorse', 'simpro', 'sedona', 'housecall-pro', 'jobber',
+}
+LOCKED_MARKERS = [
+    'id="battlecard-structure-fix"',
+    'function renderNormalizedSection',
+    'Notion Source Signals',
+    'Emerging Source Mentions',
+    'Sandy Beaches',
+]
 
 def get_sections(html):
     return list(re.finditer(
@@ -63,6 +75,26 @@ def check_duplicate_displaced(html, sections):
             issues.append(f"#{sid} has {count} displaced bars (expected 1)")
     return issues
 
+def check_required_sidebars(html, sections):
+    issues = []
+    found = {m.group(1) or m.group(2): m for m in sections}
+    for sid in sorted(COMPETITOR_IDS_WITH_SIDEBARS):
+        m = found.get(sid)
+        if not m:
+            issues.append(f"#{sid} section is missing")
+            continue
+        idx = sections.index(m)
+        start = m.start()
+        end = sections[idx+1].start() if idx+1 < len(sections) else len(html)
+        chunk = html[start:end]
+        if 'class="section-grid"' not in chunk:
+            issues.append(f"#{sid} is missing .section-grid")
+        if 'class="section-grid-main"' not in chunk:
+            issues.append(f"#{sid} is missing .section-grid-main")
+        if 'class="section-sidebar"' not in chunk:
+            issues.append(f"#{sid} is missing displaced-customer .section-sidebar")
+    return issues
+
 def check_float_bars(html):
     count = len(re.findall(r'float:right;width:220px', html))
     if count:
@@ -88,6 +120,15 @@ def check_bad_scripts(html):
             issues.append(f'JS restructuring script "{sid}" still present — remove it')
     return issues
 
+def check_locked_markers(html):
+    issues = []
+    for marker in LOCKED_MARKERS:
+        if marker not in html:
+            issues.append(f'Locked battlecard marker missing: {marker}')
+    if ', this)' in html:
+        issues.append('Old showTab(id, this) handler format detected')
+    return issues
+
 def main():
     with open(PATH) as f:
         html = f.read()
@@ -100,9 +141,11 @@ def main():
     checks = [
         ("Section nesting",       check_nesting(html, sections)),
         ("Duplicate sidebars",    check_duplicate_displaced(html, sections)),
+        ("Required sidebars",     check_required_sidebars(html, sections)),
         ("Float:right bars",      check_float_bars(html)),
         ("Missing overviews",     check_missing_overviews(html, sections)),
         ("Bad JS scripts",        check_bad_scripts(html)),
+        ("Locked markers",        check_locked_markers(html)),
     ]
 
     for name, issues in checks:

@@ -159,9 +159,14 @@ def build_new_tab_section(comp, field_data, now):
 
     return tab_id, f'''
   <div id="{tab_id}" class="section">
-    <h2 style="font-size:18px;color:#e2e8f0;margin-bottom:4px">{comp} <span style="font-size:11px;color:#ffcc00;background:#1a1400;border:1px solid #ffcc00;padding:2px 8px;border-radius:10px;margin-left:8px">🎙️ {total} field mentions</span></h2>
-    <p style="color:#94a3b8;font-size:12px;margin-bottom:20px">Field intelligence only — no static battle card yet</p>
-    {field_block}
+    <div class="section-grid"><div class="section-grid-main">
+      <div class="overview-grid">
+        <div class="overview-item"><div class="label">Competitor</div><div class="value">{comp}</div></div>
+      </div>
+      <h2 style="font-size:18px;color:#c8f0dc;margin-bottom:4px">{comp} <span style="font-size:11px;color:#ffcc00;background:#1a1400;border:1px solid #ffcc00;padding:2px 8px;border-radius:10px;margin-left:8px">🎙️ {total} field mentions</span></h2>
+      <p style="color:#2a5a3a;font-size:12px;margin-bottom:20px">Field intelligence only — no static battle card yet</p>
+      {field_block}
+    </div></div>
   </div>
 '''
 
@@ -269,23 +274,20 @@ def refresh_displaced_customers(html, sf_access_token, sf_instance):
 
     def accounts_box(names):
         items = ''.join(
-            f'<li style="padding:3px 0;font-size:11px;color:#c8f0dc;border-bottom:1px solid #0d2a0d">'
-            f'<span style="color:#3DC570;margin-right:6px">✓</span>{name}</li>'
+            f'<li><span class="chk">✓</span> {name}</li>'
             for name in names
         )
         return (
-            f'<div style="float:right;width:220px;background:#061a0e;border:1px solid #3DC57044;'
-            f'border-radius:8px;padding:12px;margin:0 0 16px 20px">'
-            f'<div style="font-size:9px;font-weight:700;text-transform:uppercase;letter-spacing:1.5px;'
-            f'color:#3DC570;margin-bottom:8px">✅ {len(names)} Displaced Customer{"s" if len(names)!=1 else ""}</div>'
-            f'<ul style="list-style:none;margin:0;padding:0">{items}</ul>'
+            f'<div class="section-sidebar"><div class="sb-header">✅ {len(names)} '
+            f'Displaced Customer{"s" if len(names)!=1 else ""}</div>'
+            f'<ul>{items}</ul>'
             f'</div>'
         )
 
-    # Replace or insert displaced boxes
-    # Match the existing box pattern
+    # Replace or insert displaced boxes. The current page layout requires
+    # static .section-sidebar cards inside .section-grid, never float:right.
     box_pattern = re.compile(
-        r'<div style="float:right;width:220px;background:#061a0e.*?</div>\s*</div>',
+        r'<div class="section-sidebar"><div class="sb-header">.*?</div><ul>.*?</ul></div>',
         re.DOTALL
     )
 
@@ -311,29 +313,53 @@ def refresh_displaced_customers(html, sf_access_token, sf_instance):
                 html = html[:end_div] + new_box + html[end_div:]
         else:
             # Standalone section div
-            marker_variants = [
-                f'id="{tab_id}" class="section">',
-                f'id="{tab_id}">',
-            ]
-            idx = -1
-            for mv in marker_variants:
-                idx = html.find(mv)
-                if idx != -1:
-                    insert_at = idx + len(mv)
-                    break
-            if idx == -1:
+            section_match = re.search(
+                rf'(<div[^>]+(?:id="{re.escape(tab_id)}"[^>]+class="section[^"]*"|class="section[^"]*"[^>]+id="{re.escape(tab_id)}")[^>]*>)',
+                html,
+            )
+            if not section_match:
                 continue
+            section_start = section_match.start()
+            next_section = re.search(r'<div[^>]+class="section[^"]*"[^>]*id=|<div[^>]+id="[^"]+"[^>]*class="section', html[section_start + 1:])
+            section_end = section_start + 1 + next_section.start() if next_section else len(html)
+            section_html = html[section_start:section_end]
             # Check if box already exists near start of section
-            existing = box_pattern.search(html[insert_at:insert_at+800])
+            existing = box_pattern.search(section_html)
             if existing:
-                html = html[:insert_at + existing.start()] + new_box + html[insert_at + existing.end():]
+                html = html[:section_start + existing.start()] + new_box + html[section_start + existing.end():]
             else:
-                html = html[:insert_at] + '\n  ' + new_box + html[insert_at:]
+                grid_close = section_html.find('</div></div>')
+                if grid_close == -1:
+                    print(f"  ⚠️  Could not find .section-grid close for #{tab_id}; skipping sidebar refresh")
+                    continue
+                insert_at = section_start + grid_close + len('</div>')
+                html = html[:insert_at] + new_box + html[insert_at:]
 
         cnt_old = len(re.findall(r'✓</span>', html[html.find(f'id="{tab_id}"'):html.find(f'id="{tab_id}"')+2000]))
         print(f"  ✓ {tab_id}: {len(names)} accounts")
 
     return html
+
+
+def validate_locked_format(html):
+    """Fail fast if a refresh would revert the curated battlecard layout."""
+    required = [
+        'id="battlecard-structure-fix"',
+        'function renderNormalizedSection',
+        'class="section-grid"',
+        'class="section-grid-main"',
+        'class="section-sidebar"',
+        'Notion Source Signals',
+        'Emerging Source Mentions',
+        'Sandy Beaches',
+    ]
+    missing = [marker for marker in required if marker not in html]
+    if missing:
+        raise RuntimeError(f"Locked battlecard formatting/content missing: {', '.join(missing)}")
+    if 'float:right;width:220px' in html:
+        raise RuntimeError("Old float:right displaced-customer formatting detected")
+    if "onclick=\"showTab('" in html and ", this)" in html:
+        raise RuntimeError("Old showTab(id, this) tab format detected")
 
 
 def main():
@@ -401,8 +427,14 @@ def main():
     except Exception as e:
         print(f"  ⚠️  Displaced customer refresh failed: {e}")
 
+    validate_locked_format(html)
+
     with open(OUTPUT_FILE, "w") as f:
         f.write(html)
+
+    validator = os.path.join(REPO_PATH, "validate_battle_cards.py")
+    if os.path.exists(validator):
+        subprocess.run(["python3", validator, OUTPUT_FILE], cwd=REPO_PATH, check=True)
 
     # Push to GitHub
     subprocess.run(["git", "add", "battle-cards.html"], cwd=REPO_PATH, check=True)
