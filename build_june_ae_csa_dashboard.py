@@ -511,26 +511,26 @@ body {{
   color:var(--ink);
   font-family:Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
 }}
-.shell {{ max-width:1440px; margin:0 auto; padding:28px; }}
+.shell {{ max-width:1600px; margin:0 auto; padding:28px; }}
 .topbar {{ display:flex; align-items:flex-end; justify-content:space-between; gap:24px; margin-bottom:22px; }}
 .eyebrow {{ color:var(--green); font-size:12px; font-weight:800; letter-spacing:.14em; text-transform:uppercase; }}
 h1 {{ margin:6px 0 0; font-size:34px; line-height:1.08; letter-spacing:0; }}
 .subtitle {{ color:var(--muted); margin-top:8px; font-size:14px; }}
 .stamp {{ text-align:right; color:var(--muted); font-size:12px; line-height:1.5; }}
-.kpis {{ display:grid; grid-template-columns:repeat(4,minmax(0,1fr)); gap:14px; margin-bottom:18px; }}
+.kpis {{ display:grid; grid-template-columns:1.35fr repeat(4,minmax(0,1fr)); gap:14px; margin-bottom:18px; }}
 .kpi, .week-card, .detail-card, .table-wrap {{
   background:var(--panel);
   border:1px solid var(--line);
   border-radius:8px;
   box-shadow:var(--shadow);
 }}
-.kpi {{ padding:18px; }}
-.kpi-label {{ color:var(--muted); font-size:12px; font-weight:800; text-transform:uppercase; letter-spacing:.08em; }}
-.kpi-val {{ margin-top:10px; font-size:32px; font-weight:850; }}
+.kpi {{ padding:16px; min-width:0; }}
+.kpi-label {{ color:var(--muted); font-size:11px; font-weight:800; text-transform:uppercase; letter-spacing:.08em; }}
+.kpi-val {{ margin-top:10px; font-size:31px; font-weight:850; }}
 .kpi-sub {{ margin-top:4px; color:var(--muted); font-size:13px; }}
-.target-card {{ grid-column:span 2; }}
+.target-card {{ grid-column:span 1; }}
 .target-top {{ display:flex; align-items:baseline; justify-content:space-between; gap:12px; }}
-.target-value {{ font-size:34px; font-weight:850; }}
+.target-value {{ font-size:31px; font-weight:850; }}
 .target-value span {{ color:var(--muted); font-size:18px; }}
 .target-track {{ height:12px; background:#edf2f7; border-radius:999px; overflow:hidden; margin-top:14px; }}
 .target-track span {{ display:block; height:100%; background:linear-gradient(90deg,var(--green),var(--blue)); border-radius:999px; }}
