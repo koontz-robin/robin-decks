@@ -2,6 +2,7 @@
 """Rebuild the Rep Coaching Dashboard from Notion scorecards."""
 import json, subprocess, os
 from datetime import datetime
+from html import escape
 
 REPO = os.path.dirname(os.path.abspath(__file__))
 
@@ -10,6 +11,26 @@ with open("/tmp/coaching_summaries.json") as f:
 
 AES = {"Andrew Whisenant","Connor Flynn","Husam Zalmiyar","Jake Borah","Jamie Butler","Jaylin Bender","Patrick Davies"}
 CSAS = {"Ingrid Beard","Justin Lee"}
+
+PROFILE_LINKS = {
+    "Jaylin Bender": "https://www.linkedin.com/in/jaylin-bender-384a771a1/",
+    "Husam Zalmiyar": "https://www.linkedin.com/in/husam-zalmiyar-a22a0b278/",
+    "Jake Borah": "https://www.linkedin.com/in/jakeborah/",
+    "Patrick Davies": "https://www.linkedin.com/in/patrickdavies05/",
+    "Jamie Butler": "https://www.linkedin.com/in/jamisonbutler/",
+    "Andrew Whisenant": "https://www.linkedin.com/in/andywhisenant/",
+    "Connor Flynn": "https://www.linkedin.com/in/connor-flynn-1635b6198/",
+    "Justin Lee": "https://www.linkedin.com/in/justin-lee/",
+    "Ingrid Beard": "https://www.linkedin.com/in/ingrid-beard-6967562b/",
+}
+
+PROFILE_IMAGES = {
+    "Jaylin Bender": "rep-headshots/jaylin-bender.png",
+    "Patrick Davies": "rep-headshots/patrick-davies.jpg",
+    "Jamie Butler": "rep-headshots/jamie-butler.png",
+    "Andrew Whisenant": "rep-headshots/andrew-whisenant.jpg",
+    "Connor Flynn": "rep-headshots/connor-flynn.jpg",
+}
 
 today_str = datetime.now().strftime("%B %d, %Y")
 total_calls = sum(d['call_count'] for d in data.values())
@@ -29,6 +50,26 @@ def grade_label(s):
     if s >= 65: return "Solid"
     if s >= 50: return "Building"
     return "Developing"
+
+def initials(name):
+    parts = [p for p in name.replace(".", " ").split() if p]
+    return "".join(p[0] for p in parts[:2]).upper()
+
+def profile_header(rep):
+    link = PROFILE_LINKS.get(rep, "#")
+    img = PROFILE_IMAGES.get(rep)
+    safe_rep = escape(rep)
+    if img:
+        avatar = (
+            f'<img class="rep-avatar" src="{img}" alt="{safe_rep} profile photo" '
+            f'loading="lazy">'
+        )
+    else:
+        avatar = f'<div class="rep-avatar initials" aria-hidden="true">{initials(rep)}</div>'
+    return (
+        f'<a class="rep-profile" href="{link}" target="_blank" rel="noopener">'
+        f'{avatar}<span>{safe_rep}</span></a>'
+    )
 
 def build_rep_card(rep, d, is_csa=False):
     avg = d["avg_score"]; sc = score_color(avg)
@@ -86,7 +127,7 @@ def build_rep_card(rep, d, is_csa=False):
         f'<div style="background:#1e293b;border-radius:12px;overflow:hidden;border:1px solid #0f172a">'
         f'<div style="background:#0f172a;padding:16px 20px;display:flex;justify-content:space-between;'
         f'align-items:center;border-bottom:2px solid {sc}">'
-        f'<div><div style="font-size:16px;font-weight:700;color:#e2e8f0">{rep}</div>'
+        f'<div>{profile_header(rep)}'
         f'<div style="font-size:11px;color:#64748b;margin-top:2px">{n} graded {"CBRs" if is_csa else "calls"} · {grade_label(avg)}</div></div>'
         f'<div style="text-align:right"><div style="font-size:36px;font-weight:800;color:{sc};line-height:1">{avg:.0f}</div>'
         f'<div style="font-size:10px;color:#64748b">avg score</div></div></div>'
@@ -112,7 +153,7 @@ if not csa_cards:
 other_tab = '<button class="tab" onclick="showPanel(\'other\',this)">Other Reps</button>' if other_cards else ""
 other_panel = f'<div id="other" class="panel"><div class="grid">{other_cards}</div></div>' if other_cards else ""
 
-css = """*{margin:0;padding:0;box-sizing:border-box}body{background:#000;font-family:'Segoe UI',system-ui,sans-serif;color:#e2e8f0;min-height:100vh;padding:36px 48px}h1{font-size:26px;font-weight:700;color:#fff;margin-bottom:4px}.sub{font-size:13px;color:#475569;margin-bottom:24px}.tab-bar{display:flex;gap:8px;margin-bottom:24px;border-bottom:1px solid #1e293b;padding-bottom:0}.tab{background:transparent;border:1px solid #1e293b;border-bottom:none;color:#64748b;padding:10px 28px;border-radius:8px 8px 0 0;cursor:pointer;font-size:13px;font-weight:700;letter-spacing:0.5px;transition:all .2s;margin-bottom:-1px}.tab:hover{color:#e2e8f0;border-color:#38bdf8}.tab.active{background:#1e293b;color:#38bdf8;border-color:#38bdf8;border-bottom:2px solid #1e293b}.grid{display:grid;grid-template-columns:repeat(2,1fr);gap:20px}.panel{display:none}.panel.active{display:block}@media(max-width:900px){.grid{grid-template-columns:1fr}}.footer{font-size:11px;color:#334155;margin-top:28px;text-align:center}"""
+css = """*{margin:0;padding:0;box-sizing:border-box}body{background:#000;font-family:'Segoe UI',system-ui,sans-serif;color:#e2e8f0;min-height:100vh;padding:36px 48px}h1{font-size:26px;font-weight:700;color:#fff;margin-bottom:4px}.sub{font-size:13px;color:#475569;margin-bottom:24px}.tab-bar{display:flex;gap:8px;margin-bottom:24px;border-bottom:1px solid #1e293b;padding-bottom:0}.tab{background:transparent;border:1px solid #1e293b;border-bottom:none;color:#64748b;padding:10px 28px;border-radius:8px 8px 0 0;cursor:pointer;font-size:13px;font-weight:700;letter-spacing:0.5px;transition:all .2s;margin-bottom:-1px}.tab:hover{color:#e2e8f0;border-color:#38bdf8}.tab.active{background:#1e293b;color:#38bdf8;border-color:#38bdf8;border-bottom:2px solid #1e293b}.grid{display:grid;grid-template-columns:repeat(2,1fr);gap:20px}.panel{display:none}.panel.active{display:block}.rep-profile{display:flex;align-items:center;gap:10px;color:#e2e8f0;text-decoration:none;font-size:16px;font-weight:700}.rep-profile:hover span{color:#38bdf8}.rep-avatar{width:38px;height:38px;border-radius:50%;object-fit:cover;border:2px solid #334155;background:#020617;flex-shrink:0}.rep-avatar.initials{display:flex;align-items:center;justify-content:center;background:linear-gradient(135deg,#0f172a,#1e293b);color:#38bdf8;font-size:12px;letter-spacing:.8px}@media(max-width:900px){.grid{grid-template-columns:1fr}}.footer{font-size:11px;color:#334155;margin-top:28px;text-align:center}"""
 
 html = f"""<!DOCTYPE html><html lang="en"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1.0">
 <title>Rep Coaching Dashboard</title><style>{css}</style></head><body>
