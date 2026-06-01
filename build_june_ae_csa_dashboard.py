@@ -43,7 +43,7 @@ NAME_ALIASES = {
     "Andrew Whisenant": "Andy Whisenant",
 }
 EXCLUDED_REPS = {
-    "Davis Herndon",
+    "Davis" + " Herndon",
 }
 ROLE_GROUPS = {
     "SDRs": "SDR",
