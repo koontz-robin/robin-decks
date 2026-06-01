@@ -41,6 +41,13 @@ h1 { margin:6px 0 0; font-size:34px; line-height:1.08; letter-spacing:0; }
 .kpi-label { color:var(--muted); font-size:12px; font-weight:800; text-transform:uppercase; letter-spacing:.08em; }
 .kpi-val { margin-top:10px; font-size:32px; font-weight:850; }
 .kpi-sub { margin-top:4px; color:var(--muted); font-size:13px; }
+.target-card { grid-column:span 2; }
+.target-top { display:flex; align-items:baseline; justify-content:space-between; gap:12px; }
+.target-value { font-size:34px; font-weight:850; }
+.target-value span { color:var(--muted); font-size:18px; }
+.target-track { height:12px; background:#edf2f7; border-radius:999px; overflow:hidden; margin-top:14px; }
+.target-track span { display:block; height:100%; background:linear-gradient(90deg,var(--green),var(--blue)); border-radius:999px; }
+.target-meta { display:flex; justify-content:space-between; color:var(--muted); font-size:12px; font-weight:750; margin-top:8px; }
 .weeks { display:grid; grid-template-columns:repeat(5,minmax(0,1fr)); gap:12px; margin-bottom:18px; }
 .week-card { padding:16px; min-height:134px; }
 .week-name { color:var(--blue); font-weight:850; font-size:13px; text-transform:uppercase; letter-spacing:.08em; }
@@ -59,7 +66,15 @@ th:first-child { text-align:left; left:0; z-index:2; }
 th span { display:block; font-weight:700; text-transform:none; letter-spacing:0; margin-top:2px; }
 td:first-child { position:sticky; left:0; background:var(--panel); z-index:1; }
 tr:last-child td { border-bottom:0; }
+.summary-row { cursor:pointer; }
+.summary-row:hover td { background:#fbfdff; }
+.details-row { display:none; }
+.details-row.open { display:table-row; }
+.details-row td:first-child { position:static; background:#fbfdff; }
 .rep-cell { display:flex; align-items:center; gap:10px; min-width:230px; }
+.first-cell { min-width:265px; }
+.expand-btn { width:24px; height:24px; flex:0 0 24px; border:1px solid var(--line); border-radius:6px; background:#fff; color:var(--muted); font-weight:900; line-height:1; cursor:pointer; }
+.summary-row.open .expand-btn { color:var(--green); border-color:#bbf7d0; background:#f0fdf4; }
 .avatar { width:34px; height:34px; border-radius:8px; display:grid; place-items:center; background:#e7f7ef; color:#087344; font-size:12px; font-weight:850; }
 .avatar.sdr { background:#fff7ed; color:#9a3412; }
 .rep-name { font-weight:800; }
@@ -88,11 +103,21 @@ tr:last-child td { border-bottom:0; }
 .section-totals { color:var(--muted); font-size:13px; font-weight:800; text-align:right; white-space:nowrap; }
 .section-totals strong { color:var(--ink); }
 .empty-table { color:var(--muted); font-size:13px; padding:22px; text-align:left; }
+.opp-detail-panel { padding:14px 18px 16px 58px; background:#fbfdff; }
+.opp-detail-panel.sdr { background:#fffaf3; }
+.opp-detail-title { font-size:12px; font-weight:850; color:var(--muted); text-transform:uppercase; letter-spacing:.08em; margin-bottom:10px; }
+.opp-detail-row { display:grid; grid-template-columns:minmax(220px,1fr) minmax(170px,220px) 90px; gap:14px; align-items:center; padding:10px 0; border-top:1px solid #edf2f7; }
+.opp-name { font-weight:850; color:var(--ink); }
+.opp-meta { color:var(--muted); font-size:12px; margin-top:2px; }
+.opp-stage { justify-self:start; color:#334155; background:#eef2ff; border:1px solid #dbe4ff; border-radius:999px; padding:4px 9px; font-size:11px; font-weight:850; }
+.opp-amount { text-align:right; color:var(--green); font-weight:850; }
+.opp-empty { color:var(--muted); font-size:13px; padding:10px 0; border-top:1px solid #edf2f7; }
 @media (max-width:1100px) {
   .shell { padding:18px; }
   .topbar { display:block; }
   .stamp { text-align:left; margin-top:12px; }
   .kpis { grid-template-columns:repeat(2,minmax(0,1fr)); }
+  .target-card { grid-column:span 2; }
   .weeks, .details { grid-template-columns:repeat(2,minmax(0,1fr)); }
   .section-title { display:block; }
   .section-totals { text-align:left; margin-top:8px; }
@@ -100,6 +125,9 @@ tr:last-child td { border-bottom:0; }
 @media (max-width:640px) {
   h1 { font-size:26px; }
   .kpis, .weeks, .details { grid-template-columns:1fr; }
+  .target-card { grid-column:span 1; }
+  .opp-detail-row { grid-template-columns:1fr; gap:6px; }
+  .opp-amount { text-align:left; }
 }
 </style>
 </head>
@@ -112,12 +140,21 @@ tr:last-child td { border-bottom:0; }
       <div class="subtitle">Quantity and MRR by owner, split across all five June calendar weeks.</div>
     </div>
     <div class="stamp">
-      Refreshed Jun 1, 2026 10:41 AM ET<br>
+      Refreshed Jun 1, 2026 10:48 AM ET<br>
       Salesforce CreatedDate, Owner, Amount
     </div>
   </header>
 
   <section class="kpis">
+    <div class="kpi target-card">
+      <div class="kpi-label">Team Target Pace</div>
+      <div class="target-top">
+        <div class="target-value">2<span> / 275</span></div>
+        <div class="kpi-sub">0.7% to target</div>
+      </div>
+      <div class="target-track"><span style="width:0.7%"></span></div>
+      <div class="target-meta"><span>273 opps remaining</span><span>June target</span></div>
+    </div>
     <div class="kpi"><div class="kpi-label">Total Opportunities</div><div class="kpi-val">2</div><div class="kpi-sub">AE + CSA owned opps created in June</div></div>
     <div class="kpi"><div class="kpi-label">Total MRR</div><div class="kpi-val">$1,150</div><div class="kpi-sub">Sum of Salesforce Amount</div></div>
     <div class="kpi"><div class="kpi-label">AE Created</div><div class="kpi-val">2</div><div class="kpi-sub">$1,150 MRR</div></div>
@@ -174,8 +211,9 @@ tr:last-child td { border-bottom:0; }
       </thead>
       <tbody>
         
-            <tr>
-              <td class="rep-cell">
+            <tr class="summary-row">
+              <td class="rep-cell first-cell">
+                <button class="expand-btn" aria-label="Expand Jamie Butler opportunity details">+</button>
                 <div class="avatar">JB</div>
                 <div>
                   <div class="rep-name">Jamie Butler</div>
@@ -214,8 +252,35 @@ tr:last-child td { border-bottom:0; }
               </td>
             </tr>
 
-            <tr>
-              <td class="rep-cell">
+            <tr class="details-row">
+              <td colspan="7">
+                <div class="opp-detail-panel">
+                  <div class="opp-detail-title">Jamie Butler · Opportunities Created</div>
+                  
+            <div class="opp-detail-row">
+              <div>
+                <div class="opp-name">Computer Backup Group</div>
+                <div class="opp-meta">Computer Backup Group · PSA 2.0</div>
+              </div>
+              <div class="opp-stage">1- Discovery Scheduled</div>
+              <div class="opp-amount">$575</div>
+            </div>
+
+            <div class="opp-detail-row">
+              <div>
+                <div class="opp-name">OneITz</div>
+                <div class="opp-meta">OneITz · PSA 2.0</div>
+              </div>
+              <div class="opp-stage">1- Discovery Scheduled</div>
+              <div class="opp-amount">$575</div>
+            </div>
+                </div>
+              </td>
+            </tr>
+
+            <tr class="summary-row">
+              <td class="rep-cell first-cell">
+                <button class="expand-btn" aria-label="Expand Andrew Whisenant opportunity details">+</button>
                 <div class="avatar">AW</div>
                 <div>
                   <div class="rep-name">Andrew Whisenant</div>
@@ -254,48 +319,18 @@ tr:last-child td { border-bottom:0; }
               </td>
             </tr>
 
-            <tr>
-              <td class="rep-cell">
-                <div class="avatar">AW</div>
-                <div>
-                  <div class="rep-name">Andy Whisenant</div>
-                  <div class="rep-group ae">AE</div>
+            <tr class="details-row">
+              <td colspan="7">
+                <div class="opp-detail-panel">
+                  <div class="opp-detail-title">Andrew Whisenant · Opportunities Created</div>
+                  <div class="opp-empty">No opportunities created in June.</div>
                 </div>
-              </td>
-              
-                <td class="week-cell">
-                  <div class="cell-count">0</div>
-                  <div class="cell-mrr">$0</div>
-                  <div class="cell-bar"><span style="width:0.0%"></span></div>
-                </td>
-                <td class="week-cell">
-                  <div class="cell-count">0</div>
-                  <div class="cell-mrr">$0</div>
-                  <div class="cell-bar"><span style="width:0.0%"></span></div>
-                </td>
-                <td class="week-cell">
-                  <div class="cell-count">0</div>
-                  <div class="cell-mrr">$0</div>
-                  <div class="cell-bar"><span style="width:0.0%"></span></div>
-                </td>
-                <td class="week-cell">
-                  <div class="cell-count">0</div>
-                  <div class="cell-mrr">$0</div>
-                  <div class="cell-bar"><span style="width:0.0%"></span></div>
-                </td>
-                <td class="week-cell">
-                  <div class="cell-count">0</div>
-                  <div class="cell-mrr">$0</div>
-                  <div class="cell-bar"><span style="width:0.0%"></span></div>
-                </td>
-              <td class="total-cell">
-                <div class="total-count">0</div>
-                <div class="total-mrr">$0</div>
               </td>
             </tr>
 
-            <tr>
-              <td class="rep-cell">
+            <tr class="summary-row">
+              <td class="rep-cell first-cell">
+                <button class="expand-btn" aria-label="Expand Connor Flynn opportunity details">+</button>
                 <div class="avatar">CF</div>
                 <div>
                   <div class="rep-name">Connor Flynn</div>
@@ -334,8 +369,18 @@ tr:last-child td { border-bottom:0; }
               </td>
             </tr>
 
-            <tr>
-              <td class="rep-cell">
+            <tr class="details-row">
+              <td colspan="7">
+                <div class="opp-detail-panel">
+                  <div class="opp-detail-title">Connor Flynn · Opportunities Created</div>
+                  <div class="opp-empty">No opportunities created in June.</div>
+                </div>
+              </td>
+            </tr>
+
+            <tr class="summary-row">
+              <td class="rep-cell first-cell">
+                <button class="expand-btn" aria-label="Expand Davis Herndon opportunity details">+</button>
                 <div class="avatar">DH</div>
                 <div>
                   <div class="rep-name">Davis Herndon</div>
@@ -374,8 +419,18 @@ tr:last-child td { border-bottom:0; }
               </td>
             </tr>
 
-            <tr>
-              <td class="rep-cell">
+            <tr class="details-row">
+              <td colspan="7">
+                <div class="opp-detail-panel">
+                  <div class="opp-detail-title">Davis Herndon · Opportunities Created</div>
+                  <div class="opp-empty">No opportunities created in June.</div>
+                </div>
+              </td>
+            </tr>
+
+            <tr class="summary-row">
+              <td class="rep-cell first-cell">
+                <button class="expand-btn" aria-label="Expand Husam Zalmiyar opportunity details">+</button>
                 <div class="avatar">HZ</div>
                 <div>
                   <div class="rep-name">Husam Zalmiyar</div>
@@ -414,8 +469,18 @@ tr:last-child td { border-bottom:0; }
               </td>
             </tr>
 
-            <tr>
-              <td class="rep-cell">
+            <tr class="details-row">
+              <td colspan="7">
+                <div class="opp-detail-panel">
+                  <div class="opp-detail-title">Husam Zalmiyar · Opportunities Created</div>
+                  <div class="opp-empty">No opportunities created in June.</div>
+                </div>
+              </td>
+            </tr>
+
+            <tr class="summary-row">
+              <td class="rep-cell first-cell">
+                <button class="expand-btn" aria-label="Expand Jake Borah opportunity details">+</button>
                 <div class="avatar">JB</div>
                 <div>
                   <div class="rep-name">Jake Borah</div>
@@ -454,8 +519,18 @@ tr:last-child td { border-bottom:0; }
               </td>
             </tr>
 
-            <tr>
-              <td class="rep-cell">
+            <tr class="details-row">
+              <td colspan="7">
+                <div class="opp-detail-panel">
+                  <div class="opp-detail-title">Jake Borah · Opportunities Created</div>
+                  <div class="opp-empty">No opportunities created in June.</div>
+                </div>
+              </td>
+            </tr>
+
+            <tr class="summary-row">
+              <td class="rep-cell first-cell">
+                <button class="expand-btn" aria-label="Expand Jake Mitchell opportunity details">+</button>
                 <div class="avatar">JM</div>
                 <div>
                   <div class="rep-name">Jake Mitchell</div>
@@ -494,8 +569,18 @@ tr:last-child td { border-bottom:0; }
               </td>
             </tr>
 
-            <tr>
-              <td class="rep-cell">
+            <tr class="details-row">
+              <td colspan="7">
+                <div class="opp-detail-panel">
+                  <div class="opp-detail-title">Jake Mitchell · Opportunities Created</div>
+                  <div class="opp-empty">No opportunities created in June.</div>
+                </div>
+              </td>
+            </tr>
+
+            <tr class="summary-row">
+              <td class="rep-cell first-cell">
+                <button class="expand-btn" aria-label="Expand Jaylin Bender opportunity details">+</button>
                 <div class="avatar">JB</div>
                 <div>
                   <div class="rep-name">Jaylin Bender</div>
@@ -534,8 +619,18 @@ tr:last-child td { border-bottom:0; }
               </td>
             </tr>
 
-            <tr>
-              <td class="rep-cell">
+            <tr class="details-row">
+              <td colspan="7">
+                <div class="opp-detail-panel">
+                  <div class="opp-detail-title">Jaylin Bender · Opportunities Created</div>
+                  <div class="opp-empty">No opportunities created in June.</div>
+                </div>
+              </td>
+            </tr>
+
+            <tr class="summary-row">
+              <td class="rep-cell first-cell">
+                <button class="expand-btn" aria-label="Expand Patrick Davies opportunity details">+</button>
                 <div class="avatar">PD</div>
                 <div>
                   <div class="rep-name">Patrick Davies</div>
@@ -574,8 +669,18 @@ tr:last-child td { border-bottom:0; }
               </td>
             </tr>
 
-            <tr>
-              <td class="rep-cell">
+            <tr class="details-row">
+              <td colspan="7">
+                <div class="opp-detail-panel">
+                  <div class="opp-detail-title">Patrick Davies · Opportunities Created</div>
+                  <div class="opp-empty">No opportunities created in June.</div>
+                </div>
+              </td>
+            </tr>
+
+            <tr class="summary-row">
+              <td class="rep-cell first-cell">
+                <button class="expand-btn" aria-label="Expand Ingrid Beard opportunity details">+</button>
                 <div class="avatar">IB</div>
                 <div>
                   <div class="rep-name">Ingrid Beard</div>
@@ -614,8 +719,18 @@ tr:last-child td { border-bottom:0; }
               </td>
             </tr>
 
-            <tr>
-              <td class="rep-cell">
+            <tr class="details-row">
+              <td colspan="7">
+                <div class="opp-detail-panel">
+                  <div class="opp-detail-title">Ingrid Beard · Opportunities Created</div>
+                  <div class="opp-empty">No opportunities created in June.</div>
+                </div>
+              </td>
+            </tr>
+
+            <tr class="summary-row">
+              <td class="rep-cell first-cell">
+                <button class="expand-btn" aria-label="Expand Justin Lee opportunity details">+</button>
                 <div class="avatar">JL</div>
                 <div>
                   <div class="rep-name">Justin Lee</div>
@@ -651,6 +766,15 @@ tr:last-child td { border-bottom:0; }
               <td class="total-cell">
                 <div class="total-count">0</div>
                 <div class="total-mrr">$0</div>
+              </td>
+            </tr>
+
+            <tr class="details-row">
+              <td colspan="7">
+                <div class="opp-detail-panel">
+                  <div class="opp-detail-title">Justin Lee · Opportunities Created</div>
+                  <div class="opp-empty">No opportunities created in June.</div>
+                </div>
               </td>
             </tr>
       </tbody>
@@ -710,8 +834,9 @@ tr:last-child td { border-bottom:0; }
       </thead>
       <tbody>
         
-            <tr>
-              <td class="rep-cell">
+            <tr class="summary-row">
+              <td class="rep-cell first-cell">
+                <button class="expand-btn" aria-label="Expand Abbey McIntosh opportunity details">+</button>
                 <div class="avatar sdr">AM</div>
                 <div>
                   <div class="rep-name">Abbey McIntosh</div>
@@ -750,8 +875,18 @@ tr:last-child td { border-bottom:0; }
               </td>
             </tr>
 
-            <tr>
-              <td class="rep-cell">
+            <tr class="details-row">
+              <td colspan="7">
+                <div class="opp-detail-panel sdr">
+                  <div class="opp-detail-title">Abbey McIntosh · Influenced Opportunities</div>
+                  <div class="opp-empty">No SDR-influenced opportunities created in June.</div>
+                </div>
+              </td>
+            </tr>
+
+            <tr class="summary-row">
+              <td class="rep-cell first-cell">
+                <button class="expand-btn" aria-label="Expand Abigail Marchese opportunity details">+</button>
                 <div class="avatar sdr">AM</div>
                 <div>
                   <div class="rep-name">Abigail Marchese</div>
@@ -790,8 +925,18 @@ tr:last-child td { border-bottom:0; }
               </td>
             </tr>
 
-            <tr>
-              <td class="rep-cell">
+            <tr class="details-row">
+              <td colspan="7">
+                <div class="opp-detail-panel sdr">
+                  <div class="opp-detail-title">Abigail Marchese · Influenced Opportunities</div>
+                  <div class="opp-empty">No SDR-influenced opportunities created in June.</div>
+                </div>
+              </td>
+            </tr>
+
+            <tr class="summary-row">
+              <td class="rep-cell first-cell">
+                <button class="expand-btn" aria-label="Expand Blake Boatright opportunity details">+</button>
                 <div class="avatar sdr">BB</div>
                 <div>
                   <div class="rep-name">Blake Boatright</div>
@@ -830,8 +975,18 @@ tr:last-child td { border-bottom:0; }
               </td>
             </tr>
 
-            <tr>
-              <td class="rep-cell">
+            <tr class="details-row">
+              <td colspan="7">
+                <div class="opp-detail-panel sdr">
+                  <div class="opp-detail-title">Blake Boatright · Influenced Opportunities</div>
+                  <div class="opp-empty">No SDR-influenced opportunities created in June.</div>
+                </div>
+              </td>
+            </tr>
+
+            <tr class="summary-row">
+              <td class="rep-cell first-cell">
+                <button class="expand-btn" aria-label="Expand Emily Petraglia opportunity details">+</button>
                 <div class="avatar sdr">EP</div>
                 <div>
                   <div class="rep-name">Emily Petraglia</div>
@@ -870,8 +1025,18 @@ tr:last-child td { border-bottom:0; }
               </td>
             </tr>
 
-            <tr>
-              <td class="rep-cell">
+            <tr class="details-row">
+              <td colspan="7">
+                <div class="opp-detail-panel sdr">
+                  <div class="opp-detail-title">Emily Petraglia · Influenced Opportunities</div>
+                  <div class="opp-empty">No SDR-influenced opportunities created in June.</div>
+                </div>
+              </td>
+            </tr>
+
+            <tr class="summary-row">
+              <td class="rep-cell first-cell">
+                <button class="expand-btn" aria-label="Expand Miguel Ocampo opportunity details">+</button>
                 <div class="avatar sdr">MO</div>
                 <div>
                   <div class="rep-name">Miguel Ocampo</div>
@@ -910,8 +1075,18 @@ tr:last-child td { border-bottom:0; }
               </td>
             </tr>
 
-            <tr>
-              <td class="rep-cell">
+            <tr class="details-row">
+              <td colspan="7">
+                <div class="opp-detail-panel sdr">
+                  <div class="opp-detail-title">Miguel Ocampo · Influenced Opportunities</div>
+                  <div class="opp-empty">No SDR-influenced opportunities created in June.</div>
+                </div>
+              </td>
+            </tr>
+
+            <tr class="summary-row">
+              <td class="rep-cell first-cell">
+                <button class="expand-btn" aria-label="Expand Ptah Robinson opportunity details">+</button>
                 <div class="avatar sdr">PR</div>
                 <div>
                   <div class="rep-name">Ptah Robinson</div>
@@ -949,9 +1124,30 @@ tr:last-child td { border-bottom:0; }
                 <div class="total-mrr">$0</div>
               </td>
             </tr>
+
+            <tr class="details-row">
+              <td colspan="7">
+                <div class="opp-detail-panel sdr">
+                  <div class="opp-detail-title">Ptah Robinson · Influenced Opportunities</div>
+                  <div class="opp-empty">No SDR-influenced opportunities created in June.</div>
+                </div>
+              </td>
+            </tr>
       </tbody>
     </table>
   </section>
 </main>
+<script>
+document.querySelectorAll('.summary-row').forEach((row) => {
+  row.addEventListener('click', (event) => {
+    const next = row.nextElementSibling;
+    if (!next || !next.classList.contains('details-row')) return;
+    const open = next.classList.toggle('open');
+    row.classList.toggle('open', open);
+    const btn = row.querySelector('.expand-btn');
+    if (btn) btn.textContent = open ? '-' : '+';
+  });
+});
+</script>
 </body>
 </html>

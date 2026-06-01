@@ -26,6 +26,7 @@ SF_CLIENT_SECRET = "FA7C3F3F72D6A1786F374CF966B505DB9B07AE43D69A6D54F127B2397713
 ET = ZoneInfo("America/New_York")
 JUNE_START = "2026-06-01T04:00:00Z"
 JULY_START = "2026-07-01T04:00:00Z"
+TEAM_TARGET = 275
 
 KNOWN_AES = {
     "Andrew Whisenant",
@@ -39,6 +40,9 @@ KNOWN_AES = {
     "Patrick Davies",
 }
 KNOWN_CSAS = {"Ingrid Beard", "Justin Lee"}
+NAME_ALIASES = {
+    "Andy Whisenant": "Andrew Whisenant",
+}
 ROLE_GROUPS = {
     "SDRs": "SDR",
     "MSP Sales": "AE",
@@ -97,7 +101,7 @@ def get_team_members(base, headers):
     """
     members = {}
     for user in sf_query(base, headers, query):
-        name = user.get("Name") or ""
+        name = normalize_name(user.get("Name") or "")
         role = (user.get("UserRole") or {}).get("Name") or ""
         if name and role in ROLE_GROUPS:
             members[name] = ROLE_GROUPS[role]
@@ -106,6 +110,10 @@ def get_team_members(base, headers):
     for name in KNOWN_CSAS:
         members.setdefault(name, "CSA")
     return members
+
+
+def normalize_name(name):
+    return NAME_ALIASES.get((name or "").strip(), (name or "").strip())
 
 
 def fetch_opportunities(base, headers):
@@ -136,9 +144,9 @@ def fetch_opportunities(base, headers):
                 "CreatedDate": record.get("CreatedDate") or "",
                 "CloseDate": record.get("CloseDate") or "",
                 "Account": account.get("Name") or "",
-                "Owner": owner.get("Name") or "Unknown",
+                "Owner": normalize_name(owner.get("Name") or "Unknown"),
                 "OwnerRole": owner_role,
-                "CreatedBy": created_by.get("Name") or "",
+                "CreatedBy": normalize_name(created_by.get("Name") or ""),
                 "SDR_Influence__c": record.get("SDR_Influence__c") or "",
             }
         )
@@ -173,7 +181,26 @@ def initials(name):
     return "".join(part[0] for part in parts[:2]).upper() or "?"
 
 
-def build_rows(by_rep, rep_groups, weekly_totals):
+def opp_detail_rows(opps, empty_text):
+    if not opps:
+        return f'<div class="opp-empty">{escape(empty_text)}</div>'
+    rows = []
+    for opp in sorted(opps, key=lambda o: (o.get("CreatedDateET", ""), o.get("Name", ""))):
+        rows.append(
+            f"""
+            <div class="opp-detail-row">
+              <div>
+                <div class="opp-name">{escape(opp.get('Name') or 'Unnamed Opportunity')}</div>
+                <div class="opp-meta">{escape(opp.get('Account') or 'No account')} · {escape(opp.get('Product_Type__c') or 'Unspecified')}</div>
+              </div>
+              <div class="opp-stage">{escape(opp.get('StageName') or 'No stage')}</div>
+              <div class="opp-amount">{money(opp.get('Amount') or 0)}</div>
+            </div>"""
+        )
+    return "\n".join(rows)
+
+
+def build_rows(by_rep, rep_groups, weekly_totals, opps_by_rep):
     rows = []
     ordered_reps = sorted(
         by_rep,
@@ -197,8 +224,9 @@ def build_rows(by_rep, rep_groups, weekly_totals):
             )
         rows.append(
             f"""
-            <tr>
-              <td class="rep-cell">
+            <tr class="summary-row">
+              <td class="rep-cell first-cell">
+                <button class="expand-btn" aria-label="Expand {escape(rep)} opportunity details">+</button>
                 <div class="avatar">{escape(initials(rep))}</div>
                 <div>
                   <div class="rep-name">{escape(rep)}</div>
@@ -209,6 +237,17 @@ def build_rows(by_rep, rep_groups, weekly_totals):
               <td class="total-cell">
                 <div class="total-count">{total_count}</div>
                 <div class="total-mrr">{money(total_amount)}</div>
+              </td>
+            </tr>"""
+        )
+        rows.append(
+            f"""
+            <tr class="details-row">
+              <td colspan="7">
+                <div class="opp-detail-panel">
+                  <div class="opp-detail-title">{escape(rep)} · Opportunities Created</div>
+                  {opp_detail_rows(opps_by_rep.get(rep, []), 'No opportunities created in June.')}
+                </div>
               </td>
             </tr>"""
         )
@@ -267,13 +306,13 @@ def build_rep_breakdown(opps_by_week_rep):
 
 
 def clean_sdr_name(value):
-    name = (value or "").strip()
+    name = normalize_name(value)
     if not name or name.lower() == "none":
         return ""
     return name
 
 
-def build_sdr_rows(by_sdr, sdr_weekly_totals):
+def build_sdr_rows(by_sdr, sdr_weekly_totals, sdr_opps_by_rep):
     rows = []
     ordered_sdrs = sorted(
         by_sdr,
@@ -300,8 +339,9 @@ def build_sdr_rows(by_sdr, sdr_weekly_totals):
             )
         rows.append(
             f"""
-            <tr>
-              <td class="rep-cell">
+            <tr class="summary-row">
+              <td class="rep-cell first-cell">
+                <button class="expand-btn" aria-label="Expand {escape(sdr)} opportunity details">+</button>
                 <div class="avatar sdr">{escape(initials(sdr))}</div>
                 <div>
                   <div class="rep-name">{escape(sdr)}</div>
@@ -312,6 +352,17 @@ def build_sdr_rows(by_sdr, sdr_weekly_totals):
               <td class="total-cell">
                 <div class="total-count">{total_count}</div>
                 <div class="total-mrr">{money(total_amount)}</div>
+              </td>
+            </tr>"""
+        )
+        rows.append(
+            f"""
+            <tr class="details-row">
+              <td colspan="7">
+                <div class="opp-detail-panel sdr">
+                  <div class="opp-detail-title">{escape(sdr)} · Influenced Opportunities</div>
+                  {opp_detail_rows(sdr_opps_by_rep.get(sdr, []), 'No SDR-influenced opportunities created in June.')}
+                </div>
               </td>
             </tr>"""
         )
@@ -328,9 +379,11 @@ def build_html(opps, members):
     weekly_totals = {week_id: {"count": 0, "amount": 0} for week_id, _, _, _ in WEEKS}
     group_totals = {"AE": {"count": 0, "amount": 0}, "CSA": {"count": 0, "amount": 0}}
     opps_by_week_rep = defaultdict(lambda: defaultdict(list))
+    opps_by_rep = defaultdict(list)
     by_sdr = defaultdict(lambda: defaultdict(lambda: {"count": 0, "amount": 0}))
     sdr_weekly_totals = {week_id: {"count": 0, "amount": 0} for week_id, _, _, _ in WEEKS}
     sdr_enriched = []
+    sdr_opps_by_rep = defaultdict(list)
 
     for rep, group in members.items():
         if group in {"AE", "CSA"}:
@@ -350,6 +403,7 @@ def build_html(opps, members):
             by_sdr[sdr][week_id]["amount"] += opp["Amount"]
             sdr_weekly_totals[week_id]["count"] += 1
             sdr_weekly_totals[week_id]["amount"] += opp["Amount"]
+            sdr_opps_by_rep[sdr].append(sdr_opp)
 
         group = classify_rep(opp["Owner"], opp["OwnerRole"], members)
         if not week_id or group not in {"AE", "CSA"}:
@@ -365,6 +419,7 @@ def build_html(opps, members):
         group_totals[group]["count"] += 1
         group_totals[group]["amount"] += opp["Amount"]
         opps_by_week_rep[week_id][rep].append(opp)
+        opps_by_rep[rep].append(opp)
 
     DATA_FILE.write_text(json.dumps({"ae_csa": enriched, "sdr_influenced": sdr_enriched}, indent=2), encoding="utf-8")
 
@@ -372,6 +427,8 @@ def build_html(opps, members):
     total_mrr = sum(opp["Amount"] for opp in enriched)
     sdr_total_count = len(sdr_enriched)
     sdr_total_mrr = sum(opp["Amount"] for opp in sdr_enriched)
+    target_pct = min(total_count / TEAM_TARGET * 100, 100) if TEAM_TARGET else 0
+    remaining = max(TEAM_TARGET - total_count, 0)
     table_headers = "".join(
         f'<th><div>{escape(week_id)}</div><span>{escape(label)}</span></th>' for week_id, label, _, _ in WEEKS
     )
@@ -419,6 +476,13 @@ h1 {{ margin:6px 0 0; font-size:34px; line-height:1.08; letter-spacing:0; }}
 .kpi-label {{ color:var(--muted); font-size:12px; font-weight:800; text-transform:uppercase; letter-spacing:.08em; }}
 .kpi-val {{ margin-top:10px; font-size:32px; font-weight:850; }}
 .kpi-sub {{ margin-top:4px; color:var(--muted); font-size:13px; }}
+.target-card {{ grid-column:span 2; }}
+.target-top {{ display:flex; align-items:baseline; justify-content:space-between; gap:12px; }}
+.target-value {{ font-size:34px; font-weight:850; }}
+.target-value span {{ color:var(--muted); font-size:18px; }}
+.target-track {{ height:12px; background:#edf2f7; border-radius:999px; overflow:hidden; margin-top:14px; }}
+.target-track span {{ display:block; height:100%; background:linear-gradient(90deg,var(--green),var(--blue)); border-radius:999px; }}
+.target-meta {{ display:flex; justify-content:space-between; color:var(--muted); font-size:12px; font-weight:750; margin-top:8px; }}
 .weeks {{ display:grid; grid-template-columns:repeat(5,minmax(0,1fr)); gap:12px; margin-bottom:18px; }}
 .week-card {{ padding:16px; min-height:134px; }}
 .week-name {{ color:var(--blue); font-weight:850; font-size:13px; text-transform:uppercase; letter-spacing:.08em; }}
@@ -437,7 +501,15 @@ th:first-child {{ text-align:left; left:0; z-index:2; }}
 th span {{ display:block; font-weight:700; text-transform:none; letter-spacing:0; margin-top:2px; }}
 td:first-child {{ position:sticky; left:0; background:var(--panel); z-index:1; }}
 tr:last-child td {{ border-bottom:0; }}
+.summary-row {{ cursor:pointer; }}
+.summary-row:hover td {{ background:#fbfdff; }}
+.details-row {{ display:none; }}
+.details-row.open {{ display:table-row; }}
+.details-row td:first-child {{ position:static; background:#fbfdff; }}
 .rep-cell {{ display:flex; align-items:center; gap:10px; min-width:230px; }}
+.first-cell {{ min-width:265px; }}
+.expand-btn {{ width:24px; height:24px; flex:0 0 24px; border:1px solid var(--line); border-radius:6px; background:#fff; color:var(--muted); font-weight:900; line-height:1; cursor:pointer; }}
+.summary-row.open .expand-btn {{ color:var(--green); border-color:#bbf7d0; background:#f0fdf4; }}
 .avatar {{ width:34px; height:34px; border-radius:8px; display:grid; place-items:center; background:#e7f7ef; color:#087344; font-size:12px; font-weight:850; }}
 .avatar.sdr {{ background:#fff7ed; color:#9a3412; }}
 .rep-name {{ font-weight:800; }}
@@ -466,11 +538,21 @@ tr:last-child td {{ border-bottom:0; }}
 .section-totals {{ color:var(--muted); font-size:13px; font-weight:800; text-align:right; white-space:nowrap; }}
 .section-totals strong {{ color:var(--ink); }}
 .empty-table {{ color:var(--muted); font-size:13px; padding:22px; text-align:left; }}
+.opp-detail-panel {{ padding:14px 18px 16px 58px; background:#fbfdff; }}
+.opp-detail-panel.sdr {{ background:#fffaf3; }}
+.opp-detail-title {{ font-size:12px; font-weight:850; color:var(--muted); text-transform:uppercase; letter-spacing:.08em; margin-bottom:10px; }}
+.opp-detail-row {{ display:grid; grid-template-columns:minmax(220px,1fr) minmax(170px,220px) 90px; gap:14px; align-items:center; padding:10px 0; border-top:1px solid #edf2f7; }}
+.opp-name {{ font-weight:850; color:var(--ink); }}
+.opp-meta {{ color:var(--muted); font-size:12px; margin-top:2px; }}
+.opp-stage {{ justify-self:start; color:#334155; background:#eef2ff; border:1px solid #dbe4ff; border-radius:999px; padding:4px 9px; font-size:11px; font-weight:850; }}
+.opp-amount {{ text-align:right; color:var(--green); font-weight:850; }}
+.opp-empty {{ color:var(--muted); font-size:13px; padding:10px 0; border-top:1px solid #edf2f7; }}
 @media (max-width:1100px) {{
   .shell {{ padding:18px; }}
   .topbar {{ display:block; }}
   .stamp {{ text-align:left; margin-top:12px; }}
   .kpis {{ grid-template-columns:repeat(2,minmax(0,1fr)); }}
+  .target-card {{ grid-column:span 2; }}
   .weeks, .details {{ grid-template-columns:repeat(2,minmax(0,1fr)); }}
   .section-title {{ display:block; }}
   .section-totals {{ text-align:left; margin-top:8px; }}
@@ -478,6 +560,9 @@ tr:last-child td {{ border-bottom:0; }}
 @media (max-width:640px) {{
   h1 {{ font-size:26px; }}
   .kpis, .weeks, .details {{ grid-template-columns:1fr; }}
+  .target-card {{ grid-column:span 1; }}
+  .opp-detail-row {{ grid-template-columns:1fr; gap:6px; }}
+  .opp-amount {{ text-align:left; }}
 }}
 </style>
 </head>
@@ -496,6 +581,15 @@ tr:last-child td {{ border-bottom:0; }}
   </header>
 
   <section class="kpis">
+    <div class="kpi target-card">
+      <div class="kpi-label">Team Target Pace</div>
+      <div class="target-top">
+        <div class="target-value">{total_count}<span> / {TEAM_TARGET}</span></div>
+        <div class="kpi-sub">{target_pct:.1f}% to target</div>
+      </div>
+      <div class="target-track"><span style="width:{target_pct:.1f}%"></span></div>
+      <div class="target-meta"><span>{remaining} opps remaining</span><span>June target</span></div>
+    </div>
     <div class="kpi"><div class="kpi-label">Total Opportunities</div><div class="kpi-val">{total_count}</div><div class="kpi-sub">AE + CSA owned opps created in June</div></div>
     <div class="kpi"><div class="kpi-label">Total MRR</div><div class="kpi-val">{money(total_mrr)}</div><div class="kpi-sub">Sum of Salesforce Amount</div></div>
     <div class="kpi"><div class="kpi-label">AE Created</div><div class="kpi-val">{group_totals['AE']['count']}</div><div class="kpi-sub">{money(group_totals['AE']['amount'])} MRR</div></div>
@@ -512,7 +606,7 @@ tr:last-child td {{ border-bottom:0; }}
         <tr><th>Owner</th>{table_headers}<th>Total</th></tr>
       </thead>
       <tbody>
-        {build_rows(by_rep, rep_groups, weekly_totals)}
+        {build_rows(by_rep, rep_groups, weekly_totals, opps_by_rep)}
       </tbody>
     </table>
   </section>
@@ -535,11 +629,23 @@ tr:last-child td {{ border-bottom:0; }}
         <tr><th>SDR</th>{table_headers}<th>Total</th></tr>
       </thead>
       <tbody>
-        {build_sdr_rows(by_sdr, sdr_weekly_totals)}
+        {build_sdr_rows(by_sdr, sdr_weekly_totals, sdr_opps_by_rep)}
       </tbody>
     </table>
   </section>
 </main>
+<script>
+document.querySelectorAll('.summary-row').forEach((row) => {{
+  row.addEventListener('click', (event) => {{
+    const next = row.nextElementSibling;
+    if (!next || !next.classList.contains('details-row')) return;
+    const open = next.classList.toggle('open');
+    row.classList.toggle('open', open);
+    const btn = row.querySelector('.expand-btn');
+    if (btn) btn.textContent = open ? '-' : '+';
+  }});
+}});
+</script>
 </body>
 </html>
 """
