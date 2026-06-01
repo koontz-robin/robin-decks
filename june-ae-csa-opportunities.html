@@ -48,6 +48,16 @@ h1 { margin:6px 0 0; font-size:34px; line-height:1.08; letter-spacing:0; }
 .target-track { height:12px; background:#edf2f7; border-radius:999px; overflow:hidden; margin-top:14px; }
 .target-track span { display:block; height:100%; background:linear-gradient(90deg,var(--green),var(--blue)); border-radius:999px; }
 .target-meta { display:flex; justify-content:space-between; color:var(--muted); font-size:12px; font-weight:750; margin-top:8px; }
+.product-goals { display:grid; grid-template-columns:repeat(4,minmax(0,1fr)); gap:12px; margin:-4px 0 18px; }
+.product-goal-card { background:var(--panel); border:1px solid var(--line); border-radius:8px; box-shadow:var(--shadow); padding:15px; }
+.product-goal-top { display:flex; align-items:flex-start; justify-content:space-between; gap:10px; }
+.product-goal-label { color:var(--muted); font-size:11px; font-weight:850; text-transform:uppercase; letter-spacing:.08em; }
+.product-goal-mrr { color:var(--green); font-size:12px; font-weight:800; margin-top:6px; }
+.product-goal-count { font-size:26px; font-weight:850; text-align:right; }
+.product-goal-count span { color:var(--muted); font-size:14px; }
+.product-goal-track { height:8px; background:#edf2f7; border-radius:999px; overflow:hidden; margin-top:13px; }
+.product-goal-track span { display:block; height:100%; background:linear-gradient(90deg,var(--blue),var(--green)); border-radius:999px; }
+.product-goal-meta { display:flex; justify-content:space-between; color:var(--muted); font-size:11px; font-weight:750; margin-top:7px; }
 .weeks { display:grid; grid-template-columns:repeat(5,minmax(0,1fr)); gap:12px; margin-bottom:18px; }
 .week-card { padding:16px; min-height:134px; }
 .week-name { color:var(--blue); font-weight:850; font-size:13px; text-transform:uppercase; letter-spacing:.08em; }
@@ -118,13 +128,14 @@ tr:last-child td { border-bottom:0; }
   .stamp { text-align:left; margin-top:12px; }
   .kpis { grid-template-columns:repeat(2,minmax(0,1fr)); }
   .target-card { grid-column:span 2; }
+  .product-goals { grid-template-columns:repeat(2,minmax(0,1fr)); }
   .weeks, .details { grid-template-columns:repeat(2,minmax(0,1fr)); }
   .section-title { display:block; }
   .section-totals { text-align:left; margin-top:8px; }
 }
 @media (max-width:640px) {
   h1 { font-size:26px; }
-  .kpis, .weeks, .details { grid-template-columns:1fr; }
+  .kpis, .product-goals, .weeks, .details { grid-template-columns:1fr; }
   .target-card { grid-column:span 1; }
   .opp-detail-row { grid-template-columns:1fr; gap:6px; }
   .opp-amount { text-align:left; }
@@ -140,7 +151,7 @@ tr:last-child td { border-bottom:0; }
       <div class="subtitle">Quantity and MRR by owner, split across all five June calendar weeks.</div>
     </div>
     <div class="stamp">
-      Refreshed Jun 1, 2026 11:03 AM ET<br>
+      Refreshed Jun 1, 2026 11:05 AM ET<br>
       Salesforce CreatedDate, Owner, Amount
     </div>
   </header>
@@ -159,6 +170,57 @@ tr:last-child td { border-bottom:0; }
     <div class="kpi"><div class="kpi-label">Total MRR</div><div class="kpi-val">$1,150</div><div class="kpi-sub">Sum of Salesforce Amount</div></div>
     <div class="kpi"><div class="kpi-label">AE Created</div><div class="kpi-val">2</div><div class="kpi-sub">$1,150 MRR</div></div>
     <div class="kpi"><div class="kpi-label">CSA Created</div><div class="kpi-val">0</div><div class="kpi-sub">$0 MRR</div></div>
+  </section>
+
+  <section class="product-goals">
+    
+            <section class="product-goal-card">
+              <div class="product-goal-top">
+                <div>
+                  <div class="product-goal-label">PSA</div>
+                  <div class="product-goal-mrr">$1,150 MRR</div>
+                </div>
+                <div class="product-goal-count">2<span> / 200</span></div>
+              </div>
+              <div class="product-goal-track"><span style="width:1.0%"></span></div>
+              <div class="product-goal-meta"><span>1.0% to goal</span><span>198 remaining</span></div>
+            </section>
+
+            <section class="product-goal-card">
+              <div class="product-goal-top">
+                <div>
+                  <div class="product-goal-label">Billing/Odin</div>
+                  <div class="product-goal-mrr">$0 MRR</div>
+                </div>
+                <div class="product-goal-count">0<span> / 40</span></div>
+              </div>
+              <div class="product-goal-track"><span style="width:0.0%"></span></div>
+              <div class="product-goal-meta"><span>0.0% to goal</span><span>40 remaining</span></div>
+            </section>
+
+            <section class="product-goal-card">
+              <div class="product-goal-top">
+                <div>
+                  <div class="product-goal-label">Payments</div>
+                  <div class="product-goal-mrr">$0 MRR</div>
+                </div>
+                <div class="product-goal-count">0<span> / 25</span></div>
+              </div>
+              <div class="product-goal-track"><span style="width:0.0%"></span></div>
+              <div class="product-goal-meta"><span>0.0% to goal</span><span>25 remaining</span></div>
+            </section>
+
+            <section class="product-goal-card">
+              <div class="product-goal-top">
+                <div>
+                  <div class="product-goal-label">Cyberprotect</div>
+                  <div class="product-goal-mrr">$0 MRR</div>
+                </div>
+                <div class="product-goal-count">0<span> / 10</span></div>
+              </div>
+              <div class="product-goal-track"><span style="width:0.0%"></span></div>
+              <div class="product-goal-meta"><span>0.0% to goal</span><span>10 remaining</span></div>
+            </section>
   </section>
 
   <section class="weeks">

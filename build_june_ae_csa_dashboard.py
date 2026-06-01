@@ -27,6 +27,12 @@ ET = ZoneInfo("America/New_York")
 JUNE_START = "2026-06-01T04:00:00Z"
 JULY_START = "2026-07-01T04:00:00Z"
 TEAM_TARGET = 275
+PRODUCT_GOALS = [
+    ("PSA", 200),
+    ("Billing/Odin", 40),
+    ("Payments", 25),
+    ("Cyberprotect", 10),
+]
 
 KNOWN_AES = {
     "Andy Whisenant",
@@ -180,6 +186,19 @@ def money(value):
     return f"${value:,.0f}"
 
 
+def product_bucket(product):
+    value = (product or "").strip().lower()
+    if "psa" in value:
+        return "PSA"
+    if "billing" in value or "odin" in value:
+        return "Billing/Odin"
+    if "payment" in value:
+        return "Payments"
+    if "cyber" in value:
+        return "Cyberprotect"
+    return "Other"
+
+
 def initials(name):
     parts = [part for part in name.split() if part]
     return "".join(part[0] for part in parts[:2]).upper() or "?"
@@ -272,6 +291,30 @@ def build_week_cards(weekly_totals):
               <div class="week-count">{metrics['count']}</div>
               <div class="week-mrr">{money(metrics['amount'])}</div>
               <div class="week-track"><span style="width:{pct:.1f}%"></span></div>
+            </section>"""
+        )
+    return "\n".join(cards)
+
+
+def build_product_goal_cards(product_totals):
+    cards = []
+    for label, goal in PRODUCT_GOALS:
+        metrics = product_totals.get(label, {"count": 0, "amount": 0})
+        count = metrics["count"]
+        pct = min(count / goal * 100, 100) if goal else 0
+        remaining = max(goal - count, 0)
+        cards.append(
+            f"""
+            <section class="product-goal-card">
+              <div class="product-goal-top">
+                <div>
+                  <div class="product-goal-label">{escape(label)}</div>
+                  <div class="product-goal-mrr">{money(metrics['amount'])} MRR</div>
+                </div>
+                <div class="product-goal-count">{count}<span> / {goal}</span></div>
+              </div>
+              <div class="product-goal-track"><span style="width:{pct:.1f}%"></span></div>
+              <div class="product-goal-meta"><span>{pct:.1f}% to goal</span><span>{remaining} remaining</span></div>
             </section>"""
         )
     return "\n".join(cards)
@@ -381,6 +424,7 @@ def build_html(opps, members):
     by_rep = defaultdict(lambda: defaultdict(lambda: {"count": 0, "amount": 0}))
     rep_groups = {}
     weekly_totals = {week_id: {"count": 0, "amount": 0} for week_id, _, _, _ in WEEKS}
+    product_totals = {label: {"count": 0, "amount": 0} for label, _ in PRODUCT_GOALS}
     group_totals = {"AE": {"count": 0, "amount": 0}, "CSA": {"count": 0, "amount": 0}}
     opps_by_week_rep = defaultdict(lambda: defaultdict(list))
     opps_by_rep = defaultdict(list)
@@ -420,6 +464,10 @@ def build_html(opps, members):
         by_rep[rep][week_id]["amount"] += opp["Amount"]
         weekly_totals[week_id]["count"] += 1
         weekly_totals[week_id]["amount"] += opp["Amount"]
+        bucket = product_bucket(opp.get("Product_Type__c"))
+        if bucket in product_totals:
+            product_totals[bucket]["count"] += 1
+            product_totals[bucket]["amount"] += opp["Amount"]
         group_totals[group]["count"] += 1
         group_totals[group]["amount"] += opp["Amount"]
         opps_by_week_rep[week_id][rep].append(opp)
@@ -487,6 +535,16 @@ h1 {{ margin:6px 0 0; font-size:34px; line-height:1.08; letter-spacing:0; }}
 .target-track {{ height:12px; background:#edf2f7; border-radius:999px; overflow:hidden; margin-top:14px; }}
 .target-track span {{ display:block; height:100%; background:linear-gradient(90deg,var(--green),var(--blue)); border-radius:999px; }}
 .target-meta {{ display:flex; justify-content:space-between; color:var(--muted); font-size:12px; font-weight:750; margin-top:8px; }}
+.product-goals {{ display:grid; grid-template-columns:repeat(4,minmax(0,1fr)); gap:12px; margin:-4px 0 18px; }}
+.product-goal-card {{ background:var(--panel); border:1px solid var(--line); border-radius:8px; box-shadow:var(--shadow); padding:15px; }}
+.product-goal-top {{ display:flex; align-items:flex-start; justify-content:space-between; gap:10px; }}
+.product-goal-label {{ color:var(--muted); font-size:11px; font-weight:850; text-transform:uppercase; letter-spacing:.08em; }}
+.product-goal-mrr {{ color:var(--green); font-size:12px; font-weight:800; margin-top:6px; }}
+.product-goal-count {{ font-size:26px; font-weight:850; text-align:right; }}
+.product-goal-count span {{ color:var(--muted); font-size:14px; }}
+.product-goal-track {{ height:8px; background:#edf2f7; border-radius:999px; overflow:hidden; margin-top:13px; }}
+.product-goal-track span {{ display:block; height:100%; background:linear-gradient(90deg,var(--blue),var(--green)); border-radius:999px; }}
+.product-goal-meta {{ display:flex; justify-content:space-between; color:var(--muted); font-size:11px; font-weight:750; margin-top:7px; }}
 .weeks {{ display:grid; grid-template-columns:repeat(5,minmax(0,1fr)); gap:12px; margin-bottom:18px; }}
 .week-card {{ padding:16px; min-height:134px; }}
 .week-name {{ color:var(--blue); font-weight:850; font-size:13px; text-transform:uppercase; letter-spacing:.08em; }}
@@ -557,13 +615,14 @@ tr:last-child td {{ border-bottom:0; }}
   .stamp {{ text-align:left; margin-top:12px; }}
   .kpis {{ grid-template-columns:repeat(2,minmax(0,1fr)); }}
   .target-card {{ grid-column:span 2; }}
+  .product-goals {{ grid-template-columns:repeat(2,minmax(0,1fr)); }}
   .weeks, .details {{ grid-template-columns:repeat(2,minmax(0,1fr)); }}
   .section-title {{ display:block; }}
   .section-totals {{ text-align:left; margin-top:8px; }}
 }}
 @media (max-width:640px) {{
   h1 {{ font-size:26px; }}
-  .kpis, .weeks, .details {{ grid-template-columns:1fr; }}
+  .kpis, .product-goals, .weeks, .details {{ grid-template-columns:1fr; }}
   .target-card {{ grid-column:span 1; }}
   .opp-detail-row {{ grid-template-columns:1fr; gap:6px; }}
   .opp-amount {{ text-align:left; }}
@@ -598,6 +657,10 @@ tr:last-child td {{ border-bottom:0; }}
     <div class="kpi"><div class="kpi-label">Total MRR</div><div class="kpi-val">{money(total_mrr)}</div><div class="kpi-sub">Sum of Salesforce Amount</div></div>
     <div class="kpi"><div class="kpi-label">AE Created</div><div class="kpi-val">{group_totals['AE']['count']}</div><div class="kpi-sub">{money(group_totals['AE']['amount'])} MRR</div></div>
     <div class="kpi"><div class="kpi-label">CSA Created</div><div class="kpi-val">{group_totals['CSA']['count']}</div><div class="kpi-sub">{money(group_totals['CSA']['amount'])} MRR</div></div>
+  </section>
+
+  <section class="product-goals">
+    {build_product_goal_cards(product_totals)}
   </section>
 
   <section class="weeks">
