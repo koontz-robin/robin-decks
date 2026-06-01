@@ -40,6 +40,7 @@ KNOWN_AES = {
 }
 KNOWN_CSAS = {"Ingrid Beard", "Justin Lee"}
 ROLE_GROUPS = {
+    "SDRs": "SDR",
     "MSP Sales": "AE",
     "Integrator Sales": "AE",
     "CSA": "CSA",
@@ -330,6 +331,13 @@ def build_html(opps, members):
     by_sdr = defaultdict(lambda: defaultdict(lambda: {"count": 0, "amount": 0}))
     sdr_weekly_totals = {week_id: {"count": 0, "amount": 0} for week_id, _, _, _ in WEEKS}
     sdr_enriched = []
+
+    for rep, group in members.items():
+        if group in {"AE", "CSA"}:
+            rep_groups[rep] = group
+            _ = by_rep[rep]
+        elif group == "SDR":
+            _ = by_sdr[rep]
 
     for opp in opps:
         date_text = created_date_et(opp["CreatedDate"])
