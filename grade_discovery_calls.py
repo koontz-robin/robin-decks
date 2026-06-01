@@ -100,24 +100,25 @@ Also note: did they uncover the Business Issue (why now)? Yes/No.
 
 ### 4. SUMMARIZE & MAKE SICK (20 pts)
 
-Score based on what the rep actually did in the summary section. GIVE CREDIT FOR THE ATTEMPT — if a rep deliberately tries to summarize, they should not score below 6 even if the content is thin.
+Score based on whether the rep played back the prospect's reality, not whether they used a formal summary phrase. GIVE CREDIT for meaningful playback of key moments from the meeting — pains, goals, business facts, stakes, constraints, decision context, timeline, or impact — even if the rep never says "let me summarize" or "let me recap."
 
-**Full credit (18-20 pts):** Rep made a clear, structured summary attempt using explicit language ("Let me summarize my notes," "Let me recap what I have," "So based on what you've shared," "Here's what I heard today..."). Summarized 3+ DBMs back BY NAME, recapped specific business facts, AND asked a confirming question. Prospect verbally confirmed.
+**Full credit (18-20 pts):** Rep clearly played back 3+ specific DBMs or key meeting moments, tied them to business facts or impact, and asked a confirming question OR earned clear prospect acknowledgement. Explicit summarizing language is helpful but NOT required.
 
-**Strong (13-17 pts):** Clear, deliberate summary attempt with 2+ DBMs named back and some facts recapped. Asked for confirmation OR prospect acknowledged without being prompted.
+**Strong (13-17 pts):** Rep played back 2+ specific DBMs or key meeting moments and recapped some business facts, stakes, or desired outcomes. Asked for confirmation OR prospect acknowledged without being prompted. No formal "summary" phrase required.
 
-**Partial (7-12 pts):** Rep made a genuine attempt to summarize — used summarizing language or clearly recapped their notes — but DBMs were thin/vague OR confirmation ask was missing. IMPORTANT: Give credit here for the attempt even if content wasn't strong. A rep who says "Let me summarize what I have..." and then recaps weakly still earns 7-10.
+**Partial (7-12 pts):** Rep briefly played back at least one meaningful pain, goal, business fact, or key moment from the call, but the recap was thin/vague OR confirmation ask was missing. IMPORTANT: Give credit here for playback even if it is not introduced as a summary.
 
-**Weak (4-6 pts):** Brief, partial attempt — mentioned a problem or two but no structured recap, no summarizing language, no confirmation ask.
+**Weak (4-6 pts):** Brief, partial playback — mentioned a problem, goal, or fact from the meeting but did not connect the dots, make the pain feel urgent, or ask for confirmation.
 
-**None (0-3 pts):** No summary attempted whatsoever. Zero attempt to recap pain. Jumped directly to demo ask or next steps.
+**None (0-3 pts):** No playback attempted whatsoever. Zero attempt to recap pain, goals, business facts, stakes, or decision context. Jumped directly to demo ask or next steps.
 
-IMPORTANT: Reserve 0-3 ONLY for reps who skip the step entirely. If the rep made ANY deliberate attempt to summarize — even saying "let me summarize my notes" or "so what I'm hearing is..." — score them at least 6-7. The question is quality of execution, not whether they tried.
+IMPORTANT: Reserve 0-3 ONLY for reps who skip playback entirely. Do NOT require magic words. If the rep restates meaningful parts of the prospect's situation in their own words, that counts as summarizing/making sick even without explicit summarizing language.
 
 Key signals to look for:
-- Did they use explicit summarizing language? ("Let me summarize my notes," "Let me recap what I have," "So based on what you've shared," "Let me make sure I have this right," "Here's what I heard today...")
-- Did they recap specific facts (company size, current software, pain points) — even briefly?
-- Did they name DBMs back — even if not perfectly quantified?
+- Did they play back key moments from the meeting in their own words?
+- Did they recap specific facts (company size, current software, pain points, timeline, decision process, goals, constraints) — even briefly?
+- Did they name DBMs, goals, or stakes back — even if not perfectly quantified?
+- Did they make the current pain feel concrete by connecting it to impact, urgency, growth, risk, or cost?
 - Did they ask "Does that sound accurate?" or "Is there anything I missed?"
 - Did the prospect confirm or acknowledge?
 - Did the prospect say "yeah, that's right" or otherwise confirm?
@@ -146,7 +147,7 @@ You MUST use the full 0-100 range. Do not cluster scores in the 50-60 range out 
 - A call where the rep did several things well but missed key elements should score in the 50s-60s.
 - Only genuinely strong calls earn 70+.
 - Be stingy with partial credit. If it wasn't clearly done, don't give credit for it.
-- The Summarize & Make Sick section: give credit for the ATTEMPT. If the rep said "let me summarize my notes" or "here's what I heard" and made a genuine recap attempt — even with thin DBMs — score at least 6-7. Reserve 0-3 only for reps who skipped this step entirely and jumped straight to next steps.
+- The Summarize & Make Sick section: give credit for meaningful playback. The rep does not need to say "let me summarize" or "here's what I heard." If they play back key pains, goals, business facts, stakes, timeline, or decision context from the meeting, award credit based on quality. Reserve 0-3 only for reps who skipped playback entirely and jumped straight to next steps.
 """
 
 
@@ -370,7 +371,7 @@ Grade this call and respond in EXACTLY this format:
 **Key moment:** "[direct quote or close paraphrase]"
 
 ### 4. Summarize & Make Sick — XX/20
-**DBMs summarized back:** X (list them)
+**DBMs / key moments played back:** X (list them)
 **Business facts recapped:** Yes/No (list key ones)
 **Confirmation ask:** Yes/No — quote it if yes
 **Prospect acknowledged:** Yes/No
