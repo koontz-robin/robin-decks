@@ -13,6 +13,10 @@ TARGET_MONTH = TARGET_MONTH[:1].upper() + TARGET_MONTH[1:].lower()
 MONTH_SLUG = TARGET_MONTH.lower()
 MONTH_ID = MONTH_SLUG
 DATA_FILE = f'{WORKSPACE}/sf_{MONTH_SLUG}_opps.json'
+FROZEN_MONTHS = {'May'}
+
+if TARGET_MONTH in FROZEN_MONTHS and os.environ.get('ALLOW_FROZEN_MONTH_PATCH') != '1':
+    raise SystemExit(f'{TARGET_MONTH} forecast data is locked; set ALLOW_FROZEN_MONTH_PATCH=1 to rebuild it intentionally.')
 
 with open(DATA_FILE) as f:
     opps = json.load(f)
