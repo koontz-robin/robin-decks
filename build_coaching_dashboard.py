@@ -8,8 +8,6 @@ REPO = os.path.dirname(os.path.abspath(__file__))
 with open("/tmp/coaching_summaries.json") as f:
     data = json.load(f)
 
-data.pop("Joseph Abarno", None)
-
 AES = {"Andrew Whisenant","Connor Flynn","Husam Zalmiyar","Jake Borah","Jamie Butler","Jaylin Bender","Patrick Davies"}
 CSAS = {"Ingrid Beard","Justin Lee"}
 
@@ -109,8 +107,12 @@ def build_rep_card(rep, d, is_csa=False):
 
 ae_cards = "".join(build_rep_card(r, data[r]) for r in sorted(AES, key=lambda x: data.get(x,{}).get("avg_score",999)) if r in data)
 csa_cards = "".join(build_rep_card(r, data[r], is_csa=True) for r in sorted(CSAS, key=lambda x: data.get(x,{}).get("avg_score",999)) if r in data)
+other_reps = {r for r in data if r not in AES and r not in CSAS}
+other_cards = "".join(build_rep_card(r, data[r]) for r in sorted(other_reps, key=lambda x: data.get(x,{}).get("avg_score",999)))
 if not csa_cards:
     csa_cards = '<div style="color:#64748b;text-align:center;padding:40px;font-size:14px">No CSA scorecards graded yet.</div>'
+other_tab = '<button class="tab" onclick="showPanel(\'other\',this)">Other Reps</button>' if other_cards else ""
+other_panel = f'<div id="other" class="panel"><div class="grid">{other_cards}</div></div>' if other_cards else ""
 
 css = """*{margin:0;padding:0;box-sizing:border-box}body{background:#000;font-family:'Segoe UI',system-ui,sans-serif;color:#e2e8f0;min-height:100vh;padding:36px 48px}h1{font-size:26px;font-weight:700;color:#fff;margin-bottom:4px}.sub{font-size:13px;color:#475569;margin-bottom:24px}.tab-bar{display:flex;gap:8px;margin-bottom:24px;border-bottom:1px solid #1e293b;padding-bottom:0}.tab{background:transparent;border:1px solid #1e293b;border-bottom:none;color:#64748b;padding:10px 28px;border-radius:8px 8px 0 0;cursor:pointer;font-size:13px;font-weight:700;letter-spacing:0.5px;transition:all .2s;margin-bottom:-1px}.tab:hover{color:#e2e8f0;border-color:#38bdf8}.tab.active{background:#1e293b;color:#38bdf8;border-color:#38bdf8;border-bottom:2px solid #1e293b}.grid{display:grid;grid-template-columns:repeat(2,1fr);gap:20px}.panel{display:none}.panel.active{display:block}@media(max-width:900px){.grid{grid-template-columns:1fr}}.footer{font-size:11px;color:#334155;margin-top:28px;text-align:center}"""
 
@@ -130,9 +132,11 @@ html = f"""<!DOCTYPE html><html lang="en"><head><meta charset="UTF-8"><meta name
 <div class="tab-bar">
   <button class="tab active" onclick="showPanel('ae',this)">Account Executives</button>
   <button class="tab" onclick="showPanel('csa',this)">Client Solutions Advisors</button>
+  {other_tab}
 </div>
 <div id="ae" class="panel active"><div class="grid">{ae_cards}</div></div>
 <div id="csa" class="panel"><div class="grid">{csa_cards}</div></div>
+{other_panel}
 <div class="footer">Rev.io Sales · Rep Coaching Dashboard · {today_str}</div>
 <script>
 function showPanel(id,btn){{

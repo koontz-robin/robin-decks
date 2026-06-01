@@ -35,6 +35,24 @@ for name, uid in REP_NOTION_IDS.items():
 
 CSA_REPS = {"Ingrid Beard", "Justin Lee"}
 ALL_REPS = set(REP_NOTION_IDS)
+REP_ALIASES = {
+    "Andy Whisenant": "Andrew Whisenant",
+    "Andrew Whisenant": "Andrew Whisenant",
+    "Davis Herndon": "Davis Herndon",
+    "Connor Flynn": "Connor Flynn",
+    "Husam Zalmiyar": "Husam Zalmiyar",
+    "Ingrid Beard": "Ingrid Beard",
+    "Jake Borah": "Jake Borah",
+    "Jake Mitchell": "Jake Mitchell",
+    "Jaylin Bender": "Jaylin Bender",
+    "Justin Lee": "Justin Lee",
+    "Patrick Davies": "Patrick Davies",
+    "Patrick Dahlstrom": "Patrick Dahlstrom",
+    "Jamie Butler": "Jamie Butler",
+    "Joseph Abarno": "Joseph Abarno",
+    "Nassim Filoso": "Nassim Filoso",
+    "Olivia Sandefur": "Olivia Sandefur",
+}
 
 headers = {
     "Authorization": f"Bearer {NOTION_TOKEN}",
@@ -147,6 +165,28 @@ def parse_top_coaching(text):
             break
     return "\n".join(f"{i+1}. {p}" for i, p in enumerate(pts))
 
+def infer_rep_from_scorecard(text):
+    """Recover the rep from grader-created page body headers when Sales Rep is blank."""
+    first_lines = "\n".join(text.splitlines()[:12])
+    header_patterns = [
+        r'Discovery Call Grade:\s*([^\n]+)',
+        r'CBR Call Grade:\s*([^\n]+)',
+        r'Client Business Review[^\n]*Grade:\s*([^\n]+)',
+    ]
+    candidates = []
+    for pattern in header_patterns:
+        m = re.search(pattern, first_lines, re.I)
+        if m:
+            candidates.append(m.group(1))
+    if not candidates:
+        candidates.append(first_lines)
+
+    for candidate in candidates:
+        for alias, canonical in REP_ALIASES.items():
+            if re.search(rf"\b{re.escape(alias)}\b", candidate, re.I):
+                return canonical
+    return None
+
 def is_cbr_record(title, robins_take):
     blob = f"{title} {robins_take}".lower()
     return "client business review" in blob or "cbr" in blob or "qualifying qs" in blob
@@ -171,14 +211,12 @@ print(f"Total pages: {len(pages)}")
 
 rep_records = defaultdict(list)
 errors = 0
+blank_rep_recovered = 0
+blank_rep_skipped = 0
+rep_mismatch_corrected = 0
 
 for i, page in enumerate(pages):
     props = page.get("properties", {})
-    reps = get_prop_people(props, "Sales Rep")
-    if not reps:
-        continue
-    rep = reps[0]
-
     # Base data from properties
     score = get_prop_number(props, "Overall Score")
     record = {
@@ -189,6 +227,36 @@ for i, page in enumerate(pages):
         "coaching": get_prop_text(props, "Top Coaching Point"),
         "robins_take": get_prop_text(props, "Robin's Take"),
     }
+
+    page_text = None
+    reps = get_prop_people(props, "Sales Rep")
+    if reps:
+        rep = reps[0]
+        if score > 0:
+            try:
+                page_text = fetch_page_text(page["id"])
+                header_rep = infer_rep_from_scorecard(page_text)
+            except Exception:
+                header_rep = None
+                errors += 1
+            if header_rep and header_rep != rep:
+                rep_mismatch_corrected += 1
+                print(f"  Corrected Sales Rep from scorecard header: {record['date']} {record['account'] or record['title']} {rep} -> {header_rep}")
+                rep = header_rep
+    else:
+        try:
+            page_text = fetch_page_text(page["id"])
+            rep = infer_rep_from_scorecard(page_text)
+        except Exception:
+            rep = None
+            errors += 1
+        if rep:
+            blank_rep_recovered += 1
+            print(f"  Recovered blank Sales Rep: {record['date']} {record['account'] or record['title']} -> {rep}")
+        else:
+            blank_rep_skipped += 1
+            print(f"  Skipping row with blank Sales Rep: {record['date']} {record['account'] or record['title']}")
+            continue
 
     if is_cbr_record(record["title"], record["robins_take"]):
         inferred_rep = infer_cbr_rep(record, rep)
@@ -206,7 +274,8 @@ for i, page in enumerate(pages):
 
     if needs_parse:
         try:
-            page_text = fetch_page_text(page["id"])
+            if page_text is None:
+                page_text = fetch_page_text(page["id"])
             cats = parse_category_scores(page_text)
             coaching_parsed = parse_top_coaching(page_text)
             if not record["coaching"] and coaching_parsed:
@@ -233,6 +302,8 @@ for i, page in enumerate(pages):
         print(f"  Processed {i+1}/{len(pages)}...")
 
 print(f"\nProcessed all pages. Errors: {errors}")
+print(f"Blank Sales Rep rows recovered: {blank_rep_recovered}; skipped: {blank_rep_skipped}")
+print(f"Sales Rep/header mismatches corrected: {rep_mismatch_corrected}")
 
 # Build summaries
 summaries = {}
