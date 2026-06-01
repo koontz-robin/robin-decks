@@ -15,6 +15,7 @@ PSA_DB_ID = "dba0a0aac29e42d7ac7e968e0245f4c4"
 REPO_PATH = "/tmp/robin-decks-fresh"
 SSH_KEY = "/home/openclaw/.openclaw/ssh/id_ed25519"
 OUTPUT_FILE = f"{REPO_PATH}/psa-onboarding-tracker.html"
+GIT_ENV = {**os.environ, "GIT_SSH_COMMAND": f"ssh -i {SSH_KEY} -o StrictHostKeyChecking=no"}
 
 SF_CLIENT_ID = "3MVG91ftikjGaMd.NAf5_nx2GISRurI0fIm1aTgGSe.jNIN4bOdlqn95rfrur3RACkqjIZlDG8iCTnKzFRa.N"
 SF_CLIENT_SECRET = "FA7C3F3F72D6A1786F374CF966B505DB9B07AE43D69A6D54F127B2397713716E"
@@ -25,6 +26,21 @@ notion_headers = {
     "Notion-Version": "2022-06-28",
     "Content-Type": "application/json",
 }
+
+
+def ensure_repo():
+    """Ensure the publishing repo exists before writing dashboard output."""
+    if os.path.isdir(os.path.join(REPO_PATH, ".git")):
+        return
+    import shutil
+    if os.path.exists(REPO_PATH):
+        shutil.rmtree(REPO_PATH)
+    subprocess.run(
+        ["git", "clone", "git@github.com:koontz-robin/robin-decks.git", REPO_PATH],
+        env=GIT_ENV, check=True
+    )
+    subprocess.run(["git", "config", "user.email", "robin@rev.io"], cwd=REPO_PATH)
+    subprocess.run(["git", "config", "user.name", "Robin"], cwd=REPO_PATH)
 
 today = datetime.now().date()
 today_str = datetime.now().strftime("%B %d, %Y")
@@ -134,13 +150,17 @@ def pull_rts_clients():
         has_more = data.get("has_more", False)
         cursor = data.get("next_cursor")
 
-    print(f"  Notion RTS clients: {len(pages)}")
+    print(f"  Notion RTS/RTAM flagged clients: {len(pages)}")
 
     clients = []
+    excluded_statuses = Counter()
     for p in pages:
         props = p.get("properties", {})
         name = "".join(t.get("plain_text", "") for t in (props.get("Client") or {}).get("title", []))
         status = ((props.get("Status") or {}).get("status") or {}).get("name", "")
+        if not status.lower().startswith("rts"):
+            excluded_statuses[status or "Blank"] += 1
+            continue
         sales_rep = ((props.get("Sales Rep") or {}).get("select") or {}).get("name", "")
         sa = ((props.get("Solutions Analyst") or {}).get("select") or {}).get("name", "")
         fees = (props.get("Fees (MRR)") or {}).get("number") or 0
@@ -174,6 +194,11 @@ def pull_rts_clients():
             "sf_activity": [],
         })
 
+    if excluded_statuses:
+        excluded = ", ".join(f"{status}: {count}" for status, count in sorted(excluded_statuses.items()))
+        print(f"  Excluded non-RTS statuses: {excluded}")
+    print(f"  Notion RTS clients: {len(clients)}")
+
     # ── 2. Enrich with Salesforce activity ────────────────────────────────
     try:
         at, iurl = sf_auth()
@@ -192,11 +217,12 @@ def pull_rts_clients():
                 continue
             acct_id = records[0]["Id"]
 
-            # Pull recent tasks/activities
+            # Pull recent tasks/activities. Many Salesforce tasks are logged
+            # against Contacts/Opportunities; AccountId is the reliable rollup.
             ta = requests.get(f"{iurl}/services/data/v57.0/query", headers=sf_headers,
                               params={"q": (
                                   f"SELECT ActivityDate, Type, Subject, Owner.Name FROM Task "
-                                  f"WHERE WhatId = '{acct_id}' AND ActivityDate >= {cutoff} "
+                                  f"WHERE AccountId = '{acct_id}' AND ActivityDate >= {cutoff} "
                                   f"ORDER BY ActivityDate DESC LIMIT 20"
                               )})
             if ta.ok:
@@ -263,7 +289,12 @@ def build_rts_section(clients):
         bdays = business_days(c.get("rts_start",""))
         c["bdays_rts"] = bdays
         activity = c.get("sf_activity", [])
-        outbound = [a for a in activity if "[In]" not in a.get("subject","")]
+        rts_start = c.get("rts_start", "")
+        outbound = [
+            a for a in activity
+            if "[In]" not in a.get("subject","")
+            and (not rts_start or a.get("date", "") >= rts_start)
+        ]
         last_act_days = days_since(max((a["date"] for a in outbound), default=None)) if outbound else None
         c["last_act_days"] = last_act_days
         last_act_date = max((a["date"] for a in outbound), default=None) if outbound else None
@@ -330,7 +361,12 @@ def build_rts_section(clients):
             sales_update_cell = f'<td style="font-size:12px;color:#e2e8f0;max-width:220px;border-left:2px solid #1e3a5f">{su_text}{su_attribution}</td>'
         else:
             sales_update_cell = '<td style="font-size:12px;color:#334155;font-style:italic;border-left:2px solid #1e3a5f">—</td>'
-        activity = [a for a in c.get("sf_activity",[]) if "[In]" not in a.get("subject","")]
+        rts_start = c.get("rts_start", "")
+        activity = [
+            a for a in c.get("sf_activity",[])
+            if "[In]" not in a.get("subject","")
+            and (not rts_start or a.get("date","") >= rts_start)
+        ]
         last_date = c.get("last_act_date","")
         last_days = c.get("last_act_days")
         last_display = f'{last_date}<br><span style="font-size:11px;color:#475569">({last_days}d ago)</span>' if last_date else '<span style="color:#f87171">Never</span>'
@@ -624,31 +660,19 @@ document.addEventListener('DOMContentLoaded', loadClawbacks);
 </script>
 </body></html>"""
 
+ensure_repo()
 with open(OUTPUT_FILE, "w") as f:
     f.write(html)
 print(f"Built: {len(html):,} chars")
 
-# Push to GitHub
-env = {**os.environ, "GIT_SSH_COMMAND": f"ssh -i {SSH_KEY} -o StrictHostKeyChecking=no"}
-# Re-clone if the .git dir was wiped (e.g. after a /tmp purge)
-if not os.path.isdir(os.path.join(REPO_PATH, ".git")):
-    import shutil
-    if os.path.exists(REPO_PATH):
-        shutil.rmtree(REPO_PATH)
-    subprocess.run(
-        ["git", "clone", "git@github.com:koontz-robin/robin-decks.git", REPO_PATH],
-        env=env, check=True
-    )
-    subprocess.run(["git", "config", "user.email", "robin@rev.io"], cwd=REPO_PATH)
-    subprocess.run(["git", "config", "user.name", "Robin"], cwd=REPO_PATH)
 subprocess.run(["git", "add", "psa-onboarding-tracker.html"], cwd=REPO_PATH)
 diff = subprocess.run(["git", "diff", "--cached", "--quiet"], cwd=REPO_PATH)
 if diff.returncode != 0:
     now_str = datetime.now().strftime("%Y-%m-%d %H:%M UTC")
     subprocess.run(["git", "commit", "-m", f"PSA Onboarding Tracker - {now_str}"], cwd=REPO_PATH)
     # Pull-rebase first to handle diverged branches, then push
-    subprocess.run(["git", "pull", "--rebase", "origin", "master"], cwd=REPO_PATH, env=env, check=True)
-    result = subprocess.run(["git", "push", "origin", "master"], cwd=REPO_PATH, env=env)
+    subprocess.run(["git", "pull", "--rebase", "origin", "master"], cwd=REPO_PATH, env=GIT_ENV, check=True)
+    result = subprocess.run(["git", "push", "origin", "master"], cwd=REPO_PATH, env=GIT_ENV)
     if result.returncode == 0:
         print("✅ Pushed to GitHub")
     else:
