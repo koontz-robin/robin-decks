@@ -83,7 +83,7 @@ with open(opp_file_path, 'w') as f:
     json.dump(all_records, f, indent=2)
 print(f"💾 Saved to {opp_file_path}")
 
-# ── Step 4: Patch forecast.html with fresh May data ─────────────────────────
+# ── Step 4: Patch forecast.html with fresh current-month data ───────────────
 print("🔨 Patching forecast.html with fresh data...")
 result = subprocess.run([sys.executable, f'{WORKSPACE}/patch_may_forecast.py'], capture_output=True, text=True)
 if result.returncode != 0:
