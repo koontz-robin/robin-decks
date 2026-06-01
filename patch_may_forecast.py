@@ -6,7 +6,7 @@ import json, os, re
 from collections import defaultdict
 from datetime import datetime, timezone
 
-WORKSPACE = '/home/openclaw/.openclaw/workspace'
+WORKSPACE = os.environ.get('FORECAST_WORKSPACE', '/home/openclaw/.openclaw/workspace')
 now = datetime.now(timezone.utc)
 TARGET_MONTH = os.environ.get('FORECAST_MONTH') or now.strftime('%B')
 TARGET_MONTH = TARGET_MONTH[:1].upper() + TARGET_MONTH[1:].lower()
@@ -32,7 +32,7 @@ Q2_QUOTAS  = {'PSA':102000,'Billing':40988,'Payments':32620,'Cyber':13500,'Comme
 MONTHLY_QUOTAS = {
     'May':  {'PSA':36000,'Billing':10252,'Payments':11040,'Cyber':2478,'CommerceHub':2956},
     # June is the Q2 remainder after April quota + May quota, so product totals reconcile to Q2.
-    'June': {'PSA':36000,'Billing':17368,'Payments':11040,'Cyber':6522,'CommerceHub':4178},
+    'June': {'PSA':38000,'Billing':17368,'Payments':11040,'Cyber':8700,'CommerceHub':0},
 }
 DEFAULT_MONTH_QUOTAS = {'PSA':30000,'Billing':13368,'Payments':10540,'Cyber':4500,'CommerceHub':1667}
 TARGET_QUOTAS = MONTHLY_QUOTAS.get(TARGET_MONTH, DEFAULT_MONTH_QUOTAS)
@@ -56,9 +56,15 @@ def prod_key(p):
     if 'PSA' in p: return 'PSA'
     if 'Billing' in p or 'Odin' in p: return 'Billing'
     if 'Payment' in p: return 'Payments'
+    if TARGET_MONTH == 'June' and 'Commerce' in p: return 'Cyber'
     if 'Cyber' in p: return 'Cyber'
     if 'Commerce' in p: return 'CommerceHub'
     return 'Other'
+
+def prod_label(p):
+    if TARGET_MONTH == 'June' and p == 'Cyber':
+        return 'CommerceHub / Cyber Protect'
+    return PROD_LABELS[p]
 
 def fmt(n): return f'${n:,.0f}'
 
@@ -126,6 +132,8 @@ def build_month_tab():
         likely = cw + sum(o.get('Amount',0) or 0 for o in opp_list if o.get('Forecast_Status__c') in ('Worst Case','Most Likely'))
         best   = cw + sum(o.get('Amount',0) or 0 for o in opp_list if o.get('Forecast_Status__c') in ('Worst Case','Most Likely','Best Case'))
         quota  = TARGET_QUOTAS[p]
+        if quota == 0 and not opp_list and cw == 0:
+            continue
         cw_pct     = min(cw/quota*100,100) if quota else 0
         likely_pct = min(likely/quota*100,100) if quota else 0
         worst_pct  = min(worst/quota*100,100) if quota else 0
@@ -137,7 +145,7 @@ def build_month_tab():
   <div class="prod-header">
     <div class="prod-title">
       <div class="prod-dot" style="background:{c};box-shadow:0 0 8px {c}"></div>
-      <h2 style="color:{c};text-shadow:0 0 20px {c}66">{PROD_LABELS[p]}</h2>
+      <h2 style="color:{c};text-shadow:0 0 20px {c}66">{prod_label(p)}</h2>
       <div class="live-dot"></div>
     </div>
     <div class="prod-meta">
