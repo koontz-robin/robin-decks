@@ -110,7 +110,8 @@ def get_team_members(base, headers):
 def fetch_opportunities(base, headers):
     query = f"""
         SELECT Id, Name, Amount, StageName, Product_Type__c, CreatedDate,
-               CloseDate, Account.Name, Owner.Name, Owner.UserRole.Name, CreatedBy.Name
+               CloseDate, Account.Name, Owner.Name, Owner.UserRole.Name,
+               CreatedBy.Name, SDR_Influence__c
         FROM Opportunity
         WHERE CreatedDate >= {JUNE_START}
           AND CreatedDate < {JULY_START}
@@ -137,6 +138,7 @@ def fetch_opportunities(base, headers):
                 "Owner": owner.get("Name") or "Unknown",
                 "OwnerRole": owner_role,
                 "CreatedBy": created_by.get("Name") or "",
+                "SDR_Influence__c": record.get("SDR_Influence__c") or "",
             }
         )
     return flattened
@@ -263,6 +265,60 @@ def build_rep_breakdown(opps_by_week_rep):
     return "\n".join(sections)
 
 
+def clean_sdr_name(value):
+    name = (value or "").strip()
+    if not name or name.lower() == "none":
+        return ""
+    return name
+
+
+def build_sdr_rows(by_sdr, sdr_weekly_totals):
+    rows = []
+    ordered_sdrs = sorted(
+        by_sdr,
+        key=lambda sdr: (-sum(v["amount"] for v in by_sdr[sdr].values()), sdr),
+    )
+    for sdr in ordered_sdrs:
+        total_count = sum(v["count"] for v in by_sdr[sdr].values())
+        total_amount = sum(v["amount"] for v in by_sdr[sdr].values())
+        cells = []
+        for week_id, label, _, _ in WEEKS:
+            metrics = by_sdr[sdr].get(week_id, {"count": 0, "amount": 0})
+            pct = (
+                (metrics["amount"] / sdr_weekly_totals[week_id]["amount"] * 100)
+                if sdr_weekly_totals[week_id]["amount"]
+                else 0
+            )
+            cells.append(
+                f"""
+                <td class="week-cell">
+                  <div class="cell-count">{metrics['count']}</div>
+                  <div class="cell-mrr">{money(metrics['amount'])}</div>
+                  <div class="cell-bar sdr"><span style="width:{min(pct, 100):.1f}%"></span></div>
+                </td>"""
+            )
+        rows.append(
+            f"""
+            <tr>
+              <td class="rep-cell">
+                <div class="avatar sdr">{escape(initials(sdr))}</div>
+                <div>
+                  <div class="rep-name">{escape(sdr)}</div>
+                  <div class="rep-group sdr">SDR</div>
+                </div>
+              </td>
+              {''.join(cells)}
+              <td class="total-cell">
+                <div class="total-count">{total_count}</div>
+                <div class="total-mrr">{money(total_amount)}</div>
+              </td>
+            </tr>"""
+        )
+    if not rows:
+        return '<tr><td colspan="7" class="empty-table">No SDR-influenced opportunities created in June.</td></tr>'
+    return "\n".join(rows)
+
+
 def build_html(opps, members):
     generated_at = datetime.now(ET)
     enriched = []
@@ -271,10 +327,22 @@ def build_html(opps, members):
     weekly_totals = {week_id: {"count": 0, "amount": 0} for week_id, _, _, _ in WEEKS}
     group_totals = {"AE": {"count": 0, "amount": 0}, "CSA": {"count": 0, "amount": 0}}
     opps_by_week_rep = defaultdict(lambda: defaultdict(list))
+    by_sdr = defaultdict(lambda: defaultdict(lambda: {"count": 0, "amount": 0}))
+    sdr_weekly_totals = {week_id: {"count": 0, "amount": 0} for week_id, _, _, _ in WEEKS}
+    sdr_enriched = []
 
     for opp in opps:
         date_text = created_date_et(opp["CreatedDate"])
         week_id = week_for_date(date_text)
+        sdr = clean_sdr_name(opp.get("SDR_Influence__c"))
+        if week_id and sdr:
+            sdr_opp = {**opp, "CreatedDateET": date_text, "Week": week_id, "SDR": sdr}
+            sdr_enriched.append(sdr_opp)
+            by_sdr[sdr][week_id]["count"] += 1
+            by_sdr[sdr][week_id]["amount"] += opp["Amount"]
+            sdr_weekly_totals[week_id]["count"] += 1
+            sdr_weekly_totals[week_id]["amount"] += opp["Amount"]
+
         group = classify_rep(opp["Owner"], opp["OwnerRole"], members)
         if not week_id or group not in {"AE", "CSA"}:
             continue
@@ -290,10 +358,12 @@ def build_html(opps, members):
         group_totals[group]["amount"] += opp["Amount"]
         opps_by_week_rep[week_id][rep].append(opp)
 
-    DATA_FILE.write_text(json.dumps(enriched, indent=2), encoding="utf-8")
+    DATA_FILE.write_text(json.dumps({"ae_csa": enriched, "sdr_influenced": sdr_enriched}, indent=2), encoding="utf-8")
 
     total_count = len(enriched)
     total_mrr = sum(opp["Amount"] for opp in enriched)
+    sdr_total_count = len(sdr_enriched)
+    sdr_total_mrr = sum(opp["Amount"] for opp in sdr_enriched)
     table_headers = "".join(
         f'<th><div>{escape(week_id)}</div><span>{escape(label)}</span></th>' for week_id, label, _, _ in WEEKS
     )
@@ -349,7 +419,9 @@ h1 {{ margin:6px 0 0; font-size:34px; line-height:1.08; letter-spacing:0; }}
 .week-mrr {{ color:var(--green); font-size:14px; font-weight:800; }}
 .week-track, .cell-bar {{ height:6px; background:#edf2f7; border-radius:999px; overflow:hidden; margin-top:12px; }}
 .week-track span, .cell-bar span {{ display:block; height:100%; background:linear-gradient(90deg,var(--green),var(--teal)); border-radius:999px; }}
+.cell-bar.sdr span {{ background:linear-gradient(90deg,#f59e0b,#2563eb); }}
 .table-wrap {{ overflow:auto; }}
+.table-wrap.sdr-section {{ margin-top:18px; }}
 table {{ width:100%; border-collapse:separate; border-spacing:0; min-width:1080px; }}
 th, td {{ border-bottom:1px solid var(--line); padding:13px 14px; vertical-align:middle; }}
 th {{ position:sticky; top:0; background:#fbfdff; color:var(--muted); font-size:12px; font-weight:850; text-align:right; text-transform:uppercase; letter-spacing:.06em; z-index:1; }}
@@ -359,10 +431,12 @@ td:first-child {{ position:sticky; left:0; background:var(--panel); z-index:1; }
 tr:last-child td {{ border-bottom:0; }}
 .rep-cell {{ display:flex; align-items:center; gap:10px; min-width:230px; }}
 .avatar {{ width:34px; height:34px; border-radius:8px; display:grid; place-items:center; background:#e7f7ef; color:#087344; font-size:12px; font-weight:850; }}
+.avatar.sdr {{ background:#fff7ed; color:#9a3412; }}
 .rep-name {{ font-weight:800; }}
 .rep-group {{ display:inline-flex; margin-top:4px; padding:2px 7px; border-radius:999px; font-size:10px; font-weight:850; letter-spacing:.06em; }}
 .rep-group.ae {{ color:#1d4ed8; background:#dbeafe; }}
 .rep-group.csa {{ color:#0f766e; background:#ccfbf1; }}
+.rep-group.sdr {{ color:#9a3412; background:#ffedd5; }}
 .week-cell, .total-cell {{ text-align:right; min-width:142px; }}
 .cell-count, .total-count {{ font-size:18px; font-weight:850; }}
 .cell-mrr, .total-mrr {{ color:var(--green); font-size:12px; font-weight:800; margin-top:2px; }}
@@ -378,12 +452,20 @@ tr:last-child td {{ border-bottom:0; }}
 .detail-row span {{ min-width:0; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; font-weight:700; }}
 .detail-row strong {{ text-align:right; font-size:12px; }}
 .empty-row {{ color:var(--muted); font-size:12px; padding:16px 0; }}
+.section-title {{ display:flex; align-items:flex-end; justify-content:space-between; gap:16px; margin:26px 0 10px; }}
+.section-title h2 {{ margin:0; font-size:20px; }}
+.section-title p {{ margin:4px 0 0; color:var(--muted); font-size:13px; }}
+.section-totals {{ color:var(--muted); font-size:13px; font-weight:800; text-align:right; white-space:nowrap; }}
+.section-totals strong {{ color:var(--ink); }}
+.empty-table {{ color:var(--muted); font-size:13px; padding:22px; text-align:left; }}
 @media (max-width:1100px) {{
   .shell {{ padding:18px; }}
   .topbar {{ display:block; }}
   .stamp {{ text-align:left; margin-top:12px; }}
   .kpis {{ grid-template-columns:repeat(2,minmax(0,1fr)); }}
   .weeks, .details {{ grid-template-columns:repeat(2,minmax(0,1fr)); }}
+  .section-title {{ display:block; }}
+  .section-totals {{ text-align:left; margin-top:8px; }}
 }}
 @media (max-width:640px) {{
   h1 {{ font-size:26px; }}
@@ -429,6 +511,25 @@ tr:last-child td {{ border-bottom:0; }}
 
   <section class="details">
     {build_rep_breakdown(opps_by_week_rep)}
+  </section>
+
+  <section class="section-title">
+    <div>
+      <h2>SDR Influenced Opportunities</h2>
+      <p>June-created opportunities with SDR Influence populated, grouped by SDR.</p>
+    </div>
+    <div class="section-totals"><strong>{sdr_total_count}</strong> opps · <strong>{money(sdr_total_mrr)}</strong> MRR</div>
+  </section>
+
+  <section class="table-wrap sdr-section">
+    <table>
+      <thead>
+        <tr><th>SDR</th>{table_headers}<th>Total</th></tr>
+      </thead>
+      <tbody>
+        {build_sdr_rows(by_sdr, sdr_weekly_totals)}
+      </tbody>
+    </table>
   </section>
 </main>
 </body>
