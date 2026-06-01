@@ -438,7 +438,7 @@ def build_html(opps, members):
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
-<title>June AE/CSA Opportunity Creation</title>
+<title>Sales Opportunities Created</title>
 <style>
 :root {{
   --bg:#f6f8fb;
@@ -571,7 +571,7 @@ tr:last-child td {{ border-bottom:0; }}
   <header class="topbar">
     <div>
       <div class="eyebrow">June 2026 Pipeline Creation</div>
-      <h1>AE / CSA Opportunities Created</h1>
+      <h1>Sales Opportunities Created</h1>
       <div class="subtitle">Quantity and MRR by owner, split across all five June calendar weeks.</div>
     </div>
     <div class="stamp">
