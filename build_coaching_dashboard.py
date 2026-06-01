@@ -17,8 +17,6 @@ team_avg = (
     sum(d['avg_score'] * d['call_count'] for d in data.values()) / total_calls
     if total_calls else 0
 )
-coaching_req = sum(1 for d in data.values() if d['avg_score'] < 50)
-
 def score_color(s):
     if s >= 80: return "#34d399"
     if s >= 65: return "#38bdf8"
@@ -29,8 +27,8 @@ def grade_label(s):
     if s >= 90: return "Elite"
     if s >= 80: return "Strong"
     if s >= 65: return "Solid"
-    if s >= 50: return "Needs Work"
-    return "Coaching Required"
+    if s >= 50: return "Building"
+    return "Developing"
 
 def build_rep_card(rep, d, is_csa=False):
     avg = d["avg_score"]; sc = score_color(avg)
@@ -127,7 +125,6 @@ html = f"""<!DOCTYPE html><html lang="en"><head><meta charset="UTF-8"><meta name
   <div style="background:#1e293b;border-radius:10px;padding:18px 20px;flex:1;min-width:130px;position:relative;overflow:hidden"><div style="position:absolute;top:0;left:0;right:0;height:3px;background:#38bdf8"></div><div style="font-size:10px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;color:#64748b;margin-bottom:6px">Reps Tracked</div><div style="font-size:42px;font-weight:800;color:#38bdf8;line-height:1">{len(data)}</div></div>
   <div style="background:#1e293b;border-radius:10px;padding:18px 20px;flex:1;min-width:130px;position:relative;overflow:hidden"><div style="position:absolute;top:0;left:0;right:0;height:3px;background:#34d399"></div><div style="font-size:10px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;color:#64748b;margin-bottom:6px">Calls Graded</div><div style="font-size:42px;font-weight:800;color:#34d399;line-height:1">{total_calls}</div></div>
   <div style="background:#1e293b;border-radius:10px;padding:18px 20px;flex:1;min-width:130px;position:relative;overflow:hidden"><div style="position:absolute;top:0;left:0;right:0;height:3px;background:#fbbf24"></div><div style="font-size:10px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;color:#64748b;margin-bottom:6px">Team Avg Score</div><div style="font-size:42px;font-weight:800;color:#fbbf24;line-height:1">{team_avg:.0f}</div></div>
-  <div style="background:#1e293b;border-radius:10px;padding:18px 20px;flex:1;min-width:130px;position:relative;overflow:hidden"><div style="position:absolute;top:0;left:0;right:0;height:3px;background:#f87171"></div><div style="font-size:10px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;color:#64748b;margin-bottom:6px">Coaching Required</div><div style="font-size:42px;font-weight:800;color:#f87171;line-height:1">{coaching_req}</div><div style="font-size:11px;color:#475569;margin-top:4px">avg &lt;50</div></div>
 </div>
 <div class="tab-bar">
   <button class="tab active" onclick="showPanel('ae',this)">Account Executives</button>
