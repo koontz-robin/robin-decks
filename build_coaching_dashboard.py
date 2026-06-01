@@ -38,6 +38,12 @@ team_avg = (
     sum(d['avg_score'] * d['call_count'] for d in data.values()) / total_calls
     if total_calls else 0
 )
+try:
+    with open(f"{REPO}/rep_ytd_monthly_averages.json") as f:
+        ytd_activity = json.load(f)
+except FileNotFoundError:
+    ytd_activity = {"months": 0, "metrics": {}}
+
 def score_color(s):
     if s >= 80: return "#34d399"
     if s >= 65: return "#38bdf8"
@@ -69,6 +75,39 @@ def profile_header(rep):
     return (
         f'<a class="rep-profile" href="{link}" target="_blank" rel="noopener">'
         f'{avatar}<span>{safe_rep}</span></a>'
+    )
+
+def compact_number(value):
+    if value == 0:
+        return "0"
+    if abs(value - round(value)) < 0.05:
+        return f"{value:.0f}"
+    return f"{value:.1f}"
+
+def compact_currency(value):
+    if value == 0:
+        return "$0"
+    if abs(value) >= 1000:
+        return f"${value/1000:.1f}K"
+    return f"${value:,.0f}"
+
+def rep_activity_metrics(rep):
+    metrics = ytd_activity.get("metrics", {}).get(rep, {})
+    items = [
+        ("Discovery", compact_number(metrics.get("discovery_calls", 0))),
+        ("Initial Demos", compact_number(metrics.get("initial_demos", 0))),
+        ("Closed Won", compact_number(metrics.get("opps_closed_won", 0))),
+        ("MRR Closed", compact_currency(metrics.get("mrr_closed", 0))),
+    ]
+    cells = "".join(
+        f'<div class="activity-metric"><div>{value}</div><span>{label}</span></div>'
+        for label, value in items
+    )
+    return (
+        f'<div class="activity-block">'
+        f'<div class="activity-label">2026 Monthly Avg</div>'
+        f'<div class="activity-grid">{cells}</div>'
+        f'</div>'
     )
 
 def build_rep_card(rep, d, is_csa=False):
@@ -131,6 +170,7 @@ def build_rep_card(rep, d, is_csa=False):
         f'<div style="font-size:11px;color:#64748b;margin-top:2px">{n} graded {"CBRs" if is_csa else "calls"} · {grade_label(avg)}</div></div>'
         f'<div style="text-align:right"><div style="font-size:36px;font-weight:800;color:{sc};line-height:1">{avg:.0f}</div>'
         f'<div style="font-size:10px;color:#64748b">avg score</div></div></div>'
+        f'{rep_activity_metrics(rep)}'
         f'<div style="display:grid;grid-template-columns:1fr 1fr;gap:0">'
         f'<div style="padding:16px 18px;border-right:1px solid #0f172a">'
         f'<div style="font-size:10px;font-weight:700;color:#64748b;letter-spacing:1.5px;'
@@ -153,7 +193,7 @@ if not csa_cards:
 other_tab = '<button class="tab" onclick="showPanel(\'other\',this)">Other Reps</button>' if other_cards else ""
 other_panel = f'<div id="other" class="panel"><div class="grid">{other_cards}</div></div>' if other_cards else ""
 
-css = """*{margin:0;padding:0;box-sizing:border-box}body{background:#000;font-family:'Segoe UI',system-ui,sans-serif;color:#e2e8f0;min-height:100vh;padding:36px 48px}h1{font-size:26px;font-weight:700;color:#fff;margin-bottom:4px}.sub{font-size:13px;color:#475569;margin-bottom:24px}.tab-bar{display:flex;gap:8px;margin-bottom:24px;border-bottom:1px solid #1e293b;padding-bottom:0}.tab{background:transparent;border:1px solid #1e293b;border-bottom:none;color:#64748b;padding:10px 28px;border-radius:8px 8px 0 0;cursor:pointer;font-size:13px;font-weight:700;letter-spacing:0.5px;transition:all .2s;margin-bottom:-1px}.tab:hover{color:#e2e8f0;border-color:#38bdf8}.tab.active{background:#1e293b;color:#38bdf8;border-color:#38bdf8;border-bottom:2px solid #1e293b}.grid{display:grid;grid-template-columns:repeat(2,1fr);gap:20px}.panel{display:none}.panel.active{display:block}.rep-profile{display:flex;align-items:center;gap:10px;color:#e2e8f0;text-decoration:none;font-size:16px;font-weight:700}.rep-profile:hover span{color:#38bdf8}.rep-avatar{width:38px;height:38px;border-radius:50%;object-fit:cover;border:2px solid #334155;background:#020617;flex-shrink:0}.rep-avatar.initials{display:flex;align-items:center;justify-content:center;background:linear-gradient(135deg,#0f172a,#1e293b);color:#38bdf8;font-size:12px;letter-spacing:.8px}@media(max-width:900px){.grid{grid-template-columns:1fr}}.footer{font-size:11px;color:#334155;margin-top:28px;text-align:center}"""
+css = """*{margin:0;padding:0;box-sizing:border-box}body{background:#000;font-family:'Segoe UI',system-ui,sans-serif;color:#e2e8f0;min-height:100vh;padding:36px 48px}h1{font-size:26px;font-weight:700;color:#fff;margin-bottom:4px}.sub{font-size:13px;color:#475569;margin-bottom:24px}.tab-bar{display:flex;gap:8px;margin-bottom:24px;border-bottom:1px solid #1e293b;padding-bottom:0}.tab{background:transparent;border:1px solid #1e293b;border-bottom:none;color:#64748b;padding:10px 28px;border-radius:8px 8px 0 0;cursor:pointer;font-size:13px;font-weight:700;letter-spacing:0.5px;transition:all .2s;margin-bottom:-1px}.tab:hover{color:#e2e8f0;border-color:#38bdf8}.tab.active{background:#1e293b;color:#38bdf8;border-color:#38bdf8;border-bottom:2px solid #1e293b}.grid{display:grid;grid-template-columns:repeat(2,1fr);gap:20px}.panel{display:none}.panel.active{display:block}.rep-profile{display:flex;align-items:center;gap:10px;color:#e2e8f0;text-decoration:none;font-size:16px;font-weight:700}.rep-profile:hover span{color:#38bdf8}.rep-avatar{width:38px;height:38px;border-radius:50%;object-fit:cover;border:2px solid #334155;background:#020617;flex-shrink:0}.rep-avatar.initials{display:flex;align-items:center;justify-content:center;background:linear-gradient(135deg,#0f172a,#1e293b);color:#38bdf8;font-size:12px;letter-spacing:.8px}.activity-block{padding:13px 20px 15px;border-bottom:1px solid #0f172a;background:linear-gradient(180deg,rgba(56,189,248,.04),rgba(15,23,42,.15))}.activity-label{font-size:10px;font-weight:700;color:#64748b;letter-spacing:1.5px;text-transform:uppercase;margin-bottom:9px}.activity-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:8px}.activity-metric{background:#020617;border:1px solid #1e293b;border-radius:8px;padding:9px 8px;min-width:0}.activity-metric div{font-size:18px;font-weight:800;color:#c8f0dc;line-height:1;white-space:nowrap}.activity-metric span{display:block;margin-top:5px;font-size:9px;font-weight:700;letter-spacing:.7px;text-transform:uppercase;color:#64748b;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}@media(max-width:900px){.grid{grid-template-columns:1fr}}@media(max-width:520px){body{padding:24px 18px}.activity-grid{grid-template-columns:repeat(2,1fr)}}.footer{font-size:11px;color:#334155;margin-top:28px;text-align:center}"""
 
 html = f"""<!DOCTYPE html><html lang="en"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1.0">
 <title>Rep Coaching Dashboard</title><style>{css}</style></head><body>
