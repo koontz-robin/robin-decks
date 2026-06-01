@@ -17,6 +17,7 @@ Repo: `git@github.com:koontz-robin/robin-decks.git`
 | Q2 Forecast Dashboard | forecast.html | https://koontz-robin.github.io/robin-decks/forecast.html | Daily (8am ET, weekdays) |
 | AE Capacity Dashboard | ae-capacity-dashboard.html | https://koontz-robin.github.io/robin-decks/ae-capacity-dashboard.html | Daily (12pm ET, weekdays) |
 | AE Capacity Slide (EXECUTE theme) | ae-capacity-slide.html | https://koontz-robin.github.io/robin-decks/ae-capacity-slide.html | Manual |
+| Sales Opportunities Created | june-ae-csa-opportunities.html | https://koontz-robin.github.io/robin-decks/june-ae-csa-opportunities.html | Hourly (9am-5pm ET, weekdays) |
 | PSA Onboarding Tracker | psa-onboarding-tracker.html | https://koontz-robin.github.io/robin-decks/psa-onboarding-tracker.html | Daily (midnight) |
 | PSA Opportunity Dashboard | psa-opportunity-dashboard.html | https://koontz-robin.github.io/robin-decks/psa-opportunity-dashboard.html | On demand |
 | PSA Target Tracker | psa-target-tracker.html | https://koontz-robin.github.io/robin-decks/psa-target-tracker.html | On demand |
@@ -25,6 +26,7 @@ Repo: `git@github.com:koontz-robin/robin-decks.git`
 | CBR Dashboard | cbr-dashboard.html | https://koontz-robin.github.io/robin-decks/cbr-dashboard.html | On demand |
 | CSA Pipeline Dashboard | csa-pipeline-dashboard.html | https://koontz-robin.github.io/robin-decks/csa-pipeline-dashboard.html | On demand |
 | Monthly Pipeline Dashboard | monthly-pipeline-dashboard.html | https://koontz-robin.github.io/robin-decks/monthly-pipeline-dashboard.html | On demand |
+| 2026 Pipeline Pace | 2026-pipeline-pace.html | https://koontz-robin.github.io/robin-decks/2026-pipeline-pace.html | On demand |
 | RTS Dashboard | rts-dashboard.html | https://koontz-robin.github.io/robin-decks/rts-dashboard.html | On demand |
 | Q2 Re-engagement Tracker | q2-reengagement-tracker.html | https://koontz-robin.github.io/robin-decks/q2-reengagement-tracker.html | On demand |
 | PSA SMC Re-engagement Tracker | smc-reengagement-tracker.html | https://koontz-robin.github.io/robin-decks/smc-reengagement-tracker.html | On demand | 214 accounts, Software Missing Capabilities, since July 2025, includes Reason Lost Detail from SF |

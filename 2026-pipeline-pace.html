@@ -1,0 +1,423 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>2026 Pipeline Pace</title>
+<link href="https://fonts.googleapis.com/css2?family=Open+Sans:wght@400;600;700;800&family=Montserrat:wght@700;800;900&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg:#0a1628;
+  --panel:#0f2339;
+  --panel2:#132540;
+  --ink:#ffffff;
+  --muted:rgba(255,255,255,.48);
+  --faint:rgba(255,255,255,.08);
+  --teal:#00d4f0;
+  --green:#3ddc97;
+  --gold:#f5a623;
+  --red:#ff5c5c;
+  --purple:#a78bfa;
+}
+* { box-sizing:border-box; }
+body {
+  margin:0;
+  background:
+    radial-gradient(circle at top left, rgba(0,212,240,.14), transparent 34rem),
+    radial-gradient(circle at bottom right, rgba(61,220,151,.10), transparent 30rem),
+    var(--bg);
+  color:var(--ink);
+  font-family:'Open Sans', Arial, sans-serif;
+}
+.stripe { height:4px; background:linear-gradient(90deg,var(--teal),var(--green)); }
+.shell { max-width:1680px; margin:0 auto; padding:26px 34px 38px; }
+.topbar { display:flex; justify-content:space-between; align-items:flex-end; gap:24px; margin-bottom:20px; }
+.eyebrow { color:var(--teal); font-size:11px; font-weight:800; letter-spacing:2px; text-transform:uppercase; }
+h1 { margin:6px 0 0; font-family:Montserrat, sans-serif; font-size:38px; line-height:1.05; letter-spacing:0; }
+.subtitle { color:var(--muted); font-size:14px; margin-top:8px; }
+.stamp { text-align:right; color:rgba(255,255,255,.32); font-size:12px; line-height:1.5; }
+.kpis { display:grid; grid-template-columns:repeat(4,minmax(0,1fr)); gap:12px; margin-bottom:16px; }
+.kpi, .month-card, .table-shell, .insight {
+  background:rgba(15,35,57,.94);
+  border:1px solid rgba(255,255,255,.08);
+  border-radius:8px;
+  box-shadow:0 18px 50px rgba(0,0,0,.24);
+}
+.kpi { padding:16px; position:relative; overflow:hidden; }
+.kpi:before { content:""; position:absolute; left:0; right:0; top:0; height:3px; background:var(--accent,var(--teal)); }
+.kpi-label { color:var(--muted); font-size:10px; font-weight:800; letter-spacing:1.5px; text-transform:uppercase; }
+.kpi-value { margin-top:8px; font-family:Montserrat, sans-serif; font-size:32px; font-weight:900; }
+.kpi-sub { color:rgba(255,255,255,.36); font-size:12px; margin-top:4px; }
+.month-grid { display:grid; grid-template-columns:repeat(6,minmax(0,1fr)); gap:12px; margin-bottom:20px; }
+.month-card { padding:15px; min-height:172px; }
+.month-card.mtd { border-color:rgba(0,212,240,.28); }
+.month-card.upcoming { opacity:.64; }
+.month-top { display:flex; justify-content:space-between; align-items:flex-start; gap:10px; }
+.month-label { font-size:12px; font-weight:900; letter-spacing:1.2px; text-transform:uppercase; color:rgba(255,255,255,.72); }
+.month-status { margin-top:4px; display:inline-flex; padding:2px 8px; border-radius:999px; background:rgba(0,212,240,.09); color:var(--teal); font-size:9px; font-weight:900; letter-spacing:1px; text-transform:uppercase; }
+.month-value { font-family:Montserrat, sans-serif; font-size:24px; font-weight:900; color:var(--teal); text-align:right; }
+.month-meta { color:rgba(255,255,255,.45); font-size:12px; margin-top:8px; }
+.month-track { height:7px; background:rgba(255,255,255,.07); border-radius:999px; overflow:hidden; margin-top:11px; }
+.month-track span { display:block; height:100%; border-radius:999px; background:linear-gradient(90deg,var(--teal),var(--green)); }
+.won-block { margin-top:11px; padding-top:10px; border-top:1px solid rgba(255,255,255,.07); display:grid; grid-template-columns:1fr auto; gap:2px 8px; align-items:baseline; }
+.won-block span { color:rgba(255,255,255,.38); font-size:10px; font-weight:800; text-transform:uppercase; letter-spacing:1px; }
+.won-block strong { color:var(--green); font-family:Montserrat, sans-serif; font-size:15px; }
+.won-block em { grid-column:1 / -1; color:rgba(255,255,255,.32); font-size:10px; font-style:normal; }
+.delta { margin-top:8px; color:var(--green); font-size:11px; font-weight:800; }
+.delta.down { color:var(--red); }
+.delta.muted { color:rgba(255,255,255,.28); }
+.section-head { display:flex; align-items:flex-end; justify-content:space-between; gap:16px; margin:22px 0 10px; }
+.section-head h2 { margin:0; font-family:Montserrat, sans-serif; font-size:20px; letter-spacing:0; }
+.section-head p { margin:4px 0 0; color:var(--muted); font-size:13px; }
+.table-shell { overflow:auto; }
+table { width:100%; min-width:1320px; border-collapse:collapse; font-size:11px; }
+th { background:rgba(0,212,240,.08); color:rgba(255,255,255,.58); font-size:10px; font-weight:900; text-transform:uppercase; letter-spacing:1.2px; }
+th, td { padding:9px 10px; text-align:center; border-bottom:1px solid rgba(255,255,255,.06); border-left:1px solid rgba(255,255,255,.04); }
+th:first-child, td:first-child { position:sticky; left:0; z-index:2; text-align:left; border-left:0; background:#0f2339; }
+th:first-child { background:#102842; color:var(--teal); }
+.row-name { min-width:150px; font-weight:900; color:#fff; }
+.muted { color:rgba(255,255,255,.48); }
+.source-table table { min-width:1040px; }
+.insight { margin-top:20px; padding:17px 20px; display:flex; justify-content:space-between; gap:18px; align-items:center; }
+.insight-text { color:rgba(255,255,255,.68); font-size:13px; line-height:1.5; }
+.insight-text strong { color:var(--green); }
+.insight-stats { display:flex; gap:0; flex-shrink:0; }
+.stat { padding:0 18px; border-left:1px solid rgba(255,255,255,.08); text-align:center; }
+.stat-value { font-family:Montserrat, sans-serif; font-size:22px; font-weight:900; color:var(--teal); }
+.stat-label { color:rgba(255,255,255,.32); font-size:9px; font-weight:800; letter-spacing:1px; text-transform:uppercase; margin-top:3px; }
+@media (max-width:1180px) {
+  .shell { padding:20px; }
+  .topbar { display:block; }
+  .stamp { text-align:left; margin-top:12px; }
+  .kpis { grid-template-columns:repeat(2,minmax(0,1fr)); }
+  .month-grid { grid-template-columns:repeat(3,minmax(0,1fr)); }
+  .insight { display:block; }
+  .insight-stats { margin-top:14px; }
+}
+@media (max-width:680px) {
+  h1 { font-size:29px; }
+  .kpis, .month-grid { grid-template-columns:1fr; }
+  .insight-stats { display:grid; grid-template-columns:1fr; gap:12px; }
+  .stat { border-left:0; padding:0; text-align:left; }
+}
+</style>
+</head>
+<body>
+<div class="stripe"></div>
+<main class="shell">
+  <header class="topbar">
+    <div>
+      <div class="eyebrow">Pipeline Trends</div>
+      <h1>2026 Pipeline Pace</h1>
+      <div class="subtitle">Month-over-month opportunities created, pipeline MRR, won MRR, product mix, and source mix through 2026.</div>
+    </div>
+    <div class="stamp">
+      Refreshed Jun 1, 2026 12:27 PM ET<br>
+      Source: Salesforce Opportunity CreatedDate and CloseDate
+    </div>
+  </header>
+
+  <section class="kpis">
+    <div class="kpi" style="--accent:var(--teal)"><div class="kpi-label">YTD Pipeline Created</div><div class="kpi-value">$855K</div><div class="kpi-sub">1,144 opportunities created</div></div>
+    <div class="kpi" style="--accent:var(--green)"><div class="kpi-label">YTD Closed Won MRR</div><div class="kpi-value">$98K</div><div class="kpi-sub">Closed-won in calendar 2026</div></div>
+    <div class="kpi" style="--accent:var(--gold)"><div class="kpi-label">Current Run Rate</div><div class="kpi-value">$1.7M</div><div class="kpi-sub">Annualized from active 2026 months</div></div>
+    <div class="kpi" style="--accent:var(--purple)"><div class="kpi-label">Best Created Month</div><div class="kpi-value">January</div><div class="kpi-sub">$231K pipeline created</div></div>
+  </section>
+
+  <section class="month-grid">
+    
+            <section class="month-card final">
+              <div class="month-top">
+                <div>
+                  <div class="month-label">January</div>
+                  <div class="month-status">Final</div>
+                </div>
+                <div class="month-value">$231K</div>
+              </div>
+              <div class="month-meta">288 opps created</div>
+              <div class="month-track"><span style="width:100.0%"></span></div>
+              <div class="won-block">
+                <span>Won MRR</span>
+                <strong>$21K</strong>
+                <em>8% win rate</em>
+              </div>
+              
+            </section>
+
+            <section class="month-card final">
+              <div class="month-top">
+                <div>
+                  <div class="month-label">February</div>
+                  <div class="month-status">Final</div>
+                </div>
+                <div class="month-value">$169K</div>
+              </div>
+              <div class="month-meta">225 opps created</div>
+              <div class="month-track"><span style="width:72.9%"></span></div>
+              <div class="won-block">
+                <span>Won MRR</span>
+                <strong>$14K</strong>
+                <em>13% win rate</em>
+              </div>
+              <div class="delta down">-$63K vs prior month</div>
+            </section>
+
+            <section class="month-card final">
+              <div class="month-top">
+                <div>
+                  <div class="month-label">March</div>
+                  <div class="month-status">Final</div>
+                </div>
+                <div class="month-value">$167K</div>
+              </div>
+              <div class="month-meta">219 opps created</div>
+              <div class="month-track"><span style="width:72.2%"></span></div>
+              <div class="won-block">
+                <span>Won MRR</span>
+                <strong>$32K</strong>
+                <em>22% win rate</em>
+              </div>
+              <div class="delta down">-$1K vs prior month</div>
+            </section>
+
+            <section class="month-card final">
+              <div class="month-top">
+                <div>
+                  <div class="month-label">April</div>
+                  <div class="month-status">Final</div>
+                </div>
+                <div class="month-value">$162K</div>
+              </div>
+              <div class="month-meta">200 opps created</div>
+              <div class="month-track"><span style="width:70.0%"></span></div>
+              <div class="won-block">
+                <span>Won MRR</span>
+                <strong>$20K</strong>
+                <em>19% win rate</em>
+              </div>
+              <div class="delta down">-$5K vs prior month</div>
+            </section>
+
+            <section class="month-card final">
+              <div class="month-top">
+                <div>
+                  <div class="month-label">May</div>
+                  <div class="month-status">Final</div>
+                </div>
+                <div class="month-value">$125K</div>
+              </div>
+              <div class="month-meta">208 opps created</div>
+              <div class="month-track"><span style="width:54.0%"></span></div>
+              <div class="won-block">
+                <span>Won MRR</span>
+                <strong>$11K</strong>
+                <em>13% win rate</em>
+              </div>
+              <div class="delta down">-$37K vs prior month</div>
+            </section>
+
+            <section class="month-card mtd">
+              <div class="month-top">
+                <div>
+                  <div class="month-label">June</div>
+                  <div class="month-status">MTD</div>
+                </div>
+                <div class="month-value">$1K</div>
+              </div>
+              <div class="month-meta">4 opps created</div>
+              <div class="month-track"><span style="width:0.5%"></span></div>
+              <div class="won-block">
+                <span>Won MRR</span>
+                <strong>$0</strong>
+                <em>0% win rate</em>
+              </div>
+              <div class="delta down">-$124K vs prior month</div>
+            </section>
+
+            <section class="month-card upcoming">
+              <div class="month-top">
+                <div>
+                  <div class="month-label">July</div>
+                  <div class="month-status">Upcoming</div>
+                </div>
+                <div class="month-value">$0</div>
+              </div>
+              <div class="month-meta">0 opps created</div>
+              <div class="month-track"><span style="width:0.0%"></span></div>
+              <div class="won-block">
+                <span>Won MRR</span>
+                <strong>$0</strong>
+                <em>0% win rate</em>
+              </div>
+              <div class="delta muted">No 2026 data yet</div>
+            </section>
+
+            <section class="month-card upcoming">
+              <div class="month-top">
+                <div>
+                  <div class="month-label">August</div>
+                  <div class="month-status">Upcoming</div>
+                </div>
+                <div class="month-value">$0</div>
+              </div>
+              <div class="month-meta">0 opps created</div>
+              <div class="month-track"><span style="width:0.0%"></span></div>
+              <div class="won-block">
+                <span>Won MRR</span>
+                <strong>$0</strong>
+                <em>0% win rate</em>
+              </div>
+              <div class="delta muted">No 2026 data yet</div>
+            </section>
+
+            <section class="month-card upcoming">
+              <div class="month-top">
+                <div>
+                  <div class="month-label">September</div>
+                  <div class="month-status">Upcoming</div>
+                </div>
+                <div class="month-value">$0</div>
+              </div>
+              <div class="month-meta">0 opps created</div>
+              <div class="month-track"><span style="width:0.0%"></span></div>
+              <div class="won-block">
+                <span>Won MRR</span>
+                <strong>$0</strong>
+                <em>0% win rate</em>
+              </div>
+              <div class="delta muted">No 2026 data yet</div>
+            </section>
+
+            <section class="month-card upcoming">
+              <div class="month-top">
+                <div>
+                  <div class="month-label">October</div>
+                  <div class="month-status">Upcoming</div>
+                </div>
+                <div class="month-value">$0</div>
+              </div>
+              <div class="month-meta">0 opps created</div>
+              <div class="month-track"><span style="width:0.0%"></span></div>
+              <div class="won-block">
+                <span>Won MRR</span>
+                <strong>$0</strong>
+                <em>0% win rate</em>
+              </div>
+              <div class="delta muted">No 2026 data yet</div>
+            </section>
+
+            <section class="month-card upcoming">
+              <div class="month-top">
+                <div>
+                  <div class="month-label">November</div>
+                  <div class="month-status">Upcoming</div>
+                </div>
+                <div class="month-value">$0</div>
+              </div>
+              <div class="month-meta">0 opps created</div>
+              <div class="month-track"><span style="width:0.0%"></span></div>
+              <div class="won-block">
+                <span>Won MRR</span>
+                <strong>$0</strong>
+                <em>0% win rate</em>
+              </div>
+              <div class="delta muted">No 2026 data yet</div>
+            </section>
+
+            <section class="month-card upcoming">
+              <div class="month-top">
+                <div>
+                  <div class="month-label">December</div>
+                  <div class="month-status">Upcoming</div>
+                </div>
+                <div class="month-value">$0</div>
+              </div>
+              <div class="month-meta">0 opps created</div>
+              <div class="month-track"><span style="width:0.0%"></span></div>
+              <div class="won-block">
+                <span>Won MRR</span>
+                <strong>$0</strong>
+                <em>0% win rate</em>
+              </div>
+              <div class="delta muted">No 2026 data yet</div>
+            </section>
+  </section>
+
+  <section class="section-head">
+    <div>
+      <h2>Pipeline by Product</h2>
+      <p>Opportunity count and created MRR by product for each 2026 month.</p>
+    </div>
+  </section>
+  
+    <div class="table-shell">
+      <table>
+        <thead><tr><th>Product</th><th>Jan</th><th>MRR</th><th>Feb</th><th>MRR</th><th>Mar</th><th>MRR</th><th>Apr</th><th>MRR</th><th>May</th><th>MRR</th><th>Jun</th><th>MRR</th><th>Jul</th><th>MRR</th><th>Aug</th><th>MRR</th><th>Sep</th><th>MRR</th><th>Oct</th><th>MRR</th><th>Nov</th><th>MRR</th><th>Dec</th><th>MRR</th></tr></thead>
+        <tbody>
+            <tr>
+              <td class="row-name" style="color:#00d4f0">PSA 2.0</td>
+              <td>208</td><td class="muted">$179K</td><td>154</td><td class="muted">$131K</td><td>132</td><td class="muted">$117K</td><td>129</td><td class="muted">$115K</td><td>125</td><td class="muted">$107K</td><td>2</td><td class="muted">$1K</td><td>0</td><td class="muted">$0</td><td>0</td><td class="muted">$0</td><td>0</td><td class="muted">$0</td><td>0</td><td class="muted">$0</td><td>0</td><td class="muted">$0</td><td>0</td><td class="muted">$0</td>
+            </tr>
+            <tr>
+              <td class="row-name" style="color:#3ddc97">Billing / Odin</td>
+              <td>40</td><td class="muted">$44K</td><td>37</td><td class="muted">$25K</td><td>53</td><td class="muted">$45K</td><td>34</td><td class="muted">$41K</td><td>23</td><td class="muted">$15K</td><td>2</td><td class="muted">$0</td><td>0</td><td class="muted">$0</td><td>0</td><td class="muted">$0</td><td>0</td><td class="muted">$0</td><td>0</td><td class="muted">$0</td><td>0</td><td class="muted">$0</td><td>0</td><td class="muted">$0</td>
+            </tr>
+            <tr>
+              <td class="row-name" style="color:#f5a623">Payments AR</td>
+              <td>22</td><td class="muted">$3K</td><td>20</td><td class="muted">$4K</td><td>18</td><td class="muted">$3K</td><td>25</td><td class="muted">$5K</td><td>19</td><td class="muted">$2K</td><td>0</td><td class="muted">$0</td><td>0</td><td class="muted">$0</td><td>0</td><td class="muted">$0</td><td>0</td><td class="muted">$0</td><td>0</td><td class="muted">$0</td><td>0</td><td class="muted">$0</td><td>0</td><td class="muted">$0</td>
+            </tr>
+            <tr>
+              <td class="row-name" style="color:#a78bfa">Cyber Protect</td>
+              <td>15</td><td class="muted">$4K</td><td>6</td><td class="muted">$5K</td><td>5</td><td class="muted">$2K</td><td>2</td><td class="muted">$350</td><td>3</td><td class="muted">$1K</td><td>0</td><td class="muted">$0</td><td>0</td><td class="muted">$0</td><td>0</td><td class="muted">$0</td><td>0</td><td class="muted">$0</td><td>0</td><td class="muted">$0</td><td>0</td><td class="muted">$0</td><td>0</td><td class="muted">$0</td>
+            </tr>
+            <tr>
+              <td class="row-name" style="color:#94a3b8">Other / Not Set</td>
+              <td>3</td><td class="muted">$1K</td><td>8</td><td class="muted">$4K</td><td>11</td><td class="muted">$0</td><td>10</td><td class="muted">$0</td><td>38</td><td class="muted">$0</td><td>0</td><td class="muted">$0</td><td>0</td><td class="muted">$0</td><td>0</td><td class="muted">$0</td><td>0</td><td class="muted">$0</td><td>0</td><td class="muted">$0</td><td>0</td><td class="muted">$0</td><td>0</td><td class="muted">$0</td>
+            </tr></tbody>
+      </table>
+    </div>
+
+  <section class="section-head">
+    <div>
+      <h2>Pipeline by Marketing Source</h2>
+      <p>Opportunity count by source bucket, using marketing sub-source where populated and lead direction as fallback.</p>
+    </div>
+  </section>
+  
+    <div class="table-shell source-table">
+      <table>
+        <thead><tr><th>Source</th><th>Jan</th><th>Feb</th><th>Mar</th><th>Apr</th><th>May</th><th>Jun</th><th>Jul</th><th>Aug</th><th>Sep</th><th>Oct</th><th>Nov</th><th>Dec</th></tr></thead>
+        <tbody>
+            <tr>
+              <td class="row-name">Sales</td>
+              <td>187</td><td>130</td><td>133</td><td>117</td><td>125</td><td>2</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td>
+            </tr>
+            <tr>
+              <td class="row-name">Rev.io Summit</td>
+              <td>0</td><td>0</td><td>0</td><td>6</td><td>1</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td>
+            </tr>
+            <tr>
+              <td class="row-name">Partner / Channel</td>
+              <td>2</td><td>8</td><td>6</td><td>12</td><td>7</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td>
+            </tr>
+            <tr>
+              <td class="row-name">Other / Not Set</td>
+              <td>99</td><td>87</td><td>80</td><td>65</td><td>75</td><td>2</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td>
+            </tr></tbody>
+      </table>
+    </div>
+
+  <section class="insight">
+    <div class="insight-text">
+      The page is the standalone version of slide 5 from the May update deck, extended across all 12 months of 2026.
+      <strong>Future months stay visible</strong> so the team can watch pace fill in as the year progresses.
+    </div>
+    <div class="insight-stats">
+      <div class="stat"><div class="stat-value">$142K</div><div class="stat-label">Avg Active Month</div></div>
+      <div class="stat"><div class="stat-value">6</div><div class="stat-label">Months With Data</div></div>
+      <div class="stat"><div class="stat-value">$855K</div><div class="stat-label">YTD Created</div></div>
+    </div>
+  </section>
+</main>
+</body>
+</html>
