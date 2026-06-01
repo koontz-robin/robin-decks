@@ -1,0 +1,744 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Profit Shield Demo Guide</title>
+<style>
+  :root {
+    --bg: #050505;
+    --surface: #12100b;
+    --surface2: #0b0a07;
+    --surface3: #1a160d;
+    --border: #342916;
+    --border-strong: #6f561d;
+    --gold: #f6c343;
+    --gold2: #d99a1e;
+    --yellow: #ffe08a;
+    --text: #f5f1e8;
+    --muted: #a99d87;
+    --soft: #756b58;
+    --red: #ef5b4a;
+    --green: #66d18f;
+  }
+  * { margin:0; padding:0; box-sizing:border-box; }
+  html { scroll-behavior:smooth; }
+  body {
+    min-height:100vh;
+    display:flex;
+    background:
+      radial-gradient(circle at 85% 0%, rgba(246,195,67,0.12), transparent 30%),
+      linear-gradient(180deg, #080806 0%, #050505 45%, #020202 100%);
+    color:var(--text);
+    font-family:"Segoe UI", system-ui, -apple-system, BlinkMacSystemFont, sans-serif;
+  }
+  .sidebar {
+    width:264px;
+    background:rgba(11,10,7,0.96);
+    border-right:1px solid var(--border);
+    position:fixed;
+    top:0;
+    left:0;
+    height:100vh;
+    overflow-y:auto;
+    padding:24px 0;
+    z-index:10;
+  }
+  .sidebar-logo {
+    padding:0 20px 20px;
+    border-bottom:1px solid var(--border);
+    margin-bottom:16px;
+  }
+  .mark {
+    width:34px;
+    height:34px;
+    border:1px solid rgba(246,195,67,0.55);
+    border-radius:8px;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    color:var(--gold);
+    font-weight:900;
+    font-size:18px;
+    margin-bottom:12px;
+    background:linear-gradient(145deg, rgba(246,195,67,0.12), rgba(246,195,67,0.02));
+  }
+  .sidebar-logo .brand { font-size:18px; font-weight:850; letter-spacing:0.3px; color:#fff; }
+  .sidebar-logo .title { font-size:10px; font-weight:800; letter-spacing:2px; text-transform:uppercase; color:var(--gold); margin-top:6px; }
+  .nav-section { padding:0 12px; margin-bottom:8px; }
+  .nav-label { font-size:9px; font-weight:800; letter-spacing:2px; text-transform:uppercase; color:var(--soft); padding:8px 8px 5px; }
+  .nav-item {
+    display:flex;
+    align-items:center;
+    gap:8px;
+    padding:8px 10px;
+    border-radius:7px;
+    font-size:13px;
+    color:var(--muted);
+    text-decoration:none;
+    cursor:pointer;
+    transition:all .15s ease;
+  }
+  .nav-item:hover, .nav-item.active { background:rgba(246,195,67,0.09); color:var(--text); }
+  .nav-item.active { color:var(--gold); }
+  .nav-step {
+    display:inline-flex;
+    align-items:center;
+    justify-content:center;
+    width:21px;
+    height:21px;
+    border-radius:50%;
+    font-size:10px;
+    font-weight:800;
+    background:var(--surface);
+    border:1px solid var(--border);
+    color:var(--muted);
+    flex-shrink:0;
+  }
+  .nav-item.active .nav-step { background:rgba(246,195,67,0.13); border-color:var(--gold); color:var(--gold); }
+
+  .main { margin-left:264px; flex:1; padding:48px 64px 64px; max-width:1040px; }
+  .hero { margin-bottom:46px; padding-bottom:32px; border-bottom:1px solid var(--border); }
+  .hero-tag, .section-tag {
+    font-size:10px;
+    font-weight:850;
+    letter-spacing:2px;
+    text-transform:uppercase;
+    color:var(--gold);
+    margin-bottom:10px;
+  }
+  .hero h1 { font-size:42px; font-weight:900; line-height:1.08; color:#fff; margin-bottom:14px; }
+  .hero h1 span { color:var(--gold); }
+  .hero p, .section .lead { font-size:15px; color:var(--muted); line-height:1.75; max-width:720px; }
+  .flow { display:flex; flex-wrap:wrap; gap:7px; margin-top:24px; align-items:center; }
+  .flow-pill { background:var(--surface); border:1px solid var(--border); border-radius:20px; padding:6px 12px; font-size:11px; font-weight:700; color:var(--muted); }
+  .flow-pill.highlight { color:var(--gold); border-color:rgba(246,195,67,0.45); background:rgba(246,195,67,0.08); }
+  .flow-arrow { color:var(--border-strong); font-size:14px; }
+
+  .section { display:none; }
+  .section.active { display:block; }
+  .step-badge { display:inline-flex; align-items:center; gap:8px; background:rgba(246,195,67,0.08); border:1px solid rgba(246,195,67,0.2); border-radius:20px; padding:5px 14px; margin-bottom:20px; }
+  .step-badge span { font-size:10px; font-weight:800; letter-spacing:1px; text-transform:uppercase; color:var(--gold); }
+  .section-header { margin-bottom:26px; }
+  .section h2 { font-size:30px; font-weight:900; color:#fff; margin-bottom:8px; }
+  h3 { font-size:18px; font-weight:800; color:#fff; margin:28px 0 10px; }
+  h4 { font-size:12px; font-weight:800; color:var(--gold); text-transform:uppercase; letter-spacing:1px; margin:20px 0 8px; }
+  p { font-size:14px; color:var(--muted); line-height:1.8; margin-bottom:14px; }
+  strong { color:var(--text); }
+
+  .purpose {
+    background:rgba(26,22,13,0.9);
+    border:1px solid var(--border);
+    border-left:3px solid var(--gold);
+    border-radius:8px;
+    padding:15px 18px;
+    margin-bottom:24px;
+  }
+  .purpose-label, .script-label, .callout-label, .card-label {
+    font-size:9px;
+    font-weight:850;
+    letter-spacing:2px;
+    text-transform:uppercase;
+    color:var(--gold);
+    margin-bottom:7px;
+  }
+  .purpose p { margin:0; color:var(--text); font-size:13px; }
+  .script {
+    background:#000;
+    border:1px solid var(--border);
+    border-left:3px solid var(--gold);
+    border-radius:8px;
+    padding:16px 20px;
+    margin:16px 0;
+    font-family:"Consolas","SFMono-Regular",monospace;
+    font-size:13px;
+    color:#f7e4a2;
+    line-height:1.8;
+    white-space:pre-wrap;
+  }
+  .callout {
+    background:rgba(246,195,67,0.065);
+    border:1px solid rgba(246,195,67,0.22);
+    border-radius:10px;
+    padding:16px 20px;
+    margin:20px 0;
+  }
+  .callout p { margin:0; color:var(--text); font-size:13px; }
+  .callout.red { background:rgba(239,91,74,0.07); border-color:rgba(239,91,74,0.25); }
+  .callout.red .callout-label { color:var(--red); }
+  .callout.green { background:rgba(102,209,143,0.06); border-color:rgba(102,209,143,0.24); }
+  .callout.green .callout-label { color:var(--green); }
+  ul { padding-left:0; margin:12px 0 18px; list-style:none; }
+  ul li { font-size:14px; color:var(--muted); line-height:1.8; margin-bottom:6px; padding-left:20px; position:relative; }
+  ul li::before { content:"→"; position:absolute; left:0; color:var(--gold); font-size:12px; }
+  ul li strong { color:var(--text); }
+  .card-grid { display:grid; grid-template-columns:repeat(2,1fr); gap:14px; margin:20px 0; }
+  .card-grid.three { grid-template-columns:repeat(3,1fr); }
+  .card { background:rgba(18,16,11,0.92); border:1px solid var(--border); border-radius:10px; padding:16px; }
+  .card p { margin:0; font-size:13px; }
+  .screenshot-slot {
+    margin:22px 0;
+    min-height:250px;
+    border:1px dashed rgba(246,195,67,0.42);
+    border-radius:12px;
+    background:
+      linear-gradient(135deg, rgba(246,195,67,0.08), rgba(246,195,67,0.015)),
+      rgba(18,16,11,0.82);
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    padding:22px;
+    text-align:center;
+  }
+  .screenshot-slot img {
+    width:100%;
+    display:block;
+    border-radius:8px;
+    border:1px solid var(--border);
+  }
+  .screenshot-slot .placeholder {
+    max-width:520px;
+  }
+  .screenshot-slot .placeholder-title {
+    font-size:12px;
+    font-weight:850;
+    letter-spacing:2px;
+    text-transform:uppercase;
+    color:var(--gold);
+    margin-bottom:8px;
+  }
+  .screenshot-slot .placeholder-path {
+    font-family:"Consolas","SFMono-Regular",monospace;
+    font-size:13px;
+    color:var(--yellow);
+    margin-bottom:8px;
+  }
+  .screenshot-slot .placeholder-copy {
+    font-size:12px;
+    color:var(--muted);
+    line-height:1.6;
+  }
+  table { width:100%; border-collapse:collapse; margin:16px 0; background:rgba(18,16,11,0.72); border:1px solid var(--border); border-radius:10px; overflow:hidden; }
+  th { font-size:10px; font-weight:850; text-transform:uppercase; letter-spacing:1px; color:var(--gold); padding:11px 14px; text-align:left; background:rgba(246,195,67,0.08); border-bottom:1px solid var(--border); }
+  td { padding:11px 14px; font-size:13px; color:var(--muted); border-bottom:1px solid rgba(52,41,22,0.6); vertical-align:top; }
+  td:first-child { color:var(--text); font-weight:700; white-space:nowrap; }
+  tr:last-child td { border-bottom:none; }
+  .nav-buttons { display:flex; justify-content:space-between; margin-top:46px; padding-top:24px; border-top:1px solid var(--border); }
+  .btn { display:inline-flex; align-items:center; gap:8px; padding:10px 18px; border-radius:8px; font-size:13px; font-weight:750; cursor:pointer; border:1px solid var(--border); background:var(--surface); color:var(--muted); transition:all .15s; }
+  .btn:hover { border-color:var(--gold); color:var(--gold); }
+  .btn.primary { background:linear-gradient(135deg, #f6c343, #c98712); border-color:#f6c343; color:#110d04; }
+  .btn.primary:hover { color:#050505; filter:brightness(1.08); }
+  .btn-spacer { flex:1; }
+  .refresh {
+    position:fixed;
+    top:12px;
+    right:16px;
+    z-index:9999;
+  }
+  .refresh button {
+    background:#100d08;
+    color:var(--gold);
+    border:1px solid var(--border-strong);
+    border-radius:8px;
+    padding:7px 14px;
+    font-size:13px;
+    cursor:pointer;
+    box-shadow:0 2px 12px rgba(0,0,0,0.35);
+  }
+  @media (max-width:860px) {
+    body { display:block; }
+    .sidebar { position:relative; width:100%; height:auto; }
+    .main { margin-left:0; padding:32px 22px 48px; }
+    .card-grid, .card-grid.three { grid-template-columns:1fr; }
+    .hero h1 { font-size:34px; }
+  }
+</style>
+</head>
+<body>
+<div class="refresh"><button onclick="window.location.reload(true)">↻ Refresh</button></div>
+
+<nav class="sidebar">
+  <div class="sidebar-logo">
+    <div class="mark">PS</div>
+    <div class="brand">Profit Shield</div>
+    <div class="title">Demo Guide</div>
+  </div>
+  <div class="nav-section">
+    <div class="nav-label">Overview</div>
+    <a class="nav-item active" onclick="show('overview')"><span class="nav-step">★</span> Demo Flow</a>
+  </div>
+  <div class="nav-section">
+    <div class="nav-label">The Demo</div>
+    <a class="nav-item" onclick="show('step1')"><span class="nav-step">1</span> Set the Frame</a>
+    <a class="nav-item" onclick="show('step2')"><span class="nav-step">2</span> Filters & Scope</a>
+    <a class="nav-item" onclick="show('step3')"><span class="nav-step">3</span> Threat Summary</a>
+    <a class="nav-item" onclick="show('step4')"><span class="nav-step">4</span> Platform Trends</a>
+    <a class="nav-item" onclick="show('step5')"><span class="nav-step">5</span> Threat List</a>
+    <a class="nav-item" onclick="show('step6')"><span class="nav-step">6</span> Listing Details</a>
+    <a class="nav-item" onclick="show('step7')"><span class="nav-step">7</span> High-Risk Properties</a>
+    <a class="nav-item" onclick="show('step8')"><span class="nav-step">8</span> Threat Map</a>
+    <a class="nav-item" onclick="show('step9')"><span class="nav-step">9</span> Reports</a>
+    <a class="nav-item" onclick="show('step10')"><span class="nav-step">10</span> ShowMojo Tie-In</a>
+    <a class="nav-item" onclick="show('step11')"><span class="nav-step">11</span> Approval Logic</a>
+    <a class="nav-item" onclick="show('wrap')"><span class="nav-step">✓</span> Close</a>
+  </div>
+</nav>
+
+<main class="main">
+  <div id="overview" class="section active">
+    <div class="hero">
+      <div class="hero-tag">Fraud Prevention Platform</div>
+      <h1>Rental Scam <span>Demo Guide</span></h1>
+      <p>A tighter talk track for the dashboard portion of the call. The goal is to show how Profit Shield finds impersonated listings, removes them, and gives operators visibility into the properties being targeted most often.</p>
+      <div class="flow">
+        <span class="flow-pill highlight">Frame</span>
+        <span class="flow-arrow">→</span>
+        <span class="flow-pill">Dashboard</span>
+        <span class="flow-arrow">→</span>
+        <span class="flow-pill">Threats</span>
+        <span class="flow-arrow">→</span>
+        <span class="flow-pill">Details</span>
+        <span class="flow-arrow">→</span>
+        <span class="flow-pill">High Risk</span>
+        <span class="flow-arrow">→</span>
+        <span class="flow-pill highlight">Next Step</span>
+      </div>
+    </div>
+
+    <h3>Demo at a Glance</h3>
+    <table>
+      <thead><tr><th>Step</th><th>Area</th><th>Key Message</th></tr></thead>
+      <tbody>
+        <tr><td>1</td><td>Set the frame</td><td>This is a background trust-and-safety layer for rental listings.</td></tr>
+        <tr><td>2</td><td>Filters</td><td>Market, submarket, and date range control the full dashboard.</td></tr>
+        <tr><td>3</td><td>Threat summary</td><td>Found, removed, pending removal, and needs-action items are separated clearly.</td></tr>
+        <tr><td>4</td><td>Platform trends</td><td>Facebook, Craigslist, TikTok, and other channels show where scams are appearing.</td></tr>
+        <tr><td>5</td><td>Threat list</td><td>Every suspicious listing has status, timing, URL, and match method.</td></tr>
+        <tr><td>6</td><td>Details</td><td>Compare legitimate listing data to the scam screenshot and source.</td></tr>
+        <tr><td>7</td><td>High-risk properties</td><td>Repeatedly targeted units are operational warning signals.</td></tr>
+        <tr><td>8</td><td>Map</td><td>Geographic view helps identify market-level fraud concentration.</td></tr>
+        <tr><td>9</td><td>Reports</td><td>Monthly reports summarize what was found, removed, and still needs review.</td></tr>
+      </tbody>
+    </table>
+
+    <div class="callout green">
+      <div class="callout-label">Positioning</div>
+      <p><strong>Use the antivirus analogy.</strong> Profit Shield runs in the background, catches impersonation attempts, removes the obvious scams, and asks for confirmation only when a legitimate listing could plausibly exist.</p>
+    </div>
+    <div class="nav-buttons">
+      <span class="btn-spacer"></span>
+      <button class="btn primary" onclick="show('step1')">Start Demo → Step 1</button>
+    </div>
+  </div>
+
+  <div id="step1" class="section">
+    <div class="step-badge"><span>Step 1</span></div>
+    <div class="section-header">
+      <div class="section-tag">Opening</div>
+      <h2>Set the Frame</h2>
+      <p class="lead">Before clicking around, explain what the dashboard is meant to prove: detection, removal, visibility, and reduced operational chaos.</p>
+    </div>
+    <div class="purpose">
+      <div class="purpose-label">Purpose</div>
+      <p>Make the demo feel relevant to the prospect's real problem: copied listings, fake deposits, self-showing access, missing keys, and brand damage.</p>
+    </div>
+    <div class="screenshot-slot">
+      <div class="placeholder">
+        <div class="placeholder-title">Screenshot Slot</div>
+        <div class="placeholder-path">profit-shield-step1-frame.png</div>
+        <div class="placeholder-copy">Add a clean opening dashboard or title-state screenshot here.</div>
+      </div>
+    </div>
+    <div class="script-label">Talk Track</div>
+    <div class="script">"Let me show you what this looks like in practice. This is the client dashboard, using live client data. The goal is to give your team a clear view of where impersonation risk is showing up, what has already been removed, and which properties need closer attention."</div>
+    <h4>Keep It Tight</h4>
+    <ul>
+      <li>Do not over-explain machine learning yet.</li>
+      <li>Anchor the demo to the prospect's scam story.</li>
+      <li>Use plain language: find, verify, remove, report.</li>
+    </ul>
+    <div class="nav-buttons">
+      <button class="btn" onclick="show('overview')">← Overview</button>
+      <button class="btn primary" onclick="show('step2')">Step 2 →</button>
+    </div>
+  </div>
+
+  <div id="step2" class="section">
+    <div class="step-badge"><span>Step 2</span></div>
+    <div class="section-header">
+      <div class="section-tag">Dashboard Controls</div>
+      <h2>Filters & Scope</h2>
+      <p class="lead">Start at the top of the dashboard. Show that the view can narrow down by market, submarket, and date range.</p>
+    </div>
+    <div class="script-label">Talk Track</div>
+    <div class="script">"At the top, you can filter by market, submarket, and date range. Those filters control everything underneath, so if you only wanted to look at Chicago, or only the last 30 days, you can narrow the entire dashboard instantly."</div>
+    <div class="screenshot-slot">
+      <div class="placeholder">
+        <div class="placeholder-title">Screenshot Slot</div>
+        <div class="placeholder-path">profit-shield-step2-filters.png</div>
+        <div class="placeholder-copy">Add the top filter bar showing market, submarket, and date range.</div>
+      </div>
+    </div>
+    <div class="card-grid">
+      <div class="card"><div class="card-label">Market</div><p>Useful for regional operators or portfolios spread across multiple cities.</p></div>
+      <div class="card"><div class="card-label">Date Range</div><p>Use last 30 days for active threat activity; expand for trend reviews.</p></div>
+    </div>
+    <div class="nav-buttons">
+      <button class="btn" onclick="show('step1')">← Step 1</button>
+      <button class="btn primary" onclick="show('step3')">Step 3 →</button>
+    </div>
+  </div>
+
+  <div id="step3" class="section">
+    <div class="step-badge"><span>Step 3</span></div>
+    <div class="section-header">
+      <div class="section-tag">Executive View</div>
+      <h2>Threat Summary</h2>
+      <p class="lead">Explain the top-line numbers as an operating dashboard, not just analytics.</p>
+    </div>
+    <div class="script-label">Talk Track</div>
+    <div class="script">"Right here, you can see the threat summary. For this client, in the last month, we found 112 potential threats. Of those, 79 have already been removed, 28 are actively in the removal process, and 5 need additional action."</div>
+    <div class="screenshot-slot">
+      <div class="placeholder">
+        <div class="placeholder-title">Screenshot Slot</div>
+        <div class="placeholder-path">profit-shield-step3-threat-summary.png</div>
+        <div class="placeholder-copy">Add the KPI cards for found, removed, in-process, and needs-action threats.</div>
+      </div>
+    </div>
+    <h4>Definitions</h4>
+    <ul>
+      <li><strong>Removed</strong> — Profit Shield found and took down the fraudulent listing.</li>
+      <li><strong>In process</strong> — Removal is underway with the platform.</li>
+      <li><strong>Needs action</strong> — The listing is suspicious, but the client should confirm before removal.</li>
+      <li><strong>Instant notifications</strong> — Suspicious ads trigger alerts as soon as they are found, so the customer is not waiting for a weekly report to learn there is a problem.</li>
+    </ul>
+    <div class="script-label">Needs-Action Example</div>
+    <div class="script">"A good example would be Zillow. If we know you syndicate legitimate listings to Zillow, and we find the same address and matching images, but it is coming from a different author and listed $1,000 cheaper, we are going to flag that. On traditional listing platforms, we ask for verification before removal so we do not accidentally take down something legitimate."</div>
+    <div class="callout">
+      <div class="callout-label">Key Line</div>
+      <p>"The important part is that your team is not starting from zero. The system has already separated obvious scams from the handful of items that deserve human review."</p>
+    </div>
+    <div class="nav-buttons">
+      <button class="btn" onclick="show('step2')">← Step 2</button>
+      <button class="btn primary" onclick="show('step4')">Step 4 →</button>
+    </div>
+  </div>
+
+  <div id="step4" class="section">
+    <div class="step-badge"><span>Step 4</span></div>
+    <div class="section-header">
+      <div class="section-tag">Where Scams Appear</div>
+      <h2>Platform Trends</h2>
+      <p class="lead">Show which platforms are producing the most impersonation risk.</p>
+    </div>
+    <div class="script-label">Talk Track</div>
+    <div class="script">"Below that, you can see where threats are coming from by platform, market, city, state, and ZIP code. For a lot of our clients, Facebook and Craigslist are consistently high-risk, and TikTok has started becoming a much bigger source of rental scams this year."</div>
+    <div class="screenshot-slot">
+      <div class="placeholder">
+        <div class="placeholder-title">Screenshot Slot</div>
+        <div class="placeholder-path">profit-shield-step4-platform-trends.png</div>
+        <div class="placeholder-copy">Add platform, market, city, state, or ZIP trend charts here.</div>
+      </div>
+    </div>
+    <h4>Why This Matters</h4>
+    <ul>
+      <li>Scammers may use platforms the property manager never posts on.</li>
+      <li>Short-form video and image slideshows make fake rentals feel credible.</li>
+      <li>Platform data helps the operator understand where renters are being misled.</li>
+      <li>Facebook is often the largest source, but Craigslist and TikTok can come in close depending on the client and market.</li>
+      <li>Call out that fraud is moving toward social channels because they do not always require complete addresses or structured listing data.</li>
+    </ul>
+    <div class="nav-buttons">
+      <button class="btn" onclick="show('step3')">← Step 3</button>
+      <button class="btn primary" onclick="show('step5')">Step 5 →</button>
+    </div>
+  </div>
+
+  <div id="step5" class="section">
+    <div class="step-badge"><span>Step 5</span></div>
+    <div class="section-header">
+      <div class="section-tag">Evidence Queue</div>
+      <h2>Threat List</h2>
+      <p class="lead">Move from summary to proof. The list shows the real items behind the metrics.</p>
+    </div>
+    <div class="script-label">Talk Track</div>
+    <div class="script">"Now, if we scroll down, this is the actual threat list. Each row represents a fraudulent or suspicious listing we found. You can see the property address, the market, the platform, how we matched it, when we identified it, removal timing, current status, and a direct link to the listing."</div>
+    <div class="screenshot-slot">
+      <div class="placeholder">
+        <div class="placeholder-title">Screenshot Slot</div>
+        <div class="placeholder-path">profit-shield-step5-threat-list.png</div>
+        <div class="placeholder-copy">Add the table/list of fraudulent or suspicious listings.</div>
+      </div>
+    </div>
+    <h4>Point Out</h4>
+    <ul>
+      <li>Address and market tied to each threat.</li>
+      <li>Platform where the impersonation appeared.</li>
+      <li>Match method, such as image match, text match, or listing similarity.</li>
+      <li>Status and removal timing.</li>
+      <li>Direct URL for review or proof.</li>
+    </ul>
+    <div class="script-label">Example to Use</div>
+    <div class="script">"Here is a typical scam pattern: the legitimate property is listed in Chicago for just under $2,000, and then we find it reposted on Facebook for $1,000 a month. We capture the screenshot as soon as it comes online — in this example, it had only been listed for 38 minutes — and then we move quickly to get it removed."</div>
+    <div class="nav-buttons">
+      <button class="btn" onclick="show('step4')">← Step 4</button>
+      <button class="btn primary" onclick="show('step6')">Step 6 →</button>
+    </div>
+  </div>
+
+  <div id="step6" class="section">
+    <div class="step-badge"><span>Step 6</span></div>
+    <div class="section-header">
+      <div class="section-tag">Listing Review</div>
+      <h2>Listing Details</h2>
+      <p class="lead">Use the detail view to show side-by-side proof of the impersonation.</p>
+    </div>
+    <div class="script-label">Talk Track</div>
+    <div class="script">"If we open the details, you can compare the legitimate listing information we have on file against the suspicious listing. You will also see a screenshot of the scam listing, which is useful because these listings can disappear quickly once removal starts."</div>
+    <div class="screenshot-slot">
+      <div class="placeholder">
+        <div class="placeholder-title">Screenshot Slot</div>
+        <div class="placeholder-path">profit-shield-step6-listing-details.png</div>
+        <div class="placeholder-copy">Add the details drawer/modal comparing legitimate listing data to the scam screenshot.</div>
+      </div>
+    </div>
+    <div class="callout red">
+      <div class="callout-label">Tie to Their Pain</div>
+      <p>"This is especially relevant to what you described with self-showings. If someone copies your listing, posts it elsewhere, and uses your showing flow to create credibility with a renter, this is where we catch that impersonation earlier."</p>
+    </div>
+    <h4>Useful Details to Mention</h4>
+    <ul>
+      <li>Scam screenshots preserve evidence even after removal.</li>
+      <li>Direct links help confirm what a renter may have seen.</li>
+      <li>Price, source, publisher, image, and description differences help determine risk.</li>
+      <li>When the customer marks a suspicious listing as legitimate, the system can learn that publisher/source and avoid flagging the same legitimate source again.</li>
+    </ul>
+    <div class="nav-buttons">
+      <button class="btn" onclick="show('step5')">← Step 5</button>
+      <button class="btn primary" onclick="show('step7')">Step 7 →</button>
+    </div>
+  </div>
+
+  <div id="step7" class="section">
+    <div class="step-badge"><span>Step 7</span></div>
+    <div class="section-header">
+      <div class="section-tag">Operational Signal</div>
+      <h2>High-Risk Properties</h2>
+      <p class="lead">Show that repeated targeting is more than a data point. It can signal real operational risk.</p>
+    </div>
+    <div class="script-label">Talk Track</div>
+    <div class="script">"Another section I would point you to is high-risk properties. These are properties that are being targeted repeatedly. If one building or unit has had eight fake listings in a month, that is a strong signal that it needs extra attention."</div>
+    <div class="screenshot-slot">
+      <div class="placeholder">
+        <div class="placeholder-title">Screenshot Slot</div>
+        <div class="placeholder-path">profit-shield-step7-high-risk-properties.png</div>
+        <div class="placeholder-copy">Add the high-risk properties list or repeat-targeting widget.</div>
+      </div>
+    </div>
+    <h4>Operational Follow-Up</h4>
+    <ul>
+      <li>Check self-showing access activity more closely.</li>
+      <li>Inspect lockboxes and keys.</li>
+      <li>Alert onsite or leasing teams.</li>
+      <li>Add renter-facing warnings for the targeted property.</li>
+      <li>Use repeated targeting as a leading indicator that someone may visit the property or tamper with access.</li>
+    </ul>
+    <div class="script-label">Bridge Line</div>
+    <div class="script">"The goal is not just to remove one listing. It is to tell you which properties scammers keep coming back to, so your team can prevent the next operational headache."</div>
+    <div class="nav-buttons">
+      <button class="btn" onclick="show('step6')">← Step 6</button>
+      <button class="btn primary" onclick="show('step8')">Step 8 →</button>
+    </div>
+  </div>
+
+  <div id="step8" class="section">
+    <div class="step-badge"><span>Step 8</span></div>
+    <div class="section-header">
+      <div class="section-tag">Geographic View</div>
+      <h2>Threat Map</h2>
+      <p class="lead">The map is useful for pattern recognition, not just eye candy.</p>
+    </div>
+    <div class="script-label">Talk Track</div>
+    <div class="script">"We also have the threat map. This gives you a visual view of where threats are showing up geographically. You can look across the full portfolio, or narrow it down to a specific client, market, or time period."</div>
+    <div class="screenshot-slot">
+      <div class="placeholder">
+        <div class="placeholder-title">Screenshot Slot</div>
+        <div class="placeholder-path">profit-shield-step8-threat-map.png</div>
+        <div class="placeholder-copy">Add the geographic threat map screenshot.</div>
+      </div>
+    </div>
+    <div class="callout">
+      <div class="callout-label">Position It Correctly</div>
+      <p>"This is less about day-to-day action and more about spotting patterns. If one market is consistently hot, you can adjust renter communication, leasing operations, or monitoring cadence there."</p>
+    </div>
+    <div class="script-label">Market Context</div>
+    <div class="script">"Across the client base, fraud volume keeps climbing because scammers are early adopters of emerging technology, especially AI. It is getting easier to create convincing impersonations quickly, so the map helps show where that activity is concentrating."</div>
+    <div class="nav-buttons">
+      <button class="btn" onclick="show('step7')">← Step 7</button>
+      <button class="btn primary" onclick="show('step9')">Step 9 →</button>
+    </div>
+  </div>
+
+  <div id="step9" class="section">
+    <div class="step-badge"><span>Step 9</span></div>
+    <div class="section-header">
+      <div class="section-tag">Reporting</div>
+      <h2>Reports</h2>
+      <p class="lead">End the dashboard tour by showing how the customer can keep leadership informed.</p>
+    </div>
+    <div class="script-label">Talk Track</div>
+    <div class="script">"Finally, we have reporting. There is a PDF builder where you can automate reports on whatever cadence makes sense — monthly, quarterly, or during onboarding — so you have a clean summary of what was found, what was removed, and which properties were most targeted."</div>
+    <div class="screenshot-slot">
+      <div class="placeholder">
+        <div class="placeholder-title">Screenshot Slot</div>
+        <div class="placeholder-path">profit-shield-step9-reports.png</div>
+        <div class="placeholder-copy">Add the reports page or sample PDF/report generation view.</div>
+      </div>
+    </div>
+    <h4>Report Value</h4>
+    <ul>
+      <li>Show fraud volume and removal outcomes.</li>
+      <li>Document recurring high-risk properties.</li>
+      <li>Give ownership or leadership a simple summary without requiring dashboard access.</li>
+      <li>During onboarding, walk the customer through notification setup, automated reports, and best practices for reviewing incidents.</li>
+    </ul>
+    <div class="nav-buttons">
+      <button class="btn" onclick="show('step8')">← Step 8</button>
+      <button class="btn primary" onclick="show('step10')">Step 10 →</button>
+    </div>
+  </div>
+
+  <div id="step10" class="section">
+    <div class="step-badge"><span>Step 10</span></div>
+    <div class="section-header">
+      <div class="section-tag">Prospect-Specific Tie-In</div>
+      <h2>ShowMojo & Self-Showing Risk</h2>
+      <p class="lead">Tie the product back to the exact incident described in discovery.</p>
+    </div>
+    <div class="script-label">Talk Track</div>
+    <div class="script">"For your specific case, the value would be reducing the operational chaos from fake listings: fewer renters being misled, fewer lock changes, fewer disputes, and earlier visibility into which properties are being used by scammers."</div>
+    <div class="screenshot-slot">
+      <div class="placeholder">
+        <div class="placeholder-title">Screenshot Slot</div>
+        <div class="placeholder-path">profit-shield-step10-showmojo-risk.png</div>
+        <div class="placeholder-copy">Add a screenshot that supports the self-showing or property-access risk story.</div>
+      </div>
+    </div>
+    <h4>Do Say</h4>
+    <ul>
+      <li>"This helps catch the impersonation before a renter pays the wrong person."</li>
+      <li>"The dashboard tells you which properties are being used in scams repeatedly."</li>
+      <li>"Your team should not have to discover the scam only after keys are missing or a renter shows up angry."</li>
+      <li>"If your leasing tool does not watermark automatically, flag suspicious inquiry behavior, blacklist repeat offenders, or protect lockbox access, this becomes the monitoring layer around that gap."</li>
+    </ul>
+    <div class="script-label">Alternate Prospect Story</div>
+    <div class="script">"For teams using tools like AppFolio Leasing Performer, the pain may be that the leasing workflow has good property data, but very little fraud protection. The scam looks simple: half the photos, a too-good-to-be-true price like '$1,000 all bills paid,' posted to Facebook or Craigslist. The renter gets misled, drives to the house, and your team inherits the angry phone calls, lockbox changes, and access issues."</div>
+    <div class="callout red">
+      <div class="callout-label">Strong Pain Point from Transcript</div>
+      <p>One prospect said two people actually moved into two managed properties before the team caught on. Use that as context for why repeated fake listings are not just a marketing or brand problem — they can become a property access problem.</p>
+    </div>
+    <h4>Avoid Saying</h4>
+    <ul>
+      <li>Do not imply Profit Shield controls ShowMojo access codes.</li>
+      <li>Do not imply Profit Shield replaces identity verification, lockbox controls, or guest-card fraud checks inside the leasing platform.</li>
+      <li>Do not promise every scam will be prevented before any renter sees it.</li>
+      <li>Do not over-index on reimbursements; keep it operational and brand-risk focused.</li>
+    </ul>
+    <div class="nav-buttons">
+      <button class="btn" onclick="show('step9')">← Step 9</button>
+      <button class="btn primary" onclick="show('step11')">Step 11 →</button>
+    </div>
+  </div>
+
+  <div id="step11" class="section">
+    <div class="step-badge"><span>Step 11</span></div>
+    <div class="section-header">
+      <div class="section-tag">Q&A Support</div>
+      <h2>Approval Logic</h2>
+      <p class="lead">Use this when the prospect asks whether their team has to manually approve removals.</p>
+    </div>
+    <div class="script-label">Answer Script</div>
+    <div class="script">"Most obvious scams can be removed automatically, especially if they appear on platforms where you do not post legitimate listings. If something appears on a platform where legitimate listings may exist, like Zillow or Realtor.com, and there are suspicious signals like a different price, unknown publisher, or missing approved branding, we flag it for confirmation before removal. That way we move quickly without risking the removal of a legitimate listing."</div>
+    <div class="screenshot-slot">
+      <div class="placeholder">
+        <div class="placeholder-title">Screenshot Slot</div>
+        <div class="placeholder-path">profit-shield-step11-approval-logic.png</div>
+        <div class="placeholder-copy">Add an example of a pending/needs-action listing or approval workflow.</div>
+      </div>
+    </div>
+    <h4>Simple Distinction</h4>
+    <table>
+      <thead><tr><th>Scenario</th><th>Action</th></tr></thead>
+      <tbody>
+        <tr><td>Facebook, Craigslist, TikTok where client does not post</td><td>Remove automatically when fraud signals are clear.</td></tr>
+        <tr><td>Zillow, Realtor.com, or a known syndication channel</td><td>Flag suspicious listings for client confirmation.</td></tr>
+        <tr><td>Confirmed legitimate publisher</td><td>Store the author/source data and reduce future false positives.</td></tr>
+      </tbody>
+    </table>
+    <div class="script-label">Confirmation Script</div>
+    <div class="script">"When something lands in pending review, the question is simple: is this fraudulent, yes or no? If yes, we handle the removal process. If no, we treat that as a legitimate source signal and use it to improve future decisions."</div>
+    <div class="nav-buttons">
+      <button class="btn" onclick="show('step10')">← Step 10</button>
+      <button class="btn primary" onclick="show('wrap')">Close →</button>
+    </div>
+  </div>
+
+  <div id="wrap" class="section">
+    <div class="step-badge"><span>Final Step</span></div>
+    <div class="section-header">
+      <div class="section-tag">Close</div>
+      <h2>Wrap-Up Close</h2>
+      <p class="lead">Finish by summarizing what the dashboard does and ask a clean next-step question.</p>
+    </div>
+    <div class="script-label">Closing Script</div>
+    <div class="script">"The easiest way to think about Profit Shield is like antivirus software for your listings. It runs in the background, monitors the platforms where fraud tends to appear, identifies impersonations, removes them when appropriate, and alerts you when something needs your review."</div>
+    <div class="screenshot-slot">
+      <div class="placeholder">
+        <div class="placeholder-title">Screenshot Slot</div>
+        <div class="placeholder-path">profit-shield-wrap-up.png</div>
+        <div class="placeholder-copy">Add a final dashboard, report summary, or customer-facing proof point screenshot.</div>
+      </div>
+    </div>
+    <div class="card-grid">
+      <div class="card" style="border-top:3px solid var(--gold)"><div class="card-label">Find</div><p>Monitor listing and social platforms for copied or suspicious rentals.</p></div>
+      <div class="card" style="border-top:3px solid var(--gold)"><div class="card-label">Remove</div><p>Take down clear scams and move suspicious items into review.</p></div>
+      <div class="card" style="border-top:3px solid var(--gold)"><div class="card-label">Prioritize</div><p>Identify high-risk properties that are repeatedly targeted.</p></div>
+      <div class="card" style="border-top:3px solid var(--gold)"><div class="card-label">Report</div><p>Give the operator a clean record of threats, removals, and trends.</p></div>
+    </div>
+    <h3>Next-Step Questions</h3>
+    <ul>
+      <li>"Based on what you saw, does this match the problem you are trying to solve?"</li>
+      <li>"Which platforms are you most worried about today?"</li>
+      <li>"Would it make more sense to evaluate this directly, or through the ShowMojo path once that integration is live?"</li>
+      <li>"If pricing is the only hang-up, should we set a short follow-up to compare direct coverage against the integrator path?"</li>
+    </ul>
+    <div class="callout green">
+      <div class="callout-label">Best Close for This Transcript</div>
+      <p>"Given your portfolio size, the ShowMojo integration may be the cleaner starting point. Once it is live, we can help you compare that route against going direct so you are only paying for the active listed units that need protection."</p>
+    </div>
+    <div class="callout">
+      <div class="callout-label">Integrator Context</div>
+      <p>If the prospect is cost-sensitive or locked into another leasing platform, position ShowMojo or Tenant Turner as a future lower-friction route because the customer can access coverage on a usage/per-active-listing basis without the same direct monthly minimum.</p>
+    </div>
+    <div class="nav-buttons">
+      <button class="btn" onclick="show('step11')">← Step 11</button>
+      <button class="btn primary" onclick="show('overview')">Back to Overview</button>
+    </div>
+  </div>
+</main>
+
+<script>
+function show(id) {
+  document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
+  document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
+  document.getElementById(id).classList.add('active');
+  document.querySelectorAll('.nav-item').forEach(link => {
+    if (link.getAttribute('onclick') && link.getAttribute('onclick').includes("'" + id + "'")) {
+      link.classList.add('active');
+    }
+  });
+  window.scrollTo(0, 0);
+}
+</script>
+</body>
+</html>
