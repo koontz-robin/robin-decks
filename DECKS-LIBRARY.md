@@ -104,7 +104,7 @@ Repo: `git@github.com:koontz-robin/robin-decks.git`
 | Beacon | beacon.html | https://koontz-robin.github.io/robin-decks/beacon.html | |
 | Beacon Rubric | beacon-rubric.html | https://koontz-robin.github.io/robin-decks/beacon-rubric.html | |
 | Demo Guide | demo-guide.html | https://koontz-robin.github.io/robin-decks/demo-guide.html | |
-| Profit Shield Demo Guide | profit-shield-demo-guide.html | https://koontz-robin.github.io/robin-decks/profit-shield-demo-guide.html | Black/gold Property Shield demo script with screenshot slots |
+| Property Shield Demo Guide | property-shield-demo-guide.html | https://koontz-robin.github.io/robin-decks/property-shield-demo-guide.html | Black/gold Property Shield demo script with screenshot slots |
 | MSP — No Voice Slide | msp-no-voice-slide.html | https://koontz-robin.github.io/robin-decks/msp-no-voice-slide.html | |
 | MSP Problems Deck | msp-problems-deck.html | https://koontz-robin.github.io/robin-decks/msp-problems-deck.html | |
 | MSP PSA Requirements | msp-psa-requirements.html | https://koontz-robin.github.io/robin-decks/msp-psa-requirements.html | |
