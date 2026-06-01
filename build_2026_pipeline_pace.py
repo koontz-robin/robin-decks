@@ -41,7 +41,19 @@ MONTHS = [
     ("2026-12", "December"),
 ]
 PRODUCTS = ["PSA 2.0", "Billing / Odin", "Payments AR", "Cyber Protect", "Other / Not Set"]
-SOURCES = ["Sales", "Tradeshow", "Website", "Paid Media", "Email", "SEO", "Rev.io Summit", "Partner / Channel", "Other / Not Set"]
+SOURCES = [
+    "Sales",
+    "Tradeshow",
+    "Website",
+    "Paid Media",
+    "Email",
+    "SEO",
+    "Rev.io Summit",
+    "Referral",
+    "Partner / Channel",
+    "Phone",
+    "Other / Not Set",
+]
 
 
 def sf_auth():
@@ -78,7 +90,8 @@ def sf_query(base, headers, query):
 def fetch_created_opps(base, headers):
     query = f"""
         SELECT Id, Name, Amount, StageName, CreatedDate, CloseDate,
-               Product_Type__c, Lead_Direction__c, Marketing_Sub_source__c,
+               Product_Type__c, Lead_Direction__c, LeadSource, Opportunity_Source__c,
+               Marketing_Source__c, Marketing_Sub_source__c,
                Account.Name, Owner.Name
         FROM Opportunity
         WHERE CreatedDate >= {YEAR}-01-01T00:00:00Z
@@ -132,7 +145,39 @@ def product_bucket(value):
     return "Other / Not Set"
 
 
-def source_bucket(lead_direction, subsource):
+def canonical_source(value):
+    text = (value or "").strip()
+    lower = text.lower()
+    if not text or lower in {"blank", "-none-", "none", "not set"}:
+        return ""
+    if "trade" in lower or "show" in lower:
+        return "Tradeshow"
+    if "website" in lower or "web" in lower or "request demo" in lower or "contact us" in lower:
+        return "Website"
+    if "paid" in lower or "ppc" in lower or "media" in lower or "facebook" in lower or "google ads" in lower:
+        return "Paid Media"
+    if "email" in lower:
+        return "Email"
+    if "seo" in lower or "organic" in lower:
+        return "SEO"
+    if "summit" in lower:
+        return "Rev.io Summit"
+    if "referral" in lower:
+        return "Referral"
+    if "partner" in lower or "channel" in lower:
+        return "Partner / Channel"
+    if "phone" in lower:
+        return "Phone"
+    if "sales" in lower:
+        return "Sales"
+    return ""
+
+
+def source_bucket(marketing_source, opportunity_source, lead_source, lead_direction, subsource):
+    for value in (marketing_source, opportunity_source, lead_source, subsource):
+        bucket = canonical_source(value)
+        if bucket:
+            return bucket
     source = (subsource or "").strip()
     lower = source.lower()
     lead = (lead_direction or "").strip().lower()
@@ -186,7 +231,13 @@ def summarize(created, closed_won):
         product_name = product_bucket(opp.get("Product_Type__c"))
         product[product_name][key]["count"] += 1
         product[product_name][key]["amount"] += amount
-        source_name = source_bucket(opp.get("Lead_Direction__c"), opp.get("Marketing_Sub_source__c"))
+        source_name = source_bucket(
+            opp.get("Marketing_Source__c"),
+            opp.get("Opportunity_Source__c"),
+            opp.get("LeadSource"),
+            opp.get("Lead_Direction__c"),
+            opp.get("Marketing_Sub_source__c"),
+        )
         source[source_name][key] += 1
         created_records.append(
             {
@@ -198,6 +249,10 @@ def summarize(created, closed_won):
                 "close_date": opp.get("CloseDate"),
                 "product": product_name,
                 "source": source_name,
+                "marketing_source": opp.get("Marketing_Source__c"),
+                "opportunity_source": opp.get("Opportunity_Source__c"),
+                "lead_source": opp.get("LeadSource"),
+                "marketing_sub_source": opp.get("Marketing_Sub_source__c"),
                 "owner": (opp.get("Owner") or {}).get("Name") if isinstance(opp.get("Owner"), dict) else None,
                 "account": (opp.get("Account") or {}).get("Name") if isinstance(opp.get("Account"), dict) else None,
             }
@@ -298,13 +353,11 @@ def build_source_table(source):
     rows = []
     for name in SOURCES:
         total = sum(source[name].values())
-        if not total and name != "Other / Not Set":
-            continue
         cells = "".join(f"<td>{source[name][key]}</td>" for key, _ in MONTHS)
         rows.append(
             f"""
             <tr>
-              <td class="row-name">{escape(name)}</td>
+              <td class="row-name">{escape(name)}<span>{total:,}</span></td>
               {cells}
             </tr>"""
         )
@@ -408,6 +461,7 @@ th, td {{ padding:9px 10px; text-align:center; border-bottom:1px solid rgba(255,
 th:first-child, td:first-child {{ position:sticky; left:0; z-index:2; text-align:left; border-left:0; background:#0f2339; }}
 th:first-child {{ background:#102842; color:var(--teal); }}
 .row-name {{ min-width:150px; font-weight:900; color:#fff; }}
+.row-name span {{ display:block; margin-top:2px; color:rgba(255,255,255,.35); font-size:9px; font-weight:800; letter-spacing:1px; text-transform:uppercase; }}
 .muted {{ color:rgba(255,255,255,.48); }}
 .source-table table {{ min-width:1040px; }}
 .insight {{ margin-top:20px; padding:17px 20px; display:flex; justify-content:space-between; gap:18px; align-items:center; }}
