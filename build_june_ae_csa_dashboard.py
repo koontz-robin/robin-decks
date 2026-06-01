@@ -29,9 +29,8 @@ JULY_START = "2026-07-01T04:00:00Z"
 TEAM_TARGET = 275
 
 KNOWN_AES = {
-    "Andrew Whisenant",
+    "Andy Whisenant",
     "Connor Flynn",
-    "Davis Herndon",
     "Husam Zalmiyar",
     "Jake Borah",
     "Jake Mitchell",
@@ -41,7 +40,10 @@ KNOWN_AES = {
 }
 KNOWN_CSAS = {"Ingrid Beard", "Justin Lee"}
 NAME_ALIASES = {
-    "Andy Whisenant": "Andrew Whisenant",
+    "Andrew Whisenant": "Andy Whisenant",
+}
+EXCLUDED_REPS = {
+    "Davis Herndon",
 }
 ROLE_GROUPS = {
     "SDRs": "SDR",
@@ -103,12 +105,14 @@ def get_team_members(base, headers):
     for user in sf_query(base, headers, query):
         name = normalize_name(user.get("Name") or "")
         role = (user.get("UserRole") or {}).get("Name") or ""
-        if name and role in ROLE_GROUPS:
+        if name and role in ROLE_GROUPS and name not in EXCLUDED_REPS:
             members[name] = ROLE_GROUPS[role]
     for name in KNOWN_AES:
-        members.setdefault(name, "AE")
+        if name not in EXCLUDED_REPS:
+            members.setdefault(name, "AE")
     for name in KNOWN_CSAS:
-        members.setdefault(name, "CSA")
+        if name not in EXCLUDED_REPS:
+            members.setdefault(name, "CSA")
     return members
 
 
