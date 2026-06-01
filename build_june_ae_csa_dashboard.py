@@ -594,7 +594,7 @@ tr:last-child td {{ border-bottom:0; }}
       <div class="target-track"><span style="width:{target_pct:.1f}%"></span></div>
       <div class="target-meta"><span>{remaining} opps remaining</span><span>June target</span></div>
     </div>
-    <div class="kpi"><div class="kpi-label">Total Opportunities</div><div class="kpi-val">{total_count}</div><div class="kpi-sub">AE + CSA owned opps created in June</div></div>
+    <div class="kpi"><div class="kpi-label">SDR Opportunities Influenced</div><div class="kpi-val">{sdr_total_count}</div><div class="kpi-sub">{money(sdr_total_mrr)} MRR influenced</div></div>
     <div class="kpi"><div class="kpi-label">Total MRR</div><div class="kpi-val">{money(total_mrr)}</div><div class="kpi-sub">Sum of Salesforce Amount</div></div>
     <div class="kpi"><div class="kpi-label">AE Created</div><div class="kpi-val">{group_totals['AE']['count']}</div><div class="kpi-sub">{money(group_totals['AE']['amount'])} MRR</div></div>
     <div class="kpi"><div class="kpi-label">CSA Created</div><div class="kpi-val">{group_totals['CSA']['count']}</div><div class="kpi-sub">{money(group_totals['CSA']['amount'])} MRR</div></div>
