@@ -39,7 +39,6 @@ KNOWN_AES = {
     "Connor Flynn",
     "Husam Zalmiyar",
     "Jake Borah",
-    "Jake Mitchell",
     "Jamie Butler",
     "Jaylin Bender",
     "Patrick Davies",
@@ -50,6 +49,7 @@ NAME_ALIASES = {
 }
 EXCLUDED_REPS = {
     "Davis" + " Herndon",
+    "Jake Mitchell",
 }
 ROLE_GROUPS = {
     "SDRs": "SDR",
