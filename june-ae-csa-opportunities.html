@@ -1,0 +1,247 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>June AE/CSA Opportunity Creation</title>
+<style>
+:root {
+  --bg:#f6f8fb;
+  --panel:#ffffff;
+  --ink:#172033;
+  --muted:#64748b;
+  --line:#dbe3ee;
+  --green:#20b26b;
+  --blue:#2563eb;
+  --teal:#0891b2;
+  --gold:#b7791f;
+  --shadow:0 18px 50px rgba(15,23,42,.08);
+}
+* { box-sizing:border-box; }
+body {
+  margin:0;
+  background:var(--bg);
+  color:var(--ink);
+  font-family:Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+}
+.shell { max-width:1440px; margin:0 auto; padding:28px; }
+.topbar { display:flex; align-items:flex-end; justify-content:space-between; gap:24px; margin-bottom:22px; }
+.eyebrow { color:var(--green); font-size:12px; font-weight:800; letter-spacing:.14em; text-transform:uppercase; }
+h1 { margin:6px 0 0; font-size:34px; line-height:1.08; letter-spacing:0; }
+.subtitle { color:var(--muted); margin-top:8px; font-size:14px; }
+.stamp { text-align:right; color:var(--muted); font-size:12px; line-height:1.5; }
+.kpis { display:grid; grid-template-columns:repeat(4,minmax(0,1fr)); gap:14px; margin-bottom:18px; }
+.kpi, .week-card, .detail-card, .table-wrap {
+  background:var(--panel);
+  border:1px solid var(--line);
+  border-radius:8px;
+  box-shadow:var(--shadow);
+}
+.kpi { padding:18px; }
+.kpi-label { color:var(--muted); font-size:12px; font-weight:800; text-transform:uppercase; letter-spacing:.08em; }
+.kpi-val { margin-top:10px; font-size:32px; font-weight:850; }
+.kpi-sub { margin-top:4px; color:var(--muted); font-size:13px; }
+.weeks { display:grid; grid-template-columns:repeat(5,minmax(0,1fr)); gap:12px; margin-bottom:18px; }
+.week-card { padding:16px; min-height:134px; }
+.week-name { color:var(--blue); font-weight:850; font-size:13px; text-transform:uppercase; letter-spacing:.08em; }
+.week-range { color:var(--muted); font-size:12px; margin-top:3px; }
+.week-count { margin-top:14px; font-size:30px; font-weight:850; }
+.week-mrr { color:var(--green); font-size:14px; font-weight:800; }
+.week-track, .cell-bar { height:6px; background:#edf2f7; border-radius:999px; overflow:hidden; margin-top:12px; }
+.week-track span, .cell-bar span { display:block; height:100%; background:linear-gradient(90deg,var(--green),var(--teal)); border-radius:999px; }
+.table-wrap { overflow:auto; }
+table { width:100%; border-collapse:separate; border-spacing:0; min-width:1080px; }
+th, td { border-bottom:1px solid var(--line); padding:13px 14px; vertical-align:middle; }
+th { position:sticky; top:0; background:#fbfdff; color:var(--muted); font-size:12px; font-weight:850; text-align:right; text-transform:uppercase; letter-spacing:.06em; z-index:1; }
+th:first-child { text-align:left; left:0; z-index:2; }
+th span { display:block; font-weight:700; text-transform:none; letter-spacing:0; margin-top:2px; }
+td:first-child { position:sticky; left:0; background:var(--panel); z-index:1; }
+tr:last-child td { border-bottom:0; }
+.rep-cell { display:flex; align-items:center; gap:10px; min-width:230px; }
+.avatar { width:34px; height:34px; border-radius:8px; display:grid; place-items:center; background:#e7f7ef; color:#087344; font-size:12px; font-weight:850; }
+.rep-name { font-weight:800; }
+.rep-group { display:inline-flex; margin-top:4px; padding:2px 7px; border-radius:999px; font-size:10px; font-weight:850; letter-spacing:.06em; }
+.rep-group.ae { color:#1d4ed8; background:#dbeafe; }
+.rep-group.csa { color:#0f766e; background:#ccfbf1; }
+.week-cell, .total-cell { text-align:right; min-width:142px; }
+.cell-count, .total-count { font-size:18px; font-weight:850; }
+.cell-mrr, .total-mrr { color:var(--green); font-size:12px; font-weight:800; margin-top:2px; }
+.total-cell { background:#fbfdff; }
+.details { display:grid; grid-template-columns:repeat(5,minmax(0,1fr)); gap:12px; margin-top:18px; }
+.detail-card { padding:15px; }
+.detail-card h2 { margin:0 0 12px; font-size:15px; }
+.detail-card h2 span { display:block; color:var(--muted); font-size:12px; font-weight:700; margin-top:2px; }
+.detail-head, .detail-row { display:grid; grid-template-columns:minmax(0,1fr) 42px 82px; gap:8px; align-items:center; }
+.detail-head { color:var(--muted); font-size:10px; font-weight:850; text-transform:uppercase; letter-spacing:.08em; padding-bottom:7px; border-bottom:1px solid var(--line); }
+.detail-row { padding:8px 0; border-bottom:1px solid #edf2f7; font-size:12px; }
+.detail-row:last-child { border-bottom:0; }
+.detail-row span { min-width:0; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; font-weight:700; }
+.detail-row strong { text-align:right; font-size:12px; }
+.empty-row { color:var(--muted); font-size:12px; padding:16px 0; }
+@media (max-width:1100px) {
+  .shell { padding:18px; }
+  .topbar { display:block; }
+  .stamp { text-align:left; margin-top:12px; }
+  .kpis { grid-template-columns:repeat(2,minmax(0,1fr)); }
+  .weeks, .details { grid-template-columns:repeat(2,minmax(0,1fr)); }
+}
+@media (max-width:640px) {
+  h1 { font-size:26px; }
+  .kpis, .weeks, .details { grid-template-columns:1fr; }
+}
+</style>
+</head>
+<body>
+<main class="shell">
+  <header class="topbar">
+    <div>
+      <div class="eyebrow">June 2026 Pipeline Creation</div>
+      <h1>AE / CSA Opportunities Created</h1>
+      <div class="subtitle">Quantity and MRR by owner, split across all five June calendar weeks.</div>
+    </div>
+    <div class="stamp">
+      Refreshed Jun 1, 2026 10:26 AM ET<br>
+      Salesforce CreatedDate, Owner, Amount
+    </div>
+  </header>
+
+  <section class="kpis">
+    <div class="kpi"><div class="kpi-label">Total Opportunities</div><div class="kpi-val">2</div><div class="kpi-sub">AE + CSA owned opps created in June</div></div>
+    <div class="kpi"><div class="kpi-label">Total MRR</div><div class="kpi-val">$1,150</div><div class="kpi-sub">Sum of Salesforce Amount</div></div>
+    <div class="kpi"><div class="kpi-label">AE Created</div><div class="kpi-val">2</div><div class="kpi-sub">$1,150 MRR</div></div>
+    <div class="kpi"><div class="kpi-label">CSA Created</div><div class="kpi-val">0</div><div class="kpi-sub">$0 MRR</div></div>
+  </section>
+
+  <section class="weeks">
+    
+            <section class="week-card">
+              <div class="week-name">Week 1</div>
+              <div class="week-range">Jun 1-7</div>
+              <div class="week-count">2</div>
+              <div class="week-mrr">$1,150</div>
+              <div class="week-track"><span style="width:100.0%"></span></div>
+            </section>
+
+            <section class="week-card">
+              <div class="week-name">Week 2</div>
+              <div class="week-range">Jun 8-14</div>
+              <div class="week-count">0</div>
+              <div class="week-mrr">$0</div>
+              <div class="week-track"><span style="width:0.0%"></span></div>
+            </section>
+
+            <section class="week-card">
+              <div class="week-name">Week 3</div>
+              <div class="week-range">Jun 15-21</div>
+              <div class="week-count">0</div>
+              <div class="week-mrr">$0</div>
+              <div class="week-track"><span style="width:0.0%"></span></div>
+            </section>
+
+            <section class="week-card">
+              <div class="week-name">Week 4</div>
+              <div class="week-range">Jun 22-28</div>
+              <div class="week-count">0</div>
+              <div class="week-mrr">$0</div>
+              <div class="week-track"><span style="width:0.0%"></span></div>
+            </section>
+
+            <section class="week-card">
+              <div class="week-name">Week 5</div>
+              <div class="week-range">Jun 29-30</div>
+              <div class="week-count">0</div>
+              <div class="week-mrr">$0</div>
+              <div class="week-track"><span style="width:0.0%"></span></div>
+            </section>
+  </section>
+
+  <section class="table-wrap">
+    <table>
+      <thead>
+        <tr><th>Owner</th><th><div>Week 1</div><span>Jun 1-7</span></th><th><div>Week 2</div><span>Jun 8-14</span></th><th><div>Week 3</div><span>Jun 15-21</span></th><th><div>Week 4</div><span>Jun 22-28</span></th><th><div>Week 5</div><span>Jun 29-30</span></th><th>Total</th></tr>
+      </thead>
+      <tbody>
+        
+            <tr>
+              <td class="rep-cell">
+                <div class="avatar">JB</div>
+                <div>
+                  <div class="rep-name">Jamie Butler</div>
+                  <div class="rep-group ae">AE</div>
+                </div>
+              </td>
+              
+                <td class="week-cell">
+                  <div class="cell-count">2</div>
+                  <div class="cell-mrr">$1,150</div>
+                  <div class="cell-bar"><span style="width:100.0%"></span></div>
+                </td>
+                <td class="week-cell">
+                  <div class="cell-count">0</div>
+                  <div class="cell-mrr">$0</div>
+                  <div class="cell-bar"><span style="width:0.0%"></span></div>
+                </td>
+                <td class="week-cell">
+                  <div class="cell-count">0</div>
+                  <div class="cell-mrr">$0</div>
+                  <div class="cell-bar"><span style="width:0.0%"></span></div>
+                </td>
+                <td class="week-cell">
+                  <div class="cell-count">0</div>
+                  <div class="cell-mrr">$0</div>
+                  <div class="cell-bar"><span style="width:0.0%"></span></div>
+                </td>
+                <td class="week-cell">
+                  <div class="cell-count">0</div>
+                  <div class="cell-mrr">$0</div>
+                  <div class="cell-bar"><span style="width:0.0%"></span></div>
+                </td>
+              <td class="total-cell">
+                <div class="total-count">2</div>
+                <div class="total-mrr">$1,150</div>
+              </td>
+            </tr>
+      </tbody>
+    </table>
+  </section>
+
+  <section class="details">
+    
+            <section class="detail-card">
+              <h2>Week 1 <span>Jun 1-7</span></h2>
+              <div class="detail-head"><span>Rep</span><span>Qty</span><span>MRR</span></div>
+              
+                <div class="detail-row">
+                  <span>Jamie Butler</span>
+                  <strong>2</strong>
+                  <strong>$1,150</strong>
+                </div>
+            </section>
+
+            <section class="detail-card">
+              <h2>Week 2 <span>Jun 8-14</span></h2>
+              <div class="detail-head"><span>Rep</span><span>Qty</span><span>MRR</span></div>
+              <div class="empty-row">No AE/CSA opportunities created.</div>
+            </section>
+
+            <section class="detail-card">
+              <h2>Week 3 <span>Jun 15-21</span></h2>
+              <div class="detail-head"><span>Rep</span><span>Qty</span><span>MRR</span></div>
+              <div class="empty-row">No AE/CSA opportunities created.</div>
+            </section>
+
+            <section class="detail-card">
+              <h2>Week 4 <span>Jun 22-28</span></h2>
+              <div class="detail-head"><span>Rep</span><span>Qty</span><span>MRR</span></div>
+              <div class="empty-row">No AE/CSA opportunities created.</div>
+            </section>
+
+            <section class="detail-card">
+              <h2>Week 5 <span>Jun 29-30</span></h2>
+              <div class="detail-head"><span>Rep</span><span>Qty</span><span>MRR</span></div>
+              <div class="empty-row">No AE/CSA opportunities created.</div>
+            </section>
+  </section>
+</main>
+</body>
+</html>
