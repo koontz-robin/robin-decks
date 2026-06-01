@@ -33,6 +33,9 @@ for name, uid in REP_NOTION_IDS.items():
     if uid not in NOTION_ID_TO_REP:
         NOTION_ID_TO_REP[uid] = name
 
+CSA_REPS = {"Ingrid Beard", "Justin Lee"}
+ALL_REPS = set(REP_NOTION_IDS)
+
 headers = {
     "Authorization": f"Bearer {NOTION_TOKEN}",
     "Notion-Version": "2022-06-28",
@@ -144,6 +147,23 @@ def parse_top_coaching(text):
             break
     return "\n".join(f"{i+1}. {p}" for i, p in enumerate(pts))
 
+def is_cbr_record(title, robins_take):
+    blob = f"{title} {robins_take}".lower()
+    return "client business review" in blob or "cbr" in blob or "qualifying qs" in blob
+
+def infer_cbr_rep(record, current_rep):
+    """CBR grader previously wrote some CSA scorecards to the wrong Notion user.
+    Prefer explicit rep names from the generated coaching text. If a CBR cannot be
+    assigned to a CSA confidently, skip it rather than pollute an AE dashboard.
+    """
+    blob = f"{record.get('coaching','')} {record.get('robins_take','')}"
+    matches = [name for name in CSA_REPS if re.search(rf"\b{re.escape(name.split()[0])}\b", blob, re.I)]
+    if len(matches) == 1:
+        return matches[0]
+    if current_rep in CSA_REPS:
+        return current_rep
+    return None
+
 # ── Main ──────────────────────────────────────────────────────────────────────
 print("Fetching all Notion pages...")
 pages = fetch_all_pages()
@@ -167,7 +187,17 @@ for i, page in enumerate(pages):
         "date":     get_prop_date(props, "Meeting Date"),
         "score":    score,
         "coaching": get_prop_text(props, "Top Coaching Point"),
+        "robins_take": get_prop_text(props, "Robin's Take"),
     }
+
+    if is_cbr_record(record["title"], record["robins_take"]):
+        inferred_rep = infer_cbr_rep(record, rep)
+        if not inferred_rep:
+            print(f"  Skipping unassigned CBR: {record['date']} {record['account'] or record['title']} (Notion rep={rep})")
+            continue
+        if inferred_rep != rep:
+            print(f"  Reassigned CBR: {record['date']} {record['account'] or record['title']} from {rep} to {inferred_rep}")
+        rep = inferred_rep
 
     # Check if category data is missing — if so, fetch from page body
     approach = get_prop_number(props, "Approach")
@@ -238,10 +268,10 @@ for rep, records in rep_records.items():
         if pt and pt not in seen:
             seen.add(pt)
             coaching_pts.append(pt)
-        if len(coaching_pts) >= 5:
+        if len(coaching_pts) >= 3:
             break
 
-    top_3 = "\n".join(f"{i+1}. {pt}" for i, pt in enumerate(coaching_pts[:5]))
+    top_3 = "\n".join(f"{i+1}. {pt}" for i, pt in enumerate(coaching_pts[:3]))
 
     summaries[rep] = {
         "avg_score": avg_score,

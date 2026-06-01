@@ -403,8 +403,8 @@ def post_to_notion(scorecard_text, title, start_time=None):
     meeting_date = (start_time or "")[:10] or None
 
     REP_NOTION_IDS = {
-        "Ingrid Beard": "2aed872b-594c-817f-a77f-00024ab1c62d",
-        "Justin Lee":   "2aed872b-594c-817f-a77f-00024ab1c62d",
+        "Ingrid Beard": "2bed872b-594c-817f-bd06-000298f4426f",
+        "Justin Lee":   "2aed872b-594c-813e-a455-00027973e56a",
     }
 
     props = {

@@ -3,8 +3,7 @@
 import json, subprocess, os
 from datetime import datetime
 
-REPO = "/tmp/robin-decks"
-SSH_KEY = "/home/openclaw/.openclaw/ssh/id_ed25519"
+REPO = os.path.dirname(os.path.abspath(__file__))
 
 with open("/tmp/coaching_summaries.json") as f:
     data = json.load(f)
@@ -16,7 +15,10 @@ CSAS = {"Ingrid Beard","Justin Lee"}
 
 today_str = datetime.now().strftime("%B %d, %Y")
 total_calls = sum(d['call_count'] for d in data.values())
-team_avg = sum(d['avg_score'] for d in data.values()) / len(data) if data else 0
+team_avg = (
+    sum(d['avg_score'] * d['call_count'] for d in data.values()) / total_calls
+    if total_calls else 0
+)
 coaching_req = sum(1 for d in data.values() if d['avg_score'] < 50)
 
 def score_color(s):
@@ -26,11 +28,11 @@ def score_color(s):
     return "#f87171"
 
 def grade_label(s):
-    if s >= 90: return "🟢 Elite"
-    if s >= 80: return "🔵 Strong"
-    if s >= 65: return "🟡 Solid"
-    if s >= 50: return "🟠 Needs Work"
-    return "🔴 Coaching Required"
+    if s >= 90: return "Elite"
+    if s >= 80: return "Strong"
+    if s >= 65: return "Solid"
+    if s >= 50: return "Needs Work"
+    return "Coaching Required"
 
 def build_rep_card(rep, d, is_csa=False):
     avg = d["avg_score"]; sc = score_color(avg)
@@ -68,7 +70,7 @@ def build_rep_card(rep, d, is_csa=False):
     else:
         cat_map = [
             ("Approach","approach",15),("Co. Story","company_story",15),
-            ("Qualifying","qualifying",40),("Summarize","summarize",20),("Next Steps","next_steps",15)
+            ("Qualifying","qualifying",40),("Summarize","summarize",20),("Next Steps","next_steps",10)
         ]
     for label, key, max_pts in cat_map:
         val = cats.get(key, 0)
@@ -101,7 +103,7 @@ def build_rep_card(rep, d, is_csa=False):
         f'text-transform:uppercase;margin-bottom:10px">Recent Calls</div>{recent_html}</div></div>'
         f'<div style="padding:16px 20px;border-top:1px solid #0f172a">'
         f'<div style="font-size:10px;font-weight:700;color:#64748b;letter-spacing:1.5px;'
-        f'text-transform:uppercase;margin-bottom:10px">🎯 Top 3 1-on-1 Coaching Priorities</div>'
+        f'text-transform:uppercase;margin-bottom:10px">Top 3 1-on-1 Coaching Priorities</div>'
         f'{coaching_items}</div></div>'
     )
 
@@ -142,18 +144,7 @@ function showPanel(id,btn){{
 </script>
 </body></html>"""
 
-os.makedirs(REPO, exist_ok=True)
 with open(f"{REPO}/rep-coaching-dashboard.html","w") as f:
     f.write(html)
 
-env = {**os.environ, "GIT_SSH_COMMAND": f"ssh -i {SSH_KEY} -o StrictHostKeyChecking=no"}
-subprocess.run(["git","config","user.email","robin@rev.io"], cwd=REPO)
-subprocess.run(["git","config","user.name","Robin"], cwd=REPO)
-subprocess.run(["git","add","rep-coaching-dashboard.html"], cwd=REPO)
-diff = subprocess.run(["git","diff","--cached","--quiet"], cwd=REPO)
-if diff.returncode != 0:
-    subprocess.run(["git","commit","-m",f"Rep coaching dashboard refresh {today_str}"], cwd=REPO)
-    subprocess.run(["git","push","origin","master"], cwd=REPO, env=env)
-    print(f"Pushed: {len(html):,} chars")
-else:
-    print("No changes.")
+print(f"Wrote {REPO}/rep-coaching-dashboard.html ({len(html):,} chars)")
