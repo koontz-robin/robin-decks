@@ -108,28 +108,6 @@ for c in contacts:
     by_event[ev][effective_status(c)] += 1
 events_sorted = sorted(by_event.items(), key=lambda x: -sum(x[1].values()))
 
-# Rep data
-rep_data = defaultdict(lambda: {'total': 0, 'sql': 0, 'mql': 0, 'disq': 0, 'unknown': 0,
-                                  'with_opp': 0, 'cw_amt': 0, 'pipeline': 0})
-for c in contacts:
-    owner = (c.get('Owner') or {}).get('Name', 'Unknown')
-    es = effective_status(c)
-    rep_data[owner]['total'] += 1
-    key_map = {'SQL': 'sql', 'MQL': 'mql', 'Disqualified': 'disq'}
-    rep_data[owner][key_map.get(es, 'unknown')] += 1
-    has_opp = c.get('Opportunities') and c['Opportunities'].get('totalSize', 0) > 0
-    if has_opp:
-        rep_data[owner]['with_opp'] += 1
-        for o in (c['Opportunities'].get('records') or []):
-            amt = o.get('Amount') or 0
-            stage = o.get('StageName', '')
-            if stage == 'Closed Won':
-                rep_data[owner]['cw_amt'] += amt
-            elif stage != 'Closed Lost':
-                rep_data[owner]['pipeline'] += amt
-
-reps = sorted(rep_data.items(), key=lambda x: -x[1]['total'])
-
 stage_labels_map = {
     'Closed Won': 'Closed Won', '6 - Verbal Commit': 'Verbal Commit',
     '5 - Product / Contract Validated': 'Validated', '4 - Proposal Sent': 'Proposal',
@@ -246,33 +224,6 @@ def event_section(ev, ev_counts):
   </div>
 </div>'''
 
-# Rep table rows
-def rep_rows_html():
-    rows = ''
-    for rep, d in reps:
-        conv = round(d['sql'] / d['total'] * 100) if d['total'] else 0
-        conv_color = '#00ff88' if conv >= 30 else ('#ffd700' if conv >= 15 else '#ff4444')
-        t = d['total']
-        bar = f'''<div style="display:flex;height:8px;border-radius:4px;overflow:hidden;width:120px;background:#0a0a0a">
-          <div style="width:{d['sql']/t*100:.0f}%;background:#00ff88"></div>
-          <div style="width:{d['mql']/t*100:.0f}%;background:#00e5ff"></div>
-          <div style="width:{d['disq']/t*100:.0f}%;background:#ff4444"></div>
-          <div style="width:{d['unknown']/t*100:.0f}%;background:#333"></div>
-        </div>
-        <div style="font-size:9px;color:#3a6a4a;margin-top:2px">
-          <span style="color:#00ff88">{d['sql']} SQL</span> · <span style="color:#00e5ff">{d['mql']} MQL</span>{f" · <span style='color:#ff4444'>{d['disq']} DQ</span>" if d['disq'] else ""}
-        </div>'''
-        rows += f'''<tr>
-          <td style="font-weight:600;color:#c8f0dc">{rep}</td>
-          <td style="text-align:center;font-weight:700">{d['total']}</td>
-          <td>{bar}</td>
-          <td style="text-align:center;color:{conv_color};font-weight:700">{conv}%</td>
-          <td style="text-align:center;color:#00e5ff">{d['with_opp']}</td>
-          <td style="text-align:center;color:#ffd700">{'$'+f"{d['pipeline']:,.0f}" if d['pipeline'] else '—'}</td>
-          <td style="text-align:center;color:#00ff88;font-weight:700">{'$'+f"{d['cw_amt']:,.0f}" if d['cw_amt'] else '—'}</td>
-        </tr>\n'''
-    return rows
-
 # JS data
 mql_labels_js = json.dumps([l for l,_,v in mql_status_funnel])
 mql_values_js = json.dumps([v for _,_,v in mql_status_funnel])
@@ -282,10 +233,6 @@ ev_totals_js  = json.dumps([sum(d.values()) for _,d in events_sorted])
 ev_ds = [{'label': s, 'color': col, 'data': [by_event[ev].get(s, 0) for ev,_ in events_sorted]}
          for s, col in status_defs if any(by_event[ev].get(s, 0) for ev,_ in events_sorted)]
 ev_ds_js      = json.dumps(ev_ds)
-rep_names_js  = json.dumps([r for r,_ in reps])
-rep_totals_js = json.dumps([d['total'] for _,d in reps])
-rep_sqls_js   = json.dumps([d['sql'] for _,d in reps])
-
 status_chips_html = ''
 for s, col in status_defs:
     cnt = status_counts.get(s, 0)
@@ -362,13 +309,6 @@ CSS = """
   .legend-bar{height:100%;border-radius:3px}
   .legend-val{font-size:13px;font-weight:700;color:#fff;width:28px;text-align:right;flex-shrink:0}
   .legend-pct{font-size:11px;font-weight:700;width:36px;text-align:right;flex-shrink:0}
-  .owner-table-wrap{background:var(--surface);border:1px solid var(--border);border-radius:10px;overflow:hidden;margin-bottom:20px}
-  .owner-table{width:100%;border-collapse:collapse}
-  .owner-table th{font-size:9px;font-weight:700;text-transform:uppercase;letter-spacing:1.5px;color:var(--muted);padding:8px 14px;text-align:left;background:#030a06}
-  .owner-table th:not(:first-child){text-align:center}
-  .owner-table td{font-size:12px;padding:7px 14px;border-bottom:1px solid rgba(0,255,136,.04);color:#8ab89a}
-  .owner-table tr:last-child td{border-bottom:none}
-  .owner-table tr:hover td{background:rgba(0,255,136,.02)}
   .event-card{background:var(--surface);border:1px solid var(--border);border-radius:10px;margin-bottom:8px;overflow:hidden}
   .event-header{display:flex;align-items:center;justify-content:space-between;padding:12px 18px;cursor:pointer;gap:12px}
   .event-header:hover{background:rgba(0,255,136,.02)}
@@ -468,23 +408,6 @@ HTML = f"""<!DOCTYPE html>
     <canvas id="eventChart"></canvas>
   </div>
 
-  <div class="section-title">MQL → SQL Conversion by Rep</div>
-  <div class="chart-card" style="padding:20px 24px">
-    <div style="display:flex;gap:20px;flex-wrap:wrap;margin-bottom:14px">
-      <div style="display:flex;align-items:center;gap:6px"><div style="width:10px;height:10px;border-radius:2px;background:#00ff88"></div><span style="font-size:11px;color:#c8f0dc;font-weight:600">SQL (MQL → SQL in 2026)</span></div>
-      <div style="display:flex;align-items:center;gap:6px"><div style="width:10px;height:10px;border-radius:2px;background:rgba(0,229,255,0.25)"></div><span style="font-size:11px;color:#c8f0dc;font-weight:600">Total leads</span></div>
-    </div>
-    <canvas id="repChart"></canvas>
-    <div style="margin-top:20px">
-      <div class="owner-table-wrap" style="margin-bottom:0">
-        <table class="owner-table">
-          <thead><tr><th>Rep</th><th>Leads</th><th>Status Mix</th><th>SQL %</th><th>Opps</th><th>Pipeline</th><th>CW</th></tr></thead>
-          <tbody>{rep_rows_html()}</tbody>
-        </table>
-      </div>
-    </div>
-  </div>
-
   <div class="section-title">By Event — {len(by_event)} events ({total} contacts)</div>
   {events_html}
 
@@ -524,34 +447,6 @@ HTML = f"""<!DOCTYPE html>
     var tw=(totals[i]/maxVal)*availW;
     ctx.fillStyle='#888';ctx.textAlign='left';ctx.font='600 10px Segoe UI';
     ctx.fillText(totals[i],pad.l+tw+5,y+barH/2);ctx.font='600 11px Segoe UI,system-ui';
-  }});
-}})();
-
-(function(){{
-  var repNames={rep_names_js};var totals={rep_totals_js};var sqls={rep_sqls_js};
-  var canvas=document.getElementById('repChart');var ctx=canvas.getContext('2d');
-  var n=repNames.length,barH=20,gap=8,groupGap=6,labelW=140;
-  var pad={{t:8,r:70,b:8,l:labelW}},chartW=700;
-  var rowH=barH*2+groupGap,chartH=n*(rowH+gap)+pad.t+pad.b;
-  canvas.width=chartW;canvas.height=chartH;canvas.style.width='100%';canvas.style.maxWidth=chartW+'px';
-  var maxVal=Math.max.apply(null,totals),availW=chartW-pad.l-pad.r;
-  ctx.font='600 11px Segoe UI,system-ui';ctx.textBaseline='middle';
-  repNames.forEach(function(rep,i){{
-    var baseY=pad.t+i*(rowH+gap);
-    ctx.fillStyle='#c8f0dc';ctx.textAlign='right';ctx.fillText(rep,labelW-8,baseY+rowH/2);
-    var tw=(totals[i]/maxVal)*availW;
-    ctx.fillStyle='rgba(0,229,255,0.2)';ctx.beginPath();ctx.roundRect(pad.l,baseY,tw,barH,3);ctx.fill();
-    ctx.fillStyle='#888';ctx.textAlign='left';ctx.font='600 10px Segoe UI';
-    ctx.fillText(totals[i]+' leads',pad.l+tw+5,baseY+barH/2);
-    var sw=(sqls[i]/maxVal)*availW;
-    if(sw>0){{
-      ctx.fillStyle='#00ff88';ctx.beginPath();ctx.roundRect(pad.l,baseY+barH+groupGap,sw,barH,3);ctx.fill();
-      ctx.fillStyle='#fff';ctx.font='700 10px Segoe UI';
-      ctx.fillText(sqls[i]+' SQL ('+Math.round(sqls[i]/totals[i]*100)+'%)',pad.l+sw+5,baseY+barH+groupGap+barH/2);
-    }}else{{
-      ctx.fillStyle='#555';ctx.font='600 10px Segoe UI';ctx.fillText('0 SQL',pad.l+5,baseY+barH+groupGap+barH/2);
-    }}
-    ctx.font='600 11px Segoe UI,system-ui';
   }});
 }})();
 
