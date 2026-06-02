@@ -66,10 +66,21 @@ status_defs = [
     ('Unknown',      '#444'),
 ]
 
+mql_status_defs = [
+    ('Hot Lead',        '#00ff88'),
+    ('Warm Lead',       '#00e5ff'),
+    ('Cold Lead',       '#ffb000'),
+    ('Partner Request', '#bf5af2'),
+    ('Client Request',  '#ffd700'),
+    ('Unknown',         '#444'),
+]
+
 # Global counts
 status_counts = defaultdict(int)
+mql_status_counts = defaultdict(int)
 for c in contacts:
     status_counts[effective_status(c)] += 1
+    mql_status_counts[c.get('Tradeshow_Status__c') or 'Unknown'] += 1
 
 total = len(contacts)
 with_opps = [c for c in contacts if c.get('Opportunities') and c['Opportunities'].get('totalSize', 0) > 0]
@@ -84,8 +95,11 @@ total_pipeline = sum(o.get('Amount') or 0 for o in sourced_opps if o.get('StageN
 total_sql = status_counts.get('SQL', 0)
 conv_rate = round(total_sql / total * 100, 1) if total else 0
 
-# Donut data
+# Status graph data
 funnel = [(s, c, status_counts.get(s, 0)) for s, c in status_defs if status_counts.get(s, 0) > 0]
+
+# Donut data
+mql_status_funnel = [(s, c, mql_status_counts.get(s, 0)) for s, c in mql_status_defs if mql_status_counts.get(s, 0) > 0]
 
 # By-event data
 by_event = defaultdict(lambda: defaultdict(int))
@@ -260,9 +274,9 @@ def rep_rows_html():
     return rows
 
 # JS data
-labels_js     = json.dumps([l for l,_,v in funnel])
-values_js     = json.dumps([v for _,_,v in funnel])
-colors_js     = json.dumps([c for _,c,_ in funnel])
+mql_labels_js = json.dumps([l for l,_,v in mql_status_funnel])
+mql_values_js = json.dumps([v for _,_,v in mql_status_funnel])
+mql_colors_js = json.dumps([c for _,c,_ in mql_status_funnel])
 ev_labels_js  = json.dumps([e for e,_ in events_sorted])
 ev_totals_js  = json.dumps([sum(d.values()) for _,d in events_sorted])
 ev_ds = [{'label': s, 'color': col, 'data': [by_event[ev].get(s, 0) for ev,_ in events_sorted]}
@@ -280,7 +294,7 @@ for s, col in status_defs:
         status_chips_html += f'<div class="status-chip" style="border-color:{col}40;background:{bg_map.get(s,"")}"><div class="sc-label" style="color:{col}">{s}</div><div class="sc-val" style="color:{col}">{cnt}</div><div class="sc-pct">{round(cnt/total*100)}% of leads</div></div>\n'
 
 date_str = datetime.now(timezone.utc).strftime('%B %d, %Y')
-legend_rows = ''.join(f'<div class="legend-row"><div class="legend-dot" style="background:{col}"></div><div class="legend-label">{lbl}</div><div class="legend-bar-wrap"><div class="legend-bar" style="width:{round(val/total*100)}%;background:{col}"></div></div><div class="legend-val">{val}</div><div class="legend-pct" style="color:{col}">{round(val/total*100)}%</div></div>\n' for lbl,col,val in funnel)
+mql_legend_rows = ''.join(f'<div class="legend-row"><div class="legend-dot" style="background:{col}"></div><div class="legend-label">{lbl}</div><div class="legend-bar-wrap"><div class="legend-bar" style="width:{round(val/total*100)}%;background:{col}"></div></div><div class="legend-val">{val}</div><div class="legend-pct" style="color:{col}">{round(val/total*100)}%</div></div>\n' for lbl,col,val in mql_status_funnel)
 ev_legend = ''.join(f'<div style="display:flex;align-items:center;gap:6px"><div style="width:10px;height:10px;border-radius:2px;background:{col}"></div><span style="font-size:11px;color:#c8f0dc;font-weight:600">{s}</span></div>' for s,col in status_defs if status_counts.get(s,0))
 events_html = ''.join(event_section(ev, dict(d)) for ev, d in events_sorted)
 status_graph_max = max((cnt for _, _, cnt in funnel), default=1)
@@ -434,16 +448,16 @@ HTML = f"""<!DOCTYPE html>
     {status_graph_rows}
   </div>
 
-  <div class="section-title">Contact Status Breakdown</div>
+  <div class="section-title">MQL Status Breakdown</div>
   <div class="chart-card">
     <div class="chart-row">
       <div class="chart-inner">
-        <canvas id="statusChart" width="280" height="280"></canvas>
+        <canvas id="mqlStatusChart" width="280" height="280"></canvas>
         <div class="donut-center"><div class="donut-total">{total}</div><div class="donut-label">2026 MQLs</div></div>
       </div>
       <div class="chart-legend">
-        <div style="font-size:10px;color:#3a7a5a;margin-bottom:12px;font-style:italic">SQL only counts when Contact Status changed from MQL to SQL in 2026</div>
-        {legend_rows}
+        <div style="font-size:10px;color:#3a7a5a;margin-bottom:12px;font-style:italic">Based on the Tradeshow Status field for contacts added or updated to MQL in 2026</div>
+        {mql_legend_rows}
       </div>
     </div>
   </div>
@@ -478,8 +492,8 @@ HTML = f"""<!DOCTYPE html>
 </div>
 <script>
 (function(){{
-  var ctx=document.getElementById('statusChart').getContext('2d');
-  var labels={labels_js};var values={values_js};var colors={colors_js};
+  var ctx=document.getElementById('mqlStatusChart').getContext('2d');
+  var labels={mql_labels_js};var values={mql_values_js};var colors={mql_colors_js};
   var cx=140,cy=140,outerR=125,innerR=80,a=-Math.PI/2;
   values.forEach(function(v,i){{
     var s=(v/values.reduce(function(a,b){{return a+b}},0))*2*Math.PI;
