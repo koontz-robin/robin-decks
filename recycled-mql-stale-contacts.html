@@ -1,0 +1,318 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Recycled MQL Stale Contacts</title>
+  <style>
+    :root { --ink:#102018; --muted:#637064; --line:#d9e5dd; --green:#24a148; --paper:#fbfdf9; --panel:#fff; }
+    * { box-sizing:border-box; }
+    body { margin:0; font-family:Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif; color:var(--ink); background:var(--paper); }
+    header { padding:28px 32px 18px; background:#fff; border-bottom:1px solid var(--line); }
+    .eyebrow { color:var(--green); font-size:12px; font-weight:850; letter-spacing:.08em; text-transform:uppercase; }
+    h1 { margin:8px 0; font-size:31px; line-height:1.08; letter-spacing:0; }
+    .subhead { color:var(--muted); margin:0; font-size:14px; line-height:1.45; max-width:980px; }
+    main { padding:24px 32px 36px; }
+    .kpis { display:grid; grid-template-columns:repeat(4,minmax(150px,1fr)); gap:12px; margin-bottom:22px; }
+    .kpi { background:var(--panel); border:1px solid var(--line); border-radius:8px; padding:14px 16px; }
+    .kpi-label { color:var(--muted); font-size:11px; font-weight:850; text-transform:uppercase; letter-spacing:.06em; }
+    .kpi-value { margin-top:7px; font-size:28px; line-height:1; font-weight:850; }
+    .kpi-sub { color:var(--muted); font-size:12px; margin-top:5px; }
+    section { margin-top:22px; background:#fff; border:1px solid var(--line); border-radius:8px; overflow:hidden; }
+    .section-head { padding:18px; border-bottom:1px solid var(--line); display:flex; justify-content:space-between; gap:16px; align-items:end; }
+    h2 { margin:0; font-size:19px; letter-spacing:0; }
+    .note { color:var(--muted); font-size:12px; line-height:1.4; max-width:620px; }
+    table { width:100%; border-collapse:collapse; table-layout:fixed; }
+    th, td { text-align:left; padding:11px 13px; border-bottom:1px solid #edf2ee; vertical-align:top; font-size:13px; }
+    thead th { color:var(--muted); background:#f7faf7; font-size:11px; font-weight:850; text-transform:uppercase; letter-spacing:.06em; }
+    tbody tr:last-child td { border-bottom:none; }
+    a { color:#166534; text-decoration:none; font-weight:800; }
+    small { display:block; color:var(--muted); margin-top:3px; font-size:11px; line-height:1.35; }
+    .owner-table { max-width:520px; }
+    footer { margin-top:16px; color:var(--muted); font-size:11px; line-height:1.5; }
+    @media (max-width:800px) { header, main { padding-left:16px; padding-right:16px; } .kpis { grid-template-columns:1fr 1fr; } table { min-width:980px; } section { overflow-x:auto; } }
+  </style>
+</head>
+<body>
+  <header>
+    <div class="eyebrow">Salesforce Recycled MQL Report</div>
+    <h1>Stale Contacts with Last Contact or Email Response</h1>
+    <p class="subhead">Generated June 2, 2026 10:39 AM ET. Stale cutoff: no completed task activity since April 18, 2026. Base source: Salesforce report "Recycled MQL for Payment Team".</p>
+  </header>
+  <main>
+    <div class="kpis">
+      <div class="kpi"><div class="kpi-label">Base Contacts</div><div class="kpi-value">217</div><div class="kpi-sub">from source report</div></div>
+      <div class="kpi"><div class="kpi-label">No Activity 45d</div><div class="kpi-value">157</div><div class="kpi-sub">latest completed task before cutoff</div></div>
+      <div class="kpi"><div class="kpi-label">Matching Contacts</div><div class="kpi-value">27</div><div class="kpi-sub">last activity is contact/response</div></div>
+      <div class="kpi"><div class="kpi-label">Accounts</div><div class="kpi-value">27</div><div class="kpi-sub">unique accounts represented</div></div>
+    </div>
+    <section class="owner-table">
+      <div class="section-head"><h2>Matches by Account Owner</h2></div>
+      <table><thead><tr><th>Owner</th><th>Contacts</th></tr></thead><tbody><tr><td>Marketing Rev.io</td><td>12</td></tr>
+<tr><td>Abigail Marchese</td><td>3</td></tr>
+<tr><td>Jaylin Bender</td><td>2</td></tr>
+<tr><td>Joseph Abarno</td><td>2</td></tr>
+<tr><td>Ryan Koontz</td><td>2</td></tr>
+<tr><td>Andy Whisenant</td><td>1</td></tr>
+<tr><td>Connor Flynn</td><td>1</td></tr>
+<tr><td>Husam Zalmiyar</td><td>1</td></tr>
+<tr><td>Jake Borah</td><td>1</td></tr>
+<tr><td>Jake Mitchell</td><td>1</td></tr>
+<tr><td>Jamie Butler</td><td>1</td></tr></tbody></table>
+    </section>
+    <section>
+      <div class="section-head">
+        <h2>Matching Contacts</h2>
+        <div class="note">Included only when the most recent completed task is either a call whose result starts with "Contact -" or an inbound Outreach email response.</div>
+      </div>
+      <table>
+        <thead><tr><th>Contact</th><th>Account</th><th>Email / Phone</th><th>Source / Stage</th><th>Last Activity</th><th>Last Contact/Response</th></tr></thead>
+        <tbody>
+            <tr>
+              <td><a href="https://rev-io.lightning.force.com/lightning/r/Contact/003PX00000tVroOYAS/view">Blake Baldwin</a><small></small></td>
+              <td><a href="https://rev-io.lightning.force.com/lightning/r/Account/001PX00000fk0DYYAY/view">Ivy Technologies</a><small>Abigail Marchese</small></td>
+              <td>blake@ivy-technologies.com<small>+17754348482</small></td>
+              <td>Facebook Ads<small>Disqualified / Disqualified</small></td>
+              <td><strong>2026-01-16 04:45 PM ET</strong><small>Contact - Not Interested - No Reason Given</small></td>
+              <td>Contact - Not Interested - No Reason Given<small>Abigail Marchese</small></td>
+            </tr>
+
+            <tr>
+              <td><a href="https://rev-io.lightning.force.com/lightning/r/Contact/003PX00000w8ouHYAQ/view">Wilkenson Francois</a><small></small></td>
+              <td><a href="https://rev-io.lightning.force.com/lightning/r/Account/001PX00000gr7ODYAY/view">Lessimp</a><small>Abigail Marchese</small></td>
+              <td>info@lessimp.com<small>+18454595814</small></td>
+              <td>Facebook Ads<small>Disqualified / Disqualified</small></td>
+              <td><strong>2026-02-05 02:23 PM ET</strong><small>Contact - Wrong Industry</small></td>
+              <td>Contact - Wrong Industry<small>Abigail Marchese</small></td>
+            </tr>
+
+            <tr>
+              <td><a href="https://rev-io.lightning.force.com/lightning/r/Contact/003PX00000uSv1VYAS/view">Ax Silver</a><small></small></td>
+              <td><a href="https://rev-io.lightning.force.com/lightning/r/Account/001PX000001M3wSYAS/view">MasTec</a><small>Abigail Marchese</small></td>
+              <td>alexander.silvera@mastec.com<small>+12019260466</small></td>
+              <td>Facebook Ads<small>Disqualified / Disqualified</small></td>
+              <td><strong>2026-01-23 09:11 AM ET</strong><small>Contact - Not Interested - No Reason Given</small></td>
+              <td>Contact - Not Interested - No Reason Given<small>Abigail Marchese</small></td>
+            </tr>
+
+            <tr>
+              <td><a href="https://rev-io.lightning.force.com/lightning/r/Contact/003PX00000pwYlVYAU/view">Randy Bayne</a><small></small></td>
+              <td><a href="https://rev-io.lightning.force.com/lightning/r/Account/001PX00000f8iyjYAA/view">URNET</a><small>Andy Whisenant</small></td>
+              <td>randy.bayne@urnet.com<small>+17139799669</small></td>
+              <td>Facebook Ads<small>Disqualified / Disqualified</small></td>
+              <td><strong>2026-02-04 10:59 AM ET</strong><small>Contact - Current Opportunity</small></td>
+              <td>Contact - Current Opportunity<small>Abbey McIntosh</small></td>
+            </tr>
+
+            <tr>
+              <td><a href="https://rev-io.lightning.force.com/lightning/r/Contact/003PX000011ktDLYAY/view">Miles Kirkpatrick</a><small>Chief Revenue Officer (CRO)</small></td>
+              <td><a href="https://rev-io.lightning.force.com/lightning/r/Account/001PX00000ihJkVYAU/view">SITE Technologies</a><small>Connor Flynn</small></td>
+              <td>miles@sitetechnologies.io<small>+1 760-636-2695</small></td>
+              <td>LinkedIn Ads<small>Disqualified / Disqualified</small></td>
+              <td><strong>2026-04-01 02:32 PM ET</strong><small>Contact - Do Not Contact</small></td>
+              <td>Contact - Do Not Contact<small>Connor Flynn</small></td>
+            </tr>
+
+            <tr>
+              <td><a href="https://rev-io.lightning.force.com/lightning/r/Contact/003PX000006AAx7YAG/view">Eric Damiani</a><small>Owner</small></td>
+              <td><a href="https://rev-io.lightning.force.com/lightning/r/Account/001PX000006RS1bYAG/view">Delaware Valley Security</a><small>Husam Zalmiyar</small></td>
+              <td>eric@delawarevalleysecurity.com<small>+18569931346</small></td>
+              <td>Facebook Ads<small>Disqualified / Disqualified</small></td>
+              <td><strong>2026-02-02 12:25 PM ET</strong><small>Contact - Send Information</small></td>
+              <td>Contact - Send Information<small>Emily Petraglia</small></td>
+            </tr>
+
+            <tr>
+              <td><a href="https://rev-io.lightning.force.com/lightning/r/Contact/003PX00000pIaVdYAK/view">Russell Guyette</a><small></small></td>
+              <td><a href="https://rev-io.lightning.force.com/lightning/r/Account/001PX00000f67lcYAA/view">Guyette Air Conditioning and Heating</a><small>Jake Borah</small></td>
+              <td>guyetteac@guyetteac.com<small>+19408675630</small></td>
+              <td>Facebook Ads<small>Disqualified / Disqualified</small></td>
+              <td><strong>2026-01-20 10:09 AM ET</strong><small>Contact - Not Interested - No Reason Given</small></td>
+              <td>Contact - Not Interested - No Reason Given<small>Mitchell Davidson</small></td>
+            </tr>
+
+            <tr>
+              <td><a href="https://rev-io.lightning.force.com/lightning/r/Contact/003PX00000IsSC8YAN/view">Dan Wilcox</a><small></small></td>
+              <td><a href="https://rev-io.lightning.force.com/lightning/r/Account/001PX00000hEandYAC/view">Luxury Alarm</a><small>Jake Mitchell</small></td>
+              <td>dwilcox.luxuryalarm@gmail.com<small>(352) 598-6785</small></td>
+              <td>Contact Us<small>Disqualified / Disqualified</small></td>
+              <td><strong>2026-02-12 11:56 AM ET</strong><small>Contact - Discovery Meeting Set</small></td>
+              <td>Contact - Discovery Meeting Set<small>Jake Mitchell</small></td>
+            </tr>
+
+            <tr>
+              <td><a href="https://rev-io.lightning.force.com/lightning/r/Contact/003PX00000uVusBYAS/view">Benjamin Freeman</a><small></small></td>
+              <td><a href="https://rev-io.lightning.force.com/lightning/r/Account/001PX00000g48JoYAI/view">DAMAZ SOLUTIONS</a><small>Jamie Butler</small></td>
+              <td>sales@luxoradmedia.com<small>12622646700</small></td>
+              <td>Request Demo<small>Disqualified / Disqualified</small></td>
+              <td><strong>2026-03-03 09:27 AM ET</strong><small>[Outreach] [Email] [In] Re: Rev.io - Demo Request</small></td>
+              <td>Email response<small>Jamie Butler</small></td>
+            </tr>
+
+            <tr>
+              <td><a href="https://rev-io.lightning.force.com/lightning/r/Contact/003PX00000ugFlEYAU/view">Louis Noriega</a><small></small></td>
+              <td><a href="https://rev-io.lightning.force.com/lightning/r/Account/001PX00000g9djZYAQ/view">Automated Port Solutions</a><small>Jaylin Bender</small></td>
+              <td>louis.noriega@aportsolutions.com<small>(786) 338-8222</small></td>
+              <td>Facebook Ads<small>Disqualified / Disqualified</small></td>
+              <td><strong>2026-03-09 02:31 PM ET</strong><small>Contact - Not Interested - No Reason Given</small></td>
+              <td>Contact - Not Interested - No Reason Given<small>Jaylin Bender</small></td>
+            </tr>
+
+            <tr>
+              <td><a href="https://rev-io.lightning.force.com/lightning/r/Contact/003PX00000ujXPQYA2/view">Ernst Remas</a><small></small></td>
+              <td><a href="https://rev-io.lightning.force.com/lightning/r/Account/001PX00000gApCUYA0/view">Eyetek Security</a><small>Jaylin Bender</small></td>
+              <td>ernst@eyeteksecurity.com<small>+15612602606</small></td>
+              <td>Facebook Ads<small>Disqualified / Disqualified</small></td>
+              <td><strong>2026-01-27 04:03 PM ET</strong><small>Contact - Too Small</small></td>
+              <td>Contact - Too Small<small>Abbey McIntosh</small></td>
+            </tr>
+
+            <tr>
+              <td><a href="https://rev-io.lightning.force.com/lightning/r/Contact/0036O000046aJNoQAM/view">Norbert Doeberlein</a><small>President &amp; Chief Executive Officer (CEO)</small></td>
+              <td><a href="https://rev-io.lightning.force.com/lightning/r/Account/0016O00003dmp9ZQAQ/view">Netzbahn, Inc.</a><small>Joseph Abarno</small></td>
+              <td>norb@netzbahn.com<small>9202975000</small></td>
+              <td>Request Demo<small>Disqualified / Disqualified</small></td>
+              <td><strong>2026-03-18 11:46 AM ET</strong><small>[Outreach] [Email] [In] Lynn @ IBPI contact info</small></td>
+              <td>Email response<small>Joseph Abarno</small></td>
+            </tr>
+
+            <tr>
+              <td><a href="https://rev-io.lightning.force.com/lightning/r/Contact/003PX00000zSmbMYAS/view">Matt Geraghty</a><small></small></td>
+              <td><a href="https://rev-io.lightning.force.com/lightning/r/Account/001PX00000iVCVBYA4/view">Straight Line Co</a><small>Joseph Abarno</small></td>
+              <td>mg@straightlineco.co.uk<small>07516800815</small></td>
+              <td>Request Demo<small>Disqualified / Disqualified</small></td>
+              <td><strong>2026-03-09 08:42 AM ET</strong><small>Contact - Wrong Industry</small></td>
+              <td>Contact - Wrong Industry<small>Cam Sharpe</small></td>
+            </tr>
+
+            <tr>
+              <td><a href="https://rev-io.lightning.force.com/lightning/r/Contact/003PX00000ukQQfYAM/view">Jon Anderson</a><small></small></td>
+              <td><a href="https://rev-io.lightning.force.com/lightning/r/Account/001PX00000gBKgLYAW/view">Arnt Asphalt Sealing</a><small>Marketing Rev.io</small></td>
+              <td>jon@arntasphaltco.com<small>+12692085776</small></td>
+              <td>Facebook Ads<small>Disqualified / Disqualified</small></td>
+              <td><strong>2026-02-03 09:23 AM ET</strong><small>Contact - Not the Right Time</small></td>
+              <td>Contact - Not the Right Time<small>Mitchell Davidson</small></td>
+            </tr>
+
+            <tr>
+              <td><a href="https://rev-io.lightning.force.com/lightning/r/Contact/003PX000012aX92YAE/view">Sarah Cedillo</a><small></small></td>
+              <td><a href="https://rev-io.lightning.force.com/lightning/r/Account/001PX00000kSMj3YAG/view">Cogent Analytics</a><small>Marketing Rev.io</small></td>
+              <td>scedillo@cogentanalytics.com<small>215-490-9865</small></td>
+              <td>Request Demo<small>Disqualified / Disqualified</small></td>
+              <td><strong>2026-04-09 09:23 AM ET</strong><small>Contact - Wrong Industry</small></td>
+              <td>Contact - Wrong Industry<small>Husam Zalmiyar</small></td>
+            </tr>
+
+            <tr>
+              <td><a href="https://rev-io.lightning.force.com/lightning/r/Contact/003PX00000uFjEdYAK/view">Eli Santos</a><small></small></td>
+              <td><a href="https://rev-io.lightning.force.com/lightning/r/Account/001PX00000fvBQvYAM/view">Heat Solutions LLC</a><small>Marketing Rev.io</small></td>
+              <td>eli@heatsolutionsllc.com<small>9176702948</small></td>
+              <td>Request Demo<small>Disqualified / Disqualified</small></td>
+              <td><strong>2026-01-20 09:08 AM ET</strong><small>Contact - Too Small</small></td>
+              <td>Contact - Too Small<small>Jake Mitchell</small></td>
+            </tr>
+
+            <tr>
+              <td><a href="https://rev-io.lightning.force.com/lightning/r/Contact/003PX00000qOxmKYAS/view">Joshua Subhash</a><small></small></td>
+              <td><a href="https://rev-io.lightning.force.com/lightning/r/Account/001PX00000fFLHWYA4/view">Lay Institute for Global Health Training</a><small>Marketing Rev.io</small></td>
+              <td>joshua@lightingtheworld.org<small>+18088927571</small></td>
+              <td>Facebook Ads<small>Disqualified / Disqualified</small></td>
+              <td><strong>2026-01-16 09:22 AM ET</strong><small>Contact - Wrong Industry</small></td>
+              <td>Contact - Wrong Industry<small>Abbey McIntosh</small></td>
+            </tr>
+
+            <tr>
+              <td><a href="https://rev-io.lightning.force.com/lightning/r/Contact/003PX00000su35IYAQ/view">Leo Dixon</a><small></small></td>
+              <td><a href="https://rev-io.lightning.force.com/lightning/r/Account/001PX00000fYkSDYA0/view">Loyalty rewards solutions</a><small>Marketing Rev.io</small></td>
+              <td>jaydee@loyaltyrewardssolutions.com<small>+13158793438</small></td>
+              <td>Facebook Ads<small>Disqualified / Disqualified</small></td>
+              <td><strong>2026-01-13 03:01 PM ET</strong><small>Contact - Too Small</small></td>
+              <td>Contact - Too Small<small>Prosper Firi</small></td>
+            </tr>
+
+            <tr>
+              <td><a href="https://rev-io.lightning.force.com/lightning/r/Contact/003PX00000wzjQDYAY/view">Maya Navarro</a><small></small></td>
+              <td><a href="https://rev-io.lightning.force.com/lightning/r/Account/001PX00000h8aS9YAI/view">Mid-American Language Services</a><small>Marketing Rev.io</small></td>
+              <td>info@malanguageservices.com<small>+13169931637</small></td>
+              <td>Facebook Ads<small>Disqualified / Disqualified</small></td>
+              <td><strong>2026-02-11 02:26 PM ET</strong><small>Contact - Wrong Industry</small></td>
+              <td>Contact - Wrong Industry<small>Emily Petraglia</small></td>
+            </tr>
+
+            <tr>
+              <td><a href="https://rev-io.lightning.force.com/lightning/r/Contact/003PX00000qjdSkYAI/view">Olga Lenox</a><small></small></td>
+              <td><a href="https://rev-io.lightning.force.com/lightning/r/Account/001PX00000fJheOYAS/view">NashDom Realty</a><small>Marketing Rev.io</small></td>
+              <td>olga@nashdomrealty.com<small>+18144407411</small></td>
+              <td>Facebook Ads<small>Disqualified / Disqualified</small></td>
+              <td><strong>2026-01-09 01:41 PM ET</strong><small>Contact - Wrong Industry</small></td>
+              <td>Contact - Wrong Industry<small>Prosper Firi</small></td>
+            </tr>
+
+            <tr>
+              <td><a href="https://rev-io.lightning.force.com/lightning/r/Contact/003PX00000vsz7JYAQ/view">Jd Horman</a><small>COO</small></td>
+              <td><a href="https://rev-io.lightning.force.com/lightning/r/Account/001PX00000glk5dYAA/view">Spirit Field Products LLC</a><small>Marketing Rev.io</small></td>
+              <td>jdhorman@spiritfieldproducts.com<small>+14695057274</small></td>
+              <td>Facebook Ads<small>Disqualified / Disqualified</small></td>
+              <td><strong>2026-02-04 01:47 PM ET</strong><small>Contact - Too Small</small></td>
+              <td>Contact - Too Small<small>Mitchell Davidson</small></td>
+            </tr>
+
+            <tr>
+              <td><a href="https://rev-io.lightning.force.com/lightning/r/Contact/003PX00000qyMc9YAE/view">Gene Austin</a><small></small></td>
+              <td><a href="https://rev-io.lightning.force.com/lightning/r/Account/001PX00000fM4weYAC/view">Tax Strategies Group</a><small>Marketing Rev.io</small></td>
+              <td>info@taxstrategiesgroup.com<small>+16464942044</small></td>
+              <td>Facebook Ads<small>Disqualified / Disqualified</small></td>
+              <td><strong>2026-01-12 10:08 AM ET</strong><small>Contact - Wrong Industry</small></td>
+              <td>Contact - Wrong Industry<small>Mitchell Davidson</small></td>
+            </tr>
+
+            <tr>
+              <td><a href="https://rev-io.lightning.force.com/lightning/r/Contact/003PX00000uc9tTYAQ/view">Levi Patrick</a><small>Executive Director</small></td>
+              <td><a href="https://rev-io.lightning.force.com/lightning/r/Account/001PX00000g7M7HYAU/view">Tulsa Regional STEM Alliance</a><small>Marketing Rev.io</small></td>
+              <td>levi.patrick@tulsastem.org<small>+14056202080</small></td>
+              <td>Facebook Ads<small>Disqualified / Disqualified</small></td>
+              <td><strong>2026-01-23 12:01 PM ET</strong><small>[Outreach] [Email] [In] Re: Rev.io Demo Request</small></td>
+              <td>Email response<small>Mitchell Davidson</small></td>
+            </tr>
+
+            <tr>
+              <td><a href="https://rev-io.lightning.force.com/lightning/r/Contact/003PX00000unUt9YAE/view">Daniel Bugbee</a><small></small></td>
+              <td><a href="https://rev-io.lightning.force.com/lightning/r/Account/001PX00000gMtqcYAC/view">UmbraForge X</a><small>Marketing Rev.io</small></td>
+              <td>admin@umbraforgex.com<small>+18604607841</small></td>
+              <td>Facebook Ads<small>Disqualified / Disqualified</small></td>
+              <td><strong>2026-01-30 10:06 AM ET</strong><small>Contact - Not the Right Time</small></td>
+              <td>Contact - Not the Right Time<small>Mitchell Davidson</small></td>
+            </tr>
+
+            <tr>
+              <td><a href="https://rev-io.lightning.force.com/lightning/r/Contact/003PX00000xpWS5YAM/view">David Parker</a><small></small></td>
+              <td><a href="https://rev-io.lightning.force.com/lightning/r/Account/001PX00000hQNl3YAG/view">gjf.com</a><small>Marketing Rev.io</small></td>
+              <td>ceo@blackstock.exchange<small>+13234525225</small></td>
+              <td>Facebook Ads<small>Disqualified / Disqualified</small></td>
+              <td><strong>2026-02-17 08:09 AM ET</strong><small>[Outreach] [Email] [In] I Got Your Message</small></td>
+              <td>Email response<small>Mitchell Davidson</small></td>
+            </tr>
+
+            <tr>
+              <td><a href="https://rev-io.lightning.force.com/lightning/r/Contact/003PX00000uYGs3YAG/view">Donald Morical II</a><small>CEO</small></td>
+              <td><a href="https://rev-io.lightning.force.com/lightning/r/Account/001PX00000g5w3DYAQ/view">CCH Mortgage</a><small>Ryan Koontz</small></td>
+              <td>don@cchmortgage.com<small>-6166</small></td>
+              <td>Facebook Ads<small>Disqualified / Disqualified</small></td>
+              <td><strong>2026-02-05 09:40 AM ET</strong><small>Contact - Current Opportunity</small></td>
+              <td>Contact - Current Opportunity<small>Abbey McIntosh</small></td>
+            </tr>
+
+            <tr>
+              <td><a href="https://rev-io.lightning.force.com/lightning/r/Contact/003PX00000wEPGTYA4/view">Ron Levy</a><small>Principal</small></td>
+              <td><a href="https://rev-io.lightning.force.com/lightning/r/Account/001PX00000gu442YAA/view">Ipex Insurance</a><small>Ryan Koontz</small></td>
+              <td>ron@ipexins.com<small>-10577</small></td>
+              <td>Facebook Ads<small>Disqualified / Disqualified</small></td>
+              <td><strong>2026-02-09 10:10 AM ET</strong><small>Contact - Do Not Contact</small></td>
+              <td>Contact - Do Not Contact<small>Mitchell Davidson</small></td>
+            </tr></tbody>
+      </table>
+    </section>
+    <footer>Private linked report ID 00OPX000009Bjvv2AC is not accessible to the API integration, so this uses the accessible public report ID 00OPX000006L6DR2A0 with the same recycled MQL base filters.</footer>
+  </main>
+</body>
+</html>
