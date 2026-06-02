@@ -13,7 +13,8 @@ TARGET_MONTH = TARGET_MONTH[:1].upper() + TARGET_MONTH[1:].lower()
 MONTH_SLUG = TARGET_MONTH.lower()
 MONTH_ID = MONTH_SLUG
 DATA_FILE = f'{WORKSPACE}/sf_{MONTH_SLUG}_opps.json'
-FROZEN_MONTHS = {'May'}
+MONTH_NAMES = ['January','February','March','April','May','June','July','August','September','October','November','December']
+FROZEN_MONTHS = set(MONTH_NAMES[:max(now.month - 1, 0)])
 
 if TARGET_MONTH in FROZEN_MONTHS and os.environ.get('ALLOW_FROZEN_MONTH_PATCH') != '1':
     raise SystemExit(f'{TARGET_MONTH} forecast data is locked; set ALLOW_FROZEN_MONTH_PATCH=1 to rebuild it intentionally.')
@@ -51,15 +52,18 @@ FORECAST_COLORS = {
     'Best Case':   ('#00ff88','rgba(0,255,136,0.06)','rgba(0,255,136,0.12)','BEST CASE'),
 }
 
-def prod_key(p):
+def prod_key_for_month(p, month_name):
     p = (p or '').strip()
     if 'PSA' in p: return 'PSA'
     if 'Billing' in p or 'Odin' in p: return 'Billing'
     if 'Payment' in p: return 'Payments'
-    if TARGET_MONTH == 'June' and 'Commerce' in p: return 'Cyber'
+    if month_name == 'June' and 'Commerce' in p: return 'Cyber'
     if 'Cyber' in p: return 'Cyber'
     if 'Commerce' in p: return 'CommerceHub'
     return 'Other'
+
+def prod_key(p):
+    return prod_key_for_month(p, TARGET_MONTH)
 
 def prod_label(p):
     if TARGET_MONTH == 'June' and p == 'Cyber':
@@ -203,16 +207,32 @@ def build_month_tab():
     return '\n'.join(lines)
 
 def build_q2_bar():
-    may_cw = defaultdict(float)
-    may_path = f'{WORKSPACE}/sf_may_opps.json'
-    if os.path.exists(may_path) and MONTH_SLUG != 'may':
-        with open(may_path) as f:
-            for o in json.load(f):
-                if o.get('StageName') == 'Closed Won':
-                    may_cw[prod_key(o.get('Product_Type__c',''))] += (o.get('Amount') or 0)
-    elif MONTH_SLUG == 'may':
-        may_cw = {p: buckets[p]['closed'] for p in PRODUCTS}
-    q2_cw = {p: apr_cw.get(p,0) + may_cw.get(p,0) + (buckets[p]['closed'] if MONTH_SLUG == 'june' else 0) for p in PRODUCTS}
+    q2_cw = defaultdict(float)
+
+    def add_closed_month(month_name):
+        slug = month_name.lower()
+        candidates = [
+            f'{WORKSPACE}/sf_{slug}_closed_won_opps.json',
+            f'{WORKSPACE}/sf_{slug}_final_opps.json',
+            f'{WORKSPACE}/sf_{slug}_opps.json',
+        ]
+        for path in candidates:
+            if not os.path.exists(path):
+                continue
+            with open(path) as f:
+                for o in json.load(f):
+                    if o.get('StageName') == 'Closed Won':
+                        q2_cw[prod_key_for_month(o.get('Product_Type__c',''), month_name)] += (o.get('Amount') or 0)
+            return
+
+    add_closed_month('April')
+    add_closed_month('May')
+    if MONTH_SLUG == 'june':
+        for p in PRODUCTS:
+            q2_cw[p] += buckets[p]['closed']
+    else:
+        add_closed_month('June')
+
     total_cw    = sum(q2_cw.values())
     total_quota = sum(Q2_QUOTAS.values())
     total_pct   = total_cw/total_quota*100 if total_quota else 0
