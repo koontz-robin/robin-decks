@@ -8,30 +8,7 @@ BASE_DIR = Path(__file__).resolve().parent
 with open(BASE_DIR / 'tradeshow_contacts.json') as f:
     raw_contacts = json.load(f)
 
-history_path = BASE_DIR / 'tradeshow_contact_status_history.json'
-if history_path.exists():
-    with open(history_path) as f:
-        contact_status_history = json.load(f)
-else:
-    contact_status_history = []
-
 YEAR_START = '2026-01-01'
-
-mql_2026_contact_ids = {
-    h.get('ContactId')
-    for h in contact_status_history
-    if h.get('Field') == 'Contact_Status__c'
-    and h.get('NewValue') == 'MQL'
-    and (h.get('CreatedDate') or '') >= YEAR_START
-}
-sql_from_mql_2026_contact_ids = {
-    h.get('ContactId')
-    for h in contact_status_history
-    if h.get('Field') == 'Contact_Status__c'
-    and h.get('OldValue') == 'MQL'
-    and h.get('NewValue') == 'SQL'
-    and (h.get('CreatedDate') or '') >= YEAR_START
-}
 
 def matches_report_filters(c):
     return (
