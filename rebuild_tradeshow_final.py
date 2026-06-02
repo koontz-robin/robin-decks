@@ -45,10 +45,13 @@ def was_mql_in_2026(c):
         or (created_in_2026 and status in ('MQL', 'SQL', 'Disqualified'))
     )
 
-def is_excluded_show(c):
-    return '25' in (c.get('Marketing_Sub_source__c') or '')
+def is_2026_event_name(name):
+    name = name or ''
+    if not name or name == 'Unknown':
+        return False
+    return not re.search(r'(^|\D)(24|25)($|\D)', name)
 
-contacts = [c for c in raw_contacts if was_mql_in_2026(c) and not is_excluded_show(c)]
+contacts = [c for c in raw_contacts if was_mql_in_2026(c) and is_2026_event_name(c.get('Marketing_Sub_source__c'))]
 
 def effective_status(c):
     """SQL only counts when Contact Status changed from MQL to SQL in 2026."""
@@ -95,7 +98,10 @@ total_with_opps = len(with_opps)
 # Use tradeshow_opps.json (Opp.Marketing_Sub_source__c query) for CW/pipeline
 # This reflects new post-show bookings only, not pre-existing contact-linked deals
 with open(BASE_DIR / 'tradeshow_opps.json') as _f:
-    sourced_opps = json.load(_f)
+    sourced_opps = [
+        o for o in json.load(_f)
+        if is_2026_event_name(o.get('Marketing_Sub_source__c'))
+    ]
 total_cw = sum(o.get('Amount') or 0 for o in sourced_opps if o.get('StageName') == 'Closed Won')
 total_pipeline = sum(o.get('Amount') or 0 for o in sourced_opps if o.get('StageName') not in ('Closed Won', 'Closed Lost'))
 total_sql = sum(1 for c in contacts if effective_status(c) == 'SQL')
@@ -371,7 +377,7 @@ HTML = f"""<!DOCTYPE html>
       <div class="header-date">GENERATED {date_str.upper()} · LIVE SALESFORCE DATA</div>
     </div>
     <h1>Tradeshow <span>MQL Dashboard</span></h1>
-    <div class="header-sub">2026 YTD · {total} contacts added or updated to MQL · {len(by_event)} events · SQL = 2026 MQL → SQL status change</div>
+    <div class="header-sub">2026 YTD · 2026 events only · {total} contacts added or updated to MQL · {len(by_event)} events · SQL = 2026 MQL → SQL status change</div>
   </div>
 
   <div class="summary-bar">
