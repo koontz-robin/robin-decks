@@ -6,14 +6,54 @@ from pathlib import Path
 BASE_DIR = Path(__file__).resolve().parent
 
 with open(BASE_DIR / 'tradeshow_contacts.json') as f:
-    contacts = json.load(f)
+    raw_contacts = json.load(f)
+
+history_path = BASE_DIR / 'tradeshow_contact_status_history.json'
+if history_path.exists():
+    with open(history_path) as f:
+        contact_status_history = json.load(f)
+else:
+    contact_status_history = []
+
+YEAR_START = '2026-01-01'
+
+mql_2026_contact_ids = {
+    h.get('ContactId')
+    for h in contact_status_history
+    if h.get('Field') == 'Contact_Status__c'
+    and h.get('NewValue') == 'MQL'
+    and (h.get('CreatedDate') or '') >= YEAR_START
+}
+sql_from_mql_2026_contact_ids = {
+    h.get('ContactId')
+    for h in contact_status_history
+    if h.get('Field') == 'Contact_Status__c'
+    and h.get('OldValue') == 'MQL'
+    and h.get('NewValue') == 'SQL'
+    and (h.get('CreatedDate') or '') >= YEAR_START
+}
+
+def was_mql_in_2026(c):
+    cid = c.get('Id')
+    status = c.get('Contact_Status__c') or ''
+    created_in_2026 = (c.get('CreatedDate') or '') >= YEAR_START
+    converted_in_2026 = (c.get('Most_Recent_Conversion__c') or '') >= YEAR_START
+    return (
+        cid in mql_2026_contact_ids
+        or cid in sql_from_mql_2026_contact_ids
+        or converted_in_2026
+        or (created_in_2026 and status in ('MQL', 'SQL', 'Disqualified'))
+    )
+
+contacts = [c for c in raw_contacts if was_mql_in_2026(c)]
 
 def effective_status(c):
-    """Opp creation = SQL conversion"""
-    has_opp = c.get('Opportunities') and c['Opportunities'].get('totalSize', 0) > 0
+    """SQL only counts when Contact Status changed from MQL to SQL in 2026."""
     sf_status = c.get('Contact_Status__c') or 'Unknown'
-    if has_opp and sf_status not in ('SQL', 'Disqualified'):
+    if c.get('Id') in sql_from_mql_2026_contact_ids:
         return 'SQL'
+    if sf_status == 'SQL':
+        return 'MQL'
     return sf_status
 
 status_defs = [
@@ -41,7 +81,8 @@ with open(BASE_DIR / 'tradeshow_opps.json') as _f:
     sourced_opps = json.load(_f)
 total_cw = sum(o.get('Amount') or 0 for o in sourced_opps if o.get('StageName') == 'Closed Won')
 total_pipeline = sum(o.get('Amount') or 0 for o in sourced_opps if o.get('StageName') not in ('Closed Won', 'Closed Lost'))
-conv_rate = round(total_with_opps / total * 100, 1) if total else 0
+total_sql = status_counts.get('SQL', 0)
+conv_rate = round(total_sql / total * 100, 1) if total else 0
 
 # Donut data
 funnel = [(s, c, status_counts.get(s, 0)) for s, c in status_defs if status_counts.get(s, 0) > 0]
@@ -195,7 +236,7 @@ def event_section(ev, ev_counts):
 def rep_rows_html():
     rows = ''
     for rep, d in reps:
-        conv = round(d['with_opp'] / d['total'] * 100) if d['total'] else 0
+        conv = round(d['sql'] / d['total'] * 100) if d['total'] else 0
         conv_color = '#00ff88' if conv >= 30 else ('#ffd700' if conv >= 15 else '#ff4444')
         t = d['total']
         bar = f'''<div style="display:flex;height:8px;border-radius:4px;overflow:hidden;width:120px;background:#0a0a0a">
@@ -367,14 +408,14 @@ HTML = f"""<!DOCTYPE html>
       <div class="header-date">GENERATED {date_str.upper()} · LIVE SALESFORCE DATA</div>
     </div>
     <h1>Tradeshow <span>MQL Dashboard</span></h1>
-    <div class="header-sub">2026 YTD · {total} contacts · {len(by_event)} events · Opp creation = SQL conversion</div>
+    <div class="header-sub">2026 YTD · {total} contacts added or updated to MQL · {len(by_event)} events · SQL = 2026 MQL → SQL status change</div>
   </div>
 
   <div class="summary-bar">
     <div class="sum-item"><div class="sum-label">Total Contacts</div><div class="sum-val">{total}</div></div>
     <div class="sum-item"><div class="sum-label">Events</div><div class="sum-val">{len(by_event)}</div></div>
-    <div class="sum-item hl"><div class="sum-label">MQL → SQL Rate</div><div class="sum-val green">{conv_rate}%</div><div class="note">opp created = SQL</div></div>
-    <div class="sum-item"><div class="sum-label">SQLs (w/ Opp)</div><div class="sum-val cyan">{total_with_opps}</div></div>
+    <div class="sum-item hl"><div class="sum-label">MQL → SQL Rate</div><div class="sum-val green">{conv_rate}%</div><div class="note">2026 status history</div></div>
+    <div class="sum-item"><div class="sum-label">SQLs</div><div class="sum-val cyan">{total_sql}</div><div class="note">MQL → SQL in 2026</div></div>
     <div class="sum-item"><div class="sum-label">Active Pipeline</div><div class="sum-val yellow">${total_pipeline:,.0f}</div></div>
     <div class="sum-item hl"><div class="sum-label">Closed Won</div><div class="sum-val green">${total_cw:,.0f}</div></div>
   </div>
@@ -386,9 +427,9 @@ HTML = f"""<!DOCTYPE html>
     <div class="status-graph-head">
       <div>
         <div class="status-graph-title">Status Mix by Contact Count</div>
-        <div class="status-graph-note">Bars are scaled to the largest status segment; percentages are of all {total} tradeshow contacts.</div>
+        <div class="status-graph-note">Bars are scaled to the largest status segment; percentages are of all {total} contacts added or updated to MQL in 2026.</div>
       </div>
-      <div class="status-graph-note">Opp created = SQL</div>
+      <div class="status-graph-note">SQL = MQL → SQL in 2026</div>
     </div>
     {status_graph_rows}
   </div>
@@ -398,10 +439,10 @@ HTML = f"""<!DOCTYPE html>
     <div class="chart-row">
       <div class="chart-inner">
         <canvas id="statusChart" width="280" height="280"></canvas>
-        <div class="donut-center"><div class="donut-total">{total}</div><div class="donut-label">contacts</div></div>
+        <div class="donut-center"><div class="donut-total">{total}</div><div class="donut-label">2026 MQLs</div></div>
       </div>
       <div class="chart-legend">
-        <div style="font-size:10px;color:#3a7a5a;margin-bottom:12px;font-style:italic">✦ Opp created = auto-promoted to SQL</div>
+        <div style="font-size:10px;color:#3a7a5a;margin-bottom:12px;font-style:italic">SQL only counts when Contact Status changed from MQL to SQL in 2026</div>
         {legend_rows}
       </div>
     </div>
@@ -416,7 +457,7 @@ HTML = f"""<!DOCTYPE html>
   <div class="section-title">MQL → SQL Conversion by Rep</div>
   <div class="chart-card" style="padding:20px 24px">
     <div style="display:flex;gap:20px;flex-wrap:wrap;margin-bottom:14px">
-      <div style="display:flex;align-items:center;gap:6px"><div style="width:10px;height:10px;border-radius:2px;background:#00ff88"></div><span style="font-size:11px;color:#c8f0dc;font-weight:600">SQL (opp created)</span></div>
+      <div style="display:flex;align-items:center;gap:6px"><div style="width:10px;height:10px;border-radius:2px;background:#00ff88"></div><span style="font-size:11px;color:#c8f0dc;font-weight:600">SQL (MQL → SQL in 2026)</span></div>
       <div style="display:flex;align-items:center;gap:6px"><div style="width:10px;height:10px;border-radius:2px;background:rgba(0,229,255,0.25)"></div><span style="font-size:11px;color:#c8f0dc;font-weight:600">Total leads</span></div>
     </div>
     <canvas id="repChart"></canvas>
@@ -433,7 +474,7 @@ HTML = f"""<!DOCTYPE html>
   <div class="section-title">By Event — {len(by_event)} events ({total} contacts)</div>
   {events_html}
 
-  <div class="footer">REV.IO SALES INTELLIGENCE · ROBIN 🦸🏻‍♂️ · CONFIDENTIAL · Opp creation = SQL conversion</div>
+  <div class="footer">REV.IO SALES INTELLIGENCE · ROBIN 🦸🏻‍♂️ · CONFIDENTIAL · 2026 MQL COHORT · SQL = MQL → SQL STATUS HISTORY</div>
 </div>
 <script>
 (function(){{
