@@ -177,6 +177,10 @@ def get_team_members(base, headers):
     return members
 
 
+def is_included_rep(name, reps):
+    return name in reps and reps.get(name) != "Other" and name not in EXCLUDED_REPS
+
+
 def fetch_created_opps(base, headers, quarter_start_utc, quarter_end_utc):
     query = f"""
         SELECT Id, Name, Amount, StageName, CreatedDate, Product_Type__c,
@@ -370,7 +374,7 @@ def build_html(payload):
     main {{ padding:24px 32px 36px; }}
     .kpis {{
       display:grid;
-      grid-template-columns:repeat(4, minmax(160px, 1fr));
+      grid-template-columns:repeat(3, minmax(160px, 1fr));
       gap:12px;
       margin-bottom:22px;
     }}
@@ -497,6 +501,8 @@ def build_html(payload):
       <div class="kpi"><div class="kpi-label">Week New Opps</div><div class="kpi-value">{fmt_int(totals["created"]["week"]["count"])}</div><div class="kpi-sub">{money(totals["created"]["week"]["amount"])} MRR</div></div>
       <div class="kpi"><div class="kpi-label">Month New Opps</div><div class="kpi-value">{fmt_int(totals["created"]["month"]["count"])}</div><div class="kpi-sub">{money(totals["created"]["month"]["amount"])} MRR</div></div>
       <div class="kpi"><div class="kpi-label">Quarter New Opps</div><div class="kpi-value">{fmt_int(totals["created"]["quarter"]["count"])}</div><div class="kpi-sub">{money(totals["created"]["quarter"]["amount"])} MRR</div></div>
+      <div class="kpi"><div class="kpi-label">Week Stage Steps</div><div class="kpi-value">{fmt_int(totals["movement"]["week"]["stage_steps"])}</div><div class="kpi-sub">{fmt_int(totals["movement"]["week"]["unique_count"])} opps moved</div></div>
+      <div class="kpi"><div class="kpi-label">Month Stage Steps</div><div class="kpi-value">{fmt_int(totals["movement"]["month"]["stage_steps"])}</div><div class="kpi-sub">{fmt_int(totals["movement"]["month"]["unique_count"])} opps moved</div></div>
       <div class="kpi"><div class="kpi-label">Quarter Stage Steps</div><div class="kpi-value">{fmt_int(totals["movement"]["quarter"]["stage_steps"])}</div><div class="kpi-sub">{fmt_int(totals["movement"]["quarter"]["unique_count"])} opps moved</div></div>
     </div>
 
@@ -563,9 +569,8 @@ def main():
 
     for opp in created:
         owner = normalize_name(((opp.get("Owner") or {}).get("Name") or "Unknown"))
-        if owner in EXCLUDED_REPS:
+        if not is_included_rep(owner, reps):
             continue
-        reps.setdefault(owner, "Other")
         created_at = datetime.strptime(opp["CreatedDate"], "%Y-%m-%dT%H:%M:%S.%f%z").astimezone(ET)
         amount = float(opp.get("Amount") or 0)
         for period in period_for_date(created_at, windows):
@@ -575,9 +580,8 @@ def main():
     for change in history:
         opp = change.get("Opportunity") or {}
         owner = normalize_name(((opp.get("Owner") or {}).get("Name") or "Unknown"))
-        if owner in EXCLUDED_REPS:
+        if not is_included_rep(owner, reps):
             continue
-        reps.setdefault(owner, "Other")
         changed_at = datetime.strptime(change["CreatedDate"], "%Y-%m-%dT%H:%M:%S.%f%z").astimezone(ET)
         old_stage = str(change.get("OldValue") or "")
         new_stage = str(change.get("NewValue") or "")
