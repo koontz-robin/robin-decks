@@ -33,16 +33,11 @@ sql_from_mql_2026_contact_ids = {
     and (h.get('CreatedDate') or '') >= YEAR_START
 }
 
-def was_mql_in_2026(c):
-    cid = c.get('Id')
-    status = c.get('Contact_Status__c') or ''
-    created_in_2026 = (c.get('CreatedDate') or '') >= YEAR_START
-    converted_in_2026 = (c.get('Most_Recent_Conversion__c') or '') >= YEAR_START
+def matches_report_filters(c):
     return (
-        cid in mql_2026_contact_ids
-        or cid in sql_from_mql_2026_contact_ids
-        or converted_in_2026
-        or (created_in_2026 and status in ('MQL', 'SQL', 'Disqualified'))
+        is_tradeshow_source(c)
+        and (c.get('Contact_Status__c') or '') == 'MQL'
+        and (c.get('Most_Recent_Conversion__c') or '') >= YEAR_START
     )
 
 def is_2026_event_name(name):
@@ -56,19 +51,9 @@ def is_tradeshow_source(c):
 
 contacts = [
     c for c in raw_contacts
-    if is_tradeshow_source(c)
-    and was_mql_in_2026(c)
+    if matches_report_filters(c)
     and is_2026_event_name(c.get('Marketing_Sub_source__c'))
 ]
-
-def effective_status(c):
-    """SQL only counts when Contact Status changed from MQL to SQL in 2026."""
-    sf_status = c.get('Contact_Status__c') or 'Unknown'
-    if c.get('Id') in sql_from_mql_2026_contact_ids:
-        return 'SQL'
-    if sf_status == 'SQL':
-        return 'MQL'
-    return sf_status
 
 def contact_stage(c):
     stage = c.get('Contact_Stage__c')
@@ -113,8 +98,6 @@ with open(BASE_DIR / 'tradeshow_opps.json') as _f:
     ]
 total_cw = sum(o.get('Amount') or 0 for o in sourced_opps if o.get('StageName') == 'Closed Won')
 total_pipeline = sum(o.get('Amount') or 0 for o in sourced_opps if o.get('StageName') not in ('Closed Won', 'Closed Lost'))
-total_sql = sum(1 for c in contacts if effective_status(c) == 'SQL')
-conv_rate = round(total_sql / total * 100, 1) if total else 0
 
 # Status graph data
 funnel = [(s, c, status_counts.get(s, 0)) for s, c in status_defs if status_counts.get(s, 0) > 0]
@@ -177,8 +160,6 @@ def event_section(ev, ev_counts):
 
     # Get contacts for this event
     ev_contacts = [c for c in contacts if (c.get('Marketing_Sub_source__c') or 'Unknown') == ev]
-    sql_n = sum(1 for c in ev_contacts if effective_status(c) == 'SQL')
-    sql_rate = round(sql_n / n * 100) if n else 0
     ev_opps = [c for c in ev_contacts if c.get('Opportunities') and c['Opportunities'].get('totalSize', 0) > 0]
     # Use sourced_opps (Opp.Marketing_Sub_source__c) for CW/pipeline — post-show new bookings only
     ev_sourced = [o for o in sourced_opps if (o.get('Marketing_Sub_source__c') or '') == ev]
@@ -222,7 +203,6 @@ def event_section(ev, ev_counts):
     </div>
     <div class="event-stats">
       {status_breakdown}
-      <span class="conv-badge">{sql_rate}% → SQL</span>
       {f'<span class="cw-badge">${cw_amt:,.0f} CW</span>' if cw_amt > 0 else ''}
       {f'<span class="pipe-badge">${pipeline:,.0f} pipeline</span>' if pipeline > 0 else ''}
     </div>
@@ -352,7 +332,6 @@ CSS = """
   .event-status-segment{height:100%;min-width:2px}
   .event-status-labels{display:flex;gap:4px;flex-wrap:wrap;justify-content:flex-end}
   .event-status-label{font-size:9px;font-weight:800;padding:1px 5px;border:1px solid;border-radius:8px;white-space:nowrap}
-  .conv-badge{font-size:10px;font-weight:700;padding:2px 8px;border-radius:10px;background:rgba(0,229,255,.1);color:var(--cyan);border:1px solid rgba(0,229,255,.2);white-space:nowrap}
   .cw-badge{font-size:10px;font-weight:700;padding:2px 8px;border-radius:10px;background:rgba(0,255,136,.1);color:var(--green);border:1px solid rgba(0,255,136,.2);white-space:nowrap}
   .pipe-badge{font-size:10px;font-weight:700;padding:2px 8px;border-radius:10px;background:rgba(255,215,0,.08);color:#ffd700;border:1px solid rgba(255,215,0,.2);white-space:nowrap}
   .event-body{border-top:1px solid var(--border)}
@@ -393,7 +372,7 @@ HTML = f"""<!DOCTYPE html>
       <div class="header-date">GENERATED {date_str.upper()} · LIVE SALESFORCE DATA</div>
     </div>
     <h1>Tradeshow <span>MQL Dashboard</span></h1>
-    <div class="header-sub">2026 YTD · 2026 events only · {total} contacts added or updated to MQL · {len(by_event)} events · SQL = 2026 MQL → SQL status change</div>
+    <div class="header-sub">2026 YTD · 2026 events only · {total} current MQL contacts · {len(by_event)} events · filters: Tradeshow source + Contact Status = MQL + Most Recent Conversion in 2026</div>
   </div>
 
   <div class="definitions-card">
@@ -410,8 +389,8 @@ HTML = f"""<!DOCTYPE html>
   <div class="summary-bar">
     <div class="sum-item"><div class="sum-label">Total Contacts</div><div class="sum-val">{total}</div></div>
     <div class="sum-item"><div class="sum-label">Events</div><div class="sum-val">{len(by_event)}</div></div>
-    <div class="sum-item hl"><div class="sum-label">MQL → SQL Rate</div><div class="sum-val green">{conv_rate}%</div><div class="note">2026 status history</div></div>
-    <div class="sum-item"><div class="sum-label">SQLs</div><div class="sum-val cyan">{total_sql}</div><div class="note">MQL → SQL in 2026</div></div>
+    <div class="sum-item hl"><div class="sum-label">Contact Status</div><div class="sum-val green">MQL</div><div class="note">current status</div></div>
+    <div class="sum-item"><div class="sum-label">Source</div><div class="sum-val cyan">Tradeshow</div><div class="note">marketing source</div></div>
     <div class="sum-item"><div class="sum-label">Active Pipeline</div><div class="sum-val yellow">${total_pipeline:,.0f}</div></div>
     <div class="sum-item hl"><div class="sum-label">Closed Won</div><div class="sum-val green">${total_cw:,.0f}</div></div>
   </div>
@@ -423,7 +402,7 @@ HTML = f"""<!DOCTYPE html>
     <div class="status-graph-head">
       <div>
         <div class="status-graph-title">Contact Stage Mix by Contact Count</div>
-        <div class="status-graph-note">Bars are scaled to the largest status segment; percentages are of all {total} contacts added or updated to MQL in 2026.</div>
+        <div class="status-graph-note">Bars are scaled to the largest status segment; percentages are of all {total} current MQL contacts with Most Recent Conversion in 2026.</div>
       </div>
       <div class="status-graph-note">Contact_Stage__c</div>
     </div>
@@ -438,7 +417,7 @@ HTML = f"""<!DOCTYPE html>
         <div class="donut-center"><div class="donut-total">{total}</div><div class="donut-label">2026 MQLs</div></div>
       </div>
       <div class="chart-legend">
-        <div style="font-size:10px;color:#3a7a5a;margin-bottom:12px;font-style:italic">Based on the Tradeshow Status field for contacts added or updated to MQL in 2026</div>
+        <div style="font-size:10px;color:#3a7a5a;margin-bottom:12px;font-style:italic">Based on the Tradeshow Status field for current MQL contacts with Most Recent Conversion in 2026</div>
         {mql_legend_rows}
       </div>
     </div>
@@ -446,7 +425,7 @@ HTML = f"""<!DOCTYPE html>
 
   <div class="section-title">Contact Stage by Show</div>
   <div class="chart-card" style="padding:20px 24px">
-    <div style="font-size:10px;color:#3a7a5a;margin-bottom:12px;font-style:italic">Uses Contact Stage for the 2026 MQL cohort: In Progress, Recycled, Disqualified, and New. Unknown means Contact_Stage__c is blank or unset in Salesforce.</div>
+    <div style="font-size:10px;color:#3a7a5a;margin-bottom:12px;font-style:italic">Uses Contact Stage for current MQL contacts with Most Recent Conversion in 2026.</div>
     <div style="display:flex;gap:20px;flex-wrap:wrap;margin-bottom:14px">{stage_ev_legend}</div>
     <canvas id="contactStageEventChart"></canvas>
   </div>
@@ -460,7 +439,7 @@ HTML = f"""<!DOCTYPE html>
   <div class="section-title">By Event — {len(by_event)} events ({total} contacts)</div>
   {events_html}
 
-  <div class="footer">REV.IO SALES INTELLIGENCE · ROBIN 🦸🏻‍♂️ · CONFIDENTIAL · 2026 MQL COHORT · SQL = MQL → SQL STATUS HISTORY</div>
+  <div class="footer">REV.IO SALES INTELLIGENCE · ROBIN 🦸🏻‍♂️ · CONFIDENTIAL · 2026 CURRENT MQL COHORT · TRADESHOW SOURCE · MOST RECENT CONVERSION IN 2026</div>
 </div>
 <script>
 (function(){{
@@ -514,4 +493,4 @@ function toggle(id){{
 with open(BASE_DIR / 'tradeshow-mql.html', 'w') as f:
     f.write(HTML)
 print(f"Done! Status counts: {dict(status_counts)}")
-print(f"Conv rate: {conv_rate}% | Pipeline: ${total_pipeline:,.0f} | CW: ${total_cw:,.0f}")
+print(f"Contacts: {total} | Events: {len(by_event)} | Pipeline: ${total_pipeline:,.0f} | CW: ${total_cw:,.0f}")
