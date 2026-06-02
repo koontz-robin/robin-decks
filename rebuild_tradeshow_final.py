@@ -56,14 +56,17 @@ def effective_status(c):
         return 'MQL'
     return sf_status
 
+def contact_stage(c):
+    stage = c.get('Contact_Stage__c') or 'New'
+    if stage in ('In Progress', 'Recycled', 'Disqualified', 'New'):
+        return stage
+    return 'New'
+
 status_defs = [
-    ('SQL',          '#00ff88'),
-    ('MQL',          '#00e5ff'),
+    ('In Progress',  '#00e5ff'),
+    ('Recycled',     '#ffb000'),
     ('Disqualified', '#ff4444'),
-    ('Partner',      '#bf5af2'),
-    ('Potential Referral/Partner', '#a855f7'),
-    ('Client',       '#ffd700'),
-    ('Unknown',      '#444'),
+    ('New',          '#00ff88'),
 ]
 
 mql_status_defs = [
@@ -79,7 +82,7 @@ mql_status_defs = [
 status_counts = defaultdict(int)
 mql_status_counts = defaultdict(int)
 for c in contacts:
-    status_counts[effective_status(c)] += 1
+    status_counts[contact_stage(c)] += 1
     mql_status_counts[c.get('Tradeshow_Status__c') or 'Unknown'] += 1
 
 total = len(contacts)
@@ -92,7 +95,7 @@ with open(BASE_DIR / 'tradeshow_opps.json') as _f:
     sourced_opps = json.load(_f)
 total_cw = sum(o.get('Amount') or 0 for o in sourced_opps if o.get('StageName') == 'Closed Won')
 total_pipeline = sum(o.get('Amount') or 0 for o in sourced_opps if o.get('StageName') not in ('Closed Won', 'Closed Lost'))
-total_sql = status_counts.get('SQL', 0)
+total_sql = sum(1 for c in contacts if effective_status(c) == 'SQL')
 conv_rate = round(total_sql / total * 100, 1) if total else 0
 
 # Status graph data
@@ -106,7 +109,7 @@ by_event = defaultdict(lambda: defaultdict(int))
 mql_status_by_event = defaultdict(lambda: defaultdict(int))
 for c in contacts:
     ev = c.get('Marketing_Sub_source__c') or 'Unknown'
-    by_event[ev][effective_status(c)] += 1
+    by_event[ev][contact_stage(c)] += 1
     mql_status_by_event[ev][c.get('Tradeshow_Status__c') or 'Unknown'] += 1
 events_sorted = sorted(by_event.items(), key=lambda x: -sum(x[1].values()))
 
@@ -122,13 +125,10 @@ stage_css_map = {
     '1- Discovery Scheduled': 's1', 'Closed Lost': 'lost',
 }
 status_bg_map = {
-    'SQL': 'rgba(0,255,136,0.12)',
-    'MQL': 'rgba(0,229,255,0.1)',
+    'In Progress': 'rgba(0,229,255,0.1)',
+    'Recycled': 'rgba(255,176,0,0.12)',
     'Disqualified': 'rgba(255,68,68,0.12)',
-    'Partner': 'rgba(191,90,242,0.12)',
-    'Potential Referral/Partner': 'rgba(168,85,247,0.12)',
-    'Client': 'rgba(255,215,0,0.12)',
-    'Unknown': 'rgba(80,80,80,0.1)',
+    'New': 'rgba(0,255,136,0.12)',
 }
 status_color_map = dict(status_defs)
 
@@ -154,13 +154,12 @@ def event_status_breakdown(ev_counts, total_count):
 
 def event_section(ev, ev_counts):
     n = sum(ev_counts.values())
-    sql_n = ev_counts.get('SQL', 0)
-    mql_n = ev_counts.get('MQL', 0)
-    sql_rate = round(sql_n / n * 100) if n else 0
     safe_id = re.sub(r'[^a-zA-Z0-9]', '_', ev)
 
     # Get contacts for this event
     ev_contacts = [c for c in contacts if (c.get('Marketing_Sub_source__c') or 'Unknown') == ev]
+    sql_n = sum(1 for c in ev_contacts if effective_status(c) == 'SQL')
+    sql_rate = round(sql_n / n * 100) if n else 0
     ev_opps = [c for c in ev_contacts if c.get('Opportunities') and c['Opportunities'].get('totalSize', 0) > 0]
     # Use sourced_opps (Opp.Marketing_Sub_source__c) for CW/pipeline — post-show new bookings only
     ev_sourced = [o for o in sourced_opps if (o.get('Marketing_Sub_source__c') or '') == ev]
@@ -177,7 +176,7 @@ def event_section(ev, ev_counts):
         name = f"{c.get('FirstName') or ''} {c.get('LastName') or ''}".strip()
         acct = (c.get('Account') or {}).get('Name', '—')
         owner = (c.get('Owner') or {}).get('Name', '—')
-        es = effective_status(c)
+        es = contact_stage(c)
         for o in (c['Opportunities'].get('records') or []):
             stage = o.get('StageName', '')
             css = stage_css_map.get(stage, 's1')
@@ -188,12 +187,12 @@ def event_section(ev, ev_counts):
 
     # Contact rows
     contact_rows = ''
-    for c in sorted(ev_contacts, key=lambda x: effective_status(x)):
+    for c in sorted(ev_contacts, key=lambda x: contact_stage(x)):
         name = f"{c.get('FirstName') or ''} {c.get('LastName') or ''}".strip()
         acct = (c.get('Account') or {}).get('Name', '—')
         owner = (c.get('Owner') or {}).get('Name', '—')
-        es = effective_status(c)
-        contact_rows += f'<tr><td>{name}</td><td style="color:#5a8a6a">{acct}</td><td style="color:#5a8a6a;font-size:11px">{owner}</td><td>{status_pill(es)}</td></tr>\n'
+        stage = contact_stage(c)
+        contact_rows += f'<tr><td>{name}</td><td style="color:#5a8a6a">{acct}</td><td style="color:#5a8a6a;font-size:11px">{owner}</td><td>{status_pill(stage)}</td></tr>\n'
 
     return f'''
 <div class="event-card">
@@ -219,7 +218,7 @@ def event_section(ev, ev_counts):
       </div>''' if opp_rows else '<div class="event-body">'}
       <div class="contact-list">
         <div class="opp-table-label">ALL CONTACTS ({n})</div>
-        <table class="opp-table"><thead><tr><th>Name</th><th>Account</th><th>Owner</th><th>Status</th></tr></thead>
+        <table class="opp-table"><thead><tr><th>Name</th><th>Account</th><th>Owner</th><th>Stage</th></tr></thead>
         <tbody>{contact_rows}</tbody></table>
       </div>
     </div>
@@ -243,7 +242,7 @@ status_chips_html = ''
 for s, col in status_defs:
     cnt = status_counts.get(s, 0)
     if cnt:
-        bg_map = {'SQL': 'rgba(0,255,136,0.06)', 'MQL': 'rgba(0,229,255,0.06)', 'Disqualified': 'rgba(255,68,68,0.06)', 'Partner': 'rgba(191,90,242,0.08)', 'Potential Referral/Partner': 'rgba(168,85,247,0.08)', 'Client': 'rgba(255,215,0,0.08)', 'Unknown': 'rgba(80,80,80,0.06)'}
+        bg_map = {'In Progress': 'rgba(0,229,255,0.06)', 'Recycled': 'rgba(255,176,0,0.08)', 'Disqualified': 'rgba(255,68,68,0.06)', 'New': 'rgba(0,255,136,0.06)'}
         status_chips_html += f'<div class="status-chip" style="border-color:{col}40;background:{bg_map.get(s,"")}"><div class="sc-label" style="color:{col}">{s}</div><div class="sc-val" style="color:{col}">{cnt}</div><div class="sc-pct">{round(cnt/total*100)}% of leads</div></div>\n'
 
 date_str = datetime.now(timezone.utc).strftime('%B %d, %Y')
@@ -390,7 +389,7 @@ HTML = f"""<!DOCTYPE html>
         <div class="status-graph-title">Contact Stage Mix by Contact Count</div>
         <div class="status-graph-note">Bars are scaled to the largest status segment; percentages are of all {total} contacts added or updated to MQL in 2026.</div>
       </div>
-      <div class="status-graph-note">SQL = MQL → SQL in 2026</div>
+      <div class="status-graph-note">Contact_Stage__c</div>
     </div>
     {status_graph_rows}
   </div>
@@ -411,7 +410,7 @@ HTML = f"""<!DOCTYPE html>
 
   <div class="section-title">Contact Stage by Show</div>
   <div class="chart-card" style="padding:20px 24px">
-    <div style="font-size:10px;color:#3a7a5a;margin-bottom:12px;font-style:italic">Uses Contact Status for the 2026 MQL cohort. SQL only counts when the contact changed from MQL to SQL in 2026.</div>
+    <div style="font-size:10px;color:#3a7a5a;margin-bottom:12px;font-style:italic">Uses Contact Stage for the 2026 MQL cohort: In Progress, Recycled, Disqualified, and New.</div>
     <div style="display:flex;gap:20px;flex-wrap:wrap;margin-bottom:14px">{stage_ev_legend}</div>
     <canvas id="contactStageEventChart"></canvas>
   </div>
