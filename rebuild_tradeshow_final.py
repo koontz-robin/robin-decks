@@ -103,9 +103,11 @@ mql_status_funnel = [(s, c, mql_status_counts.get(s, 0)) for s, c in mql_status_
 
 # By-event data
 by_event = defaultdict(lambda: defaultdict(int))
+mql_status_by_event = defaultdict(lambda: defaultdict(int))
 for c in contacts:
     ev = c.get('Marketing_Sub_source__c') or 'Unknown'
     by_event[ev][effective_status(c)] += 1
+    mql_status_by_event[ev][c.get('Tradeshow_Status__c') or 'Unknown'] += 1
 events_sorted = sorted(by_event.items(), key=lambda x: -sum(x[1].values()))
 
 stage_labels_map = {
@@ -229,9 +231,9 @@ mql_labels_js = json.dumps([l for l,_,v in mql_status_funnel])
 mql_values_js = json.dumps([v for _,_,v in mql_status_funnel])
 mql_colors_js = json.dumps([c for _,c,_ in mql_status_funnel])
 ev_labels_js  = json.dumps([e for e,_ in events_sorted])
-ev_totals_js  = json.dumps([sum(d.values()) for _,d in events_sorted])
-ev_ds = [{'label': s, 'color': col, 'data': [by_event[ev].get(s, 0) for ev,_ in events_sorted]}
-         for s, col in status_defs if any(by_event[ev].get(s, 0) for ev,_ in events_sorted)]
+ev_totals_js  = json.dumps([sum(mql_status_by_event[e].values()) for e,_ in events_sorted])
+ev_ds = [{'label': s, 'color': col, 'data': [mql_status_by_event[ev].get(s, 0) for ev,_ in events_sorted]}
+         for s, col in mql_status_defs if any(mql_status_by_event[ev].get(s, 0) for ev,_ in events_sorted)]
 ev_ds_js      = json.dumps(ev_ds)
 status_chips_html = ''
 for s, col in status_defs:
@@ -242,7 +244,7 @@ for s, col in status_defs:
 
 date_str = datetime.now(timezone.utc).strftime('%B %d, %Y')
 mql_legend_rows = ''.join(f'<div class="legend-row"><div class="legend-dot" style="background:{col}"></div><div class="legend-label">{lbl}</div><div class="legend-bar-wrap"><div class="legend-bar" style="width:{round(val/total*100)}%;background:{col}"></div></div><div class="legend-val">{val}</div><div class="legend-pct" style="color:{col}">{round(val/total*100)}%</div></div>\n' for lbl,col,val in mql_status_funnel)
-ev_legend = ''.join(f'<div style="display:flex;align-items:center;gap:6px"><div style="width:10px;height:10px;border-radius:2px;background:{col}"></div><span style="font-size:11px;color:#c8f0dc;font-weight:600">{s}</span></div>' for s,col in status_defs if status_counts.get(s,0))
+ev_legend = ''.join(f'<div style="display:flex;align-items:center;gap:6px"><div style="width:10px;height:10px;border-radius:2px;background:{col}"></div><span style="font-size:11px;color:#c8f0dc;font-weight:600">{s}</span></div>' for s,col in mql_status_defs if mql_status_counts.get(s,0))
 events_html = ''.join(event_section(ev, dict(d)) for ev, d in events_sorted)
 status_graph_max = max((cnt for _, _, cnt in funnel), default=1)
 status_graph_rows = ''.join(
@@ -402,7 +404,7 @@ HTML = f"""<!DOCTYPE html>
     </div>
   </div>
 
-  <div class="section-title">Contact Status by Event</div>
+  <div class="section-title">MQL Status by Event</div>
   <div class="chart-card" style="padding:20px 24px">
     <div style="display:flex;gap:20px;flex-wrap:wrap;margin-bottom:14px">{ev_legend}</div>
     <canvas id="eventChart"></canvas>
