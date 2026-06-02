@@ -31,6 +31,13 @@ NAME_ALIASES = {
 EXCLUDED_REPS = {
     "Davis" + " Herndon",
     "Jake Mitchell",
+    "Ardit Berdyna",
+    "Blaine Villafuerte",
+    "Cam Sharpe",
+    "Matt Salin",
+    "Olivia Sandefur",
+    "Reid Doster",
+    "Usman Zahoor",
 }
 ROLE_GROUPS = {
     "SDRs": "SDR",
@@ -589,7 +596,6 @@ def main():
                 "stage_steps": steps,
                 "changed_at": changed_at.isoformat(),
                 "changed_at_et": changed_at.strftime("%b %-d, %-I:%M %p ET"),
-                "changed_by": ((change.get("CreatedBy") or {}).get("Name") or ""),
             }
         )
 
