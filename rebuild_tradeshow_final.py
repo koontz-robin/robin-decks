@@ -45,7 +45,10 @@ def was_mql_in_2026(c):
         or (created_in_2026 and status in ('MQL', 'SQL', 'Disqualified'))
     )
 
-contacts = [c for c in raw_contacts if was_mql_in_2026(c)]
+def is_excluded_show(c):
+    return '25' in (c.get('Marketing_Sub_source__c') or '')
+
+contacts = [c for c in raw_contacts if was_mql_in_2026(c) and not is_excluded_show(c)]
 
 def effective_status(c):
     """SQL only counts when Contact Status changed from MQL to SQL in 2026."""
