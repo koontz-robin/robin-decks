@@ -286,6 +286,12 @@ CSS = """
   h1{font-size:32px;font-weight:900;color:#fff;letter-spacing:-1px;margin-bottom:4px}
   h1 span{color:var(--green);text-shadow:0 0 30px var(--green)}
   .header-sub{font-size:13px;color:var(--muted)}
+  .definitions-card{background:var(--surface);border:1px solid rgba(0,229,255,.2);border-radius:10px;padding:16px 18px;margin-bottom:20px}
+  .definitions-title{font-size:10px;font-weight:800;letter-spacing:2px;text-transform:uppercase;color:var(--cyan);margin-bottom:12px}
+  .definitions-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px 18px}
+  .definition-item{display:grid;grid-template-columns:92px 1fr;gap:10px;align-items:start}
+  .definition-term{font-size:11px;font-weight:900;text-transform:uppercase;color:#fff;letter-spacing:.8px}
+  .definition-copy{font-size:12px;line-height:1.35;color:#8ab89a}
   .summary-bar{display:grid;grid-template-columns:repeat(6,1fr);gap:8px;margin-bottom:20px}
   .sum-item{background:var(--surface);border:1px solid var(--border);border-radius:8px;padding:12px;text-align:center}
   .sum-item.hl{border-color:var(--green);background:rgba(0,255,136,.04)}
@@ -378,6 +384,17 @@ HTML = f"""<!DOCTYPE html>
     </div>
     <h1>Tradeshow <span>MQL Dashboard</span></h1>
     <div class="header-sub">2026 YTD · 2026 events only · {total} contacts added or updated to MQL · {len(by_event)} events · SQL = 2026 MQL → SQL status change</div>
+  </div>
+
+  <div class="definitions-card">
+    <div class="definitions-title">Definitions</div>
+    <div class="definitions-grid">
+      <div class="definition-item"><div class="definition-term">SQL</div><div class="definition-copy">MQL that has converted into an opportunity.</div></div>
+      <div class="definition-item"><div class="definition-term">MQL</div><div class="definition-copy">Marketing sourced lead that has not converted into an opportunity yet.</div></div>
+      <div class="definition-item"><div class="definition-term">New</div><div class="definition-copy">MQL that has not been reached out to yet. Changed to In Progress after first outreach attempt.</div></div>
+      <div class="definition-item"><div class="definition-term">In Progress</div><div class="definition-copy">MQL that Sales is aggressively prospecting to convert after assignment.</div></div>
+      <div class="definition-item"><div class="definition-term">Recycled</div><div class="definition-copy">Sales has made several outreach attempts but was unsuccessful in converting, and the lead is now open to SDRs for continued prospecting.</div></div>
+    </div>
   </div>
 
   <div class="summary-bar">
