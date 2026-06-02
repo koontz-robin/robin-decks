@@ -181,13 +181,6 @@
     </div>
   </div>
 
-  <div class="section-title">Contact Stage by Show</div>
-  <div class="chart-card" style="padding:20px 24px">
-    <div style="font-size:10px;color:#3a7a5a;margin-bottom:12px;font-style:italic">Uses Contact Stage for current MQL contacts with Most Recent Conversion in 2026.</div>
-    <div style="display:flex;gap:20px;flex-wrap:wrap;margin-bottom:14px"><div style="display:flex;align-items:center;gap:6px"><div style="width:10px;height:10px;border-radius:2px;background:#00e5ff"></div><span style="font-size:11px;color:#c8f0dc;font-weight:600">In Progress</span></div><div style="display:flex;align-items:center;gap:6px"><div style="width:10px;height:10px;border-radius:2px;background:#ffb000"></div><span style="font-size:11px;color:#c8f0dc;font-weight:600">Recycled</span></div><div style="display:flex;align-items:center;gap:6px"><div style="width:10px;height:10px;border-radius:2px;background:#00ff88"></div><span style="font-size:11px;color:#c8f0dc;font-weight:600">New</span></div></div>
-    <canvas id="contactStageEventChart"></canvas>
-  </div>
-
   <div class="section-title">MQL Status by Event</div>
   <div class="chart-card" style="padding:20px 24px">
     <div style="display:flex;gap:20px;flex-wrap:wrap;margin-bottom:14px"><div style="display:flex;align-items:center;gap:6px"><div style="width:10px;height:10px;border-radius:2px;background:#00ff88"></div><span style="font-size:11px;color:#c8f0dc;font-weight:600">Hot Lead</span></div><div style="display:flex;align-items:center;gap:6px"><div style="width:10px;height:10px;border-radius:2px;background:#00e5ff"></div><span style="font-size:11px;color:#c8f0dc;font-weight:600">Warm Lead</span></div><div style="display:flex;align-items:center;gap:6px"><div style="width:10px;height:10px;border-radius:2px;background:#ffb000"></div><span style="font-size:11px;color:#c8f0dc;font-weight:600">Cold Lead</span></div><div style="display:flex;align-items:center;gap:6px"><div style="width:10px;height:10px;border-radius:2px;background:#444"></div><span style="font-size:11px;color:#c8f0dc;font-weight:600">Unknown</span></div></div>
@@ -735,7 +728,6 @@ function drawStackedEventChart(canvasId, labels, totals, datasets){
   });
 }
 
-drawStackedEventChart('contactStageEventChart', ["TMTBootcamp", "Kaseya Connect 26", "ISC West 26", "Pax8 Beyond 26", "MSP Summit 26", "AIN 26", "Channel Partners 26", "SkySwitch Vectors 26", "ASCII 26", "ITEXPO 26", "IAF 26", "NinjaOne Boston 26"], [30, 26, 21, 19, 13, 11, 9, 8, 5, 4, 2, 1], [{"label": "In Progress", "color": "#00e5ff", "data": [1, 0, 0, 10, 1, 0, 0, 2, 0, 0, 0, 1]}, {"label": "Recycled", "color": "#ffb000", "data": [29, 26, 21, 1, 12, 11, 9, 6, 5, 4, 2, 0]}, {"label": "New", "color": "#00ff88", "data": [0, 0, 0, 8, 0, 0, 0, 0, 0, 0, 0, 0]}]);
 drawStackedEventChart('mqlEventChart', ["TMTBootcamp", "Kaseya Connect 26", "ISC West 26", "Pax8 Beyond 26", "MSP Summit 26", "AIN 26", "Channel Partners 26", "SkySwitch Vectors 26", "ASCII 26", "ITEXPO 26", "IAF 26", "NinjaOne Boston 26"], [30, 26, 21, 19, 13, 11, 9, 8, 5, 4, 2, 1], [{"label": "Hot Lead", "color": "#00ff88", "data": [2, 3, 6, 0, 4, 3, 3, 1, 0, 3, 2, 1]}, {"label": "Warm Lead", "color": "#00e5ff", "data": [22, 22, 15, 1, 8, 7, 5, 7, 5, 1, 0, 0]}, {"label": "Cold Lead", "color": "#ffb000", "data": [0, 1, 0, 0, 1, 0, 1, 0, 0, 0, 0, 0]}, {"label": "Unknown", "color": "#444", "data": [6, 0, 0, 18, 0, 1, 0, 0, 0, 0, 0, 0]}]);
 
 function toggle(id){
