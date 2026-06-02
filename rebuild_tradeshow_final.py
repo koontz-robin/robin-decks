@@ -1,8 +1,11 @@
 import json, re
 from collections import defaultdict
 from datetime import datetime, timezone
+from pathlib import Path
 
-with open('/home/openclaw/.openclaw/workspace/tradeshow_contacts.json') as f:
+BASE_DIR = Path(__file__).resolve().parent
+
+with open(BASE_DIR / 'tradeshow_contacts.json') as f:
     contacts = json.load(f)
 
 def effective_status(c):
@@ -31,9 +34,7 @@ total_with_opps = len(with_opps)
 
 # Use tradeshow_opps.json (Opp.Marketing_Sub_source__c query) for CW/pipeline
 # This reflects new post-show bookings only, not pre-existing contact-linked deals
-import os as _os
-_opps_path = _os.path.join(_os.path.dirname(_os.path.abspath(__file__)), 'tradeshow_opps.json')
-with open(_opps_path) as _f:
+with open(BASE_DIR / 'tradeshow_opps.json') as _f:
     sourced_opps = json.load(_f)
 total_cw = sum(o.get('Amount') or 0 for o in sourced_opps if o.get('StageName') == 'Closed Won')
 total_pipeline = sum(o.get('Amount') or 0 for o in sourced_opps if o.get('StageName') not in ('Closed Won', 'Closed Lost'))
@@ -451,7 +452,7 @@ function toggle(id){{
 </body>
 </html>"""
 
-with open('/home/openclaw/.openclaw/workspace/tradeshow-mql.html', 'w') as f:
+with open(BASE_DIR / 'tradeshow-mql.html', 'w') as f:
     f.write(HTML)
 print(f"Done! Status counts: {dict(status_counts)}")
 print(f"Conv rate: {conv_rate}% | Pipeline: ${total_pipeline:,.0f} | CW: ${total_cw:,.0f}")
