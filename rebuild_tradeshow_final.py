@@ -51,7 +51,15 @@ def is_2026_event_name(name):
         return False
     return not re.search(r'(^|\D)(24|25)($|\D)', name)
 
-contacts = [c for c in raw_contacts if was_mql_in_2026(c) and is_2026_event_name(c.get('Marketing_Sub_source__c'))]
+def is_tradeshow_source(c):
+    return (c.get('MArketing_Lead_Source__c') or c.get('Marketing_Lead_Source__c') or c.get('Marketing_Source__c') or '') == 'Tradeshow'
+
+contacts = [
+    c for c in raw_contacts
+    if is_tradeshow_source(c)
+    and was_mql_in_2026(c)
+    and is_2026_event_name(c.get('Marketing_Sub_source__c'))
+]
 
 def effective_status(c):
     """SQL only counts when Contact Status changed from MQL to SQL in 2026."""
