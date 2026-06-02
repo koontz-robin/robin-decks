@@ -231,10 +231,14 @@ mql_labels_js = json.dumps([l for l,_,v in mql_status_funnel])
 mql_values_js = json.dumps([v for _,_,v in mql_status_funnel])
 mql_colors_js = json.dumps([c for _,c,_ in mql_status_funnel])
 ev_labels_js  = json.dumps([e for e,_ in events_sorted])
-ev_totals_js  = json.dumps([sum(mql_status_by_event[e].values()) for e,_ in events_sorted])
-ev_ds = [{'label': s, 'color': col, 'data': [mql_status_by_event[ev].get(s, 0) for ev,_ in events_sorted]}
+stage_ev_totals_js = json.dumps([sum(by_event[e].values()) for e,_ in events_sorted])
+stage_ev_ds = [{'label': s, 'color': col, 'data': [by_event[ev].get(s, 0) for ev,_ in events_sorted]}
+         for s, col in status_defs if any(by_event[ev].get(s, 0) for ev,_ in events_sorted)]
+stage_ev_ds_js = json.dumps(stage_ev_ds)
+mql_ev_totals_js  = json.dumps([sum(mql_status_by_event[e].values()) for e,_ in events_sorted])
+mql_ev_ds = [{'label': s, 'color': col, 'data': [mql_status_by_event[ev].get(s, 0) for ev,_ in events_sorted]}
          for s, col in mql_status_defs if any(mql_status_by_event[ev].get(s, 0) for ev,_ in events_sorted)]
-ev_ds_js      = json.dumps(ev_ds)
+mql_ev_ds_js = json.dumps(mql_ev_ds)
 status_chips_html = ''
 for s, col in status_defs:
     cnt = status_counts.get(s, 0)
@@ -245,6 +249,7 @@ for s, col in status_defs:
 date_str = datetime.now(timezone.utc).strftime('%B %d, %Y')
 mql_legend_rows = ''.join(f'<div class="legend-row"><div class="legend-dot" style="background:{col}"></div><div class="legend-label">{lbl}</div><div class="legend-bar-wrap"><div class="legend-bar" style="width:{round(val/total*100)}%;background:{col}"></div></div><div class="legend-val">{val}</div><div class="legend-pct" style="color:{col}">{round(val/total*100)}%</div></div>\n' for lbl,col,val in mql_status_funnel)
 ev_legend = ''.join(f'<div style="display:flex;align-items:center;gap:6px"><div style="width:10px;height:10px;border-radius:2px;background:{col}"></div><span style="font-size:11px;color:#c8f0dc;font-weight:600">{s}</span></div>' for s,col in mql_status_defs if mql_status_counts.get(s,0))
+stage_ev_legend = ''.join(f'<div style="display:flex;align-items:center;gap:6px"><div style="width:10px;height:10px;border-radius:2px;background:{col}"></div><span style="font-size:11px;color:#c8f0dc;font-weight:600">{s}</span></div>' for s,col in status_defs if status_counts.get(s,0))
 events_html = ''.join(event_section(ev, dict(d)) for ev, d in events_sorted)
 status_graph_max = max((cnt for _, _, cnt in funnel), default=1)
 status_graph_rows = ''.join(
@@ -378,11 +383,11 @@ HTML = f"""<!DOCTYPE html>
 
   <div class="status-row">{status_chips_html}</div>
 
-  <div class="section-title">Tradeshow MQL Status Breakdown</div>
+  <div class="section-title">Contact Stage Breakdown</div>
   <div class="status-graph-card">
     <div class="status-graph-head">
       <div>
-        <div class="status-graph-title">Status Mix by Contact Count</div>
+        <div class="status-graph-title">Contact Stage Mix by Contact Count</div>
         <div class="status-graph-note">Bars are scaled to the largest status segment; percentages are of all {total} contacts added or updated to MQL in 2026.</div>
       </div>
       <div class="status-graph-note">SQL = MQL → SQL in 2026</div>
@@ -404,10 +409,17 @@ HTML = f"""<!DOCTYPE html>
     </div>
   </div>
 
+  <div class="section-title">Contact Stage by Show</div>
+  <div class="chart-card" style="padding:20px 24px">
+    <div style="font-size:10px;color:#3a7a5a;margin-bottom:12px;font-style:italic">Uses Contact Status for the 2026 MQL cohort. SQL only counts when the contact changed from MQL to SQL in 2026.</div>
+    <div style="display:flex;gap:20px;flex-wrap:wrap;margin-bottom:14px">{stage_ev_legend}</div>
+    <canvas id="contactStageEventChart"></canvas>
+  </div>
+
   <div class="section-title">MQL Status by Event</div>
   <div class="chart-card" style="padding:20px 24px">
     <div style="display:flex;gap:20px;flex-wrap:wrap;margin-bottom:14px">{ev_legend}</div>
-    <canvas id="eventChart"></canvas>
+    <canvas id="mqlEventChart"></canvas>
   </div>
 
   <div class="section-title">By Event — {len(by_event)} events ({total} contacts)</div>
@@ -428,9 +440,8 @@ HTML = f"""<!DOCTYPE html>
   ctx.beginPath();ctx.arc(cx,cy,innerR,0,2*Math.PI);ctx.strokeStyle='rgba(0,255,136,0.15)';ctx.lineWidth=1;ctx.stroke();
 }})();
 
-(function(){{
-  var labels={ev_labels_js};var totals={ev_totals_js};var datasets={ev_ds_js};
-  var canvas=document.getElementById('eventChart');var ctx=canvas.getContext('2d');
+function drawStackedEventChart(canvasId, labels, totals, datasets){{
+  var canvas=document.getElementById(canvasId);var ctx=canvas.getContext('2d');
   var n=labels.length,barH=28,gap=10,labelW=155;
   var pad={{t:8,r:60,b:8,l:labelW}},chartW=700;
   var chartH=n*(barH+gap)+pad.t+pad.b;
@@ -450,7 +461,10 @@ HTML = f"""<!DOCTYPE html>
     ctx.fillStyle='#888';ctx.textAlign='left';ctx.font='600 10px Segoe UI';
     ctx.fillText(totals[i],pad.l+tw+5,y+barH/2);ctx.font='600 11px Segoe UI,system-ui';
   }});
-}})();
+}}
+
+drawStackedEventChart('contactStageEventChart', {ev_labels_js}, {stage_ev_totals_js}, {stage_ev_ds_js});
+drawStackedEventChart('mqlEventChart', {ev_labels_js}, {mql_ev_totals_js}, {mql_ev_ds_js});
 
 function toggle(id){{
   var b=document.getElementById('body-'+id);
