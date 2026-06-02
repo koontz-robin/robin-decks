@@ -63,16 +63,17 @@ def effective_status(c):
     return sf_status
 
 def contact_stage(c):
-    stage = c.get('Contact_Stage__c') or 'New'
+    stage = c.get('Contact_Stage__c')
     if stage in ('In Progress', 'Recycled', 'Disqualified', 'New'):
         return stage
-    return 'New'
+    return 'Unknown'
 
 status_defs = [
     ('In Progress',  '#00e5ff'),
     ('Recycled',     '#ffb000'),
     ('Disqualified', '#ff4444'),
     ('New',          '#00ff88'),
+    ('Unknown',      '#777'),
 ]
 
 mql_status_defs = [
@@ -138,6 +139,7 @@ status_bg_map = {
     'Recycled': 'rgba(255,176,0,0.12)',
     'Disqualified': 'rgba(255,68,68,0.12)',
     'New': 'rgba(0,255,136,0.12)',
+    'Unknown': 'rgba(120,120,120,0.12)',
 }
 status_color_map = dict(status_defs)
 
@@ -251,7 +253,7 @@ status_chips_html = ''
 for s, col in status_defs:
     cnt = status_counts.get(s, 0)
     if cnt:
-        bg_map = {'In Progress': 'rgba(0,229,255,0.06)', 'Recycled': 'rgba(255,176,0,0.08)', 'Disqualified': 'rgba(255,68,68,0.06)', 'New': 'rgba(0,255,136,0.06)'}
+        bg_map = {'In Progress': 'rgba(0,229,255,0.06)', 'Recycled': 'rgba(255,176,0,0.08)', 'Disqualified': 'rgba(255,68,68,0.06)', 'New': 'rgba(0,255,136,0.06)', 'Unknown': 'rgba(120,120,120,0.08)'}
         status_chips_html += f'<div class="status-chip" style="border-color:{col}40;background:{bg_map.get(s,"")}"><div class="sc-label" style="color:{col}">{s}</div><div class="sc-val" style="color:{col}">{cnt}</div><div class="sc-pct">{round(cnt/total*100)}% of leads</div></div>\n'
 
 date_str = datetime.now(timezone.utc).strftime('%B %d, %Y')
@@ -436,7 +438,7 @@ HTML = f"""<!DOCTYPE html>
 
   <div class="section-title">Contact Stage by Show</div>
   <div class="chart-card" style="padding:20px 24px">
-    <div style="font-size:10px;color:#3a7a5a;margin-bottom:12px;font-style:italic">Uses Contact Stage for the 2026 MQL cohort: In Progress, Recycled, Disqualified, and New.</div>
+    <div style="font-size:10px;color:#3a7a5a;margin-bottom:12px;font-style:italic">Uses Contact Stage for the 2026 MQL cohort: In Progress, Recycled, Disqualified, and New. Unknown means Contact_Stage__c is blank or unset in Salesforce.</div>
     <div style="display:flex;gap:20px;flex-wrap:wrap;margin-bottom:14px">{stage_ev_legend}</div>
     <canvas id="contactStageEventChart"></canvas>
   </div>
