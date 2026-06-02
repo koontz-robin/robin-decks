@@ -20,6 +20,9 @@ status_defs = [
     ('SQL',          '#00ff88'),
     ('MQL',          '#00e5ff'),
     ('Disqualified', '#ff4444'),
+    ('Partner',      '#bf5af2'),
+    ('Potential Referral/Partner', '#a855f7'),
+    ('Client',       '#ffd700'),
     ('Unknown',      '#444'),
 ]
 
@@ -215,13 +218,23 @@ status_chips_html = ''
 for s, col in status_defs:
     cnt = status_counts.get(s, 0)
     if cnt:
-        bg_map = {'SQL': 'rgba(0,255,136,0.06)', 'MQL': 'rgba(0,229,255,0.06)', 'Disqualified': 'rgba(255,68,68,0.06)', 'Unknown': 'rgba(80,80,80,0.06)'}
+        bg_map = {'SQL': 'rgba(0,255,136,0.06)', 'MQL': 'rgba(0,229,255,0.06)', 'Disqualified': 'rgba(255,68,68,0.06)', 'Partner': 'rgba(191,90,242,0.08)', 'Potential Referral/Partner': 'rgba(168,85,247,0.08)', 'Client': 'rgba(255,215,0,0.08)', 'Unknown': 'rgba(80,80,80,0.06)'}
         status_chips_html += f'<div class="status-chip" style="border-color:{col}40;background:{bg_map.get(s,"")}"><div class="sc-label" style="color:{col}">{s}</div><div class="sc-val" style="color:{col}">{cnt}</div><div class="sc-pct">{round(cnt/total*100)}% of leads</div></div>\n'
 
 date_str = datetime.now(timezone.utc).strftime('%B %d, %Y')
 legend_rows = ''.join(f'<div class="legend-row"><div class="legend-dot" style="background:{col}"></div><div class="legend-label">{lbl}</div><div class="legend-bar-wrap"><div class="legend-bar" style="width:{round(val/total*100)}%;background:{col}"></div></div><div class="legend-val">{val}</div><div class="legend-pct" style="color:{col}">{round(val/total*100)}%</div></div>\n' for lbl,col,val in funnel)
 ev_legend = ''.join(f'<div style="display:flex;align-items:center;gap:6px"><div style="width:10px;height:10px;border-radius:2px;background:{col}"></div><span style="font-size:11px;color:#c8f0dc;font-weight:600">{s}</span></div>' for s,col in status_defs if status_counts.get(s,0))
 events_html = ''.join(event_section(ev, dict(d)) for ev, d in events_sorted)
+status_graph_max = max((cnt for _, _, cnt in funnel), default=1)
+status_graph_rows = ''.join(
+    f'''<div class="status-graph-row">
+      <div class="status-graph-label"><span class="legend-dot" style="background:{col}"></span>{lbl}</div>
+      <div class="status-graph-track"><div class="status-graph-fill" style="width:{(val/status_graph_max*100 if status_graph_max else 0):.1f}%;background:{col};box-shadow:0 0 10px {col}66"></div></div>
+      <div class="status-graph-value">{val}</div>
+      <div class="status-graph-pct" style="color:{col}">{round(val/total*100)}%</div>
+    </div>'''
+    for lbl, col, val in funnel
+)
 
 CSS = """
   :root{--green:#00ff88;--cyan:#00e5ff;--bg:#020408;--surface:#060d14;--border:#0a2a1a;--text:#c8f0dc;--muted:#2a5a3a}
@@ -253,6 +266,17 @@ CSS = """
   .sc-pct{font-size:10px;color:var(--muted);margin-top:3px}
   .section-title{font-size:10px;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:var(--muted);margin-bottom:10px;margin-top:20px}
   .chart-card{background:var(--surface);border:1px solid var(--border);border-radius:10px;padding:20px 24px;margin-bottom:20px}
+  .status-graph-card{background:var(--surface);border:1px solid rgba(0,229,255,.25);border-radius:10px;padding:18px 20px;margin-bottom:20px}
+  .status-graph-head{display:flex;justify-content:space-between;align-items:flex-end;gap:16px;margin-bottom:14px}
+  .status-graph-title{font-size:12px;font-weight:800;letter-spacing:2px;text-transform:uppercase;color:var(--cyan)}
+  .status-graph-note{font-size:11px;color:var(--muted)}
+  .status-graph-row{display:grid;grid-template-columns:minmax(150px,210px) 1fr 54px 44px;gap:12px;align-items:center;margin-bottom:10px}
+  .status-graph-row:last-child{margin-bottom:0}
+  .status-graph-label{display:flex;align-items:center;gap:8px;font-size:12px;font-weight:700;color:#c8f0dc;min-width:0}
+  .status-graph-track{height:13px;background:rgba(0,255,136,.06);border-radius:7px;overflow:hidden;border:1px solid rgba(255,255,255,.03)}
+  .status-graph-fill{height:100%;border-radius:7px;min-width:2px}
+  .status-graph-value{font-size:13px;font-weight:900;color:#fff;text-align:right}
+  .status-graph-pct{font-size:12px;font-weight:800;text-align:right}
   .chart-row{display:flex;gap:32px;align-items:center;flex-wrap:wrap}
   .chart-inner{position:relative;flex-shrink:0}
   .donut-center{position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);text-align:center}
@@ -334,6 +358,18 @@ HTML = f"""<!DOCTYPE html>
   </div>
 
   <div class="status-row">{status_chips_html}</div>
+
+  <div class="section-title">Tradeshow MQL Status Breakdown</div>
+  <div class="status-graph-card">
+    <div class="status-graph-head">
+      <div>
+        <div class="status-graph-title">Status Mix by Contact Count</div>
+        <div class="status-graph-note">Bars are scaled to the largest status segment; percentages are of all {total} tradeshow contacts.</div>
+      </div>
+      <div class="status-graph-note">Opp created = SQL</div>
+    </div>
+    {status_graph_rows}
+  </div>
 
   <div class="section-title">Contact Status Breakdown</div>
   <div class="chart-card">
