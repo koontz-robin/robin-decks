@@ -86,13 +86,36 @@ stage_css_map = {
     '4 - Proposal Sent': 's4', '3 - Initial Product Demo': 's3', '2 - Discovery Completed': 's2',
     '1- Discovery Scheduled': 's1', 'Closed Lost': 'lost',
 }
+status_bg_map = {
+    'SQL': 'rgba(0,255,136,0.12)',
+    'MQL': 'rgba(0,229,255,0.1)',
+    'Disqualified': 'rgba(255,68,68,0.12)',
+    'Partner': 'rgba(191,90,242,0.12)',
+    'Potential Referral/Partner': 'rgba(168,85,247,0.12)',
+    'Client': 'rgba(255,215,0,0.12)',
+    'Unknown': 'rgba(80,80,80,0.1)',
+}
+status_color_map = dict(status_defs)
 
 def status_pill(s):
-    colors = {'SQL': '#00ff88', 'MQL': '#00e5ff', 'Disqualified': '#ff4444', 'Unknown': '#555'}
-    bg_colors = {'SQL': 'rgba(0,255,136,0.12)', 'MQL': 'rgba(0,229,255,0.1)', 'Disqualified': 'rgba(255,68,68,0.12)', 'Unknown': 'rgba(80,80,80,0.1)'}
-    col = colors.get(s, '#888')
-    bg = bg_colors.get(s, 'rgba(80,80,80,0.1)')
+    col = status_color_map.get(s, '#888')
+    bg = status_bg_map.get(s, 'rgba(80,80,80,0.1)')
     return f'<span style="font-size:9px;font-weight:700;padding:1px 6px;border-radius:8px;background:{bg};color:{col}">{s}</span>'
+
+def event_status_breakdown(ev_counts, total_count):
+    segments = ''
+    labels = ''
+    for s, col in status_defs:
+        cnt = ev_counts.get(s, 0)
+        if not cnt:
+            continue
+        pct = cnt / total_count * 100 if total_count else 0
+        segments += f'<div class="event-status-segment" style="width:{pct:.1f}%;background:{col}" title="{s}: {cnt} ({pct:.0f}%)"></div>'
+        labels += f'<span class="event-status-label" style="color:{col};background:{status_bg_map.get(s,"rgba(80,80,80,0.1)")};border-color:{col}33">{s}: {cnt}</span>'
+    return f'''<div class="event-status-breakdown">
+      <div class="event-status-track">{segments}</div>
+      <div class="event-status-labels">{labels}</div>
+    </div>'''
 
 def event_section(ev, ev_counts):
     n = sum(ev_counts.values())
@@ -109,13 +132,7 @@ def event_section(ev, ev_counts):
     cw_amt = sum(o.get('Amount') or 0 for o in ev_sourced if o.get('StageName') == 'Closed Won')
     pipeline = sum(o.get('Amount') or 0 for o in ev_sourced if o.get('StageName') not in ('Closed Won', 'Closed Lost'))
 
-    # Status badges
-    badges = ''
-    for s, col in status_defs:
-        cnt = ev_counts.get(s, 0)
-        if cnt:
-            bg_map = {'SQL': 'rgba(0,255,136,0.12)', 'MQL': 'rgba(0,229,255,0.1)', 'Disqualified': 'rgba(255,68,68,0.12)', 'Unknown': 'rgba(80,80,80,0.1)'}
-            badges += f'<span style="font-size:10px;font-weight:700;padding:2px 8px;border-radius:10px;background:{bg_map.get(s,"rgba(80,80,80,0.1)")};color:{col};margin-right:4px">{s}: {cnt}</span>'
+    status_breakdown = event_status_breakdown(ev_counts, n)
 
     # Opp rows
     opp_rows = ''
@@ -151,7 +168,7 @@ def event_section(ev, ev_counts):
       <span class="event-count">{n} contacts</span>
     </div>
     <div class="event-stats">
-      {badges}
+      {status_breakdown}
       <span class="conv-badge">{sql_rate}% → SQL</span>
       {f'<span class="cw-badge">${cw_amt:,.0f} CW</span>' if cw_amt > 0 else ''}
       {f'<span class="pipe-badge">${pipeline:,.0f} pipeline</span>' if pipeline > 0 else ''}
@@ -304,6 +321,11 @@ CSS = """
   .event-name{font-size:15px;font-weight:800;color:#fff}
   .event-count{font-size:11px;color:var(--muted);background:rgba(0,255,136,.06);border:1px solid var(--border);padding:2px 8px;border-radius:10px}
   .event-stats{display:flex;align-items:center;gap:6px;flex-wrap:wrap;flex:1;justify-content:flex-end}
+  .event-status-breakdown{min-width:260px;max-width:390px;flex:1 1 300px}
+  .event-status-track{display:flex;height:9px;background:rgba(0,255,136,.06);border:1px solid rgba(255,255,255,.03);border-radius:5px;overflow:hidden;margin-bottom:5px}
+  .event-status-segment{height:100%;min-width:2px}
+  .event-status-labels{display:flex;gap:4px;flex-wrap:wrap;justify-content:flex-end}
+  .event-status-label{font-size:9px;font-weight:800;padding:1px 5px;border:1px solid;border-radius:8px;white-space:nowrap}
   .conv-badge{font-size:10px;font-weight:700;padding:2px 8px;border-radius:10px;background:rgba(0,229,255,.1);color:var(--cyan);border:1px solid rgba(0,229,255,.2);white-space:nowrap}
   .cw-badge{font-size:10px;font-weight:700;padding:2px 8px;border-radius:10px;background:rgba(0,255,136,.1);color:var(--green);border:1px solid rgba(0,255,136,.2);white-space:nowrap}
   .pipe-badge{font-size:10px;font-weight:700;padding:2px 8px;border-radius:10px;background:rgba(255,215,0,.08);color:#ffd700;border:1px solid rgba(255,215,0,.2);white-space:nowrap}
