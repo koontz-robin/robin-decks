@@ -6,7 +6,7 @@ import json
 import subprocess
 import sys
 from collections import defaultdict
-from datetime import datetime
+from datetime import datetime, timedelta
 from pathlib import Path
 from zoneinfo import ZoneInfo
 
@@ -28,6 +28,15 @@ def money(value):
 
 def plural(value, singular, plural_text=None):
     return singular if value == 1 else (plural_text or f"{singular}s")
+
+
+def format_names(names):
+    bold_names = [f"**{name}**" for name in names]
+    if len(bold_names) <= 1:
+        return "".join(bold_names)
+    if len(bold_names) == 2:
+        return " and ".join(bold_names)
+    return f"{', '.join(bold_names[:-1])}, and {bold_names[-1]}"
 
 
 def load_discord_token():
@@ -72,6 +81,23 @@ def top_lines(stats, limit=3):
     return lines, ordered
 
 
+def created_date(row):
+    date_text = row.get("CreatedDateET")
+    if date_text:
+        return date_text[:10]
+
+    created_at = row.get("CreatedDate")
+    if not created_at:
+        return ""
+    normalized = created_at.replace("Z", "+00:00")
+    if len(normalized) >= 5 and normalized[-5] in {"+", "-"} and normalized[-3] != ":":
+        normalized = f"{normalized[:-2]}:{normalized[-2:]}"
+    try:
+        return datetime.fromisoformat(normalized).astimezone(ET).date().isoformat()
+    except ValueError:
+        return ""
+
+
 def build_message():
     payload = json.loads(DATA_FILE.read_text(encoding="utf-8"))
     ae_csa = payload.get("ae_csa", [])
@@ -79,6 +105,10 @@ def build_message():
 
     ae_csa_stats = summarize_rows(ae_csa, "Owner")
     sdr_stats = summarize_rows(sdr_influenced, "SDR")
+    yesterday = datetime.now(ET).date() - timedelta(days=1)
+    yesterday_rows = [row for row in ae_csa if created_date(row) == yesterday.isoformat()]
+    yesterday_stats = summarize_rows(yesterday_rows, "Owner")
+    yesterday_lines, yesterday_ordered = top_lines(yesterday_stats)
     ae_csa_lines, ae_csa_ordered = top_lines(ae_csa_stats)
     sdr_lines, sdr_ordered = top_lines(sdr_stats)
 
@@ -92,6 +122,10 @@ def build_message():
     generated = datetime.now(ET).strftime("%b %-d, %-I:%M %p ET")
     lead_name = ae_csa_ordered[0][0] if ae_csa_ordered else "the team"
     lead_count = ae_csa_ordered[0][1]["count"] if ae_csa_ordered else 0
+    yesterday_lead_count = yesterday_ordered[0][1]["count"] if yesterday_ordered else 0
+    yesterday_leaders = [
+        name for name, values in yesterday_ordered if values["count"] == yesterday_lead_count
+    ]
     lead_sdr = sdr_ordered[0][0] if sdr_ordered else None
 
     lines = [
@@ -99,9 +133,22 @@ def build_message():
         f"Fresh pull as of **{generated}**: **{total_count}** AE/CSA-created opps for **{money(total_mrr)} MRR**.",
         f"That is **{pace_pct:.1f}%** of the 275-opportunity June target, with **{remaining}** to go.",
         "",
-        "🏆 **AE/CSA leaderboard**",
-        *(ae_csa_lines or ["No AE/CSA-created opps yet."]),
+        f"📣 **Yesterday's top opportunity creators ({yesterday.strftime('%b %-d')})**",
+        *(yesterday_lines or ["No AE/CSA-created opps were logged yesterday."]),
     ]
+    if yesterday_lead_count:
+        leader_text = format_names(yesterday_leaders)
+        lines.append(
+            f"Big shoutout to {leader_text} for leading yesterday with **{yesterday_lead_count}** "
+            f"{plural(yesterday_lead_count, 'opp')} created."
+        )
+    lines.extend(
+        [
+            "",
+            "🏆 **AE/CSA leaderboard**",
+            *(ae_csa_lines or ["No AE/CSA-created opps yet."]),
+        ]
+    )
     if lead_count:
         lines.append(f"Big shoutout to **{lead_name}** setting the pace at **{lead_count}** created opps.")
     lines.extend(
