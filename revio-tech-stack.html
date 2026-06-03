@@ -357,12 +357,141 @@
   }
   .dot.active { background: #00d4f0; box-shadow: 0 0 14px rgba(0,212,240,0.9); }
   .counter { font-size: 12px; color: rgba(255,255,255,0.42); font-weight: 900; min-width: 48px; text-align: right; }
+  .robin-slide-grid {
+    flex: 1;
+    display: grid;
+    grid-template-columns: 0.92fr 1.08fr;
+    gap: 28px;
+    align-items: stretch;
+    min-height: 0;
+  }
+  .robin-copy {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    min-width: 0;
+  }
+  .robin-title {
+    font-size: clamp(32px, 4.3vw, 52px);
+    line-height: 1;
+    letter-spacing: 0;
+    font-weight: 950;
+    max-width: 720px;
+  }
+  .robin-title span { color: #3ddc97; }
+  .impact-stats {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 12px;
+    margin-top: 22px;
+  }
+  .impact-stat {
+    min-height: 94px;
+    border-radius: 18px;
+    padding: 16px;
+    background: rgba(255,255,255,0.09);
+    border: 1px solid rgba(255,255,255,0.13);
+    box-shadow: 0 18px 42px rgba(0,0,0,0.22);
+    backdrop-filter: blur(14px);
+  }
+  .impact-stat strong {
+    display: block;
+    font-size: 30px;
+    line-height: 1;
+    font-weight: 950;
+    color: #fff;
+    margin-bottom: 8px;
+  }
+  .impact-stat:nth-child(1) strong { color: #3ddc97; }
+  .impact-stat:nth-child(2) strong { color: #00d4f0; }
+  .impact-stat:nth-child(3) strong { color: #a78bfa; }
+  .impact-stat:nth-child(4) strong { color: #ffc24d; }
+  .impact-stat span {
+    display: block;
+    font-size: 11px;
+    line-height: 1.3;
+    color: rgba(255,255,255,0.48);
+    font-weight: 900;
+    letter-spacing: 1.2px;
+    text-transform: uppercase;
+  }
+  .impact-panel {
+    margin-top: 14px;
+    border-radius: 20px;
+    padding: 16px 18px;
+    background: linear-gradient(135deg, rgba(0,212,240,0.14), rgba(61,220,151,0.08));
+    border: 1px solid rgba(0,212,240,0.22);
+  }
+  .impact-panel h3 {
+    font-size: 16px;
+    font-weight: 950;
+    margin-bottom: 8px;
+  }
+  .impact-panel p {
+    font-size: 13px;
+    line-height: 1.42;
+    color: rgba(255,255,255,0.63);
+  }
+  .robin-art-wrap {
+    position: relative;
+    min-height: 0;
+    border-radius: 28px;
+    overflow: hidden;
+    border: 1px solid rgba(255,255,255,0.13);
+    box-shadow: 0 28px 70px rgba(0,0,0,0.35);
+    background: rgba(255,255,255,0.08);
+  }
+  .robin-art-wrap::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(180deg, transparent 42%, rgba(8,17,31,0.88) 100%);
+    pointer-events: none;
+  }
+  .robin-art {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+  }
+  .robin-art-card {
+    position: absolute;
+    left: 24px;
+    right: 24px;
+    bottom: 24px;
+    z-index: 2;
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 12px;
+  }
+  .robin-chip {
+    border-radius: 16px;
+    padding: 12px;
+    background: rgba(8,17,31,0.72);
+    border: 1px solid rgba(255,255,255,0.14);
+    backdrop-filter: blur(16px);
+  }
+  .robin-chip b {
+    display: block;
+    font-size: 12px;
+    line-height: 1.15;
+    margin-bottom: 6px;
+  }
+  .robin-chip span {
+    display: block;
+    font-size: 10px;
+    line-height: 1.28;
+    color: rgba(255,255,255,0.48);
+    font-weight: 900;
+    letter-spacing: 0.8px;
+    text-transform: uppercase;
+  }
   @media (max-width: 900px) {
     html, body { overflow: auto; }
     .deck { height: auto; overflow: visible; }
     .slide { position: static; min-height: auto; display: none; }
     .slide.active { display: flex; }
-    .cover-layout, .system-map, .operating-grid { grid-template-columns: 1fr; }
+    .cover-layout, .system-map, .operating-grid, .robin-slide-grid { grid-template-columns: 1fr; }
     .grid-3 { grid-template-columns: 1fr; }
     .flow { grid-template-columns: 1fr; }
     .flow-card::after { display: none; }
@@ -381,7 +510,7 @@
         <div class="brand-line"></div>
         <div class="eyebrow">Revenue Tech Stack</div>
       </div>
-      <div class="slide-no">01 / 01</div>
+      <div class="slide-no">01 / 02</div>
     </div>
     <div class="body">
       <div class="cover-layout">
@@ -410,12 +539,50 @@
     </div>
   </section>
 
+  <section class="slide">
+    <div class="topbar">
+      <div class="brand">
+        <img src="https://7091219.fs1.hubspotusercontent-na1.net/hubfs/7091219/email-assets/logo-revio-white.png" alt="Rev.io">
+        <div class="brand-line"></div>
+        <div class="eyebrow">OpenClaw Impact Layer</div>
+      </div>
+      <div class="slide-no">02 / 02</div>
+    </div>
+    <div class="body">
+      <div class="robin-slide-grid">
+        <div class="robin-copy">
+          <div class="cover-kicker">OpenClaw · Sales Team Bots</div>
+          <h2 class="robin-title">Robin turns sales ops work into an <span>always-on execution layer.</span></h2>
+          <p class="lead">A sales-team bot that builds dashboards, refreshes reporting, grades calls, monitors risk, creates decks, and answers ad hoc operating questions without waiting on analyst bandwidth.</p>
+          <div class="impact-stats">
+            <div class="impact-stat"><strong>~28hrs</strong><span>Conservative hours saved / month</span></div>
+            <div class="impact-stat"><strong>$3-4K</strong><span>Conservative monthly value</span></div>
+            <div class="impact-stat"><strong>16</strong><span>Active automations</span></div>
+            <div class="impact-stat"><strong>~50</strong><span>Dashboards & decks built</span></div>
+          </div>
+          <div class="impact-panel">
+            <h3>The operating model</h3>
+            <p>Robin sits beside Salesforce, Outreach, Notion, and the reporting stack to turn raw sales activity into executive-ready visibility, coaching loops, and action. Revenue influence and faster decision cycles are upside beyond the conservative value model.</p>
+          </div>
+        </div>
+        <div class="robin-art-wrap">
+          <img class="robin-art" src="tech-stack-assets/robin-sidekick.png" alt="Comic-style Robin-inspired sales sidekick with dashboard tablet">
+          <div class="robin-art-card">
+            <div class="robin-chip"><b>Dashboards</b><span>Forecast, PSA, MQL, AE capacity</span></div>
+            <div class="robin-chip"><b>Automations</b><span>Daily refreshes, alerts, monitors</span></div>
+            <div class="robin-chip"><b>Decks</b><span>Board updates, ROI, enablement</span></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
 </div>
 
 <div class="nav">
   <button id="prev">Prev</button>
   <div class="dots" id="dots"></div>
-  <div class="counter" id="counter">1 / 1</div>
+  <div class="counter" id="counter">1 / 2</div>
   <button id="next">Next</button>
 </div>
 
