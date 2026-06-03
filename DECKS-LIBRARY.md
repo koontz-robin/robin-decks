@@ -38,7 +38,7 @@ Repo: `git@github.com:koontz-robin/robin-decks.git`
 | Name | File | URL | Notes |
 |---|---|---|---|
 | Rev.io Sales — May Update (5-slide deck) | may-update-deck.html | https://koontz-robin.github.io/robin-decks/may-update-deck.html | Cover, Forecast, Efficiency, May Pipeline, Q2 Momentum |
-| Rev.io Tech Stack | revio-tech-stack.html | https://koontz-robin.github.io/robin-decks/revio-tech-stack.html | Visual stack deck: HubSpot, Salesforce, Outreach, ZoomInfo, OpenClaw, Clay, Claude, Rox, DocuSign |
+| Rev.io Tech Stack | revio-tech-stack.html | https://koontz-robin.github.io/robin-decks/revio-tech-stack.html | Visual stack deck: HubSpot, Salesforce, Outreach, ZoomInfo, OpenClaw, Clay, Claude, Rox, DocuSign, Notion |
 | Q2 Board Deck | q2-board-deck.html | https://koontz-robin.github.io/robin-decks/q2-board-deck.html | Main board deck |
 | Q2 Board — Slide 0: Pipeline Gaps | q2-board-slide-0-pipeline-gaps.html | https://koontz-robin.github.io/robin-decks/q2-board-slide-0-pipeline-gaps.html | |
 | Q2 Board — Slide 1: Efficiency (Branded) | q2-board-slide-1-efficiency-branded.html | https://koontz-robin.github.io/robin-decks/q2-board-slide-1-efficiency-branded.html | |
