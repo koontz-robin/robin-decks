@@ -1,0 +1,597 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Rev.io Tech Stack</title>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  html, body { height: 100%; overflow: hidden; }
+  body {
+    font-family: Inter, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+    background: #08111f;
+    color: #f8fbff;
+  }
+  .deck { width: 100vw; height: 100vh; position: relative; overflow: hidden; }
+  .deck::before {
+    content: "";
+    position: fixed;
+    inset: -20%;
+    background:
+      radial-gradient(circle at 16% 24%, rgba(0, 212, 240, 0.22), transparent 28%),
+      radial-gradient(circle at 86% 18%, rgba(61, 220, 151, 0.18), transparent 30%),
+      radial-gradient(circle at 50% 105%, rgba(255, 194, 77, 0.14), transparent 34%),
+      linear-gradient(135deg, #08111f 0%, #0d1b31 46%, #10263d 100%);
+    z-index: 0;
+  }
+  .slide {
+    position: absolute;
+    inset: 0;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.28s ease;
+    display: flex;
+    flex-direction: column;
+    z-index: 1;
+  }
+  .slide.active { opacity: 1; pointer-events: all; }
+  .topbar {
+    height: 72px;
+    padding: 20px 46px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    border-bottom: 1px solid rgba(255,255,255,0.08);
+    background: rgba(8,17,31,0.72);
+    backdrop-filter: blur(16px);
+    flex-shrink: 0;
+  }
+  .brand { display: flex; align-items: center; gap: 14px; }
+  .brand img { height: 28px; filter: brightness(0) invert(1); opacity: 0.94; }
+  .brand-line { width: 1px; height: 28px; background: rgba(255,255,255,0.16); }
+  .eyebrow {
+    font-size: 11px;
+    line-height: 1;
+    letter-spacing: 2.2px;
+    text-transform: uppercase;
+    color: rgba(255,255,255,0.52);
+    font-weight: 800;
+  }
+  .slide-no { font-size: 12px; color: rgba(255,255,255,0.38); font-weight: 800; letter-spacing: 1px; }
+  .body {
+    flex: 1;
+    padding: 34px 50px 84px;
+    display: flex;
+    flex-direction: column;
+    min-height: 0;
+  }
+  h1 {
+    font-size: clamp(48px, 7vw, 86px);
+    line-height: 0.95;
+    letter-spacing: 0;
+    max-width: 980px;
+    font-weight: 900;
+  }
+  h1 span, h2 span { color: #00d4f0; }
+  h2 {
+    font-size: clamp(34px, 4.7vw, 58px);
+    line-height: 1.02;
+    letter-spacing: 0;
+    max-width: 1040px;
+    font-weight: 900;
+  }
+  .lead {
+    margin-top: 18px;
+    font-size: 20px;
+    line-height: 1.45;
+    color: rgba(255,255,255,0.68);
+    max-width: 820px;
+  }
+  .cover-layout {
+    flex: 1;
+    display: grid;
+    grid-template-columns: 0.9fr 1.1fr;
+    align-items: center;
+    gap: 40px;
+  }
+  .cover-kicker {
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    padding: 8px 14px;
+    border: 1px solid rgba(0,212,240,0.32);
+    border-radius: 999px;
+    color: #00d4f0;
+    background: rgba(0,212,240,0.08);
+    font-size: 11px;
+    font-weight: 900;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    margin-bottom: 22px;
+  }
+  .stack-orbit {
+    position: relative;
+    height: min(70vh, 650px);
+    min-height: 520px;
+  }
+  .core {
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%, -50%);
+    width: 220px;
+    height: 220px;
+    border-radius: 50%;
+    display: grid;
+    place-items: center;
+    background: rgba(255,255,255,0.08);
+    border: 1px solid rgba(255,255,255,0.16);
+    box-shadow: 0 0 70px rgba(0,212,240,0.2), inset 0 0 34px rgba(255,255,255,0.04);
+    backdrop-filter: blur(18px);
+  }
+  .core img { width: 126px; filter: brightness(0) invert(1); }
+  .orbit-ring {
+    position: absolute;
+    border: 1px solid rgba(255,255,255,0.12);
+    border-radius: 50%;
+    inset: 42px;
+  }
+  .orbit-ring.second { inset: 118px; opacity: 0.6; }
+  .orbit-card {
+    position: absolute;
+    width: 132px;
+    min-height: 114px;
+    padding: 14px 12px 12px;
+    border-radius: 18px;
+    background: rgba(255,255,255,0.1);
+    border: 1px solid rgba(255,255,255,0.15);
+    backdrop-filter: blur(18px);
+    box-shadow: 0 18px 42px rgba(0,0,0,0.28);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    text-align: center;
+  }
+  .orbit-card img, .logo-mark img, .tool-logo img {
+    max-width: 52px;
+    max-height: 52px;
+    object-fit: contain;
+  }
+  .orbit-card .name { font-size: 13px; font-weight: 900; color: #fff; }
+  .orbit-card .role { font-size: 10px; line-height: 1.2; color: rgba(255,255,255,0.52); font-weight: 800; text-transform: uppercase; letter-spacing: 0.8px; }
+  .pos-1 { left: 42%; top: 0; }
+  .pos-2 { right: 6%; top: 12%; }
+  .pos-3 { right: 0; top: 42%; }
+  .pos-4 { right: 12%; bottom: 8%; }
+  .pos-5 { left: 43%; bottom: 0; }
+  .pos-6 { left: 8%; bottom: 8%; }
+  .pos-7 { left: 0; top: 42%; }
+  .pos-8 { left: 9%; top: 12%; }
+  .pos-9 { left: 42%; top: 28%; }
+  .grid-3 {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0,1fr));
+    gap: 18px;
+    margin-top: 30px;
+  }
+  .tile {
+    min-height: 205px;
+    border-radius: 18px;
+    padding: 24px;
+    background: rgba(255,255,255,0.09);
+    border: 1px solid rgba(255,255,255,0.12);
+    box-shadow: 0 18px 44px rgba(0,0,0,0.22);
+    backdrop-filter: blur(14px);
+  }
+  .tile-head { display: flex; align-items: center; gap: 14px; margin-bottom: 18px; }
+  .logo-mark {
+    width: 64px;
+    height: 64px;
+    border-radius: 16px;
+    display: grid;
+    place-items: center;
+    background: rgba(255,255,255,0.94);
+    flex-shrink: 0;
+  }
+  .logo-text {
+    color: #07111f;
+    font-weight: 950;
+    font-size: 18px;
+    letter-spacing: 0;
+  }
+  .tile h3 { font-size: 22px; line-height: 1.08; font-weight: 900; margin-bottom: 3px; }
+  .label {
+    display: inline-block;
+    font-size: 11px;
+    color: #00d4f0;
+    font-weight: 900;
+    letter-spacing: 1.4px;
+    text-transform: uppercase;
+  }
+  .tile p { font-size: 14px; line-height: 1.5; color: rgba(255,255,255,0.62); }
+  .system-map {
+    margin-top: 34px;
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    gap: 20px;
+    align-items: stretch;
+  }
+  .pillar {
+    border-radius: 20px;
+    padding: 24px;
+    background: rgba(255,255,255,0.08);
+    border: 1px solid rgba(255,255,255,0.12);
+  }
+  .pillar-title { font-size: 13px; font-weight: 900; letter-spacing: 1.8px; text-transform: uppercase; color: #3ddc97; margin-bottom: 18px; }
+  .tool-row {
+    display: grid;
+    grid-template-columns: 54px 1fr;
+    gap: 14px;
+    align-items: center;
+    padding: 14px 0;
+    border-top: 1px solid rgba(255,255,255,0.08);
+  }
+  .tool-row:first-of-type { border-top: none; }
+  .tool-logo {
+    width: 54px;
+    height: 54px;
+    border-radius: 15px;
+    display: grid;
+    place-items: center;
+    background: rgba(255,255,255,0.94);
+  }
+  .tool-name { font-size: 18px; font-weight: 900; }
+  .tool-role { margin-top: 2px; font-size: 13px; color: rgba(255,255,255,0.52); font-weight: 800; }
+  .flow {
+    margin-top: 34px;
+    display: grid;
+    grid-template-columns: repeat(5, 1fr);
+    gap: 14px;
+    align-items: stretch;
+  }
+  .flow-card {
+    position: relative;
+    min-height: 230px;
+    padding: 22px 18px;
+    border-radius: 18px;
+    background: rgba(255,255,255,0.09);
+    border: 1px solid rgba(255,255,255,0.12);
+  }
+  .flow-card::after {
+    content: "";
+    position: absolute;
+    right: -18px;
+    top: 50%;
+    width: 22px;
+    height: 2px;
+    background: linear-gradient(90deg, rgba(0,212,240,0.75), transparent);
+  }
+  .flow-card:last-child::after { display: none; }
+  .step { font-size: 11px; font-weight: 950; letter-spacing: 1.6px; text-transform: uppercase; color: #3ddc97; margin-bottom: 12px; }
+  .flow-card h3 { font-size: 21px; line-height: 1.08; margin-bottom: 12px; }
+  .flow-card p { font-size: 13px; line-height: 1.48; color: rgba(255,255,255,0.6); }
+  .mini-logos { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 16px; }
+  .mini {
+    width: 34px;
+    height: 34px;
+    border-radius: 10px;
+    display: grid;
+    place-items: center;
+    background: #fff;
+  }
+  .mini img { max-width: 24px; max-height: 24px; object-fit: contain; }
+  .mini span { font-size: 11px; color: #07111f; font-weight: 950; }
+  .operating-grid {
+    margin-top: 34px;
+    display: grid;
+    grid-template-columns: 1.1fr 0.9fr;
+    gap: 22px;
+  }
+  .big-panel, .side-panel {
+    border-radius: 22px;
+    background: rgba(255,255,255,0.09);
+    border: 1px solid rgba(255,255,255,0.12);
+    padding: 28px;
+  }
+  .big-panel h3, .side-panel h3 { font-size: 28px; margin-bottom: 18px; }
+  .rules { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+  .rule {
+    border-radius: 16px;
+    padding: 18px;
+    background: rgba(255,255,255,0.08);
+    border: 1px solid rgba(255,255,255,0.1);
+  }
+  .rule strong { display: block; font-size: 16px; margin-bottom: 8px; }
+  .rule span { font-size: 13px; line-height: 1.45; color: rgba(255,255,255,0.58); }
+  .score-card {
+    border-radius: 18px;
+    padding: 22px;
+    background: linear-gradient(135deg, rgba(0,212,240,0.16), rgba(61,220,151,0.1));
+    border: 1px solid rgba(0,212,240,0.2);
+    margin-top: 16px;
+  }
+  .score-label { font-size: 11px; color: #00d4f0; font-weight: 950; letter-spacing: 1.4px; text-transform: uppercase; }
+  .score-value { font-size: 44px; font-weight: 950; margin-top: 4px; }
+  .score-copy { font-size: 14px; line-height: 1.5; color: rgba(255,255,255,0.62); margin-top: 8px; }
+  .source-note {
+    margin-top: auto;
+    font-size: 11px;
+    color: rgba(255,255,255,0.28);
+    line-height: 1.5;
+  }
+  .nav {
+    position: fixed;
+    z-index: 10;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    height: 56px;
+    padding: 10px 28px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    background: rgba(8,17,31,0.88);
+    border-top: 1px solid rgba(255,255,255,0.08);
+    backdrop-filter: blur(18px);
+  }
+  .nav button {
+    border: 1px solid rgba(0,212,240,0.35);
+    background: rgba(0,212,240,0.08);
+    color: #dffbff;
+    border-radius: 999px;
+    padding: 8px 18px;
+    font-weight: 900;
+    cursor: pointer;
+  }
+  .nav button:disabled { opacity: 0.28; cursor: default; }
+  .dots { display: flex; gap: 8px; align-items: center; }
+  .dot {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background: rgba(255,255,255,0.22);
+    cursor: pointer;
+  }
+  .dot.active { background: #00d4f0; box-shadow: 0 0 14px rgba(0,212,240,0.9); }
+  .counter { font-size: 12px; color: rgba(255,255,255,0.42); font-weight: 900; min-width: 48px; text-align: right; }
+  @media (max-width: 900px) {
+    html, body { overflow: auto; }
+    .deck { height: auto; overflow: visible; }
+    .slide { position: static; min-height: auto; display: none; }
+    .slide.active { display: flex; }
+    .cover-layout, .system-map, .operating-grid { grid-template-columns: 1fr; }
+    .grid-3 { grid-template-columns: 1fr; }
+    .flow { grid-template-columns: 1fr; }
+    .flow-card::after { display: none; }
+    .stack-orbit { min-height: 760px; }
+    .body { padding: 26px 22px 78px; }
+    .topbar { padding: 18px 22px; }
+  }
+</style>
+</head>
+<body>
+<div class="deck">
+  <section class="slide active">
+    <div class="topbar">
+      <div class="brand">
+        <img src="https://7091219.fs1.hubspotusercontent-na1.net/hubfs/7091219/email-assets/logo-revio-white.png" alt="Rev.io">
+        <div class="brand-line"></div>
+        <div class="eyebrow">Revenue Tech Stack</div>
+      </div>
+      <div class="slide-no">01 / 05</div>
+    </div>
+    <div class="body">
+      <div class="cover-layout">
+        <div>
+          <div class="cover-kicker">Rev.io GTM Operating System</div>
+          <h1>The stack behind a more automated sales motion.</h1>
+          <p class="lead">Nine connected tools covering marketing, CRM, engagement, enrichment, AI prospecting, sales bots, document design, esignature, and TAM expansion.</p>
+        </div>
+        <div class="stack-orbit" aria-label="Rev.io tech stack logo constellation">
+          <div class="orbit-ring"></div>
+          <div class="orbit-ring second"></div>
+          <div class="core"><img src="https://7091219.fs1.hubspotusercontent-na1.net/hubfs/7091219/email-assets/logo-revio-white.png" alt="Rev.io"></div>
+          <div class="orbit-card pos-1"><img src="https://www.google.com/s2/favicons?domain=hubspot.com&sz=128" alt="HubSpot"><div class="name">HubSpot</div><div class="role">Marketing</div></div>
+          <div class="orbit-card pos-2"><img src="https://cdn.jsdelivr.net/npm/simple-icons@latest/icons/salesforce.svg" alt="Salesforce"><div class="name">Salesforce</div><div class="role">CRM</div></div>
+          <div class="orbit-card pos-3"><img src="https://www.google.com/s2/favicons?domain=outreach.ai&sz=128" alt="Outreach"><div class="name">Outreach</div><div class="role">Engagement / Dialer</div></div>
+          <div class="orbit-card pos-4"><img src="https://www.google.com/s2/favicons?domain=zoominfo.com&sz=128" alt="ZoomInfo"><div class="name">ZoomInfo</div><div class="role">TAM Expansion</div></div>
+          <div class="orbit-card pos-5"><img src="https://www.google.com/s2/favicons?domain=openclaw.ai&sz=128" alt="OpenClaw"><div class="name">OpenClaw</div><div class="role">Sales Team Bots</div></div>
+          <div class="orbit-card pos-6"><img src="https://www.google.com/s2/favicons?domain=clay.com&sz=128" alt="Clay"><div class="name">Clay</div><div class="role">Enrichment</div></div>
+          <div class="orbit-card pos-7"><img src="https://cdn.jsdelivr.net/npm/simple-icons@latest/icons/anthropic.svg" alt="Claude"><div class="name">Claude</div><div class="role">Document Design</div></div>
+          <div class="orbit-card pos-8"><img src="https://www.google.com/s2/favicons?domain=rox.com&sz=128" alt="Rox"><div class="name">Rox</div><div class="role">AI Prospecting</div></div>
+          <div class="orbit-card pos-9"><img src="https://cdn.jsdelivr.net/npm/simple-icons@latest/icons/docusign.svg" alt="DocuSign"><div class="name">DocuSign</div><div class="role">Esignature</div></div>
+        </div>
+      </div>
+      <div class="source-note">Logo sources: official company domains via favicon lookup, plus Simple Icons CDN for Salesforce, Claude/Anthropic, and DocuSign where favicon quality was weaker.</div>
+    </div>
+  </section>
+
+  <section class="slide">
+    <div class="topbar">
+      <div class="brand">
+        <img src="https://7091219.fs1.hubspotusercontent-na1.net/hubfs/7091219/email-assets/logo-revio-white.png" alt="Rev.io">
+        <div class="brand-line"></div>
+        <div class="eyebrow">Stack Roles</div>
+      </div>
+      <div class="slide-no">02 / 05</div>
+    </div>
+    <div class="body">
+      <h2>Each platform has a clear job in the revenue engine.</h2>
+      <p class="lead">The strongest version of the stack is not more tools. It is a clean division of labor where every system owns a distinct part of the motion.</p>
+      <div class="grid-3">
+        <div class="tile"><div class="tile-head"><div class="logo-mark"><img src="https://www.google.com/s2/favicons?domain=hubspot.com&sz=128" alt="HubSpot"></div><div><h3>HubSpot</h3><div class="label">Marketing</div></div></div><p>Captures and nurtures demand, manages marketing audiences, and supports campaign-to-lead visibility.</p></div>
+        <div class="tile"><div class="tile-head"><div class="logo-mark"><img src="https://cdn.jsdelivr.net/npm/simple-icons@latest/icons/salesforce.svg" alt="Salesforce"></div><div><h3>Salesforce</h3><div class="label">CRM</div></div></div><p>The system of record for accounts, contacts, opportunities, pipeline, ownership, activity, and leadership reporting.</p></div>
+        <div class="tile"><div class="tile-head"><div class="logo-mark"><img src="https://www.google.com/s2/favicons?domain=outreach.ai&sz=128" alt="Outreach"></div><div><h3>Outreach</h3><div class="label">Engagement / Dialer</div></div></div><p>Turns target accounts and contacts into sequenced rep activity across email, phone, tasks, and follow-up workflows.</p></div>
+        <div class="tile"><div class="tile-head"><div class="logo-mark"><img src="https://www.google.com/s2/favicons?domain=zoominfo.com&sz=128" alt="ZoomInfo"></div><div><h3>ZoomInfo</h3><div class="label">TAM Expansion</div></div></div><p>Expands account and contact coverage so the team can identify new territories, contacts, buying committees, and whitespace.</p></div>
+        <div class="tile"><div class="tile-head"><div class="logo-mark"><img src="https://www.google.com/s2/favicons?domain=openclaw.ai&sz=128" alt="OpenClaw"></div><div><h3>OpenClaw</h3><div class="label">Sales Team Bots</div></div></div><p>Automates sales team operating work: dashboards, alerts, routing, follow-ups, research packets, and rep-facing assistants.</p></div>
+        <div class="tile"><div class="tile-head"><div class="logo-mark"><img src="https://www.google.com/s2/favicons?domain=clay.com&sz=128" alt="Clay"></div><div><h3>Clay</h3><div class="label">Enrichment</div></div></div><p>Combines external data sources and AI research to turn raw accounts into usable targeting and personalization fields.</p></div>
+        <div class="tile"><div class="tile-head"><div class="logo-mark"><img src="https://cdn.jsdelivr.net/npm/simple-icons@latest/icons/anthropic.svg" alt="Claude"></div><div><h3>Claude</h3><div class="label">Document Design</div></div></div><p>Converts sales strategy and source material into polished documents, decks, narratives, business cases, and customer-ready assets.</p></div>
+        <div class="tile"><div class="tile-head"><div class="logo-mark"><img src="https://www.google.com/s2/favicons?domain=rox.com&sz=128" alt="Rox"></div><div><h3>Rox</h3><div class="label">AI Automated Prospecting</div></div></div><p>Runs signal-based AI prospecting to identify, research, prioritize, and engage accounts with less manual prep from reps.</p></div>
+        <div class="tile"><div class="tile-head"><div class="logo-mark"><img src="https://cdn.jsdelivr.net/npm/simple-icons@latest/icons/docusign.svg" alt="DocuSign"></div><div><h3>DocuSign</h3><div class="label">Esignature</div></div></div><p>Moves approved commercial terms through signature quickly and gives sales a clean handoff from verbal yes to executed agreement.</p></div>
+      </div>
+    </div>
+  </section>
+
+  <section class="slide">
+    <div class="topbar">
+      <div class="brand">
+        <img src="https://7091219.fs1.hubspotusercontent-na1.net/hubfs/7091219/email-assets/logo-revio-white.png" alt="Rev.io">
+        <div class="brand-line"></div>
+        <div class="eyebrow">Operating Layers</div>
+      </div>
+      <div class="slide-no">03 / 05</div>
+    </div>
+    <div class="body">
+      <h2>The stack works best as <span>three connected layers</span>.</h2>
+      <p class="lead">Salesforce stays the source of truth. Data and AI tools expand the market. Engagement and execution systems turn that insight into pipeline activity.</p>
+      <div class="system-map">
+        <div class="pillar">
+          <div class="pillar-title">1. Source of Truth</div>
+          <div class="tool-row"><div class="tool-logo"><img src="https://cdn.jsdelivr.net/npm/simple-icons@latest/icons/salesforce.svg" alt="Salesforce"></div><div><div class="tool-name">Salesforce</div><div class="tool-role">CRM</div></div></div>
+          <div class="tool-row"><div class="tool-logo"><img src="https://cdn.jsdelivr.net/npm/simple-icons@latest/icons/docusign.svg" alt="DocuSign"></div><div><div class="tool-name">DocuSign</div><div class="tool-role">Esignature</div></div></div>
+        </div>
+        <div class="pillar">
+          <div class="pillar-title">2. Market Intelligence</div>
+          <div class="tool-row"><div class="tool-logo"><img src="https://www.google.com/s2/favicons?domain=zoominfo.com&sz=128" alt="ZoomInfo"></div><div><div class="tool-name">ZoomInfo</div><div class="tool-role">TAM Expansion</div></div></div>
+          <div class="tool-row"><div class="tool-logo"><img src="https://www.google.com/s2/favicons?domain=clay.com&sz=128" alt="Clay"></div><div><div class="tool-name">Clay</div><div class="tool-role">Enrichment</div></div></div>
+          <div class="tool-row"><div class="tool-logo"><img src="https://www.google.com/s2/favicons?domain=rox.com&sz=128" alt="Rox"></div><div><div class="tool-name">Rox</div><div class="tool-role">AI Automated Prospecting</div></div></div>
+        </div>
+        <div class="pillar">
+          <div class="pillar-title">3. Activation & Leverage</div>
+          <div class="tool-row"><div class="tool-logo"><img src="https://www.google.com/s2/favicons?domain=hubspot.com&sz=128" alt="HubSpot"></div><div><div class="tool-name">HubSpot</div><div class="tool-role">Marketing</div></div></div>
+          <div class="tool-row"><div class="tool-logo"><img src="https://www.google.com/s2/favicons?domain=outreach.ai&sz=128" alt="Outreach"></div><div><div class="tool-name">Outreach</div><div class="tool-role">Engagement / Dialer</div></div></div>
+          <div class="tool-row"><div class="tool-logo"><img src="https://www.google.com/s2/favicons?domain=openclaw.ai&sz=128" alt="OpenClaw"></div><div><div class="tool-name">OpenClaw</div><div class="tool-role">Sales Team Bots</div></div></div>
+          <div class="tool-row"><div class="tool-logo"><img src="https://cdn.jsdelivr.net/npm/simple-icons@latest/icons/anthropic.svg" alt="Claude"></div><div><div class="tool-name">Claude</div><div class="tool-role">Document Design</div></div></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="slide">
+    <div class="topbar">
+      <div class="brand">
+        <img src="https://7091219.fs1.hubspotusercontent-na1.net/hubfs/7091219/email-assets/logo-revio-white.png" alt="Rev.io">
+        <div class="brand-line"></div>
+        <div class="eyebrow">Revenue Workflow</div>
+      </div>
+      <div class="slide-no">04 / 05</div>
+    </div>
+    <div class="body">
+      <h2>From market map to signed agreement.</h2>
+      <p class="lead">This is the stack as a workflow, not a vendor list: identify the market, enrich the account, automate prospecting, execute engagement, then package and close.</p>
+      <div class="flow">
+        <div class="flow-card">
+          <div class="step">Step 01</div>
+          <h3>Build the market</h3>
+          <p>ZoomInfo expands TAM coverage and identifies accounts, contacts, buying committees, and whitespace.</p>
+          <div class="mini-logos"><div class="mini"><img src="https://www.google.com/s2/favicons?domain=zoominfo.com&sz=128" alt="ZoomInfo"></div></div>
+        </div>
+        <div class="flow-card">
+          <div class="step">Step 02</div>
+          <h3>Enrich and segment</h3>
+          <p>Clay turns account lists into enriched targeting fields, signals, and personalization inputs.</p>
+          <div class="mini-logos"><div class="mini"><img src="https://www.google.com/s2/favicons?domain=clay.com&sz=128" alt="Clay"></div></div>
+        </div>
+        <div class="flow-card">
+          <div class="step">Step 03</div>
+          <h3>Automate prospecting</h3>
+          <p>Rox and OpenClaw create leverage: automated prospecting, sales team bots, reporting, routing, and alerts.</p>
+          <div class="mini-logos"><div class="mini"><img src="https://www.google.com/s2/favicons?domain=rox.com&sz=128" alt="Rox"></div><div class="mini"><img src="https://www.google.com/s2/favicons?domain=openclaw.ai&sz=128" alt="OpenClaw"></div></div>
+        </div>
+        <div class="flow-card">
+          <div class="step">Step 04</div>
+          <h3>Engage and convert</h3>
+          <p>HubSpot captures demand, Outreach drives rep engagement, and Salesforce records the funnel.</p>
+          <div class="mini-logos"><div class="mini"><img src="https://www.google.com/s2/favicons?domain=hubspot.com&sz=128" alt="HubSpot"></div><div class="mini"><img src="https://www.google.com/s2/favicons?domain=outreach.ai&sz=128" alt="Outreach"></div><div class="mini"><img src="https://cdn.jsdelivr.net/npm/simple-icons@latest/icons/salesforce.svg" alt="Salesforce"></div></div>
+        </div>
+        <div class="flow-card">
+          <div class="step">Step 05</div>
+          <h3>Design and close</h3>
+          <p>Claude helps package the story and DocuSign moves approved terms through signature.</p>
+          <div class="mini-logos"><div class="mini"><img src="https://cdn.jsdelivr.net/npm/simple-icons@latest/icons/anthropic.svg" alt="Claude"></div><div class="mini"><img src="https://cdn.jsdelivr.net/npm/simple-icons@latest/icons/docusign.svg" alt="DocuSign"></div></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="slide">
+    <div class="topbar">
+      <div class="brand">
+        <img src="https://7091219.fs1.hubspotusercontent-na1.net/hubfs/7091219/email-assets/logo-revio-white.png" alt="Rev.io">
+        <div class="brand-line"></div>
+        <div class="eyebrow">Leadership Message</div>
+      </div>
+      <div class="slide-no">05 / 05</div>
+    </div>
+    <div class="body">
+      <h2>The strategic shift: <span>reps spend less time assembling context</span> and more time converting it.</h2>
+      <p class="lead">The stack should reduce manual work, improve targeting quality, make activity more measurable, and shorten the path from signal to signed agreement.</p>
+      <div class="operating-grid">
+        <div class="big-panel">
+          <h3>Operating principles</h3>
+          <div class="rules">
+            <div class="rule"><strong>Salesforce owns truth</strong><span>All account, contact, opportunity, and pipeline reporting should reconcile back to CRM.</span></div>
+            <div class="rule"><strong>AI creates leverage</strong><span>Rox, OpenClaw, Clay, and Claude remove prep work, research burden, and manual document production.</span></div>
+            <div class="rule"><strong>Engagement stays measurable</strong><span>Outreach and HubSpot should make activity, campaign impact, and conversion visible.</span></div>
+            <div class="rule"><strong>Execution closes the loop</strong><span>DocuSign turns approved commercial intent into signed agreements with less delay.</span></div>
+          </div>
+        </div>
+        <div class="side-panel">
+          <h3>Why this matters</h3>
+          <div class="score-card">
+            <div class="score-label">Stack Narrative</div>
+            <div class="score-value">9 tools, 1 motion</div>
+            <div class="score-copy">Rev.io's GTM stack is moving toward a unified operating system: find the right market, enrich the right targets, automate the right work, and focus reps on conversion.</div>
+          </div>
+          <div class="score-card">
+            <div class="score-label">Leadership Takeaway</div>
+            <div class="score-value">More signal. Less swivel-chair.</div>
+            <div class="score-copy">The goal is not tool sprawl. The goal is fewer manual handoffs and better sales execution at scale.</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+</div>
+
+<div class="nav">
+  <button id="prev">Prev</button>
+  <div class="dots" id="dots"></div>
+  <div class="counter" id="counter">1 / 5</div>
+  <button id="next">Next</button>
+</div>
+
+<script>
+const slides = [...document.querySelectorAll(".slide")];
+const dots = document.getElementById("dots");
+const counter = document.getElementById("counter");
+let current = 0;
+
+slides.forEach((_, index) => {
+  const dot = document.createElement("div");
+  dot.className = "dot" + (index === 0 ? " active" : "");
+  dot.addEventListener("click", () => show(index));
+  dots.appendChild(dot);
+});
+
+function show(index) {
+  current = Math.max(0, Math.min(slides.length - 1, index));
+  slides.forEach((slide, i) => slide.classList.toggle("active", i === current));
+  [...dots.children].forEach((dot, i) => dot.classList.toggle("active", i === current));
+  document.getElementById("prev").disabled = current === 0;
+  document.getElementById("next").disabled = current === slides.length - 1;
+  counter.textContent = `${current + 1} / ${slides.length}`;
+}
+
+document.getElementById("prev").addEventListener("click", () => show(current - 1));
+document.getElementById("next").addEventListener("click", () => show(current + 1));
+document.addEventListener("keydown", (event) => {
+  if (event.key === "ArrowRight" || event.key === " ") show(current + 1);
+  if (event.key === "ArrowLeft") show(current - 1);
+});
+show(0);
+</script>
+</body>
+</html>
