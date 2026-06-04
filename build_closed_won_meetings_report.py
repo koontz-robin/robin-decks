@@ -18,7 +18,7 @@ CSV_FILE = WORKSPACE / "closed_won_meetings_report.csv"
 DATA_FILE = WORKSPACE / "closed_won_meetings_report.json"
 ET = ZoneInfo("America/New_York")
 
-EXCLUDED_EVENT_TYPES = {"10 - Internal Meeting / Training", "Onboarding Hand-off"}
+EXCLUDED_EVENT_TYPES = {"10 - Internal Meeting / Training"}
 
 
 def chunked(items, size=150):
@@ -74,7 +74,6 @@ def fetch_events(base, headers, field, ids, start_date, end_date):
               AND ActivityDate >= {start_date}
               AND ActivityDate <= {end_date}
               AND Type != '10 - Internal Meeting / Training'
-              AND Type != 'Onboarding Hand-off'
               AND (Canceled_Meeting__c = false OR Canceled_Meeting__c = null)
               AND (Meeting_No_show__c = false OR Meeting_No_show__c = null)
               AND IsDeleted = false
@@ -212,7 +211,7 @@ def build_html(payload):
   <header>
     <div class="eyebrow">Salesforce Closed Won Analysis</div>
     <h1>Closed Won Meetings Report</h1>
-    <p class="subhead">All Closed Won opportunities whose Product Type contains PSA or Billing. Meeting counts include non-internal, non-canceled Salesforce Event records tied to either the opportunity or its account during the opportunity's CreatedDate-to-CloseDate window. Generated {escape(generated)}.</p>
+    <p class="subhead">All Closed Won opportunities whose Product Type contains PSA or Billing. Logged meetings per deal include all non-internal, non-canceled Salesforce Event records associated to the account during the opportunity's CreatedDate-to-CloseDate window, plus any Events logged directly on the opportunity. Generated {escape(generated)}.</p>
   </header>
   <main>
     <div class="kpis">
@@ -255,11 +254,14 @@ def main():
     start_date = min(parse_sf_datetime(opp["CreatedDate"]).date() for opp in opps).isoformat()
     end_date = max(opp["CloseDate"] for opp in opps)
 
-    account_events = fetch_events(base, headers, "WhatId", account_ids, start_date, end_date)
+    account_id_events = fetch_events(base, headers, "AccountId", account_ids, start_date, end_date)
+    account_what_events = fetch_events(base, headers, "WhatId", account_ids, start_date, end_date)
     opportunity_events = fetch_events(base, headers, "WhatId", opp_ids, start_date, end_date)
 
     events_by_account = defaultdict(list)
-    for event in account_events:
+    for event in account_id_events:
+        events_by_account[event.get("AccountId")].append(event)
+    for event in account_what_events:
         events_by_account[event.get("WhatId")].append(event)
     events_by_opp = defaultdict(list)
     for event in opportunity_events:
@@ -307,7 +309,8 @@ def main():
         "summary": summarize(rows),
         "source_counts": {
             "opportunities": len(opps),
-            "account_events_fetched": len(account_events),
+            "account_id_events_fetched": len(account_id_events),
+            "account_what_events_fetched": len(account_what_events),
             "opportunity_events_fetched": len(opportunity_events),
         },
     }
@@ -320,7 +323,11 @@ def main():
         writer.writerows(rows)
 
     print(f"Fetched {len(opps):,} Closed Won PSA/Billing opportunities.")
-    print(f"Fetched {len(account_events):,} account-linked sales meetings and {len(opportunity_events):,} opportunity-linked sales meetings.")
+    print(
+        f"Fetched {len(account_id_events):,} AccountId-linked meetings, "
+        f"{len(account_what_events):,} account WhatId-linked meetings, and "
+        f"{len(opportunity_events):,} opportunity-linked meetings."
+    )
     print(f"Wrote {HTML_FILE}")
     print(f"Wrote {CSV_FILE}")
     print(f"Wrote {DATA_FILE}")
