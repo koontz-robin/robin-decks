@@ -71,6 +71,19 @@
   .snapshot-icon { font-size: 22px; flex-shrink: 0; margin-top: 2px; }
   .snapshot-label { font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 1px; color: var(--text-sub); margin-bottom: 4px; }
   .snapshot-val { font-size: 14px; font-weight: 600; color: var(--text-main); line-height: 1.4; }
+  .solution-map { position: relative; min-height: 360px; margin: -22px auto 42px; padding: 28px 28px 34px; border: 1px solid rgba(0,87,255,0.14); border-radius: 22px; background: radial-gradient(circle at 50% 50%, rgba(0,87,255,0.12), rgba(255,255,255,0.72) 46%, rgba(240,244,255,0.95)); box-shadow: 0 18px 50px rgba(10,15,30,0.08); overflow: hidden; }
+  .solution-map::before { content: ''; position: absolute; inset: 78px 130px; border: 1px dashed rgba(0,87,255,0.24); border-radius: 50%; }
+  .solution-map::after { content: ''; position: absolute; left: 50%; top: 50%; width: 62%; height: 1px; transform: translate(-50%, -50%); background: linear-gradient(90deg, transparent, rgba(0,87,255,0.22), transparent); }
+  .solution-row { position: relative; z-index: 2; display: grid; grid-template-columns: repeat(5, minmax(0, 1fr)); gap: 10px; }
+  .solution-row.bottom { position: absolute; left: 28px; right: 28px; bottom: 30px; }
+  .solution-side { position: absolute; z-index: 2; top: 128px; display: grid; gap: 12px; width: 150px; }
+  .solution-side.left { left: 42px; }
+  .solution-side.right { right: 42px; }
+  .solution-node { min-height: 42px; display: flex; align-items: center; justify-content: center; text-align: center; padding: 9px 12px; border: 1px solid rgba(10,15,30,0.09); border-radius: 12px; background: rgba(255,255,255,0.94); color: var(--text-main); font-size: 12px; font-weight: 800; line-height: 1.22; box-shadow: 0 8px 20px rgba(10,15,30,0.08); }
+  .solution-node .sub { display: block; color: var(--text-sub); font-size: 10px; font-weight: 700; margin-top: 2px; }
+  .solution-core { position: absolute; z-index: 3; left: 50%; top: 50%; transform: translate(-50%, -50%); width: 194px; height: 194px; border-radius: 50%; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 10px; background: #fff; border: 10px solid rgba(0,87,255,0.12); box-shadow: 0 22px 48px rgba(10,15,30,0.18); }
+  .solution-core img { width: 118px; max-height: 68px; object-fit: contain; }
+  .solution-core span { font-size: 10px; font-weight: 800; letter-spacing: 1.4px; text-transform: uppercase; color: var(--rev-blue); }
 
   /* QUOTE BLOCK */
   .quote-block { background: linear-gradient(135deg, #0A0F1E, #0A1A3E); border-radius: 20px; padding: 36px 40px; color: #fff; max-width: 800px; margin: 0 auto 40px; position: relative; }
@@ -195,6 +208,11 @@
     .journey-grid { grid-template-columns: 1fr; }
     .journey-flow { grid-template-columns: 1fr; }
     .journey-arrow { transform: rotate(90deg); text-align: center; }
+    .solution-map { display: grid; gap: 10px; min-height: auto; padding: 18px; margin-top: -20px; }
+    .solution-map::before, .solution-map::after { display: none; }
+    .solution-row, .solution-row.bottom, .solution-side, .solution-side.left, .solution-side.right { position: static; width: auto; display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+    .solution-core { position: static; transform: none; width: 150px; height: 150px; justify-self: center; order: -1; }
+    .solution-core img { width: 96px; }
     nav .nav-pills { display: none; }
   }
 </style>
@@ -256,6 +274,35 @@
       <div class="section-tag">Account Snapshot</div>
       <h2 class="section-title">Who is AVIT?</h2>
       <p class="section-sub">AVIT. A full-stack managed services company with deep roots in hospitality, security, and AV.</p>
+    </div>
+
+    <div class="solution-map" aria-label="AVIT platform ecosystem">
+      <div class="solution-row top">
+        <div class="solution-node">NetSuite</div>
+        <div class="solution-node">ConnectWise<span class="sub">PSA / RMM</span></div>
+        <div class="solution-node">IT Glue</div>
+        <div class="solution-node">Meraki</div>
+        <div class="solution-node">Pax8</div>
+      </div>
+      <div class="solution-side left">
+        <div class="solution-node">TD Synnex</div>
+        <div class="solution-node">Ingram Micro</div>
+      </div>
+      <div class="solution-core">
+        <img src="avit-assets/avit-logo-red.webp" alt="AVIT">
+        <span>Platform Ecosystem</span>
+      </div>
+      <div class="solution-side right">
+        <div class="solution-node">D&amp;H</div>
+        <div class="solution-node">ScanSource</div>
+      </div>
+      <div class="solution-row bottom">
+        <div class="solution-node">ADI</div>
+        <div class="solution-node">Alarm.com</div>
+        <div class="solution-node">Digicom</div>
+        <div class="solution-node">Jira</div>
+        <div class="solution-node">Field Nation</div>
+      </div>
     </div>
 
     <div class="quote-block">
