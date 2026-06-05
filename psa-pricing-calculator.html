@@ -389,6 +389,30 @@
           <span class="pill">Editable estimate</span>
         </div>
         <div class="rows" id="monthlyRows">
+        <div class="row" data-line="minimum" draggable="true">
+          <button class="drag-handle" type="button" draggable="true" aria-label="Drag Monthly Minimum row" title="Drag to reorder">::</button>
+          <div>
+            <div class="item-title">Monthly Minimum</div>
+            <div class="item-copy">Preset at $1,000. Reps can adjust the minimum when an approved package, ramp, or exception requires a different threshold.</div>
+          </div>
+          <div>
+            <label for="monthlyMinimum">Minimum</label>
+            <div class="stepper">
+              <button type="button" data-step="monthlyMinimum" data-delta="-100" aria-label="Decrease monthly minimum">-</button>
+              <input class="number-input" id="monthlyMinimum" type="number" min="0" step="100" value="1000">
+              <button type="button" data-step="monthlyMinimum" data-delta="100" aria-label="Increase monthly minimum">+</button>
+            </div>
+          </div>
+          <div>
+            <label>Applies to</label>
+            <div class="item-copy">Monthly recurring</div>
+          </div>
+          <div>
+            <label>Current minimum</label>
+            <div class="line-total" id="monthlyMinimumTotal">$1,000</div>
+          </div>
+        </div>
+
           <div class="row" data-line="standard" draggable="true">
             <button class="drag-handle" type="button" draggable="true" aria-label="Drag Standard User row" title="Drag to reorder">::</button>
             <div>
@@ -498,30 +522,6 @@
           <div>
             <label>Line total</label>
             <div class="line-total" id="commTotal">$0</div>
-          </div>
-        </div>
-
-        <div class="row" data-line="minimum" draggable="true">
-          <button class="drag-handle" type="button" draggable="true" aria-label="Drag Monthly Minimum row" title="Drag to reorder">::</button>
-          <div>
-            <div class="item-title">Monthly Minimum</div>
-            <div class="item-copy">Preset at $1,000. Reps can adjust the minimum when an approved package, ramp, or exception requires a different threshold.</div>
-          </div>
-          <div>
-            <label for="monthlyMinimum">Minimum</label>
-            <div class="stepper">
-              <button type="button" data-step="monthlyMinimum" data-delta="-100" aria-label="Decrease monthly minimum">-</button>
-              <input class="number-input" id="monthlyMinimum" type="number" min="0" step="100" value="1000">
-              <button type="button" data-step="monthlyMinimum" data-delta="100" aria-label="Increase monthly minimum">+</button>
-            </div>
-          </div>
-          <div>
-            <label>Applies to</label>
-            <div class="item-copy">Monthly recurring</div>
-          </div>
-          <div>
-            <label>Current minimum</label>
-            <div class="line-total" id="monthlyMinimumTotal">$1,000</div>
           </div>
         </div>
 
