@@ -418,24 +418,6 @@
           </div>
         </div>
 
-        <div class="row" data-line="minimum">
-          <div>
-            <div class="item-title">Minimum Starter Package</div>
-            <div class="item-copy">Monthly minimum applied when selected license value is below the starter package threshold.</div>
-          </div>
-          <div>
-            <label for="minimumQty">Quantity</label>
-            <input class="number-input" id="minimumQty" type="number" min="1" step="1" value="1">
-          </div>
-          <div>
-            <label for="minimumRate">Minimum</label>
-            <input class="number-input" id="minimumRate" type="number" min="0" step="50" value="1000">
-          </div>
-          <div>
-            <label>Adjustment</label>
-            <div class="line-total" id="minimumAdjustment">$0</div>
-          </div>
-        </div>
       </div>
     </section>
 
@@ -466,7 +448,7 @@
           <span>Total users</span>
           <strong id="totalUsers">13</strong>
         </div>
-        <div class="floor-note" id="floorNote">Your selected package is above the monthly minimum, so no minimum adjustment is needed.</div>
+        <div class="floor-note" id="floorNote">Clients can tailor their package mix as long as the final monthly package is $1,000 or more.</div>
         <button class="copy-btn" type="button" id="copySummary">Copy pricing summary</button>
       </div>
     </aside>
@@ -474,8 +456,8 @@
 
   <div class="details">
     <div class="detail-card">
-      <h3>How the minimum works</h3>
-      <p>If selected users total less than $1,000, the calculator adds a minimum adjustment so the monthly package reaches the starter threshold.</p>
+      <h3>Tailored package minimum</h3>
+      <p>Clients can adjust the mix of Standard Users, Field Users, and included Revy AI Outcomes as long as the final monthly package is at least $1,000.</p>
     </div>
     <div class="detail-card">
       <h3>What can be adjusted</h3>
@@ -493,7 +475,7 @@
 <script>
   const ids = [
     "standardQty", "standardRate", "fieldQty", "fieldRate",
-    "revyRate", "minimumQty", "minimumRate"
+    "revyRate"
   ];
 
   const money = new Intl.NumberFormat("en-US", {
@@ -517,14 +499,12 @@
     const fieldQty = numberValue("fieldQty");
     const fieldRate = numberValue("fieldRate");
     const revyRate = numberValue("revyRate");
-    const minimumQty = Math.max(1, numberValue("minimumQty"));
-    const minimumRate = numberValue("minimumRate");
+    const minimumValue = 1000;
 
     const standardTotal = standardQty * standardRate;
     const fieldTotal = fieldQty * fieldRate;
     const revyTotal = revyRate;
     const licenseValue = standardTotal + fieldTotal + revyTotal;
-    const minimumValue = minimumQty * minimumRate;
     const adjustment = Math.max(0, minimumValue - licenseValue);
     const total = licenseValue + adjustment;
     const totalUsers = standardQty + fieldQty;
@@ -532,7 +512,6 @@
     document.getElementById("standardTotal").textContent = format(standardTotal);
     document.getElementById("fieldTotal").textContent = format(fieldTotal);
     document.getElementById("revyTotal").textContent = revyTotal > 0 ? format(revyTotal) : "Included";
-    document.getElementById("minimumAdjustment").textContent = format(adjustment);
     document.getElementById("licenseValue").textContent = format(licenseValue);
     document.getElementById("minimumValue").textContent = format(minimumValue);
     document.getElementById("adjustmentValue").textContent = format(adjustment);
@@ -543,11 +522,11 @@
     const sub = document.getElementById("totalSub");
     const note = document.getElementById("floorNote");
     if (adjustment > 0) {
-      sub.textContent = `${format(adjustment)} is added to reach the ${format(minimumValue)} monthly starter minimum.`;
-      note.textContent = `Selected licenses total ${format(licenseValue)}. The minimum adjustment brings the package to ${format(total)} per month.`;
+      sub.textContent = `${format(adjustment)} is added so the tailored package reaches the ${format(minimumValue)} monthly minimum.`;
+      note.textContent = `Clients can tailor the user mix. This configuration totals ${format(licenseValue)} before the minimum adjustment and ${format(total)} per month after the minimum is applied.`;
     } else {
-      sub.textContent = `License value exceeds the ${format(minimumValue)} monthly starter minimum.`;
-      note.textContent = "Your selected package is above the monthly minimum, so no minimum adjustment is needed.";
+      sub.textContent = `License value meets or exceeds the ${format(minimumValue)} monthly minimum.`;
+      note.textContent = `Clients can tailor the user mix. This configuration is ${format(total)} per month and already meets the minimum.`;
     }
 
     return {
