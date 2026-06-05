@@ -24,22 +24,12 @@
     background: var(--wash);
     line-height: 1.5;
   }
-  .topbar {
-    background: #fff;
-    border-bottom: 1px solid var(--line);
-    position: sticky;
-    top: 0;
-    z-index: 10;
-  }
-  .topbar-inner {
-    max-width: 1180px;
-    margin: 0 auto;
-    min-height: 68px;
-    padding: 0 24px;
+  .hero-top {
     display: flex;
     align-items: center;
     justify-content: space-between;
-    gap: 18px;
+    gap: 24px;
+    margin-bottom: 34px;
   }
   .logo {
     display: flex;
@@ -47,19 +37,19 @@
     gap: 14px;
   }
   .logo img {
-    width: 104px;
+    width: 132px;
     height: auto;
     display: block;
   }
   .logo .label {
-    border-left: 1px solid var(--line);
+    border-left: 1px solid rgba(255,255,255,.32);
     padding-left: 14px;
-    color: var(--muted);
+    color: rgba(255,255,255,.76);
     font-size: 13px;
     font-weight: 700;
   }
   .top-total {
-    color: var(--navy);
+    color: rgba(255,255,255,.78);
     font-size: 14px;
     font-weight: 800;
   }
@@ -74,7 +64,7 @@
     max-width: 1180px;
     margin: 0 auto;
     min-height: 48vh;
-    padding: 58px 24px 48px;
+    padding: 28px 24px 48px;
     display: grid;
     align-content: center;
     gap: 18px;
@@ -319,26 +309,23 @@
     .line-total { text-align: left; }
   }
   @media (max-width: 620px) {
-    .topbar-inner { align-items: flex-start; flex-direction: column; padding-top: 12px; padding-bottom: 12px; }
+    .hero-top { align-items: flex-start; flex-direction: column; margin-bottom: 26px; }
     .top-total span { display: block; margin-left: 0; }
-    .hero { padding-top: 44px; }
+    .hero { padding-top: 24px; }
     main { padding-left: 14px; padding-right: 14px; }
   }
 </style>
 </head>
 <body>
-<div class="topbar">
-  <div class="topbar-inner">
-    <div class="logo">
-      <img src="revio-logo.png" alt="Rev.io">
-      <div class="label">PSA Pricing Calculator</div>
-    </div>
-    <div class="top-total">Estimated monthly total <span id="topTotal">$1,000</span></div>
-  </div>
-</div>
-
 <header>
   <div class="hero">
+    <div class="hero-top">
+      <div class="logo">
+        <img src="revio-logo-white.png" alt="Rev.io">
+        <div class="label">PSA Pricing Calculator</div>
+      </div>
+      <div class="top-total">Estimated monthly total <span id="topTotal">$1,000</span></div>
+    </div>
     <div class="kicker">Rev.io PSA</div>
     <h1>Build your starter package and see the path to $1,000/month.</h1>
     <p>Adjust user quantities and rates to model your monthly Rev.io PSA package. The calculator automatically applies the $1,000 monthly minimum when selected users total less than the starter threshold.</p>
