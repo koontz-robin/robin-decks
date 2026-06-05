@@ -143,11 +143,41 @@
   }
   .row {
     display: grid;
-    grid-template-columns: minmax(260px, 1fr) minmax(190px, .34fr) minmax(170px, .3fr) 132px;
+    grid-template-columns: 34px minmax(240px, 1fr) minmax(190px, .34fr) minmax(170px, .3fr) 132px;
     gap: 14px;
     align-items: center;
     padding: 18px 22px;
     border-bottom: 1px solid var(--line);
+  }
+  .row.dragging {
+    opacity: .58;
+  }
+  .row.drop-before {
+    box-shadow: inset 0 3px 0 var(--teal);
+  }
+  .drag-handle {
+    width: 34px;
+    height: 42px;
+    border: 1px solid #c8d6e1;
+    border-radius: 8px;
+    background: #fff;
+    color: var(--muted);
+    display: grid;
+    place-items: center;
+    cursor: grab;
+    font-size: 18px;
+    font-weight: 900;
+    line-height: 1;
+  }
+  .drag-handle:active { cursor: grabbing; }
+  .drag-handle:hover,
+  .drag-handle:focus {
+    color: var(--teal);
+    border-color: var(--teal);
+    outline: none;
+  }
+  .row:not([draggable="true"]) {
+    grid-template-columns: minmax(260px, 1fr) minmax(190px, .34fr) minmax(170px, .3fr) 132px;
   }
   .row:last-child { border-bottom: 0; }
   .item-title {
@@ -321,6 +351,8 @@
     .calculator { grid-template-columns: 1fr; }
     .summary { position: static; }
     .row { grid-template-columns: 1fr; }
+    .row:not([draggable="true"]) { grid-template-columns: 1fr; }
+    .drag-handle { width: 100%; }
     .line-total { text-align: left; }
   }
   @media (max-width: 620px) {
@@ -355,8 +387,9 @@
           <h2>Monthly license fees</h2>
           <span class="pill">Editable estimate</span>
         </div>
-        <div class="rows">
-          <div class="row" data-line="standard">
+        <div class="rows" id="monthlyRows">
+          <div class="row" data-line="standard" draggable="true">
+            <button class="drag-handle" type="button" draggable="true" aria-label="Drag Standard User row" title="Drag to reorder">::</button>
             <div>
               <div class="item-title">Standard User</div>
               <div class="item-copy">Core PSA access for admins, dispatch, operations, management, and back-office users.</div>
@@ -383,7 +416,8 @@
             </div>
           </div>
 
-        <div class="row" data-line="field">
+        <div class="row" data-line="field" draggable="true">
+          <button class="drag-handle" type="button" draggable="true" aria-label="Drag Field User row" title="Drag to reorder">::</button>
           <div>
             <div class="item-title">Field User</div>
             <div class="item-copy">Mobile-first access for technicians and field employees who need ticket, time, photo, and signature workflows.</div>
@@ -410,7 +444,8 @@
           </div>
         </div>
 
-        <div class="row" data-line="revii">
+        <div class="row" data-line="revii" draggable="true">
+          <button class="drag-handle" type="button" draggable="true" aria-label="Drag Revii AI Credits row" title="Drag to reorder">::</button>
           <div>
             <div class="item-title">Revii AI Credits</div>
             <div class="item-copy">Agentic AI outcomes initiated by your users in the Revii interface globally available in the interface.</div>
@@ -437,7 +472,8 @@
           </div>
         </div>
 
-        <div class="row" data-line="communications">
+        <div class="row" data-line="communications" draggable="true">
+          <button class="drag-handle" type="button" draggable="true" aria-label="Drag Communications Billing row" title="Drag to reorder">::</button>
           <div>
             <div class="item-title">Communications Billing</div>
             <div class="item-copy">Monthly communications billing volume multiplied by an editable percentage. This line is usage based with no monthly floor.</div>
@@ -464,7 +500,8 @@
           </div>
         </div>
 
-        <div class="row" data-line="minimum">
+        <div class="row" data-line="minimum" draggable="true">
+          <button class="drag-handle" type="button" draggable="true" aria-label="Drag Monthly Minimum row" title="Drag to reorder">::</button>
           <div>
             <div class="item-title">Monthly Minimum</div>
             <div class="item-copy">Preset at $1,000. Reps can adjust the minimum when an approved package, ramp, or exception requires a different threshold.</div>
@@ -716,6 +753,7 @@
         document.getElementById(id).value = params.get(id);
       }
     });
+    applyMonthlyOrder(params.get("monthlyOrder"));
   }
 
   function updateUrl() {
@@ -726,9 +764,77 @@
         params.set(id, input.value);
       }
     });
+    const monthlyOrder = getMonthlyOrder();
+    if (monthlyOrder) {
+      params.set("monthlyOrder", monthlyOrder);
+    }
     const nextUrl = `${window.location.pathname}?${params.toString()}`;
     window.history.replaceState({}, "", nextUrl);
     return `${window.location.origin}${nextUrl}`;
+  }
+
+  function getMonthlyRows() {
+    return Array.from(document.querySelectorAll("#monthlyRows .row[draggable='true']"));
+  }
+
+  function getMonthlyOrder() {
+    return getMonthlyRows().map(row => row.dataset.line).filter(Boolean).join(",");
+  }
+
+  function applyMonthlyOrder(orderText) {
+    if (!orderText) return;
+    const container = document.getElementById("monthlyRows");
+    const rowsByLine = new Map(getMonthlyRows().map(row => [row.dataset.line, row]));
+    orderText.split(",").forEach(line => {
+      const row = rowsByLine.get(line);
+      if (row) {
+        container.appendChild(row);
+      }
+    });
+  }
+
+  function clearDropMarkers() {
+    getMonthlyRows().forEach(row => row.classList.remove("drop-before"));
+  }
+
+  function setupMonthlyDrag() {
+    const container = document.getElementById("monthlyRows");
+    let draggedRow = null;
+
+    getMonthlyRows().forEach(row => {
+      row.addEventListener("dragstart", event => {
+        draggedRow = row;
+        row.classList.add("dragging");
+        event.dataTransfer.effectAllowed = "move";
+        event.dataTransfer.setData("text/plain", row.dataset.line || "");
+      });
+
+      row.addEventListener("dragend", () => {
+        row.classList.remove("dragging");
+        draggedRow = null;
+        clearDropMarkers();
+        updateUrl();
+      });
+    });
+
+    container.addEventListener("dragover", event => {
+      if (!draggedRow) return;
+      event.preventDefault();
+      const targetRow = event.target.closest("#monthlyRows .row[draggable='true']");
+      clearDropMarkers();
+      if (!targetRow || targetRow === draggedRow) return;
+      targetRow.classList.add("drop-before");
+      const targetBox = targetRow.getBoundingClientRect();
+      const placeAfter = event.clientY > targetBox.top + targetBox.height / 2;
+      container.insertBefore(draggedRow, placeAfter ? targetRow.nextSibling : targetRow);
+    });
+
+    container.addEventListener("drop", event => {
+      if (!draggedRow) return;
+      event.preventDefault();
+      clearDropMarkers();
+      updateUrl();
+    });
   }
 
   function getPromo(monthlyTotal) {
@@ -913,6 +1019,7 @@
     });
   });
 
+  setupMonthlyDrag();
   applyUrlValues();
   calculate();
 </script>
