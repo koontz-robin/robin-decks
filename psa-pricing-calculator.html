@@ -1,0 +1,603 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Rev.io PSA Pricing Calculator</title>
+<style>
+  :root {
+    --navy: #1d3756;
+    --teal: #2399b5;
+    --green: #6ebe4f;
+    --ink: #1e2a36;
+    --muted: #617283;
+    --line: #dfe7ee;
+    --wash: #f5f8fb;
+    --paper: #ffffff;
+    --soft: #e9f5f8;
+  }
+  * { box-sizing: border-box; }
+  body {
+    margin: 0;
+    font-family: "Segoe UI", -apple-system, BlinkMacSystemFont, Arial, sans-serif;
+    color: var(--ink);
+    background: var(--wash);
+    line-height: 1.5;
+  }
+  .topbar {
+    background: #fff;
+    border-bottom: 1px solid var(--line);
+    position: sticky;
+    top: 0;
+    z-index: 10;
+  }
+  .topbar-inner {
+    max-width: 1180px;
+    margin: 0 auto;
+    min-height: 68px;
+    padding: 0 24px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 18px;
+  }
+  .logo {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+  }
+  .logo img {
+    width: 104px;
+    height: auto;
+    display: block;
+  }
+  .logo .label {
+    border-left: 1px solid var(--line);
+    padding-left: 14px;
+    color: var(--muted);
+    font-size: 13px;
+    font-weight: 700;
+  }
+  .top-total {
+    color: var(--navy);
+    font-size: 14px;
+    font-weight: 800;
+  }
+  .top-total span { color: var(--green); font-size: 22px; margin-left: 8px; }
+  header {
+    background:
+      linear-gradient(135deg, rgba(29,55,86,.96), rgba(35,153,181,.9)),
+      radial-gradient(circle at 85% 15%, rgba(110,190,79,.35), transparent 36%);
+    color: #fff;
+  }
+  .hero {
+    max-width: 1180px;
+    margin: 0 auto;
+    min-height: 48vh;
+    padding: 58px 24px 48px;
+    display: grid;
+    align-content: center;
+    gap: 18px;
+  }
+  .kicker {
+    width: fit-content;
+    border: 1px solid rgba(255,255,255,.28);
+    border-radius: 999px;
+    padding: 5px 12px;
+    color: #d8f7ff;
+    font-size: 11px;
+    font-weight: 900;
+    letter-spacing: 1.3px;
+    text-transform: uppercase;
+  }
+  h1 {
+    max-width: 900px;
+    margin: 0;
+    font-size: clamp(36px, 5.2vw, 64px);
+    line-height: 1.04;
+    letter-spacing: -.8px;
+  }
+  .hero p {
+    max-width: 760px;
+    margin: 0;
+    color: rgba(255,255,255,.78);
+    font-size: 18px;
+  }
+  main {
+    max-width: 1180px;
+    margin: -42px auto 0;
+    padding: 0 24px 68px;
+    position: relative;
+    z-index: 2;
+  }
+  .calculator {
+    display: grid;
+    grid-template-columns: minmax(0, 1.16fr) minmax(340px, .84fr);
+    gap: 18px;
+    align-items: start;
+  }
+  .panel {
+    background: var(--paper);
+    border: 1px solid var(--line);
+    border-radius: 8px;
+    box-shadow: 0 18px 46px rgba(29,55,86,.12);
+    overflow: hidden;
+  }
+  .panel-head {
+    padding: 20px 22px;
+    border-bottom: 1px solid var(--line);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 16px;
+  }
+  .panel-head h2 {
+    margin: 0;
+    font-size: 19px;
+    color: var(--navy);
+  }
+  .pill {
+    background: var(--soft);
+    color: var(--teal);
+    border-radius: 999px;
+    padding: 5px 10px;
+    font-size: 11px;
+    font-weight: 900;
+    letter-spacing: .8px;
+    text-transform: uppercase;
+  }
+  .rows { display: grid; }
+  .row {
+    display: grid;
+    grid-template-columns: 1fr 154px 154px 132px;
+    gap: 14px;
+    align-items: center;
+    padding: 18px 22px;
+    border-bottom: 1px solid var(--line);
+  }
+  .row:last-child { border-bottom: 0; }
+  .item-title {
+    font-size: 16px;
+    font-weight: 850;
+    color: var(--ink);
+  }
+  .item-copy {
+    margin-top: 4px;
+    font-size: 13px;
+    color: var(--muted);
+  }
+  label {
+    display: block;
+    color: var(--muted);
+    font-size: 11px;
+    font-weight: 850;
+    letter-spacing: .8px;
+    text-transform: uppercase;
+    margin-bottom: 5px;
+  }
+  .number-input {
+    width: 100%;
+    border: 1px solid #c8d6e1;
+    border-radius: 8px;
+    min-height: 42px;
+    padding: 8px 10px;
+    color: var(--ink);
+    font-size: 17px;
+    font-weight: 750;
+    background: #fff;
+  }
+  .number-input:focus {
+    outline: 3px solid rgba(35,153,181,.18);
+    border-color: var(--teal);
+  }
+  .stepper {
+    display: grid;
+    grid-template-columns: 38px 1fr 38px;
+    gap: 6px;
+  }
+  .stepper button,
+  .copy-btn {
+    border: 1px solid #c8d6e1;
+    background: #fff;
+    color: var(--navy);
+    border-radius: 8px;
+    min-height: 42px;
+    font-size: 20px;
+    font-weight: 900;
+    cursor: pointer;
+  }
+  .stepper button:hover,
+  .copy-btn:hover { border-color: var(--teal); background: var(--soft); }
+  .line-total {
+    color: var(--navy);
+    font-size: 21px;
+    font-weight: 900;
+    text-align: right;
+  }
+  .summary {
+    position: sticky;
+    top: 86px;
+  }
+  .summary-body { padding: 22px; display: grid; gap: 16px; }
+  .total-card {
+    background: linear-gradient(135deg, var(--navy), #0e5765);
+    color: #fff;
+    border-radius: 8px;
+    padding: 24px;
+  }
+  .total-label {
+    color: rgba(255,255,255,.68);
+    font-size: 12px;
+    font-weight: 900;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+  }
+  .total-value {
+    margin-top: 8px;
+    font-size: 52px;
+    line-height: 1;
+    font-weight: 950;
+    letter-spacing: -1px;
+  }
+  .total-sub {
+    margin-top: 10px;
+    color: rgba(255,255,255,.75);
+    font-size: 13px;
+  }
+  .summary-line {
+    display: flex;
+    justify-content: space-between;
+    gap: 14px;
+    align-items: flex-start;
+    border-bottom: 1px solid var(--line);
+    padding-bottom: 12px;
+    font-size: 14px;
+    color: var(--muted);
+  }
+  .summary-line strong {
+    color: var(--ink);
+    font-size: 16px;
+    white-space: nowrap;
+  }
+  .summary-line.minimum strong { color: var(--green); }
+  .floor-note {
+    background: #f2f9ef;
+    border: 1px solid #d5ebcd;
+    border-radius: 8px;
+    padding: 14px;
+    color: #386b2e;
+    font-size: 13px;
+    font-weight: 650;
+  }
+  .copy-btn {
+    width: 100%;
+    background: var(--green);
+    border-color: var(--green);
+    color: #fff;
+    font-size: 14px;
+    letter-spacing: .2px;
+  }
+  .copy-btn:hover { background: #5bab43; border-color: #5bab43; }
+  .details {
+    margin-top: 18px;
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 14px;
+  }
+  .detail-card {
+    background: #fff;
+    border: 1px solid var(--line);
+    border-radius: 8px;
+    padding: 18px;
+  }
+  .detail-card h3 { margin: 0 0 7px; color: var(--navy); font-size: 16px; }
+  .detail-card p { margin: 0; color: var(--muted); font-size: 13px; }
+  .toast {
+    position: fixed;
+    left: 50%;
+    bottom: 24px;
+    transform: translateX(-50%) translateY(20px);
+    opacity: 0;
+    pointer-events: none;
+    background: var(--navy);
+    color: #fff;
+    border-radius: 8px;
+    padding: 12px 16px;
+    box-shadow: 0 10px 30px rgba(0,0,0,.18);
+    transition: opacity .2s, transform .2s;
+    font-size: 14px;
+    font-weight: 700;
+  }
+  .toast.show {
+    opacity: 1;
+    transform: translateX(-50%) translateY(0);
+  }
+  @media (max-width: 980px) {
+    .calculator, .details { grid-template-columns: 1fr; }
+    .summary { position: static; }
+    .row { grid-template-columns: 1fr; }
+    .line-total { text-align: left; }
+  }
+  @media (max-width: 620px) {
+    .topbar-inner { align-items: flex-start; flex-direction: column; padding-top: 12px; padding-bottom: 12px; }
+    .top-total span { display: block; margin-left: 0; }
+    .hero { padding-top: 44px; }
+    main { padding-left: 14px; padding-right: 14px; }
+  }
+</style>
+</head>
+<body>
+<div class="topbar">
+  <div class="topbar-inner">
+    <div class="logo">
+      <img src="revio-logo.png" alt="Rev.io">
+      <div class="label">PSA Pricing Calculator</div>
+    </div>
+    <div class="top-total">Estimated monthly total <span id="topTotal">$1,000</span></div>
+  </div>
+</div>
+
+<header>
+  <div class="hero">
+    <div class="kicker">Rev.io PSA</div>
+    <h1>Build your starter package and see the path to $1,000/month.</h1>
+    <p>Adjust user quantities and rates to model your monthly Rev.io PSA package. The calculator automatically applies the $1,000 monthly minimum when selected users total less than the starter threshold.</p>
+  </div>
+</header>
+
+<main>
+  <div class="calculator">
+    <section class="panel" aria-label="Pricing calculator">
+      <div class="panel-head">
+        <h2>Monthly license fees</h2>
+        <span class="pill">Editable estimate</span>
+      </div>
+      <div class="rows">
+        <div class="row" data-line="standard">
+          <div>
+            <div class="item-title">Standard User</div>
+            <div class="item-copy">Core PSA access for admins, dispatch, operations, management, and back-office users.</div>
+          </div>
+          <div>
+            <label for="standardQty">Quantity</label>
+            <div class="stepper">
+              <button type="button" data-step="standardQty" data-delta="-1" aria-label="Decrease Standard User quantity">-</button>
+              <input class="number-input" id="standardQty" type="number" min="0" step="1" value="8">
+              <button type="button" data-step="standardQty" data-delta="1" aria-label="Increase Standard User quantity">+</button>
+            </div>
+          </div>
+          <div>
+            <label for="standardRate">Rate</label>
+            <input class="number-input" id="standardRate" type="number" min="0" step="5" value="120">
+          </div>
+          <div>
+            <label>Line total</label>
+            <div class="line-total" id="standardTotal">$960</div>
+          </div>
+        </div>
+
+        <div class="row" data-line="field">
+          <div>
+            <div class="item-title">Field User</div>
+            <div class="item-copy">Mobile-first access for technicians and field employees who need ticket, time, photo, and signature workflows.</div>
+          </div>
+          <div>
+            <label for="fieldQty">Quantity</label>
+            <div class="stepper">
+              <button type="button" data-step="fieldQty" data-delta="-1" aria-label="Decrease Field User quantity">-</button>
+              <input class="number-input" id="fieldQty" type="number" min="0" step="1" value="5">
+              <button type="button" data-step="fieldQty" data-delta="1" aria-label="Increase Field User quantity">+</button>
+            </div>
+          </div>
+          <div>
+            <label for="fieldRate">Rate</label>
+            <input class="number-input" id="fieldRate" type="number" min="0" step="5" value="30">
+          </div>
+          <div>
+            <label>Line total</label>
+            <div class="line-total" id="fieldTotal">$150</div>
+          </div>
+        </div>
+
+        <div class="row" data-line="revy">
+          <div>
+            <div class="item-title">Revy AI Outcomes</div>
+            <div class="item-copy">AI-assisted notes, workflow support, reporting, and adoption tools included with the starter package.</div>
+          </div>
+          <div>
+            <label for="revyQty">Quantity</label>
+            <input class="number-input" id="revyQty" type="text" value="Unlimited">
+          </div>
+          <div>
+            <label for="revyRate">Rate</label>
+            <input class="number-input" id="revyRate" type="number" min="0" step="5" value="0">
+          </div>
+          <div>
+            <label>Line total</label>
+            <div class="line-total" id="revyTotal">Included</div>
+          </div>
+        </div>
+
+        <div class="row" data-line="minimum">
+          <div>
+            <div class="item-title">Minimum Starter Package</div>
+            <div class="item-copy">Monthly minimum applied when selected license value is below the starter package threshold.</div>
+          </div>
+          <div>
+            <label for="minimumQty">Quantity</label>
+            <input class="number-input" id="minimumQty" type="number" min="1" step="1" value="1">
+          </div>
+          <div>
+            <label for="minimumRate">Minimum</label>
+            <input class="number-input" id="minimumRate" type="number" min="0" step="50" value="1000">
+          </div>
+          <div>
+            <label>Adjustment</label>
+            <div class="line-total" id="minimumAdjustment">$0</div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <aside class="panel summary" aria-label="Pricing summary">
+      <div class="panel-head">
+        <h2>Pricing summary</h2>
+        <span class="pill">Monthly</span>
+      </div>
+      <div class="summary-body">
+        <div class="total-card">
+          <div class="total-label">Estimated monthly total</div>
+          <div class="total-value" id="mainTotal">$1,110</div>
+          <div class="total-sub" id="totalSub">License value exceeds the $1,000 monthly starter minimum.</div>
+        </div>
+        <div class="summary-line">
+          <span>Selected license value</span>
+          <strong id="licenseValue">$1,110</strong>
+        </div>
+        <div class="summary-line">
+          <span>Starter package minimum</span>
+          <strong id="minimumValue">$1,000</strong>
+        </div>
+        <div class="summary-line minimum">
+          <span>Minimum adjustment</span>
+          <strong id="adjustmentValue">$0</strong>
+        </div>
+        <div class="summary-line">
+          <span>Total users</span>
+          <strong id="totalUsers">13</strong>
+        </div>
+        <div class="floor-note" id="floorNote">Your selected package is above the monthly minimum, so no minimum adjustment is needed.</div>
+        <button class="copy-btn" type="button" id="copySummary">Copy pricing summary</button>
+      </div>
+    </aside>
+  </div>
+
+  <div class="details">
+    <div class="detail-card">
+      <h3>How the minimum works</h3>
+      <p>If selected users total less than $1,000, the calculator adds a minimum adjustment so the monthly package reaches the starter threshold.</p>
+    </div>
+    <div class="detail-card">
+      <h3>What can be adjusted</h3>
+      <p>Change user quantities, user rates, and the minimum threshold to model different customer configurations in real time.</p>
+    </div>
+    <div class="detail-card">
+      <h3>Estimate only</h3>
+      <p>This calculator is for package planning. Final pricing, taxes, services, and contract terms may vary by order form.</p>
+    </div>
+  </div>
+</main>
+
+<div class="toast" id="toast">Pricing summary copied</div>
+
+<script>
+  const ids = [
+    "standardQty", "standardRate", "fieldQty", "fieldRate",
+    "revyRate", "minimumQty", "minimumRate"
+  ];
+
+  const money = new Intl.NumberFormat("en-US", {
+    style: "currency",
+    currency: "USD",
+    maximumFractionDigits: 0
+  });
+
+  function numberValue(id) {
+    const value = Number(document.getElementById(id).value);
+    return Number.isFinite(value) && value > 0 ? value : 0;
+  }
+
+  function format(value) {
+    return money.format(Math.round(value));
+  }
+
+  function calculate() {
+    const standardQty = numberValue("standardQty");
+    const standardRate = numberValue("standardRate");
+    const fieldQty = numberValue("fieldQty");
+    const fieldRate = numberValue("fieldRate");
+    const revyRate = numberValue("revyRate");
+    const minimumQty = Math.max(1, numberValue("minimumQty"));
+    const minimumRate = numberValue("minimumRate");
+
+    const standardTotal = standardQty * standardRate;
+    const fieldTotal = fieldQty * fieldRate;
+    const revyTotal = revyRate;
+    const licenseValue = standardTotal + fieldTotal + revyTotal;
+    const minimumValue = minimumQty * minimumRate;
+    const adjustment = Math.max(0, minimumValue - licenseValue);
+    const total = licenseValue + adjustment;
+    const totalUsers = standardQty + fieldQty;
+
+    document.getElementById("standardTotal").textContent = format(standardTotal);
+    document.getElementById("fieldTotal").textContent = format(fieldTotal);
+    document.getElementById("revyTotal").textContent = revyTotal > 0 ? format(revyTotal) : "Included";
+    document.getElementById("minimumAdjustment").textContent = format(adjustment);
+    document.getElementById("licenseValue").textContent = format(licenseValue);
+    document.getElementById("minimumValue").textContent = format(minimumValue);
+    document.getElementById("adjustmentValue").textContent = format(adjustment);
+    document.getElementById("mainTotal").textContent = format(total);
+    document.getElementById("topTotal").textContent = format(total);
+    document.getElementById("totalUsers").textContent = totalUsers;
+
+    const sub = document.getElementById("totalSub");
+    const note = document.getElementById("floorNote");
+    if (adjustment > 0) {
+      sub.textContent = `${format(adjustment)} is added to reach the ${format(minimumValue)} monthly starter minimum.`;
+      note.textContent = `Selected licenses total ${format(licenseValue)}. The minimum adjustment brings the package to ${format(total)} per month.`;
+    } else {
+      sub.textContent = `License value exceeds the ${format(minimumValue)} monthly starter minimum.`;
+      note.textContent = "Your selected package is above the monthly minimum, so no minimum adjustment is needed.";
+    }
+
+    return {
+      standardQty, standardRate, standardTotal,
+      fieldQty, fieldRate, fieldTotal,
+      revyTotal, licenseValue, minimumValue, adjustment, total, totalUsers
+    };
+  }
+
+  function showToast() {
+    const toast = document.getElementById("toast");
+    toast.classList.add("show");
+    window.setTimeout(() => toast.classList.remove("show"), 1800);
+  }
+
+  document.querySelectorAll("input").forEach(input => {
+    input.addEventListener("input", calculate);
+  });
+
+  document.querySelectorAll("[data-step]").forEach(button => {
+    button.addEventListener("click", () => {
+      const input = document.getElementById(button.dataset.step);
+      const delta = Number(button.dataset.delta);
+      const next = Math.max(Number(input.min || 0), numberValue(button.dataset.step) + delta);
+      input.value = next;
+      calculate();
+    });
+  });
+
+  document.getElementById("copySummary").addEventListener("click", async () => {
+    const result = calculate();
+    const lines = [
+      "Rev.io PSA pricing estimate",
+      `Standard Users: ${result.standardQty} x ${format(result.standardRate)} = ${format(result.standardTotal)}`,
+      `Field Users: ${result.fieldQty} x ${format(result.fieldRate)} = ${format(result.fieldTotal)}`,
+      `Revy AI Outcomes: Included`,
+      `Selected license value: ${format(result.licenseValue)}`,
+      `Starter package minimum: ${format(result.minimumValue)}`,
+      `Minimum adjustment: ${format(result.adjustment)}`,
+      `Estimated monthly total: ${format(result.total)}`
+    ];
+    try {
+      await navigator.clipboard.writeText(lines.join("\\n"));
+      showToast();
+    } catch (error) {
+      window.prompt("Copy pricing summary", lines.join("\\n"));
+    }
+  });
+
+  calculate();
+</script>
+</body>
+</html>
