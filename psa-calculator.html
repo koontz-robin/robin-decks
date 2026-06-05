@@ -137,6 +137,10 @@
     text-transform: uppercase;
   }
   .rows { display: grid; }
+  .left-stack {
+    display: grid;
+    gap: 18px;
+  }
   .row {
     display: grid;
     grid-template-columns: 1fr 154px 154px 132px;
@@ -340,38 +344,39 @@
 
 <main>
   <div class="calculator">
-    <section class="panel" aria-label="Pricing calculator">
-      <div class="panel-head">
-        <h2>Monthly license fees</h2>
-        <span class="pill">Editable estimate</span>
-      </div>
-      <div class="rows">
-        <div class="row" data-line="standard">
-          <div>
-            <div class="item-title">Standard User</div>
-            <div class="item-copy">Core PSA access for admins, dispatch, operations, management, and back-office users.</div>
-          </div>
-          <div>
-            <label for="standardQty">Quantity</label>
-            <div class="stepper">
-              <button type="button" data-step="standardQty" data-delta="-1" aria-label="Decrease Standard User quantity">-</button>
-              <input class="number-input" id="standardQty" type="number" min="0" step="1" value="8">
-              <button type="button" data-step="standardQty" data-delta="1" aria-label="Increase Standard User quantity">+</button>
-            </div>
-          </div>
-          <div>
-            <label for="standardRate">Rate</label>
-            <div class="stepper">
-              <button type="button" data-step="standardRate" data-delta="-5" aria-label="Decrease Standard User rate">-</button>
-              <input class="number-input" id="standardRate" type="number" min="0" step="5" value="120">
-              <button type="button" data-step="standardRate" data-delta="5" aria-label="Increase Standard User rate">+</button>
-            </div>
-          </div>
-          <div>
-            <label>Line total</label>
-            <div class="line-total" id="standardTotal">$960</div>
-          </div>
+    <div class="left-stack">
+      <section class="panel" aria-label="Monthly pricing calculator">
+        <div class="panel-head">
+          <h2>Monthly license fees</h2>
+          <span class="pill">Editable estimate</span>
         </div>
+        <div class="rows">
+          <div class="row" data-line="standard">
+            <div>
+              <div class="item-title">Standard User</div>
+              <div class="item-copy">Core PSA access for admins, dispatch, operations, management, and back-office users.</div>
+            </div>
+            <div>
+              <label for="standardQty">Quantity</label>
+              <div class="stepper">
+                <button type="button" data-step="standardQty" data-delta="-1" aria-label="Decrease Standard User quantity">-</button>
+                <input class="number-input" id="standardQty" type="number" min="0" step="1" value="8">
+                <button type="button" data-step="standardQty" data-delta="1" aria-label="Increase Standard User quantity">+</button>
+              </div>
+            </div>
+            <div>
+              <label for="standardRate">Rate</label>
+              <div class="stepper">
+                <button type="button" data-step="standardRate" data-delta="-5" aria-label="Decrease Standard User rate">-</button>
+                <input class="number-input" id="standardRate" type="number" min="0" step="5" value="120">
+                <button type="button" data-step="standardRate" data-delta="5" aria-label="Increase Standard User rate">+</button>
+              </div>
+            </div>
+            <div>
+              <label>Line total</label>
+              <div class="line-total" id="standardTotal">$960</div>
+            </div>
+          </div>
 
         <div class="row" data-line="field">
           <div>
@@ -400,30 +405,30 @@
           </div>
         </div>
 
-        <div class="row" data-line="revy">
+        <div class="row" data-line="revii">
           <div>
             <div class="item-title">Agentic AI Outcomes</div>
             <div class="item-copy">Agentic AI outcomes initiated by your users in the Revii interface and globally available in the interface.</div>
           </div>
           <div>
-            <label for="revyQty">Quantity</label>
+            <label for="reviiQty">Quantity</label>
             <div class="stepper">
-              <button type="button" data-step="revyQty" data-delta="-1" aria-label="Decrease Agentic AI Outcomes quantity">-</button>
-              <input class="number-input" id="revyQty" type="number" min="0" step="1" value="0">
-              <button type="button" data-step="revyQty" data-delta="1" aria-label="Increase Agentic AI Outcomes quantity">+</button>
+              <button type="button" data-step="reviiQty" data-delta="-1" aria-label="Decrease Agentic AI Outcomes quantity">-</button>
+              <input class="number-input" id="reviiQty" type="number" min="0" step="1" value="0">
+              <button type="button" data-step="reviiQty" data-delta="1" aria-label="Increase Agentic AI Outcomes quantity">+</button>
             </div>
           </div>
           <div>
-            <label for="revyRate">Rate</label>
+            <label for="reviiRate">Rate</label>
             <div class="stepper">
-              <button type="button" data-step="revyRate" data-delta="-5" aria-label="Decrease Agentic AI Outcomes rate">-</button>
-              <input class="number-input" id="revyRate" type="number" min="0" step="5" value="0">
-              <button type="button" data-step="revyRate" data-delta="5" aria-label="Increase Agentic AI Outcomes rate">+</button>
+              <button type="button" data-step="reviiRate" data-delta="-5" aria-label="Decrease Agentic AI Outcomes rate">-</button>
+              <input class="number-input" id="reviiRate" type="number" min="0" step="5" value="0">
+              <button type="button" data-step="reviiRate" data-delta="5" aria-label="Increase Agentic AI Outcomes rate">+</button>
             </div>
           </div>
           <div>
             <label>Line total</label>
-            <div class="line-total" id="revyTotal">$0</div>
+            <div class="line-total" id="reviiTotal">$0</div>
           </div>
         </div>
 
@@ -454,8 +459,71 @@
           </div>
         </div>
 
-      </div>
-    </section>
+        </div>
+      </section>
+
+      <section class="panel" aria-label="One-time set-up fees">
+        <div class="panel-head">
+          <h2>One-time set-up fees</h2>
+          <span class="pill">Due once</span>
+        </div>
+        <div class="rows">
+          <div class="row" data-line="setup">
+            <div>
+              <div class="item-title">Implementation Set-Up</div>
+              <div class="item-copy">One-time onboarding, configuration, and launch support for the Rev.io PSA package.</div>
+            </div>
+            <div>
+              <label for="setupQty">Quantity</label>
+              <div class="stepper">
+                <button type="button" data-step="setupQty" data-delta="-1" aria-label="Decrease Implementation Set-Up quantity">-</button>
+                <input class="number-input" id="setupQty" type="number" min="0" step="1" value="1">
+                <button type="button" data-step="setupQty" data-delta="1" aria-label="Increase Implementation Set-Up quantity">+</button>
+              </div>
+            </div>
+            <div>
+              <label for="setupRate">Rate</label>
+              <div class="stepper">
+                <button type="button" data-step="setupRate" data-delta="-250" aria-label="Decrease Implementation Set-Up rate">-</button>
+                <input class="number-input" id="setupRate" type="number" min="0" step="250" value="2500">
+                <button type="button" data-step="setupRate" data-delta="250" aria-label="Increase Implementation Set-Up rate">+</button>
+              </div>
+            </div>
+            <div>
+              <label>Line total</label>
+              <div class="line-total" id="setupTotal">$2,500</div>
+            </div>
+          </div>
+
+          <div class="row" data-line="training">
+            <div>
+              <div class="item-title">Training / Data Services</div>
+              <div class="item-copy">Optional one-time training, data migration, and additional services as scoped on the order form.</div>
+            </div>
+            <div>
+              <label for="trainingQty">Quantity</label>
+              <div class="stepper">
+                <button type="button" data-step="trainingQty" data-delta="-1" aria-label="Decrease Training / Data Services quantity">-</button>
+                <input class="number-input" id="trainingQty" type="number" min="0" step="1" value="0">
+                <button type="button" data-step="trainingQty" data-delta="1" aria-label="Increase Training / Data Services quantity">+</button>
+              </div>
+            </div>
+            <div>
+              <label for="trainingRate">Rate</label>
+              <div class="stepper">
+                <button type="button" data-step="trainingRate" data-delta="-250" aria-label="Decrease Training / Data Services rate">-</button>
+                <input class="number-input" id="trainingRate" type="number" min="0" step="250" value="0">
+                <button type="button" data-step="trainingRate" data-delta="250" aria-label="Increase Training / Data Services rate">+</button>
+              </div>
+            </div>
+            <div>
+              <label>Line total</label>
+              <div class="line-total" id="trainingTotal">$0</div>
+            </div>
+          </div>
+        </div>
+      </section>
+    </div>
 
     <aside class="panel summary" aria-label="Pricing summary">
       <div class="panel-head">
@@ -488,6 +556,14 @@
           <span>Total users</span>
           <strong id="totalUsers">13</strong>
         </div>
+        <div class="summary-line">
+          <span>One-time set-up fees</span>
+          <strong id="setupFeeValue">$2,500</strong>
+        </div>
+        <div class="summary-line">
+          <span>Estimated first invoice</span>
+          <strong id="firstInvoiceValue">$4,110</strong>
+        </div>
         <div class="floor-note" id="floorNote">Clients can tailor their package mix as long as the final monthly package is $1,000 or more.</div>
         <button class="copy-btn" type="button" id="copySummary">Copy pricing summary</button>
         <button class="copy-btn secondary" type="button" id="copyLink">Copy shareable link</button>
@@ -502,7 +578,7 @@
     </div>
     <div class="detail-card">
       <h3>What can be adjusted</h3>
-      <p>Change user quantities, user rates, AI usage, communications billing volume, and billing percentage to model different customer configurations in real time.</p>
+      <p>Change user quantities, user rates, AI usage, communications billing volume, billing percentage, and one-time set-up fees to model different customer configurations in real time.</p>
     </div>
     <div class="detail-card">
       <h3>Estimate only</h3>
@@ -516,8 +592,14 @@
 <script>
   const ids = [
     "standardQty", "standardRate", "fieldQty", "fieldRate",
-    "revyQty", "revyRate", "commVolume", "commPercent"
+    "reviiQty", "reviiRate", "commVolume", "commPercent",
+    "setupQty", "setupRate", "trainingQty", "trainingRate"
   ];
+
+  const legacyParams = {
+    reviiQty: "revyQty",
+    reviiRate: "revyRate"
+  };
 
   const money = new Intl.NumberFormat("en-US", {
     style: "currency",
@@ -546,8 +628,9 @@
   function applyUrlValues() {
     const params = new URLSearchParams(window.location.search);
     ids.forEach(id => {
-      if (!params.has(id)) return;
-      const value = Number(params.get(id));
+      const paramName = params.has(id) ? id : legacyParams[id];
+      if (!paramName || !params.has(paramName)) return;
+      const value = Number(params.get(paramName));
       if (Number.isFinite(value) && value >= 0) {
         document.getElementById(id).value = value;
       }
@@ -572,27 +655,37 @@
     const standardRate = numberValue("standardRate");
     const fieldQty = numberValue("fieldQty");
     const fieldRate = numberValue("fieldRate");
-    const revyQty = numberValue("revyQty");
-    const revyRate = numberValue("revyRate");
+    const reviiQty = numberValue("reviiQty");
+    const reviiRate = numberValue("reviiRate");
     const commVolume = numberValue("commVolume");
     const commPercent = numberValue("commPercent");
+    const setupQty = numberValue("setupQty");
+    const setupRate = numberValue("setupRate");
+    const trainingQty = numberValue("trainingQty");
+    const trainingRate = numberValue("trainingRate");
     const minimumValue = 1000;
     const commMinimum = 500;
 
     const standardTotal = standardQty * standardRate;
     const fieldTotal = fieldQty * fieldRate;
-    const revyTotal = revyQty * revyRate;
+    const reviiTotal = reviiQty * reviiRate;
     const commCalculated = commVolume * (commPercent / 100);
     const commTotal = commVolume > 0 && commPercent > 0 ? Math.max(commCalculated, commMinimum) : 0;
-    const licenseValue = standardTotal + fieldTotal + revyTotal + commTotal;
+    const setupTotal = setupQty * setupRate;
+    const trainingTotal = trainingQty * trainingRate;
+    const setupFeeTotal = setupTotal + trainingTotal;
+    const licenseValue = standardTotal + fieldTotal + reviiTotal + commTotal;
     const adjustment = Math.max(0, minimumValue - licenseValue);
     const total = licenseValue + adjustment;
+    const firstInvoiceTotal = total + setupFeeTotal;
     const totalUsers = standardQty + fieldQty;
 
     document.getElementById("standardTotal").textContent = format(standardTotal);
     document.getElementById("fieldTotal").textContent = format(fieldTotal);
-    document.getElementById("revyTotal").textContent = format(revyTotal);
+    document.getElementById("reviiTotal").textContent = format(reviiTotal);
     document.getElementById("commTotal").textContent = format(commTotal);
+    document.getElementById("setupTotal").textContent = format(setupTotal);
+    document.getElementById("trainingTotal").textContent = format(trainingTotal);
     document.getElementById("commSummary").textContent = format(commTotal);
     document.getElementById("licenseValue").textContent = format(licenseValue);
     document.getElementById("minimumValue").textContent = format(minimumValue);
@@ -600,6 +693,8 @@
     document.getElementById("mainTotal").textContent = format(total);
     document.getElementById("topTotal").textContent = format(total);
     document.getElementById("totalUsers").textContent = totalUsers;
+    document.getElementById("setupFeeValue").textContent = format(setupFeeTotal);
+    document.getElementById("firstInvoiceValue").textContent = format(firstInvoiceTotal);
 
     const sub = document.getElementById("totalSub");
     const note = document.getElementById("floorNote");
@@ -614,8 +709,11 @@
     return {
       standardQty, standardRate, standardTotal,
       fieldQty, fieldRate, fieldTotal,
-      revyQty, revyRate, revyTotal,
+      reviiQty, reviiRate, reviiTotal,
       commVolume, commPercent, commCalculated, commTotal,
+      setupQty, setupRate, setupTotal,
+      trainingQty, trainingRate, trainingTotal,
+      setupFeeTotal, firstInvoiceTotal,
       licenseValue, minimumValue, adjustment, total, totalUsers
     };
   }
@@ -637,12 +735,16 @@
       "Rev.io PSA pricing estimate",
       `Standard Users: ${result.standardQty} x ${format(result.standardRate)} = ${format(result.standardTotal)}`,
       `Field Users: ${result.fieldQty} x ${format(result.fieldRate)} = ${format(result.fieldTotal)}`,
-      `Agentic AI Outcomes: ${result.revyQty} x ${format(result.revyRate)} = ${format(result.revyTotal)}`,
+      `Agentic AI Outcomes: ${result.reviiQty} x ${format(result.reviiRate)} = ${format(result.reviiTotal)}`,
       `Communications Billing: ${format(result.commVolume)} monthly volume x ${result.commPercent}% = ${format(result.commCalculated)} calculated, ${format(result.commTotal)} applied`,
       `Selected package value: ${format(result.licenseValue)}`,
       `Starter package minimum: ${format(result.minimumValue)}`,
       `Minimum adjustment: ${format(result.adjustment)}`,
-      `Estimated monthly total: ${format(result.total)}`
+      `Estimated monthly total: ${format(result.total)}`,
+      `Implementation Set-Up: ${result.setupQty} x ${format(result.setupRate)} = ${format(result.setupTotal)}`,
+      `Training / Data Services: ${result.trainingQty} x ${format(result.trainingRate)} = ${format(result.trainingTotal)}`,
+      `One-time set-up fees: ${format(result.setupFeeTotal)}`,
+      `Estimated first invoice: ${format(result.firstInvoiceTotal)}`
     ];
     try {
       await navigator.clipboard.writeText(lines.join("\\n"));
