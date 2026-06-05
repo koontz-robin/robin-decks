@@ -1,0 +1,379 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>AVIT June 4 Onsite - Transcript Analysis</title>
+<style>
+  :root {
+    --navy: #091426;
+    --blue: #0057ff;
+    --cyan: #00a9d6;
+    --green: #23a455;
+    --amber: #c47a00;
+    --red: #c8462b;
+    --ink: #172033;
+    --muted: #5d6b82;
+    --line: #dfe7f2;
+    --paper: #ffffff;
+    --wash: #f5f8fc;
+  }
+  * { box-sizing: border-box; }
+  html { scroll-behavior: smooth; }
+  body {
+    margin: 0;
+    font-family: "Segoe UI", -apple-system, BlinkMacSystemFont, Arial, sans-serif;
+    color: var(--ink);
+    background: var(--wash);
+    line-height: 1.55;
+  }
+  nav {
+    position: sticky;
+    top: 0;
+    z-index: 20;
+    background: rgba(9, 20, 38, .96);
+    border-bottom: 1px solid rgba(255,255,255,.12);
+  }
+  .nav-inner {
+    max-width: 1180px;
+    margin: 0 auto;
+    min-height: 58px;
+    padding: 0 24px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 18px;
+  }
+  .brand { color: #fff; font-weight: 800; letter-spacing: .2px; font-size: 14px; white-space: nowrap; }
+  .brand span { color: #67d8ff; }
+  .nav-links { display: flex; gap: 4px; flex-wrap: wrap; justify-content: flex-end; }
+  .nav-links a {
+    color: rgba(255,255,255,.72);
+    text-decoration: none;
+    font-size: 12px;
+    font-weight: 650;
+    padding: 7px 10px;
+    border-radius: 999px;
+  }
+  .nav-links a:hover { background: rgba(255,255,255,.1); color: #fff; }
+  header {
+    background:
+      linear-gradient(135deg, rgba(9,20,38,.96), rgba(0,47,128,.92)),
+      radial-gradient(circle at 82% 20%, rgba(0,169,214,.4), transparent 34%);
+    color: #fff;
+  }
+  .hero {
+    max-width: 1180px;
+    margin: 0 auto;
+    min-height: calc(100vh - 58px);
+    padding: 72px 24px 56px;
+    display: grid;
+    align-content: center;
+    gap: 34px;
+  }
+  .kicker {
+    display: inline-flex;
+    width: fit-content;
+    border: 1px solid rgba(255,255,255,.25);
+    border-radius: 999px;
+    padding: 5px 12px;
+    color: #9ce9ff;
+    font-size: 11px;
+    font-weight: 800;
+    letter-spacing: 1.3px;
+    text-transform: uppercase;
+  }
+  h1 {
+    max-width: 980px;
+    margin: 0;
+    font-size: clamp(38px, 6vw, 72px);
+    line-height: 1.02;
+    letter-spacing: -1px;
+  }
+  .hero-copy {
+    max-width: 820px;
+    color: rgba(255,255,255,.76);
+    font-size: 18px;
+  }
+  .metric-grid {
+    display: grid;
+    grid-template-columns: repeat(5, minmax(130px, 1fr));
+    gap: 14px;
+  }
+  .metric {
+    border: 1px solid rgba(255,255,255,.16);
+    background: rgba(255,255,255,.07);
+    border-radius: 8px;
+    padding: 18px;
+    min-height: 120px;
+  }
+  .metric .num { font-size: 31px; line-height: 1; font-weight: 900; color: #7be0ff; }
+  .metric .label { margin-top: 9px; font-size: 12px; color: rgba(255,255,255,.68); }
+  section { padding: 70px 24px; }
+  .wrap { max-width: 1180px; margin: 0 auto; }
+  .section-head { max-width: 780px; margin-bottom: 28px; }
+  .eyebrow {
+    color: var(--blue);
+    font-size: 11px;
+    font-weight: 900;
+    letter-spacing: 1.4px;
+    text-transform: uppercase;
+    margin-bottom: 8px;
+  }
+  h2 { font-size: clamp(28px, 4vw, 44px); line-height: 1.1; margin: 0; letter-spacing: -.5px; }
+  .sub { color: var(--muted); font-size: 16px; margin-top: 10px; }
+  .dark { background: var(--navy); color: #fff; }
+  .dark .sub { color: rgba(255,255,255,.7); }
+  .dark .eyebrow { color: #7be0ff; }
+  .cards { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 16px; }
+  .card {
+    background: var(--paper);
+    border: 1px solid var(--line);
+    border-radius: 8px;
+    padding: 22px;
+    box-shadow: 0 8px 26px rgba(9,20,38,.06);
+  }
+  .dark .card {
+    background: rgba(255,255,255,.06);
+    border-color: rgba(255,255,255,.14);
+    box-shadow: none;
+  }
+  .card h3 { margin: 0 0 8px; font-size: 17px; line-height: 1.25; }
+  .card p { margin: 0; color: var(--muted); font-size: 14px; }
+  .dark .card p { color: rgba(255,255,255,.7); }
+  .tag {
+    display: inline-block;
+    border-radius: 999px;
+    font-size: 10px;
+    font-weight: 900;
+    letter-spacing: .8px;
+    text-transform: uppercase;
+    padding: 4px 8px;
+    margin-bottom: 12px;
+    background: rgba(0,87,255,.1);
+    color: var(--blue);
+  }
+  .tag.good { background: rgba(35,164,85,.12); color: var(--green); }
+  .tag.gap { background: rgba(200,70,43,.12); color: var(--red); }
+  .tag.idea { background: rgba(0,169,214,.12); color: var(--cyan); }
+  .tag.risk { background: rgba(196,122,0,.12); color: var(--amber); }
+  .callout {
+    display: grid;
+    grid-template-columns: 1.1fr .9fr;
+    gap: 18px;
+    align-items: stretch;
+  }
+  .quote {
+    background: #fff;
+    border-left: 5px solid var(--cyan);
+    border-radius: 8px;
+    padding: 24px;
+    font-size: 20px;
+    font-weight: 750;
+    line-height: 1.35;
+    box-shadow: 0 8px 26px rgba(9,20,38,.06);
+  }
+  .quote small { display: block; margin-top: 12px; color: var(--muted); font-size: 13px; font-weight: 600; }
+  .list {
+    display: grid;
+    gap: 10px;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+  }
+  .list li {
+    position: relative;
+    padding-left: 18px;
+    color: var(--muted);
+    font-size: 14px;
+  }
+  .list li::before {
+    content: "";
+    position: absolute;
+    left: 0;
+    top: .7em;
+    width: 7px;
+    height: 7px;
+    border-radius: 50%;
+    background: var(--blue);
+  }
+  .dark .list li { color: rgba(255,255,255,.72); }
+  .dark .list li::before { background: #7be0ff; }
+  .matrix { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 16px; }
+  .wide { grid-column: span 2; }
+  .source {
+    border-top: 1px solid var(--line);
+    color: var(--muted);
+    font-size: 12px;
+    padding-top: 18px;
+    margin-top: 34px;
+  }
+  @media (max-width: 920px) {
+    .nav-inner { align-items: flex-start; padding-top: 12px; padding-bottom: 12px; flex-direction: column; }
+    .metric-grid, .cards, .matrix, .callout { grid-template-columns: 1fr; }
+    .wide { grid-column: auto; }
+  }
+</style>
+</head>
+<body>
+<nav>
+  <div class="nav-inner">
+    <div class="brand">Rev.io <span>/</span> AVIT</div>
+    <div class="nav-links">
+      <a href="#summary">Summary</a>
+      <a href="#positive">Positive</a>
+      <a href="#gaps">Gaps</a>
+      <a href="#ideas">Lightbulbs</a>
+      <a href="#challenges">Challenges</a>
+      <a href="#actions">Actions</a>
+    </div>
+  </div>
+</nav>
+
+<header>
+  <div class="hero">
+    <div class="kicker">June 4 Onsite Transcript Analysis</div>
+    <div>
+      <h1>AVIT validated the Rev.io thesis, but the win depends on execution against complex workflow gaps.</h1>
+      <p class="hero-copy">Across the onsite sessions, AVIT reacted positively to Rev.io's billing DNA, reporting/AI direction, mobile/service workflows, API-first posture, and partnership transparency. The biggest risks are not generic PSA fit. They are specific: NetSuite, integrations, quote/inventory depth, subcontractor access, and roadmap credibility.</p>
+    </div>
+    <div class="metric-grid">
+      <div class="metric"><div class="num">130</div><div class="label">Users AVIT wants some PSA access for, versus roughly 70 ConnectWise licenses today.</div></div>
+      <div class="metric"><div class="num">75+</div><div class="label">Current or desired integrations surfaced across the evaluation.</div></div>
+      <div class="metric"><div class="num">12k</div><div class="label">Mapped SKUs in NetSuite / RF Smart that need clean operational visibility.</div></div>
+      <div class="metric"><div class="num">100k+</div><div class="label">Tickets per year, making triage, dispatch, and reporting scale critical.</div></div>
+      <div class="metric"><div class="num">2 wks</div><div class="label">Approximate decision window discussed after the onsite.</div></div>
+    </div>
+  </div>
+</header>
+
+<section id="summary">
+  <div class="wrap">
+    <div class="section-head">
+      <div class="eyebrow">Executive Read</div>
+      <h2>AVIT is not evaluating whether Rev.io is a better-looking ConnectWise. They are testing whether Rev.io can become their operating layer.</h2>
+      <p class="sub">The strongest company-wide takeaway: AVIT is center-of-fairway for the PSA strategy, but they are unusually complex. They need a partner that will co-design around hospitality, AV, IT, telecom, NetSuite, high-volume service, long projects, and subcontractors.</p>
+    </div>
+    <div class="callout">
+      <div class="quote">
+        "The Lego blocks are already built. We just need to connect them together."
+        <small>Theme from the service workflow discussion: many asks are adjacent to current platform capabilities, but need productized workflow depth.</small>
+      </div>
+      <div class="card">
+        <span class="tag risk">Core Risk</span>
+        <h3>Transparency is the buying criterion.</h3>
+        <p>AVIT repeatedly contrasted Rev.io's candor with Kaseya/ConnectWise roadmap opacity. Any vague answer on integrations, roadmap dates, migration scope, or current-state gaps will hurt more than admitting a gap.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="positive" class="dark">
+  <div class="wrap">
+    <div class="section-head">
+      <div class="eyebrow">Positive Feedback</div>
+      <h2>What landed well with AVIT</h2>
+      <p class="sub">These were the clearest signs of product-market fit and sales messaging that should be shared internally.</p>
+    </div>
+    <div class="cards">
+      <div class="card"><span class="tag good">ICP Fit</span><h3>"Center of the fairway"</h3><p>The team explicitly positioned AVIT as the exact kind of customer Rev.io is designing for: low-voltage, IT, telecom, hospitality, security, complex billing, and high operational volume.</p></div>
+      <div class="card"><span class="tag good">Reporting</span><h3>Built-in BrightGauge alternative</h3><p>SQL lab, chat-with-data, shareable links, auto-refresh, alerts, and dashboard creation were received as meaningful internal BI value, not a cosmetic feature.</p></div>
+      <div class="card"><span class="tag good">AI</span><h3>Revy felt practical</h3><p>Transcript cleanup, voice-driven time entries, ticket actions, analytics querying, and agentic workflows were framed as adoption drivers, especially for field users and managers.</p></div>
+      <div class="card"><span class="tag good">Mobile</span><h3>Clear operational win</h3><p>Offline access, GPS/geofencing, photos, video, push notifications, work/travel timers, signatures, and ticket history directly address the PDF-ticket and TSheets workaround.</p></div>
+      <div class="card"><span class="tag good">Billing DNA</span><h3>Telecom-grade billing resonated</h3><p>Mixed cadence billing, recurring services, tax complexity, invoice templates, parent/related-account flexibility, and agreement profitability all mapped to AVIT's complexity.</p></div>
+      <div class="card"><span class="tag good">API First</span><h3>Developer portal and API keys matter</h3><p>Unlimited API-style flexibility, API key management, and a developer portal contrast well against ConnectWise constraints and AVIT's large integration estate.</p></div>
+      <div class="card"><span class="tag good">Agreement Direction</span><h3>Consolidation is a differentiator</h3><p>AVIT wants one agreement with multiple components, billing cycles, coverage rules, overages, and renewal intelligence instead of agreement sprawl.</p></div>
+      <div class="card"><span class="tag good">Service UX</span><h3>Ticket views and notes were credible</h3><p>Configurable boards, shared/private views, tags, custom fields, macros, activity notes, and Revise addressed everyday service desk work.</p></div>
+      <div class="card"><span class="tag good">Partnership</span><h3>The conversation created trust</h3><p>Rev.io's willingness to say what is live, what is coming, and what needs more work was itself a positive signal for a buyer frustrated by vendor opacity.</p></div>
+    </div>
+  </div>
+</section>
+
+<section id="gaps">
+  <div class="wrap">
+    <div class="section-head">
+      <div class="eyebrow">Software Gaps</div>
+      <h2>Where we said, implied, or exposed that the product is not fully there today</h2>
+      <p class="sub">These should not be hidden. They are the areas Product and Sales need crisp current-state language, owner, date, and fallback plan for.</p>
+    </div>
+    <div class="matrix">
+      <div class="card"><span class="tag gap">NetSuite</span><h3>Real-time inventory at ticket/quote level is not live</h3><p>Pulling on-hand inventory from NetSuite into service and quoting views is the largest "wow" requirement, but current language was feasibility through API/custom build, not existing production capability.</p></div>
+      <div class="card"><span class="tag gap">Billing Automation</span><h3>Automation is still too all-or-nothing</h3><p>Invoicing can automate charges, invoice creation, and sending, but the current model lacks enough selective controls for AVIT's review-heavy billing process.</p></div>
+      <div class="card"><span class="tag gap">Agreements</span><h3>Block-time rollover and expiration need work</h3><p>The team captured rollover/expiration as a fast follow. AVIT's support models need block time, covered work, uncovered work, role/reason-code nuance, and overage handling in one structure.</p></div>
+      <div class="card"><span class="tag gap">Expenses</span><h3>Shipping, PO, and exception review are immature</h3><p>AVIT needs better automation around vendor cost, customer billing, FedEx/shipping charges, and mismatched billable items. AI-assisted exception detection is a needed direction.</p></div>
+      <div class="card"><span class="tag gap">Quote Depth</span><h3>Inventory costing and quote margin are incomplete</h3><p>They asked for supplier pricing, quantity on hand, suggested replacements, and quote profitability/margin approvals. Current quote costing does not fully flow through.</p></div>
+      <div class="card"><span class="tag gap">Quote Experience</span><h3>Images, optional lines, and view alerts remain roadmap</h3><p>Default product images, optional line items, quote-view email alerts, and stronger product-catalog image behavior are important, with images specifically flagged as a deal-breaker risk.</p></div>
+      <div class="card"><span class="tag gap">Project Billing</span><h3>Quote-to-project and progressive billing need deeper automation</h3><p>Today quotes can create tickets and pending recurring services. AVIT's long construction projects need direct quote-to-project, deposit, change-order, and milestone billing flows.</p></div>
+      <div class="card"><span class="tag gap">Workflow Engine</span><h3>Triage and macros are not yet smart enough</h3><p>Email routing, quote-created tickets, and macros exist, but AVIT wants logic-driven dispatch, 911 prioritization, reminders, SLA pause rules, and Revy-informed triage.</p></div>
+      <div class="card"><span class="tag gap">Portal Access</span><h3>One-off subcontractor access does not exist as requested</h3><p>The ideal generated link for subs with time in/out, notes, photos, GPS check-in, customer sign-off, and no account creation is not current product. It became a prototype action item.</p></div>
+      <div class="card"><span class="tag gap">VIP Routing</span><h3>SLA/contact-role handling is account-centric today</h3><p>AVIT needs role-aware routing for manager-on-duty, brand ambassador, owner, VIP, and special-contact scenarios. Current SLA logic links primarily to accounts/status/workflows.</p></div>
+      <div class="card"><span class="tag gap">Integrations</span><h3>More pre-built vendor support is needed</h3><p>SonicWall, Meraki, TD Synnex, Ingram, IT Glue, Field Nation, ServiceNow/Jira continuity, and NetSuite depth all need clear status and prioritization.</p></div>
+      <div class="card"><span class="tag gap">Bulk Data UX</span><h3>Bulk address import and selective migration are open issues</h3><p>Multi-address quoting is supported, but bulk address import was missing. Migration also needs selective import/scrubbing instead of a noisy everything-over approach.</p></div>
+    </div>
+  </div>
+</section>
+
+<section id="ideas" class="dark">
+  <div class="wrap">
+    <div class="section-head">
+      <div class="eyebrow">Lightbulbs & Feature Suggestions</div>
+      <h2>Ideas worth moving into Product discovery</h2>
+      <p class="sub">These are not all AVIT-only. Several are broadly applicable to MSPs, integrators, telecom providers, and high-volume service organizations.</p>
+    </div>
+    <div class="cards">
+      <div class="card"><span class="tag idea">Portal</span><h3>Subcontractor sign-off link</h3><p>Generate a ticket-specific link that captures time in/out, notes, signer name, signature, GPS, and photos without requiring a Rev.io user account.</p></div>
+      <div class="card"><span class="tag idea">Service</span><h3>VIP / role-based routing</h3><p>Route and escalate by contact role or business role, such as manager on duty, brand ambassador, owner, VIP, or support level, not only by account.</p></div>
+      <div class="card"><span class="tag idea">AI Ops</span><h3>AI-assisted billing exception review</h3><p>Use AI to find mismatched expenses, missing shipping charges, vendor/customer cost deltas, and items that look billable but were not added to invoice review.</p></div>
+      <div class="card"><span class="tag idea">CRM</span><h3>Lead stage before opportunity</h3><p>Capture word-of-mouth referrals earlier, before formal opportunity creation, and track which referrals convert versus stall.</p></div>
+      <div class="card"><span class="tag idea">Quoting</span><h3>Inventory-aware quote lines</h3><p>Show on-hand quantity, source system, replacement suggestions, supplier availability, cost, and margin while quoting.</p></div>
+      <div class="card"><span class="tag idea">Reporting</span><h3>Permanent operational dashboards</h3><p>Lean into always-current, auto-refresh dashboards for service queues, aging tickets, billable work not invoiced, and agreement margin alerts.</p></div>
+      <div class="card"><span class="tag idea">Account Alerts</span><h3>Actionable pop-ups and reminders</h3><p>Extend account/ticket alerts for credit holds, unopened restaurants, special projects, customer status, follow-up reminders, and bulk location updates.</p></div>
+      <div class="card"><span class="tag idea">Integrations</span><h3>Fallback data layer</h3><p>Copy critical IT Glue/configuration data into Rev.io so teams can keep working when external systems or internet access are degraded.</p></div>
+      <div class="card"><span class="tag idea">Agreements</span><h3>Package billing with hidden component detail</h3><p>Let customers see a clean package total while the backend keeps component-level charges, cost, tax, and reconciliation detail.</p></div>
+    </div>
+  </div>
+</section>
+
+<section id="challenges">
+  <div class="wrap">
+    <div class="section-head">
+      <div class="eyebrow">Challenges Uncovered</div>
+      <h2>Why AVIT is a hard but valuable customer</h2>
+      <p class="sub">These are the operational realities that make AVIT more complex than a standard MSP migration.</p>
+    </div>
+    <div class="cards">
+      <div class="card"><span class="tag risk">Business Model</span><h3>They are a systems integrator plus MSP plus telecom provider</h3><p>Hospitality, restaurants, AV, IT, security, surveillance, VoIP, signage, white-label help desk, and field service all overlap in the same operating model.</p></div>
+      <div class="card"><span class="tag risk">NetSuite</span><h3>NetSuite is the source of truth</h3><p>Inventory, catalog, deferred revenue, invoicing, payment flow, and invoice-number continuity all depend on NetSuite. Rev.io cannot treat it as a peripheral integration.</p></div>
+      <div class="card"><span class="tag risk">Scale</span><h3>High service volume</h3><p>100,000+ annual tickets and dispatch handling 15-20 calls per hour mean small UI or workflow inefficiencies become expensive fast.</p></div>
+      <div class="card"><span class="tag risk">Projects</span><h3>9-18 month construction projects</h3><p>Projects start before ground break, use deposits and pre-purchased hardware, and require inventory reservation, change orders, and milestone/progressive billing.</p></div>
+      <div class="card"><span class="tag risk">Subcontractors</span><h3>70% of subs may be one-off</h3><p>Full user accounts do not make sense for workers who touch one job once. AVIT needs accountable access without account administration overhead.</p></div>
+      <div class="card"><span class="tag risk">Data</span><h3>Migration is also cleanup</h3><p>ConnectWise and NetSuite data are split, stale relationship data exists, Catalyst syncs nightly, ticket sync is off, and selective scrubbing may be better than blind import.</p></div>
+      <div class="card"><span class="tag risk">Users</span><h3>Licensing has shaped broken workflows</h3><p>Only about 70 users are in ConnectWise today, but 130 need access. PDF tickets through Teams and TSheets time tracking exist partly because licensing/mobile adoption failed.</p></div>
+      <div class="card"><span class="tag risk">Competitive</span><h3>Halo's integration count is the obvious risk</h3><p>Halo's 250+ integration story must be countered with depth: NetSuite API, custom integration partnership, billing strength, AI, and roadmap influence.</p></div>
+      <div class="card"><span class="tag risk">Timing</span><h3>They will not rush</h3><p>December 2026 is the renewal trigger, but AVIT is open to a longer, phased migration and will avoid holiday blackout. A credible timeline beats a compressed one.</p></div>
+    </div>
+  </div>
+</section>
+
+<section id="actions" class="dark">
+  <div class="wrap">
+    <div class="section-head">
+      <div class="eyebrow">Recommended Internal Actions</div>
+      <h2>What should happen next</h2>
+      <p class="sub">This is the practical follow-up list for the company, not just the sales team.</p>
+    </div>
+    <div class="matrix">
+      <div class="card"><span class="tag idea">Product</span><h3>Create an AVIT gap tracker</h3><p>One owner per gap: NetSuite inventory, subcontractor link, quote images, quote margin, workflow triage, block time, package billing, and vendor integrations.</p></div>
+      <div class="card"><span class="tag idea">Engineering</span><h3>Scope NetSuite as a go-live dependency</h3><p>Define exactly what is live, custom, and future: invoice push, invoice-number matching, on-hand inventory, product catalog, deferred revenue, payments, and purchasing.</p></div>
+      <div class="card"><span class="tag idea">Sales</span><h3>Prepare transparent current-state language</h3><p>For every roadmap feature, document what we can show today, what is committed, estimated release timing, and a workaround if AVIT needs it before release.</p></div>
+      <div class="card"><span class="tag idea">CS / Onboarding</span><h3>Build a phased migration narrative</h3><p>Cover data scrub, integration rebuild, parallel run, open tickets/projects, active agreements, user training, and holiday blackout constraints.</p></div>
+      <div class="card"><span class="tag idea">Leadership</span><h3>Treat AVIT as roadmap-shaping</h3><p>Their asks are not edge cases. They expose what high-complexity integrators need from the PSA strategy.</p></div>
+      <div class="card"><span class="tag idea">Marketing</span><h3>Capture the new buyer story</h3><p>Rev.io is strongest when positioned as billing-native, AI-enabled, API-first, transparent, and willing to co-build around complex operations.</p></div>
+    </div>
+    <div class="source">
+      Source basis: extracted June 5, 2026 from the AVIT Notion meeting series sections titled 2026-06-04 Onsite, Onsite Sales, Onsite Service, Onsite Billing, plus the June 4 onsite SE and onboarding briefs. Outreach Kaia was unavailable during extraction with a 500 error, so this page uses the Notion transcript/summary records available in the workspace.
+    </div>
+  </div>
+</section>
+</body>
+</html>
