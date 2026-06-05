@@ -440,7 +440,7 @@
         <div class="row" data-line="communications">
           <div>
             <div class="item-title">Communications Billing</div>
-            <div class="item-copy">Monthly communications billing volume multiplied by an editable percentage, with a $500 monthly minimum for this line item.</div>
+            <div class="item-copy">Monthly communications billing volume multiplied by an editable percentage. This line is usage based with no monthly floor.</div>
           </div>
           <div>
             <label for="commVolume">Monthly volume</label>
@@ -776,13 +776,12 @@
     const trainingQty = numberValue("trainingQty");
     const trainingRate = numberValue("trainingRate");
     const minimumValue = numberValue("monthlyMinimum");
-    const commMinimum = 500;
 
     const standardTotal = standardQty * standardRate;
     const fieldTotal = fieldQty * fieldRate;
     const reviiTotal = reviiQty * reviiRate;
     const commCalculated = commVolume * (commPercent / 100);
-    const commTotal = commVolume > 0 && commPercent > 0 ? Math.max(commCalculated, commMinimum) : 0;
+    const commTotal = commCalculated;
     const setupTotal = setupQty * setupRate;
     const trainingTotal = trainingQty * trainingRate;
     const setupFeeTotal = setupTotal + trainingTotal;
@@ -862,7 +861,7 @@
       `Standard Users: ${result.standardQty} x ${formatRate(result.standardRate)} = ${format(result.standardTotal)}`,
       `Field Users: ${result.fieldQty} x ${formatRate(result.fieldRate)} = ${format(result.fieldTotal)}`,
       `Revii AI Credits: ${result.reviiQty} x ${formatRate(result.reviiRate)} = ${format(result.reviiTotal)}`,
-      `Communications Billing: ${format(result.commVolume)} monthly volume x ${result.commPercent}% = ${format(result.commCalculated)} calculated, ${format(result.commTotal)} applied`,
+      `Communications Billing: ${format(result.commVolume)} monthly volume x ${result.commPercent}% = ${format(result.commTotal)} usage based`,
       `Selected package value: ${format(result.licenseValue)}`,
       `Monthly minimum: ${format(result.minimumValue)}`,
       `Minimum adjustment: ${format(result.adjustment)}`,
