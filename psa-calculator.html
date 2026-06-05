@@ -180,7 +180,19 @@
     font-weight: 750;
     background: #fff;
   }
-  .number-input:focus {
+  .text-input {
+    width: 100%;
+    border: 1px solid #c8d6e1;
+    border-radius: 8px;
+    min-height: 42px;
+    padding: 8px 10px;
+    color: var(--ink);
+    font-size: 16px;
+    font-weight: 700;
+    background: #fff;
+  }
+  .number-input:focus,
+  .text-input:focus {
     outline: 3px solid rgba(35,153,181,.18);
     border-color: var(--teal);
   }
@@ -254,6 +266,13 @@
     white-space: nowrap;
   }
   .summary-line.minimum strong { color: var(--green); }
+  .summary-line.discount strong { color: #ba4a00; }
+  .promo-status {
+    font-size: 12px;
+    color: var(--muted);
+    font-weight: 750;
+  }
+  .promo-status.applied { color: #386b2e; }
   .floor-note {
     background: #f2f9ef;
     border: 1px solid #d5ebcd;
@@ -523,6 +542,34 @@
           </div>
         </div>
       </section>
+
+      <section class="panel" aria-label="Monthly promotion code">
+        <div class="panel-head">
+          <h2>Monthly promotion code</h2>
+          <span class="pill">Rep approved</span>
+        </div>
+        <div class="rows">
+          <div class="row" data-line="promotion">
+            <div>
+              <div class="item-title">Promotion Code</div>
+              <div class="item-copy">Monthly discounts can be enabled behind the scenes by rep name and promo code. Promotions apply to the monthly recurring total only.</div>
+              <div class="promo-status" id="promoStatus">No monthly promotion applied.</div>
+            </div>
+            <div>
+              <label for="promoRep">Rep name</label>
+              <input class="text-input" id="promoRep" type="text" placeholder="Rep name">
+            </div>
+            <div>
+              <label for="promoCode">Promo code</label>
+              <input class="text-input" id="promoCode" type="text" placeholder="Promo code">
+            </div>
+            <div>
+              <label>Monthly discount</label>
+              <div class="line-total" id="promoDiscountValue">$0</div>
+            </div>
+          </div>
+        </div>
+      </section>
     </div>
 
     <aside class="panel summary" aria-label="Pricing summary">
@@ -555,6 +602,10 @@
         <div class="summary-line">
           <span>Total users</span>
           <strong id="totalUsers">13</strong>
+        </div>
+        <div class="summary-line discount">
+          <span>Monthly promotion</span>
+          <strong id="promoSummary">-$0</strong>
         </div>
         <div class="summary-line">
           <span>One-time set-up fees</span>
@@ -596,6 +647,16 @@
     "setupQty", "setupRate", "trainingQty", "trainingRate"
   ];
 
+  const textIds = ["promoRep", "promoCode"];
+  const urlIds = [...ids, ...textIds];
+
+  const promoRules = {
+    // Add rep-approved monthly discounts here when leadership defines them.
+    // Example:
+    // "RAMP250": { reps: ["Jane Smith"], type: "amount", amount: 250, label: "$250 monthly ramp promo" },
+    // "RAMP25": { reps: ["Jane Smith"], type: "percent", percent: 25, max: 500, label: "25% monthly ramp promo, capped at $500" }
+  };
+
   const legacyParams = {
     reviiQty: "revyQty",
     reviiRate: "revyRate"
@@ -625,6 +686,14 @@
     return Number(Number(value).toFixed(places));
   }
 
+  function cleanText(value) {
+    return String(value || "").trim();
+  }
+
+  function normalizeText(value) {
+    return cleanText(value).toLowerCase();
+  }
+
   function applyUrlValues() {
     const params = new URLSearchParams(window.location.search);
     ids.forEach(id => {
@@ -635,11 +704,16 @@
         document.getElementById(id).value = value;
       }
     });
+    textIds.forEach(id => {
+      if (params.has(id)) {
+        document.getElementById(id).value = params.get(id);
+      }
+    });
   }
 
   function updateUrl() {
     const params = new URLSearchParams();
-    ids.forEach(id => {
+    urlIds.forEach(id => {
       const input = document.getElementById(id);
       if (input.value !== "") {
         params.set(id, input.value);
@@ -648,6 +722,38 @@
     const nextUrl = `${window.location.pathname}?${params.toString()}`;
     window.history.replaceState({}, "", nextUrl);
     return `${window.location.origin}${nextUrl}`;
+  }
+
+  function getPromo(monthlyTotal) {
+    const rep = cleanText(document.getElementById("promoRep").value);
+    const code = cleanText(document.getElementById("promoCode").value).toUpperCase();
+    if (!rep || !code) {
+      return { discount: 0, label: "No monthly promotion applied.", applied: false, rep, code };
+    }
+
+    const rule = promoRules[code];
+    if (!rule) {
+      return { discount: 0, label: "Promotion code not recognized.", applied: false, rep, code };
+    }
+
+    const allowedReps = (rule.reps || []).map(normalizeText);
+    if (allowedReps.length && !allowedReps.includes(normalizeText(rep))) {
+      return { discount: 0, label: "Promotion code is not assigned to this rep.", applied: false, rep, code };
+    }
+
+    let discount = 0;
+    if (rule.type === "percent") {
+      discount = monthlyTotal * ((Number(rule.percent) || 0) / 100);
+    } else {
+      discount = Number(rule.amount) || 0;
+    }
+    if (Number.isFinite(Number(rule.max)) && Number(rule.max) > 0) {
+      discount = Math.min(discount, Number(rule.max));
+    }
+    discount = Math.min(Math.max(0, discount), monthlyTotal);
+
+    const label = rule.label || `${code} monthly promotion`;
+    return { discount, label, applied: discount > 0, rep, code };
   }
 
   function calculate() {
@@ -676,7 +782,9 @@
     const setupFeeTotal = setupTotal + trainingTotal;
     const licenseValue = standardTotal + fieldTotal + reviiTotal + commTotal;
     const adjustment = Math.max(0, minimumValue - licenseValue);
-    const total = licenseValue + adjustment;
+    const monthlyBeforePromo = licenseValue + adjustment;
+    const promo = getPromo(monthlyBeforePromo);
+    const total = Math.max(0, monthlyBeforePromo - promo.discount);
     const firstInvoiceTotal = total + setupFeeTotal;
     const totalUsers = standardQty + fieldQty;
 
@@ -693,6 +801,8 @@
     document.getElementById("mainTotal").textContent = format(total);
     document.getElementById("topTotal").textContent = format(total);
     document.getElementById("totalUsers").textContent = totalUsers;
+    document.getElementById("promoDiscountValue").textContent = `-${format(promo.discount)}`;
+    document.getElementById("promoSummary").textContent = `-${format(promo.discount)}`;
     document.getElementById("setupFeeValue").textContent = format(setupFeeTotal);
     document.getElementById("firstInvoiceValue").textContent = format(firstInvoiceTotal);
 
@@ -705,6 +815,14 @@
       sub.textContent = `Package value meets or exceeds the ${format(minimumValue)} monthly minimum.`;
       note.textContent = `Clients can tailor the user mix. This configuration is ${format(total)} per month and already meets the minimum.`;
     }
+    if (promo.applied) {
+      sub.textContent = `${promo.label} applies ${format(promo.discount)} off the monthly recurring total.`;
+      note.textContent = `${promo.rep} applied ${promo.code}. Monthly recurring is ${format(total)} after promotion; estimated first invoice is ${format(firstInvoiceTotal)} with one-time set-up fees.`;
+    }
+
+    const promoStatus = document.getElementById("promoStatus");
+    promoStatus.textContent = promo.label;
+    promoStatus.classList.toggle("applied", promo.applied);
 
     return {
       standardQty, standardRate, standardTotal,
@@ -714,6 +832,7 @@
       setupQty, setupRate, setupTotal,
       trainingQty, trainingRate, trainingTotal,
       setupFeeTotal, firstInvoiceTotal,
+      promo, monthlyBeforePromo,
       licenseValue, minimumValue, adjustment, total, totalUsers
     };
   }
@@ -740,6 +859,7 @@
       `Selected package value: ${format(result.licenseValue)}`,
       `Starter package minimum: ${format(result.minimumValue)}`,
       `Minimum adjustment: ${format(result.adjustment)}`,
+      `Monthly promotion: ${result.promo.applied ? `${result.promo.code} for ${result.promo.rep}, ${format(result.promo.discount)} off monthly` : "None"}`,
       `Estimated monthly total: ${format(result.total)}`,
       `Implementation Set-Up: ${result.setupQty} x ${format(result.setupRate)} = ${format(result.setupTotal)}`,
       `Training / Data Services: ${result.trainingQty} x ${format(result.trainingRate)} = ${format(result.trainingTotal)}`,
@@ -765,7 +885,7 @@
     }
   });
 
-  ids.forEach(id => {
+  urlIds.forEach(id => {
     const input = document.getElementById(id);
     input.addEventListener("blur", updateUrl);
     input.addEventListener("change", updateUrl);
