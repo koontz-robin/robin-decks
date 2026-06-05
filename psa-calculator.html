@@ -342,8 +342,8 @@
       <div class="top-total">Estimated monthly total <span id="topTotal">$1,610</span></div>
     </div>
     <div class="kicker">Rev.io PSA</div>
-    <h1>Build your starter package and see the path to $1,000/month.</h1>
-    <p>Adjust user quantities and rates to model your monthly Rev.io PSA package. The calculator automatically applies the $1,000 monthly minimum when selected users total less than the starter threshold.</p>
+    <h1>Build your PSA package and see the path to the monthly minimum.</h1>
+    <p>Adjust user quantities, rates, and the monthly minimum to model your monthly Rev.io PSA package. The calculator automatically applies the selected monthly minimum when selected items total less than the threshold.</p>
   </div>
 </header>
 
@@ -464,6 +464,29 @@
           </div>
         </div>
 
+        <div class="row" data-line="minimum">
+          <div>
+            <div class="item-title">Monthly Minimum</div>
+            <div class="item-copy">Preset at $1,000. Reps can adjust the minimum when an approved package, ramp, or exception requires a different threshold.</div>
+          </div>
+          <div>
+            <label for="monthlyMinimum">Minimum</label>
+            <div class="stepper">
+              <button type="button" data-step="monthlyMinimum" data-delta="-100" aria-label="Decrease monthly minimum">-</button>
+              <input class="number-input" id="monthlyMinimum" type="number" min="0" step="100" value="1000">
+              <button type="button" data-step="monthlyMinimum" data-delta="100" aria-label="Increase monthly minimum">+</button>
+            </div>
+          </div>
+          <div>
+            <label>Applies to</label>
+            <div class="item-copy">Monthly recurring</div>
+          </div>
+          <div>
+            <label>Current minimum</label>
+            <div class="line-total" id="monthlyMinimumTotal">$1,000</div>
+          </div>
+        </div>
+
         </div>
       </section>
 
@@ -567,7 +590,7 @@
         <div class="total-card">
           <div class="total-label">Estimated monthly total</div>
           <div class="total-value" id="mainTotal">$1,610</div>
-          <div class="total-sub" id="totalSub">Package value exceeds the $1,000 monthly starter minimum.</div>
+          <div class="total-sub" id="totalSub">Package value exceeds the selected monthly minimum.</div>
         </div>
         <div class="summary-line">
           <span>Selected package value</span>
@@ -578,7 +601,7 @@
           <strong id="commSummary">$500</strong>
         </div>
         <div class="summary-line">
-          <span>Starter package minimum</span>
+          <span>Monthly minimum</span>
           <strong id="minimumValue">$1,000</strong>
         </div>
         <div class="summary-line minimum">
@@ -601,7 +624,7 @@
           <span>Estimated first invoice</span>
           <strong id="firstInvoiceValue">$4,110</strong>
         </div>
-        <div class="floor-note" id="floorNote">Clients can tailor their package mix as long as the final monthly package is $1,000 or more.</div>
+        <div class="floor-note" id="floorNote">Clients can tailor their package mix as long as the final monthly package meets the selected monthly minimum.</div>
         <button class="copy-btn" type="button" id="copySummary">Copy pricing summary</button>
         <button class="copy-btn secondary" type="button" id="copyLink">Copy shareable link</button>
       </div>
@@ -615,7 +638,7 @@
 <script>
   const ids = [
     "standardQty", "standardRate", "fieldQty", "fieldRate",
-    "reviiQty", "reviiRate", "commVolume", "commPercent",
+    "reviiQty", "reviiRate", "commVolume", "commPercent", "monthlyMinimum",
     "setupQty", "setupRate", "trainingQty", "trainingRate"
   ];
 
@@ -741,7 +764,7 @@
     const setupRate = numberValue("setupRate");
     const trainingQty = numberValue("trainingQty");
     const trainingRate = numberValue("trainingRate");
-    const minimumValue = 1000;
+    const minimumValue = numberValue("monthlyMinimum");
     const commMinimum = 500;
 
     const standardTotal = standardQty * standardRate;
@@ -766,6 +789,7 @@
     document.getElementById("commTotal").textContent = format(commTotal);
     document.getElementById("setupTotal").textContent = format(setupTotal);
     document.getElementById("trainingTotal").textContent = format(trainingTotal);
+    document.getElementById("monthlyMinimumTotal").textContent = format(minimumValue);
     document.getElementById("commSummary").textContent = format(commTotal);
     document.getElementById("licenseValue").textContent = format(licenseValue);
     document.getElementById("minimumValue").textContent = format(minimumValue);
@@ -829,7 +853,7 @@
       `Revii AI Credits: ${result.reviiQty} x ${format(result.reviiRate)} = ${format(result.reviiTotal)}`,
       `Communications Billing: ${format(result.commVolume)} monthly volume x ${result.commPercent}% = ${format(result.commCalculated)} calculated, ${format(result.commTotal)} applied`,
       `Selected package value: ${format(result.licenseValue)}`,
-      `Starter package minimum: ${format(result.minimumValue)}`,
+      `Monthly minimum: ${format(result.minimumValue)}`,
       `Minimum adjustment: ${format(result.adjustment)}`,
       `Monthly promotion: ${result.promo.applied ? `${result.promo.code} for ${result.promo.rep}, ${format(result.promo.discount)} off monthly` : "None"}`,
       `Estimated monthly total: ${format(result.total)}`,
