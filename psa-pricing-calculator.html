@@ -297,6 +297,7 @@
   }
   .summary-line.minimum strong { color: var(--green); }
   .summary-line.discount strong { color: #ba4a00; }
+  .is-hidden { display: none !important; }
   .promo-status {
     font-size: 12px;
     color: var(--muted);
@@ -649,7 +650,7 @@
           <span>Total users</span>
           <strong id="totalUsers">7</strong>
         </div>
-        <div class="summary-line discount">
+        <div class="summary-line discount is-hidden" id="promoSummaryRow">
           <span>Monthly promotion</span>
           <strong id="promoSummary">-$0</strong>
         </div>
@@ -918,6 +919,7 @@
     document.getElementById("totalUsers").textContent = totalUsers;
     document.getElementById("promoDiscountValue").textContent = `-${format(promo.discount)}`;
     document.getElementById("promoSummary").textContent = `-${format(promo.discount)}`;
+    document.getElementById("promoSummaryRow").classList.toggle("is-hidden", !promo.code);
     document.getElementById("setupFeeValue").textContent = format(setupFeeTotal);
     document.getElementById("firstInvoiceValue").textContent = format(firstInvoiceTotal);
 
