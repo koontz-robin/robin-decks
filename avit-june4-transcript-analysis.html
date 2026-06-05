@@ -190,6 +190,46 @@
     box-shadow: 0 8px 26px rgba(9,20,38,.06);
   }
   .quote small { display: block; margin-top: 12px; color: var(--muted); font-size: 13px; font-weight: 600; }
+  .priority-list { display: grid; gap: 14px; }
+  .priority-quote {
+    display: grid;
+    grid-template-columns: 74px 1fr;
+    gap: 18px;
+    align-items: start;
+    background: rgba(255,255,255,.07);
+    border: 1px solid rgba(255,255,255,.15);
+    border-radius: 8px;
+    padding: 20px;
+  }
+  .rank {
+    width: 54px;
+    height: 54px;
+    border-radius: 8px;
+    display: grid;
+    place-items: center;
+    background: rgba(123,224,255,.14);
+    color: #7be0ff;
+    font-size: 22px;
+    font-weight: 900;
+  }
+  .quote-body blockquote {
+    margin: 0;
+    color: #fff;
+    font-size: clamp(18px, 2.3vw, 26px);
+    font-weight: 800;
+    line-height: 1.25;
+  }
+  .quote-body .quote-meta {
+    margin-top: 10px;
+    color: rgba(255,255,255,.62);
+    font-size: 13px;
+    font-weight: 650;
+  }
+  .quote-body .why {
+    margin-top: 12px;
+    color: rgba(255,255,255,.78);
+    font-size: 14px;
+  }
   .list {
     display: grid;
     gap: 10px;
@@ -226,7 +266,7 @@
   }
   @media (max-width: 920px) {
     .nav-inner { align-items: flex-start; padding-top: 12px; padding-bottom: 12px; flex-direction: column; }
-    .metric-grid, .cards, .matrix, .callout { grid-template-columns: 1fr; }
+    .metric-grid, .cards, .matrix, .callout, .priority-quote { grid-template-columns: 1fr; }
     .wide { grid-column: auto; }
   }
 </style>
@@ -288,20 +328,107 @@
 <section id="positive" class="dark">
   <div class="wrap">
     <div class="section-head">
-      <div class="eyebrow">Positive Feedback</div>
-      <h2>What landed well with AVIT</h2>
-      <p class="sub">These were the clearest signs of product-market fit and sales messaging that should be shared internally.</p>
+      <div class="eyebrow">Prioritized Feedback Quotes</div>
+      <h2>What AVIT actually said, ranked by importance</h2>
+      <p class="sub">This replaces interpretation-first boxes with direct customer language. The ranking is based on likely impact to the buying decision, implementation risk, and roadmap value.</p>
     </div>
-    <div class="cards">
-      <div class="card"><span class="tag good">ICP Fit</span><h3>"Center of the fairway"</h3><p>The team explicitly positioned AVIT as the exact kind of customer Rev.io is designing for: low-voltage, IT, telecom, hospitality, security, complex billing, and high operational volume.</p></div>
-      <div class="card"><span class="tag good">Reporting</span><h3>Built-in BrightGauge alternative</h3><p>SQL lab, chat-with-data, shareable links, auto-refresh, alerts, and dashboard creation were received as meaningful internal BI value, not a cosmetic feature.</p></div>
-      <div class="card"><span class="tag good">AI</span><h3>Revy felt practical</h3><p>Transcript cleanup, voice-driven time entries, ticket actions, analytics querying, and agentic workflows were framed as adoption drivers, especially for field users and managers.</p></div>
-      <div class="card"><span class="tag good">Mobile</span><h3>Clear operational win</h3><p>Offline access, GPS/geofencing, photos, video, push notifications, work/travel timers, signatures, and ticket history directly address the PDF-ticket and TSheets workaround.</p></div>
-      <div class="card"><span class="tag good">Billing DNA</span><h3>Telecom-grade billing resonated</h3><p>Mixed cadence billing, recurring services, tax complexity, invoice templates, parent/related-account flexibility, and agreement profitability all mapped to AVIT's complexity.</p></div>
-      <div class="card"><span class="tag good">API First</span><h3>Developer portal and API keys matter</h3><p>Unlimited API-style flexibility, API key management, and a developer portal contrast well against ConnectWise constraints and AVIT's large integration estate.</p></div>
-      <div class="card"><span class="tag good">Agreement Direction</span><h3>Consolidation is a differentiator</h3><p>AVIT wants one agreement with multiple components, billing cycles, coverage rules, overages, and renewal intelligence instead of agreement sprawl.</p></div>
-      <div class="card"><span class="tag good">Service UX</span><h3>Ticket views and notes were credible</h3><p>Configurable boards, shared/private views, tags, custom fields, macros, activity notes, and Revise addressed everyday service desk work.</p></div>
-      <div class="card"><span class="tag good">Partnership</span><h3>The conversation created trust</h3><p>Rev.io's willingness to say what is live, what is coming, and what needs more work was itself a positive signal for a buyer frustrated by vendor opacity.</p></div>
+    <div class="priority-list">
+      <div class="priority-quote">
+        <div class="rank">1</div>
+        <div class="quote-body">
+          <blockquote>"Show me you can pull the on-hands from NetSuite and put it in there when a service member is looking at it. That would blow me away."</blockquote>
+          <div class="quote-meta">Kelly Green, captured in the June 4 onsite brief</div>
+          <div class="why">Highest priority because NetSuite inventory visibility is the clearest "wow" moment and the largest integration proof point.</div>
+        </div>
+      </div>
+      <div class="priority-quote">
+        <div class="rank">2</div>
+        <div class="quote-body">
+          <blockquote>"That alone would save us."</blockquote>
+          <div class="quote-meta">AVIT service feedback on a one-time subcontractor link</div>
+          <div class="why">The generated-link workflow is both a product gap and a major operational value driver: time, notes, signature, photos, and customer approval without a full user account.</div>
+        </div>
+      </div>
+      <div class="priority-quote">
+        <div class="rank">3</div>
+        <div class="quote-body">
+          <blockquote>"Those four things? We're golden."</blockquote>
+          <div class="quote-meta">AVIT service feedback on subcontractor sign-off requirements</div>
+          <div class="why">The requirement is specific enough to productize: time in, time out, notes, signer name/signature, plus photos as a strong add.</div>
+        </div>
+      </div>
+      <div class="priority-quote">
+        <div class="rank">4</div>
+        <div class="quote-body">
+          <blockquote>"The mobile app that we have for ConnectWise Manage is really tough to use... This looks markedly different. I like the layout of it. It looks pretty intuitive navigation wise."</blockquote>
+          <div class="quote-meta">AVIT service feedback after the Rev.io mobile app walkthrough</div>
+          <div class="why">Mobile is one of the clearest near-term wins because AVIT currently works around ConnectWise with Teams PDFs and separate time tracking.</div>
+        </div>
+      </div>
+      <div class="priority-quote">
+        <div class="rank">5</div>
+        <div class="quote-body">
+          <blockquote>"That is insane to me. Just thinking about where software was a year ago."</blockquote>
+          <div class="quote-meta">AVIT reaction to chat-with-data / AI-generated reporting</div>
+          <div class="why">This is the strongest positive quote for Revy and reporting. It validates AI as practical workflow value, not just a demo novelty.</div>
+        </div>
+      </div>
+      <div class="priority-quote">
+        <div class="rank">6</div>
+        <div class="quote-body">
+          <blockquote>"With BrightGauge, you can't prompt it. You can't just give it an open prompt. You have to build it."</blockquote>
+          <div class="quote-meta">AVIT reporting comparison</div>
+          <div class="why">This directly positions Rev.io analytics against a tool AVIT depends on today and reframes reporting migration as a competitive advantage.</div>
+        </div>
+      </div>
+      <div class="priority-quote">
+        <div class="rank">7</div>
+        <div class="quote-body">
+          <blockquote>"Some of them, we could live without... but that rack dashboard would kill us. Right now, the provisioning dashboard would kill us."</blockquote>
+          <div class="quote-meta">AVIT reporting / implementation feedback</div>
+          <div class="why">Important implementation risk: dashboards are not a nice-to-have. They are part of operational continuity and can drag out onboarding if not planned early.</div>
+        </div>
+      </div>
+      <div class="priority-quote">
+        <div class="rank">8</div>
+        <div class="quote-body">
+          <blockquote>"We have no idea what's in the pipeline."</blockquote>
+          <div class="quote-meta">AVIT sales / opportunity management feedback</div>
+          <div class="why">This creates a strong opening for lightweight lead/opportunity tracking, forecasting, and quote-connected sales visibility.</div>
+        </div>
+      </div>
+      <div class="priority-quote">
+        <div class="rank">9</div>
+        <div class="quote-body">
+          <blockquote>"It's gotta be a one-to-one because otherwise we'll continue having broken down silos and systems that we can't afford."</blockquote>
+          <div class="quote-meta">AVIT feedback on CRM / PSA synchronization</div>
+          <div class="why">This raises the bar for integrations: partial sync is not enough. AVIT needs confidence that Rev.io eliminates split-system drift rather than adding another layer.</div>
+        </div>
+      </div>
+      <div class="priority-quote">
+        <div class="rank">10</div>
+        <div class="quote-body">
+          <blockquote>"We have to have that profitability reporting when you've got a quote."</blockquote>
+          <div class="quote-meta">AVIT sales feedback during quote / inventory costing discussion</div>
+          <div class="why">This is a product priority for quoting: real-time cost, margin, supplier pricing, and approval rules need to move earlier in the workflow.</div>
+        </div>
+      </div>
+      <div class="priority-quote">
+        <div class="rank">11</div>
+        <div class="quote-body">
+          <blockquote>"IT support needs to automatically grab the IT support agreement... and then AV, we charge the amount of money and how much time is associated with the AV support agreement to figure out where we are profitable or not."</blockquote>
+          <div class="quote-meta">AVIT billing / agreement feedback</div>
+          <div class="why">This defines agreement fit: automated association, multiple support types, and profitability by service line must work together.</div>
+        </div>
+      </div>
+      <div class="priority-quote">
+        <div class="rank">12</div>
+        <div class="quote-body">
+          <blockquote>"If we could prep all that work and have it all done ready to go signed out... that would make life a lot easier."</blockquote>
+          <div class="quote-meta">AVIT feedback on known future locations and opening trackers</div>
+          <div class="why">This supports lead/pre-opportunity workflow and recurring chain rollout use cases, especially where AVIT already knows work is coming.</div>
+        </div>
+      </div>
     </div>
   </div>
 </section>
