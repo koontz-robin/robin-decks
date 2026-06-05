@@ -324,7 +324,7 @@
         <img src="revio-logo-white.png" alt="Rev.io">
         <div class="label">PSA Pricing Calculator</div>
       </div>
-      <div class="top-total">Estimated monthly total <span id="topTotal">$1,000</span></div>
+      <div class="top-total">Estimated monthly total <span id="topTotal">$1,610</span></div>
     </div>
     <div class="kicker">Rev.io PSA</div>
     <h1>Build your starter package and see the path to $1,000/month.</h1>
@@ -409,6 +409,25 @@
           </div>
         </div>
 
+        <div class="row" data-line="communications">
+          <div>
+            <div class="item-title">Communications Billing</div>
+            <div class="item-copy">Monthly communications billing volume multiplied by an editable percentage, with a $500 monthly minimum for this line item.</div>
+          </div>
+          <div>
+            <label for="commVolume">Monthly volume</label>
+            <input class="number-input" id="commVolume" type="number" min="0" step="1000" value="100000">
+          </div>
+          <div>
+            <label for="commPercent">Percentage</label>
+            <input class="number-input" id="commPercent" type="number" min="0" step="0.1" value="0.5">
+          </div>
+          <div>
+            <label>Line total</label>
+            <div class="line-total" id="commTotal">$500</div>
+          </div>
+        </div>
+
       </div>
     </section>
 
@@ -420,12 +439,16 @@
       <div class="summary-body">
         <div class="total-card">
           <div class="total-label">Estimated monthly total</div>
-          <div class="total-value" id="mainTotal">$1,110</div>
-          <div class="total-sub" id="totalSub">License value exceeds the $1,000 monthly starter minimum.</div>
+          <div class="total-value" id="mainTotal">$1,610</div>
+          <div class="total-sub" id="totalSub">Package value exceeds the $1,000 monthly starter minimum.</div>
         </div>
         <div class="summary-line">
-          <span>Selected license value</span>
-          <strong id="licenseValue">$1,110</strong>
+          <span>Selected package value</span>
+          <strong id="licenseValue">$1,610</strong>
+        </div>
+        <div class="summary-line">
+          <span>Communications billing fee</span>
+          <strong id="commSummary">$500</strong>
         </div>
         <div class="summary-line">
           <span>Starter package minimum</span>
@@ -448,11 +471,11 @@
   <div class="details">
     <div class="detail-card">
       <h3>Tailored package minimum</h3>
-      <p>Clients can adjust the mix of Standard Users, Field Users, and Revy AI Outcomes as long as the final monthly package is at least $1,000.</p>
+      <p>Clients can adjust the mix of Standard Users, Field Users, Revy AI Outcomes, and communications billing as long as the final monthly package is at least $1,000.</p>
     </div>
     <div class="detail-card">
       <h3>What can be adjusted</h3>
-      <p>Change user quantities, user rates, and the minimum threshold to model different customer configurations in real time.</p>
+      <p>Change user quantities, user rates, AI usage, communications billing volume, and billing percentage to model different customer configurations in real time.</p>
     </div>
     <div class="detail-card">
       <h3>Estimate only</h3>
@@ -466,7 +489,7 @@
 <script>
   const ids = [
     "standardQty", "standardRate", "fieldQty", "fieldRate",
-    "revyQty", "revyRate"
+    "revyQty", "revyRate", "commVolume", "commPercent"
   ];
 
   const money = new Intl.NumberFormat("en-US", {
@@ -491,12 +514,17 @@
     const fieldRate = numberValue("fieldRate");
     const revyQty = numberValue("revyQty");
     const revyRate = numberValue("revyRate");
+    const commVolume = numberValue("commVolume");
+    const commPercent = numberValue("commPercent");
     const minimumValue = 1000;
+    const commMinimum = 500;
 
     const standardTotal = standardQty * standardRate;
     const fieldTotal = fieldQty * fieldRate;
     const revyTotal = revyQty * revyRate;
-    const licenseValue = standardTotal + fieldTotal + revyTotal;
+    const commCalculated = commVolume * (commPercent / 100);
+    const commTotal = commVolume > 0 && commPercent > 0 ? Math.max(commCalculated, commMinimum) : 0;
+    const licenseValue = standardTotal + fieldTotal + revyTotal + commTotal;
     const adjustment = Math.max(0, minimumValue - licenseValue);
     const total = licenseValue + adjustment;
     const totalUsers = standardQty + fieldQty;
@@ -504,6 +532,8 @@
     document.getElementById("standardTotal").textContent = format(standardTotal);
     document.getElementById("fieldTotal").textContent = format(fieldTotal);
     document.getElementById("revyTotal").textContent = format(revyTotal);
+    document.getElementById("commTotal").textContent = format(commTotal);
+    document.getElementById("commSummary").textContent = format(commTotal);
     document.getElementById("licenseValue").textContent = format(licenseValue);
     document.getElementById("minimumValue").textContent = format(minimumValue);
     document.getElementById("adjustmentValue").textContent = format(adjustment);
@@ -517,14 +547,16 @@
       sub.textContent = `${format(adjustment)} is added so the tailored package reaches the ${format(minimumValue)} monthly minimum.`;
       note.textContent = `Clients can tailor the user mix. This configuration totals ${format(licenseValue)} before the minimum adjustment and ${format(total)} per month after the minimum is applied.`;
     } else {
-      sub.textContent = `License value meets or exceeds the ${format(minimumValue)} monthly minimum.`;
+      sub.textContent = `Package value meets or exceeds the ${format(minimumValue)} monthly minimum.`;
       note.textContent = `Clients can tailor the user mix. This configuration is ${format(total)} per month and already meets the minimum.`;
     }
 
     return {
       standardQty, standardRate, standardTotal,
       fieldQty, fieldRate, fieldTotal,
-      revyQty, revyRate, revyTotal, licenseValue, minimumValue, adjustment, total, totalUsers
+      revyQty, revyRate, revyTotal,
+      commVolume, commPercent, commCalculated, commTotal,
+      licenseValue, minimumValue, adjustment, total, totalUsers
     };
   }
 
@@ -555,7 +587,8 @@
       `Standard Users: ${result.standardQty} x ${format(result.standardRate)} = ${format(result.standardTotal)}`,
       `Field Users: ${result.fieldQty} x ${format(result.fieldRate)} = ${format(result.fieldTotal)}`,
       `Revy AI Outcomes: ${result.revyQty} x ${format(result.revyRate)} = ${format(result.revyTotal)}`,
-      `Selected license value: ${format(result.licenseValue)}`,
+      `Communications Billing: ${format(result.commVolume)} monthly volume x ${result.commPercent}% = ${format(result.commCalculated)} calculated, ${format(result.commTotal)} applied`,
+      `Selected package value: ${format(result.licenseValue)}`,
       `Starter package minimum: ${format(result.minimumValue)}`,
       `Minimum adjustment: ${format(result.adjustment)}`,
       `Estimated monthly total: ${format(result.total)}`
