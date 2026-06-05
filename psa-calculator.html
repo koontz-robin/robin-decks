@@ -647,6 +647,7 @@
 
   const promoRules = {
     // Add rep-approved monthly discounts here when leadership defines them.
+    "JUNE": { type: "target", targetMonthly: 750, months: 6, label: "JUNE promo: $750/month for the first 6 months" }
     // Example:
     // "RAMP250": { reps: ["Jane Smith"], type: "amount", amount: 250, label: "$250 monthly ramp promo" },
     // "RAMP25": { reps: ["Jane Smith"], type: "percent", percent: 25, max: 500, label: "25% monthly ramp promo, capped at $500" }
@@ -748,7 +749,9 @@
     }
 
     let discount = 0;
-    if (rule.type === "percent") {
+    if (rule.type === "target") {
+      discount = monthlyTotal - (Number(rule.targetMonthly) || 0);
+    } else if (rule.type === "percent") {
       discount = monthlyTotal * ((Number(rule.percent) || 0) / 100);
     } else {
       discount = Number(rule.amount) || 0;
@@ -759,7 +762,7 @@
     discount = Math.min(Math.max(0, discount), monthlyTotal);
 
     const label = rule.label || `${code} monthly promotion`;
-    return { discount, label, applied: discount > 0, rep, code };
+    return { discount, label, applied: discount > 0, rep, code, months: rule.months || null };
   }
 
   function calculate() {
@@ -823,7 +826,8 @@
     }
     if (promo.applied) {
       sub.textContent = `${promo.label} applies ${format(promo.discount)} off the monthly recurring total.`;
-      note.textContent = `${promo.rep} applied ${promo.code}. Monthly recurring is ${format(total)} after promotion; estimated first invoice is ${format(firstInvoiceTotal)} with one-time set-up fees.`;
+      const duration = promo.months ? ` for the first ${promo.months} months` : "";
+      note.textContent = `${promo.rep} applied ${promo.code}. Monthly recurring is ${format(total)}${duration}; estimated first invoice is ${format(firstInvoiceTotal)} with one-time set-up fees.`;
     }
 
     const promoStatus = document.getElementById("promoStatus");
@@ -865,7 +869,7 @@
       `Selected package value: ${format(result.licenseValue)}`,
       `Monthly minimum: ${format(result.minimumValue)}`,
       `Minimum adjustment: ${format(result.adjustment)}`,
-      `Monthly promotion: ${result.promo.applied ? `${result.promo.code} for ${result.promo.rep}, ${format(result.promo.discount)} off monthly` : "None"}`,
+      `Monthly promotion: ${result.promo.applied ? `${result.promo.code} for ${result.promo.rep}, ${format(result.promo.discount)} off monthly${result.promo.months ? ` for the first ${result.promo.months} months` : ""}` : "None"}`,
       `Estimated monthly total: ${format(result.total)}`,
       `Implementation Set-Up: ${result.setupQty} x ${formatRate(result.setupRate)} = ${format(result.setupTotal)}`,
       `Training / Data Services: ${result.trainingQty} x ${formatRate(result.trainingRate)} = ${format(result.trainingTotal)}`,
