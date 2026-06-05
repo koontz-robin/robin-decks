@@ -1,0 +1,461 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>PSA Minimum Increase Plan - $500 to $1,000</title>
+<style>
+  :root {
+    --navy: #102238;
+    --ink: #142033;
+    --muted: #607085;
+    --line: #dce5ed;
+    --wash: #f6f9fb;
+    --paper: #ffffff;
+    --teal: #1697aa;
+    --green: #42a85b;
+    --amber: #b86d00;
+    --red: #b9412f;
+  }
+  * { box-sizing: border-box; }
+  body {
+    margin: 0;
+    font-family: "Segoe UI", -apple-system, BlinkMacSystemFont, Arial, sans-serif;
+    color: var(--ink);
+    background: var(--wash);
+    line-height: 1.55;
+  }
+  nav {
+    position: sticky;
+    top: 0;
+    z-index: 10;
+    background: rgba(16, 34, 56, .98);
+    border-bottom: 1px solid rgba(255,255,255,.12);
+  }
+  .nav-inner {
+    max-width: 1180px;
+    margin: 0 auto;
+    min-height: 58px;
+    padding: 0 24px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 18px;
+  }
+  .brand { color: #fff; font-weight: 800; letter-spacing: .2px; font-size: 14px; }
+  .nav-links { display: flex; gap: 4px; flex-wrap: wrap; justify-content: flex-end; }
+  .nav-links a {
+    color: rgba(255,255,255,.74);
+    text-decoration: none;
+    font-size: 12px;
+    font-weight: 650;
+    padding: 7px 10px;
+    border-radius: 999px;
+  }
+  .nav-links a:hover { background: rgba(255,255,255,.1); color: #fff; }
+  header {
+    background: linear-gradient(135deg, #102238 0%, #173a57 58%, #0d5764 100%);
+    color: #fff;
+  }
+  .hero {
+    max-width: 1180px;
+    margin: 0 auto;
+    min-height: 78vh;
+    padding: 76px 24px 54px;
+    display: grid;
+    align-content: center;
+    gap: 28px;
+  }
+  .kicker {
+    width: fit-content;
+    border: 1px solid rgba(255,255,255,.26);
+    border-radius: 999px;
+    padding: 5px 12px;
+    color: #9ee9f3;
+    font-size: 11px;
+    font-weight: 900;
+    letter-spacing: 1.4px;
+    text-transform: uppercase;
+  }
+  h1 {
+    max-width: 980px;
+    margin: 0;
+    font-size: clamp(38px, 5.8vw, 70px);
+    line-height: 1.03;
+    letter-spacing: -.8px;
+  }
+  .hero-copy {
+    max-width: 820px;
+    margin: 0;
+    color: rgba(255,255,255,.76);
+    font-size: 18px;
+  }
+  .hero-grid {
+    display: grid;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: 14px;
+    margin-top: 10px;
+  }
+  .hero-stat {
+    border: 1px solid rgba(255,255,255,.16);
+    background: rgba(255,255,255,.07);
+    border-radius: 8px;
+    padding: 18px;
+    min-height: 112px;
+  }
+  .hero-stat .num { font-size: 34px; line-height: 1; font-weight: 900; color: #9ee9f3; }
+  .hero-stat .label { margin-top: 9px; font-size: 12px; color: rgba(255,255,255,.7); }
+  section { padding: 68px 24px; }
+  .wrap { max-width: 1180px; margin: 0 auto; }
+  .section-head { max-width: 820px; margin-bottom: 28px; }
+  .eyebrow {
+    color: var(--teal);
+    font-size: 11px;
+    font-weight: 900;
+    letter-spacing: 1.4px;
+    text-transform: uppercase;
+    margin-bottom: 8px;
+  }
+  h2 { font-size: clamp(27px, 4vw, 44px); line-height: 1.1; margin: 0; letter-spacing: -.4px; }
+  .sub { color: var(--muted); font-size: 16px; margin-top: 10px; }
+  .dark { background: var(--navy); color: #fff; }
+  .dark .sub { color: rgba(255,255,255,.7); }
+  .dark .eyebrow { color: #9ee9f3; }
+  .cards { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 16px; }
+  .card {
+    background: var(--paper);
+    border: 1px solid var(--line);
+    border-radius: 8px;
+    padding: 22px;
+    box-shadow: 0 8px 26px rgba(16,34,56,.06);
+  }
+  .dark .card {
+    background: rgba(255,255,255,.07);
+    border-color: rgba(255,255,255,.15);
+    box-shadow: none;
+  }
+  .card h3 { margin: 0 0 8px; font-size: 17px; line-height: 1.25; }
+  .card p { margin: 0; color: var(--muted); font-size: 14px; }
+  .dark .card p { color: rgba(255,255,255,.72); }
+  .tag {
+    display: inline-block;
+    border-radius: 999px;
+    font-size: 10px;
+    font-weight: 900;
+    letter-spacing: .8px;
+    text-transform: uppercase;
+    padding: 4px 8px;
+    margin-bottom: 12px;
+    background: rgba(22,151,170,.12);
+    color: var(--teal);
+  }
+  .tag.green { background: rgba(66,168,91,.12); color: var(--green); }
+  .tag.amber { background: rgba(184,109,0,.12); color: var(--amber); }
+  .tag.red { background: rgba(185,65,47,.12); color: var(--red); }
+  .starter-layout { display: grid; grid-template-columns: 1fr .88fr; gap: 18px; align-items: stretch; }
+  .starter-table {
+    width: 100%;
+    border-collapse: collapse;
+    overflow: hidden;
+    border-radius: 8px;
+    background: #fff;
+    border: 1px solid var(--line);
+    box-shadow: 0 8px 26px rgba(16,34,56,.06);
+  }
+  .starter-table th {
+    color: #7a8b9e;
+    font-size: 12px;
+    text-transform: uppercase;
+    letter-spacing: 1.3px;
+    text-align: left;
+    padding: 14px 16px;
+    border-bottom: 1px solid var(--line);
+  }
+  .starter-table td {
+    padding: 16px;
+    border-bottom: 1px solid var(--line);
+    vertical-align: top;
+    font-size: 15px;
+  }
+  .starter-table tr:last-child td { border-bottom: 0; }
+  .starter-table .item { font-weight: 800; font-size: 16px; }
+  .starter-table .money { font-weight: 900; font-size: 19px; white-space: nowrap; }
+  .starter-table .muted { color: var(--muted); font-size: 13px; display: block; margin-top: 3px; }
+  .callout {
+    background: #fff;
+    border: 1px solid var(--line);
+    border-left: 5px solid var(--teal);
+    border-radius: 8px;
+    padding: 24px;
+    box-shadow: 0 8px 26px rgba(16,34,56,.06);
+  }
+  .callout .big { font-size: 38px; line-height: 1; font-weight: 900; color: var(--teal); }
+  .callout p { color: var(--muted); margin: 12px 0 0; }
+  .timeline { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 14px; }
+  .step {
+    background: #fff;
+    border: 1px solid var(--line);
+    border-radius: 8px;
+    padding: 20px;
+    min-height: 160px;
+  }
+  .step .month { font-size: 12px; color: var(--muted); font-weight: 800; text-transform: uppercase; letter-spacing: 1px; }
+  .step .price { margin-top: 10px; font-size: 34px; line-height: 1; font-weight: 900; color: var(--teal); }
+  .step p { margin: 12px 0 0; color: var(--muted); font-size: 14px; }
+  .policy-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+  .list {
+    margin: 0;
+    padding: 0;
+    list-style: none;
+    display: grid;
+    gap: 9px;
+  }
+  .list li {
+    position: relative;
+    padding-left: 18px;
+    color: var(--muted);
+    font-size: 14px;
+  }
+  .list li::before {
+    content: "";
+    position: absolute;
+    left: 0;
+    top: .7em;
+    width: 7px;
+    height: 7px;
+    border-radius: 50%;
+    background: var(--teal);
+  }
+  .dark .list li { color: rgba(255,255,255,.74); }
+  .source {
+    border-top: 1px solid var(--line);
+    color: var(--muted);
+    font-size: 12px;
+    padding-top: 18px;
+    margin-top: 34px;
+  }
+  @media (max-width: 920px) {
+    .nav-inner { align-items: flex-start; padding-top: 12px; padding-bottom: 12px; flex-direction: column; }
+    .hero-grid, .cards, .starter-layout, .timeline, .policy-grid { grid-template-columns: 1fr; }
+  }
+</style>
+</head>
+<body>
+<nav>
+  <div class="nav-inner">
+    <div class="brand">Rev.io PSA Minimum Strategy</div>
+    <div class="nav-links">
+      <a href="#decision">Decision</a>
+      <a href="#starter">Starter Pack</a>
+      <a href="#promo">Promo Ramp</a>
+      <a href="#guardrails">Guardrails</a>
+      <a href="#impact">Impact</a>
+      <a href="#rollout">Rollout</a>
+    </div>
+  </div>
+</nav>
+
+<header>
+  <div class="hero">
+    <div class="kicker">Leadership Proposal</div>
+    <h1>Raise the PSA minimum from $500 to $1,000 without creating sticker shock.</h1>
+    <p class="hero-copy">The recommendation is to make $1,000 the new commercial floor for PSA clients, package it as a value-rich Minimum Starter Package, and give each rep a limited monthly supply of ramp promos to bridge qualified smaller clients into the new minimum.</p>
+    <div class="hero-grid">
+      <div class="hero-stat"><div class="num">$1,000</div><div class="label">New minimum monthly package for PSA clients.</div></div>
+      <div class="hero-stat"><div class="num">8 + 5</div><div class="label">Included Standard Users plus Field Users in the Starter Pack.</div></div>
+      <div class="hero-stat"><div class="num">$1,110</div><div class="label">Implied license value before packaging at the $1,000 floor.</div></div>
+      <div class="hero-stat"><div class="num">Limited</div><div class="label">Promo inventory per rep per month to protect price integrity.</div></div>
+    </div>
+  </div>
+</header>
+
+<section id="decision">
+  <div class="wrap">
+    <div class="section-head">
+      <div class="eyebrow">The Decision</div>
+      <h2>Move from a minimum charge to a minimum outcome package.</h2>
+      <p class="sub">The current $500 minimum frames PSA as a small-license purchase. The new $1,000 floor should be positioned as the smallest complete operating footprint we are willing to implement and support.</p>
+    </div>
+    <div class="cards">
+      <div class="card"><span class="tag green">Recommendation</span><h3>Set the new PSA minimum at $1,000 MRR.</h3><p>Use the Minimum Starter Package as the default first quote line for new PSA clients and prospects entering proposal stage.</p></div>
+      <div class="card"><span class="tag amber">Transition Tool</span><h3>Use ramp promos, not discounting.</h3><p>Promos should be scarce, tracked, and time-bound. They are a bridge to the new minimum, not a way to keep selling at $500.</p></div>
+      <div class="card"><span class="tag">Leadership Ask</span><h3>Approve floor, promo policy, and operating rules.</h3><p>Sales can execute if leadership aligns on eligibility, rep allocations, approval workflow, and the non-negotiable step-up to $1,000.</p></div>
+    </div>
+  </div>
+</section>
+
+<section id="starter">
+  <div class="wrap">
+    <div class="section-head">
+      <div class="eyebrow">Starter Pack</div>
+      <h2>The $1,000 package should feel specific, tangible, and fair.</h2>
+      <p class="sub">The screenshot creates a clean commercial anchor: a named package that includes enough seats for an operational rollout, not an arbitrary minimum fee.</p>
+    </div>
+    <div class="starter-layout">
+      <table class="starter-table">
+        <thead>
+          <tr>
+            <th>Item</th>
+            <th>Quantity</th>
+            <th>Rate</th>
+            <th>Total</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td class="item">Minimum Starter Package<span class="muted">Packaged monthly floor for PSA clients</span></td>
+            <td>1</td>
+            <td class="money">$1,000</td>
+            <td class="money">$1,000</td>
+          </tr>
+          <tr>
+            <td class="item">Included - Standard User<span class="muted">Core users for managers, dispatch, admin, finance, and operations</span></td>
+            <td>8</td>
+            <td>$120</td>
+            <td>Included</td>
+          </tr>
+          <tr>
+            <td class="item">Included - Field User<span class="muted">Mobile-first users for field access and service execution</span></td>
+            <td>5</td>
+            <td>$30</td>
+            <td>Included</td>
+          </tr>
+          <tr>
+            <td class="item">Included - Revy AI Outcomes<span class="muted">AI-assisted notes, reporting, workflow, and adoption support</span></td>
+            <td>Unlimited</td>
+            <td>Included</td>
+            <td>Included</td>
+          </tr>
+        </tbody>
+      </table>
+      <div class="callout">
+        <div class="big">$1,110 value</div>
+        <p>8 Standard Users at $120 plus 5 Field Users at $30 creates $1,110 of license value before Revy AI Outcomes. Packaging it at $1,000 gives Sales a simple value story while still lifting the floor.</p>
+        <p>The message: "This is the smallest complete team configuration we recommend for a successful PSA launch."</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="promo" class="dark">
+  <div class="wrap">
+    <div class="section-head">
+      <div class="eyebrow">Promo Ramp</div>
+      <h2>Give reps a scarce monthly ramp tool so the minimum increase does not stall qualified deals.</h2>
+      <p class="sub">The ramp should be contractual and automatic. A client may start below $1,000 only if the agreement clearly steps them into the $1,000 minimum.</p>
+    </div>
+    <div class="timeline">
+      <div class="step">
+        <div class="month">Months 1-2</div>
+        <div class="price">$500</div>
+        <p>Launch rate for approved Starter Pack promo deals. This protects early-stage adoption and avoids immediate sticker shock.</p>
+      </div>
+      <div class="step">
+        <div class="month">Months 3-4</div>
+        <div class="price">$750</div>
+        <p>Mid-ramp step. Client is already live, implementation is underway, and the pricing conversation is no longer theoretical.</p>
+      </div>
+      <div class="step">
+        <div class="month">Month 5+</div>
+        <div class="price">$1,000</div>
+        <p>Full Starter Pack minimum begins. No manual renewal, re-approval, or renegotiation required.</p>
+      </div>
+      <div class="step">
+        <div class="month">Expansion</div>
+        <div class="price">List</div>
+        <p>Any users above the included 8 Standard and 5 Field Users are sold at standard list pricing.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="guardrails">
+  <div class="wrap">
+    <div class="section-head">
+      <div class="eyebrow">Guardrails</div>
+      <h2>Scarcity and rules keep this from becoming a new $500 minimum.</h2>
+      <p class="sub">The program needs to feel like rep inventory, not a discount anyone can request after procurement pushes back.</p>
+    </div>
+    <div class="policy-grid">
+      <div class="card">
+        <span class="tag green">Recommended Allocation</span>
+        <h3>Two ramp promos per rep per month.</h3>
+        <ul class="list">
+          <li>Unused promos expire at month end.</li>
+          <li>Managers receive a small exception pool for strategic deals.</li>
+          <li>Promos must be logged in Salesforce before proposal is sent.</li>
+          <li>No stacking with other commercial concessions.</li>
+        </ul>
+      </div>
+      <div class="card">
+        <span class="tag red">Eligibility Rules</span>
+        <h3>Use only where it changes conversion, not margin preference.</h3>
+        <ul class="list">
+          <li>New PSA logos or qualified cross-sell clients only.</li>
+          <li>Must include the full Starter Pack structure.</li>
+          <li>Must include automatic step-up language in the order form.</li>
+          <li>Cannot be used for clients clearly large enough to start at $1,000.</li>
+        </ul>
+      </div>
+      <div class="card">
+        <span class="tag amber">Approval Path</span>
+        <h3>Rep controlled, manager visible.</h3>
+        <ul class="list">
+          <li>Rep can use allocated promo without VP approval if rules are met.</li>
+          <li>Manager reviews promo usage weekly.</li>
+          <li>Any third promo in a month requires manager approval.</li>
+          <li>Any ramp longer than four months requires VP approval.</li>
+        </ul>
+      </div>
+      <div class="card">
+        <span class="tag">Contract Language</span>
+        <h3>The step-up must be explicit.</h3>
+        <ul class="list">
+          <li>Quote shows $1,000 Minimum Starter Package as the actual product.</li>
+          <li>Ramp appears as a temporary promotional credit.</li>
+          <li>Credit expires automatically after month four.</li>
+          <li>Client sees the full $1,000 go-forward rate before signature.</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="impact">
+  <div class="wrap">
+    <div class="section-head">
+      <div class="eyebrow">Business Impact</div>
+      <h2>The goal is higher floor, cleaner packaging, and fewer under-sized implementations.</h2>
+      <p class="sub">The biggest benefit is not only $500 more MRR per client. It is better alignment between what we sell, what we implement, and the minimum team footprint needed for PSA value.</p>
+    </div>
+    <div class="cards">
+      <div class="card"><span class="tag green">Revenue</span><h3>Every full-rate client adds $500 MRR over the old floor.</h3><p>Ten clients sold at the new minimum creates $5,000 more MRR than the same volume under the old floor, before expansion users.</p></div>
+      <div class="card"><span class="tag green">Adoption</span><h3>The included Field Users reinforce the mobile story.</h3><p>The Starter Pack nudges clients toward field adoption from day one instead of launching PSA as only a back-office system.</p></div>
+      <div class="card"><span class="tag green">Positioning</span><h3>Revy AI Outcomes become part of the base value.</h3><p>Including unlimited AI outcomes makes the $1,000 floor feel tied to modern workflow value rather than a seat-count increase.</p></div>
+      <div class="card"><span class="tag amber">Margin Discipline</span><h3>Ramp promos preserve closeability without hiding the real price.</h3><p>The client sees $1,000 as the actual package and the ramp as temporary. That is cleaner than discounting the base package.</p></div>
+      <div class="card"><span class="tag amber">Sales Behavior</span><h3>Limited promo inventory forces prioritization.</h3><p>Reps will spend promos where they believe the deal is real, instead of using discounts as the default negotiation response.</p></div>
+      <div class="card"><span class="tag amber">Implementation</span><h3>Smaller clients still get a complete launch footprint.</h3><p>The package sets a minimum implementation shape: enough admin, operational, and field users to create visible value.</p></div>
+    </div>
+  </div>
+</section>
+
+<section id="rollout" class="dark">
+  <div class="wrap">
+    <div class="section-head">
+      <div class="eyebrow">Rollout Plan</div>
+      <h2>Recommended 30-day launch sequence</h2>
+      <p class="sub">Leadership can approve the package quickly if Sales Ops, Finance, and Sales all leave the meeting with clear owners.</p>
+    </div>
+    <div class="cards">
+      <div class="card"><span class="tag">Week 1</span><h3>Approve package and policy.</h3><p>Finalize $1,000 Starter Pack, included users, ramp credit language, rep allocation, and manager exception pool.</p></div>
+      <div class="card"><span class="tag">Week 2</span><h3>Update quoting and order forms.</h3><p>Create the Minimum Starter Package SKU, temporary promo credit line, Salesforce promo field, and approval tracking.</p></div>
+      <div class="card"><span class="tag">Week 3</span><h3>Train managers and reps.</h3><p>Enable reps with talk track, objection handling, promo rules, examples, and "do not discount the package" guidance.</p></div>
+      <div class="card"><span class="tag">Week 4</span><h3>Launch on new proposals.</h3><p>Apply to new PSA proposals. Review first two weeks of usage in forecast calls and tighten rules if promos are overused.</p></div>
+      <div class="card"><span class="tag">30 Days</span><h3>Report back to leadership.</h3><p>Show proposal volume, promo usage by rep, win rate, average start MRR, full-rate MRR, and exceptions requested.</p></div>
+      <div class="card"><span class="tag">60 Days</span><h3>Decide whether to reduce promos.</h3><p>If conversion holds, reduce promo inventory or shorten ramp to accelerate adoption of the $1,000 floor.</p></div>
+    </div>
+    <div class="source">Source basis: package structure is based on Ryan's June 5, 2026 screenshot showing Monthly License Fees for a Minimum Starter Package with 8 Standard Users, 5 Field Users, and unlimited Revy AI Outcomes.</div>
+  </div>
+</section>
+</body>
+</html>
