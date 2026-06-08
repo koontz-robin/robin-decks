@@ -1,0 +1,522 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Fuse Telecom / Allied Technology Group ROI Business Case</title>
+<style>
+  :root {
+    --ink: #172033;
+    --muted: #607089;
+    --line: #dbe3ef;
+    --bg: #f6f8fb;
+    --panel: #ffffff;
+    --blue: #1667cc;
+    --green: #23a559;
+    --gold: #b7791f;
+    --red: #c24130;
+    --slate: #334155;
+  }
+  * { box-sizing: border-box; }
+  body {
+    margin: 0;
+    background: var(--bg);
+    color: var(--ink);
+    font-family: Arial, Helvetica, sans-serif;
+    line-height: 1.45;
+  }
+  .deck {
+    max-width: 1180px;
+    margin: 0 auto;
+    background: var(--panel);
+    box-shadow: 0 18px 55px rgba(23, 32, 51, 0.12);
+  }
+  .slide {
+    min-height: 680px;
+    padding: 58px 68px 46px;
+    border-bottom: 1px solid var(--line);
+    position: relative;
+    overflow: hidden;
+  }
+  .cover {
+    background:
+      linear-gradient(135deg, rgba(22,103,204,0.96), rgba(23,32,51,0.96)),
+      url("revio-logo-white.png");
+    color: #fff;
+  }
+  .cover::after {
+    content: "";
+    position: absolute;
+    right: 58px;
+    bottom: 52px;
+    width: 270px;
+    height: 270px;
+    border: 1px solid rgba(255,255,255,0.18);
+    border-radius: 50%;
+  }
+  .brand {
+    display: flex;
+    align-items: center;
+    gap: 18px;
+    margin-bottom: 92px;
+  }
+  .brand img { height: 34px; width: auto; }
+  .brand .rule { width: 1px; height: 34px; background: rgba(255,255,255,0.35); }
+  .brand span { font-size: 12px; font-weight: 700; letter-spacing: 2px; text-transform: uppercase; opacity: 0.8; }
+  .eyebrow {
+    font-size: 12px;
+    font-weight: 700;
+    letter-spacing: 2.6px;
+    text-transform: uppercase;
+    color: var(--blue);
+    margin-bottom: 12px;
+  }
+  .cover .eyebrow { color: #8bd4ff; }
+  h1, h2, h3, p { margin-top: 0; }
+  h1 {
+    font-size: 58px;
+    line-height: 1.02;
+    letter-spacing: 0;
+    max-width: 850px;
+    margin-bottom: 24px;
+  }
+  h2 {
+    font-size: 34px;
+    line-height: 1.12;
+    letter-spacing: 0;
+    max-width: 820px;
+    margin-bottom: 12px;
+  }
+  h3 {
+    font-size: 17px;
+    margin-bottom: 8px;
+  }
+  .lead {
+    color: var(--muted);
+    font-size: 18px;
+    max-width: 870px;
+    margin-bottom: 34px;
+  }
+  .cover .lead { color: rgba(255,255,255,0.78); max-width: 760px; }
+  .meta {
+    display: grid;
+    grid-template-columns: repeat(4, minmax(130px, 1fr));
+    gap: 18px;
+    margin-top: 70px;
+    max-width: 900px;
+  }
+  .meta div {
+    border-top: 1px solid rgba(255,255,255,0.35);
+    padding-top: 12px;
+  }
+  .meta label, .stat label {
+    display: block;
+    font-size: 10px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 1.7px;
+    color: rgba(255,255,255,0.62);
+    margin-bottom: 6px;
+  }
+  .meta strong { font-size: 15px; }
+  .grid-3 {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 18px;
+  }
+  .grid-2 {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 22px;
+  }
+  .card {
+    border: 1px solid var(--line);
+    border-radius: 8px;
+    padding: 22px;
+    background: #fff;
+  }
+  .card.blue { border-top: 4px solid var(--blue); }
+  .card.green { border-top: 4px solid var(--green); }
+  .card.gold { border-top: 4px solid var(--gold); }
+  .card.red { border-top: 4px solid var(--red); }
+  .card p, li {
+    color: var(--muted);
+    font-size: 14px;
+  }
+  ul {
+    margin: 10px 0 0;
+    padding-left: 20px;
+  }
+  li { margin-bottom: 8px; }
+  .quote {
+    margin-top: 14px;
+    padding-left: 13px;
+    border-left: 3px solid var(--gold);
+    color: #6f4d13;
+    font-size: 13px;
+    font-style: italic;
+  }
+  .stats {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 16px;
+    margin: 24px 0 34px;
+  }
+  .stat {
+    background: #f8fafc;
+    border: 1px solid var(--line);
+    border-radius: 8px;
+    padding: 18px 18px 16px;
+  }
+  .stat label { color: var(--muted); }
+  .stat strong {
+    display: block;
+    font-size: 28px;
+    color: var(--slate);
+    margin-bottom: 3px;
+  }
+  .stat span { color: var(--muted); font-size: 12px; }
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 18px;
+    border: 1px solid var(--line);
+    border-radius: 8px;
+    overflow: hidden;
+  }
+  th {
+    text-align: left;
+    background: #edf3fb;
+    color: var(--slate);
+    font-size: 11px;
+    text-transform: uppercase;
+    letter-spacing: 1.3px;
+    padding: 13px 14px;
+  }
+  td {
+    border-top: 1px solid var(--line);
+    padding: 14px;
+    vertical-align: top;
+    font-size: 14px;
+    color: var(--muted);
+  }
+  td strong { color: var(--ink); }
+  .right { text-align: right; }
+  .money { color: var(--green); font-weight: 700; }
+  .risk { color: var(--red); font-weight: 700; }
+  .source-tag {
+    display: inline-block;
+    font-size: 10px;
+    font-weight: 700;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    color: var(--blue);
+    background: #e8f1ff;
+    border: 1px solid #cfe1fb;
+    border-radius: 999px;
+    padding: 4px 9px;
+    margin-bottom: 9px;
+  }
+  .formula {
+    font-size: 12px;
+    color: var(--muted);
+    margin-top: 4px;
+  }
+  .footer {
+    position: absolute;
+    left: 68px;
+    right: 68px;
+    bottom: 22px;
+    display: flex;
+    justify-content: space-between;
+    color: #9aa7b7;
+    font-size: 11px;
+  }
+  .callout {
+    background: #f0f9f4;
+    border: 1px solid #bfe5cd;
+    border-radius: 8px;
+    padding: 22px;
+    color: #164f2b;
+    margin-top: 24px;
+  }
+  .small { font-size: 12px; color: var(--muted); }
+  @media print {
+    body { background: #fff; }
+    .deck { box-shadow: none; max-width: none; }
+    .slide { min-height: 7.5in; page-break-after: always; }
+  }
+</style>
+</head>
+<body>
+<main class="deck">
+  <section class="slide cover">
+    <div class="brand">
+      <img src="revio-logo-white.png" alt="Rev.io">
+      <div class="rule"></div>
+      <span>ROI Business Case</span>
+    </div>
+    <div class="eyebrow">Prepared for Fuse Telecom / Allied Technology Group</div>
+    <h1>Why replacing Freeside is a business continuity decision, not a software preference</h1>
+    <p class="lead">A source-backed executive case for moving to Rev.io Billing, based on the Allied Technology Group Salesforce account and the May 12 discovery-call scorecard in Notion.</p>
+    <div class="meta">
+      <div><label>Open opportunity</label><strong>$1,500 MRR</strong></div>
+      <div><label>Current stage</label><strong>Initial product demo</strong></div>
+      <div><label>Close date</label><strong>June 30, 2026</strong></div>
+      <div><label>Owner</label><strong>Connor Flynn</strong></div>
+    </div>
+    <div class="footer"><span>Rev.io confidential</span><span>Built June 8, 2026</span></div>
+  </section>
+
+  <section class="slide">
+    <div class="eyebrow">1. Executive Thesis</div>
+    <h2>Fuse has outgrown a platform that is still working, but no longer protects the business.</h2>
+    <p class="lead">The discovery notes do not point to a feature shopping exercise. They point to operational risk: the current billing platform has no support path, manual processes sit around it, and reporting depends on technical workarounds.</p>
+    <div class="stats">
+      <div class="stat"><label>Current billing opp</label><strong>$1.5K</strong><span>MRR in Salesforce</span></div>
+      <div class="stat"><label>Annual software case</label><strong>$18K</strong><span>Rev.io annualized MRR</span></div>
+      <div class="stat"><label>Known pain points</label><strong>4</strong><span>From Notion scorecard</span></div>
+      <div class="stat"><label>Buying trigger</label><strong>Now</strong><span>Pricing follow-up set June 8</span></div>
+    </div>
+    <div class="grid-2">
+      <div class="card red">
+        <span class="source-tag">What we heard</span>
+        <h3>The current system is a single point of failure.</h3>
+        <p>The Notion page says the Freeside developer retired, support is gone, and the platform is effectively dead. That creates a continuity risk around billing, cash collection, and customer operations.</p>
+      </div>
+      <div class="card green">
+        <span class="source-tag">Business case</span>
+        <h3>Rev.io pays for itself if it removes only modest operational drag.</h3>
+        <p>At $1,500 MRR, the break-even bar is low: prevent 30 loaded labor hours per month at $50/hour, or avoid one meaningful billing incident per year.</p>
+      </div>
+    </div>
+    <div class="footer"><span>Source: Salesforce and Notion discovery scorecard</span><span>1</span></div>
+  </section>
+
+  <section class="slide">
+    <div class="eyebrow">2. Source-Backed Pain</div>
+    <h2>The discovery call surfaced four business problems that should anchor the ROI story.</h2>
+    <p class="lead">These are the claims Connor can defend directly from the Notion scorecard. The next step is to attach numbers to each one during pricing and mutual-action planning.</p>
+    <div class="grid-3">
+      <div class="card red">
+        <h3>No support path</h3>
+        <p>Freeside still functions, but the support model is gone. The original developer retired and the platform is described as dead.</p>
+        <div class="quote">"If something breaks tomorrow, what happens to your billing cycle?"</div>
+      </div>
+      <div class="card red">
+        <h3>Duplicate customer creation</h3>
+        <p>Customers must be created manually in multiple platforms. That turns growth into admin work and increases data quality risk.</p>
+        <div class="quote">"How many hours a week does that cost your team?"</div>
+      </div>
+      <div class="card red">
+        <h3>No workflow automation</h3>
+        <p>Process execution depends on salespeople following PDF steps manually rather than a controlled system workflow.</p>
+        <div class="quote">Manual process equals inconsistent process.</div>
+      </div>
+      <div class="card red">
+        <h3>Reporting bottleneck</h3>
+        <p>Custom reporting requires going directly into SQL, which slows decisions and creates dependency on technical resources.</p>
+        <div class="quote">Reports should not require a database person.</div>
+      </div>
+      <div class="card gold">
+        <h3>Decision-maker gap</h3>
+        <p>Abel said he is the most likely person for Fuse, but the scorecard notes that authority was not fully confirmed.</p>
+        <div class="quote">Use the deck to align Abel, Manuel, finance, and ops.</div>
+      </div>
+      <div class="card blue">
+        <h3>Prior evaluation history</h3>
+        <p>Salesforce shows multiple prior Billing opportunities from 2018, 2020, 2021, 2023, and a 2026 PSA opportunity that closed lost.</p>
+        <div class="quote">The buying problem keeps resurfacing.</div>
+      </div>
+    </div>
+    <div class="footer"><span>Source: Notion page "(Discovery Call) Allied Technology Group & Rev.io"</span><span>2</span></div>
+  </section>
+
+  <section class="slide">
+    <div class="eyebrow">3. Cost of Inaction</div>
+    <h2>The current-state cost is the sum of labor drag, billing risk, and delayed visibility.</h2>
+    <p class="lead">The dollar values below are intentionally conservative assumptions for discussion. They should be replaced with Fuse's actual hours, customer volume, and billing exposure after Connor quantifies the pain.</p>
+    <table>
+      <thead>
+        <tr>
+          <th>Cost driver</th>
+          <th>Defensible assumption</th>
+          <th class="right">Annual impact</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><strong>Manual customer setup</strong><div class="formula">20 hrs/month x $50 loaded hourly cost x 12</div></td>
+          <td>Duplicate setup and cleanup across disconnected systems.</td>
+          <td class="right risk">$12,000</td>
+        </tr>
+        <tr>
+          <td><strong>Manual workflow follow-up</strong><div class="formula">10 hrs/month x $50 loaded hourly cost x 12</div></td>
+          <td>PDF-based process adherence, chasing missing steps, correcting inconsistent execution.</td>
+          <td class="right risk">$6,000</td>
+        </tr>
+        <tr>
+          <td><strong>Reporting dependency</strong><div class="formula">8 hrs/month x $75 technical hourly cost x 12</div></td>
+          <td>SQL-driven report requests and ad hoc pulls that should be self-service.</td>
+          <td class="right risk">$7,200</td>
+        </tr>
+        <tr>
+          <td><strong>Continuity risk reserve</strong><div class="formula">One avoided interruption or emergency support event</div></td>
+          <td>Conservative placeholder for outage, broken billing cycle, or urgent custom support when Freeside fails.</td>
+          <td class="right risk">$10,000</td>
+        </tr>
+        <tr>
+          <td><strong>Total modeled annual drag</strong></td>
+          <td>Conservative quantified case before revenue leakage or customer experience impact.</td>
+          <td class="right money">$35,200</td>
+        </tr>
+      </tbody>
+    </table>
+    <div class="callout">
+      <strong>Break-even: Rev.io at $1,500 MRR equals $18,000 per year.</strong>
+      The modeled cost of staying put is roughly 2.0x the annual software cost before counting revenue leakage, missed invoices, delayed collections, or employee frustration.
+    </div>
+    <div class="footer"><span>Assumptions for discussion, not customer-confirmed metrics</span><span>3</span></div>
+  </section>
+
+  <section class="slide">
+    <div class="eyebrow">4. ROI Model</div>
+    <h2>A conservative first-year ROI case clears the bar even with modest efficiency gains.</h2>
+    <p class="lead">Use this as a pricing-conversation framework. It keeps the math simple and lets Fuse replace assumptions with their real operating data.</p>
+    <div class="grid-2">
+      <div class="card blue">
+        <h3>Conservative Year 1</h3>
+        <table>
+          <tbody>
+            <tr><td>Modeled annual benefit</td><td class="right money">$35,200</td></tr>
+            <tr><td>Annual Rev.io cost</td><td class="right risk">$18,000</td></tr>
+            <tr><td><strong>Net value</strong></td><td class="right money">$17,200</td></tr>
+            <tr><td><strong>ROI</strong></td><td class="right money">96%</td></tr>
+            <tr><td><strong>Payback</strong></td><td class="right money">6.1 months</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <div class="card green">
+        <h3>Upside Case</h3>
+        <table>
+          <tbody>
+            <tr><td>40 labor hrs/month removed at $55/hr</td><td class="right money">$26,400</td></tr>
+            <tr><td>Reporting dependency reduced by 10 hrs/month</td><td class="right money">$9,000</td></tr>
+            <tr><td>One avoided billing issue</td><td class="right money">$20,000</td></tr>
+            <tr><td><strong>Total annual benefit</strong></td><td class="right money">$55,400</td></tr>
+            <tr><td><strong>Net after Rev.io</strong></td><td class="right money">$37,400</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+    <div class="callout">
+      The strongest executive message is not "Rev.io is cheaper." It is "Rev.io turns unsupported billing risk into a controlled operating system, and the subscription is covered by a small amount of avoided waste."
+    </div>
+    <div class="footer"><span>ROI formulas use current Salesforce MRR of $1,500</span><span>4</span></div>
+  </section>
+
+  <section class="slide">
+    <div class="eyebrow">5. Why Rev.io</div>
+    <h2>Map the product story directly to the pains Fuse already named.</h2>
+    <p class="lead">Keep the value argument tied to their words. Each capability should answer a known operational problem rather than adding generic platform claims.</p>
+    <table>
+      <thead>
+        <tr>
+          <th>Fuse pain</th>
+          <th>Business impact</th>
+          <th>Rev.io answer</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><strong>Dead Freeside platform</strong></td>
+          <td>No reliable support path if billing breaks or needs to change.</td>
+          <td>Supported billing platform with Rev.io telecom billing expertise and implementation resources.</td>
+        </tr>
+        <tr>
+          <td><strong>Manual customer creation</strong></td>
+          <td>Higher admin cost, higher error rate, slower onboarding.</td>
+          <td>Centralized customer/account data and integration path to reduce repeated data entry.</td>
+        </tr>
+        <tr>
+          <td><strong>PDF-based process steps</strong></td>
+          <td>Sales and ops rely on memory and manual compliance.</td>
+          <td>System workflows, controlled processes, and cleaner handoffs from sales to billing.</td>
+        </tr>
+        <tr>
+          <td><strong>SQL-only reporting</strong></td>
+          <td>Leaders wait on technical users for custom answers.</td>
+          <td>Operational reporting and billing visibility designed for business users.</td>
+        </tr>
+      </tbody>
+    </table>
+    <div class="footer"><span>Positioning based on discovery notes</span><span>5</span></div>
+  </section>
+
+  <section class="slide">
+    <div class="eyebrow">6. Pricing Conversation</div>
+    <h2>Connor should use pricing to confirm the economics, not just present a quote.</h2>
+    <p class="lead">The Notion coaching note is clear: the discovery call found real pain but did not quantify it. The next meeting should convert this deck into a mutual business case.</p>
+    <div class="grid-3">
+      <div class="card blue">
+        <h3>1. Confirm the current-state numbers</h3>
+        <ul>
+          <li>How many customers are created per month?</li>
+          <li>How many systems does each setup touch?</li>
+          <li>Who handles corrections when data is wrong?</li>
+        </ul>
+      </div>
+      <div class="card blue">
+        <h3>2. Quantify Freeside risk</h3>
+        <ul>
+          <li>What happens if Freeside breaks during billing?</li>
+          <li>Who can fix it today?</li>
+          <li>What is the cost of a missed or delayed billing run?</li>
+        </ul>
+      </div>
+      <div class="card blue">
+        <h3>3. Tie price to an approval event</h3>
+        <ul>
+          <li>Who signs off besides Abel?</li>
+          <li>Does Manuel need an executive summary?</li>
+          <li>What must be true by June 30 to move forward?</li>
+        </ul>
+      </div>
+    </div>
+    <div class="callout">
+      Recommended ask: "If we validate that the current process is costing more than $18K per year in labor and risk, can we use that as the business case for a June decision?"
+    </div>
+    <div class="footer"><span>Next step in Salesforce: pricing discussion on June 8 at 3:30</span><span>6</span></div>
+  </section>
+
+  <section class="slide">
+    <div class="eyebrow">7. Source Appendix</div>
+    <h2>Source notes used to build this business case.</h2>
+    <div class="grid-2">
+      <div class="card">
+        <h3>Salesforce account and opportunity</h3>
+        <ul>
+          <li>Account: Allied Technology Group, Warm Prospect, MSP - UCaaS / VoIP, San Juan, PR.</li>
+          <li>Owner: Connor Flynn. Last activity date: June 8, 2026.</li>
+          <li>Open opportunity: Fuse Telecom / Allied Tech Group, Billing, $1,500 MRR, Stage 3 Initial Product Demo, 25% probability, War Room forecast, close date June 30, 2026.</li>
+          <li>Next step: Pricing discussion on June 8 at 3:30.</li>
+          <li>Prior lost opportunities: Billing in 2018, 2020, 2021, 2023; PSA 2.0 in May 2026.</li>
+        </ul>
+      </div>
+      <div class="card">
+        <h3>Notion discovery page</h3>
+        <ul>
+          <li>Page: (Discovery Call) Allied Technology Group & Rev.io.</li>
+          <li>Meeting date: May 12, 2026. Sales rep: Connor Flynn. Overall score: 64/100.</li>
+          <li>DBMs uncovered: no support/dead Freeside platform, no system integration, no workflow/process automation, limited SQL-only custom reporting.</li>
+          <li>Coaching note: quantify business impact before pricing. Ask what happens if Freeside breaks and how many hours manual processes cost.</li>
+          <li>Decision process note: Abel said he is the most likely person for Fuse, but authority should be confirmed.</li>
+        </ul>
+      </div>
+    </div>
+    <p class="small" style="margin-top:26px;">ROI assumptions are explicitly labeled as modeling assumptions and should be replaced with Fuse-confirmed operating metrics before the deck is sent externally.</p>
+    <div class="footer"><span>Internal Rev.io working deck</span><span>7</span></div>
+  </section>
+</main>
+</body>
+</html>
