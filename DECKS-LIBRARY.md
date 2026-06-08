@@ -105,7 +105,7 @@ Repo: `git@github.com:koontz-robin/robin-decks.git`
 
 | Name | File | URL | Notes |
 |---|---|---|---|
-| Tigerpaw Web Migration Weekly Template | tigerpaw-web-migration-weekly-template.xlsx | https://koontz-robin.github.io/robin-decks/tigerpaw-web-migration-weekly-template.xlsx | Editable weekly Excel forecast template |
+| Tigerpaw Web Migration Weekly Template | tigerpaw-web-migration-weekly-template-branded.xlsx | https://koontz-robin.github.io/robin-decks/tigerpaw-web-migration-weekly-template-branded.xlsx | Editable weekly Excel forecast template |
 | Beacon | beacon.html | https://koontz-robin.github.io/robin-decks/beacon.html | |
 | Beacon Rubric | beacon-rubric.html | https://koontz-robin.github.io/robin-decks/beacon-rubric.html | |
 | Demo Guide | demo-guide.html | https://koontz-robin.github.io/robin-decks/demo-guide.html | |
