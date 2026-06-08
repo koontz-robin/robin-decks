@@ -3,268 +3,258 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>AE Capacity — Prospect Meetings by Month</title>
+<title>AE Capacity Dashboard</title>
 <style>
 * { margin: 0; padding: 0; box-sizing: border-box; }
 body { background: #000; font-family: 'Segoe UI', system-ui, sans-serif; color: #e2e8f0; min-height: 100vh; padding: 40px 48px; }
 h1 { font-size: 26px; font-weight: 700; color: #fff; margin-bottom: 6px; }
-.subtitle { font-size: 14px; color: #94a3b8; margin-bottom: 40px; }
-.grid { display: grid; grid-template-columns: repeat(5, 1fr); gap: 24px; margin-bottom: 40px; }
-.card { background: #1e293b; border-radius: 12px; padding: 28px 24px; position: relative; overflow: hidden; }
+.subtitle { font-size: 14px; color: #94a3b8; margin-bottom: 32px; }
+.grid { display: grid; grid-template-columns: repeat(6, minmax(0, 1fr)); gap: 18px; margin-bottom: 28px; }
+.card { background: #1e293b; border-radius: 12px; padding: 22px 20px; position: relative; overflow: hidden; min-width: 0; }
 .card::before { content: ''; position: absolute; top: 0; left: 0; right: 0; height: 4px; background: var(--accent); }
-.card.jan { --accent: #38bdf8; } .card.feb { --accent: #a78bfa; }
-.card.mar { --accent: #34d399; } .card.apr { --accent: #f97316; } .card.may { --accent: #ec4899; }
-.month-label { font-size: 11px; font-weight: 700; letter-spacing: 1.5px; text-transform: uppercase; color: #64748b; margin-bottom: 16px; }
-.meetings-val { font-size: 64px; font-weight: 800; line-height: 1; margin-bottom: 4px; color: var(--accent); }
-.meetings-label { font-size: 13px; color: #94a3b8; margin-bottom: 24px; }
-.ae-badge { display: inline-flex; align-items: center; gap: 8px; background: #0f172a; border-radius: 8px; padding: 8px 14px; }
-.ae-num { font-size: 22px; font-weight: 700; color: #fff; }
-.ae-text { font-size: 12px; color: #64748b; line-height: 1.3; }
-.rep-table { background: #1e293b; border-radius: 12px; overflow: hidden; }
+.month-label { font-size: 11px; font-weight: 700; letter-spacing: 1.2px; text-transform: uppercase; color: #64748b; margin-bottom: 14px; white-space: nowrap; }
+.meetings-val { font-size: 54px; font-weight: 800; line-height: 1; margin-bottom: 4px; color: var(--accent); }
+.meetings-label { font-size: 13px; color: #94a3b8; margin-bottom: 18px; }
+.ae-badge { display: inline-flex; align-items: center; gap: 8px; background: #0f172a; border-radius: 8px; padding: 8px 12px; }
+.ae-num { font-size: 21px; font-weight: 700; color: #fff; }
+.ae-text { font-size: 12px; color: #64748b; line-height: 1.25; }
+.rate { font-size: 13px; color: #94a3b8; margin-top: 14px; }
+.projection { font-size: 12px; color: #94a3b8; margin-top: 6px; line-height: 1.35; }
+.summary { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 18px; margin-bottom: 28px; }
+.summary-card { background: #111827; border: 1px solid #1f2937; border-radius: 10px; padding: 16px 18px; }
+.summary-label { color: #64748b; font-size: 11px; font-weight: 800; letter-spacing: 1px; text-transform: uppercase; margin-bottom: 8px; }
+.summary-value { color: #fff; font-size: 24px; font-weight: 800; }
+.summary-sub { color: #94a3b8; font-size: 12px; margin-top: 4px; }
+.chart-section, .rep-table { background: #1e293b; border-radius: 12px; padding: 22px 20px; margin-bottom: 28px; }
+.section-title { color: #64748b; font-size: 12px; font-weight: 800; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 18px; }
+.bar-row { display: grid; grid-template-columns: 92px minmax(0, 1fr) 110px; gap: 14px; align-items: center; margin-bottom: 13px; }
+.bar-month { color: #94a3b8; font-size: 12px; font-weight: 700; }
+.bar-track { height: 30px; background: #0f172a; border-radius: 6px; overflow: hidden; display: flex; }
+.bar-actual, .bar-projected { height: 100%; min-width: 34px; display: flex; align-items: center; padding-left: 10px; color: #0f172a; font-size: 12px; font-weight: 800; }
+.bar-projected { background: #fde68a; color: #422006; opacity: .72; }
+.bar-stat { color: #94a3b8; font-size: 12px; text-align: right; }
+.rep-table { overflow: hidden; padding: 0; }
 .rep-table table { width: 100%; border-collapse: collapse; }
-.rep-table th { font-size: 10px; font-weight: 700; letter-spacing: 1px; text-transform: uppercase; color: #64748b; padding: 10px 12px; text-align: center; background: #0f172a; }
+.rep-table th { font-size: 10px; font-weight: 700; letter-spacing: 1px; text-transform: uppercase; color: #64748b; padding: 11px 12px; text-align: center; background: #0f172a; }
 .rep-table th:first-child { text-align: left; }
-.rep-table td { border-bottom: 1px solid #0f172a; }
+.rep-table td { border-bottom: 1px solid #0f172a; padding: 9px 12px; font-size: 13px; }
 .rep-table tr:last-child td { border-bottom: none; }
-.footer { margin-top: 32px; font-size: 11px; color: #475569; text-align: center; letter-spacing: 1px; }
+.rep-name { color: #e2e8f0; font-weight: 700; }
+.trend.up { color: #34d399; } .trend.down { color: #f87171; } .trend.flat { color: #64748b; }
+.footer { margin-top: 30px; font-size: 11px; color: #475569; text-align: center; letter-spacing: 1px; }
+@media (max-width: 1300px) { .grid { grid-template-columns: repeat(3, minmax(0, 1fr)); } }
+@media (max-width: 760px) { body { padding: 24px 18px; } .grid, .summary { grid-template-columns: 1fr; } .bar-row { grid-template-columns: 1fr; } .bar-stat { text-align:left; } }
 </style>
 </head>
 <body>
-<div id="robin-refresh-btn" style="position:fixed;top:12px;right:16px;z-index:9999;">
-  <button onclick="window.location.reload(true)" title="Refresh dashboard" style="background:#1e293b;color:#f8fafc;border:1px solid #334155;border-radius:8px;padding:7px 14px;font-size:13px;font-family:sans-serif;cursor:pointer;display:flex;align-items:center;gap:6px;box-shadow:0 2px 8px rgba(0,0,0,0.3);transition:background 0.15s;" onmouseover="this.style.background='#334155'" onmouseout="this.style.background='#1e293b'">
-    <span style="font-size:15px;line-height:1">↻</span> Refresh
-  </button>
-</div>
 <h1>AE Capacity Dashboard</h1>
-<div class="subtitle">Prospect meetings completed by month · Q1–Q2 2026 · Updated May 21, 2026</div>
+<div class="subtitle">Prospect meetings completed by month · Seven-AE roster only · Refreshed June 8, 2026 8:30 AM ET</div>
 
 <div class="grid">
 
-<div class="card jan">
-  <div class="month-label">Jan 2026</div>
+<div class="card" style="--accent:#38bdf8">
+  <div class="month-label">Jan 2026 — Final</div>
   <div class="meetings-val">137</div>
   <div class="meetings-label">prospect meetings</div>
   <div class="ae-badge">
-    <div class="ae-num">12</div>
-    <div class="ae-text">Active<br>AEs</div>
+    <div class="ae-num">7</div>
+    <div class="ae-text">AE roster<br>only</div>
   </div>
-  <div style="font-size:13px;color:#94a3b8;margin-top:14px">0.52 mtgs/AE/day</div>
+  <div class="rate">0.89 mtgs/AE/day</div>
+  
 </div>
 
-<div class="card feb">
-  <div class="month-label">Feb 2026</div>
-  <div class="meetings-val">146</div>
+<div class="card" style="--accent:#a78bfa">
+  <div class="month-label">Feb 2026 — Final</div>
+  <div class="meetings-val">145</div>
   <div class="meetings-label">prospect meetings</div>
   <div class="ae-badge">
-    <div class="ae-num">11</div>
-    <div class="ae-text">Active<br>AEs</div>
+    <div class="ae-num">7</div>
+    <div class="ae-text">AE roster<br>only</div>
   </div>
-  <div style="font-size:13px;color:#94a3b8;margin-top:14px">0.66 mtgs/AE/day</div>
+  <div class="rate">1.04 mtgs/AE/day</div>
+  
 </div>
 
-<div class="card mar">
-  <div class="month-label">Mar 2026</div>
-  <div class="meetings-val">219</div>
+<div class="card" style="--accent:#34d399">
+  <div class="month-label">Mar 2026 — Final</div>
+  <div class="meetings-val">226</div>
   <div class="meetings-label">prospect meetings</div>
   <div class="ae-badge">
-    <div class="ae-num">8</div>
-    <div class="ae-text">Active<br>AEs</div>
+    <div class="ae-num">7</div>
+    <div class="ae-text">AE roster<br>only</div>
   </div>
-  <div style="font-size:13px;color:#94a3b8;margin-top:14px">1.24 mtgs/AE/day</div>
+  <div class="rate">1.47 mtgs/AE/day</div>
+  
 </div>
 
-<div class="card apr">
-  <div class="month-label">Apr 2026</div>
+<div class="card" style="--accent:#f97316">
+  <div class="month-label">Apr 2026 — Final</div>
   <div class="meetings-val">256</div>
   <div class="meetings-label">prospect meetings</div>
   <div class="ae-badge">
     <div class="ae-num">7</div>
-    <div class="ae-text">Active<br>AEs</div>
+    <div class="ae-text">AE roster<br>only</div>
   </div>
-  <div style="font-size:13px;color:#94a3b8;margin-top:14px">1.66 mtgs/AE/day</div>
+  <div class="rate">1.66 mtgs/AE/day</div>
+  
 </div>
 
-<div class="card may">
-  <div class="month-label">May 2026</div>
-  <div class="meetings-val">179</div>
+<div class="card" style="--accent:#ec4899">
+  <div class="month-label">May 2026 — Final</div>
+  <div class="meetings-val">252</div>
   <div class="meetings-label">prospect meetings</div>
   <div class="ae-badge">
-    <div class="ae-num">11</div>
-    <div class="ae-text">Active<br>AEs</div>
+    <div class="ae-num">7</div>
+    <div class="ae-text">AE roster<br>only</div>
   </div>
-  <div style="font-size:13px;color:#94a3b8;margin-top:14px">1.08 mtgs/AE/day</div>
-  <div style="font-size:12px;color:#94a3b8;margin-top:6px">Projected: <strong style="color:#ec4899">251</strong></div>
+  <div class="rate">1.71 mtgs/AE/day</div>
+  
 </div>
 
+<div class="card" style="--accent:#facc15">
+  <div class="month-label">Jun 2026 — MTD</div>
+  <div class="meetings-val">45</div>
+  <div class="meetings-label">prospect meetings</div>
+  <div class="ae-badge">
+    <div class="ae-num">7</div>
+    <div class="ae-text">AE roster<br>only</div>
+  </div>
+  <div class="rate">1.07 mtgs/AE/day</div>
+  <div class="projection">Projected: <strong style="color:#facc15">165</strong> · 16 biz days left</div>
+</div>
+</div>
+
+<div class="summary">
+  <div class="summary-card">
+    <div class="summary-label">Final May</div>
+    <div class="summary-value">252 meetings</div>
+    <div class="summary-sub">1.71 meetings / AE / day</div>
+  </div>
+  <div class="summary-card">
+    <div class="summary-label">June MTD</div>
+    <div class="summary-value">45 meetings</div>
+    <div class="summary-sub">1.07 meetings / AE / day through 6 biz days</div>
+  </div>
+  <div class="summary-card">
+    <div class="summary-label">June Projection</div>
+    <div class="summary-value">165 meetings</div>
+    <div class="summary-sub">16 business days remaining</div>
+  </div>
+</div>
+
+<div class="chart-section">
+  <div class="section-title">Monthly Comparison</div>
+  
+<div class="bar-row">
+  <div class="bar-month">Jan 2026</div>
+  <div class="bar-track">
+    <div class="bar-actual" style="background:#38bdf8;width:53.5%">137</div>
+    
+  </div>
+  <div class="bar-stat">0.89 / AE / day</div>
+</div>
+
+<div class="bar-row">
+  <div class="bar-month">Feb 2026</div>
+  <div class="bar-track">
+    <div class="bar-actual" style="background:#a78bfa;width:56.6%">145</div>
+    
+  </div>
+  <div class="bar-stat">1.04 / AE / day</div>
+</div>
+
+<div class="bar-row">
+  <div class="bar-month">Mar 2026</div>
+  <div class="bar-track">
+    <div class="bar-actual" style="background:#34d399;width:88.3%">226</div>
+    
+  </div>
+  <div class="bar-stat">1.47 / AE / day</div>
+</div>
+
+<div class="bar-row">
+  <div class="bar-month">Apr 2026</div>
+  <div class="bar-track">
+    <div class="bar-actual" style="background:#f97316;width:100.0%">256</div>
+    
+  </div>
+  <div class="bar-stat">1.66 / AE / day</div>
+</div>
+
+<div class="bar-row">
+  <div class="bar-month">May 2026</div>
+  <div class="bar-track">
+    <div class="bar-actual" style="background:#ec4899;width:98.4%">252</div>
+    
+  </div>
+  <div class="bar-stat">1.71 / AE / day</div>
+</div>
+
+<div class="bar-row">
+  <div class="bar-month">Jun 2026</div>
+  <div class="bar-track">
+    <div class="bar-actual" style="background:#facc15;width:17.6%">45</div>
+    <div class="bar-projected" style="width:46.9%">→ 165</div>
+  </div>
+  <div class="bar-stat">1.07 / AE / day</div>
+</div>
 </div>
 
 <div class="rep-table">
   <table>
     <thead><tr>
-      <th style="text-align:left">Rep</th>
-      <th style="color:#38bdf8">Jan</th>
-      <th style="color:#a78bfa">Feb</th>
-      <th style="color:#34d399">Mar</th>
-      <th style="color:#f97316">Apr</th>
-      <th style="color:#ec4899">May MTD</th>
-      <th>Trend</th>
+      <th>AE</th>
+      <th style="color:#38bdf8">Jan</th><th style="color:#a78bfa">Feb</th><th style="color:#34d399">Mar</th><th style="color:#f97316">Apr</th><th style="color:#ec4899">May</th><th style="color:#facc15">Jun</th>
+      <th>Jun vs May</th>
     </tr></thead>
     <tbody>
-
-<tr style="border-bottom:1px solid #0f172a">
-  <td style="padding:8px 12px;color:#e2e8f0;font-weight:600">Emily Petraglia</td>
-  <td style="text-align:center;color:#38bdf8">9</td>
-  <td style="text-align:center;color:#a78bfa">31</td>
-  <td style="text-align:center;color:#34d399">41</td>
-  <td style="text-align:center;color:#f97316;font-weight:700">33</td>
-  <td style="text-align:center;color:#ec4899;font-weight:700">25</td>
-  <td style="text-align:center"><span style="color:#f87171">▼</span></td>
-</tr>
-
-<tr style="border-bottom:1px solid #0f172a">
-  <td style="padding:8px 12px;color:#e2e8f0;font-weight:600">Blake Boatright</td>
-  <td style="text-align:center;color:#38bdf8">0</td>
-  <td style="text-align:center;color:#a78bfa">5</td>
-  <td style="text-align:center;color:#34d399">20</td>
-  <td style="text-align:center;color:#f97316;font-weight:700">39</td>
-  <td style="text-align:center;color:#ec4899;font-weight:700">25</td>
-  <td style="text-align:center"><span style="color:#f87171">▼</span></td>
-</tr>
-
-<tr style="border-bottom:1px solid #0f172a">
-  <td style="padding:8px 12px;color:#e2e8f0;font-weight:600">Ingrid Beard</td>
-  <td style="text-align:center;color:#64748b">—</td>
-  <td style="text-align:center;color:#64748b">—</td>
-  <td style="text-align:center;color:#64748b">—</td>
-  <td style="text-align:center;color:#64748b">—</td>
-  <td style="text-align:center;color:#ec4899;font-weight:700">18</td>
-  <td style="text-align:center"><span style="color:#34d399">▲</span></td>
-</tr>
-
-<tr style="border-bottom:1px solid #0f172a">
-  <td style="padding:8px 12px;color:#e2e8f0;font-weight:600">Ptah Robinson</td>
-  <td style="text-align:center;color:#38bdf8">0</td>
-  <td style="text-align:center;color:#a78bfa">2</td>
-  <td style="text-align:center;color:#34d399">13</td>
-  <td style="text-align:center;color:#f97316;font-weight:700">9</td>
-  <td style="text-align:center;color:#ec4899;font-weight:700">18</td>
-  <td style="text-align:center"><span style="color:#34d399">▲</span></td>
-</tr>
-
-<tr style="border-bottom:1px solid #0f172a">
-  <td style="padding:8px 12px;color:#e2e8f0;font-weight:600">Abbey McIntosh</td>
-  <td style="text-align:center;color:#38bdf8">41</td>
-  <td style="text-align:center;color:#a78bfa">31</td>
-  <td style="text-align:center;color:#34d399">33</td>
-  <td style="text-align:center;color:#f97316;font-weight:700">39</td>
-  <td style="text-align:center;color:#ec4899;font-weight:700">15</td>
-  <td style="text-align:center"><span style="color:#f87171">▼</span></td>
-</tr>
-
-<tr style="border-bottom:1px solid #0f172a">
-  <td style="padding:8px 12px;color:#e2e8f0;font-weight:600">Abigail Marchese</td>
-  <td style="text-align:center;color:#38bdf8">21</td>
-  <td style="text-align:center;color:#a78bfa">33</td>
-  <td style="text-align:center;color:#34d399">32</td>
-  <td style="text-align:center;color:#f97316;font-weight:700">21</td>
-  <td style="text-align:center;color:#ec4899;font-weight:700">15</td>
-  <td style="text-align:center"><span style="color:#f87171">▼</span></td>
-</tr>
-
-<tr style="border-bottom:1px solid #0f172a">
-  <td style="padding:8px 12px;color:#e2e8f0;font-weight:600">Miguel Ocampo</td>
-  <td style="text-align:center;color:#38bdf8">0</td>
-  <td style="text-align:center;color:#a78bfa">4</td>
-  <td style="text-align:center;color:#34d399">13</td>
-  <td style="text-align:center;color:#f97316;font-weight:700">16</td>
-  <td style="text-align:center;color:#ec4899;font-weight:700">14</td>
-  <td style="text-align:center"><span style="color:#f87171">▼</span></td>
-</tr>
-
-<tr style="border-bottom:1px solid #0f172a">
-  <td style="padding:8px 12px;color:#e2e8f0;font-weight:600">Justin Lee</td>
-  <td style="text-align:center;color:#64748b">—</td>
-  <td style="text-align:center;color:#64748b">—</td>
-  <td style="text-align:center;color:#64748b">—</td>
-  <td style="text-align:center;color:#64748b">—</td>
-  <td style="text-align:center;color:#ec4899;font-weight:700">11</td>
-  <td style="text-align:center"><span style="color:#34d399">▲</span></td>
-</tr>
-
-<tr style="border-bottom:1px solid #0f172a">
-  <td style="padding:8px 12px;color:#e2e8f0;font-weight:600">Jaylin Bender</td>
-  <td style="text-align:center;color:#38bdf8">22</td>
-  <td style="text-align:center;color:#a78bfa">15</td>
-  <td style="text-align:center;color:#34d399">22</td>
-  <td style="text-align:center;color:#f97316;font-weight:700">13</td>
-  <td style="text-align:center;color:#ec4899;font-weight:700">10</td>
-  <td style="text-align:center"><span style="color:#f87171">▼</span></td>
-</tr>
-
-<tr style="border-bottom:1px solid #0f172a">
-  <td style="padding:8px 12px;color:#e2e8f0;font-weight:600">Andy Whisenant</td>
-  <td style="text-align:center;color:#38bdf8">7</td>
-  <td style="text-align:center;color:#a78bfa">4</td>
-  <td style="text-align:center;color:#34d399">8</td>
-  <td style="text-align:center;color:#f97316;font-weight:700">6</td>
-  <td style="text-align:center;color:#ec4899;font-weight:700">7</td>
-  <td style="text-align:center"><span style="color:#34d399">▲</span></td>
-</tr>
-
-<tr style="border-bottom:1px solid #0f172a">
-  <td style="padding:8px 12px;color:#e2e8f0;font-weight:600">Connor Flynn</td>
-  <td style="text-align:center;color:#38bdf8">7</td>
-  <td style="text-align:center;color:#a78bfa">5</td>
-  <td style="text-align:center;color:#34d399">9</td>
-  <td style="text-align:center;color:#f97316;font-weight:700">12</td>
-  <td style="text-align:center;color:#ec4899;font-weight:700">6</td>
-  <td style="text-align:center"><span style="color:#f87171">▼</span></td>
-</tr>
-
-<tr style="border-bottom:1px solid #0f172a">
-  <td style="padding:8px 12px;color:#e2e8f0;font-weight:600">Patrick Davies</td>
-  <td style="text-align:center;color:#38bdf8">19</td>
-  <td style="text-align:center;color:#a78bfa">15</td>
-  <td style="text-align:center;color:#34d399">13</td>
-  <td style="text-align:center;color:#f97316;font-weight:700">7</td>
-  <td style="text-align:center;color:#ec4899;font-weight:700">4</td>
-  <td style="text-align:center"><span style="color:#f87171">▼</span></td>
-</tr>
-
-<tr style="border-bottom:1px solid #0f172a">
-  <td style="padding:8px 12px;color:#e2e8f0;font-weight:600">Jamie Butler</td>
-  <td style="text-align:center;color:#38bdf8">8</td>
-  <td style="text-align:center;color:#a78bfa">7</td>
-  <td style="text-align:center;color:#34d399">3</td>
-  <td style="text-align:center;color:#f97316;font-weight:700">5</td>
-  <td style="text-align:center;color:#ec4899;font-weight:700">4</td>
-  <td style="text-align:center"><span style="color:#f87171">▼</span></td>
-</tr>
-
-<tr style="border-bottom:1px solid #0f172a">
-  <td style="padding:8px 12px;color:#e2e8f0;font-weight:600">Husam Zalmiyar</td>
-  <td style="text-align:center;color:#38bdf8">10</td>
-  <td style="text-align:center;color:#a78bfa">5</td>
-  <td style="text-align:center;color:#34d399">8</td>
-  <td style="text-align:center;color:#f97316;font-weight:700">7</td>
-  <td style="text-align:center;color:#ec4899;font-weight:700">2</td>
-  <td style="text-align:center"><span style="color:#f87171">▼</span></td>
+      
+<tr>
+  <td class="rep-name">Jamie Butler</td>
+  <td style="text-align:center;color:#38bdf8;font-weight:700">22</td><td style="text-align:center;color:#a78bfa;font-weight:700">22</td><td style="text-align:center;color:#34d399;font-weight:700">40</td><td style="text-align:center;color:#f97316;font-weight:700">48</td><td style="text-align:center;color:#ec4899;font-weight:700">54</td><td style="text-align:center;color:#facc15;font-weight:700">13</td>
+  <td style="text-align:center"><span class="trend down">▼</span></td>
 </tr>
 
 <tr>
-  <td style="padding:8px 12px;color:#e2e8f0;font-weight:600">Jake Borah</td>
-  <td style="text-align:center;color:#38bdf8">13</td>
-  <td style="text-align:center;color:#a78bfa">11</td>
-  <td style="text-align:center;color:#34d399">14</td>
-  <td style="text-align:center;color:#f97316;font-weight:700">8</td>
-  <td style="text-align:center;color:#ec4899;font-weight:700">2</td>
-  <td style="text-align:center"><span style="color:#f87171">▼</span></td>
+  <td class="rep-name">Andy Whisenant</td>
+  <td style="text-align:center;color:#38bdf8;font-weight:700">15</td><td style="text-align:center;color:#a78bfa;font-weight:700">29</td><td style="text-align:center;color:#34d399;font-weight:700">45</td><td style="text-align:center;color:#f97316;font-weight:700">35</td><td style="text-align:center;color:#ec4899;font-weight:700">21</td><td style="text-align:center;color:#facc15;font-weight:700">2</td>
+  <td style="text-align:center"><span class="trend down">▼</span></td>
 </tr>
 
+<tr>
+  <td class="rep-name">Connor Flynn</td>
+  <td style="text-align:center;color:#38bdf8;font-weight:700">25</td><td style="text-align:center;color:#a78bfa;font-weight:700">31</td><td style="text-align:center;color:#34d399;font-weight:700">29</td><td style="text-align:center;color:#f97316;font-weight:700">41</td><td style="text-align:center;color:#ec4899;font-weight:700">57</td><td style="text-align:center;color:#facc15;font-weight:700">5</td>
+  <td style="text-align:center"><span class="trend down">▼</span></td>
+</tr>
+
+<tr>
+  <td class="rep-name">Jake Borah</td>
+  <td style="text-align:center;color:#38bdf8;font-weight:700">16</td><td style="text-align:center;color:#a78bfa;font-weight:700">14</td><td style="text-align:center;color:#34d399;font-weight:700">27</td><td style="text-align:center;color:#f97316;font-weight:700">33</td><td style="text-align:center;color:#ec4899;font-weight:700">35</td><td style="text-align:center;color:#facc15;font-weight:700">8</td>
+  <td style="text-align:center"><span class="trend down">▼</span></td>
+</tr>
+
+<tr>
+  <td class="rep-name">Husam Zalmiyar</td>
+  <td style="text-align:center;color:#38bdf8;font-weight:700">14</td><td style="text-align:center;color:#a78bfa;font-weight:700">13</td><td style="text-align:center;color:#34d399;font-weight:700">17</td><td style="text-align:center;color:#f97316;font-weight:700">25</td><td style="text-align:center;color:#ec4899;font-weight:700">28</td><td style="text-align:center;color:#facc15;font-weight:700">1</td>
+  <td style="text-align:center"><span class="trend down">▼</span></td>
+</tr>
+
+<tr>
+  <td class="rep-name">Patrick Davies</td>
+  <td style="text-align:center;color:#38bdf8;font-weight:700">23</td><td style="text-align:center;color:#a78bfa;font-weight:700">24</td><td style="text-align:center;color:#34d399;font-weight:700">44</td><td style="text-align:center;color:#f97316;font-weight:700">46</td><td style="text-align:center;color:#ec4899;font-weight:700">35</td><td style="text-align:center;color:#facc15;font-weight:700">8</td>
+  <td style="text-align:center"><span class="trend down">▼</span></td>
+</tr>
+
+<tr>
+  <td class="rep-name">Jaylin Bender</td>
+  <td style="text-align:center;color:#38bdf8;font-weight:700">22</td><td style="text-align:center;color:#a78bfa;font-weight:700">12</td><td style="text-align:center;color:#34d399;font-weight:700">24</td><td style="text-align:center;color:#f97316;font-weight:700">28</td><td style="text-align:center;color:#ec4899;font-weight:700">22</td><td style="text-align:center;color:#facc15;font-weight:700">8</td>
+  <td style="text-align:center"><span class="trend down">▼</span></td>
+</tr>
     </tbody>
   </table>
 </div>
 
-<div class="footer">REV.IO SALES INTELLIGENCE · ROBIN 🦸🏻‍♂️ · MAY 21, 2026 · MAY DATA THROUGH 15 WORKING DAYS</div>
+<div class="footer">REV.IO SALES INTELLIGENCE · SEVEN ACCOUNT EXECUTIVES ONLY · SALESFORCE COMPLETED PROSPECT MEETINGS</div>
 </body>
 </html>

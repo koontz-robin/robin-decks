@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Build and publish the June AE opportunity creation dashboard."""
+"""Build and publish the June AE/CSA opportunity creation dashboard."""
 
 import json
 import os
@@ -18,7 +18,6 @@ import requests
 WORKSPACE = Path("/home/openclaw/.openclaw/workspace")
 HTML_FILE = WORKSPACE / "june-ae-csa-opportunities.html"
 DATA_FILE = WORKSPACE / "sf_june_ae_csa_opps.json"
-MAY_FINAL_FILE = WORKSPACE / "sf_may_final_opps.json"
 
 SF_INSTANCE = "https://rev-io.my.salesforce.com"
 SF_CLIENT_ID = "3MVG91ftikjGaMd.NAf5_nx2GISRurI0fIm1aTgGSe.jNIN4bOdlqn95rfrur3RACkqjIZlDG8iCTnKzFRa.N"
@@ -35,16 +34,16 @@ PRODUCT_GOALS = [
     ("Cyberprotect", 10),
 ]
 
-AE_ROSTER = [
-    "Jamie Butler",
+KNOWN_AES = {
     "Andy Whisenant",
     "Connor Flynn",
-    "Jake Borah",
     "Husam Zalmiyar",
-    "Patrick Davies",
+    "Jake Borah",
+    "Jamie Butler",
     "Jaylin Bender",
-]
-KNOWN_AES = set(AE_ROSTER)
+    "Patrick Davies",
+}
+KNOWN_CSAS = {"Ingrid Beard", "Justin Lee"}
 NAME_ALIASES = {
     "Andrew Whisenant": "Andy Whisenant",
 }
@@ -101,24 +100,25 @@ def sf_query(base, headers, query):
 
 def get_team_members(base, headers):
     role_list = ", ".join(f"'{role}'" for role in ROLE_GROUPS)
-    roster_names = ", ".join(f"'{name}'" for name in KNOWN_AES | set(NAME_ALIASES))
     query = f"""
         SELECT Name, UserRole.Name
         FROM User
         WHERE IsActive = true
           AND UserRole.Name IN ({role_list})
-          AND Name IN ({roster_names})
         ORDER BY Name
     """
     members = {}
     for user in sf_query(base, headers, query):
         name = normalize_name(user.get("Name") or "")
         role = (user.get("UserRole") or {}).get("Name") or ""
-        if name in KNOWN_AES and role in ROLE_GROUPS and name not in EXCLUDED_REPS:
+        if name and role in ROLE_GROUPS and name not in EXCLUDED_REPS:
             members[name] = ROLE_GROUPS[role]
     for name in KNOWN_AES:
         if name not in EXCLUDED_REPS:
             members.setdefault(name, "AE")
+    for name in KNOWN_CSAS:
+        if name not in EXCLUDED_REPS:
+            members.setdefault(name, "CSA")
     return members
 
 
@@ -223,19 +223,16 @@ def opp_detail_rows(opps, empty_text):
     return "\n".join(rows)
 
 
-def build_rows(by_rep, rep_groups, weekly_totals, opps_by_rep, may_by_rep):
+def build_rows(by_rep, rep_groups, weekly_totals, opps_by_rep):
     rows = []
-    ordered_reps = [rep for rep in AE_ROSTER if rep in by_rep]
+    ordered_reps = sorted(
+        by_rep,
+        key=lambda rep: (rep_groups.get(rep, "ZZZ"), -sum(v["amount"] for v in by_rep[rep].values()), rep),
+    )
     for rep in ordered_reps:
         group = rep_groups.get(rep, "Other")
         total_count = sum(v["count"] for v in by_rep[rep].values())
         total_amount = sum(v["amount"] for v in by_rep[rep].values())
-        may_metrics = may_by_rep.get(rep, {"count": 0, "amount": 0})
-        may_cell = f"""
-                <td class="week-cell may-cell">
-                  <div class="cell-count">{may_metrics['count']}</div>
-                  <div class="cell-mrr">{money(may_metrics['amount'])}</div>
-                </td>"""
         cells = []
         for week_id, label, _, _ in WEEKS:
             metrics = by_rep[rep].get(week_id, {"count": 0, "amount": 0})
@@ -256,10 +253,9 @@ def build_rows(by_rep, rep_groups, weekly_totals, opps_by_rep, may_by_rep):
                 <div class="avatar">{escape(initials(rep))}</div>
                 <div>
                   <div class="rep-name">{escape(rep)}</div>
-                  <div class="rep-group ae">AE</div>
+                  <div class="rep-group {group.lower()}">{escape(group)}</div>
                 </div>
               </td>
-              {may_cell}
               {''.join(cells)}
               <td class="total-cell">
                 <div class="total-count">{total_count}</div>
@@ -270,7 +266,7 @@ def build_rows(by_rep, rep_groups, weekly_totals, opps_by_rep, may_by_rep):
         rows.append(
             f"""
             <tr class="details-row">
-              <td colspan="8">
+              <td colspan="7">
                 <div class="opp-detail-panel">
                   <div class="opp-detail-title">{escape(rep)} · Opportunities Created</div>
                   {opp_detail_rows(opps_by_rep.get(rep, []), 'No opportunities created in June.')}
@@ -344,7 +340,7 @@ def build_rep_breakdown(opps_by_week_rep):
                 </div>"""
             )
         if not rows:
-            rows.append('<div class="empty-row">No AE opportunities created.</div>')
+            rows.append('<div class="empty-row">No AE/CSA opportunities created.</div>')
         sections.append(
             f"""
             <section class="detail-card">
@@ -361,31 +357,6 @@ def clean_sdr_name(value):
     if not name or name.lower() == "none":
         return ""
     return name
-
-
-def load_may_final_opps():
-    if not MAY_FINAL_FILE.exists():
-        return []
-    with MAY_FINAL_FILE.open(encoding="utf-8") as handle:
-        opps = json.load(handle)
-    return [
-        {**opp, "Owner": normalize_name(opp.get("Owner") or "")}
-        for opp in opps
-        if normalize_name(opp.get("Owner") or "") in KNOWN_AES
-    ]
-
-
-def summarize_by_owner(opps):
-    totals = defaultdict(lambda: {"count": 0, "amount": 0})
-    for rep in AE_ROSTER:
-        _ = totals[rep]
-    for opp in opps:
-        rep = normalize_name(opp.get("Owner") or "")
-        if rep not in KNOWN_AES:
-            continue
-        totals[rep]["count"] += 1
-        totals[rep]["amount"] += float(opp.get("Amount") or 0)
-    return totals
 
 
 def build_sdr_rows(by_sdr, sdr_weekly_totals, sdr_opps_by_rep):
@@ -447,27 +418,43 @@ def build_sdr_rows(by_sdr, sdr_weekly_totals, sdr_opps_by_rep):
     return "\n".join(rows)
 
 
-def build_html(opps, members, may_final_opps):
+def build_html(opps, members):
     generated_at = datetime.now(ET)
     enriched = []
     by_rep = defaultdict(lambda: defaultdict(lambda: {"count": 0, "amount": 0}))
     rep_groups = {}
     weekly_totals = {week_id: {"count": 0, "amount": 0} for week_id, _, _, _ in WEEKS}
     product_totals = {label: {"count": 0, "amount": 0} for label, _ in PRODUCT_GOALS}
+    group_totals = {"AE": {"count": 0, "amount": 0}, "CSA": {"count": 0, "amount": 0}}
     opps_by_week_rep = defaultdict(lambda: defaultdict(list))
     opps_by_rep = defaultdict(list)
-    may_by_rep = summarize_by_owner(may_final_opps)
+    by_sdr = defaultdict(lambda: defaultdict(lambda: {"count": 0, "amount": 0}))
+    sdr_weekly_totals = {week_id: {"count": 0, "amount": 0} for week_id, _, _, _ in WEEKS}
+    sdr_enriched = []
+    sdr_opps_by_rep = defaultdict(list)
 
     for rep, group in members.items():
-        if rep in KNOWN_AES and group == "AE":
+        if group in {"AE", "CSA"}:
             rep_groups[rep] = group
             _ = by_rep[rep]
+        elif group == "SDR":
+            _ = by_sdr[rep]
 
     for opp in opps:
         date_text = created_date_et(opp["CreatedDate"])
         week_id = week_for_date(date_text)
+        sdr = clean_sdr_name(opp.get("SDR_Influence__c"))
+        if week_id and sdr:
+            sdr_opp = {**opp, "CreatedDateET": date_text, "Week": week_id, "SDR": sdr}
+            sdr_enriched.append(sdr_opp)
+            by_sdr[sdr][week_id]["count"] += 1
+            by_sdr[sdr][week_id]["amount"] += opp["Amount"]
+            sdr_weekly_totals[week_id]["count"] += 1
+            sdr_weekly_totals[week_id]["amount"] += opp["Amount"]
+            sdr_opps_by_rep[sdr].append(sdr_opp)
+
         group = classify_rep(opp["Owner"], opp["OwnerRole"], members)
-        if not week_id or group != "AE" or opp["Owner"] not in KNOWN_AES:
+        if not week_id or group not in {"AE", "CSA"}:
             continue
         opp = {**opp, "CreatedDateET": date_text, "Week": week_id, "Group": group}
         enriched.append(opp)
@@ -481,18 +468,20 @@ def build_html(opps, members, may_final_opps):
         if bucket in product_totals:
             product_totals[bucket]["count"] += 1
             product_totals[bucket]["amount"] += opp["Amount"]
+        group_totals[group]["count"] += 1
+        group_totals[group]["amount"] += opp["Amount"]
         opps_by_week_rep[week_id][rep].append(opp)
         opps_by_rep[rep].append(opp)
 
-    DATA_FILE.write_text(json.dumps({"ae_created": enriched, "may_final": may_final_opps}, indent=2), encoding="utf-8")
+    DATA_FILE.write_text(json.dumps({"ae_csa": enriched, "sdr_influenced": sdr_enriched}, indent=2), encoding="utf-8")
 
     total_count = len(enriched)
     total_mrr = sum(opp["Amount"] for opp in enriched)
-    may_total_count = len(may_final_opps)
-    may_total_mrr = sum(float(opp.get("Amount") or 0) for opp in may_final_opps)
+    sdr_total_count = len(sdr_enriched)
+    sdr_total_mrr = sum(opp["Amount"] for opp in sdr_enriched)
     target_pct = min(total_count / TEAM_TARGET * 100, 100) if TEAM_TARGET else 0
     remaining = max(TEAM_TARGET - total_count, 0)
-    table_headers = '<th><div>May Final</div><span>Closed Won</span></th>' + "".join(
+    table_headers = "".join(
         f'<th><div>{escape(week_id)}</div><span>{escape(label)}</span></th>' for week_id, label, _, _ in WEEKS
     )
 
@@ -646,11 +635,11 @@ tr:last-child td {{ border-bottom:0; }}
     <div>
       <div class="eyebrow">June 2026 Pipeline Creation</div>
       <h1>Sales Opportunities Created</h1>
-      <div class="subtitle">June-created opportunity quantity and MRR by AE, with finalized May closed-won totals.</div>
+      <div class="subtitle">Quantity and MRR by owner, split across all five June calendar weeks.</div>
     </div>
     <div class="stamp">
       Refreshed {generated_at.strftime('%b %-d, %Y %-I:%M %p ET')}<br>
-      Salesforce CreatedDate, CloseDate, Owner, Amount
+      Salesforce CreatedDate, Owner, Amount
     </div>
   </header>
 
@@ -664,10 +653,10 @@ tr:last-child td {{ border-bottom:0; }}
       <div class="target-track"><span style="width:{target_pct:.1f}%"></span></div>
       <div class="target-meta"><span>{remaining} opps remaining</span><span>June target</span></div>
     </div>
-    <div class="kpi"><div class="kpi-label">June AE Created</div><div class="kpi-val">{total_count}</div><div class="kpi-sub">{money(total_mrr)} MRR</div></div>
-    <div class="kpi"><div class="kpi-label">June Total MRR</div><div class="kpi-val">{money(total_mrr)}</div><div class="kpi-sub">Sum of Salesforce Amount</div></div>
-    <div class="kpi"><div class="kpi-label">Final May Closed Won</div><div class="kpi-val">{may_total_count}</div><div class="kpi-sub">{money(may_total_mrr)} MRR</div></div>
-    <div class="kpi"><div class="kpi-label">AE Roster</div><div class="kpi-val">7</div><div class="kpi-sub">Jamie, Andy, Connor, Jake, Husam, Patrick, Jaylin</div></div>
+    <div class="kpi"><div class="kpi-label">Total MRR</div><div class="kpi-val">{money(total_mrr)}</div><div class="kpi-sub">Sum of Salesforce Amount</div></div>
+    <div class="kpi"><div class="kpi-label">AE Created</div><div class="kpi-val">{group_totals['AE']['count']}</div><div class="kpi-sub">{money(group_totals['AE']['amount'])} MRR</div></div>
+    <div class="kpi"><div class="kpi-label">CSA Created</div><div class="kpi-val">{group_totals['CSA']['count']}</div><div class="kpi-sub">{money(group_totals['CSA']['amount'])} MRR</div></div>
+    <div class="kpi"><div class="kpi-label">SDR Opportunities Influenced</div><div class="kpi-val">{sdr_total_count}</div><div class="kpi-sub">{money(sdr_total_mrr)} MRR influenced</div></div>
   </section>
 
   <section class="product-goals">
@@ -684,13 +673,32 @@ tr:last-child td {{ border-bottom:0; }}
         <tr><th>Owner</th>{table_headers}<th>Total</th></tr>
       </thead>
       <tbody>
-        {build_rows(by_rep, rep_groups, weekly_totals, opps_by_rep, may_by_rep)}
+        {build_rows(by_rep, rep_groups, weekly_totals, opps_by_rep)}
       </tbody>
     </table>
   </section>
 
   <section class="details">
     {build_rep_breakdown(opps_by_week_rep)}
+  </section>
+
+  <section class="section-title">
+    <div>
+      <h2>SDR Influenced Opportunities</h2>
+      <p>June-created opportunities with SDR Influence populated, grouped by SDR.</p>
+    </div>
+    <div class="section-totals"><strong>{sdr_total_count}</strong> opps · <strong>{money(sdr_total_mrr)}</strong> MRR</div>
+  </section>
+
+  <section class="table-wrap sdr-section">
+    <table>
+      <thead>
+        <tr><th>SDR</th>{table_headers}<th>Total</th></tr>
+      </thead>
+      <tbody>
+        {build_sdr_rows(by_sdr, sdr_weekly_totals, sdr_opps_by_rep)}
+      </tbody>
+    </table>
   </section>
 </main>
 <script>
@@ -736,12 +744,11 @@ def publish(files):
 def main():
     print("Authenticating to Salesforce...")
     base, headers = sf_auth()
-    print("Fetching AE members...")
+    print("Fetching AE/CSA members...")
     members = get_team_members(base, headers)
     print("Fetching June-created opportunities...")
     opps = fetch_opportunities(base, headers)
-    may_final_opps = load_may_final_opps()
-    total_count, total_mrr = build_html(opps, members, may_final_opps)
+    total_count, total_mrr = build_html(opps, members)
     print(f"Built {HTML_FILE.name}: {total_count} opps, {money(total_mrr)} MRR")
     if os.environ.get("NO_PUBLISH") == "1":
         print("NO_PUBLISH=1 set; skipping GitHub Pages publish.")
