@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Build the weekly Tigerpaw Web migration forecast Excel template."""
+"""Build a Rev.io-branded weekly Tigerpaw Web migration forecast workbook."""
 
 from __future__ import annotations
 
@@ -10,7 +10,7 @@ from zipfile import ZIP_DEFLATED, ZipFile
 OUT = Path("tigerpaw-web-migration-weekly-template.xlsx")
 
 
-def xml_escape(value: str) -> str:
+def esc(value: str) -> str:
     return (
         value.replace("&", "&amp;")
         .replace("<", "&lt;")
@@ -20,145 +20,263 @@ def xml_escape(value: str) -> str:
 
 
 def inline(value: str) -> str:
-    return f'<is><t xml:space="preserve">{xml_escape(value)}</t></is>'
+    return f'<is><t xml:space="preserve">{esc(value)}</t></is>'
 
 
-def cell(ref: str, value: str | int | float = "", style: int | None = None, formula: str | None = None) -> str:
-    attrs = [f'r="{ref}"']
-    if style is not None:
-        attrs.append(f's="{style}"')
-    if formula is not None:
-        return f'<c {" ".join(attrs)}><f>{xml_escape(formula)}</f></c>'
+def cell(ref: str, value: str | int | float = "", style: int = 0, formula: str | None = None) -> str:
+    attrs = f'r="{ref}" s="{style}"'
+    if formula:
+        return f"<c {attrs}><f>{esc(formula)}</f></c>"
     if isinstance(value, (int, float)):
-        return f'<c {" ".join(attrs)}><v>{value}</v></c>'
-    return f'<c {" ".join(attrs)} t="inlineStr">{inline(value)}</c>'
+        return f"<c {attrs}><v>{value}</v></c>"
+    if value == "":
+        return f"<c {attrs}/>"
+    return f'<c {attrs} t="inlineStr">{inline(value)}</c>'
 
 
-def row(num: int, cells: list[str], height: int | None = None) -> str:
-    ht = f' ht="{height}" customHeight="1"' if height else ""
-    return f'<row r="{num}"{ht}>{"".join(cells)}</row>'
+def row(num: int, cells: list[str], height: int | None = None, style: int | None = None) -> str:
+    attrs = [f'r="{num}"']
+    if height:
+        attrs.append(f'ht="{height}" customHeight="1"')
+    if style is not None:
+        attrs.append(f's="{style}" customFormat="1"')
+    return f"<row {' '.join(attrs)}>{''.join(cells)}</row>"
 
 
-sheet_rows = [
-    row(1, [cell("A1", "Tigerpaw Web Migration Weekly Forecast", 1)], 28),
-    row(2, [cell("A2", "Fill in the blue cells each week. The completed script updates automatically.", 2)]),
-    row(4, [cell("A4", "Rep Name", 3), cell("B4", "", 4), cell("D4", "Week Of", 3), cell("E4", "", 4)]),
-    row(5, [cell("A5", "Last Updated", 3), cell("B5", "", 4), cell("D5", "Manager", 3), cell("E5", "", 4)]),
-    row(7, [cell("A7", "Weekly Inputs", 5)]),
-    row(8, [cell("A8", "Metric", 6), cell("B8", "Input", 6), cell("C8", "Notes", 6)]),
-    row(9, [cell("A9", "Open Tigerpaw Web migration opportunities", 7), cell("B9", "", 4), cell("C9", "Count of currently open migration opps.", 8)]),
-    row(10, [cell("A10", "Total renewal amount", 7), cell("B10", "", 9), cell("C10", "Total renewal value for open migration opps.", 8)]),
-    row(11, [cell("A11", "Potential increase", 7), cell("B11", "", 9), cell("C11", "Expected MRR or renewal lift.", 8)]),
-    row(12, [cell("A12", "Forecasted migration opportunities this month", 7), cell("B12", "", 4), cell("C12", "Count expected to migrate this month.", 8)]),
-    row(13, [cell("A13", "Forecasted monthly renewal amount", 7), cell("B13", "", 9), cell("C13", "Total renewal amount tied to monthly forecast.", 8)]),
-    row(14, [cell("A14", "Client meetings remaining this week", 7), cell("B14", "", 4), cell("C14", "Remaining Tigerpaw Web migration client meetings this week.", 8)]),
-    row(15, [cell("A15", "Client meetings scheduled next week", 7), cell("B15", "", 4), cell("C15", "Already scheduled for next week.", 8)]),
-    row(17, [cell("A17", "Completed Script", 5)]),
-    row(18, [cell("A18", "", 10, 'CONCATENATE("I currently have ",B9," open Tigerpaw web migration opportunities worth a total renewal amount of ",TEXT(B10,"$#,##0")," with a potential increase of ",TEXT(B11,"$#,##0"),".")')], 45),
-    row(19, [cell("A19", "", 10, 'CONCATENATE("I am forecasting ",B12," migration opportunities for this month worth a total renewal amount of ",TEXT(B13,"$#,##0"),".")')], 45),
-    row(20, [cell("A20", "", 10, 'CONCATENATE("I have ",B14," Tigerpaw web migration client meetings remaining this week and ",B15," scheduled for next week.")')], 45),
-    row(22, [cell("A22", "Optional Deal Detail", 5)]),
-    row(23, [
-        cell("A23", "Account", 6),
-        cell("B23", "Opp Owner", 6),
-        cell("C23", "Stage", 6),
-        cell("D23", "Renewal Amount", 6),
-        cell("E23", "Potential Increase", 6),
-        cell("F23", "Forecast Month", 6),
-        cell("G23", "Next Meeting", 6),
-        cell("H23", "Notes", 6),
-    ]),
-]
+def blank_row(num: int, cols: range, style: int) -> str:
+    cells = [cell(f"{chr(64 + col)}{num}", "", style) for col in cols]
+    return row(num, cells, style=style)
 
-for row_num in range(24, 44):
-    sheet_rows.append(
+
+rows: list[str] = []
+
+rows.extend(
+    [
+        row(2, [cell("F2", "FORECAST SCRIPT", 2), cell("O2", "rev.io", 3)], 28),
+        row(3, [cell("F3", "Tigerpaw Web Migration Weekly Update", 4), cell("O3", "Sales Team Repo", 5)], 24),
+        row(6, [cell("B6", "Rep Name", 6), cell("E6", "", 7), cell("J6", "Week Of", 6), cell("M6", "", 7)], 22),
+        row(7, [cell("B7", "Manager", 6), cell("E7", "", 7), cell("J7", "Last Updated", 6), cell("M7", "", 7)], 22),
+        row(9, [cell("B9", "Weekly fill-in script", 8)], 24),
         row(
-            row_num,
+            11,
             [
-                cell(f"A{row_num}", "", 11),
-                cell(f"B{row_num}", "", 11),
-                cell(f"C{row_num}", "", 11),
-                cell(f"D{row_num}", "", 12),
-                cell(f"E{row_num}", "", 12),
-                cell(f"F{row_num}", "", 11),
-                cell(f"G{row_num}", "", 11),
-                cell(f"H{row_num}", "", 11),
+                cell("B11", "I currently have", 9),
+                cell("E11", "", 10),
+                cell("G11", "open Tigerpaw web migration opportunities worth a total renewal amount of", 9),
+                cell("O11", "", 11),
+                cell("Q11", "with a potential increase of", 9),
+                cell("V11", "", 11),
             ],
+            28,
+        ),
+        row(
+            13,
+            [
+                cell("B13", "I am forecasting", 12),
+                cell("E13", "", 10),
+                cell("G13", "migration opportunities for this month worth a total renewal amount of", 12),
+                cell("O13", "", 11),
+            ],
+            28,
+        ),
+        row(
+            15,
+            [
+                cell("B15", "I have", 9),
+                cell("E15", "", 10),
+                cell("G15", "Tigerpaw web migration client meetings remaining this week and", 9),
+                cell("O15", "", 10),
+                cell("Q15", "scheduled for next week.", 9),
+            ],
+            28,
+        ),
+        row(18, [cell("B18", "Completed script", 8)], 24),
+        row(
+            20,
+            [
+                cell(
+                    "B20",
+                    "",
+                    13,
+                    'CONCATENATE("I currently have ",E11," open Tigerpaw web migration opportunities worth a total renewal amount of ",TEXT(O11,"$#,##0")," with a potential increase of ",TEXT(V11,"$#,##0"),".")',
+                )
+            ],
+            42,
+        ),
+        row(
+            21,
+            [
+                cell(
+                    "B21",
+                    "",
+                    13,
+                    'CONCATENATE("I am forecasting ",E13," migration opportunities for this month worth a total renewal amount of ",TEXT(O13,"$#,##0"),".")',
+                )
+            ],
+            42,
+        ),
+        row(
+            22,
+            [
+                cell(
+                    "B22",
+                    "",
+                    13,
+                    'CONCATENATE("I have ",E15," Tigerpaw web migration client meetings remaining this week and ",O15," scheduled for next week.")',
+                )
+            ],
+            42,
+        ),
+        row(25, [cell("B25", "Optional deal detail", 8)], 24),
+        row(
+            27,
+            [
+                cell("B27", "Account", 14),
+                cell("E27", "Opp Owner", 14),
+                cell("G27", "Stage", 14),
+                cell("I27", "Renewal Amount", 14),
+                cell("K27", "Potential Increase", 14),
+                cell("M27", "Forecast Month", 14),
+                cell("O27", "Next Meeting", 14),
+                cell("Q27", "Notes", 14),
+            ],
+            24,
+        ),
+    ]
+)
+
+for r in range(28, 43):
+    rows.append(
+        row(
+            r,
+            [
+                cell(f"B{r}", "", 15),
+                cell(f"E{r}", "", 15),
+                cell(f"G{r}", "", 15),
+                cell(f"I{r}", "", 16),
+                cell(f"K{r}", "", 16),
+                cell(f"M{r}", "", 15),
+                cell(f"O{r}", "", 15),
+                cell(f"Q{r}", "", 15),
+            ],
+            22,
         )
     )
+
+merge_refs = [
+    "F2:N2",
+    "O2:V2",
+    "F3:N3",
+    "O3:V3",
+    "B9:V9",
+    "B11:D11",
+    "G11:N11",
+    "Q11:U11",
+    "B13:D13",
+    "G13:N13",
+    "B15:D15",
+    "G15:N15",
+    "Q15:V15",
+    "B18:V18",
+    "B20:V20",
+    "B21:V21",
+    "B22:V22",
+    "B25:V25",
+    "B27:D27",
+    "E27:F27",
+    "G27:H27",
+    "I27:J27",
+    "K27:L27",
+    "M27:N27",
+    "O27:P27",
+    "Q27:V27",
+]
+for r in range(28, 43):
+    merge_refs.extend([f"B{r}:D{r}", f"E{r}:F{r}", f"G{r}:H{r}", f"I{r}:J{r}", f"K{r}:L{r}", f"M{r}:N{r}", f"O{r}:P{r}", f"Q{r}:V{r}"])
+
+merge_xml = "".join(f'<mergeCell ref="{ref}"/>' for ref in merge_refs)
 
 sheet_xml = f'''<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <worksheet xmlns="http://schemas.openxmlformats.org/spreadsheetml/2006/main"
   xmlns:r="http://schemas.openxmlformats.org/officeDocument/2006/relationships">
-  <sheetViews><sheetView workbookViewId="0" showGridLines="0"><pane ySplit="8" topLeftCell="A9" activePane="bottomLeft" state="frozen"/></sheetView></sheetViews>
+  <sheetViews><sheetView workbookViewId="0" showGridLines="0"><pane ySplit="9" topLeftCell="A10" activePane="bottomLeft" state="frozen"/></sheetView></sheetViews>
   <sheetFormatPr defaultRowHeight="18"/>
   <cols>
-    <col min="1" max="1" width="42" customWidth="1"/>
-    <col min="2" max="2" width="18" customWidth="1"/>
-    <col min="3" max="3" width="48" customWidth="1"/>
-    <col min="4" max="8" width="20" customWidth="1"/>
+    <col min="1" max="1" width="3" customWidth="1"/>
+    <col min="2" max="4" width="11" customWidth="1"/>
+    <col min="5" max="5" width="11" customWidth="1"/>
+    <col min="6" max="6" width="3" customWidth="1"/>
+    <col min="7" max="14" width="11" customWidth="1"/>
+    <col min="15" max="15" width="13" customWidth="1"/>
+    <col min="16" max="16" width="3" customWidth="1"/>
+    <col min="17" max="22" width="11" customWidth="1"/>
+    <col min="23" max="23" width="3" customWidth="1"/>
   </cols>
-  <sheetData>{"".join(sheet_rows)}</sheetData>
-  <mergeCells count="5">
-    <mergeCell ref="A1:H1"/>
-    <mergeCell ref="A2:H2"/>
-    <mergeCell ref="A7:H7"/>
-    <mergeCell ref="A17:H17"/>
-    <mergeCell ref="A22:H22"/>
-  </mergeCells>
+  <sheetData>{''.join(rows)}</sheetData>
+  <mergeCells count="{len(merge_refs)}">{merge_xml}</mergeCells>
   <dataValidations count="2">
-    <dataValidation type="whole" allowBlank="1" sqref="B9 B12 B14 B15"><formula1>0</formula1><formula2>999</formula2></dataValidation>
-    <dataValidation type="decimal" allowBlank="1" sqref="B10:B11 B13 D24:E43"><formula1>0</formula1><formula2>999999999</formula2></dataValidation>
+    <dataValidation type="whole" operator="between" allowBlank="1" sqref="E11 E13 E15 O15"><formula1>0</formula1><formula2>999</formula2></dataValidation>
+    <dataValidation type="decimal" operator="between" allowBlank="1" sqref="O11 V11 O13 I28:K42"><formula1>0</formula1><formula2>999999999</formula2></dataValidation>
   </dataValidations>
-  <pageMargins left="0.7" right="0.7" top="0.75" bottom="0.75" header="0.3" footer="0.3"/>
+  <pageMargins left="0.4" right="0.4" top="0.5" bottom="0.5" header="0.3" footer="0.3"/>
 </worksheet>'''
 
 styles_xml = '''<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <styleSheet xmlns="http://schemas.openxmlformats.org/spreadsheetml/2006/main">
-  <fonts count="4">
-    <font><sz val="11"/><color rgb="FF1F2937"/><name val="Aptos"/></font>
-    <font><b/><sz val="18"/><color rgb="FFFFFFFF"/><name val="Aptos Display"/></font>
+  <numFmts count="1"><numFmt numFmtId="164" formatCode="$#,##0"/></numFmts>
+  <fonts count="7">
+    <font><sz val="11"/><color rgb="FF0F172A"/><name val="Aptos"/></font>
+    <font><b/><sz val="20"/><color rgb="FFFFFFFF"/><name val="Aptos Display"/></font>
+    <font><b/><sz val="24"/><color rgb="FFFFFFFF"/><name val="Aptos Display"/></font>
+    <font><sz val="11"/><color rgb="FFE0F2FE"/><name val="Aptos"/></font>
     <font><b/><sz val="11"/><color rgb="FFFFFFFF"/><name val="Aptos"/></font>
-    <font><i/><sz val="10"/><color rgb="FF64748B"/><name val="Aptos"/></font>
+    <font><b/><sz val="11"/><color rgb="FF0F172A"/><name val="Aptos"/></font>
+    <font><sz val="12"/><color rgb="FF0F172A"/><name val="Aptos"/></font>
   </fonts>
-  <fills count="7">
+  <fills count="9">
     <fill><patternFill patternType="none"/></fill>
     <fill><patternFill patternType="gray125"/></fill>
-    <fill><patternFill patternType="solid"><fgColor rgb="FF0F172A"/><bgColor indexed="64"/></patternFill></fill>
-    <fill><patternFill patternType="solid"><fgColor rgb="FF1E293B"/><bgColor indexed="64"/></patternFill></fill>
+    <fill><patternFill patternType="solid"><fgColor rgb="FF0B1220"/><bgColor indexed="64"/></patternFill></fill>
+    <fill><patternFill patternType="solid"><fgColor rgb="FF111827"/><bgColor indexed="64"/></patternFill></fill>
     <fill><patternFill patternType="solid"><fgColor rgb="FFE0F2FE"/><bgColor indexed="64"/></patternFill></fill>
-    <fill><patternFill patternType="solid"><fgColor rgb="FFDBEAFE"/><bgColor indexed="64"/></patternFill></fill>
+    <fill><patternFill patternType="solid"><fgColor rgb="FFDCFCE7"/><bgColor indexed="64"/></patternFill></fill>
+    <fill><patternFill patternType="solid"><fgColor rgb="FF38BDF8"/><bgColor indexed="64"/></patternFill></fill>
     <fill><patternFill patternType="solid"><fgColor rgb="FFF8FAFC"/><bgColor indexed="64"/></patternFill></fill>
+    <fill><patternFill patternType="solid"><fgColor rgb="FFECFEFF"/><bgColor indexed="64"/></patternFill></fill>
   </fills>
-  <borders count="3">
+  <borders count="4">
     <border><left/><right/><top/><bottom/><diagonal/></border>
     <border><left style="thin"><color rgb="FFCBD5E1"/></left><right style="thin"><color rgb="FFCBD5E1"/></right><top style="thin"><color rgb="FFCBD5E1"/></top><bottom style="thin"><color rgb="FFCBD5E1"/></bottom><diagonal/></border>
-    <border><bottom style="thin"><color rgb="FF94A3B8"/></bottom></border>
+    <border><left style="medium"><color rgb="FF0F172A"/></left><right style="medium"><color rgb="FF0F172A"/></right><top style="medium"><color rgb="FF0F172A"/></top><bottom style="medium"><color rgb="FF0F172A"/></bottom><diagonal/></border>
+    <border><bottom style="thin"><color rgb="FF38BDF8"/></bottom></border>
   </borders>
   <cellStyleXfs count="1"><xf numFmtId="0" fontId="0" fillId="0" borderId="0"/></cellStyleXfs>
-  <cellXfs count="13">
+  <cellXfs count="17">
     <xf numFmtId="0" fontId="0" fillId="0" borderId="0" xfId="0"/>
+    <xf numFmtId="0" fontId="0" fillId="2" borderId="0" xfId="0" applyFill="1"/>
     <xf numFmtId="0" fontId="1" fillId="2" borderId="0" xfId="0" applyFont="1" applyFill="1" applyAlignment="1"><alignment horizontal="center" vertical="center"/></xf>
-    <xf numFmtId="0" fontId="3" fillId="0" borderId="0" xfId="0" applyFont="1" applyAlignment="1"><alignment horizontal="center"/></xf>
-    <xf numFmtId="0" fontId="2" fillId="3" borderId="1" xfId="0" applyFont="1" applyFill="1" applyBorder="1"/>
-    <xf numFmtId="0" fontId="0" fillId="4" borderId="1" xfId="0" applyFill="1" applyBorder="1"/>
-    <xf numFmtId="0" fontId="2" fillId="2" borderId="0" xfId="0" applyFont="1" applyFill="1"/>
-    <xf numFmtId="0" fontId="2" fillId="3" borderId="1" xfId="0" applyFont="1" applyFill="1" applyBorder="1"/>
-    <xf numFmtId="0" fontId="0" fillId="6" borderId="1" xfId="0" applyFill="1" applyBorder="1"/>
-    <xf numFmtId="0" fontId="3" fillId="6" borderId="1" xfId="0" applyFont="1" applyFill="1" applyBorder="1" applyAlignment="1"><alignment wrapText="1"/></xf>
-    <xf numFmtId="164" fontId="0" fillId="4" borderId="1" xfId="0" applyNumberFormat="1" applyFill="1" applyBorder="1"/>
-    <xf numFmtId="0" fontId="0" fillId="5" borderId="1" xfId="0" applyFill="1" applyBorder="1" applyAlignment="1"><alignment wrapText="1" vertical="center"/></xf>
-    <xf numFmtId="0" fontId="0" fillId="0" borderId="1" xfId="0" applyBorder="1"/>
-    <xf numFmtId="164" fontId="0" fillId="0" borderId="1" xfId="0" applyNumberFormat="1" applyBorder="1"/>
+    <xf numFmtId="0" fontId="2" fillId="2" borderId="0" xfId="0" applyFont="1" applyFill="1" applyAlignment="1"><alignment horizontal="right" vertical="center"/></xf>
+    <xf numFmtId="0" fontId="3" fillId="2" borderId="0" xfId="0" applyFont="1" applyFill="1" applyAlignment="1"><alignment horizontal="center"/></xf>
+    <xf numFmtId="0" fontId="3" fillId="2" borderId="0" xfId="0" applyFont="1" applyFill="1" applyAlignment="1"><alignment horizontal="right"/></xf>
+    <xf numFmtId="0" fontId="4" fillId="3" borderId="1" xfId="0" applyFont="1" applyFill="1" applyBorder="1" applyAlignment="1"><alignment horizontal="right"/></xf>
+    <xf numFmtId="0" fontId="0" fillId="7" borderId="2" xfId="0" applyFill="1" applyBorder="1"/>
+    <xf numFmtId="0" fontId="4" fillId="3" borderId="0" xfId="0" applyFont="1" applyFill="1"/>
+    <xf numFmtId="0" fontId="5" fillId="4" borderId="1" xfId="0" applyFont="1" applyFill="1" applyBorder="1" applyAlignment="1"><alignment horizontal="center" vertical="center" wrapText="1"/></xf>
+    <xf numFmtId="0" fontId="6" fillId="8" borderId="2" xfId="0" applyFont="1" applyFill="1" applyBorder="1" applyAlignment="1"><alignment horizontal="center" vertical="center"/></xf>
+    <xf numFmtId="164" fontId="6" fillId="8" borderId="2" xfId="0" applyNumberFormat="1" applyFont="1" applyFill="1" applyBorder="1" applyAlignment="1"><alignment horizontal="center" vertical="center"/></xf>
+    <xf numFmtId="0" fontId="5" fillId="5" borderId="1" xfId="0" applyFont="1" applyFill="1" applyBorder="1" applyAlignment="1"><alignment horizontal="center" vertical="center" wrapText="1"/></xf>
+    <xf numFmtId="0" fontId="6" fillId="5" borderId="2" xfId="0" applyFont="1" applyFill="1" applyBorder="1" applyAlignment="1"><alignment wrapText="1" vertical="center"/></xf>
+    <xf numFmtId="0" fontId="4" fillId="6" borderId="1" xfId="0" applyFont="1" applyFill="1" applyBorder="1" applyAlignment="1"><alignment horizontal="center"/></xf>
+    <xf numFmtId="0" fontId="0" fillId="7" borderId="1" xfId="0" applyFill="1" applyBorder="1"/>
+    <xf numFmtId="164" fontId="0" fillId="7" borderId="1" xfId="0" applyNumberFormat="1" applyFill="1" applyBorder="1"/>
   </cellXfs>
   <cellStyles count="1"><cellStyle name="Normal" xfId="0" builtinId="0"/></cellStyles>
-  <numFmts count="1"><numFmt numFmtId="164" formatCode="$#,##0"/></numFmts>
 </styleSheet>'''
 
 workbook_xml = '''<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <workbook xmlns="http://schemas.openxmlformats.org/spreadsheetml/2006/main"
   xmlns:r="http://schemas.openxmlformats.org/officeDocument/2006/relationships">
-  <sheets><sheet name="Weekly Forecast" sheetId="1" r:id="rId1"/></sheets>
+  <sheets><sheet name="Forecast Script" sheetId="1" r:id="rId1"/></sheets>
 </workbook>'''
 
 rels_xml = '''<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
@@ -180,7 +298,6 @@ content_types_xml = '''<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
   <Override PartName="/xl/worksheets/sheet1.xml" ContentType="application/vnd.openxmlformats-officedocument.spreadsheetml.worksheet+xml"/>
   <Override PartName="/xl/styles.xml" ContentType="application/vnd.openxmlformats-officedocument.spreadsheetml.styles+xml"/>
 </Types>'''
-
 
 with ZipFile(OUT, "w", ZIP_DEFLATED) as archive:
     archive.writestr("[Content_Types].xml", content_types_xml)
