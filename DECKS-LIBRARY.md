@@ -1,6 +1,6 @@
 # DECKS-LIBRARY.md — Robin's Deck & Dashboard Library
 
-Last updated: 2026-06-01
+Last updated: 2026-06-08
 GitHub Pages base: `https://koontz-robin.github.io/robin-decks/`
 Repo: `git@github.com:koontz-robin/robin-decks.git`
 
@@ -29,7 +29,7 @@ Repo: `git@github.com:koontz-robin/robin-decks.git`
 | 2026 Pipeline Pace | 2026-pipeline-pace.html | https://koontz-robin.github.io/robin-decks/2026-pipeline-pace.html | On demand |
 | RTS Dashboard | rts-dashboard.html | https://koontz-robin.github.io/robin-decks/rts-dashboard.html | On demand |
 | Q2 Re-engagement Tracker | q2-reengagement-tracker.html | https://koontz-robin.github.io/robin-decks/q2-reengagement-tracker.html | On demand |
-| PSA SMC Re-engagement Tracker | smc-reengagement-tracker.html | https://koontz-robin.github.io/robin-decks/smc-reengagement-tracker.html | On demand | 214 accounts, Software Missing Capabilities, since July 2025, includes Reason Lost Detail from SF |
+| PSA SMC Re-engagement Tracker | smc-reengagement-tracker.html | https://koontz-robin.github.io/robin-decks/smc-reengagement-tracker.html | On demand; SMC since Jul 2025 |
 
 ---
 
