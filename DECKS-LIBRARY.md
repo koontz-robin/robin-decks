@@ -30,6 +30,7 @@ Repo: `git@github.com:koontz-robin/robin-decks.git`
 | RTS Dashboard | rts-dashboard.html | https://koontz-robin.github.io/robin-decks/rts-dashboard.html | On demand |
 | Q2 Re-engagement Tracker | q2-reengagement-tracker.html | https://koontz-robin.github.io/robin-decks/q2-reengagement-tracker.html | On demand |
 | PSA SMC Re-engagement Tracker | smc-reengagement-tracker.html | https://koontz-robin.github.io/robin-decks/smc-reengagement-tracker.html | On demand; SMC since Jul 2025 |
+| Apollo 3 Re-engagement Command Center | External | https://tony-kaylee.github.io/apollo3-reengagement-dashboard/ | On demand; external Apollo 1-3 win-back dashboard |
 
 ---
 
