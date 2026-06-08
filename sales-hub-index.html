@@ -3,237 +3,225 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Rev.io · Sales Hub</title>
+<title>Rev.io Sales Team Library</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
 <style>
   :root {
-    --bg: #0A0F1A;
-    --surface: #0F172A;
-    --surface2: #111827;
-    --border: #1E293B;
-    --indigo: #6366F1;
-    --indigo-light: #818CF8;
-    --indigo-dim: rgba(99,102,241,0.12);
-    --text: #E2E8F0;
-    --muted: #64748B;
-    --emerald: #10B981;
-    --amber: #F59E0B;
-    --rose: #F43F5E;
+    --bg: #08111f;
+    --panel: #0f172a;
+    --panel-2: #111c31;
+    --border: #233248;
+    --text: #e5edf7;
+    --muted: #91a1b5;
+    --soft: #64748b;
+    --blue: #38bdf8;
+    --green: #22c55e;
+    --amber: #f59e0b;
   }
   * { box-sizing: border-box; margin: 0; padding: 0; }
   body {
-    background: var(--bg);
-    color: var(--text);
-    font-family: 'Inter', system-ui, sans-serif;
     min-height: 100vh;
-    padding: 48px 24px 64px;
-  }
-
-  /* ── Header ── */
-  .header {
-    max-width: 1100px;
-    margin: 0 auto 52px;
-    display: flex;
-    align-items: flex-end;
-    justify-content: space-between;
-    gap: 24px;
-    flex-wrap: wrap;
-  }
-  .header-left h1 {
-    font-size: 30px;
-    font-weight: 900;
-    letter-spacing: -0.5px;
+    background:
+      linear-gradient(180deg, rgba(56,189,248,0.08), transparent 280px),
+      var(--bg);
     color: var(--text);
+    font-family: Inter, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+    padding: 40px 22px 56px;
   }
-  .header-left h1 span { color: var(--indigo-light); }
-  .header-left p {
-    color: var(--muted);
-    font-size: 13px;
-    letter-spacing: 1px;
-    text-transform: uppercase;
-    margin-top: 6px;
-  }
-  .header-meta {
-    font-size: 12px;
-    color: var(--muted);
-    text-align: right;
-    line-height: 1.6;
-  }
-  .header-meta span { color: var(--emerald); font-weight: 600; }
-
-  /* ── Section ── */
-  .section { max-width: 1100px; margin: 0 auto 44px; }
-  .section-label {
-    font-size: 11px;
-    font-weight: 700;
-    letter-spacing: 2px;
-    text-transform: uppercase;
-    color: var(--muted);
+  .shell { max-width: 1120px; margin: 0 auto; }
+  .top {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-end;
+    gap: 24px;
+    margin-bottom: 30px;
     border-bottom: 1px solid var(--border);
-    padding-bottom: 10px;
-    margin-bottom: 20px;
+    padding-bottom: 22px;
   }
-
-  /* ── Cards ── */
-  .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 16px; }
+  h1 {
+    font-size: clamp(28px, 4vw, 42px);
+    line-height: 1.05;
+    letter-spacing: 0;
+    font-weight: 900;
+  }
+  .subhead {
+    color: var(--muted);
+    font-size: 14px;
+    margin-top: 10px;
+    max-width: 620px;
+    line-height: 1.5;
+  }
+  .meta {
+    color: var(--soft);
+    font-size: 12px;
+    text-align: right;
+    line-height: 1.7;
+    min-width: 170px;
+  }
+  .meta strong { color: var(--green); font-weight: 700; }
+  .section-label {
+    color: var(--muted);
+    font-size: 11px;
+    font-weight: 800;
+    letter-spacing: 1.6px;
+    text-transform: uppercase;
+    margin: 28px 0 14px;
+  }
+  .grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+    gap: 14px;
+  }
   .card {
-    background: var(--surface);
+    display: flex;
+    flex-direction: column;
+    min-height: 176px;
+    background: linear-gradient(180deg, var(--panel-2), var(--panel));
     border: 1px solid var(--border);
-    border-radius: 12px;
-    padding: 22px 22px 18px;
-    text-decoration: none;
+    border-radius: 8px;
+    padding: 18px;
     color: inherit;
-    display: block;
-    transition: border-color 0.2s, transform 0.15s, box-shadow 0.2s;
-    position: relative;
-    overflow: hidden;
-  }
-  .card::before {
-    content: '';
-    position: absolute;
-    top: 0; left: 0; right: 0;
-    height: 2px;
-    background: var(--indigo);
-    opacity: 0;
-    transition: opacity 0.2s;
+    text-decoration: none;
+    transition: transform 0.16s ease, border-color 0.16s ease, box-shadow 0.16s ease;
   }
   .card:hover {
-    border-color: var(--indigo);
     transform: translateY(-2px);
-    box-shadow: 0 8px 24px rgba(99,102,241,0.12);
+    border-color: rgba(56,189,248,0.72);
+    box-shadow: 0 12px 28px rgba(2,8,23,0.34);
   }
-  .card:hover::before { opacity: 1; }
-
-  .card-eyebrow {
+  .eyebrow {
+    color: var(--blue);
     font-size: 10px;
-    font-weight: 700;
-    letter-spacing: 1.5px;
+    font-weight: 800;
+    letter-spacing: 1.3px;
     text-transform: uppercase;
+    margin-bottom: 12px;
+  }
+  .card h2 {
+    font-size: 17px;
+    line-height: 1.25;
+    letter-spacing: 0;
+    margin-bottom: 8px;
+  }
+  .card p {
     color: var(--muted);
-    margin-bottom: 10px;
+    font-size: 13px;
+    line-height: 1.5;
+    flex: 1;
+  }
+  .status {
     display: flex;
     align-items: center;
-    gap: 8px;
-  }
-  .card-eyebrow .badge {
-    padding: 2px 7px;
-    border-radius: 20px;
-    font-size: 9px;
-    font-weight: 700;
-    letter-spacing: 1px;
-  }
-  .badge-live { background: rgba(16,185,129,0.12); color: var(--emerald); border: 1px solid rgba(16,185,129,0.25); }
-  .badge-new  { background: rgba(245,158,11,0.12);  color: var(--amber);   border: 1px solid rgba(245,158,11,0.25); }
-  .badge-intel { background: var(--indigo-dim); color: var(--indigo-light); border: 1px solid rgba(99,102,241,0.3); }
-
-  .card-title { font-size: 16px; font-weight: 700; margin-bottom: 7px; color: var(--text); }
-  .card-desc  { font-size: 13px; color: var(--muted); line-height: 1.55; }
-  .card-footer {
-    margin-top: 14px;
-    padding-top: 12px;
-    border-top: 1px solid var(--border);
+    gap: 7px;
+    color: var(--soft);
     font-size: 11px;
-    color: var(--muted);
-    display: flex;
-    align-items: center;
-    gap: 6px;
+    margin-top: 16px;
+    padding-top: 12px;
+    border-top: 1px solid rgba(148,163,184,0.14);
   }
   .dot {
-    width: 7px; height: 7px;
-    border-radius: 50%;
-    display: inline-block;
-    flex-shrink: 0;
+    width: 7px;
+    height: 7px;
+    border-radius: 999px;
+    background: var(--green);
+    box-shadow: 0 0 8px rgba(34,197,94,0.8);
   }
-  .dot-green   { background: var(--emerald); box-shadow: 0 0 6px var(--emerald); animation: pulse 2s infinite; }
-  .dot-indigo  { background: var(--indigo-light); box-shadow: 0 0 6px var(--indigo-light); animation: pulse 2s infinite; }
-  @keyframes pulse { 0%,100%{opacity:1} 50%{opacity:0.4} }
-
-  /* ── Footer ── */
+  .dot.external { background: var(--amber); box-shadow: 0 0 8px rgba(245,158,11,0.75); }
   .footer {
-    text-align: center;
-    margin-top: 56px;
-    color: var(--muted);
+    color: var(--soft);
     font-size: 12px;
-    letter-spacing: 0.5px;
+    margin-top: 30px;
+    text-align: center;
   }
-  .footer span { color: var(--indigo-light); }
-
-  @media (max-width: 640px) {
-    .header { flex-direction: column; align-items: flex-start; }
-    .header-meta { text-align: left; }
-    .grid { grid-template-columns: 1fr; }
+  @media (max-width: 680px) {
+    body { padding: 28px 16px 44px; }
+    .top { align-items: flex-start; flex-direction: column; }
+    .meta { text-align: left; }
+    .card { min-height: 154px; }
   }
 </style>
 </head>
 <body>
-
-<div class="header">
-  <div class="header-left">
-    <h1>Rev.io · <span>Sales Hub</span></h1>
-    <p>Sales Intelligence — Playbooks, Battle Cards &amp; Live Dashboards</p>
-  </div>
-  <div class="header-meta">
-    Maintained by Robin 🤖<br>
-    <span>Live · Updated automatically</span>
-  </div>
-</div>
-
-<!-- ── COMPETITIVE INTELLIGENCE ── -->
-<div class="section">
-  <div class="section-label">⚔️ Competitive Intelligence</div>
-  <div class="grid">
-
-    <a class="card" href="https://koontz-robin.github.io/robin-decks/battle-cards.html" target="_blank">
-      <div class="card-eyebrow">Battle Cards <span class="badge badge-live">LIVE</span></div>
-      <div class="card-title">Competitor Battle Cards</div>
-      <div class="card-desc">Full competitive playbook — ConnectWise, Autotask, HaloPSA, Syncro, SuperOps, Service Fusion, and 15+ integrator competitors. Strengths, weaknesses, discovery questions, field intel, and displaced customers.</div>
-      <div class="card-footer"><span class="dot dot-green"></span> Updated with live field intelligence</div>
-    </a>
-
-  </div>
-</div>
-
-<!-- ── FORECAST & PIPELINE ── -->
-<div class="section">
-  <div class="section-label">📊 Forecast &amp; Pipeline</div>
-  <div class="grid">
-
-    <a class="card" href="https://koontz-robin.github.io/robin-decks/forecast.html" target="_blank">
-      <div class="card-eyebrow">Monthly Forecast <span class="badge badge-live">LIVE</span></div>
-      <div class="card-title">May 2026 Forecast Dashboard</div>
-      <div class="card-desc">Worst case / most likely / best case scenarios by product. Closed won bookings, pipeline by stage, manager scenario inputs, and quota attainment tracking.</div>
-      <div class="card-footer"><span class="dot dot-green"></span> Refreshed daily from Salesforce</div>
-    </a>
-
-  </div>
-</div>
-
-<!-- ── MORE COMING SOON ── -->
-<div class="section">
-  <div class="section-label">🔜 Coming Soon</div>
-  <div class="grid">
-
-    <div class="card" style="cursor:default; opacity:0.5;">
-      <div class="card-eyebrow">Playbook <span class="badge badge-intel">PLANNED</span></div>
-      <div class="card-title">Discovery Call Scorecard</div>
-      <div class="card-desc">Live graded discovery calls with coaching notes, scores by stage, and trend tracking across the team.</div>
-      <div class="card-footer"><span class="dot dot-indigo"></span> In development</div>
+<main class="shell">
+  <header class="top">
+    <div>
+      <h1>Sales Team Library</h1>
+      <p class="subhead">A focused set of the dashboards and enablement tools the sales team needs regular access to.</p>
     </div>
-
-    <div class="card" style="cursor:default; opacity:0.5;">
-      <div class="card-eyebrow">Coaching <span class="badge badge-intel">PLANNED</span></div>
-      <div class="card-title">CBR Coaching Dashboard</div>
-      <div class="card-desc">Customer business review call grades, coaching notes, and rep-level performance trends.</div>
-      <div class="card-footer"><span class="dot dot-indigo"></span> In development</div>
+    <div class="meta">
+      Rev.io Sales<br>
+      <strong>Updated June 8, 2026</strong>
     </div>
+  </header>
 
-  </div>
-</div>
+  <section>
+    <div class="section-label">Core Dashboards</div>
+    <div class="grid">
+      <a class="card" href="https://koontz-robin.github.io/robin-decks/forecast.html">
+        <div class="eyebrow">Forecast</div>
+        <h2>Forecast Dashboard</h2>
+        <p>Current-month bookings forecast with closed won, open pipeline, and scenario views.</p>
+        <div class="status"><span class="dot"></span>Live dashboard</div>
+      </a>
 
-<div class="footer">
-  Built by <span>Robin</span> · Rev.io Sales Intelligence
-</div>
+      <a class="card" href="https://koontz-robin.github.io/robin-decks/ae-capacity-dashboard.html">
+        <div class="eyebrow">Capacity</div>
+        <h2>AE Capacity Dashboard</h2>
+        <p>AE activity and meeting capacity by month, with team pacing and rep-level views.</p>
+        <div class="status"><span class="dot"></span>Live dashboard</div>
+      </a>
 
+      <a class="card" href="https://koontz-robin.github.io/robin-decks/psa-onboarding-tracker.html">
+        <div class="eyebrow">Onboarding</div>
+        <h2>PSA Onboarding Tracker</h2>
+        <p>PSA customer onboarding status, forecasted graduations, ownership, and account health signals.</p>
+        <div class="status"><span class="dot"></span>Live dashboard</div>
+      </a>
+
+      <a class="card" href="https://koontz-robin.github.io/robin-decks/rep-coaching-dashboard.html">
+        <div class="eyebrow">Coaching</div>
+        <h2>Rep Coaching Dashboard</h2>
+        <p>Rep-level coaching insights, call feedback, and performance signals for sales leadership.</p>
+        <div class="status"><span class="dot"></span>Team dashboard</div>
+      </a>
+
+      <a class="card" href="https://tony-kaylee.github.io/apollo3-reengagement-dashboard/">
+        <div class="eyebrow">Re-engagement</div>
+        <h2>Apollo 3 Re-engagement</h2>
+        <p>Win-back command center for Apollo 3 re-engagement tied to prior closed-lost opportunities.</p>
+        <div class="status"><span class="dot external"></span>External dashboard</div>
+      </a>
+    </div>
+  </section>
+
+  <section>
+    <div class="section-label">Enablement</div>
+    <div class="grid">
+      <a class="card" href="https://koontz-robin.github.io/robin-decks/battle-cards.html">
+        <div class="eyebrow">Competitive</div>
+        <h2>Battle Cards</h2>
+        <p>Competitive positioning, discovery prompts, objection handling, and field notes.</p>
+        <div class="status"><span class="dot"></span>Sales enablement</div>
+      </a>
+
+      <a class="card" href="https://koontz-robin.github.io/robin-decks/demo-guide.html">
+        <div class="eyebrow">Demo</div>
+        <h2>Demo Guide</h2>
+        <p>Structured demo guidance for reps preparing for product walkthroughs and customer conversations.</p>
+        <div class="status"><span class="dot"></span>Sales enablement</div>
+      </a>
+
+      <a class="card" href="https://koontz-robin.github.io/robin-decks/beacon.html">
+        <div class="eyebrow">Training</div>
+        <h2>Beacon</h2>
+        <p>Sales training and enablement resource for consistent team execution.</p>
+        <div class="status"><span class="dot"></span>Sales enablement</div>
+      </a>
+    </div>
+  </section>
+
+  <div class="footer">Built by Robin for Rev.io Sales</div>
+</main>
 </body>
 </html>

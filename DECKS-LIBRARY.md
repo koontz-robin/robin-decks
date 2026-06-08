@@ -121,6 +121,7 @@ Repo: `git@github.com:koontz-robin/robin-decks.git`
 | Name | File | URL | Notes |
 |---|---|---|---|
 | Main Index | index.html | https://koontz-robin.github.io/robin-decks/index.html | Hub page |
+| Sales Team Library | sales-hub-index.html | https://koontz-robin.github.io/robin-decks/sales-hub-index.html | Stripped-down sales-facing dashboard library |
 
 ---
 
