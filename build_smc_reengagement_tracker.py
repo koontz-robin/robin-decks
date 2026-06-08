@@ -189,7 +189,7 @@ def build_rows(accounts: list[dict]) -> str:
 def build_html(accounts: list[dict]) -> str:
     now = datetime.now(timezone.utc)
     date_label = now.strftime("%B %-d, %Y")
-    owner_counts = Counter(row["account_owner"] or "Unassigned" for row in accounts)
+    owner_counts = Counter(row["owner"] or "Unassigned" for row in accounts)
     total_accounts = len(accounts)
     closed_won = [row for row in accounts if row["status"] == "Closed Won"]
     active = [row for row in accounts if row["status"] == "Active Opp"]
@@ -277,7 +277,7 @@ tr:hover td{{background:rgba(61,197,112,.02)}}
   </div>
   <table>
     <thead><tr>
-      <th>Account</th><th>MRR</th><th>Owner</th><th>Acct Owner</th><th>Features Needed</th>
+      <th>Account</th><th>MRR</th><th>Opp Owner</th><th>Acct Owner</th><th>Features Needed</th>
       <th>Reason Lost Detail</th>
       <th>Re-eng Opps</th><th>Last Close Date</th><th>Last Activity</th><th>SF Stage</th><th>Status</th>
     </tr></thead>
@@ -301,8 +301,8 @@ function filterTable(){{
   var count=0;
   for(var i=0;i<rows.length;i++){{
     var cells=rows[i].querySelectorAll('td');
-    var acctOwner=cells[3]?cells[3].textContent.trim():'';
-    var ownerMatch=!activeOwner||acctOwner===activeOwner;
+    var oppOwner=cells[2]?cells[2].textContent.trim():'';
+    var ownerMatch=!activeOwner||oppOwner===activeOwner;
     var textMatch=rows[i].textContent.toLowerCase().includes(q);
     var show=ownerMatch&&textMatch;
     rows[i].style.display=show?'':'none';
@@ -413,7 +413,7 @@ def main() -> None:
             {
                 "account": account_name(display),
                 "mrr": display.get("Amount") or 0,
-                "owner": account_owner(display) or child_name(display, "Owner"),
+                "owner": child_name(display, "Owner") or "Unassigned",
                 "account_owner": account_owner(display) or "Unassigned",
                 "features": features_from_detail(detail),
                 "reason_lost_detail": detail,
