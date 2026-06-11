@@ -18,6 +18,7 @@ Repo: `git@github.com:koontz-robin/robin-decks.git`
 | AE Capacity Dashboard | ae-capacity-dashboard.html | https://koontz-robin.github.io/robin-decks/ae-capacity-dashboard.html | Daily (12pm ET, weekdays) |
 | AE Capacity Slide (EXECUTE theme) | ae-capacity-slide.html | https://koontz-robin.github.io/robin-decks/ae-capacity-slide.html | Manual |
 | Sales Opportunities Created | june-ae-csa-opportunities.html | https://koontz-robin.github.io/robin-decks/june-ae-csa-opportunities.html | Hourly (9am-5pm ET, weekdays) |
+| CSA Cohorts | csa-cohorts.html | https://koontz-robin.github.io/robin-decks/csa-cohorts.html | Snapshot copy of Sales Opportunities Created |
 | PSA Onboarding Tracker | psa-onboarding-tracker.html | https://koontz-robin.github.io/robin-decks/psa-onboarding-tracker.html | Daily (midnight) |
 | PSA Opportunity Dashboard | psa-opportunity-dashboard.html | https://koontz-robin.github.io/robin-decks/psa-opportunity-dashboard.html | On demand |
 | PSA Target Tracker | psa-target-tracker.html | https://koontz-robin.github.io/robin-decks/psa-target-tracker.html | On demand |
