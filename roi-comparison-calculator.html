@@ -1,0 +1,552 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Rev.io ROI Comparison Calculator</title>
+<style>
+  :root {
+    --navy: #1d3756;
+    --teal: #2399b5;
+    --green: #6ebe4f;
+    --ink: #1e2a36;
+    --muted: #647789;
+    --line: #dce7ef;
+    --wash: #f5f8fb;
+    --paper: #ffffff;
+    --soft: #eaf7fa;
+    --danger: #c95555;
+  }
+
+  * { box-sizing: border-box; }
+
+  body {
+    margin: 0;
+    color: var(--ink);
+    background: var(--wash);
+    font-family: "Segoe UI", -apple-system, BlinkMacSystemFont, Arial, sans-serif;
+    line-height: 1.45;
+  }
+
+  header {
+    color: #fff;
+    background:
+      linear-gradient(135deg, rgba(29,55,86,.98), rgba(35,153,181,.9)),
+      radial-gradient(circle at 86% 18%, rgba(110,190,79,.28), transparent 34%);
+  }
+
+  .hero {
+    max-width: 1220px;
+    margin: 0 auto;
+    padding: 30px 24px 50px;
+  }
+
+  .topbar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 18px;
+    margin-bottom: 42px;
+  }
+
+  .logo {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+  }
+
+  .logo img {
+    width: 126px;
+    height: auto;
+    display: block;
+  }
+
+  .logo-label {
+    border-left: 1px solid rgba(255,255,255,.34);
+    padding-left: 14px;
+    color: rgba(255,255,255,.78);
+    font-size: 13px;
+    font-weight: 800;
+  }
+
+  .print-btn {
+    min-height: 40px;
+    border: 1px solid rgba(255,255,255,.36);
+    border-radius: 8px;
+    padding: 8px 13px;
+    background: rgba(255,255,255,.08);
+    color: #fff;
+    font: inherit;
+    font-size: 13px;
+    font-weight: 800;
+    cursor: pointer;
+  }
+
+  .print-btn:hover { background: rgba(255,255,255,.16); }
+
+  .kicker {
+    width: fit-content;
+    border: 1px solid rgba(255,255,255,.28);
+    border-radius: 999px;
+    padding: 5px 12px;
+    color: #d8f7ff;
+    font-size: 11px;
+    font-weight: 900;
+    letter-spacing: 1.2px;
+    text-transform: uppercase;
+  }
+
+  h1 {
+    max-width: 920px;
+    margin: 14px 0 10px;
+    font-size: clamp(34px, 5vw, 58px);
+    line-height: 1.04;
+  }
+
+  .subhead {
+    max-width: 760px;
+    margin: 0;
+    color: rgba(255,255,255,.78);
+    font-size: 17px;
+  }
+
+  main {
+    max-width: 1220px;
+    margin: -30px auto 0;
+    padding: 0 24px 60px;
+  }
+
+  .panel {
+    overflow: hidden;
+    background: var(--paper);
+    border: 1px solid var(--line);
+    border-radius: 8px;
+    box-shadow: 0 18px 42px rgba(29,55,86,.13);
+  }
+
+  .panel-head {
+    display: flex;
+    justify-content: space-between;
+    align-items: end;
+    gap: 18px;
+    padding: 22px;
+    border-bottom: 1px solid var(--line);
+  }
+
+  h2 {
+    margin: 0 0 5px;
+    color: var(--navy);
+    font-size: 20px;
+  }
+
+  .helper {
+    margin: 0;
+    color: var(--muted);
+    font-size: 13px;
+  }
+
+  .customer-fields {
+    display: grid;
+    grid-template-columns: minmax(220px, 1fr) minmax(180px, .5fr);
+    gap: 12px;
+    min-width: 390px;
+  }
+
+  label {
+    display: block;
+    margin-bottom: 6px;
+    color: var(--muted);
+    font-size: 11px;
+    font-weight: 850;
+    letter-spacing: .8px;
+    text-transform: uppercase;
+  }
+
+  input {
+    width: 100%;
+    min-height: 42px;
+    border: 1px solid #c6d5e0;
+    border-radius: 8px;
+    background: #fff;
+    color: var(--ink);
+    font: inherit;
+    font-size: 15px;
+    font-weight: 700;
+    padding: 8px 10px;
+  }
+
+  input:focus {
+    outline: 3px solid rgba(35,153,181,.18);
+    border-color: var(--teal);
+  }
+
+  .comparison {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+  }
+
+  .side {
+    min-width: 0;
+  }
+
+  .side + .side {
+    border-left: 1px solid var(--line);
+  }
+
+  .side-title {
+    padding: 18px 22px;
+    border-bottom: 1px solid var(--line);
+    background: #f9fbfd;
+  }
+
+  .side-title h3 {
+    margin: 0 0 4px;
+    color: var(--navy);
+    font-size: 17px;
+  }
+
+  .side-title p {
+    margin: 0;
+    color: var(--muted);
+    font-size: 12px;
+    font-weight: 700;
+  }
+
+  .line-item {
+    display: grid;
+    grid-template-columns: minmax(112px, .32fr) minmax(160px, 1fr) minmax(130px, .42fr);
+    gap: 12px;
+    align-items: end;
+    padding: 16px 22px;
+    border-bottom: 1px solid var(--line);
+  }
+
+  .line-item:last-child { border-bottom: 0; }
+
+  .category {
+    align-self: center;
+    color: var(--navy);
+    font-weight: 900;
+    font-size: 14px;
+  }
+
+  .money-wrap {
+    position: relative;
+  }
+
+  .money-wrap span {
+    position: absolute;
+    left: 10px;
+    top: 50%;
+    transform: translateY(-50%);
+    color: var(--muted);
+    font-weight: 900;
+    pointer-events: none;
+  }
+
+  .money-wrap input {
+    padding-left: 24px;
+    text-align: right;
+  }
+
+  .summary {
+    display: grid;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: 14px;
+    padding: 18px 22px 22px;
+    background: #fbfdff;
+    border-top: 1px solid var(--line);
+  }
+
+  .metric {
+    min-height: 112px;
+    border: 1px solid var(--line);
+    border-radius: 8px;
+    background: #fff;
+    padding: 16px;
+    display: grid;
+    align-content: center;
+    gap: 5px;
+  }
+
+  .metric strong {
+    display: block;
+    color: var(--navy);
+    font-size: clamp(22px, 3vw, 34px);
+    line-height: 1;
+  }
+
+  .metric span {
+    color: var(--muted);
+    font-size: 11px;
+    font-weight: 900;
+    letter-spacing: .8px;
+    text-transform: uppercase;
+  }
+
+  .metric.savings {
+    background: var(--soft);
+    border-color: rgba(35,153,181,.28);
+  }
+
+  .metric.savings strong { color: var(--green); }
+  .metric.loss strong { color: var(--danger); }
+
+  .notes {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) auto;
+    gap: 16px;
+    align-items: center;
+    padding: 18px 22px;
+    border-top: 1px solid var(--line);
+    background: #fff;
+  }
+
+  textarea {
+    width: 100%;
+    min-height: 86px;
+    resize: vertical;
+    border: 1px solid #c6d5e0;
+    border-radius: 8px;
+    padding: 10px;
+    color: var(--ink);
+    font: inherit;
+    font-size: 14px;
+  }
+
+  .reset-btn {
+    min-height: 42px;
+    border: 1px solid #c6d5e0;
+    border-radius: 8px;
+    background: #fff;
+    color: var(--navy);
+    font: inherit;
+    font-size: 13px;
+    font-weight: 850;
+    padding: 9px 13px;
+    cursor: pointer;
+  }
+
+  .reset-btn:hover { border-color: var(--teal); color: var(--teal); }
+
+  @media (max-width: 960px) {
+    .panel-head,
+    .notes {
+      grid-template-columns: 1fr;
+      align-items: stretch;
+    }
+
+    .panel-head {
+      display: grid;
+    }
+
+    .customer-fields,
+    .comparison,
+    .summary {
+      grid-template-columns: 1fr;
+    }
+
+    .customer-fields {
+      min-width: 0;
+    }
+
+    .side + .side {
+      border-left: 0;
+      border-top: 1px solid var(--line);
+    }
+  }
+
+  @media (max-width: 620px) {
+    .topbar {
+      align-items: flex-start;
+      flex-direction: column;
+      margin-bottom: 30px;
+    }
+
+    .line-item {
+      grid-template-columns: 1fr;
+      gap: 9px;
+    }
+
+    .hero {
+      padding: 24px 18px 44px;
+    }
+
+    main {
+      padding: 0 14px 42px;
+    }
+  }
+
+  @media print {
+    body { background: #fff; }
+    header { background: var(--navy); }
+    main { margin-top: 0; padding: 18px; }
+    .panel { box-shadow: none; }
+    .print-btn,
+    .reset-btn { display: none; }
+    input,
+    textarea { border-color: #b7c7d2; }
+  }
+</style>
+</head>
+<body>
+<header>
+  <div class="hero">
+    <div class="topbar">
+      <div class="logo">
+        <img src="revio-logo-white.png" alt="Rev.io">
+        <div class="logo-label">ROI Calculator</div>
+      </div>
+      <button class="print-btn" type="button" onclick="window.print()">Print / Save PDF</button>
+    </div>
+    <div class="kicker">Fillable Cost Comparison</div>
+    <h1>Current Software vs. Rev.io Savings Calculator</h1>
+    <p class="subhead">Enter the customer's current monthly software spend on the left and the Rev.io monthly investment on the right. Savings update automatically at the bottom.</p>
+  </div>
+</header>
+
+<main>
+  <section class="panel" aria-label="ROI comparison calculator">
+    <div class="panel-head">
+      <div>
+        <h2>Software Cost Comparison</h2>
+        <p class="helper">Use the misc lines for any other tools being replaced or consolidated.</p>
+      </div>
+      <div class="customer-fields">
+        <div>
+          <label for="customerName">Customer</label>
+          <input id="customerName" type="text" placeholder="Customer name">
+        </div>
+        <div>
+          <label for="preparedDate">Prepared Date</label>
+          <input id="preparedDate" type="text" placeholder="MM/DD/YYYY">
+        </div>
+      </div>
+    </div>
+
+    <div class="comparison">
+      <div class="side">
+        <div class="side-title">
+          <h3>Customer Current Software</h3>
+          <p>Current monthly spend</p>
+        </div>
+        <div id="currentRows"></div>
+      </div>
+
+      <div class="side">
+        <div class="side-title">
+          <h3>Rev.io</h3>
+          <p>Proposed monthly investment</p>
+        </div>
+        <div id="revioRows"></div>
+      </div>
+    </div>
+
+    <div class="summary" aria-live="polite">
+      <div class="metric">
+        <strong id="currentMonthly">$0</strong>
+        <span>Current Monthly Cost</span>
+      </div>
+      <div class="metric">
+        <strong id="revioMonthly">$0</strong>
+        <span>Rev.io Monthly Cost</span>
+      </div>
+      <div class="metric savings" id="monthlySavingsCard">
+        <strong id="monthlySavings">$0</strong>
+        <span>Monthly Savings</span>
+      </div>
+      <div class="metric savings" id="annualSavingsCard">
+        <strong id="annualSavings">$0</strong>
+        <span>Yearly Savings</span>
+      </div>
+    </div>
+
+    <div class="notes">
+      <div>
+        <label for="notes">Notes / Assumptions</label>
+        <textarea id="notes" placeholder="Add contract terms, seat counts, modules included, or other assumptions."></textarea>
+      </div>
+      <button class="reset-btn" type="button" id="resetBtn">Clear Amounts</button>
+    </div>
+  </section>
+</main>
+
+<script>
+  const categories = [
+    { label: "PSA", current: "Current PSA", revio: "Rev.io PSA" },
+    { label: "Inventory Control", current: "Current inventory control", revio: "Rev.io inventory control" },
+    { label: "Ticketing", current: "Current ticketing", revio: "Rev.io ticketing" },
+    { label: "Misc Software 1", current: "Misc software", revio: "Rev.io included / replacement" },
+    { label: "Misc Software 2", current: "Misc software", revio: "Rev.io included / replacement" },
+    { label: "Misc Software 3", current: "Misc software", revio: "Rev.io included / replacement" }
+  ];
+
+  const currentRows = document.getElementById("currentRows");
+  const revioRows = document.getElementById("revioRows");
+  const currency = new Intl.NumberFormat("en-US", {
+    style: "currency",
+    currency: "USD",
+    maximumFractionDigits: 0
+  });
+
+  function cleanNumber(value) {
+    const parsed = Number(String(value).replace(/[^0-9.-]/g, ""));
+    return Number.isFinite(parsed) ? parsed : 0;
+  }
+
+  function buildRow(category, side, index) {
+    const item = document.createElement("div");
+    item.className = "line-item";
+    item.innerHTML = `
+      <div class="category">${category.label}</div>
+      <div>
+        <label for="${side}-name-${index}">Software / Module</label>
+        <input id="${side}-name-${index}" type="text" value="${side === "current" ? category.current : category.revio}">
+      </div>
+      <div>
+        <label for="${side}-amount-${index}">Monthly Cost</label>
+        <div class="money-wrap">
+          <span>$</span>
+          <input id="${side}-amount-${index}" class="amount ${side}-amount" inputmode="decimal" type="text" placeholder="0">
+        </div>
+      </div>
+    `;
+    return item;
+  }
+
+  function calculate() {
+    const currentTotal = [...document.querySelectorAll(".current-amount")]
+      .reduce((sum, input) => sum + cleanNumber(input.value), 0);
+    const revioTotal = [...document.querySelectorAll(".revio-amount")]
+      .reduce((sum, input) => sum + cleanNumber(input.value), 0);
+    const monthlySavings = currentTotal - revioTotal;
+    const annualSavings = monthlySavings * 12;
+
+    document.getElementById("currentMonthly").textContent = currency.format(currentTotal);
+    document.getElementById("revioMonthly").textContent = currency.format(revioTotal);
+    document.getElementById("monthlySavings").textContent = currency.format(monthlySavings);
+    document.getElementById("annualSavings").textContent = currency.format(annualSavings);
+
+    document.getElementById("monthlySavingsCard").classList.toggle("loss", monthlySavings < 0);
+    document.getElementById("annualSavingsCard").classList.toggle("loss", annualSavings < 0);
+  }
+
+  categories.forEach((category, index) => {
+    currentRows.appendChild(buildRow(category, "current", index));
+    revioRows.appendChild(buildRow(category, "revio", index));
+  });
+
+  document.addEventListener("input", (event) => {
+    if (event.target.classList.contains("amount")) calculate();
+  });
+
+  document.getElementById("resetBtn").addEventListener("click", () => {
+    document.querySelectorAll(".amount").forEach((input) => { input.value = ""; });
+    calculate();
+  });
+
+  document.getElementById("preparedDate").value = new Date().toLocaleDateString("en-US");
+  calculate();
+</script>
+</body>
+</html>
