@@ -43,11 +43,21 @@
     justify-content: space-between;
   }
   nav .logo {
-    color: #fff;
-    font-size: 15px;
-    font-weight: 700;
+    display: flex;
+    align-items: center;
+    gap: 12px;
   }
-  nav .logo span { color: var(--rev-accent); }
+  .nav-logo-img {
+    display: block;
+    object-fit: contain;
+  }
+  .nav-logo-img.revio { width: 34px; height: 34px; border-radius: 7px; }
+  .nav-logo-img.fuse { width: 118px; height: 34px; object-position: left center; }
+  .logo-divider {
+    width: 1px;
+    height: 24px;
+    background: rgba(255,255,255,0.2);
+  }
   nav .nav-pills { display: flex; gap: 4px; }
   nav .pill {
     color: rgba(255,255,255,0.58);
@@ -89,6 +99,33 @@
 
   .content-max { width: 100%; max-width: 1060px; position: relative; z-index: 1; }
   .hero-content { width: 100%; max-width: 900px; position: relative; z-index: 1; text-align: center; }
+  .hero-logo-lockup {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 22px;
+    margin-bottom: 28px;
+  }
+  .hero-logo-lockup img {
+    display: block;
+    object-fit: contain;
+  }
+  .hero-logo-lockup .revio-logo {
+    width: 72px;
+    height: 72px;
+    border-radius: 16px;
+    box-shadow: 0 12px 32px rgba(0,0,0,0.18);
+  }
+  .hero-logo-lockup .fuse-logo {
+    width: min(300px, 52vw);
+    height: 88px;
+    object-position: left center;
+  }
+  .hero-logo-divider {
+    width: 1px;
+    height: 54px;
+    background: rgba(255,255,255,0.24);
+  }
   .hero-badge {
     display: inline-block;
     background: rgba(0,87,255,0.25);
@@ -531,6 +568,11 @@
     nav .nav-pills { display: none; }
     nav { padding: 0 18px; }
     .slide { padding: 56px 18px; }
+    .nav-logo-img.fuse { width: 100px; }
+    .hero-logo-lockup { gap: 14px; }
+    .hero-logo-lockup .revio-logo { width: 58px; height: 58px; border-radius: 12px; }
+    .hero-logo-lockup .fuse-logo { width: min(220px, 58vw); height: 70px; }
+    .hero-logo-divider { height: 42px; }
     .hero-stats { grid-template-columns: 1fr 1fr; }
     .solution-grid,
     .journey-grid { grid-template-columns: 1fr; }
@@ -541,7 +583,11 @@
 </head>
 <body>
 <nav>
-  <div class="logo">rev<span>.</span>io x Fuse Telecom</div>
+  <div class="logo" aria-label="Rev.io and Fuse Telecom">
+    <img class="nav-logo-img revio" src="assets/allied-fuse/revio-logo.png" alt="Rev.io">
+    <span class="logo-divider" aria-hidden="true"></span>
+    <img class="nav-logo-img fuse" src="assets/allied-fuse/fuse-telecom-logo.png" alt="Fuse Telecom">
+  </div>
   <div class="nav-pills">
     <a href="#cover" class="pill">Cover</a>
     <a href="#why-revio" class="pill">Why Rev.io</a>
@@ -555,6 +601,11 @@
 <div class="slide-container">
   <section class="slide slide-hero" id="cover">
     <div class="hero-content">
+      <div class="hero-logo-lockup" aria-label="Rev.io and Fuse Telecom">
+        <img class="revio-logo" src="assets/allied-fuse/revio-logo.png" alt="Rev.io">
+        <span class="hero-logo-divider" aria-hidden="true"></span>
+        <img class="fuse-logo" src="assets/allied-fuse/fuse-telecom-logo.png" alt="Fuse Telecom">
+      </div>
       <div class="hero-badge">Fuse Telecom Business Case - June 2026</div>
       <div class="hero-eyebrow">Prepared for Fuse Telecom</div>
       <h1 class="hero-title">Move Fuse from Freeside workarounds to a <span class="highlight">consolidated Rev.io operating stack</span></h1>
