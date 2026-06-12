@@ -420,6 +420,7 @@ def build_sdr_rows(by_sdr, sdr_weekly_totals, sdr_opps_by_rep):
 
 def build_html(opps, members):
     generated_at = datetime.now(ET)
+    opps = [opp for opp in opps if (opp.get("Amount") or 0) > 0]
     enriched = []
     by_rep = defaultdict(lambda: defaultdict(lambda: {"count": 0, "amount": 0}))
     rep_groups = {}
@@ -635,7 +636,7 @@ tr:last-child td {{ border-bottom:0; }}
     <div>
       <div class="eyebrow">June 2026 Pipeline Creation</div>
       <h1>Sales Opportunities Created</h1>
-      <div class="subtitle">Quantity and MRR by owner, split across all five June calendar weeks.</div>
+      <div class="subtitle">Quantity and MRR by owner, split across all five June calendar weeks. $0 opportunities excluded.</div>
     </div>
     <div class="stamp">
       Refreshed {generated_at.strftime('%b %-d, %Y %-I:%M %p ET')}<br>
