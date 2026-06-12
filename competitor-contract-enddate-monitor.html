@@ -1,12 +1,9 @@
 <!doctype html>
-<html lang="en">
-<head>
-<meta charset="utf-8">
-<meta name="viewport" content="width=device-width,initial-scale=1">
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
 <title>Competitor Contract End Date Monitor</title>
 <style>
-:root { --bg:#f5f7fb; --panel:#ffffff; --ink:#172033; --muted:#667085; --line:#d7deea; --blue:#2563eb; --green:#16a34a; --amber:#d97706; --red:#dc2626; --shadow:0 16px 42px rgba(15,23,42,.08); }
-* { box-sizing:border-box; } body { margin:0; background:var(--bg); color:var(--ink); font-family:Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif; }
+:root { --bg:#f5f7fb; --panel:#ffffff; --ink:#172033; --muted:#667085; --line:#d7deea; --blue:#2563eb; --shadow:0 16px 42px rgba(15,23,42,.08); }
+* { box-sizing:border-box; } body { margin:0; background:var(--bg); color:var(--ink); font-family:Inter,ui-sans-serif,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif; }
 .shell { max-width:1360px; margin:0 auto; padding:28px; } .topbar { display:flex; justify-content:space-between; gap:18px; align-items:flex-start; margin-bottom:20px; }
 .eyebrow { color:var(--blue); font-size:11px; font-weight:850; letter-spacing:.12em; text-transform:uppercase; } h1 { margin:7px 0 0; font-size:34px; line-height:1.05; letter-spacing:0; }
 .subtitle { margin-top:8px; color:var(--muted); font-size:14px; max-width:850px; line-height:1.5; } .stamp { text-align:right; color:var(--muted); font-size:12px; line-height:1.5; min-width:240px; }
@@ -21,28 +18,10 @@ a { color:var(--blue); text-decoration:none; } a:hover { text-decoration:underli
 blockquote { margin:12px 0 0; padding:10px 12px; border-left:4px solid var(--blue); background:#f8fafc; color:#344054; font-size:13px; line-height:1.45; } .reason,.timing { margin:10px 0 0; color:#475467; font-size:13px; line-height:1.45; } .legend { display:flex; gap:8px; flex-wrap:wrap; margin-top:10px; } .pill { padding:5px 8px; border:1px solid var(--line); border-radius:999px; background:#f8fafc; color:#475467; font-size:11px; font-weight:800; }
 @media (max-width:1020px) { .kpis { grid-template-columns:repeat(2,1fr); } .content { grid-template-columns:1fr; } .panel { position:static; } .signal-grid { grid-template-columns:repeat(2,1fr); } .topbar { flex-direction:column; } .stamp { text-align:left; } } @media (max-width:620px) { .shell { padding:18px; } .kpis,.signal-grid { grid-template-columns:1fr; } h1 { font-size:28px; } }
 </style></head><body><main class="shell">
-<header class="topbar"><div><div class="eyebrow">Sales Ops · Notion Review</div><h1>Competitor Contract End Date Monitor</h1><p class="subtitle">Filtered Sales Meeting Coaching Notion review showing only contract-timing references that name a specific month/date or say the prospect just/recently renewed or entered a new contract.</p></div><div class="stamp">Generated 2026-06-12 02:39 UTC<br>Source: Sales Meeting Coaching Notion DB<br>No SF writes performed</div></header>
-<section class="kpis"><div class="kpi"><div class="kpi-label">Notion Pages</div><div class="kpi-value">295</div><div class="kpi-sub">sales meetings inspected</div></div><div class="kpi"><div class="kpi-label">Initial References</div><div class="kpi-value">37</div><div class="kpi-sub">before filter</div></div><div class="kpi"><div class="kpi-label">Filtered In</div><div class="kpi-value">14</div><div class="kpi-sub">specific month/recent renewal</div></div><div class="kpi"><div class="kpi-label">Accounts</div><div class="kpi-value">12</div><div class="kpi-sub">unique account names</div></div><div class="kpi"><div class="kpi-label">Strong</div><div class="kpi-value">12</div><div class="kpi-sub">high relevance</div></div><div class="kpi"><div class="kpi-label">Removed</div><div class="kpi-value">23</div><div class="kpi-sub">vague/no month</div></div></section>
-<div class="notice"><strong>Filter applied:</strong> Removed findings that only said vague terms like locked in, month-to-month, yearly, end of year, 18 months, or generic contract questions without a named month/date or recent renewal/new-contract language.</div>
+<header class="topbar"><div><div class="eyebrow">Sales Ops · Daily Pruned</div><h1>Competitor Contract End Date Monitor</h1><p class="subtitle">Filtered Sales Meeting Coaching Notion review. Items are removed automatically after their matched Salesforce account has <strong>Competitor Contract End Date</strong> populated.</p></div><div class="stamp">Generated 2026-06-12 02:48 UTC<br>Source: Sales Meeting Coaching Notion DB + Salesforce<br>No SF writes performed</div></header>
+<section class="kpis"><div class="kpi"><div class="kpi-label">Initial Filtered</div><div class="kpi-value">14</div><div class="kpi-sub">month/recent renewal rows</div></div><div class="kpi"><div class="kpi-label">Active</div><div class="kpi-value">13</div><div class="kpi-sub">shown on dashboard</div></div><div class="kpi"><div class="kpi-label">Pruned</div><div class="kpi-value">1</div><div class="kpi-sub">field already populated</div></div><div class="kpi"><div class="kpi-label">SF Blank</div><div class="kpi-value">0</div><div class="kpi-sub">event-matched rows</div></div><div class="kpi"><div class="kpi-label">Needs Match</div><div class="kpi-value">13</div><div class="kpi-sub">no safe SF match</div></div><div class="kpi"><div class="kpi-label">Strong</div><div class="kpi-value">11</div><div class="kpi-sub">high relevance</div></div></section>
+<div class="notice"><strong>Daily pruning:</strong> this page checks Salesforce before publishing. If a safely matched account has <strong>Competitor_Contract_End_Date__c</strong> filled in, that finding is removed from the dashboard.</div>
 <section class="content"><div class="signal-list">
-      <article class="signal-card" data-relevance="strong">
-        <div class="signal-top">
-          <div>
-            <div class="eyebrow">2026-04-01 · Current/incumbent vendor contract</div>
-            <h2>Celerius &amp; Rev.io</h2>
-          </div>
-          <span class="confidence high">Strong</span>
-        </div>
-        <div class="signal-grid">
-          <div><span>Meeting</span><strong>(Discovery Call) Celerius &amp; Rev.io</strong></div>
-          <div><span>Timing Reference</span><strong>Contract expires in August</strong></div>
-          <div><span>Exact Date</span><strong>Not stated</strong></div>
-          <div><span>Confidence</span><strong>0.99</strong></div>
-        </div>
-        <blockquote>contract timing (expires in August).</blockquote>
-        <p class="reason"><strong>Why it matters:</strong> Explicit reference to incumbent contract timing and expiration month.</p>
-        <p class="timing"><a href="https://app.notion.com/p/Discovery-Call-Celerius-Rev-io-335a59b7e7b281a7be22e335875f4b4a" target="_blank" rel="noopener">Open Notion source</a></p>
-      </article>
       <article class="signal-card" data-relevance="strong">
         <div class="signal-top">
           <div>
@@ -55,10 +34,11 @@ blockquote { margin:12px 0 0; padding:10px 12px; border-left:4px solid var(--blu
           <div><span>Meeting</span><strong>(Discovery Call) Organ Mountain Cabling and Technology L.L.C. &amp; Rev.io PSA</strong></div>
           <div><span>Timing Reference</span><strong>renewal timing in August</strong></div>
           <div><span>Exact Date</span><strong>August</strong></div>
-          <div><span>Confidence</span><strong>0.98</strong></div>
+          <div><span>SF Status</span><strong>Needs match</strong></div>
         </div>
         <blockquote>Asked about renewal timing (August).</blockquote>
         <p class="reason"><strong>Why it matters:</strong> Explicit reference to prospect renewal timing for an incumbent system/software relationship.</p>
+        <p class="reason"><strong>Salesforce:</strong> manual account match needed</p>
         <p class="timing"><a href="https://app.notion.com/p/Discovery-Call-Organ-Mountain-Cabling-and-Technology-L-L-C-Rev-io-PSA-33da59b7e7b2816a81ffc568830e5149" target="_blank" rel="noopener">Open Notion source</a></p>
       </article>
       <article class="signal-card" data-relevance="strong">
@@ -73,10 +53,11 @@ blockquote { margin:12px 0 0; padding:10px 12px; border-left:4px solid var(--blu
           <div><span>Meeting</span><strong>Rev.io &amp; Ryan Hawkins | Post ISC West Discovery Call</strong></div>
           <div><span>Timing Reference</span><strong>renewal in 3-4 weeks; renewal in May</strong></div>
           <div><span>Exact Date</span><strong>Not stated</strong></div>
-          <div><span>Confidence</span><strong>0.98</strong></div>
+          <div><span>SF Status</span><strong>Needs match</strong></div>
         </div>
         <blockquote>With a Jobber renewal in 3-4 weeks, there was a real timeline to leverage ... Business Issue identified: Yes (Jobber renewal in May)</blockquote>
         <p class="reason"><strong>Why it matters:</strong> Direct reference to incumbent vendor renewal timing that could affect evaluation/decision timeline.</p>
+        <p class="reason"><strong>Salesforce:</strong> manual account match needed</p>
         <p class="timing"><a href="https://app.notion.com/p/Rev-io-Ryan-Hawkins-Post-ISC-West-Discovery-Call-33da59b7e7b281649dcbc19b05ed5018" target="_blank" rel="noopener">Open Notion source</a></p>
       </article>
       <article class="signal-card" data-relevance="strong">
@@ -91,10 +72,11 @@ blockquote { margin:12px 0 0; padding:10px 12px; border-left:4px solid var(--blu
           <div><span>Meeting</span><strong>(Discovery Call) Amazing7 &amp; Rev.io</strong></div>
           <div><span>Timing Reference</span><strong>Prospect just renewed incumbent vendor contract</strong></div>
           <div><span>Exact Date</span><strong>Not stated</strong></div>
-          <div><span>Confidence</span><strong>0.97</strong></div>
+          <div><span>SF Status</span><strong>Needs match</strong></div>
         </div>
         <blockquote>&quot;the prospect just renewed their Syncro contract&quot;</blockquote>
         <p class="reason"><strong>Why it matters:</strong> Directly references a recent renewal of the incumbent software contract, which affects timing.</p>
+        <p class="reason"><strong>Salesforce:</strong> manual account match needed</p>
         <p class="timing"><a href="https://app.notion.com/p/Discovery-Call-Amazing7-Rev-io-33da59b7e7b281f49fabc50b11cd7c68" target="_blank" rel="noopener">Open Notion source</a></p>
       </article>
       <article class="signal-card" data-relevance="strong">
@@ -109,10 +91,11 @@ blockquote { margin:12px 0 0; padding:10px 12px; border-left:4px solid var(--blu
           <div><span>Meeting</span><strong>Overview of Revii - AI Powered Digital Workforce</strong></div>
           <div><span>Timing Reference</span><strong>2+ years away from contract flexibility; recent 2-year renewal discussed</strong></div>
           <div><span>Exact Date</span><strong>Not stated</strong></div>
-          <div><span>Confidence</span><strong>0.97</strong></div>
+          <div><span>SF Status</span><strong>Needs match</strong></div>
         </div>
         <blockquote>missing the &quot;make sick&quot; element that creates urgency for a prospect who&#x27;s 2+ years away from contract flexibility. ... Matt asked about the contract renewal timing (&quot;You guys just renewed a 2 year with Connectwise, is that cor</blockquote>
         <p class="reason"><strong>Why it matters:</strong> Direct discussion of incumbent vendor renewal timing and distance from a point where the prospect could switch vendors.</p>
+        <p class="reason"><strong>Salesforce:</strong> manual account match needed</p>
         <p class="timing"><a href="https://app.notion.com/p/Overview-of-Revii-AI-Powered-Digital-Workforce-348a59b7e7b281e6bc9eed1baefcf281" target="_blank" rel="noopener">Open Notion source</a></p>
       </article>
       <article class="signal-card" data-relevance="strong">
@@ -127,10 +110,11 @@ blockquote { margin:12px 0 0; padding:10px 12px; border-left:4px solid var(--blu
           <div><span>Meeting</span><strong>(Discovery Call) WPS Technology Solutions &amp; Rev.io</strong></div>
           <div><span>Timing Reference</span><strong>Contract renewal timing in August</strong></div>
           <div><span>Exact Date</span><strong>Not stated</strong></div>
-          <div><span>Confidence</span><strong>0.96</strong></div>
+          <div><span>SF Status</span><strong>Needs match</strong></div>
         </div>
         <blockquote>Got confirmation on contract renewal timing (August).</blockquote>
         <p class="reason"><strong>Why it matters:</strong> Explicit mention of incumbent contract renewal timing, including a month reference.</p>
+        <p class="reason"><strong>Salesforce:</strong> manual account match needed</p>
         <p class="timing"><a href="https://app.notion.com/p/Discovery-Call-WPS-Technology-Solutions-Rev-io-34ba59b7e7b2812396a3de5e3643d647" target="_blank" rel="noopener">Open Notion source</a></p>
       </article>
       <article class="signal-card" data-relevance="strong">
@@ -145,10 +129,11 @@ blockquote { margin:12px 0 0; padding:10px 12px; border-left:4px solid var(--blu
           <div><span>Meeting</span><strong>Reminder-(Discovery Call) Parrk Analytics &amp; Rev.io RMM</strong></div>
           <div><span>Timing Reference</span><strong>Contract renewal on May 2nd</strong></div>
           <div><span>Exact Date</span><strong>2026-05-02</strong></div>
-          <div><span>Confidence</span><strong>0.98</strong></div>
+          <div><span>SF Status</span><strong>Needs match</strong></div>
         </div>
         <blockquote>Identified the business issue (contract renewal May 2nd).</blockquote>
         <p class="reason"><strong>Why it matters:</strong> Explicit reference to an existing contract renewal date tied to their current software situation.</p>
+        <p class="reason"><strong>Salesforce:</strong> manual account match needed</p>
         <p class="timing"><a href="https://app.notion.com/p/Reminder-Discovery-Call-Parrk-Analytics-Rev-io-RMM-351a59b7e7b2811e90cbdb323ffb3d51" target="_blank" rel="noopener">Open Notion source</a></p>
       </article>
       <article class="signal-card" data-relevance="strong">
@@ -163,10 +148,11 @@ blockquote { margin:12px 0 0; padding:10px 12px; border-left:4px solid var(--blu
           <div><span>Meeting</span><strong>(Discovery Call) Dioguardi Consultation Group &amp; Rev.io</strong></div>
           <div><span>Timing Reference</span><strong>just renewed on May 1st</strong></div>
           <div><span>Exact Date</span><strong>2026-05-01</strong></div>
-          <div><span>Confidence</span><strong>0.98</strong></div>
+          <div><span>SF Status</span><strong>Needs match</strong></div>
         </div>
         <blockquote>the prospect actually revealed he just renewed his PSA contract on May 1st</blockquote>
         <p class="reason"><strong>Why it matters:</strong> Explicit mention that the prospect renewed their incumbent PSA contract, which directly affects replacement timing and buying window.</p>
+        <p class="reason"><strong>Salesforce:</strong> manual account match needed</p>
         <p class="timing"><a href="https://app.notion.com/p/Discovery-Call-Dioguardi-Consultation-Group-Rev-io-358a59b7e7b281a0bea7faad0c0154fc" target="_blank" rel="noopener">Open Notion source</a></p>
       </article>
       <article class="signal-card" data-relevance="strong">
@@ -181,10 +167,11 @@ blockquote { margin:12px 0 0; padding:10px 12px; border-left:4px solid var(--blu
           <div><span>Meeting</span><strong>(Discovery Call) Dioguardi Consultation Group &amp; Rev.io</strong></div>
           <div><span>Timing Reference</span><strong>contract just auto-renewed; maybe 4-5 months callback timing</strong></div>
           <div><span>Exact Date</span><strong>Not stated</strong></div>
-          <div><span>Confidence</span><strong>0.95</strong></div>
+          <div><span>SF Status</span><strong>Needs match</strong></div>
         </div>
         <blockquote>When a prospect tells you their contract just auto-renewed, that&#x27;s the moment to lock in a specific callback date with calendar invites, not &quot;maybe 4-5 months.&quot;</blockquote>
         <p class="reason"><strong>Why it matters:</strong> References an incumbent contract auto-renewal and a vague follow-up window tied to contract timing.</p>
+        <p class="reason"><strong>Salesforce:</strong> manual account match needed</p>
         <p class="timing"><a href="https://app.notion.com/p/Discovery-Call-Dioguardi-Consultation-Group-Rev-io-358a59b7e7b281e7b082f9e2dd7c7874" target="_blank" rel="noopener">Open Notion source</a></p>
       </article>
       <article class="signal-card" data-relevance="strong">
@@ -199,10 +186,11 @@ blockquote { margin:12px 0 0; padding:10px 12px; border-left:4px solid var(--blu
           <div><span>Meeting</span><strong>(Discovery Call) SelTec &amp; Rev.io</strong></div>
           <div><span>Timing Reference</span><strong>Current contract ends in December; evaluation starts in June/July.</strong></div>
           <div><span>Exact Date</span><strong>December</strong></div>
-          <div><span>Confidence</span><strong>0.98</strong></div>
+          <div><span>SF Status</span><strong>Needs match</strong></div>
         </div>
         <blockquote>&quot;What they did well: Got the \&quot;why now\&quot; (contract ends December, starting evaluation June/July).&quot;</blockquote>
         <p class="reason"><strong>Why it matters:</strong> This directly states the incumbent software contract end timing and the prospect&#x27;s evaluation window.</p>
+        <p class="reason"><strong>Salesforce:</strong> manual account match needed</p>
         <p class="timing"><a href="https://app.notion.com/p/Discovery-Call-SelTec-Rev-io-358a59b7e7b281369b43e94a49ec175f" target="_blank" rel="noopener">Open Notion source</a></p>
       </article>
       <article class="signal-card" data-relevance="strong">
@@ -217,10 +205,11 @@ blockquote { margin:12px 0 0; padding:10px 12px; border-left:4px solid var(--blu
           <div><span>Meeting</span><strong>(Discovery Call) SelTec &amp; Rev.io</strong></div>
           <div><span>Timing Reference</span><strong>contract ends December</strong></div>
           <div><span>Exact Date</span><strong>Not stated</strong></div>
-          <div><span>Confidence</span><strong>0.97</strong></div>
+          <div><span>SF Status</span><strong>Needs match</strong></div>
         </div>
         <blockquote>Identified the timeline (contract ends December)</blockquote>
         <p class="reason"><strong>Why it matters:</strong> Direct statement of incumbent vendor contract end timing, relevant to renewal/replace window.</p>
+        <p class="reason"><strong>Salesforce:</strong> manual account match needed</p>
         <p class="timing"><a href="https://app.notion.com/p/Discovery-Call-SelTec-Rev-io-358a59b7e7b2812fb777f705a74f04d1" target="_blank" rel="noopener">Open Notion source</a></p>
       </article>
       <article class="signal-card" data-relevance="strong">
@@ -235,10 +224,11 @@ blockquote { margin:12px 0 0; padding:10px 12px; border-left:4px solid var(--blu
           <div><span>Meeting</span><strong>(Discovery Call) Zakiant &amp; Rev.io</strong></div>
           <div><span>Timing Reference</span><strong>Recently entered a new contract and is locked in for now</strong></div>
           <div><span>Exact Date</span><strong>Not stated</strong></div>
-          <div><span>Confidence</span><strong>0.98</strong></div>
+          <div><span>SF Status</span><strong>Needs match</strong></div>
         </div>
         <blockquote>&quot;So it sounds like the PSA using today is too complicated, but you just entered a new contract with them, so you&#x27;re locked in for now, is that right?&quot;</blockquote>
         <p class="reason"><strong>Why it matters:</strong> Explicit reference to an incumbent software/vendor contract and current lock-in timing, even though no exact renewal or end date is given.</p>
+        <p class="reason"><strong>Salesforce:</strong> manual account match needed</p>
         <p class="timing"><a href="https://app.notion.com/p/Discovery-Call-Zakiant-Rev-io-35ea59b7e7b281b9856fc6db7ad96447" target="_blank" rel="noopener">Open Notion source</a></p>
       </article>
       <article class="signal-card" data-relevance="maybe">
@@ -253,10 +243,11 @@ blockquote { margin:12px 0 0; padding:10px 12px; border-left:4px solid var(--blu
           <div><span>Meeting</span><strong>(Discovery Call) Impossible Cloud &amp; Rev.io</strong></div>
           <div><span>Timing Reference</span><strong>Hard deadline by June 1st related to getting setup in time</strong></div>
           <div><span>Exact Date</span><strong>2026-06-01</strong></div>
-          <div><span>Confidence</span><strong>0.74</strong></div>
+          <div><span>SF Status</span><strong>Needs match</strong></div>
         </div>
         <blockquote>&quot;June 1st is sort of a hard deadline&quot;</blockquote>
         <p class="reason"><strong>Why it matters:</strong> This is a clear timing/deadline reference, but it is not explicitly stated as an incumbent vendor contract renewal or expiration.</p>
+        <p class="reason"><strong>Salesforce:</strong> manual account match needed</p>
         <p class="timing"><a href="https://app.notion.com/p/Discovery-Call-Impossible-Cloud-Rev-io-34fa59b7e7b281f69283de0203003923" target="_blank" rel="noopener">Open Notion source</a></p>
       </article>
       <article class="signal-card" data-relevance="maybe">
@@ -271,9 +262,10 @@ blockquote { margin:12px 0 0; padding:10px 12px; border-left:4px solid var(--blu
           <div><span>Meeting</span><strong>(Discovery Call) Versatile VoIP &amp; Rev.io</strong></div>
           <div><span>Timing Reference</span><strong>Agreement changes status in October 2027; vague contract/agreement timing reference.</strong></div>
           <div><span>Exact Date</span><strong>2027-10</strong></div>
-          <div><span>Confidence</span><strong>0.72</strong></div>
+          <div><span>SF Status</span><strong>Needs match</strong></div>
         </div>
         <blockquote>&quot;The agreement with the purchaser is that all the networking stuff stays on that side and all the voice stuff stays on this side. They will become a referring agent in October of 2027.&quot;</blockquote>
         <p class="reason"><strong>Why it matters:</strong> Mentions an agreement and a future date when the relationship changes, which may indicate contract timing, though not clearly an incumbent software/vendor renewal or expiration.</p>
+        <p class="reason"><strong>Salesforce:</strong> manual account match needed</p>
         <p class="timing"><a href="https://app.notion.com/p/Discovery-Call-Versatile-VoIP-Rev-io-35ea59b7e7b281a9a531d4ae8ee8f6df" target="_blank" rel="noopener">Open Notion source</a></p>
-      </article></div><aside class="panel"><h2>Relevance</h2><div class="legend"><span class="pill high">Strong: 12</span><span class="pill medium">Likely: 0</span><span class="pill low">Maybe: 2</span></div><h2 style="margin-top:18px">By Month</h2><table><thead><tr><th>Month</th><th>Refs</th></tr></thead><tbody><tr><td>2026-04</td><td>8</td></tr><tr><td>2026-05</td><td>6</td></tr></tbody></table><h2 style="margin-top:18px">Accounts</h2><table><thead><tr><th>Account</th><th>Refs</th></tr></thead><tbody><tr><td>Dioguardi Consultation Group</td><td>2</td></tr><tr><td>SelTec</td><td>2</td></tr><tr><td>Celerius &amp; Rev.io</td><td>1</td></tr><tr><td>Organ Mountain Cabling and Technology L.L.C.</td><td>1</td></tr><tr><td>Modern Wave</td><td>1</td></tr><tr><td>Amazing7</td><td>1</td></tr><tr><td>Revii/PSA Overview</td><td>1</td></tr><tr><td>WPS Technology Solutions</td><td>1</td></tr><tr><td>Parrk Analytics</td><td>1</td></tr><tr><td>Zakiant &amp; Rev.io</td><td>1</td></tr><tr><td>Impossible Cloud</td><td>1</td></tr><tr><td>Versatile VoIP</td><td>1</td></tr></tbody></table><h2 style="margin-top:18px">Source Files</h2><p class="reason">Filtered JSON: reports/competitor_contract_enddates/all-notion-contract-review-month-or-recent-renewal-20260612.json<br>Original JSON: reports/competitor_contract_enddates/all-notion-contract-review-complete-20260612-021355.json</p></aside></section></main></body></html>
+      </article></div><aside class="panel"><h2>Relevance</h2><div class="legend"><span class="pill high">Strong: 11</span><span class="pill medium">Likely: 0</span><span class="pill low">Maybe: 2</span></div><h2 style="margin-top:18px">By Month</h2><table><thead><tr><th>Month</th><th>Refs</th></tr></thead><tbody><tr><td>2026-04</td><td>7</td></tr><tr><td>2026-05</td><td>6</td></tr></tbody></table><h2 style="margin-top:18px">Accounts</h2><table><thead><tr><th>Account</th><th>Refs</th></tr></thead><tbody><tr><td>Dioguardi Consultation Group</td><td>2</td></tr><tr><td>SelTec</td><td>2</td></tr><tr><td>Organ Mountain Cabling and Technology L.L.C.</td><td>1</td></tr><tr><td>Modern Wave</td><td>1</td></tr><tr><td>Amazing7</td><td>1</td></tr><tr><td>Revii/PSA Overview</td><td>1</td></tr><tr><td>WPS Technology Solutions</td><td>1</td></tr><tr><td>Parrk Analytics</td><td>1</td></tr><tr><td>Zakiant &amp; Rev.io</td><td>1</td></tr><tr><td>Impossible Cloud</td><td>1</td></tr><tr><td>Versatile VoIP</td><td>1</td></tr></tbody></table><h2 style="margin-top:18px">Status</h2><p class="reason">Pruned rows are tracked in <code>reports/competitor_contract_enddates/active-contract-enddate-monitor-status.json</code>.</p></aside></section></main></body></html>
