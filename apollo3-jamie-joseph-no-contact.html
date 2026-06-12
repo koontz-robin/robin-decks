@@ -1,0 +1,617 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Apollo 3 No Contact Activity — Jamie & Joseph</title>
+<style>
+:root {
+  --bg:#0b0f14; --panel:#111821; --panel2:#15202b; --line:#263444;
+  --text:#e9f0f7; --muted:#93a4b5; --green:#37d99e; --amber:#f2b84b;
+  --blue:#58a6ff; --red:#ff6b6b; --gray:#6d7c8c;
+}
+* { box-sizing:border-box; }
+body {
+  margin:0; background:var(--bg); color:var(--text);
+  font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
+}
+a { color:inherit; }
+.wrap { max-width:1440px; margin:0 auto; padding:28px; }
+.top { display:flex; align-items:flex-start; justify-content:space-between; gap:20px; margin-bottom:22px; }
+h1 { margin:0; font-size:28px; line-height:1.1; letter-spacing:0; }
+.lede { color:var(--muted); margin-top:8px; max-width:850px; line-height:1.5; }
+.stamp { color:var(--muted); font-size:13px; text-align:right; white-space:nowrap; }
+.metrics { display:grid; grid-template-columns:repeat(4,minmax(0,1fr)); gap:12px; margin-bottom:16px; }
+.metric,.owner-card { background:var(--panel); border:1px solid var(--line); border-radius:8px; padding:14px; }
+.metric-label,.owner-stats { color:var(--muted); font-size:12px; text-transform:uppercase; letter-spacing:.05em; }
+.metric-value { font-size:28px; font-weight:750; margin-top:6px; }
+.metric-note { color:var(--muted); font-size:13px; margin-top:4px; }
+.owners { display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); gap:12px; margin-bottom:16px; }
+.owner-name { font-weight:750; font-size:17px; margin-bottom:6px; }
+.controls { display:flex; gap:10px; flex-wrap:wrap; align-items:center; background:var(--panel); border:1px solid var(--line); border-radius:8px; padding:12px; margin-bottom:14px; }
+input,select,button { background:var(--panel2); color:var(--text); border:1px solid var(--line); border-radius:6px; padding:9px 10px; font:inherit; }
+input { min-width:280px; flex:1; }
+button { cursor:pointer; }
+.table-wrap { border:1px solid var(--line); border-radius:8px; overflow:auto; background:var(--panel); }
+table { width:100%; border-collapse:collapse; min-width:1080px; }
+th,td { padding:12px 14px; border-bottom:1px solid var(--line); text-align:left; vertical-align:top; }
+th { color:var(--muted); font-size:12px; text-transform:uppercase; letter-spacing:.05em; background:#0f151d; position:sticky; top:0; z-index:1; }
+tr:hover td { background:#14202a; }
+.acct { color:#fff; font-weight:750; text-decoration:none; }
+.acct:hover { color:var(--blue); text-decoration:underline; }
+.sub,.last-touch { color:var(--muted); font-size:12px; line-height:1.45; margin-top:4px; max-width:460px; }
+.money { font-variant-numeric:tabular-nums; font-weight:700; }
+.tier { display:inline-block; padding:4px 8px; border-radius:999px; background:#243242; color:var(--text); font-size:12px; line-height:1.25; }
+.tier.ready { background:#12372a; color:var(--green); }
+.tier.partial { background:#233252; color:#9cc4ff; }
+.tier.soon { background:#3a2b10; color:var(--amber); }
+.tier.blocked { background:#3a171a; color:var(--red); }
+.hidden { display:none; }
+@media (max-width:900px) {
+  .wrap { padding:18px; }
+  .top { flex-direction:column; }
+  .stamp { text-align:left; white-space:normal; }
+  .metrics,.owners { grid-template-columns:1fr; }
+  input { min-width:100%; }
+}
+</style>
+</head>
+<body>
+<main class="wrap">
+  <div class="top">
+    <div>
+      <h1>Apollo 3 Accounts Missing Contact Activity</h1>
+      <p class="lede">Jamie Butler and Joseph Abarno owned Salesforce accounts from the Apollo 3 re-engagement dashboard with no Task/Event subject containing <b>Contact</b> since 2026-04-12. Salesforce account names are clickable.</p>
+    </div>
+    <div class="stamp">Generated Jun 12, 2026 3:43 PM ET<br>Dashboard rows checked: 56</div>
+  </div>
+  <div class="metrics">
+        <section class="metric">
+          <div class="metric-label">Accounts Missing Contact</div>
+          <div class="metric-value">35</div>
+          <div class="metric-note">of 48 Jamie/Joseph dashboard accounts</div>
+        </section>
+        
+
+        <section class="metric">
+          <div class="metric-label">Total ARR</div>
+          <div class="metric-value">$57,104</div>
+          <div class="metric-note">summed across dashboard rows</div>
+        </section>
+        
+
+        <section class="metric">
+          <div class="metric-label">Re-engage Ready</div>
+          <div class="metric-value">11</div>
+          <div class="metric-note">Fully Unblocked or Core Delivered</div>
+        </section>
+        
+
+        <section class="metric">
+          <div class="metric-label">Still Blocked</div>
+          <div class="metric-value">8</div>
+          <div class="metric-note">hard gap remains</div>
+        </section>
+        </div>
+  <div class="owners">
+            <div class="owner-card">
+              <div class="owner-name">Jamie Butler</div>
+              <div class="owner-stats">27 accounts · $45,774 ARR</div>
+            </div>
+            
+            <div class="owner-card">
+              <div class="owner-name">Joseph Abarno</div>
+              <div class="owner-stats">8 accounts · $11,330 ARR</div>
+            </div>
+            </div>
+  <div class="controls">
+    <input id="search" type="search" placeholder="Search account, opportunity, tier">
+    <select id="owner"><option value="">All owners</option><option value="Jamie Butler">Jamie Butler</option>
+<option value="Joseph Abarno">Joseph Abarno</option></select>
+    <select id="tier">
+      <option value="">All tiers</option>
+      <option value="ready">Ready / delivered</option>
+      <option value="partial">Partial win</option>
+      <option value="soon">Coming soon</option>
+      <option value="blocked">Still blocked</option>
+      <option value="none">No Apollo signal</option>
+    </select>
+    <button id="reset" type="button">Reset</button>
+  </div>
+  <div class="table-wrap">
+    <table>
+      <thead>
+        <tr>
+          <th>Account</th>
+          <th>Owner</th>
+          <th>ARR</th>
+          <th>Apollo Tier</th>
+          <th>Rows</th>
+          <th>Dashboard Last Touch</th>
+          <th>Last Touch Detail</th>
+        </tr>
+      </thead>
+      <tbody id="rows">
+        
+            <tr data-owner="Jamie Butler" data-tier="none" data-search="vitel global vitel global no apollo signal">
+              <td>
+                <a class="acct" href="https://rev-io.my.salesforce.com/0011500001KmSFfAAN" target="_blank" rel="noopener">Vitel Global</a>
+                <div class="sub">Vitel Global</div>
+              </td>
+              <td>Jamie Butler</td>
+              <td class="money">$6,000</td>
+              <td><span class="tier none">No Apollo signal</span></td>
+              <td>1</td>
+              <td>2026-06-09</td>
+              <td class="last-touch">Task: [Outreach] [Email] [Out] AI Agreement Management and Reporting (Jamie Butler)</td>
+            </tr>
+            
+            <tr data-owner="Jamie Butler" data-tier="none" data-search="wildix wildix no apollo signal">
+              <td>
+                <a class="acct" href="https://rev-io.my.salesforce.com/0011C00002bYYavQAG" target="_blank" rel="noopener">Wildix</a>
+                <div class="sub">Wildix</div>
+              </td>
+              <td>Jamie Butler</td>
+              <td class="money">$6,000</td>
+              <td><span class="tier none">No Apollo signal</span></td>
+              <td>1</td>
+              <td>2026-06-09</td>
+              <td class="last-touch">Task: [Outreach] [Email] [Out] AI Agreement Management and Reporting (Jamie Butler)</td>
+            </tr>
+            
+            <tr data-owner="Jamie Butler" data-tier="soon" data-search="anavon technology group anavon technology group coming soon — watch">
+              <td>
+                <a class="acct" href="https://rev-io.my.salesforce.com/0011C000021DSbnQAG" target="_blank" rel="noopener">Anavon Technology Group</a>
+                <div class="sub">Anavon Technology Group</div>
+              </td>
+              <td>Jamie Butler</td>
+              <td class="money">$5,000</td>
+              <td><span class="tier soon">Coming Soon — Watch</span></td>
+              <td>1</td>
+              <td>2026-06-08</td>
+              <td class="last-touch">Task: [Outreach] [Email] [Out] Here We Go Again (Jamie Butler)</td>
+            </tr>
+            
+            <tr data-owner="Jamie Butler" data-tier="none" data-search="esplicity esplicity no apollo signal">
+              <td>
+                <a class="acct" href="https://rev-io.my.salesforce.com/001PX00000KJf34YAD" target="_blank" rel="noopener">Esplicity</a>
+                <div class="sub">Esplicity</div>
+              </td>
+              <td>Jamie Butler</td>
+              <td class="money">$4,750</td>
+              <td><span class="tier none">No Apollo signal</span></td>
+              <td>1</td>
+              <td>2026-06-08</td>
+              <td class="last-touch">Task: [Outreach] [Email] [Out] Here We Go Again (Jamie Butler)</td>
+            </tr>
+            
+            <tr data-owner="Jamie Butler" data-tier="blocked" data-search="mavericks office solutions mavericks office solutions still blocked (hard gaps)">
+              <td>
+                <a class="acct" href="https://rev-io.my.salesforce.com/001PX000001jrwYYAQ" target="_blank" rel="noopener">Mavericks office Solutions</a>
+                <div class="sub">Mavericks Office Solutions</div>
+              </td>
+              <td>Jamie Butler</td>
+              <td class="money">$3,000</td>
+              <td><span class="tier blocked">Still Blocked (hard gaps)</span></td>
+              <td>1</td>
+              <td>2026-06-09</td>
+              <td class="last-touch">Task: [Outreach] [Email] [Out] AI Agreement Management and Reporting (Jamie Butler)</td>
+            </tr>
+            
+            <tr data-owner="Jamie Butler" data-tier="blocked" data-search="socs socs fiber still blocked (hard gaps)">
+              <td>
+                <a class="acct" href="https://rev-io.my.salesforce.com/0011500001IJ9ZGAA1" target="_blank" rel="noopener">SOCS</a>
+                <div class="sub">SOCS Fiber</div>
+              </td>
+              <td>Jamie Butler</td>
+              <td class="money">$3,000</td>
+              <td><span class="tier blocked">Still Blocked (hard gaps)</span></td>
+              <td>1</td>
+              <td>2026-06-09</td>
+              <td class="last-touch">Task: [Outreach] [Email] [Out] AI Agreement Management and Reporting (Jamie Butler)</td>
+            </tr>
+            
+            <tr data-owner="Jamie Butler" data-tier="ready soon" data-search="hednorth hednorth hednorth fully unblocked — re-engage now / coming soon — watch">
+              <td>
+                <a class="acct" href="https://rev-io.my.salesforce.com/001PX00000Hq25ZYAR" target="_blank" rel="noopener">HEDnorth</a>
+                <div class="sub">HEDNorth; HEDnorth</div>
+              </td>
+              <td>Jamie Butler</td>
+              <td class="money">$2,088</td>
+              <td><span class="tier ready">Fully Unblocked — Re-engage Now / Coming Soon — Watch</span></td>
+              <td>2</td>
+              <td>2026-06-09</td>
+              <td class="last-touch">Task: [Outreach] [Email] [Out] AI Agreement Management and Reporting (Jamie Butler)</td>
+            </tr>
+            
+            <tr data-owner="Jamie Butler" data-tier="ready" data-search="metro mbs metro mbs - billing / psa web fully unblocked — re-engage now">
+              <td>
+                <a class="acct" href="https://rev-io.my.salesforce.com/0016O00003Ou3GdQAJ" target="_blank" rel="noopener">Metro MBS</a>
+                <div class="sub">Metro MBS - Billing / PSA Web</div>
+              </td>
+              <td>Jamie Butler</td>
+              <td class="money">$2,000</td>
+              <td><span class="tier ready">Fully Unblocked — Re-engage Now</span></td>
+              <td>1</td>
+              <td>2026-06-10</td>
+              <td class="last-touch">Task: No Answer (Abbey McIntosh)</td>
+            </tr>
+            
+            <tr data-owner="Jamie Butler" data-tier="ready partial" data-search="proactiverisk proactiverisk proactiverisk fully unblocked — re-engage now / partial win — lead w/ delivered">
+              <td>
+                <a class="acct" href="https://rev-io.my.salesforce.com/001PX00000a207zYAA" target="_blank" rel="noopener">PROACTIVERISK</a>
+                <div class="sub">ProactiveRISK; ProactiveRisk</div>
+              </td>
+              <td>Jamie Butler</td>
+              <td class="money">$1,660</td>
+              <td><span class="tier ready">Fully Unblocked — Re-engage Now / Partial Win — Lead w/ Delivered</span></td>
+              <td>2</td>
+              <td>2026-06-09</td>
+              <td class="last-touch">Task: [Outreach] [Email] [Out] AI Agreement Management and Reporting (Jamie Butler)</td>
+            </tr>
+            
+            <tr data-owner="Jamie Butler" data-tier="blocked none" data-search="nero consulting nero - billing nero consulting still blocked (hard gaps) / no apollo signal">
+              <td>
+                <a class="acct" href="https://rev-io.my.salesforce.com/001PX0000096LURYA2" target="_blank" rel="noopener">Nero Consulting</a>
+                <div class="sub">Nero - Billing; Nero Consulting</div>
+              </td>
+              <td>Jamie Butler</td>
+              <td class="money">$1,270</td>
+              <td><span class="tier blocked">Still Blocked (hard gaps) / No Apollo signal</span></td>
+              <td>2</td>
+              <td>2026-06-09</td>
+              <td class="last-touch">Task: [Outreach] [Email] [Out] AI Agreement Management and Reporting (Jamie Butler)</td>
+            </tr>
+            
+            <tr data-owner="Jamie Butler" data-tier="ready" data-search="open tier systems open tier systems fully unblocked — re-engage now">
+              <td>
+                <a class="acct" href="https://rev-io.my.salesforce.com/0011C00002ulsicQAA" target="_blank" rel="noopener">Open Tier Systems</a>
+                <div class="sub">Open Tier Systems</div>
+              </td>
+              <td>Jamie Butler</td>
+              <td class="money">$1,258</td>
+              <td><span class="tier ready">Fully Unblocked — Re-engage Now</span></td>
+              <td>1</td>
+              <td>2026-06-09</td>
+              <td class="last-touch">Task: [Outreach] [Email] [Out] AI Agreement Management and Reporting (Jamie Butler)</td>
+            </tr>
+            
+            <tr data-owner="Jamie Butler" data-tier="none" data-search="technology sandbox technology sandbox no apollo signal">
+              <td>
+                <a class="acct" href="https://rev-io.my.salesforce.com/001PX00000RBLlBYAX" target="_blank" rel="noopener">Technology Sandbox</a>
+                <div class="sub">Technology Sandbox</div>
+              </td>
+              <td>Jamie Butler</td>
+              <td class="money">$1,150</td>
+              <td><span class="tier none">No Apollo signal</span></td>
+              <td>1</td>
+              <td>2026-06-08</td>
+              <td class="last-touch">Task: [Outreach] [Email] [Out] Here We Go Again (Jamie Butler)</td>
+            </tr>
+            
+            <tr data-owner="Jamie Butler" data-tier="ready" data-search="preferred tel preferred tel inc fully unblocked — re-engage now">
+              <td>
+                <a class="acct" href="https://rev-io.my.salesforce.com/0011C00002vRtv6QAC" target="_blank" rel="noopener">Preferred Tel</a>
+                <div class="sub">Preferred Tel Inc</div>
+              </td>
+              <td>Jamie Butler</td>
+              <td class="money">$1,000</td>
+              <td><span class="tier ready">Fully Unblocked — Re-engage Now</span></td>
+              <td>1</td>
+              <td>2026-06-08</td>
+              <td class="last-touch">Task: [Outreach] [Email] [Out] Preferred Tel customer retention (Jamie Butler)</td>
+            </tr>
+            
+            <tr data-owner="Jamie Butler" data-tier="partial" data-search="newcastle communications newcastle communications partial win — lead w/ delivered">
+              <td>
+                <a class="acct" href="https://rev-io.my.salesforce.com/0016O00003dqFUfQAM" target="_blank" rel="noopener">Newcastle Communications</a>
+                <div class="sub">Newcastle Communications</div>
+              </td>
+              <td>Jamie Butler</td>
+              <td class="money">$962</td>
+              <td><span class="tier partial">Partial Win — Lead w/ Delivered</span></td>
+              <td>1</td>
+              <td>2026-06-08</td>
+              <td class="last-touch">Task: [Outreach] [Email] [Out] Here We Go Again (Jamie Butler)</td>
+            </tr>
+            
+            <tr data-owner="Jamie Butler" data-tier="none" data-search="whitaker networks, inc. whitaker networks no apollo signal">
+              <td>
+                <a class="acct" href="https://rev-io.my.salesforce.com/001PX000001jsTiYAI" target="_blank" rel="noopener">Whitaker Networks, Inc.</a>
+                <div class="sub">Whitaker Networks</div>
+              </td>
+              <td>Jamie Butler</td>
+              <td class="money">$720</td>
+              <td><span class="tier none">No Apollo signal</span></td>
+              <td>1</td>
+              <td>2026-06-08</td>
+              <td class="last-touch">Task: [Outreach] [Email] [Out] Here We Go Again (Jamie Butler)</td>
+            </tr>
+            
+            <tr data-owner="Jamie Butler" data-tier="blocked" data-search="emedical technology emedical technology still blocked (hard gaps)">
+              <td>
+                <a class="acct" href="https://rev-io.my.salesforce.com/001PX00000l6fVIYAY" target="_blank" rel="noopener">eMedical Technology</a>
+                <div class="sub">eMedical Technology</div>
+              </td>
+              <td>Jamie Butler</td>
+              <td class="money">$660</td>
+              <td><span class="tier blocked">Still Blocked (hard gaps)</span></td>
+              <td>1</td>
+              <td>2026-06-08</td>
+              <td class="last-touch">Task: [Outreach] [Email] [Out] Here We Go Again (Jamie Butler)</td>
+            </tr>
+            
+            <tr data-owner="Jamie Butler" data-tier="none" data-search="technologyx technologyx no apollo signal">
+              <td>
+                <a class="acct" href="https://rev-io.my.salesforce.com/001PX000001rf53YAA" target="_blank" rel="noopener">TechnoLogyx</a>
+                <div class="sub">TechnoLogyx</div>
+              </td>
+              <td>Jamie Butler</td>
+              <td class="money">$616</td>
+              <td><span class="tier none">No Apollo signal</span></td>
+              <td>1</td>
+              <td>2026-06-08</td>
+              <td class="last-touch">Task: [Outreach] [Email] [Out] Rev.io PSA Launched.... Again (Jamie Butler)</td>
+            </tr>
+            
+            <tr data-owner="Jamie Butler" data-tier="ready" data-search="cs&amp;m tele-systems cs&amp;m tele-systems fully unblocked — re-engage now">
+              <td>
+                <a class="acct" href="https://rev-io.my.salesforce.com/0011500001HNQF4AAP" target="_blank" rel="noopener">CS&amp;M Tele-Systems</a>
+                <div class="sub">CS&amp;M Tele-Systems</div>
+              </td>
+              <td>Jamie Butler</td>
+              <td class="money">$590</td>
+              <td><span class="tier ready">Fully Unblocked — Re-engage Now</span></td>
+              <td>1</td>
+              <td>2026-06-09</td>
+              <td class="last-touch">Task: Left Voicemail (Jamie Butler)</td>
+            </tr>
+            
+            <tr data-owner="Jamie Butler" data-tier="blocked" data-search="cran-com crancom still blocked (hard gaps)">
+              <td>
+                <a class="acct" href="https://rev-io.my.salesforce.com/001PX00000D52BNYAZ" target="_blank" rel="noopener">CRAN-COM</a>
+                <div class="sub">CranCom</div>
+              </td>
+              <td>Jamie Butler</td>
+              <td class="money">$575</td>
+              <td><span class="tier blocked">Still Blocked (hard gaps)</span></td>
+              <td>1</td>
+              <td>2026-06-09</td>
+              <td class="last-touch">Task: [Outreach] [Email] [Out] AI Agreement Management and Reporting (Jamie Butler)</td>
+            </tr>
+            
+            <tr data-owner="Jamie Butler" data-tier="ready" data-search="it in demand it in demand fully unblocked — re-engage now">
+              <td>
+                <a class="acct" href="https://rev-io.my.salesforce.com/0016O00003dmo9tQAA" target="_blank" rel="noopener">IT In Demand</a>
+                <div class="sub">IT In Demand</div>
+              </td>
+              <td>Jamie Butler</td>
+              <td class="money">$575</td>
+              <td><span class="tier ready">Fully Unblocked — Re-engage Now</span></td>
+              <td>1</td>
+              <td>2026-06-08</td>
+              <td class="last-touch">Task: [Outreach] [Email] [Out] Here We Go Again (Jamie Butler)</td>
+            </tr>
+            
+            <tr data-owner="Jamie Butler" data-tier="blocked" data-search="core transit core transit still blocked (hard gaps)">
+              <td>
+                <a class="acct" href="https://rev-io.my.salesforce.com/001PX00000LDSyUYAX" target="_blank" rel="noopener">Core Transit</a>
+                <div class="sub">Core Transit</div>
+              </td>
+              <td>Jamie Butler</td>
+              <td class="money">$500</td>
+              <td><span class="tier blocked">Still Blocked (hard gaps)</span></td>
+              <td>1</td>
+              <td>2026-06-09</td>
+              <td class="last-touch">Task: [Outreach] [Email] [Out] AI Agreement Management and Reporting (Jamie Butler)</td>
+            </tr>
+            
+            <tr data-owner="Jamie Butler" data-tier="partial" data-search="i2g systems i2g systems partial win — lead w/ delivered">
+              <td>
+                <a class="acct" href="https://rev-io.my.salesforce.com/001PX000001jsv8YAA" target="_blank" rel="noopener">I2G Systems</a>
+                <div class="sub">I2G Systems</div>
+              </td>
+              <td>Jamie Butler</td>
+              <td class="money">$500</td>
+              <td><span class="tier partial">Partial Win — Lead w/ Delivered</span></td>
+              <td>1</td>
+              <td>2026-06-08</td>
+              <td class="last-touch">Task: [Outreach] [Email] [Out] Here We Go Again (Jamie Butler)</td>
+            </tr>
+            
+            <tr data-owner="Jamie Butler" data-tier="ready" data-search="safe data systems safe data systems fully unblocked — re-engage now">
+              <td>
+                <a class="acct" href="https://rev-io.my.salesforce.com/001PX00000NjfxuYAB" target="_blank" rel="noopener">Safe Data Systems</a>
+                <div class="sub">Safe Data Systems</div>
+              </td>
+              <td>Jamie Butler</td>
+              <td class="money">$500</td>
+              <td><span class="tier ready">Fully Unblocked — Re-engage Now</span></td>
+              <td>1</td>
+              <td>2026-06-08</td>
+              <td class="last-touch">Task: Gatekeeper (Abbey McIntosh)</td>
+            </tr>
+            
+            <tr data-owner="Jamie Butler" data-tier="blocked" data-search="teletech communications teletech communications still blocked (hard gaps)">
+              <td>
+                <a class="acct" href="https://rev-io.my.salesforce.com/001PX00000RtXQQYA3" target="_blank" rel="noopener">Teletech Communications</a>
+                <div class="sub">Teletech Communications</div>
+              </td>
+              <td>Jamie Butler</td>
+              <td class="money">$500</td>
+              <td><span class="tier blocked">Still Blocked (hard gaps)</span></td>
+              <td>1</td>
+              <td>2026-06-09</td>
+              <td class="last-touch">Task: [Outreach] [Email] [Out] AI Agreement Management and Reporting (Jamie Butler)</td>
+            </tr>
+            
+            <tr data-owner="Jamie Butler" data-tier="none" data-search="yovu yovu no apollo signal">
+              <td>
+                <a class="acct" href="https://rev-io.my.salesforce.com/0011C00001oOXyJQAW" target="_blank" rel="noopener">YOVU</a>
+                <div class="sub">YOVU</div>
+              </td>
+              <td>Jamie Butler</td>
+              <td class="money">$500</td>
+              <td><span class="tier none">No Apollo signal</span></td>
+              <td>1</td>
+              <td>2026-06-08</td>
+              <td class="last-touch">Task: [Outreach] [Email] [Out] Re: Initial Demo Summary: March 23rd, 2026 (Jamie Butler)</td>
+            </tr>
+            
+            <tr data-owner="Jamie Butler" data-tier="blocked" data-search="tech solutions now tech solutions now still blocked (hard gaps)">
+              <td>
+                <a class="acct" href="https://rev-io.my.salesforce.com/0016O00003ebgvdQAA" target="_blank" rel="noopener">Tech Solutions Now</a>
+                <div class="sub">Tech Solutions Now</div>
+              </td>
+              <td>Jamie Butler</td>
+              <td class="money">$400</td>
+              <td><span class="tier blocked">Still Blocked (hard gaps)</span></td>
+              <td>1</td>
+              <td>2026-06-09</td>
+              <td class="last-touch">Task: [Outreach] [Email] [Out] AI Agreement Management and Reporting (Jamie Butler)</td>
+            </tr>
+            
+            <tr data-owner="Jamie Butler" data-tier="none" data-search="red arrow technologies red arrow technologies early access psa no apollo signal">
+              <td>
+                <a class="acct" href="https://rev-io.my.salesforce.com/001PX00000Ir3n9YAB" target="_blank" rel="noopener">Red Arrow Technologies</a>
+                <div class="sub">Red Arrow Technologies Early Access PSA</div>
+              </td>
+              <td>Jamie Butler</td>
+              <td class="money">$0</td>
+              <td><span class="tier none">No Apollo signal</span></td>
+              <td>1</td>
+              <td>2026-06-08</td>
+              <td class="last-touch">Task: [Outreach] [Email] [Out] Here We Go Again (Jamie Butler)</td>
+            </tr>
+            
+            <tr data-owner="Joseph Abarno" data-tier="none" data-search="la harpe telephone company il la harpe telephone company no apollo signal">
+              <td>
+                <a class="acct" href="https://rev-io.my.salesforce.com/001PX00000Jgo78YAB" target="_blank" rel="noopener">La Harpe Telephone Company IL</a>
+                <div class="sub">La Harpe Telephone Company</div>
+              </td>
+              <td>Joseph Abarno</td>
+              <td class="money">$3,000</td>
+              <td><span class="tier none">No Apollo signal</span></td>
+              <td>1</td>
+              <td>2025-07-08</td>
+              <td class="last-touch">Event: (Discovery Call) La Harpe Telephone Company IL &amp; Rev.io (Jamie Butler)</td>
+            </tr>
+            
+            <tr data-owner="Joseph Abarno" data-tier="partial" data-search="selectqos selectqos partial win — lead w/ delivered">
+              <td>
+                <a class="acct" href="https://rev-io.my.salesforce.com/0016O00003ebhrzQAA" target="_blank" rel="noopener">SelectQoS</a>
+                <div class="sub">SelectQoS</div>
+              </td>
+              <td>Joseph Abarno</td>
+              <td class="money">$2,550</td>
+              <td><span class="tier partial">Partial Win — Lead w/ Delivered</span></td>
+              <td>1</td>
+              <td>2026-06-09</td>
+              <td class="last-touch">Task: [Outreach] [Email] [Out] AI Agreement Management and Reporting (Jamie Butler)</td>
+            </tr>
+            
+            <tr data-owner="Joseph Abarno" data-tier="none" data-search="drn drn/readitech billing i no apollo signal">
+              <td>
+                <a class="acct" href="https://rev-io.my.salesforce.com/0016O00003ebkPyQAI" target="_blank" rel="noopener">DRN</a>
+                <div class="sub">DRN/Readitech Billing I</div>
+              </td>
+              <td>Joseph Abarno</td>
+              <td class="money">$1,700</td>
+              <td><span class="tier none">No Apollo signal</span></td>
+              <td>1</td>
+              <td>2026-06-09</td>
+              <td class="last-touch">Task: [Outreach] [Email] [Out] AI Agreement Management and Reporting (Jamie Butler)</td>
+            </tr>
+            
+            <tr data-owner="Joseph Abarno" data-tier="ready" data-search="advantage it services advantage its fully unblocked — re-engage now">
+              <td>
+                <a class="acct" href="https://rev-io.my.salesforce.com/001PX000004QIIPYA4" target="_blank" rel="noopener">Advantage IT Services</a>
+                <div class="sub">Advantage ITs</div>
+              </td>
+              <td>Joseph Abarno</td>
+              <td class="money">$1,495</td>
+              <td><span class="tier ready">Fully Unblocked — Re-engage Now</span></td>
+              <td>1</td>
+              <td>2026-06-09</td>
+              <td class="last-touch">Task: [Outreach] [Email] [In] Automatic reply: AI Agreement Management and Reporting (Jamie Butler)</td>
+            </tr>
+            
+            <tr data-owner="Joseph Abarno" data-tier="ready" data-search="techmedics techmedics core delivered — re-engage now">
+              <td>
+                <a class="acct" href="https://rev-io.my.salesforce.com/001PX000007pUo1YAE" target="_blank" rel="noopener">Techmedics</a>
+                <div class="sub">Techmedics</div>
+              </td>
+              <td>Joseph Abarno</td>
+              <td class="money">$1,360</td>
+              <td><span class="tier ready">Core Delivered — Re-engage Now</span></td>
+              <td>1</td>
+              <td>2026-06-09</td>
+              <td class="last-touch">Task: [Outreach] [Email] [Out] AI Agreement Management and Reporting (Jamie Butler)</td>
+            </tr>
+            
+            <tr data-owner="Joseph Abarno" data-tier="partial" data-search="mannassi it solutions mannassi it solutions partial win — lead w/ delivered">
+              <td>
+                <a class="acct" href="https://rev-io.my.salesforce.com/0016O00003dmp7hQAA" target="_blank" rel="noopener">Mannassi IT Solutions</a>
+                <div class="sub">Mannassi IT Solutions</div>
+              </td>
+              <td>Joseph Abarno</td>
+              <td class="money">$575</td>
+              <td><span class="tier partial">Partial Win — Lead w/ Delivered</span></td>
+              <td>1</td>
+              <td>2026-06-09</td>
+              <td class="last-touch">Task: [Outreach] [Email] [Out] AI Agreement Management and Reporting (Jamie Butler)</td>
+            </tr>
+            
+            <tr data-owner="Joseph Abarno" data-tier="none" data-search="cyber security consultants cyber security consultants no apollo signal">
+              <td>
+                <a class="acct" href="https://rev-io.my.salesforce.com/001PX00000WXisgYAD" target="_blank" rel="noopener">Cyber Security Consultants</a>
+                <div class="sub">Cyber Security Consultants</div>
+              </td>
+              <td>Joseph Abarno</td>
+              <td class="money">$400</td>
+              <td><span class="tier none">No Apollo signal</span></td>
+              <td>1</td>
+              <td>2026-06-09</td>
+              <td class="last-touch">Task: [Outreach] [Email] [Out] AI Agreement Management and Reporting (Jamie Butler)</td>
+            </tr>
+            
+            <tr data-owner="Joseph Abarno" data-tier="ready" data-search="clarus it solutions clarus fully unblocked — re-engage now">
+              <td>
+                <a class="acct" href="https://rev-io.my.salesforce.com/001PX000001rZh7YAE" target="_blank" rel="noopener">Clarus IT Solutions</a>
+                <div class="sub">Clarus</div>
+              </td>
+              <td>Joseph Abarno</td>
+              <td class="money">$250</td>
+              <td><span class="tier ready">Fully Unblocked — Re-engage Now</span></td>
+              <td>1</td>
+              <td>2026-06-09</td>
+              <td class="last-touch">Task: [Outreach] [Email] [Out] AI Agreement Management and Reporting (Jamie Butler)</td>
+            </tr>
+            
+      </tbody>
+    </table>
+  </div>
+</main>
+<script>
+const search = document.getElementById('search');
+const owner = document.getElementById('owner');
+const tier = document.getElementById('tier');
+const rows = [...document.querySelectorAll('tbody tr')];
+function applyFilters() {
+  const q = search.value.trim().toLowerCase();
+  const o = owner.value;
+  const t = tier.value;
+  rows.forEach(row => {
+    const okQ = !q || row.dataset.search.includes(q);
+    const okO = !o || row.dataset.owner === o;
+    const okT = !t || row.dataset.tier.split(' ').includes(t);
+    row.classList.toggle('hidden', !(okQ && okO && okT));
+  });
+}
+[search, owner, tier].forEach(el => el.addEventListener('input', applyFilters));
+document.getElementById('reset').addEventListener('click', () => {
+  search.value = ''; owner.value = ''; tier.value = ''; applyFilters();
+});
+</script>
+</body>
+</html>
