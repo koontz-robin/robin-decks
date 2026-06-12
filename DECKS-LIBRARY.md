@@ -25,6 +25,7 @@ Repo: `git@github.com:koontz-robin/robin-decks.git`
 | Rep Coaching Dashboard | rep-coaching-dashboard.html | https://koontz-robin.github.io/robin-decks/rep-coaching-dashboard.html | On demand |
 | SDR Efficiency Dashboard | sdr-efficiency.html | https://koontz-robin.github.io/robin-decks/sdr-efficiency.html | On demand |
 | CBR Dashboard | cbr-dashboard.html | https://koontz-robin.github.io/robin-decks/cbr-dashboard.html | On demand |
+| Competitor Contract End Date Monitor | competitor-contract-enddate-monitor.html | https://koontz-robin.github.io/robin-decks/competitor-contract-enddate-monitor.html | Dry-run May 2026 Outreach transcript scan |
 | CSA Pipeline Dashboard | csa-pipeline-dashboard.html | https://koontz-robin.github.io/robin-decks/csa-pipeline-dashboard.html | On demand |
 | Monthly Pipeline Dashboard | monthly-pipeline-dashboard.html | https://koontz-robin.github.io/robin-decks/monthly-pipeline-dashboard.html | On demand |
 | 2026 Pipeline Pace | 2026-pipeline-pace.html | https://koontz-robin.github.io/robin-decks/2026-pipeline-pace.html | On demand |
