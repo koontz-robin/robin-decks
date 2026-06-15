@@ -21,6 +21,7 @@ const PROSPECT_MEETING_TYPES = [
   "4-Pricing / Negotiation Call",
   "Tradeshow Meeting"
 ];
+const EXCLUDED_CLOSED_LOST_REASONS = new Set(["Unknown", "No Decision / Non-Responsive"]);
 
 const MONTHS = [
   ["jan", "2026-01", "Jan"],
@@ -276,8 +277,11 @@ for (let index = 0; index < MONTHS.length; index++) {
 
   const lostRows = lost.filter(row => monthKey(row.CloseDate) === ym);
   const byReason = {};
-  for (const row of lostRows) addBreakdown(byReason, row.Loss_Reason__c || "Unknown", 1);
-  setMonth(feeds[5], index, lostRows.length, topBreakdown(byReason), { status, reports: lostRows.length ? 1 : 0 });
+  for (const row of lostRows) {
+    const reason = row.Loss_Reason__c || "Unknown";
+    if (!EXCLUDED_CLOSED_LOST_REASONS.has(reason)) addBreakdown(byReason, reason, 1);
+  }
+  setMonth(feeds[5], index, Object.values(byReason).reduce((sum, value) => sum + value, 0), topBreakdown(byReason), { status, reports: Object.keys(byReason).length ? 1 : 0 });
 
   const meetingRows = prospectMeetings.filter(row => monthKey(row.ActivityDate) === ym);
   const byMeetingRep = {};
