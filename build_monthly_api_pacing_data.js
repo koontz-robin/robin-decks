@@ -330,7 +330,7 @@ for (let index = 0; index < MONTHS.length; index++) {
 }
 
 const output = {
-  title: "Monthly Report Pacing Dashboard",
+  title: "Sales KPIs - Monthly Pacing Dashboard",
   year: 2026,
   asOf: "2026-06-15",
   summaryLabel: "Ryan's starting report set",
