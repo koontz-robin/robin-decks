@@ -24,7 +24,6 @@
       <div class="stamp" id="stamp">Loading data...</div>
     </div>
   </header>
-  <section class="kpis" id="kpis"></section>
   <section>
     <div class="section-head"><div><h2>Report Summary</h2><p>Each report as a row with Jan-Dec values and a trend line.</p></div></div>
     <div class="table-panel"><table class="summary"><thead id="summaryHead"></thead><tbody id="summaryBody"></tbody></table></div>
@@ -32,7 +31,7 @@
   <section>
     <div class="section-head"><div><h2>Report Breakdowns</h2><p>Each product, source, rep, or loss reason is a row. The sparkline shows the full-year monthly trend.</p></div></div>
     <div id="detailTables"></div>
-    <div class="note">Data source: <code>monthly-api-pacing-data.json</code>. Discovery/demo rows currently have monthly totals; rep-level splits will populate when the Event export is added.</div>
+    <div class="note">Data source: <code>monthly-api-pacing-data.json</code>. Salesforce-backed rows refresh through the dashboard data builder.</div>
   </section>
 </main>
 <script>
@@ -72,12 +71,6 @@ function render(data){
   document.getElementById("title").textContent=data.title||"Sales KPIs - Monthly Pacing Dashboard";
   document.getElementById("subtitle").textContent=`${data.summaryLabel||"Reports"} by month for ${data.year||"the year"}, with detail rows and line graphs.`;
   document.getElementById("stamp").innerHTML=`As of ${data.asOf||"not set"}<br>${feeds.length} reports tracked`;
-  const actualYtd=feeds.reduce((sum,feed)=>sum+ytd(feed),0);
-  const reports=feeds.reduce((sum,feed)=>sum+MONTHS.reduce((n,[key])=>n+Number(getMonth(feed,key).reports||0),0),0);
-  const populatedRows=feeds.reduce((sum,feed)=>sum+allLabels(feed).length,0);
-  const missingBreakdowns=feeds.filter(feed=>!allLabels(feed).length).length;
-  const kpis=[["Reports",feeds.length,data.summaryLabel||"Report set","var(--cyan)"],["YTD Total",number(actualYtd),"Combined row totals","var(--green)"],["Monthly Entries",reports,"Report/month entries loaded","var(--violet)"],["Detail Rows",populatedRows,"Products, sources, reps, reasons","var(--yellow)"],["Pending Splits",missingBreakdowns,"Need row-level export","var(--red)"]];
-  document.getElementById("kpis").innerHTML=kpis.map(([label,value,sub,color])=>`<div class="kpi" style="--accent:${color}"><div class="kpi-label">${label}</div><div class="kpi-value">${value}</div><div class="kpi-sub">${sub}</div></div>`).join("");
   const monthHeaders=MONTHS.map(([,label])=>`<th>${label}</th>`).join("");
   document.getElementById("summaryHead").innerHTML=`<tr><th>Report</th>${monthHeaders}<th>YTD</th><th>Trend</th><th>Status</th></tr>`;
   document.getElementById("summaryBody").innerHTML=feeds.map(feed=>{
