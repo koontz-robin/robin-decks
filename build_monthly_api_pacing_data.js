@@ -97,6 +97,12 @@ const pace = readJson("sf_2026_pipeline_pace.json", {});
 const created = deck.created_2026_jan_jun || [];
 const won = deck.closed_won_2026_jan_jun || [];
 const lost = deck.closed_lost_2026_jan_jun || [];
+const juneCreatedReps = new Set(
+  created
+    .filter(row => monthKey(row.CreatedDate) === "2026-06")
+    .map(row => row.Owner)
+    .filter(Boolean)
+);
 
 const feeds = [
   feed({
@@ -106,6 +112,15 @@ const feeds = [
     metric: "MRR",
     unit: "currency",
     source: "Salesforce opportunities by CloseDate"
+  }),
+  feed({
+    id: "closed-won-mrr-by-rep-june-created",
+    name: "Closed Won MRR by Rep",
+    category: "Closed Won",
+    metric: "MRR",
+    unit: "currency",
+    source: "Salesforce closed-won opportunities; reps with June-created opps only",
+    importance: "Critical"
   }),
   feed({
     id: "opps-created-by-product",
@@ -169,18 +184,27 @@ for (let index = 0; index < MONTHS.length; index++) {
   for (const row of wonRows) addBreakdown(wonByProduct, normalizeProduct(row.Product_Type__c), row.Amount);
   setMonth(feeds[0], index, wonRows.reduce((sum, row) => sum + Number(row.Amount || 0), 0), topBreakdown(wonByProduct), { status, reports: wonRows.length ? 1 : 0 });
 
+  const wonRowsForJuneCreatedReps = wonRows.filter(row => juneCreatedReps.has(row.Owner));
+  const wonByRep = {};
+  for (const row of wonRowsForJuneCreatedReps) addBreakdown(wonByRep, row.Owner, row.Amount);
+  setMonth(feeds[1], index, wonRowsForJuneCreatedReps.reduce((sum, row) => sum + Number(row.Amount || 0), 0), topBreakdown(wonByRep, 20), {
+    status,
+    reports: Object.keys(wonByRep).length ? 1 : 0,
+    notes: index === 5 ? "Rows are limited to reps who have at least one opportunity created in June." : undefined
+  });
+
   const createdRows = created.filter(row => monthKey(row.CreatedDate) === ym);
   const createdByProduct = {};
   for (const row of createdRows) addBreakdown(createdByProduct, normalizeProduct(row.Product_Type__c), 1);
-  setMonth(feeds[1], index, createdRows.length, topBreakdown(createdByProduct), { status, reports: createdRows.length ? 1 : 0 });
+  setMonth(feeds[2], index, createdRows.length, topBreakdown(createdByProduct), { status, reports: createdRows.length ? 1 : 0 });
 
   const bySource = {};
   for (const row of createdRows) addBreakdown(bySource, sourceName(row), 1);
-  setMonth(feeds[2], index, Object.values(bySource).reduce((sum, value) => sum + value, 0), topBreakdown(bySource), { status, reports: createdRows.length ? 1 : 0 });
+  setMonth(feeds[3], index, Object.values(bySource).reduce((sum, value) => sum + value, 0), topBreakdown(bySource), { status, reports: createdRows.length ? 1 : 0 });
 
   const byRep = {};
   for (const row of createdRows.filter(row => Number(row.Amount || 0) > 0)) addBreakdown(byRep, row.Owner, 1);
-  setMonth(feeds[3], index, Object.values(byRep).reduce((sum, value) => sum + value, 0), topBreakdown(byRep, 15), {
+  setMonth(feeds[4], index, Object.values(byRep).reduce((sum, value) => sum + value, 0), topBreakdown(byRep, 15), {
     status,
     reports: Object.keys(byRep).length ? 1 : 0,
     notes: index === 5 ? "Filtered to opportunities with Amount > 0, per Ryan's requirement." : undefined
@@ -189,17 +213,17 @@ for (let index = 0; index < MONTHS.length; index++) {
   const lostRows = lost.filter(row => monthKey(row.CloseDate) === ym);
   const byReason = {};
   for (const row of lostRows) addBreakdown(byReason, row.Loss_Reason__c || "Unknown", 1);
-  setMonth(feeds[4], index, lostRows.length, topBreakdown(byReason), { status, reports: lostRows.length ? 1 : 0 });
+  setMonth(feeds[5], index, lostRows.length, topBreakdown(byReason), { status, reports: lostRows.length ? 1 : 0 });
 
   const discovery = SCORECARD.discoveryComplete[index];
-  setMonth(feeds[5], index, discovery || 0, [], {
+  setMonth(feeds[6], index, discovery || 0, [], {
     status: discovery == null ? "missing" : status,
     reports: discovery == null ? 0 : 1,
     notes: discovery == null ? "Needs rep-level event export to split by rep." : "Monthly total loaded; rep-level split needs the event export."
   });
 
   const demos = SCORECARD.initialDemoComplete[index];
-  setMonth(feeds[6], index, demos || 0, [], {
+  setMonth(feeds[7], index, demos || 0, [], {
     status: demos == null ? "missing" : status,
     reports: demos == null ? 0 : 1,
     notes: demos == null ? "Needs rep-level event export to split by rep." : "Monthly total loaded; rep-level split needs the event export."
