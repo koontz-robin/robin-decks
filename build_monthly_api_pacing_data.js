@@ -35,13 +35,15 @@ function monthKey(dateValue) {
 
 function normalizeProduct(value) {
   const product = value || "Other / Not Set";
-  if (product === "Billing Add-on" || product === "Odin") return "Billing / Odin";
+  if (product === "Billing" || product === "Billing Add-on" || product === "Billing / Odin" || product === "Odin") return "Billing";
   if (product === "PSA") return "PSA 2.0";
   return product;
 }
 
 function sourceName(row) {
-  return row.Marketing_Source__c || row.Marketing_Sub_source__c || row.Lead_Direction__c || "Other / Not Set";
+  const source = row.Marketing_Source__c || row.Marketing_Sub_source__c || row.Lead_Direction__c || "Other / Not Set";
+  if (source === "Sales Generated") return "Sales";
+  return source;
 }
 
 function addBreakdown(map, label, value) {
