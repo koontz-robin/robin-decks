@@ -52,7 +52,12 @@ function seriesFor(feed,label){
 function allLabels(feed){
   const seen=new Set();
   for(const [key] of MONTHS) for(const item of getMonth(feed,key).breakdown||[]) if(item.value) seen.add(item.label);
-  return [...seen].sort((a,b)=>seriesFor(feed,b).reduce((x,y)=>x+y,0)-seriesFor(feed,a).reduce((x,y)=>x+y,0)||a.localeCompare(b));
+  let labels=[...seen];
+  if(feed.id==="opps-created-by-rep-nonzero"){
+    const juneActive=new Set((getMonth(feed,"jun").breakdown||[]).filter(item=>Number(item.value||0)>0).map(item=>item.label));
+    labels=labels.filter(label=>juneActive.has(label));
+  }
+  return labels.sort((a,b)=>seriesFor(feed,b).reduce((x,y)=>x+y,0)-seriesFor(feed,a).reduce((x,y)=>x+y,0)||a.localeCompare(b));
 }
 function sparkline(values){
   const w=140,h=34,p=3,max=Math.max(...values,1),step=(w-p*2)/(values.length-1);
