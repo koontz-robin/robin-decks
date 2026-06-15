@@ -1,5 +1,27 @@
 const fs = require("fs");
 
+const SF_INSTANCE = "https://rev-io.my.salesforce.com";
+const SF_CLIENT_ID = "3MVG91ftikjGaMd.NAf5_nx2GISRurI0fIm1aTgGSe.jNIN4bOdlqn95rfrur3RACkqjIZlDG8iCTnKzFRa.N";
+const SF_CLIENT_SECRET = "FA7C3F3F72D6A1786F374CF966B505DB9B07AE43D69A6D54F127B2397713716E";
+const AE_CAPACITY_REPS = [
+  "Jamie Butler",
+  "Andy Whisenant",
+  "Connor Flynn",
+  "Jake Borah",
+  "Husam Zalmiyar",
+  "Patrick Davies",
+  "Jaylin Bender"
+];
+const AE_QUERY_NAMES = [...new Set([...AE_CAPACITY_REPS, "Andrew Whisenant"])];
+const NAME_ALIASES = { "Andrew Whisenant": "Andy Whisenant" };
+const PROSPECT_MEETING_TYPES = [
+  "1-Discovery Call",
+  "2-Initial DEMO",
+  "3-Follow Up DEMO / Meeting",
+  "4-Pricing / Negotiation Call",
+  "Tradeshow Meeting"
+];
+
 const MONTHS = [
   ["jan", "2026-01", "Jan"],
   ["feb", "2026-02", "Feb"],
@@ -15,11 +37,6 @@ const MONTHS = [
   ["dec", "2026-12", "Dec"]
 ];
 
-const SCORECARD = {
-  discoveryComplete: [97, 94, 94, 112, 102, 37, null, null, null, null, null, null],
-  initialDemoComplete: [50, 49, 57, 50, 53, 16, null, null, null, null, null, null]
-};
-
 function readJson(path, fallback) {
   try {
     return JSON.parse(fs.readFileSync(path, "utf8"));
@@ -31,6 +48,11 @@ function readJson(path, fallback) {
 function monthKey(dateValue) {
   if (!dateValue) return null;
   return String(dateValue).slice(0, 7);
+}
+
+function normalizeName(name) {
+  const clean = (name || "").trim();
+  return NAME_ALIASES[clean] || clean;
 }
 
 function normalizeProduct(value) {
@@ -90,6 +112,54 @@ function setMonth(feed, monthIndex, actual, breakdown, options = {}) {
     notes: options.notes,
     breakdown: breakdown || []
   };
+}
+
+function soqlString(value) {
+  return `'${String(value).replace(/\\/g, "\\\\").replace(/'/g, "\\'")}'`;
+}
+
+async function sfAuth() {
+  const params = new URLSearchParams({
+    grant_type: "client_credentials",
+    client_id: SF_CLIENT_ID,
+    client_secret: SF_CLIENT_SECRET
+  });
+  const response = await fetch(`${SF_INSTANCE}/services/oauth2/token`, {
+    method: "POST",
+    headers: { "Content-Type": "application/x-www-form-urlencoded" },
+    body: params
+  });
+  if (!response.ok) throw new Error(`Salesforce auth failed: ${response.status} ${await response.text()}`);
+  const payload = await response.json();
+  return { base: payload.instance_url, token: payload.access_token };
+}
+
+async function sfQuery(base, token, query) {
+  let url = `${base}/services/data/v59.0/query?q=${encodeURIComponent(query.trim())}`;
+  const records = [];
+  while (url) {
+    const response = await fetch(url, { headers: { Authorization: `Bearer ${token}` } });
+    if (!response.ok) throw new Error(`Salesforce query failed: ${response.status} ${await response.text()}`);
+    const payload = await response.json();
+    records.push(...(payload.records || []));
+    url = payload.nextRecordsUrl ? `${base}${payload.nextRecordsUrl}` : null;
+  }
+  return records;
+}
+
+async function fetchProspectMeetings() {
+  const { base, token } = await sfAuth();
+  const query = `
+    SELECT Id, ActivityDate, Owner.Name
+    FROM Event
+    WHERE ActivityDate >= 2026-01-01
+      AND ActivityDate <= 2026-12-31
+      AND IsDeleted = false
+      AND Type IN (${PROSPECT_MEETING_TYPES.map(soqlString).join(", ")})
+      AND Appointment_Status__c = 'Completed'
+      AND Owner.Name IN (${AE_QUERY_NAMES.map(soqlString).join(", ")})
+  `;
+  return sfQuery(base, token, query);
 }
 
 const deck = readJson("sf_june_deck_data.json", {});
@@ -156,24 +226,18 @@ const feeds = [
     source: "Salesforce closed-lost opportunities by CloseDate"
   }),
   feed({
-    id: "discovery-calls-completed-by-rep",
-    name: "Discovery Calls Completed by Rep",
+    id: "prospect-meetings-by-rep",
+    name: "Prospect Meetings by Rep",
     category: "Meetings",
-    metric: "Completed calls",
+    metric: "Completed prospect meetings",
     unit: "count",
-    source: "PSA team tracker scorecard totals",
-    importance: "High"
-  }),
-  feed({
-    id: "initial-demos-completed-by-rep",
-    name: "Initial Demos Completed by Rep",
-    category: "Meetings",
-    metric: "Completed demos",
-    unit: "count",
-    source: "PSA team tracker scorecard totals",
+    source: "Salesforce completed prospect Event types; seven-AE capacity roster",
     importance: "High"
   })
 ];
+
+async function main() {
+const prospectMeetings = await fetchProspectMeetings();
 
 for (let index = 0; index < MONTHS.length; index++) {
   const [, ym] = MONTHS[index];
@@ -215,18 +279,16 @@ for (let index = 0; index < MONTHS.length; index++) {
   for (const row of lostRows) addBreakdown(byReason, row.Loss_Reason__c || "Unknown", 1);
   setMonth(feeds[5], index, lostRows.length, topBreakdown(byReason), { status, reports: lostRows.length ? 1 : 0 });
 
-  const discovery = SCORECARD.discoveryComplete[index];
-  setMonth(feeds[6], index, discovery || 0, [], {
-    status: discovery == null ? "missing" : status,
-    reports: discovery == null ? 0 : 1,
-    notes: discovery == null ? "Needs rep-level event export to split by rep." : "Monthly total loaded; rep-level split needs the event export."
-  });
-
-  const demos = SCORECARD.initialDemoComplete[index];
-  setMonth(feeds[7], index, demos || 0, [], {
-    status: demos == null ? "missing" : status,
-    reports: demos == null ? 0 : 1,
-    notes: demos == null ? "Needs rep-level event export to split by rep." : "Monthly total loaded; rep-level split needs the event export."
+  const meetingRows = prospectMeetings.filter(row => monthKey(row.ActivityDate) === ym);
+  const byMeetingRep = {};
+  for (const row of meetingRows) {
+    const owner = normalizeName(row.Owner?.Name);
+    if (AE_CAPACITY_REPS.includes(owner)) addBreakdown(byMeetingRep, owner, 1);
+  }
+  setMonth(feeds[6], index, Object.values(byMeetingRep).reduce((sum, value) => sum + value, 0), topBreakdown(byMeetingRep, 20), {
+    status,
+    reports: Object.keys(byMeetingRep).length ? 1 : 0,
+    notes: index === 5 ? "Prospect meetings use the AE capacity dashboard ruleset and seven-AE roster." : undefined
   });
 }
 
@@ -240,3 +302,9 @@ const output = {
 
 fs.writeFileSync("monthly-api-pacing-data.json", JSON.stringify(output, null, 2) + "\n");
 console.log(`Wrote monthly-api-pacing-data.json with ${feeds.length} reports`);
+}
+
+main().catch(error => {
+  console.error(error);
+  process.exit(1);
+});
