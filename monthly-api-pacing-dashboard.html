@@ -1,0 +1,86 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Monthly API Pacing Dashboard</title>
+<style>
+:root{--bg:#07111f;--panel:#0e1b2d;--panel2:#132238;--line:#26364d;--text:#edf5ff;--muted:#91a1b5;--soft:#607089;--cyan:#35c7df;--green:#35d08b;--yellow:#f5b942;--red:#ff6b6b;--violet:#a78bfa}
+*{box-sizing:border-box}body{margin:0;min-height:100vh;background:linear-gradient(180deg,rgba(53,199,223,.1),transparent 330px),var(--bg);color:var(--text);font-family:Inter,"Segoe UI",system-ui,sans-serif}.shell{max-width:1560px;margin:0 auto;padding:28px 28px 42px}.topbar{display:flex;justify-content:space-between;align-items:flex-end;gap:20px;padding-bottom:20px;border-bottom:1px solid var(--line)}.eyebrow{color:var(--cyan);font-size:11px;font-weight:800;text-transform:uppercase;letter-spacing:1.6px}h1{margin:6px 0 0;font-size:36px;line-height:1.05;letter-spacing:0}.subhead{margin-top:8px;color:var(--muted);font-size:14px;max-width:760px;line-height:1.45}.actions{display:flex;align-items:flex-end;gap:10px;flex-wrap:wrap;justify-content:flex-end}.stamp{color:var(--soft);font-size:12px;text-align:right;line-height:1.5;min-width:190px}button,.file-label{border:1px solid var(--line);background:#10243b;color:var(--text);border-radius:6px;min-height:36px;padding:0 12px;font:700 12px Inter,"Segoe UI",system-ui,sans-serif;cursor:pointer}button:hover,.file-label:hover{border-color:rgba(53,199,223,.8)}input[type=file]{display:none}.kpis{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:12px;margin:20px 0}.kpi,.panel,.month-card{background:linear-gradient(180deg,var(--panel2),var(--panel));border:1px solid var(--line);border-radius:8px;box-shadow:0 18px 42px rgba(0,0,0,.22)}.kpi{padding:15px;border-top:3px solid var(--accent,var(--cyan))}.kpi-label{color:var(--muted);font-size:10px;font-weight:800;text-transform:uppercase;letter-spacing:1.2px}.kpi-value{margin-top:8px;font-size:30px;font-weight:900;line-height:1}.kpi-sub{margin-top:6px;color:var(--soft);font-size:12px;line-height:1.35}.section-head{display:flex;justify-content:space-between;align-items:flex-end;gap:18px;margin:24px 0 10px}.section-head h2{margin:0;font-size:19px;letter-spacing:0}.section-head p{margin:4px 0 0;color:var(--muted);font-size:13px}.month-grid{display:grid;grid-template-columns:repeat(6,minmax(0,1fr));gap:12px}.month-card{padding:14px;min-height:160px}.month-card.current{border-color:rgba(53,199,223,.55)}.month-top{display:flex;justify-content:space-between;gap:12px;align-items:flex-start}.month-name{font-size:12px;font-weight:900;text-transform:uppercase;letter-spacing:1.1px;color:rgba(237,245,255,.78)}.month-status{margin-top:5px;display:inline-flex;border-radius:999px;padding:2px 8px;background:rgba(53,199,223,.1);color:var(--cyan);font-size:9px;font-weight:900;text-transform:uppercase;letter-spacing:1px}.month-num{text-align:right;font-size:24px;font-weight:900;color:var(--cyan)}.month-meta{color:var(--muted);font-size:12px;margin-top:9px;line-height:1.4}.track{height:7px;border-radius:999px;overflow:hidden;background:rgba(255,255,255,.08);margin-top:11px}.track span{display:block;height:100%;border-radius:999px;background:linear-gradient(90deg,var(--cyan),var(--green));width:0}.month-detail{margin-top:10px;padding-top:10px;border-top:1px solid rgba(255,255,255,.07);display:grid;grid-template-columns:1fr auto;gap:4px 10px;color:var(--soft);font-size:11px}.month-detail strong{color:var(--text)}.panel{overflow:auto}table{width:100%;min-width:1320px;border-collapse:collapse;font-size:12px}th,td{padding:10px 9px;border-bottom:1px solid rgba(255,255,255,.06);border-left:1px solid rgba(255,255,255,.04);text-align:center;vertical-align:middle}th{background:rgba(53,199,223,.08);color:rgba(237,245,255,.62);font-size:10px;font-weight:900;text-transform:uppercase;letter-spacing:1.1px}th:first-child,td:first-child{position:sticky;left:0;z-index:2;text-align:left;border-left:0;background:#0e1b2d}th:first-child{background:#122842;color:var(--cyan)}.feed-name{font-weight:900;color:#fff;min-width:190px}.feed-name span{display:block;color:var(--soft);font-size:10px;font-weight:800;text-transform:uppercase;letter-spacing:1px;margin-top:3px}.cell-value{font-weight:900;color:#fff}.cell-sub{color:var(--soft);font-size:10px;margin-top:2px}.pill{display:inline-flex;align-items:center;justify-content:center;min-width:62px;min-height:20px;border-radius:999px;padding:2px 7px;font-size:9px;font-weight:900;text-transform:uppercase;letter-spacing:.8px}.final{background:rgba(53,208,139,.12);color:var(--green)}.mtd{background:rgba(53,199,223,.12);color:var(--cyan)}.missing{background:rgba(145,161,181,.12);color:var(--muted)}.blocked{background:rgba(255,107,107,.14);color:var(--red)}.future{background:rgba(167,139,250,.12);color:var(--violet)}.feed-card-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:12px;margin-top:12px}.feed-card{padding:15px;border-top:3px solid var(--accent,var(--cyan))}.feed-card h3{margin:0;font-size:16px;letter-spacing:0}.feed-card .meta{display:flex;gap:8px;flex-wrap:wrap;margin-top:8px;color:var(--muted);font-size:11px}.feed-card p{color:var(--muted);font-size:12px;line-height:1.45;margin:10px 0 0}.note{color:var(--soft);font-size:12px;margin-top:12px;line-height:1.5}code{color:var(--cyan)}@media(max-width:1120px){.topbar{display:block}.actions{justify-content:flex-start;margin-top:14px}.stamp{text-align:left}.kpis{grid-template-columns:repeat(2,minmax(0,1fr))}.month-grid{grid-template-columns:repeat(3,minmax(0,1fr))}}@media(max-width:680px){.shell{padding:22px 14px 34px}h1{font-size:28px}.kpis,.month-grid{grid-template-columns:1fr}}
+</style>
+</head>
+<body>
+<main class="shell">
+  <header class="topbar">
+    <div>
+      <div class="eyebrow">Monthly Pacing</div>
+      <h1 id="title">Monthly API Pacing Dashboard</h1>
+      <div class="subhead" id="subtitle">A feed-driven view of the reports and API sources that matter most, broken down by month for the current year.</div>
+    </div>
+    <div class="actions">
+      <label class="file-label" for="dataFile">Load JSON</label>
+      <input id="dataFile" type="file" accept="application/json,.json">
+      <button id="resetBtn" type="button">Reset</button>
+      <div class="stamp" id="stamp">Loading data...</div>
+    </div>
+  </header>
+  <section class="kpis" id="kpis"></section>
+  <section>
+    <div class="section-head"><div><h2>Month-by-Month Pace</h2><p>Aggregated actuals, targets, report counts, and feed health by month.</p></div></div>
+    <div class="month-grid" id="monthGrid"></div>
+  </section>
+  <section>
+    <div class="section-head"><div><h2>Feed Matrix</h2><p>Each important API/report feed against every month of the year.</p></div></div>
+    <div class="panel"><table><thead id="matrixHead"></thead><tbody id="matrixBody"></tbody></table></div>
+  </section>
+  <section>
+    <div class="section-head"><div><h2>Monthly Breakdowns</h2><p>Top product, source, rep, and loss-reason segments inside each monthly report.</p></div></div>
+    <div class="feed-card-grid" id="breakdownCards"></div>
+  </section>
+  <section>
+    <div class="section-head"><div><h2>Feed Health</h2><p>Ownership, importance, YTD pace, and the latest note from each feed.</p></div></div>
+    <div class="feed-card-grid" id="feedCards"></div>
+    <div class="note">Data source: <code>monthly-api-pacing-data.json</code>. Use Load JSON to test a new version before replacing the file.</div>
+  </section>
+</main>
+<script>
+const MONTHS=[["jan","Jan"],["feb","Feb"],["mar","Mar"],["apr","Apr"],["may","May"],["jun","Jun"],["jul","Jul"],["aug","Aug"],["sep","Sep"],["oct","Oct"],["nov","Nov"],["dec","Dec"]];
+const FALLBACK_DATA={title:"Monthly API Pacing Dashboard",year:2026,asOf:"2026-06-15",summaryLabel:"Important report/API feeds",feeds:[]};
+const currency=n=>new Intl.NumberFormat("en-US",{style:"currency",currency:"USD",maximumFractionDigits:0}).format(n||0);
+const number=n=>new Intl.NumberFormat("en-US",{maximumFractionDigits:0}).format(n||0);
+const fmt=(v,u)=>u==="currency"?currency(v):u==="percent"?`${Math.round(v||0)}%`:number(v);
+const pct=(a,t)=>t?Math.max(0,Math.min(999,(a||0)/t*100)):0;
+const statusClass=s=>["final","mtd","missing","blocked","future"].includes(s)?s:"missing";
+const getMonth=(feed,key)=>feed.months&&feed.months[key]||{actual:0,target:0,status:"future",reports:0};
+function monthTotals(data,key){return data.feeds.reduce((acc,feed)=>{const m=getMonth(feed,key);acc.actual+=Number(m.actual||0);acc.target+=Number(m.target||0);acc.reports+=Number(m.reports||0);acc.blocked+=m.status==="blocked"?1:0;acc.missing+=m.status==="missing"?1:0;acc.mtd+=m.status==="mtd"?1:0;return acc},{actual:0,target:0,reports:0,blocked:0,missing:0,mtd:0})}
+function ytd(feed){return MONTHS.reduce((acc,[key])=>{const m=getMonth(feed,key);acc.actual+=Number(m.actual||0);acc.target+=Number(m.target||0);acc.reports+=Number(m.reports||0);if(m.status==="blocked")acc.blocked++;if(m.status==="missing")acc.missing++;if(m.notes)acc.latestNote=m.notes;return acc},{actual:0,target:0,reports:0,blocked:0,missing:0,latestNote:"No notes yet."})}
+function render(data){
+  const feeds=data.feeds||[];
+  const asOf=new Date(`${data.asOf||new Date().toISOString().slice(0,10)}T00:00:00Z`);
+  const currentMonthIndex=Number.isNaN(asOf.getTime())?new Date().getUTCMonth():asOf.getUTCMonth();
+  const allYtd=feeds.map(ytd);
+  const annualTarget=feeds.reduce((sum,f)=>sum+Number(f.annualTarget||0),0);
+  const actualYtd=allYtd.reduce((sum,i)=>sum+i.actual,0);
+  const targetYtd=allYtd.reduce((sum,i)=>sum+i.target,0);
+  const totalReports=allYtd.reduce((sum,i)=>sum+i.reports,0);
+  const blockedFeeds=allYtd.filter(i=>i.blocked>0).length;
+  const missingCells=allYtd.reduce((sum,i)=>sum+i.missing,0);
+  document.getElementById("title").textContent=data.title||"Monthly API Pacing Dashboard";
+  document.getElementById("subtitle").textContent=`${data.summaryLabel||"Feeds"} broken down by month for ${data.year||"the year"}.`;
+  document.getElementById("stamp").innerHTML=`As of ${data.asOf||"not set"}<br>${feeds.length} feeds tracked`;
+  const kpis=[["Feeds Tracked",feeds.length,data.summaryLabel||"Important feeds","var(--cyan)"],["YTD Actual",number(actualYtd),`${Math.round(pct(actualYtd,targetYtd))}% of YTD target`,"var(--green)"],["Annual Target",number(annualTarget),"Combined across configured feeds","var(--yellow)"],["Reports Loaded",totalReports,"Monthly report entries received","var(--violet)"],["Needs Attention",blockedFeeds+missingCells,`${blockedFeeds} blocked feeds · ${missingCells} missing months`,"var(--red)"]];
+  document.getElementById("kpis").innerHTML=kpis.map(([label,value,sub,color])=>`<div class="kpi" style="--accent:${color}"><div class="kpi-label">${label}</div><div class="kpi-value">${value}</div><div class="kpi-sub">${sub}</div></div>`).join("");
+  const maxActual=Math.max(...MONTHS.map(([key])=>monthTotals(data,key).actual),1);
+  document.getElementById("monthGrid").innerHTML=MONTHS.map(([key,label],index)=>{const total=monthTotals(data,key);const status=index>currentMonthIndex?"future":total.blocked?"blocked":total.mtd?"mtd":total.missing?"missing":"final";return `<article class="month-card ${index===currentMonthIndex?"current":""}"><div class="month-top"><div><div class="month-name">${label}</div><div class="month-status ${statusClass(status)}">${status}</div></div><div class="month-num">${number(total.actual)}</div></div><div class="month-meta">${number(total.target)} target · ${number(total.reports)} reports</div><div class="track"><span style="width:${Math.min(100,total.actual/maxActual*100)}%"></span></div><div class="month-detail"><span>Pace</span><strong>${Math.round(pct(total.actual,total.target))}%</strong><span>Blocked</span><strong>${total.blocked}</strong><span>Missing</span><strong>${total.missing}</strong></div></article>`}).join("");
+  document.getElementById("matrixHead").innerHTML=`<tr><th>Feed</th>${MONTHS.map(([,label])=>`<th>${label}</th>`).join("")}<th>YTD</th><th>Pace</th></tr>`;
+  document.getElementById("matrixBody").innerHTML=feeds.map(feed=>{const totals=ytd(feed);return `<tr><td class="feed-name">${feed.name}<span>${feed.category||"Uncategorized"} · ${feed.owner||"Unowned"}</span></td>${MONTHS.map(([key])=>{const m=getMonth(feed,key);return `<td><div class="cell-value">${fmt(m.actual,feed.unit)}</div><div class="cell-sub">${fmt(m.target,feed.unit)} target</div><div class="pill ${statusClass(m.status)}">${m.status||"missing"}</div></td>`}).join("")}<td><div class="cell-value">${fmt(totals.actual,feed.unit)}</div><div class="cell-sub">${number(totals.reports)} reports</div></td><td><div class="cell-value">${Math.round(pct(totals.actual,totals.target))}%</div><div class="cell-sub">${fmt(totals.target,feed.unit)} target</div></td></tr>`}).join("");
+  document.getElementById("breakdownCards").innerHTML=feeds.map((feed,index)=>{const color=["var(--cyan)","var(--green)","var(--yellow)","var(--violet)","var(--red)"][index%5];const monthRows=MONTHS.map(([key,label])=>{const m=getMonth(feed,key);const items=(m.breakdown||[]).slice(0,5);const body=items.length?items.map(item=>`<div class="month-detail"><span>${item.label}</span><strong>${fmt(item.value,feed.unit)}</strong></div>`).join(""):`<p>No breakdown loaded${m.notes?`: ${m.notes}`:"."}</p>`;return `<div class="kpi feed-card" style="--accent:${color}"><h3>${label}</h3><div class="meta"><span>${fmt(m.actual,feed.unit)}</span><span class="pill ${statusClass(m.status)}">${m.status||"missing"}</span></div>${body}</div>`}).join("");return `<article class="panel" style="padding:14px"><div class="feed-name" style="margin-bottom:12px">${feed.name}<span>${feed.source||feed.category||""}</span></div><div class="feed-card-grid">${monthRows}</div></article>`}).join("");
+  document.getElementById("feedCards").innerHTML=feeds.map((feed,index)=>{const totals=ytd(feed);const color=["var(--cyan)","var(--green)","var(--yellow)","var(--violet)","var(--red)"][index%5];return `<article class="kpi feed-card" style="--accent:${color}"><h3>${feed.name}</h3><div class="meta"><span>${feed.category||"Uncategorized"}</span><span>${feed.owner||"Unowned"}</span><span>${feed.importance||"Normal"}</span></div><p><strong>${fmt(totals.actual,feed.unit)}</strong> YTD against <strong>${fmt(totals.target,feed.unit)}</strong> target. ${totals.blocked} blocked months, ${totals.missing} missing months.</p><p>${totals.latestNote}</p></article>`}).join("");
+}
+async function loadDefault(){try{const res=await fetch("monthly-api-pacing-data.json",{cache:"no-store"});if(!res.ok)throw new Error(`HTTP ${res.status}`);render(await res.json())}catch(err){render(FALLBACK_DATA);document.getElementById("stamp").innerHTML=`Fallback data loaded<br>${err.message}`}}
+document.getElementById("dataFile").addEventListener("change",async event=>{const[file]=event.target.files;if(!file)return;render(JSON.parse(await file.text()))});
+document.getElementById("resetBtn").addEventListener("click",loadDefault);
+loadDefault();
+</script>
+</body>
+</html>
