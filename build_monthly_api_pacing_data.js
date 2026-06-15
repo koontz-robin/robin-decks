@@ -163,6 +163,20 @@ async function fetchProspectMeetings() {
   return sfQuery(base, token, query);
 }
 
+async function fetchSdrInfluencedOpportunities() {
+  const { base, token } = await sfAuth();
+  const query = `
+    SELECT Id, CreatedDate, SDR_Influence__c
+    FROM Opportunity
+    WHERE CreatedDate >= 2026-01-01T00:00:00Z
+      AND CreatedDate < 2027-01-01T00:00:00Z
+      AND IsDeleted = false
+      AND SDR_Influence__c != null
+      AND SDR_Influence__c != 'None'
+  `;
+  return sfQuery(base, token, query);
+}
+
 const deck = readJson("sf_june_deck_data.json", {});
 const pace = readJson("sf_2026_pipeline_pace.json", {});
 const created = deck.created_2026_jan_jun || [];
@@ -219,6 +233,15 @@ const feeds = [
     importance: "Critical"
   }),
   feed({
+    id: "sdr-influenced-opps-created-by-month",
+    name: "SDR Influenced Opportunities Created",
+    category: "Pipeline Creation",
+    metric: "Opportunities",
+    unit: "count",
+    source: "Salesforce opportunities by CreatedDate where SDR_Influence__c is populated",
+    importance: "Critical"
+  }),
+  feed({
     id: "closed-lost-by-loss-reason",
     name: "Closed Lost Opportunities by Loss Reason",
     category: "Closed Lost",
@@ -239,6 +262,7 @@ const feeds = [
 
 async function main() {
 const prospectMeetings = await fetchProspectMeetings();
+const sdrInfluencedOpps = await fetchSdrInfluencedOpportunities();
 
 for (let index = 0; index < MONTHS.length; index++) {
   const [, ym] = MONTHS[index];
@@ -275,13 +299,22 @@ for (let index = 0; index < MONTHS.length; index++) {
     notes: index === 5 ? "Filtered to opportunities with Amount > 0, per Ryan's requirement." : undefined
   });
 
+  const sdrRows = sdrInfluencedOpps.filter(row => monthKey(row.CreatedDate) === ym);
+  const bySdr = {};
+  for (const row of sdrRows) addBreakdown(bySdr, row.SDR_Influence__c, 1);
+  setMonth(feeds[5], index, sdrRows.length, topBreakdown(bySdr, 20), {
+    status,
+    reports: Object.keys(bySdr).length ? 1 : 0,
+    notes: index === 5 ? "Counts opportunities created in the month with SDR_Influence__c populated and not None." : undefined
+  });
+
   const lostRows = lost.filter(row => monthKey(row.CloseDate) === ym);
   const byReason = {};
   for (const row of lostRows) {
     const reason = row.Loss_Reason__c || "Unknown";
     if (!EXCLUDED_CLOSED_LOST_REASONS.has(reason)) addBreakdown(byReason, reason, 1);
   }
-  setMonth(feeds[5], index, Object.values(byReason).reduce((sum, value) => sum + value, 0), topBreakdown(byReason), { status, reports: Object.keys(byReason).length ? 1 : 0 });
+  setMonth(feeds[6], index, Object.values(byReason).reduce((sum, value) => sum + value, 0), topBreakdown(byReason), { status, reports: Object.keys(byReason).length ? 1 : 0 });
 
   const meetingRows = prospectMeetings.filter(row => monthKey(row.ActivityDate) === ym);
   const byMeetingRep = {};
@@ -289,7 +322,7 @@ for (let index = 0; index < MONTHS.length; index++) {
     const owner = normalizeName(row.Owner?.Name);
     if (AE_CAPACITY_REPS.includes(owner)) addBreakdown(byMeetingRep, owner, 1);
   }
-  setMonth(feeds[6], index, Object.values(byMeetingRep).reduce((sum, value) => sum + value, 0), topBreakdown(byMeetingRep, 20), {
+  setMonth(feeds[7], index, Object.values(byMeetingRep).reduce((sum, value) => sum + value, 0), topBreakdown(byMeetingRep, 20), {
     status,
     reports: Object.keys(byMeetingRep).length ? 1 : 0,
     notes: index === 5 ? "Prospect meetings use the AE capacity dashboard ruleset and seven-AE roster." : undefined
