@@ -1,0 +1,500 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Rev.io Sales Training — Contract End Date Discovery</title>
+<style>
+  :root {
+    --rev-blue:#0057ff;
+    --rev-cyan:#00c2ff;
+    --rev-green:#00d97e;
+    --rev-amber:#f5a623;
+    --rev-red:#c9252d;
+    --navy:#071426;
+    --navy-2:#0d2036;
+    --ink:#172033;
+    --muted:#65748a;
+    --line:#dbe5f1;
+    --paper:#ffffff;
+    --wash:#f4f7fb;
+  }
+  * { box-sizing:border-box; }
+  html { scroll-behavior:smooth; }
+  body {
+    margin:0;
+    font-family:"Segoe UI", -apple-system, BlinkMacSystemFont, Arial, sans-serif;
+    color:var(--ink);
+    background:var(--wash);
+    line-height:1.5;
+  }
+  nav {
+    position:sticky;
+    top:0;
+    z-index:40;
+    background:rgba(7,20,38,.96);
+    border-bottom:1px solid rgba(255,255,255,.12);
+    backdrop-filter:blur(14px);
+  }
+  .nav-inner {
+    max-width:1180px;
+    margin:0 auto;
+    min-height:62px;
+    padding:0 22px;
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    gap:18px;
+  }
+  .brand { color:#fff; font-size:14px; font-weight:900; white-space:nowrap; }
+  .brand span { color:var(--rev-cyan); }
+  .nav-links { display:flex; gap:4px; flex-wrap:wrap; justify-content:flex-end; }
+  .nav-links a {
+    color:rgba(255,255,255,.68);
+    text-decoration:none;
+    font-size:12px;
+    font-weight:750;
+    padding:7px 10px;
+    border-radius:999px;
+  }
+  .nav-links a:hover { background:rgba(255,255,255,.1); color:#fff; }
+  header {
+    color:#fff;
+    background:
+      linear-gradient(135deg, rgba(7,20,38,.98), rgba(0,41,112,.94)),
+      radial-gradient(circle at 18% 22%, rgba(0,194,255,.26), transparent 28%),
+      radial-gradient(circle at 84% 8%, rgba(0,217,126,.16), transparent 24%);
+  }
+  .hero {
+    max-width:1180px;
+    min-height:calc(100vh - 62px);
+    margin:0 auto;
+    padding:78px 22px 58px;
+    display:grid;
+    grid-template-columns:1.03fr .97fr;
+    align-items:center;
+    gap:42px;
+  }
+  .kicker {
+    display:inline-flex;
+    width:fit-content;
+    border:1px solid rgba(255,255,255,.2);
+    border-radius:999px;
+    padding:6px 13px;
+    color:#9feaff;
+    font-size:11px;
+    font-weight:950;
+    letter-spacing:1.4px;
+    text-transform:uppercase;
+  }
+  h1 {
+    margin:20px 0 16px;
+    font-size:clamp(42px,6vw,76px);
+    line-height:1;
+    letter-spacing:-1.7px;
+  }
+  .hero-copy {
+    max-width:710px;
+    color:rgba(255,255,255,.76);
+    font-size:18px;
+  }
+  .hero-actions { display:flex; gap:12px; flex-wrap:wrap; margin-top:26px; }
+  .btn {
+    display:inline-flex;
+    align-items:center;
+    justify-content:center;
+    min-height:42px;
+    padding:0 17px;
+    border-radius:8px;
+    border:1px solid transparent;
+    text-decoration:none;
+    font-weight:850;
+    font-size:13px;
+  }
+  .btn.primary { background:var(--rev-blue); color:#fff; box-shadow:0 14px 34px rgba(0,87,255,.34); }
+  .btn.secondary { border-color:rgba(255,255,255,.24); color:#fff; background:rgba(255,255,255,.06); }
+  .signal-card {
+    border:1px solid rgba(255,255,255,.15);
+    background:rgba(255,255,255,.07);
+    border-radius:12px;
+    padding:22px;
+    box-shadow:0 26px 70px rgba(0,0,0,.28);
+  }
+  .signal-inner {
+    background:#fff;
+    color:var(--ink);
+    border-radius:8px;
+    padding:22px;
+    display:grid;
+    gap:15px;
+  }
+  .signal-row {
+    display:grid;
+    grid-template-columns:46px 1fr;
+    gap:14px;
+    align-items:start;
+    border-bottom:1px solid var(--line);
+    padding-bottom:14px;
+  }
+  .signal-row:last-child { border-bottom:0; padding-bottom:0; }
+  .signal-num {
+    width:42px;
+    height:42px;
+    border-radius:50%;
+    display:grid;
+    place-items:center;
+    background:rgba(0,87,255,.1);
+    color:var(--rev-blue);
+    font-weight:950;
+  }
+  .signal-row h3 { margin:0 0 4px; font-size:17px; }
+  .signal-row p { margin:0; color:var(--muted); font-size:13px; }
+  section { padding:76px 22px; }
+  .dark { background:var(--navy); color:#fff; }
+  .wrap { max-width:1180px; margin:0 auto; }
+  .section-head {
+    display:flex;
+    justify-content:space-between;
+    align-items:end;
+    gap:28px;
+    margin-bottom:28px;
+  }
+  .eyebrow {
+    color:var(--rev-blue);
+    font-size:11px;
+    font-weight:950;
+    letter-spacing:1.5px;
+    text-transform:uppercase;
+    margin-bottom:8px;
+  }
+  .dark .eyebrow { color:#83e7ff; }
+  h2 {
+    margin:0;
+    font-size:clamp(29px,4vw,48px);
+    line-height:1.07;
+    letter-spacing:-.8px;
+  }
+  .sub {
+    max-width:630px;
+    color:var(--muted);
+    font-size:15px;
+  }
+  .dark .sub { color:rgba(255,255,255,.68); }
+  .grid-3 { display:grid; grid-template-columns:repeat(3,minmax(0,1fr)); gap:16px; }
+  .grid-2 { display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); gap:18px; }
+  .card {
+    background:#fff;
+    border:1px solid var(--line);
+    border-radius:8px;
+    padding:22px;
+    box-shadow:0 10px 28px rgba(7,20,38,.06);
+  }
+  .dark .card {
+    background:rgba(255,255,255,.06);
+    border-color:rgba(255,255,255,.13);
+    box-shadow:none;
+  }
+  .card h3 { margin:0 0 8px; font-size:18px; line-height:1.18; }
+  .card p { margin:0; color:var(--muted); font-size:14px; }
+  .dark .card p { color:rgba(255,255,255,.72); }
+  .tag {
+    display:inline-flex;
+    width:fit-content;
+    border-radius:999px;
+    padding:4px 9px;
+    font-size:10px;
+    font-weight:950;
+    letter-spacing:.9px;
+    text-transform:uppercase;
+    margin-bottom:14px;
+    background:rgba(0,87,255,.1);
+    color:var(--rev-blue);
+  }
+  .tag.green { background:rgba(0,217,126,.12); color:#07864f; }
+  .tag.amber { background:rgba(245,166,35,.14); color:#9b6500; }
+  .dark .tag { background:rgba(0,194,255,.13); color:#8fe9ff; }
+  .script {
+    display:grid;
+    gap:12px;
+  }
+  .script-line {
+    display:grid;
+    grid-template-columns:120px 1fr;
+    gap:14px;
+    align-items:start;
+    border:1px solid var(--line);
+    background:#fff;
+    border-radius:8px;
+    padding:16px;
+  }
+  .script-label {
+    color:var(--rev-blue);
+    font-size:11px;
+    font-weight:950;
+    letter-spacing:1px;
+    text-transform:uppercase;
+  }
+  .script-line p { margin:0; color:#334155; font-size:14px; }
+  .talk-track {
+    background:linear-gradient(135deg,var(--navy),var(--navy-2));
+    color:#fff;
+    border-radius:10px;
+    padding:28px;
+    border:1px solid rgba(0,194,255,.2);
+  }
+  .talk-track p {
+    margin:0;
+    font-size:20px;
+    line-height:1.55;
+    color:rgba(255,255,255,.88);
+  }
+  .checklist {
+    display:grid;
+    gap:10px;
+    margin:0;
+    padding:0;
+    list-style:none;
+  }
+  .checklist li {
+    display:grid;
+    grid-template-columns:24px 1fr;
+    gap:10px;
+    align-items:start;
+    font-size:14px;
+    color:#40516a;
+  }
+  .dark .checklist li { color:rgba(255,255,255,.76); }
+  .check {
+    width:20px;
+    height:20px;
+    display:grid;
+    place-items:center;
+    border-radius:50%;
+    background:rgba(0,217,126,.14);
+    color:#07864f;
+    font-size:12px;
+    font-weight:950;
+  }
+  .resource-list {
+    display:grid;
+    gap:12px;
+  }
+  .resource {
+    display:block;
+    text-decoration:none;
+    color:inherit;
+    border:1px solid var(--line);
+    background:#fff;
+    border-radius:8px;
+    padding:16px;
+  }
+  .resource strong { color:var(--rev-blue); display:block; margin-bottom:4px; }
+  .resource span { color:var(--muted); font-size:13px; }
+  footer {
+    background:#050b14;
+    color:rgba(255,255,255,.48);
+    text-align:center;
+    padding:24px;
+    font-size:12px;
+  }
+  @media (max-width:900px) {
+    .hero, .grid-2 { grid-template-columns:1fr; }
+    .grid-3 { grid-template-columns:1fr; }
+    .section-head { display:block; }
+    .nav-links { display:none; }
+    .script-line { grid-template-columns:1fr; }
+  }
+</style>
+</head>
+<body>
+<nav>
+  <div class="nav-inner">
+    <div class="brand">rev<span>.</span>io sales training</div>
+    <div class="nav-links">
+      <a href="#why">Why It Matters</a>
+      <a href="#questions">Questions</a>
+      <a href="#talk-track">Talk Track</a>
+      <a href="#manager">Manager Guide</a>
+      <a href="#resources">Resources</a>
+    </div>
+  </div>
+</nav>
+
+<header>
+  <div class="hero">
+    <div>
+      <div class="kicker">Rev.io Sales Training</div>
+      <h1>Ask the contract end date early.</h1>
+      <p class="hero-copy">Contract timing is not a form field. It tells us whether the buyer has urgency, whether a change is realistic, how to sequence procurement, and how to avoid losing a winnable deal to auto-renewal or poor timing.</p>
+      <div class="hero-actions">
+        <a class="btn primary" href="#questions">Use the questions</a>
+        <a class="btn secondary" href="#talk-track">Practice the talk track</a>
+      </div>
+    </div>
+    <div class="signal-card">
+      <div class="signal-inner">
+        <div class="signal-row"><div class="signal-num">1</div><div><h3>Timing creates strategy</h3><p>The end date tells us whether this is a now deal, a nurture path, or a future displacement campaign.</p></div></div>
+        <div class="signal-row"><div class="signal-num">2</div><div><h3>Timing exposes risk</h3><p>Auto-renewals, notice windows, data migration, and legal review can quietly kill momentum if reps find them late.</p></div></div>
+        <div class="signal-row"><div class="signal-num">3</div><div><h3>Timing improves coaching</h3><p>A real date gives managers a concrete way to inspect next steps, urgency, and close-plan quality.</p></div></div>
+      </div>
+    </div>
+  </div>
+</header>
+
+<section id="why">
+  <div class="wrap">
+    <div class="section-head">
+      <div>
+        <div class="eyebrow">Why it matters</div>
+        <h2>The contract date changes the whole deal motion.</h2>
+      </div>
+      <p class="sub">A prospect can have pain, interest, and budget, but if the incumbent contract renews next week or expires in eighteen months, the sales motion should be different.</p>
+    </div>
+    <div class="grid-3">
+      <div class="card"><span class="tag">Qualification</span><h3>Separates interest from timing</h3><p>End date turns a vague evaluation into a real buying window: immediate displacement, renewal event, planned transition, or nurture.</p></div>
+      <div class="card"><span class="tag">Close plan</span><h3>Works backward from reality</h3><p>Migration, security review, finance approval, legal, and notice periods all need calendar space before the incumbent renews.</p></div>
+      <div class="card"><span class="tag">Leverage</span><h3>Creates the business reason to act</h3><p>The strongest urgency is not "we have a promo." It is "your current system renews on this date and your team still has these unresolved problems."</p></div>
+    </div>
+  </div>
+</section>
+
+<section class="dark">
+  <div class="wrap">
+    <div class="section-head">
+      <div>
+        <div class="eyebrow">What reps must learn</div>
+        <h2>Contract timing is a discovery lane, not a one-off question.</h2>
+      </div>
+      <p class="sub">The goal is not just to capture a date. The goal is to understand the buyer's current obligation, renewal process, pain tolerance, and decision path.</p>
+    </div>
+    <div class="grid-3">
+      <div class="card"><span class="tag">Incumbent</span><h3>What are they tied to?</h3><p>Current vendor, contract term, auto-renewal language, notice period, month-to-month status, and any bundled services.</p></div>
+      <div class="card"><span class="tag">Decision process</span><h3>Who owns the clock?</h3><p>Economic buyer, finance, legal, IT/security, operations, and any board or executive approval tied to the change.</p></div>
+      <div class="card"><span class="tag">Business pain</span><h3>Why not wait?</h3><p>What breaks if they renew the incumbent for another term? What cost, risk, or operational drag becomes locked in?</p></div>
+    </div>
+  </div>
+</section>
+
+<section id="questions">
+  <div class="wrap">
+    <div class="section-head">
+      <div>
+        <div class="eyebrow">Discovery questions</div>
+        <h2>Ask cleanly, then go one layer deeper.</h2>
+      </div>
+      <p class="sub">Use normal language. The question should feel like project planning, not interrogation.</p>
+    </div>
+    <div class="script">
+      <div class="script-line"><div class="script-label">Start simple</div><p>When does your current agreement with your PSA, billing, or incumbent vendor come up for renewal?</p></div>
+      <div class="script-line"><div class="script-label">Clarify</div><p>Is that a hard contract end date, an auto-renewal date, or a notice deadline where you have to act before the renewal?</p></div>
+      <div class="script-line"><div class="script-label">Work backward</div><p>If you wanted to be live before that date, when would you need vendor selection, contracting, migration, and training completed?</p></div>
+      <div class="script-line"><div class="script-label">Make sick</div><p>If you renew with the same system, which of these workflow, billing, reporting, or service issues are you agreeing to live with for another term?</p></div>
+      <div class="script-line"><div class="script-label">Create next step</div><p>Would it make sense to map the timeline now so we can tell whether a switch is realistic before that renewal window?</p></div>
+    </div>
+  </div>
+</section>
+
+<section id="talk-track" class="dark">
+  <div class="wrap">
+    <div class="section-head">
+      <div>
+        <div class="eyebrow">Rep talk track</div>
+        <h2>How to explain why you are asking.</h2>
+      </div>
+      <p class="sub">A short explanation lowers defensiveness and positions the rep as a project planner.</p>
+    </div>
+    <div class="talk-track">
+      <p>"The reason I ask about your contract end date is not to pressure you. It helps us be realistic. If your current system renews soon, we need to know whether there is enough time for evaluation, approval, migration, and training. If the date is farther out, we can build a smarter timeline and keep you from getting trapped by an auto-renewal before you are ready."</p>
+    </div>
+  </div>
+</section>
+
+<section>
+  <div class="wrap">
+    <div class="section-head">
+      <div>
+        <div class="eyebrow">How to use the answer</div>
+        <h2>Do not let the date sit idle in Salesforce.</h2>
+      </div>
+      <p class="sub">Once a rep gets the date, it should drive next steps, deal stage inspection, and coaching.</p>
+    </div>
+    <div class="grid-3">
+      <div class="card"><span class="tag green">Near term</span><h3>0-6 months</h3><p>Build a mutual action plan immediately. Confirm notice deadlines, procurement path, migration needs, and the decision date required to hit go-live.</p></div>
+      <div class="card"><span class="tag amber">Mid term</span><h3>6-12 months</h3><p>Run deeper discovery, quantify current pain, identify stakeholders, and schedule timeline checkpoints before renewal pressure arrives.</p></div>
+      <div class="card"><span class="tag">Long term</span><h3>12+ months</h3><p>Create nurture with business-value milestones. Do not abandon the account; build champions and document the future renewal path.</p></div>
+    </div>
+  </div>
+</section>
+
+<section id="manager" class="dark">
+  <div class="wrap">
+    <div class="section-head">
+      <div>
+        <div class="eyebrow">Manager guide</div>
+        <h2>Inspect for behavior, not just field completion.</h2>
+      </div>
+      <p class="sub">A date in Salesforce is useful only if it changes the sales plan.</p>
+    </div>
+    <div class="grid-2">
+      <div class="card">
+        <span class="tag">Coaching checklist</span>
+        <h3>Ask these in pipeline review</h3>
+        <ul class="checklist">
+          <li><span class="check">✓</span><span>Do we know the actual end date, auto-renewal date, and notice deadline?</span></li>
+          <li><span class="check">✓</span><span>What has to happen before that date for the customer to switch successfully?</span></li>
+          <li><span class="check">✓</span><span>What pain gets locked in if they renew the incumbent?</span></li>
+          <li><span class="check">✓</span><span>Is the next meeting tied to the buyer's timeline or just our preferred sales process?</span></li>
+        </ul>
+      </div>
+      <div class="card">
+        <span class="tag">Salesforce hygiene</span>
+        <h3>Minimum fields to capture</h3>
+        <ul class="checklist">
+          <li><span class="check">✓</span><span>Incumbent vendor or current platform.</span></li>
+          <li><span class="check">✓</span><span>Contract end date, renewal date, or month-to-month status.</span></li>
+          <li><span class="check">✓</span><span>Notice deadline and confidence level.</span></li>
+          <li><span class="check">✓</span><span>Source of the date: buyer quote, transcript, contract copy, or rep estimate.</span></li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section>
+  <div class="wrap">
+    <div class="section-head">
+      <div>
+        <div class="eyebrow">Common misses</div>
+        <h2>Where reps lose leverage.</h2>
+      </div>
+      <p class="sub">These are the behaviors the training should correct.</p>
+    </div>
+    <div class="grid-3">
+      <div class="card"><span class="tag">Too late</span><h3>Asking after demo</h3><p>If timing comes after the pitch, the rep may have already built the wrong close plan.</p></div>
+      <div class="card"><span class="tag">Too vague</span><h3>"Sometime next year"</h3><p>Month, quarter, notice window, and confidence matter. Vague timing should trigger follow-up, not be accepted as complete.</p></div>
+      <div class="card"><span class="tag">Too passive</span><h3>No implication question</h3><p>The date only creates urgency when the rep connects renewal to the pain the buyer just described.</p></div>
+    </div>
+  </div>
+</section>
+
+<section id="resources" class="dark">
+  <div class="wrap">
+    <div class="section-head">
+      <div>
+        <div class="eyebrow">Resources</div>
+        <h2>Useful references for the training.</h2>
+      </div>
+      <p class="sub">These sources support the core ideas: timeline qualification, decision process, discovery, and contract renewal readiness.</p>
+    </div>
+    <div class="resource-list">
+      <a class="resource" href="https://www.salesforce.com/sales/what-is-a-sales-cycle/" target="_blank" rel="noopener"><strong>Salesforce: Sales cycle stages</strong><span>Supports the idea that discovery, stakeholder mapping, and next-step planning happen before a product pitch becomes a real opportunity.</span></a>
+      <a class="resource" href="https://www.highspot.com/blog/bant-sales-methodology/" target="_blank" rel="noopener"><strong>Highspot: BANT methodology</strong><span>Frames timing as a core qualification element alongside budget, authority, and need.</span></a>
+      <a class="resource" href="https://meddicc.com/meddpicc-sales-methodology-and-process" target="_blank" rel="noopener"><strong>MEDDICC: Decision process and paper process</strong><span>Reinforces that complex deals require understanding buyer decision steps and post-decision paperwork.</span></a>
+      <a class="resource" href="https://www.pramata.com/contract-renewal-management-best-practices/" target="_blank" rel="noopener"><strong>Pramata: Contract renewal management</strong><span>Shows why renewal dates, dashboards, and end-date visibility matter for prioritization and avoiding missed renewals.</span></a>
+    </div>
+  </div>
+</section>
+
+<footer>Rev.io Sales Training · Contract End Date Discovery · 2026</footer>
+</body>
+</html>
