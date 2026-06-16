@@ -358,17 +358,19 @@
   }
   .role .name { font-size:22px; font-weight:950; margin:4px 0; }
   .role .email { color:#94ecff; font-size:13px; font-weight:750; }
-  .source-grid { display:grid; grid-template-columns:repeat(3, minmax(0,1fr)); gap:16px; }
-  .source {
-    display:block;
-    background:#071426;
-    border:1px solid rgba(255,255,255,.12);
-    border-radius:8px;
-    overflow:hidden;
-    text-decoration:none;
+  .phase-date {
+    display:inline-flex;
+    width:fit-content;
+    margin:0 0 7px;
+    border-radius:999px;
+    padding:4px 9px;
+    background:rgba(0,87,255,.1);
+    color:var(--rev-blue);
+    font-size:11px;
+    font-weight:950;
+    letter-spacing:.6px;
+    text-transform:uppercase;
   }
-  .source img { width:100%; aspect-ratio:16/9; object-fit:cover; display:block; }
-  .source div { padding:12px 14px; color:#dbeafe; font-size:13px; font-weight:850; }
   .next {
     display:grid;
     grid-template-columns:72px 1fr;
@@ -400,7 +402,7 @@
   }
   @media (max-width:900px) {
     .hero, .proof-strip, .grid-2 { grid-template-columns:1fr; }
-    .grid-3, .risk-grid, .role-grid, .source-grid { grid-template-columns:1fr; }
+    .grid-3, .risk-grid, .role-grid { grid-template-columns:1fr; }
     .phase { grid-template-columns:54px 1fr; }
     .chips { grid-column:2; justify-content:flex-start; }
     .workstream-grid { grid-template-columns:1fr; }
@@ -429,10 +431,10 @@
     <div>
       <div class="kicker">AVIT × Rev.io PSA · Custom Implementation Plan</div>
       <h1>From ConnectWise drag to a controlled Rev.io PSA launch.</h1>
-      <p class="hero-copy">A branded implementation dashboard for AVIT: migration scope, onboarding gates, operating risks, owners, and the proof points needed before go-live. Built from the Rev.io onboarding materials and AVIT’s known operating model.</p>
+      <p class="hero-copy">A branded implementation dashboard for AVIT: migration scope, onboarding gates, operating risks, owners, and the proof points needed before go-live. Built around a July 1, 2026 kickoff and a September 1, 2026 target launch.</p>
       <div class="hero-actions">
         <a class="btn primary" href="#timeline">View implementation path</a>
-        <a class="btn secondary" href="#source">Review source materials</a>
+        <a class="btn secondary" href="#risks">Review launch risks</a>
       </div>
     </div>
     <div class="hero-panel">
@@ -448,7 +450,7 @@
           <div class="metric"><div class="num">130</div><div class="label">target platform users including field access</div></div>
           <div class="metric"><div class="num">100K+</div><div class="label">tickets per year to preserve and operationalize</div></div>
           <div class="metric"><div class="num">12K</div><div class="label">NetSuite SKUs requiring catalog/inventory discipline</div></div>
-          <div class="metric"><div class="num">75+</div><div class="label">integrations and dependencies to disposition</div></div>
+          <div class="metric"><div class="num">9 wks</div><div class="label">July 1 kickoff to September 1 target launch</div></div>
         </div>
       </div>
     </div>
@@ -515,17 +517,17 @@
     <div class="section-head">
       <div>
         <div class="eyebrow">Onboarding timeline</div>
-        <h2>Phase gates from kickoff to launch.</h2>
+        <h2>Phase gates from July 1 kickoff to September 1 launch.</h2>
       </div>
-      <p class="sub">Every phase has a job, owner, and sign-off. That keeps the implementation from becoming a very expensive vibes exercise.</p>
+      <p class="sub">Every phase has a job, owner, sign-off, and date range. That keeps the implementation from becoming a very expensive vibes exercise.</p>
     </div>
     <div class="timeline">
-      <div class="phase"><div class="phase-num">1</div><div><h3>Kickoff</h3><p>Meet the AVIT team, align goals, establish project plan, introduce Rev.io project manager and solutions analyst, initiate data export.</p></div><div class="chips"><span class="chip">Stakeholders</span><span class="chip">Milestones</span><span class="chip">Data export</span></div></div>
-      <div class="phase"><div class="phase-num">2A</div><div><h3>Discovery & Configuration</h3><p>Map existing workflows and configure Rev.io PSA around billing rules, service types, roles, integrations, and reporting.</p></div><div class="chips"><span class="chip">Workflow review</span><span class="chip">System config</span><span class="chip">Users</span></div></div>
-      <div class="phase"><div class="phase-num">2B</div><div><h3>Data Migration</h3><p>Extract historical data from ConnectWise, load into Rev.io PSA, and complete AVIT review and reconciliation before moving forward.</p></div><div class="chips"><span class="chip">Extraction</span><span class="chip">Validation</span><span class="chip">Sign-off</span></div></div>
-      <div class="phase"><div class="phase-num">3</div><div><h3>Training</h3><p>Role-based enablement for administrators, technicians, billing users, project users, and reporting stakeholders.</p></div><div class="chips"><span class="chip">Admin</span><span class="chip">Technician</span><span class="chip">Billing</span></div></div>
-      <div class="phase optional"><div class="phase-num">4</div><div><h3>Dual Entry / Mock Operations</h3><p>Optional confidence phase for parallel operations, UAT scenarios, issue resolution, and team readiness before full cutover.</p></div><div class="chips"><span class="chip">Parallel run</span><span class="chip">UAT</span><span class="chip">Confidence check</span></div></div>
-      <div class="phase"><div class="phase-num">5</div><div><h3>Go-Live</h3><p>Launch on Rev.io PSA with real-time support, post-launch check-ins, issue triage, and Customer Success handoff.</p></div><div class="chips"><span class="chip">Launch support</span><span class="chip">Hypercare</span><span class="chip">CS handoff</span></div></div>
+      <div class="phase"><div class="phase-num">1</div><div><div class="phase-date">Jul 1-3, 2026</div><h3>Kickoff</h3><p>Meet the AVIT team, align goals, establish project plan, introduce Rev.io project manager and solutions analyst, initiate data export.</p></div><div class="chips"><span class="chip">Stakeholders</span><span class="chip">Milestones</span><span class="chip">Data export</span></div></div>
+      <div class="phase"><div class="phase-num">2A</div><div><div class="phase-date">Jul 6-17, 2026</div><h3>Discovery & Configuration</h3><p>Map existing workflows and configure Rev.io PSA around billing rules, service types, roles, integrations, and reporting.</p></div><div class="chips"><span class="chip">Workflow review</span><span class="chip">System config</span><span class="chip">Users</span></div></div>
+      <div class="phase"><div class="phase-num">2B</div><div><div class="phase-date">Jul 13-31, 2026</div><h3>Data Migration</h3><p>Extract historical data from ConnectWise, load into Rev.io PSA, and complete AVIT review and reconciliation before moving forward.</p></div><div class="chips"><span class="chip">Extraction</span><span class="chip">Validation</span><span class="chip">Sign-off</span></div></div>
+      <div class="phase"><div class="phase-num">3</div><div><div class="phase-date">Aug 3-14, 2026</div><h3>Training</h3><p>Role-based enablement for administrators, technicians, billing users, project users, and reporting stakeholders.</p></div><div class="chips"><span class="chip">Admin</span><span class="chip">Technician</span><span class="chip">Billing</span></div></div>
+      <div class="phase optional"><div class="phase-num">4</div><div><div class="phase-date">Aug 17-28, 2026</div><h3>Dual Entry / Mock Operations</h3><p>Optional confidence phase for parallel operations, UAT scenarios, issue resolution, and team readiness before full cutover.</p></div><div class="chips"><span class="chip">Parallel run</span><span class="chip">UAT</span><span class="chip">Confidence check</span></div></div>
+      <div class="phase"><div class="phase-num">5</div><div><div class="phase-date">Sep 1, 2026</div><h3>Go-Live</h3><p>Launch on Rev.io PSA with real-time support, post-launch check-ins, issue triage, and Customer Success handoff.</p></div><div class="chips"><span class="chip">Launch support</span><span class="chip">Hypercare</span><span class="chip">CS handoff</span></div></div>
     </div>
   </div>
 </section>
@@ -601,23 +603,6 @@
       <div class="next"><div class="next-num">2</div><div><h3>Create AVIT-specific UAT script</h3><p>Use real scenarios: parent-child billing, break-fix tickets, field closeout, quote/change order, invoice review, and NetSuite handoff.</p></div></div>
       <div class="next"><div class="next-num">3</div><div><h3>Build integration disposition tracker</h3><p>Classify every requested integration as live today, native connector, API-supported, roadmap, custom, retained, or deferred.</p></div></div>
       <div class="next"><div class="next-num">4</div><div><h3>Schedule project-readiness call</h3><p>Bring Rev.io PM, SA, data engineer, sales owner, AVIT ops, finance, and technical owner together before contracting momentum cools.</p></div></div>
-    </div>
-  </div>
-</section>
-
-<section id="source" class="dark">
-  <div class="wrap">
-    <div class="section-head">
-      <div>
-        <div class="eyebrow">Source materials</div>
-        <h2>Implementation content grounded in the supplied Rev.io materials.</h2>
-      </div>
-      <p class="sub">The dashboard uses the supplied screenshots as its source appendix so AVIT can see the migration scope, onboarding phases, and named resources.</p>
-    </div>
-    <div class="source-grid">
-      <a class="source" href="avit-assets/implementation/migration-overview.png"><img src="avit-assets/implementation/migration-overview.png" alt="Migration overview source screenshot"><div>Migration overview</div></a>
-      <a class="source" href="avit-assets/implementation/onboarding-timeline.png"><img src="avit-assets/implementation/onboarding-timeline.png" alt="Onboarding timeline source screenshot"><div>Onboarding timeline</div></a>
-      <a class="source" href="avit-assets/implementation/key-contacts.png"><img src="avit-assets/implementation/key-contacts.png" alt="Key contacts source screenshot"><div>Key contacts and escalation paths</div></a>
     </div>
   </div>
 </section>
