@@ -349,6 +349,52 @@
   .risk.high { border-top-color:var(--avit-red); }
   .risk h3 { margin:0 0 8px; font-size:16px; }
   .risk p { margin:0; color:var(--muted); font-size:13px; }
+  .api-panel {
+    display:grid;
+    grid-template-columns:1.05fr .95fr;
+    gap:18px;
+    align-items:stretch;
+  }
+  .api-card {
+    background:#fff;
+    border:1px solid var(--line);
+    border-radius:8px;
+    padding:22px;
+    box-shadow:0 10px 28px rgba(7,20,38,.06);
+  }
+  .api-card.dark-card {
+    background:linear-gradient(135deg,var(--navy),var(--navy-2));
+    border-color:rgba(0,194,255,.24);
+    color:#fff;
+  }
+  .api-card h3 { margin:0 0 8px; font-size:20px; }
+  .api-card p { margin:0 0 15px; color:var(--muted); font-size:14px; }
+  .api-card.dark-card p { color:rgba(255,255,255,.72); }
+  .api-list { display:grid; gap:10px; margin:0; padding:0; list-style:none; }
+  .api-list li {
+    display:grid;
+    grid-template-columns:24px 1fr;
+    gap:10px;
+    align-items:start;
+    font-size:13px;
+    color:#40516a;
+  }
+  .api-card.dark-card .api-list li { color:rgba(255,255,255,.78); }
+  .api-check {
+    width:20px;
+    height:20px;
+    display:grid;
+    place-items:center;
+    border-radius:50%;
+    background:rgba(0,217,126,.14);
+    color:#07864f;
+    font-size:12px;
+    font-weight:950;
+  }
+  .api-card.dark-card .api-check {
+    background:rgba(0,194,255,.16);
+    color:#8fe9ff;
+  }
   .role-grid { display:grid; grid-template-columns:repeat(3, minmax(0,1fr)); gap:16px; }
   .role {
     min-height:260px;
@@ -401,7 +447,7 @@
     font-size:12px;
   }
   @media (max-width:900px) {
-    .hero, .proof-strip, .grid-2 { grid-template-columns:1fr; }
+    .hero, .proof-strip, .grid-2, .api-panel { grid-template-columns:1fr; }
     .grid-3, .risk-grid, .role-grid { grid-template-columns:1fr; }
     .phase { grid-template-columns:54px 1fr; }
     .chips { grid-column:2; justify-content:flex-start; }
@@ -417,6 +463,7 @@
     <div class="brand"><img src="avit-assets/avit-logo-red-analysis.webp" alt="AVIT logo"> <div>rev<span>.</span>io implementation command center</div></div>
     <div class="nav-links">
       <a href="#scope">Scope</a>
+      <a href="#api">Migration API</a>
       <a href="#timeline">Timeline</a>
       <a href="#workstreams">Workstreams</a>
       <a href="#risks">Risks</a>
@@ -512,6 +559,36 @@
   </div>
 </section>
 
+<section id="api" class="dark">
+  <div class="wrap">
+    <div class="section-head">
+      <div>
+        <div class="eyebrow">ConnectWise migration API</div>
+        <h2>Use the API plan as the technical spine of the migration.</h2>
+      </div>
+      <p class="sub">This moves the conversation from “we can export data” to a controlled extraction, mapping, loading, and reconciliation model AVIT can trust.</p>
+    </div>
+    <div class="api-panel">
+      <div class="api-card dark-card">
+        <span class="tag">Protected technical reference</span>
+        <h3>ConnectWise Migration API artifact</h3>
+        <p>The implementation team should use the migration API document as the working technical reference for ConnectWise extraction, endpoint planning, field mapping, load sequencing, and validation ownership.</p>
+        <a class="btn primary" href="https://decks.revioai.bot/connectwise-migration-api.html" target="_blank" rel="noopener">Open secure API doc</a>
+      </div>
+      <div class="api-card">
+        <span class="tag green">How it fits AVIT</span>
+        <h3>Technical gates to present</h3>
+        <ul class="api-list">
+          <li><span class="api-check">✓</span><span>Confirm API access, credentials, permissions, rate limits, and export windows before July 1 kickoff.</span></li>
+          <li><span class="api-check">✓</span><span>Map ConnectWise companies, contacts, tickets, notes, invoices, payments, products, agreements, projects, and reference values into Rev.io PSA.</span></li>
+          <li><span class="api-check">✓</span><span>Use sample loads to prove parent-child accounts, open ticket history, financial balances, product catalog structure, and ticket-note integrity.</span></li>
+          <li><span class="api-check">✓</span><span>Track exceptions in a migration defect log with AVIT sign-off before final cutover.</span></li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</section>
+
 <section id="timeline">
   <div class="wrap">
     <div class="section-head">
@@ -546,6 +623,7 @@
       <div class="name">Project Governance</div><div>Kickoff, project plan, decisions, issue log, weekly status, go-live readiness.</div><div>Project Manager + AVIT sponsor</div>
       <div class="name">PSA Configuration</div><div>Customers, boards, statuses, priorities, SLAs, roles, billing rules, agreements.</div><div>Solutions Analyst + AVIT ops</div>
       <div class="name">Data Migration</div><div>ConnectWise extraction, mapping, load testing, reconciliation, exception cleanup.</div><div>Data Engineer + AVIT data owner</div>
+      <div class="name">ConnectWise Migration API</div><div>API access, endpoint coverage, credential readiness, field-level mapping, migration defect log, sample-load sign-off, and cutover validation.</div><div>Data Engineer + AVIT technical owner</div>
       <div class="name">NetSuite / Billing</div><div>Invoice flow, product catalog, SKUs, payments, shipping charges, finance sign-off.</div><div>Rev.io + AVIT finance</div>
       <div class="name">Field Operations</div><div>Mobile workflow, subcontractor link, sign-off, photos, GPS, technician training.</div><div>Rev.io + service leaders</div>
       <div class="name">Integrations</div><div>IT Glue, Meraki, Pax8, distributors, ServiceNow/Jira, RMM, FedEx, reporting exports.</div><div>Integration owner + AVIT technical owner</div>
@@ -602,7 +680,8 @@
       <div class="next"><div class="next-num">1</div><div><h3>Confirm implementation assumptions</h3><p>Validate target users, data scope, timeline expectation, NetSuite ownership, and whether AVIT wants the optional dual-entry phase.</p></div></div>
       <div class="next"><div class="next-num">2</div><div><h3>Create AVIT-specific UAT script</h3><p>Use real scenarios: parent-child billing, break-fix tickets, field closeout, quote/change order, invoice review, and NetSuite handoff.</p></div></div>
       <div class="next"><div class="next-num">3</div><div><h3>Build integration disposition tracker</h3><p>Classify every requested integration as live today, native connector, API-supported, roadmap, custom, retained, or deferred.</p></div></div>
-      <div class="next"><div class="next-num">4</div><div><h3>Schedule project-readiness call</h3><p>Bring Rev.io PM, SA, data engineer, sales owner, AVIT ops, finance, and technical owner together before contracting momentum cools.</p></div></div>
+      <div class="next"><div class="next-num">4</div><div><h3>Review the ConnectWise migration API plan</h3><p>Walk AVIT through API access, endpoint coverage, mapping assumptions, sample-load acceptance criteria, and the cutover validation checklist.</p></div></div>
+      <div class="next"><div class="next-num">5</div><div><h3>Schedule project-readiness call</h3><p>Bring Rev.io PM, SA, data engineer, sales owner, AVIT ops, finance, and technical owner together before contracting momentum cools.</p></div></div>
     </div>
   </div>
 </section>
