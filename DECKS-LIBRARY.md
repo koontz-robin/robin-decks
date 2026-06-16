@@ -18,10 +18,11 @@ Repo: `git@github.com:koontz-robin/robin-decks.git`
 | AE Capacity Dashboard | ae-capacity-dashboard.html | https://koontz-robin.github.io/robin-decks/ae-capacity-dashboard.html | Daily (12pm ET, weekdays) |
 | AE Capacity Slide (EXECUTE theme) | ae-capacity-slide.html | https://koontz-robin.github.io/robin-decks/ae-capacity-slide.html | Manual |
 | Sales Opportunities Created | june-ae-csa-opportunities.html | https://koontz-robin.github.io/robin-decks/june-ae-csa-opportunities.html | Hourly (9am-5pm ET, weekdays) |
+| Sales KPI Results - Q2 2026 | sales-kpi-results-q2-2026.html | https://koontz-robin.github.io/robin-decks/sales-kpi-results-q2-2026.html | Snapshot from Q2 26 workbook tab |
 | CSA Cohorts | csa-cohorts.html | https://koontz-robin.github.io/robin-decks/csa-cohorts.html | Snapshot copy of Sales Opportunities Created |
 | 2026 PSA Team Tracker | 2026-psa-team-tracker.html | https://koontz-robin.github.io/robin-decks/2026-psa-team-tracker.html | Nightly (11pm ET) |
 | Monthly Report Pacing Dashboard | monthly-api-pacing-dashboard.html | https://koontz-robin.github.io/robin-decks/monthly-api-pacing-dashboard.html | JSON-driven monthly pacing for Ryan's starting report set |
-| PSA Onboarding Tracker | psa-onboarding-tracker.html | https://koontz-robin.github.io/robin-decks/psa-onboarding-tracker.html | Daily (midnight) |
+| PSA Onboarding Tracker | psa-onboarding-tracker.html | https://koontz-robin.github.io/robin-decks/psa-onboarding-tracker.html | Daily (8am & 1pm ET) |
 | PSA Opportunity Dashboard | psa-opportunity-dashboard.html | https://koontz-robin.github.io/robin-decks/psa-opportunity-dashboard.html | On demand |
 | PSA Target Tracker | psa-target-tracker.html | https://koontz-robin.github.io/robin-decks/psa-target-tracker.html | On demand |
 | Rep Coaching Dashboard | rep-coaching-dashboard.html | https://koontz-robin.github.io/robin-decks/rep-coaching-dashboard.html | On demand |
@@ -42,6 +43,7 @@ Repo: `git@github.com:koontz-robin/robin-decks.git`
 
 | Name | File | URL | Notes |
 |---|---|---|---|
+| AVIT Consolidated Deck | avit-consolidated-deck.html | https://koontz-robin.github.io/robin-decks/avit-consolidated-deck.html | Consolidated tabs for Evaluations Summary, Onsite Meeting Recap, and Implementation Plan |
 | Rev.io Sales — May Update (5-slide deck) | may-update-deck.html | https://koontz-robin.github.io/robin-decks/may-update-deck.html | Cover, Forecast, Efficiency, May Pipeline, Q2 Momentum |
 | Rev.io Tech Stack | revio-tech-stack.html | https://koontz-robin.github.io/robin-decks/revio-tech-stack.html | Visual stack deck: HubSpot, Salesforce, Outreach, ZoomInfo, OpenClaw, Clay, Claude, Rox, DocuSign, Notion |
 | Q2 Board Deck | q2-board-deck.html | https://koontz-robin.github.io/robin-decks/q2-board-deck.html | Main board deck |
