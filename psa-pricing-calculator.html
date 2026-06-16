@@ -525,6 +525,90 @@
           </div>
         </div>
 
+        <div class="row" data-line="cloud-backup" draggable="true">
+          <button class="drag-handle" type="button" draggable="true" aria-label="Drag Rev.io Cloud Backup row" title="Drag to reorder">::</button>
+          <div>
+            <div class="item-title">Rev.io Cloud Backup</div>
+            <div class="item-copy">Backup storage tracked in GBs. Starting price defaults to $0.10 per GB.</div>
+          </div>
+          <div>
+            <label for="cloudBackupGb">GBs</label>
+            <div class="stepper">
+              <button type="button" data-step="cloudBackupGb" data-delta="-100" aria-label="Decrease Rev.io Cloud Backup GBs">-</button>
+              <input class="number-input" id="cloudBackupGb" type="number" min="0" step="100" value="0">
+              <button type="button" data-step="cloudBackupGb" data-delta="100" aria-label="Increase Rev.io Cloud Backup GBs">+</button>
+            </div>
+          </div>
+          <div>
+            <label for="cloudBackupRate">Rate / GB</label>
+            <div class="stepper">
+              <button type="button" data-step="cloudBackupRate" data-delta="-0.01" aria-label="Decrease Rev.io Cloud Backup rate">-</button>
+              <input class="number-input" id="cloudBackupRate" type="number" min="0" step="0.01" value="0.10">
+              <button type="button" data-step="cloudBackupRate" data-delta="0.01" aria-label="Increase Rev.io Cloud Backup rate">+</button>
+            </div>
+          </div>
+          <div>
+            <label>Line total</label>
+            <div class="line-total" id="cloudBackupTotal">$0</div>
+          </div>
+        </div>
+
+        <div class="row" data-line="rmm" draggable="true">
+          <button class="drag-handle" type="button" draggable="true" aria-label="Drag Rev.io RMM row" title="Drag to reorder">::</button>
+          <div>
+            <div class="item-title">Rev.io RMM</div>
+            <div class="item-copy">Remote monitoring and management tracked by endpoint. Starting price defaults to $2.00 per endpoint.</div>
+          </div>
+          <div>
+            <label for="rmmEndpoints">Endpoints</label>
+            <div class="stepper">
+              <button type="button" data-step="rmmEndpoints" data-delta="-10" aria-label="Decrease Rev.io RMM endpoints">-</button>
+              <input class="number-input" id="rmmEndpoints" type="number" min="0" step="10" value="0">
+              <button type="button" data-step="rmmEndpoints" data-delta="10" aria-label="Increase Rev.io RMM endpoints">+</button>
+            </div>
+          </div>
+          <div>
+            <label for="rmmRate">Rate / endpoint</label>
+            <div class="stepper">
+              <button type="button" data-step="rmmRate" data-delta="-0.10" aria-label="Decrease Rev.io RMM rate">-</button>
+              <input class="number-input" id="rmmRate" type="number" min="0" step="0.10" value="2.00">
+              <button type="button" data-step="rmmRate" data-delta="0.10" aria-label="Increase Rev.io RMM rate">+</button>
+            </div>
+          </div>
+          <div>
+            <label>Line total</label>
+            <div class="line-total" id="rmmTotal">$0</div>
+          </div>
+        </div>
+
+        <div class="row" data-line="edr" draggable="true">
+          <button class="drag-handle" type="button" draggable="true" aria-label="Drag Rev.io EDR row" title="Drag to reorder">::</button>
+          <div>
+            <div class="item-title">Rev.io EDR</div>
+            <div class="item-copy">Endpoint detection and response tracked by endpoint. Starting price defaults to $1.20 per endpoint.</div>
+          </div>
+          <div>
+            <label for="edrEndpoints">Endpoints</label>
+            <div class="stepper">
+              <button type="button" data-step="edrEndpoints" data-delta="-10" aria-label="Decrease Rev.io EDR endpoints">-</button>
+              <input class="number-input" id="edrEndpoints" type="number" min="0" step="10" value="0">
+              <button type="button" data-step="edrEndpoints" data-delta="10" aria-label="Increase Rev.io EDR endpoints">+</button>
+            </div>
+          </div>
+          <div>
+            <label for="edrRate">Rate / endpoint</label>
+            <div class="stepper">
+              <button type="button" data-step="edrRate" data-delta="-0.10" aria-label="Decrease Rev.io EDR rate">-</button>
+              <input class="number-input" id="edrRate" type="number" min="0" step="0.10" value="1.20">
+              <button type="button" data-step="edrRate" data-delta="0.10" aria-label="Increase Rev.io EDR rate">+</button>
+            </div>
+          </div>
+          <div>
+            <label>Line total</label>
+            <div class="line-total" id="edrTotal">$0</div>
+          </div>
+        </div>
+
         </div>
       </section>
 
@@ -677,6 +761,7 @@
   const ids = [
     "standardQty", "standardRate", "fieldQty", "fieldRate",
     "reviiQty", "reviiRate", "commVolume", "commPercent", "monthlyMinimum",
+    "cloudBackupGb", "cloudBackupRate", "rmmEndpoints", "rmmRate", "edrEndpoints", "edrRate",
     "setupQty", "setupRate", "trainingQty", "trainingRate"
   ];
 
@@ -881,6 +966,12 @@
     const reviiRate = numberValue("reviiRate");
     const commVolume = numberValue("commVolume");
     const commPercent = numberValue("commPercent");
+    const cloudBackupGb = numberValue("cloudBackupGb");
+    const cloudBackupRate = numberValue("cloudBackupRate");
+    const rmmEndpoints = numberValue("rmmEndpoints");
+    const rmmRate = numberValue("rmmRate");
+    const edrEndpoints = numberValue("edrEndpoints");
+    const edrRate = numberValue("edrRate");
     const setupQty = numberValue("setupQty");
     const setupRate = numberValue("setupRate");
     const trainingQty = numberValue("trainingQty");
@@ -892,10 +983,13 @@
     const reviiTotal = reviiQty * reviiRate;
     const commCalculated = commVolume * (commPercent / 100);
     const commTotal = commCalculated;
+    const cloudBackupTotal = cloudBackupGb * cloudBackupRate;
+    const rmmTotal = rmmEndpoints * rmmRate;
+    const edrTotal = edrEndpoints * edrRate;
     const setupTotal = setupQty * setupRate;
     const trainingTotal = trainingQty * trainingRate;
     const setupFeeTotal = setupTotal + trainingTotal;
-    const licenseValue = standardTotal + fieldTotal + reviiTotal + commTotal;
+    const licenseValue = standardTotal + fieldTotal + reviiTotal + commTotal + cloudBackupTotal + rmmTotal + edrTotal;
     const adjustment = Math.max(0, minimumValue - licenseValue);
     const monthlyBeforePromo = licenseValue + adjustment;
     const promo = getPromo(monthlyBeforePromo);
@@ -907,6 +1001,9 @@
     document.getElementById("fieldTotal").textContent = format(fieldTotal);
     document.getElementById("reviiTotal").textContent = format(reviiTotal);
     document.getElementById("commTotal").textContent = format(commTotal);
+    document.getElementById("cloudBackupTotal").textContent = format(cloudBackupTotal);
+    document.getElementById("rmmTotal").textContent = format(rmmTotal);
+    document.getElementById("edrTotal").textContent = format(edrTotal);
     document.getElementById("setupTotal").textContent = format(setupTotal);
     document.getElementById("trainingTotal").textContent = format(trainingTotal);
     document.getElementById("monthlyMinimumTotal").textContent = format(minimumValue);
@@ -947,6 +1044,9 @@
       fieldQty, fieldRate, fieldTotal,
       reviiQty, reviiRate, reviiTotal,
       commVolume, commPercent, commCalculated, commTotal,
+      cloudBackupGb, cloudBackupRate, cloudBackupTotal,
+      rmmEndpoints, rmmRate, rmmTotal,
+      edrEndpoints, edrRate, edrTotal,
       setupQty, setupRate, setupTotal,
       trainingQty, trainingRate, trainingTotal,
       setupFeeTotal, firstInvoiceTotal,
@@ -974,6 +1074,9 @@
       `Field Users: ${result.fieldQty} x ${formatRate(result.fieldRate)} = ${format(result.fieldTotal)}`,
       `Revii AI Credits: ${result.reviiQty} x ${formatRate(result.reviiRate)} = ${format(result.reviiTotal)}`,
       `Communications Billing: ${format(result.commVolume)} monthly volume x ${result.commPercent}% = ${format(result.commTotal)} usage based`,
+      `Rev.io Cloud Backup: ${result.cloudBackupGb} GBs x ${formatRate(result.cloudBackupRate)} = ${format(result.cloudBackupTotal)}`,
+      `Rev.io RMM: ${result.rmmEndpoints} endpoints x ${formatRate(result.rmmRate)} = ${format(result.rmmTotal)}`,
+      `Rev.io EDR: ${result.edrEndpoints} endpoints x ${formatRate(result.edrRate)} = ${format(result.edrTotal)}`,
       `Selected package value: ${format(result.licenseValue)}`,
       `Monthly minimum: ${format(result.minimumValue)}`,
       `Minimum adjustment: ${format(result.adjustment)}`,
