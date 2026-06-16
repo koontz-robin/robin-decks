@@ -1,0 +1,627 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>AVIT × Rev.io PSA Implementation Command Center</title>
+<style>
+  :root {
+    --rev-blue:#0057ff;
+    --rev-blue-2:#003fbf;
+    --rev-cyan:#00c2ff;
+    --rev-green:#00d97e;
+    --avit-red:#c9252d;
+    --amber:#f5a623;
+    --navy:#071426;
+    --navy-2:#0d2036;
+    --ink:#172033;
+    --muted:#65748a;
+    --line:#dbe5f1;
+    --paper:#ffffff;
+    --wash:#f4f7fb;
+  }
+  * { box-sizing:border-box; }
+  html { scroll-behavior:smooth; }
+  body {
+    margin:0;
+    font-family:"Segoe UI", -apple-system, BlinkMacSystemFont, Arial, sans-serif;
+    color:var(--ink);
+    background:var(--wash);
+    line-height:1.5;
+  }
+  a { color:inherit; }
+  nav {
+    position:sticky;
+    top:0;
+    z-index:50;
+    background:rgba(7,20,38,.94);
+    border-bottom:1px solid rgba(255,255,255,.12);
+    backdrop-filter:blur(14px);
+  }
+  .nav-inner {
+    max-width:1220px;
+    margin:0 auto;
+    min-height:64px;
+    padding:0 24px;
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    gap:20px;
+  }
+  .brand {
+    display:flex;
+    align-items:center;
+    gap:13px;
+    color:#fff;
+    font-weight:900;
+    letter-spacing:-.2px;
+    white-space:nowrap;
+  }
+  .brand img {
+    height:34px;
+    width:auto;
+    background:#fff;
+    border-radius:6px;
+    padding:6px 9px;
+  }
+  .brand span { color:var(--rev-cyan); }
+  .nav-links { display:flex; gap:4px; flex-wrap:wrap; justify-content:flex-end; }
+  .nav-links a {
+    text-decoration:none;
+    color:rgba(255,255,255,.68);
+    font-size:12px;
+    font-weight:750;
+    padding:7px 10px;
+    border-radius:999px;
+  }
+  .nav-links a:hover { background:rgba(255,255,255,.1); color:#fff; }
+  header {
+    color:#fff;
+    background:
+      linear-gradient(135deg, rgba(7,20,38,.98), rgba(0,41,112,.92)),
+      radial-gradient(circle at 18% 20%, rgba(0,194,255,.28), transparent 28%),
+      radial-gradient(circle at 84% 8%, rgba(201,37,45,.2), transparent 24%);
+  }
+  .hero {
+    max-width:1220px;
+    min-height:calc(100vh - 64px);
+    margin:0 auto;
+    padding:78px 24px 56px;
+    display:grid;
+    grid-template-columns:1.04fr .96fr;
+    align-items:center;
+    gap:42px;
+  }
+  .kicker {
+    display:inline-flex;
+    align-items:center;
+    width:fit-content;
+    border:1px solid rgba(255,255,255,.2);
+    border-radius:999px;
+    padding:6px 13px;
+    color:#9feaff;
+    font-size:11px;
+    font-weight:900;
+    letter-spacing:1.4px;
+    text-transform:uppercase;
+  }
+  h1 {
+    margin:20px 0 16px;
+    font-size:clamp(42px, 6vw, 76px);
+    line-height:1;
+    letter-spacing:-1.8px;
+  }
+  .hero-copy {
+    max-width:720px;
+    color:rgba(255,255,255,.76);
+    font-size:18px;
+  }
+  .hero-actions { display:flex; gap:12px; flex-wrap:wrap; margin-top:26px; }
+  .btn {
+    display:inline-flex;
+    align-items:center;
+    justify-content:center;
+    min-height:42px;
+    padding:0 17px;
+    border-radius:8px;
+    border:1px solid transparent;
+    text-decoration:none;
+    font-weight:850;
+    font-size:13px;
+  }
+  .btn.primary { background:var(--rev-blue); color:#fff; box-shadow:0 14px 34px rgba(0,87,255,.34); }
+  .btn.secondary { border-color:rgba(255,255,255,.24); color:#fff; background:rgba(255,255,255,.06); }
+  .hero-panel {
+    border:1px solid rgba(255,255,255,.14);
+    background:rgba(255,255,255,.07);
+    border-radius:12px;
+    padding:22px;
+    box-shadow:0 26px 70px rgba(0,0,0,.28);
+  }
+  .launch-card {
+    background:#fff;
+    color:var(--ink);
+    border-radius:8px;
+    padding:22px;
+    display:grid;
+    gap:18px;
+  }
+  .launch-head {
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    gap:14px;
+    border-bottom:1px solid var(--line);
+    padding-bottom:15px;
+  }
+  .launch-title { font-size:18px; font-weight:900; }
+  .status-pill {
+    display:inline-flex;
+    align-items:center;
+    border-radius:999px;
+    background:rgba(0,217,126,.12);
+    color:#07864f;
+    padding:5px 10px;
+    font-size:11px;
+    font-weight:900;
+    text-transform:uppercase;
+    letter-spacing:.8px;
+  }
+  .metric-grid {
+    display:grid;
+    grid-template-columns:repeat(2, minmax(0, 1fr));
+    gap:12px;
+  }
+  .metric {
+    background:#f5f8fc;
+    border:1px solid var(--line);
+    border-radius:8px;
+    padding:16px;
+    min-height:112px;
+  }
+  .metric .num {
+    font-size:32px;
+    line-height:1;
+    font-weight:950;
+    letter-spacing:-.7px;
+    color:var(--rev-blue);
+  }
+  .metric .label {
+    margin-top:8px;
+    color:var(--muted);
+    font-size:12px;
+    font-weight:700;
+  }
+  section { padding:76px 24px; }
+  .dark { background:var(--navy); color:#fff; }
+  .wrap { max-width:1220px; margin:0 auto; }
+  .section-head {
+    display:flex;
+    align-items:end;
+    justify-content:space-between;
+    gap:28px;
+    margin-bottom:28px;
+  }
+  .section-head.compact { margin-bottom:18px; }
+  .eyebrow {
+    color:var(--rev-blue);
+    font-size:11px;
+    font-weight:950;
+    letter-spacing:1.5px;
+    text-transform:uppercase;
+    margin-bottom:8px;
+  }
+  .dark .eyebrow { color:#83e7ff; }
+  h2 {
+    margin:0;
+    font-size:clamp(29px, 4vw, 48px);
+    line-height:1.07;
+    letter-spacing:-.8px;
+  }
+  .sub {
+    max-width:620px;
+    color:var(--muted);
+    font-size:15px;
+  }
+  .dark .sub { color:rgba(255,255,255,.68); }
+  .grid-3 { display:grid; grid-template-columns:repeat(3, minmax(0, 1fr)); gap:16px; }
+  .grid-2 { display:grid; grid-template-columns:repeat(2, minmax(0, 1fr)); gap:18px; }
+  .card {
+    background:#fff;
+    border:1px solid var(--line);
+    border-radius:8px;
+    padding:22px;
+    box-shadow:0 10px 28px rgba(7,20,38,.06);
+  }
+  .dark .card {
+    background:rgba(255,255,255,.06);
+    border-color:rgba(255,255,255,.13);
+    box-shadow:none;
+  }
+  .card h3 { margin:0 0 8px; font-size:18px; line-height:1.18; }
+  .card p { margin:0; color:var(--muted); font-size:14px; }
+  .dark .card p { color:rgba(255,255,255,.7); }
+  .tag {
+    display:inline-flex;
+    width:fit-content;
+    border-radius:999px;
+    padding:4px 9px;
+    font-size:10px;
+    font-weight:950;
+    letter-spacing:.9px;
+    text-transform:uppercase;
+    margin-bottom:14px;
+    background:rgba(0,87,255,.1);
+    color:var(--rev-blue);
+  }
+  .tag.red { background:rgba(201,37,45,.11); color:var(--avit-red); }
+  .tag.green { background:rgba(0,217,126,.12); color:#07864f; }
+  .tag.amber { background:rgba(245,166,35,.14); color:#9b6500; }
+  .dark .tag { background:rgba(0,194,255,.13); color:#8fe9ff; }
+  .proof-strip {
+    display:grid;
+    grid-template-columns:1.2fr .8fr;
+    gap:18px;
+    align-items:stretch;
+  }
+  .proof-main {
+    border-radius:8px;
+    overflow:hidden;
+    border:1px solid var(--line);
+    background:#071426;
+    min-height:430px;
+  }
+  .proof-main img { width:100%; height:100%; object-fit:cover; display:block; }
+  .proof-copy {
+    display:grid;
+    gap:14px;
+  }
+  .timeline {
+    position:relative;
+    display:grid;
+    gap:14px;
+  }
+  .phase {
+    display:grid;
+    grid-template-columns:74px 1fr 260px;
+    gap:18px;
+    align-items:start;
+    background:#fff;
+    border:1px solid var(--line);
+    border-radius:8px;
+    padding:18px;
+  }
+  .phase-num {
+    width:54px;
+    height:54px;
+    display:grid;
+    place-items:center;
+    border:2px solid var(--rev-cyan);
+    color:var(--rev-blue);
+    border-radius:50%;
+    font-size:17px;
+    font-weight:950;
+  }
+  .phase.optional .phase-num { border-color:var(--amber); color:#9b6500; }
+  .phase h3 { margin:0 0 5px; font-size:18px; }
+  .phase p { margin:0; color:var(--muted); font-size:14px; }
+  .chips { display:flex; flex-wrap:wrap; gap:7px; justify-content:flex-end; }
+  .chip {
+    border:1px solid var(--line);
+    background:#f7faff;
+    color:#526176;
+    border-radius:999px;
+    padding:5px 9px;
+    font-size:11px;
+    font-weight:750;
+  }
+  .workstream-grid {
+    display:grid;
+    grid-template-columns:1.1fr 1.1fr .8fr;
+    gap:1px;
+    border:1px solid var(--line);
+    border-radius:8px;
+    overflow:hidden;
+    background:var(--line);
+  }
+  .workstream-grid > div {
+    background:#fff;
+    padding:15px 16px;
+    font-size:13px;
+  }
+  .workstream-grid .head {
+    background:var(--navy);
+    color:#fff;
+    font-size:11px;
+    font-weight:950;
+    letter-spacing:1.2px;
+    text-transform:uppercase;
+  }
+  .workstream-grid .name { font-weight:900; color:var(--rev-blue); }
+  .risk-grid { display:grid; grid-template-columns:repeat(3, minmax(0, 1fr)); gap:16px; }
+  .risk {
+    background:#fff;
+    border:1px solid var(--line);
+    border-top:4px solid var(--amber);
+    border-radius:8px;
+    padding:19px;
+  }
+  .risk.high { border-top-color:var(--avit-red); }
+  .risk h3 { margin:0 0 8px; font-size:16px; }
+  .risk p { margin:0; color:var(--muted); font-size:13px; }
+  .role-grid { display:grid; grid-template-columns:repeat(3, minmax(0,1fr)); gap:16px; }
+  .role {
+    min-height:260px;
+    display:flex;
+    flex-direction:column;
+    justify-content:space-between;
+  }
+  .role .name { font-size:22px; font-weight:950; margin:4px 0; }
+  .role .email { color:#94ecff; font-size:13px; font-weight:750; }
+  .source-grid { display:grid; grid-template-columns:repeat(3, minmax(0,1fr)); gap:16px; }
+  .source {
+    display:block;
+    background:#071426;
+    border:1px solid rgba(255,255,255,.12);
+    border-radius:8px;
+    overflow:hidden;
+    text-decoration:none;
+  }
+  .source img { width:100%; aspect-ratio:16/9; object-fit:cover; display:block; }
+  .source div { padding:12px 14px; color:#dbeafe; font-size:13px; font-weight:850; }
+  .next {
+    display:grid;
+    grid-template-columns:72px 1fr;
+    gap:17px;
+    align-items:start;
+    padding:19px 0;
+    border-bottom:1px solid var(--line);
+  }
+  .next:last-child { border-bottom:0; }
+  .next-num {
+    width:48px;
+    height:48px;
+    border-radius:8px;
+    display:grid;
+    place-items:center;
+    color:#fff;
+    background:linear-gradient(135deg,var(--rev-blue),var(--rev-cyan));
+    font-size:18px;
+    font-weight:950;
+  }
+  .next h3 { margin:0 0 4px; font-size:18px; }
+  .next p { margin:0; color:var(--muted); font-size:14px; }
+  footer {
+    background:#050b14;
+    color:rgba(255,255,255,.48);
+    text-align:center;
+    padding:24px;
+    font-size:12px;
+  }
+  @media (max-width:900px) {
+    .hero, .proof-strip, .grid-2 { grid-template-columns:1fr; }
+    .grid-3, .risk-grid, .role-grid, .source-grid { grid-template-columns:1fr; }
+    .phase { grid-template-columns:54px 1fr; }
+    .chips { grid-column:2; justify-content:flex-start; }
+    .workstream-grid { grid-template-columns:1fr; }
+    .workstream-grid .head { display:none; }
+    .nav-links { display:none; }
+  }
+</style>
+</head>
+<body>
+<nav>
+  <div class="nav-inner">
+    <div class="brand"><img src="avit-assets/avit-logo-red-analysis.webp" alt="AVIT logo"> <div>rev<span>.</span>io implementation command center</div></div>
+    <div class="nav-links">
+      <a href="#scope">Scope</a>
+      <a href="#timeline">Timeline</a>
+      <a href="#workstreams">Workstreams</a>
+      <a href="#risks">Risks</a>
+      <a href="#team">Team</a>
+      <a href="#next">Next</a>
+    </div>
+  </div>
+</nav>
+
+<header>
+  <div class="hero">
+    <div>
+      <div class="kicker">AVIT × Rev.io PSA · Custom Implementation Plan</div>
+      <h1>From ConnectWise drag to a controlled Rev.io PSA launch.</h1>
+      <p class="hero-copy">A branded implementation dashboard for AVIT: migration scope, onboarding gates, operating risks, owners, and the proof points needed before go-live. Built from the Rev.io onboarding materials and AVIT’s known operating model.</p>
+      <div class="hero-actions">
+        <a class="btn primary" href="#timeline">View implementation path</a>
+        <a class="btn secondary" href="#source">Review source materials</a>
+      </div>
+    </div>
+    <div class="hero-panel">
+      <div class="launch-card">
+        <div class="launch-head">
+          <div>
+            <div class="tag red">AVIT critical path</div>
+            <div class="launch-title">Migration readiness snapshot</div>
+          </div>
+          <div class="status-pill">Ready to scope</div>
+        </div>
+        <div class="metric-grid">
+          <div class="metric"><div class="num">130</div><div class="label">target platform users including field access</div></div>
+          <div class="metric"><div class="num">100K+</div><div class="label">tickets per year to preserve and operationalize</div></div>
+          <div class="metric"><div class="num">12K</div><div class="label">NetSuite SKUs requiring catalog/inventory discipline</div></div>
+          <div class="metric"><div class="num">75+</div><div class="label">integrations and dependencies to disposition</div></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</header>
+
+<section id="scope">
+  <div class="wrap">
+    <div class="section-head">
+      <div>
+        <div class="eyebrow">Migration scope</div>
+        <h2>Data AVIT should expect Rev.io to move cleanly.</h2>
+      </div>
+      <p class="sub">The first implementation risk is not configuration. It is moving the right ConnectWise data while keeping stale CRM noise out of the new operating system.</p>
+    </div>
+    <div class="grid-3">
+      <div class="card"><span class="tag">Customers</span><h3>Account foundation</h3><p>Company name, ConnectWise account ID, service/billing/listing/site addresses, account creation date, and active status.</p></div>
+      <div class="card"><span class="tag">Contacts</span><h3>Clean contact model</h3><p>Full name, title, phone, email, primary contact designation, active status, and selective migration rules for stale contacts.</p></div>
+      <div class="card"><span class="tag">Financial history</span><h3>Invoices, payments, credits</h3><p>Invoice number, date, due date, amounts by service/expense/product, credit memos, payments, and outstanding balances. Voided invoices stay out.</p></div>
+      <div class="card"><span class="tag">Product catalog</span><h3>SKU and service catalog</h3><p>Products with description, rate, cost, status, classification, subcategory, manufacturer, unit of measure, serialized flags, and part numbers.</p></div>
+      <div class="card"><span class="tag">Tickets</span><h3>PSA history</h3><p>Description, type, status, priority, severity, opened/closed dates, customer association, and configured reference values.</p></div>
+      <div class="card"><span class="tag">Notes</span><h3>Communication record</h3><p>All ticket notes linked to migrated tickets so communication history survives cutover and remains searchable.</p></div>
+    </div>
+  </div>
+</section>
+
+<section class="dark">
+  <div class="wrap">
+    <div class="section-head">
+      <div>
+        <div class="eyebrow">AVIT operating model</div>
+        <h2>Why this needs a custom plan.</h2>
+      </div>
+      <p class="sub">AVIT is not a simple PSA swap. NetSuite, franchise billing, field workflows, subcontractors, CSP/distributors, and reporting all collide at go-live.</p>
+    </div>
+    <div class="grid-2">
+      <div class="card"><span class="tag">NetSuite gravity</span><h3>Financial and inventory source of truth</h3><p>Rev.io must respect NetSuite boundaries while improving invoice handoff, product visibility, and ticket-level inventory context.</p></div>
+      <div class="card"><span class="tag">Field workforce</span><h3>Simple execution for techs and subcontractors</h3><p>Mobile access, photos, notes, time, signatures, GPS context, and one-time work links need to be validated before cutover.</p></div>
+      <div class="card"><span class="tag">Franchise complexity</span><h3>Corporate, owner, location, and sibling relationships</h3><p>Recurring billing and break-fix billing have to support real-world hospitality account structures, not a toy parent-child demo.</p></div>
+      <div class="card"><span class="tag">Workflow intensity</span><h3>Automation without losing billing control</h3><p>AVIT needs triage logic, SLA rules, agreement profitability, billing review, project change orders, and operational dashboards.</p></div>
+    </div>
+  </div>
+</section>
+
+<section>
+  <div class="wrap">
+    <div class="section-head">
+      <div>
+        <div class="eyebrow">Data blueprint</div>
+        <h2>Extract, transform, validate. No mystery meat migration.</h2>
+      </div>
+      <p class="sub">The plan is designed to make quality measurable: record counts, exception logs, reference-value mapping, sample loads, and formal sign-off.</p>
+    </div>
+    <div class="grid-3">
+      <div class="card"><span class="tag green">1 · Extract</span><h3>Pull from ConnectWise and NetSuite context</h3><p>Companies, contacts, tickets, notes, invoices, payments, credits, products, agreements, project records, and NetSuite references.</p></div>
+      <div class="card"><span class="tag green">2 · Transform</span><h3>Normalize AVIT’s structure</h3><p>Map parent/child/related-account relationships, statuses, priorities, types, billing rules, and stale contact suppression logic.</p></div>
+      <div class="card"><span class="tag green">3 · Validate</span><h3>Make AVIT sign-off explicit</h3><p>Sample loads, full loads, invoice reconciliation, ticket/note counts, product catalog checks, open-ticket review, and exception acceptance.</p></div>
+    </div>
+  </div>
+</section>
+
+<section id="timeline">
+  <div class="wrap">
+    <div class="section-head">
+      <div>
+        <div class="eyebrow">Onboarding timeline</div>
+        <h2>Phase gates from kickoff to launch.</h2>
+      </div>
+      <p class="sub">Every phase has a job, owner, and sign-off. That keeps the implementation from becoming a very expensive vibes exercise.</p>
+    </div>
+    <div class="timeline">
+      <div class="phase"><div class="phase-num">1</div><div><h3>Kickoff</h3><p>Meet the AVIT team, align goals, establish project plan, introduce Rev.io project manager and solutions analyst, initiate data export.</p></div><div class="chips"><span class="chip">Stakeholders</span><span class="chip">Milestones</span><span class="chip">Data export</span></div></div>
+      <div class="phase"><div class="phase-num">2A</div><div><h3>Discovery & Configuration</h3><p>Map existing workflows and configure Rev.io PSA around billing rules, service types, roles, integrations, and reporting.</p></div><div class="chips"><span class="chip">Workflow review</span><span class="chip">System config</span><span class="chip">Users</span></div></div>
+      <div class="phase"><div class="phase-num">2B</div><div><h3>Data Migration</h3><p>Extract historical data from ConnectWise, load into Rev.io PSA, and complete AVIT review and reconciliation before moving forward.</p></div><div class="chips"><span class="chip">Extraction</span><span class="chip">Validation</span><span class="chip">Sign-off</span></div></div>
+      <div class="phase"><div class="phase-num">3</div><div><h3>Training</h3><p>Role-based enablement for administrators, technicians, billing users, project users, and reporting stakeholders.</p></div><div class="chips"><span class="chip">Admin</span><span class="chip">Technician</span><span class="chip">Billing</span></div></div>
+      <div class="phase optional"><div class="phase-num">4</div><div><h3>Dual Entry / Mock Operations</h3><p>Optional confidence phase for parallel operations, UAT scenarios, issue resolution, and team readiness before full cutover.</p></div><div class="chips"><span class="chip">Parallel run</span><span class="chip">UAT</span><span class="chip">Confidence check</span></div></div>
+      <div class="phase"><div class="phase-num">5</div><div><h3>Go-Live</h3><p>Launch on Rev.io PSA with real-time support, post-launch check-ins, issue triage, and Customer Success handoff.</p></div><div class="chips"><span class="chip">Launch support</span><span class="chip">Hypercare</span><span class="chip">CS handoff</span></div></div>
+    </div>
+  </div>
+</section>
+
+<section id="workstreams">
+  <div class="wrap">
+    <div class="section-head">
+      <div>
+        <div class="eyebrow">Workstreams</div>
+        <h2>Parallel work required to keep the project moving.</h2>
+      </div>
+      <p class="sub">This is the operating dashboard for the implementation. Each lane needs an AVIT owner and a Rev.io owner.</p>
+    </div>
+    <div class="workstream-grid">
+      <div class="head">Workstream</div><div class="head">Scope</div><div class="head">Primary owners</div>
+      <div class="name">Project Governance</div><div>Kickoff, project plan, decisions, issue log, weekly status, go-live readiness.</div><div>Project Manager + AVIT sponsor</div>
+      <div class="name">PSA Configuration</div><div>Customers, boards, statuses, priorities, SLAs, roles, billing rules, agreements.</div><div>Solutions Analyst + AVIT ops</div>
+      <div class="name">Data Migration</div><div>ConnectWise extraction, mapping, load testing, reconciliation, exception cleanup.</div><div>Data Engineer + AVIT data owner</div>
+      <div class="name">NetSuite / Billing</div><div>Invoice flow, product catalog, SKUs, payments, shipping charges, finance sign-off.</div><div>Rev.io + AVIT finance</div>
+      <div class="name">Field Operations</div><div>Mobile workflow, subcontractor link, sign-off, photos, GPS, technician training.</div><div>Rev.io + service leaders</div>
+      <div class="name">Integrations</div><div>IT Glue, Meraki, Pax8, distributors, ServiceNow/Jira, RMM, FedEx, reporting exports.</div><div>Integration owner + AVIT technical owner</div>
+    </div>
+  </div>
+</section>
+
+<section id="risks">
+  <div class="wrap">
+    <div class="section-head">
+      <div>
+        <div class="eyebrow">Risk register</div>
+        <h2>Items to manage before AVIT commits to go-live.</h2>
+      </div>
+      <p class="sub">This is where the dashboard needs teeth. If these items are fuzzy, AVIT will hear “implementation risk” no matter how pretty the demo is.</p>
+    </div>
+    <div class="risk-grid">
+      <div class="risk high"><span class="tag red">High</span><h3>NetSuite inventory visibility</h3><p>Confirm live vs. custom/API path for on-hand inventory at ticket and quote level.</p></div>
+      <div class="risk high"><span class="tag red">High</span><h3>Product images in quotes</h3><p>Define phase-one workaround or committed roadmap path for default quote-line images.</p></div>
+      <div class="risk high"><span class="tag red">High</span><h3>Parent / related account model</h3><p>Build AVIT examples into UAT, including corporate, franchise, owner, sibling, and location relationships.</p></div>
+      <div class="risk"><span class="tag amber">Medium</span><h3>Subcontractor workflow</h3><p>Validate one-time work links, photos, signatures, GPS expectations, and access controls.</p></div>
+      <div class="risk"><span class="tag amber">Medium</span><h3>FedEx / shipping charges</h3><p>Decide whether shipping logic belongs in Rev.io, NetSuite, or both.</p></div>
+      <div class="risk"><span class="tag amber">Medium</span><h3>Stale ConnectWise contacts</h3><p>Use selective migration and scrubbing before stale CRM history pollutes Rev.io.</p></div>
+    </div>
+  </div>
+</section>
+
+<section class="dark" id="team">
+  <div class="wrap">
+    <div class="section-head">
+      <div>
+        <div class="eyebrow">Implementation team</div>
+        <h2>Named Rev.io resources and escalation paths.</h2>
+      </div>
+      <p class="sub">The plan should feel staffed, not hypothetical. AVIT needs to know who owns timeline, configuration, and migration quality.</p>
+    </div>
+    <div class="role-grid">
+      <div class="card role"><div><span class="tag">Project Manager</span><div class="name">Lauren Swygert</div><p>Primary point of contact. Owns timeline, milestones, weekly status, risks, and coordination.</p></div><div class="email">lauren.swygert@rev.io</div></div>
+      <div class="card role"><div><span class="tag">Solutions Analyst</span><div class="name">Jeremy Adams</div><p>Owns Rev.io PSA configuration and training delivery. Ensures workflows match AVIT’s operating model.</p></div><div class="email">jeremy.adams@rev.io</div></div>
+      <div class="card role"><div><span class="tag">Data Engineer</span><div class="name">Joshua Nugent</div><p>Supports ConnectWise migration and comparative analysis to ensure accuracy throughout the transition.</p></div><div class="email">joshua.nugent@rev.io</div></div>
+    </div>
+  </div>
+</section>
+
+<section id="next">
+  <div class="wrap">
+    <div class="section-head compact">
+      <div>
+        <div class="eyebrow">Immediate next steps</div>
+        <h2>What Rev.io should bring to AVIT next.</h2>
+      </div>
+    </div>
+    <div>
+      <div class="next"><div class="next-num">1</div><div><h3>Confirm implementation assumptions</h3><p>Validate target users, data scope, timeline expectation, NetSuite ownership, and whether AVIT wants the optional dual-entry phase.</p></div></div>
+      <div class="next"><div class="next-num">2</div><div><h3>Create AVIT-specific UAT script</h3><p>Use real scenarios: parent-child billing, break-fix tickets, field closeout, quote/change order, invoice review, and NetSuite handoff.</p></div></div>
+      <div class="next"><div class="next-num">3</div><div><h3>Build integration disposition tracker</h3><p>Classify every requested integration as live today, native connector, API-supported, roadmap, custom, retained, or deferred.</p></div></div>
+      <div class="next"><div class="next-num">4</div><div><h3>Schedule project-readiness call</h3><p>Bring Rev.io PM, SA, data engineer, sales owner, AVIT ops, finance, and technical owner together before contracting momentum cools.</p></div></div>
+    </div>
+  </div>
+</section>
+
+<section id="source" class="dark">
+  <div class="wrap">
+    <div class="section-head">
+      <div>
+        <div class="eyebrow">Source materials</div>
+        <h2>Implementation content grounded in the supplied Rev.io materials.</h2>
+      </div>
+      <p class="sub">The dashboard uses the supplied screenshots as its source appendix so AVIT can see the migration scope, onboarding phases, and named resources.</p>
+    </div>
+    <div class="source-grid">
+      <a class="source" href="avit-assets/implementation/migration-overview.png"><img src="avit-assets/implementation/migration-overview.png" alt="Migration overview source screenshot"><div>Migration overview</div></a>
+      <a class="source" href="avit-assets/implementation/onboarding-timeline.png"><img src="avit-assets/implementation/onboarding-timeline.png" alt="Onboarding timeline source screenshot"><div>Onboarding timeline</div></a>
+      <a class="source" href="avit-assets/implementation/key-contacts.png"><img src="avit-assets/implementation/key-contacts.png" alt="Key contacts source screenshot"><div>Key contacts and escalation paths</div></a>
+    </div>
+  </div>
+</section>
+
+<footer>Rev.io Sales · Confidential · Prepared for AVIT</footer>
+</body>
+</html>
