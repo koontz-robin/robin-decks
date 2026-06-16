@@ -473,27 +473,27 @@
           <button class="drag-handle" type="button" draggable="true" aria-label="Drag Revii AI Credits row" title="Drag to reorder">::</button>
           <div>
             <div class="item-title">Revii AI Credits</div>
-            <div class="item-copy">Agentic AI outcomes initiated by your users in the Revii interface globally available in the interface.</div>
+            <div class="item-copy">Agentic AI outcomes initiated by your users in the Revii interface. The first 15,000 credits are included; overage starts at $0.01 per credit.</div>
           </div>
           <div>
-            <label for="reviiQty">Quantity</label>
+            <label for="reviiQty">Credits</label>
             <div class="stepper">
-              <button type="button" data-step="reviiQty" data-delta="-1" aria-label="Decrease Revii AI Credits quantity">-</button>
-              <input class="number-input" id="reviiQty" type="number" min="0" step="1" value="100">
-              <button type="button" data-step="reviiQty" data-delta="1" aria-label="Increase Revii AI Credits quantity">+</button>
+              <button type="button" data-step="reviiQty" data-delta="-1000" aria-label="Decrease Revii AI Credits quantity">-</button>
+              <input class="number-input" id="reviiQty" type="number" min="0" step="1000" value="15000">
+              <button type="button" data-step="reviiQty" data-delta="1000" aria-label="Increase Revii AI Credits quantity">+</button>
             </div>
           </div>
           <div>
-            <label for="reviiRate">Rate</label>
+            <label for="reviiRate">Overage rate</label>
             <div class="stepper">
-              <button type="button" data-step="reviiRate" data-delta="-0.05" aria-label="Decrease Revii AI Credits rate">-</button>
-              <input class="number-input" id="reviiRate" type="number" min="0" step="0.05" value="0.50">
-              <button type="button" data-step="reviiRate" data-delta="0.05" aria-label="Increase Revii AI Credits rate">+</button>
+              <button type="button" data-step="reviiRate" data-delta="-0.01" aria-label="Decrease Revii AI Credits rate">-</button>
+              <input class="number-input" id="reviiRate" type="number" min="0" step="0.01" value="0.01">
+              <button type="button" data-step="reviiRate" data-delta="0.01" aria-label="Increase Revii AI Credits rate">+</button>
             </div>
           </div>
           <div>
             <label>Line total</label>
-            <div class="line-total" id="reviiTotal">$50</div>
+            <div class="line-total" id="reviiTotal">$0</div>
           </div>
         </div>
 
@@ -712,11 +712,11 @@
         <div class="total-card">
           <div class="total-label">Estimated monthly total</div>
           <div class="total-value" id="mainTotal">$1,000</div>
-          <div class="total-sub" id="totalSub">$315 is added so the tailored package reaches the $1,000 monthly minimum.</div>
+          <div class="total-sub" id="totalSub">$365 is added so the tailored package reaches the $1,000 monthly minimum.</div>
         </div>
         <div class="summary-line">
           <span>Selected package value</span>
-          <strong id="licenseValue">$685</strong>
+          <strong id="licenseValue">$635</strong>
         </div>
         <div class="summary-line">
           <span>Communications billing fee</span>
@@ -728,7 +728,7 @@
         </div>
         <div class="summary-line minimum">
           <span>Minimum adjustment</span>
-          <strong id="adjustmentValue">$315</strong>
+          <strong id="adjustmentValue">$365</strong>
         </div>
         <div class="summary-line">
           <span>Total users</span>
@@ -746,7 +746,7 @@
           <span>Estimated first invoice</span>
           <strong id="firstInvoiceValue">$3,500</strong>
         </div>
-        <div class="floor-note" id="floorNote">Clients can tailor the user mix. This configuration totals $685 before the minimum adjustment and $1,000 per month after the minimum is applied.</div>
+        <div class="floor-note" id="floorNote">Clients can tailor the user mix. This configuration totals $635 before the minimum adjustment and $1,000 per month after the minimum is applied.</div>
         <button class="copy-btn" type="button" id="copySummary">Copy pricing summary</button>
         <button class="copy-btn secondary" type="button" id="copyLink">Copy shareable link</button>
       </div>
@@ -780,6 +780,8 @@
     reviiQty: "revyQty",
     reviiRate: "revyRate"
   };
+
+  const REVII_INCLUDED_CREDITS = 15000;
 
   const money = new Intl.NumberFormat("en-US", {
     style: "currency",
@@ -980,7 +982,9 @@
 
     const standardTotal = standardQty * standardRate;
     const fieldTotal = fieldQty * fieldRate;
-    const reviiTotal = reviiQty * reviiRate;
+    const reviiBillableQty = Math.max(0, reviiQty - REVII_INCLUDED_CREDITS);
+    const reviiIncludedQty = Math.min(reviiQty, REVII_INCLUDED_CREDITS);
+    const reviiTotal = reviiBillableQty * reviiRate;
     const commCalculated = commVolume * (commPercent / 100);
     const commTotal = commCalculated;
     const cloudBackupTotal = cloudBackupGb * cloudBackupRate;
@@ -1042,7 +1046,7 @@
     return {
       standardQty, standardRate, standardTotal,
       fieldQty, fieldRate, fieldTotal,
-      reviiQty, reviiRate, reviiTotal,
+      reviiQty, reviiRate, reviiIncludedQty, reviiBillableQty, reviiTotal,
       commVolume, commPercent, commCalculated, commTotal,
       cloudBackupGb, cloudBackupRate, cloudBackupTotal,
       rmmEndpoints, rmmRate, rmmTotal,
@@ -1072,7 +1076,7 @@
       "Rev.io PSA pricing estimate",
       `Standard Users: ${result.standardQty} x ${formatRate(result.standardRate)} = ${format(result.standardTotal)}`,
       `Field Users: ${result.fieldQty} x ${formatRate(result.fieldRate)} = ${format(result.fieldTotal)}`,
-      `Revii AI Credits: ${result.reviiQty} x ${formatRate(result.reviiRate)} = ${format(result.reviiTotal)}`,
+      `Revii AI Credits: ${result.reviiQty} credits; ${result.reviiIncludedQty} included, ${result.reviiBillableQty} billable x ${formatRate(result.reviiRate)} = ${format(result.reviiTotal)}`,
       `Communications Billing: ${format(result.commVolume)} monthly volume x ${result.commPercent}% = ${format(result.commTotal)} usage based`,
       `Rev.io Cloud Backup: ${result.cloudBackupGb} GBs x ${formatRate(result.cloudBackupRate)} = ${format(result.cloudBackupTotal)}`,
       `Rev.io RMM: ${result.rmmEndpoints} endpoints x ${formatRate(result.rmmRate)} = ${format(result.rmmTotal)}`,
