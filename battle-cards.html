@@ -167,9 +167,25 @@
   }
   .section-sidebar ul li:last-child { border-bottom: none; }
   .section-sidebar .chk { color: #10B981; font-weight: 700; flex-shrink: 0; }
+  .billing-grid { display:grid; grid-template-columns:repeat(auto-fit,minmax(220px,1fr)); gap:16px; margin:18px 0 26px; }
+  .billing-card {
+    background:#0F172A;
+    border:1px solid rgba(99,102,241,0.28);
+    border-radius:10px;
+    padding:18px;
+    cursor:pointer;
+    transition:all .18s ease;
+    min-height:185px;
+  }
+  .billing-card:hover { border-color:#818CF8; transform:translateY(-2px); background:#111C33; }
+  .billing-card .kicker { color:#818CF8; font-size:10px; font-weight:700; letter-spacing:1.2px; text-transform:uppercase; margin-bottom:8px; }
+  .billing-card h3 { color:#E2E8F0; font-size:18px; margin-bottom:8px; }
+  .billing-card p { color:#94A3B8; font-size:13px; line-height:1.55; margin-bottom:12px; }
+  .billing-card .angle { display:inline-block; color:#10B981; font-size:11px; font-weight:700; padding:3px 8px; border-radius:999px; background:rgba(16,185,129,.10); border:1px solid rgba(16,185,129,.22); }
   @media (max-width: 900px) {
     .section-grid { grid-template-columns: 1fr; }
     .section-sidebar { position: static; }
+    .billing-grid { grid-template-columns:1fr; }
   }
 
 </style>
@@ -190,6 +206,7 @@
   <span style="font-size:11px;color:#2a5a3a;letter-spacing:2px;text-transform:uppercase;margin-right:4px">Segment:</span>
   <button id="seg-msp" class="seg-btn active" onclick="filterSegment('msp')">MSP</button>
   <button id="seg-integrator" class="seg-btn" onclick="filterSegment('integrator')">Integrator</button>
+  <button id="seg-billing" class="seg-btn" onclick="filterSegment('billing')">Billing</button>
   <button id="seg-all" class="seg-btn" onclick="filterSegment('all')">All</button>
 </div>
 <div class="nav-tabs" style="top:110px">
@@ -198,6 +215,7 @@
   <button class="nav-tab" data-segment="msp" onclick="showTab('halo')">HaloPSA</button>
   <button class="nav-tab" data-segment="msp" onclick="showTab('syncro')">Syncro</button>
   <button class="nav-tab" data-segment="msp" onclick="showTab('superops')">SuperOps</button>
+  <button class="nav-tab" data-segment="billing" onclick="showTab('billing')">Billing</button>
   <button class="nav-tab" data-segment="integrator" onclick="showTab('integrators')">Integrators</button>
   <button class="nav-tab" data-segment="both" onclick="showTab('quickref')">Quick Reference</button>
   <button class="nav-tab" data-segment="integrator" onclick="showTab('service-fusion')">Service Fusion</button>
@@ -216,6 +234,73 @@
 
 <main>
 
+<!-- ===== BILLING ===== -->
+<div class="section" id="billing">
+  <div class="section-title">Billing Competitor Battlecards</div>
+  <div class="overview-grid">
+    <div class="overview-item"><div class="label">Segment</div><div class="value">Billing Platforms</div></div>
+    <div class="overview-item"><div class="label">Primary Angle</div><div class="value">Billing-only tools vs. Rev.io's billing + PSA operating system</div></div>
+    <div class="overview-item"><div class="label">Use When</div><div class="value">Prospects mention telecom billing, tax compliance, usage rating, invoicing, or revenue management</div></div>
+  </div>
+
+  <div style="background:#060d14;border:1px solid rgba(99,102,241,0.18);border-radius:10px;padding:16px;margin-bottom:20px;color:#cbd5e1;font-size:13px;line-height:1.65">
+    Billing competitors usually win attention on narrow telecom billing depth, usage rating, or tax compliance. Rev.io's wedge is broader: billing, payments, customer management, ticketing, service workflow, reporting, and operational visibility in one revenue platform. Do not let the conversation stay trapped at "can it rate a call"; move it to "can it run the business after the invoice goes out?"
+  </div>
+
+  <div class="billing-grid">
+    <div class="billing-card" onclick="showTab('datagate')">
+      <div class="kicker">Usage billing · MSP telecom</div>
+      <h3>Datagate</h3>
+      <p>Usage-based telecom billing for MSPs and telecom resellers. Field intel shows gaps around automated payment reminders and collections.</p>
+      <span class="angle">Open Datagate card</span>
+    </div>
+    <div class="billing-card" onclick="showTab('onebill')">
+      <div class="kicker">Subscription billing · revenue management</div>
+      <h3>OneBill</h3>
+      <p>Telecom and ISP subscription billing platform. Usually credible in billing conversations, but narrower than Rev.io's full operating-system story.</p>
+      <span class="angle">Open OneBill card</span>
+    </div>
+    <div class="billing-card" onclick="showTab('timelybill')">
+      <div class="kicker">Telecom billing · quoting gaps</div>
+      <h3>TimelyBill</h3>
+      <p>Billing platform used by smaller telecom operators. Field intel flags quoting limitations and the need for separate tools.</p>
+      <span class="angle">Open TimelyBill card</span>
+    </div>
+    <div class="billing-card" onclick="showTab('idi-costguard')">
+      <div class="kicker">Carrier billing · CostGuard</div>
+      <h3>IDI / CostGuard</h3>
+      <p>Established communications billing stack with strong telecom roots. Best pivot: legacy carrier billing depth does not equal modern customer operations.</p>
+      <span class="angle">Open IDI / CostGuard card</span>
+    </div>
+    <div class="billing-card" onclick="showTab('sandybeaches-intelebill')">
+      <div class="kicker">Telecom tax · billing compliance</div>
+      <h3>Sandy Beaches / Intelebill</h3>
+      <p>Telecom billing and tax-compliance competitor that appears in source mentions. Treat as billing/tax point solution unless they prove broader workflow depth.</p>
+      <span class="angle">Open Sandy Beaches / Intelebill card</span>
+    </div>
+  </div>
+
+  <div class="section-title">Universal Billing Talk Track</div>
+  <div class="sw-table">
+    <div class="sw-col strengths">
+      <h4>Acknowledge</h4>
+      <ul>
+        <li>Billing specialists can be strong at usage rating, telecom taxes, and narrow invoice workflows</li>
+        <li>Some incumbents are deeply embedded in carrier-style back offices</li>
+        <li>Replacing a billing engine can feel risky if the prospect only thinks about invoices</li>
+      </ul>
+    </div>
+    <div class="sw-col weaknesses">
+      <h4>Reframe</h4>
+      <ul>
+        <li>Billing without service operations creates another silo</li>
+        <li>Collections, payments, ticket context, customer visibility, and reporting matter after invoices are generated</li>
+        <li>Rev.io wins when the buyer needs a revenue platform, not just a rating engine</li>
+      </ul>
+    </div>
+  </div>
+</div>
+
 <!-- ===== CONNECTWISE ===== -->
 <div class="section active" id="connectwise">
 <div class="section-grid"><div class="section-grid-main">
@@ -227,22 +312,14 @@
   
 
 
-
-
-<!-- FIELD_INTEL_START:ConnectWise updated:2026-06-12 -->
-<div class="section-title">🎙️ Field Intelligence — What Prospects Say (84 raw mentions)</div>
+<!-- FIELD_INTEL_START:ConnectWise updated:2026-05-29 -->
+<div class="section-title">Field Intelligence — What Prospects Say (83 raw mentions)</div>
 <div style="margin-bottom:8px"><div style="font-size:11px;color:#ff4466;text-transform:uppercase;letter-spacing:1px;margin-bottom:8px">Key Pain Points</div><div style="background:#1a0808;border-left:3px solid #ff4466;padding:10px 12px;border-radius:4px;margin-bottom:8px">
-          <div style="font-size:13px;color:#e2e8f0">Prospects repeatedly describe ConnectWise as complex and hard to use, with rigid workflows that don’t fit their business and require significant manual work even after implementation.</div>
+          <div style="font-size:13px;color:#e2e8f0">Prospect frustrated with ConnectWise requiring paid block hours for any customization changes. CRM functionality is poor</div>
         </div><div style="background:#1a0808;border-left:3px solid #ff4466;padding:10px 12px;border-radius:4px;margin-bottom:8px">
-          <div style="font-size:13px;color:#e2e8f0">Support and vendor experience are a recurring frustration, with complaints about slow response times, changing account managers, and having to buy paid services for customization changes.</div>
-        </div><div style="background:#1a0808;border-left:3px solid #ff4466;padding:10px 12px;border-radius:4px;margin-bottom:8px">
-          <div style="font-size:13px;color:#e2e8f0">Many prospects struggle with a fragmented platform experience, citing weak module integrations and especially cumbersome quoting, reporting, and billing processes that create extra manual effort.</div>
+          <div style="font-size:13px;color:#e2e8f0">Prospect paid for onboarding but it wasn't configured correctly. They believe ConnectWise's legacy product lacks flexibi</div>
         </div></div>
-<div><div style="font-size:11px;color:#00ff88;text-transform:uppercase;letter-spacing:1px;margin-bottom:8px">Genuine Strengths</div><div style="background:#081a08;border-left:3px solid #00ff88;padding:10px 12px;border-radius:4px;margin-bottom:8px">
-          <div style="font-size:13px;color:#e2e8f0">ConnectWise is sometimes retained because it can be a lower-cost option than alternatives in certain deployment scenarios.</div>
-        </div><div style="background:#081a08;border-left:3px solid #00ff88;padding:10px 12px;border-radius:4px;margin-bottom:8px">
-          <div style="font-size:13px;color:#e2e8f0">Some long-time users continue to rely on ConnectWise for core PSA functions like invoicing, CRM, and broad integration coverage, even if imperfectly.</div>
-        </div></div>
+
 <!-- FIELD_INTEL_END:ConnectWise -->
 
 
@@ -358,21 +435,15 @@
   
 
 
-
-
-<!-- FIELD_INTEL_START:Autotask updated:2026-06-12 -->
-<div class="section-title">🎙️ Field Intelligence — What Prospects Say (60 raw mentions)</div>
+<!-- FIELD_INTEL_START:Autotask updated:2026-05-29 -->
+<div class="section-title">Field Intelligence — What Prospects Say (59 raw mentions)</div>
 <div style="margin-bottom:8px"><div style="font-size:11px;color:#ff4466;text-transform:uppercase;letter-spacing:1px;margin-bottom:8px">Key Pain Points</div><div style="background:#1a0808;border-left:3px solid #ff4466;padding:10px 12px;border-radius:4px;margin-bottom:8px">
-          <div style="font-size:13px;color:#e2e8f0">Autotask is often seen as overcomplicated and click-heavy, with SMB/MSP teams saying it feels too extensive for lean operations and is hard for technicians to adopt.</div>
+          <div style="font-size:13px;color:#e2e8f0">Prospect has been using Autotask since early 2000s, before Datto and Kaseya acquisitions. General consensus among team i</div>
         </div><div style="background:#1a0808;border-left:3px solid #ff4466;padding:10px 12px;border-radius:4px;margin-bottom:8px">
-          <div style="font-size:13px;color:#e2e8f0">Technicians frequently dislike working in Autotask day-to-day, with recurring complaints around poor ticket/time-entry workflow and missed billable time when notes do not translate cleanly into time records.</div>
-        </div><div style="background:#1a0808;border-left:3px solid #ff4466;padding:10px 12px;border-radius:4px;margin-bottom:8px">
-          <div style="font-size:13px;color:#e2e8f0">Prospects associate Autotask with a legacy PSA stack and commonly cite weak usability in adjacent areas like mobile and API/data migration, which reinforces interest in moving away from the platform.</div>
+          <div style="font-size:13px;color:#e2e8f0">Prospect states Autotask is pretty good at managing data but technicians hate using it. They invested in Thread as a wor</div>
         </div></div>
 <div><div style="font-size:11px;color:#00ff88;text-transform:uppercase;letter-spacing:1px;margin-bottom:8px">Genuine Strengths</div><div style="background:#081a08;border-left:3px solid #00ff88;padding:10px 12px;border-radius:4px;margin-bottom:8px">
-          <div style="font-size:13px;color:#e2e8f0">Autotask is valued for strong operational visibility, especially dashboards and reporting around ticket resolution times, response metrics, and status tracking.</div>
-        </div><div style="background:#081a08;border-left:3px solid #00ff88;padding:10px 12px;border-radius:4px;margin-bottom:8px">
-          <div style="font-size:13px;color:#e2e8f0">Customers using the broader Kaseya stack appreciate Autotask’s integration across tools like RMM, EDR, and Rocket Cyber, and some describe those integrations as having improved significantly in recent years.</div>
+          <div style="font-size:13px;color:#e2e8f0">Using Autotask as part of complete Kaseya suite at $60/user with 5 user minimum on 2-year contract. Appreciates that all</div>
         </div></div>
 <!-- FIELD_INTEL_END:Autotask -->
 
@@ -456,37 +527,24 @@
 </div><div class="section-sidebar"><div class="sb-header">✅ 3 Displaced Customers</div><ul><li><span class="chk">✓</span> Automated Telecom</li><li><span class="chk">✓</span> Grahek Technology</li><li><span class="chk">✓</span> Tolleson Inc</li></ul></div></div>
 </div>
 <div class="section" id="halo">
-
-
 <div class="section-grid"><div class="section-grid-main">
-
-<!-- FIELD_INTEL_START:Halo PSA updated:2026-06-12 -->
-<div class="section-title">🎙️ Field Intelligence — What Prospects Say (3 raw mentions)</div>
-<div style="margin-bottom:8px"><div style="font-size:11px;color:#ff4466;text-transform:uppercase;letter-spacing:1px;margin-bottom:8px">Key Pain Points</div><div style="background:#1a0808;border-left:3px solid #ff4466;padding:10px 12px;border-radius:4px;margin-bottom:8px">
-          <div style="font-size:13px;color:#e2e8f0">Some prospects report Halo PSA falls short of the value promised during the sales process, creating disappointment after purchase.</div>
-        </div><div style="background:#1a0808;border-left:3px solid #ff4466;padding:10px 12px;border-radius:4px;margin-bottom:8px">
-          <div style="font-size:13px;color:#e2e8f0">Some buyers are actively evaluating Halo PSA against other PSA platforms rather than seeing it as a clear standout option.</div>
-        </div></div>
-
-<!-- FIELD_INTEL_END:Halo PSA -->
   <div class="overview-grid">
     <div class="overview-item"><div class="label">Competitor</div><div class="value">HaloPSA</div></div>
 
-
-
-<!-- FIELD_INTEL_START:Halo updated:2026-06-12 -->
-<div class="section-title">🎙️ Field Intelligence — What Prospects Say (20 raw mentions)</div>
+<!-- FIELD_INTEL_START:Halo PSA updated:2026-05-29 -->
+<div class="section-title">Field Intelligence — What Prospects Say (3 raw mentions)</div>
 <div style="margin-bottom:8px"><div style="font-size:11px;color:#ff4466;text-transform:uppercase;letter-spacing:1px;margin-bottom:8px">Key Pain Points</div><div style="background:#1a0808;border-left:3px solid #ff4466;padding:10px 12px;border-radius:4px;margin-bottom:8px">
-          <div style="font-size:13px;color:#e2e8f0">Halo can require a long, resource-intensive onboarding and consulting effort before teams are fully up and running.</div>
-        </div><div style="background:#1a0808;border-left:3px solid #ff4466;padding:10px 12px;border-radius:4px;margin-bottom:8px">
-          <div style="font-size:13px;color:#e2e8f0">Customers may adopt Halo slowly because the platform is broad and complex, making full module rollout take time.</div>
-        </div><div style="background:#1a0808;border-left:3px solid #ff4466;padding:10px 12px;border-radius:4px;margin-bottom:8px">
-          <div style="font-size:13px;color:#e2e8f0">Some technical issues can be difficult to resolve even with Halo support, despite generally responsive service.</div>
+          <div style="font-size:13px;color:#e2e8f0">Another Skyswitch partner using Halo PSA is not super happy with it. He didn't feel like he got the full value that they</div>
         </div></div>
+
+<!-- FIELD_INTEL_END:Halo PSA -->
+
+
+<!-- FIELD_INTEL_START:Halo updated:2026-05-29 -->
+<div class="section-title">Field Intelligence — What Prospects Say (19 raw mentions)</div>
+
 <div><div style="font-size:11px;color:#00ff88;text-transform:uppercase;letter-spacing:1px;margin-bottom:8px">Genuine Strengths</div><div style="background:#081a08;border-left:3px solid #00ff88;padding:10px 12px;border-radius:4px;margin-bottom:8px">
-          <div style="font-size:13px;color:#e2e8f0">Halo is widely seen as a benchmark for modern PSA UX, with prospects describing its interface as sleek and something competitors are trying to copy.</div>
-        </div><div style="background:#081a08;border-left:3px solid #00ff88;padding:10px 12px;border-radius:4px;margin-bottom:8px">
-          <div style="font-size:13px;color:#e2e8f0">Halo is viewed as operationally solid for core workflows, with integrations working well, billing flowing smoothly, and support generally responsive by phone.</div>
+          <div style="font-size:13px;color:#e2e8f0">Prospect mentioned Halo as the benchmark for modern PSA design, stating 'everyone right now is copying Halo' for UX. The</div>
         </div></div>
 <!-- FIELD_INTEL_END:Halo -->
   
@@ -606,22 +664,14 @@
   
 
 
-
-
-<!-- FIELD_INTEL_START:Syncro updated:2026-06-12 -->
-<div class="section-title">🎙️ Field Intelligence — What Prospects Say (12 raw mentions)</div>
+<!-- FIELD_INTEL_START:Syncro updated:2026-05-29 -->
+<div class="section-title">Field Intelligence — What Prospects Say (11 raw mentions)</div>
 <div style="margin-bottom:8px"><div style="font-size:11px;color:#ff4466;text-transform:uppercase;letter-spacing:1px;margin-bottom:8px">Key Pain Points</div><div style="background:#1a0808;border-left:3px solid #ff4466;padding:10px 12px;border-radius:4px;margin-bottom:8px">
-          <div style="font-size:13px;color:#e2e8f0">Syncro’s project management is a recurring weakness because projects must be tracked as regular tickets, making it hard to separate project work from service tickets.</div>
+          <div style="font-size:13px;color:#e2e8f0">Syncro was originally repair shopper meant for brick and mortar repair locations. For projects, you just do it as a regu</div>
         </div><div style="background:#1a0808;border-left:3px solid #ff4466;padding:10px 12px;border-radius:4px;margin-bottom:8px">
-          <div style="font-size:13px;color:#e2e8f0">Project tickets staying open for days or weeks consistently distort SLA and time-to-resolution reporting, creating misleading performance metrics.</div>
-        </div><div style="background:#1a0808;border-left:3px solid #ff4466;padding:10px 12px;border-radius:4px;margin-bottom:8px">
-          <div style="font-size:13px;color:#e2e8f0">Prospects repeatedly describe Syncro’s UI as dated and less polished than newer PSA platforms they see in the market.</div>
+          <div style="font-size:13px;color:#e2e8f0">Prospect mentioned Syncro looks a little dated compared to what they're seeing out there from other platforms at the MSP</div>
         </div></div>
-<div><div style="font-size:11px;color:#00ff88;text-transform:uppercase;letter-spacing:1px;margin-bottom:8px">Genuine Strengths</div><div style="background:#081a08;border-left:3px solid #00ff88;padding:10px 12px;border-radius:4px;margin-bottom:8px">
-          <div style="font-size:13px;color:#e2e8f0">Customers often say Syncro covers their core needs well enough that they have no major complaints and little reason to switch.</div>
-        </div><div style="background:#081a08;border-left:3px solid #00ff88;padding:10px 12px;border-radius:4px;margin-bottom:8px">
-          <div style="font-size:13px;color:#e2e8f0">The combined PSA and RMM offering is a real draw for evaluators who want more functionality in a single platform.</div>
-        </div></div>
+
 <!-- FIELD_INTEL_END:Syncro -->
   
     <div class="overview-item"><div class="label">Founded</div><div class="value">2017</div></div>
@@ -1067,21 +1117,15 @@
 
 
 
-
-
-<!-- FIELD_INTEL_START:Service Fusion updated:2026-06-12 -->
-<div class="section-title">🎙️ Field Intelligence — What Prospects Say (31 raw mentions)</div>
+<!-- FIELD_INTEL_START:Service Fusion updated:2026-05-29 -->
+<div class="section-title">Field Intelligence — What Prospects Say (31 raw mentions)</div>
 <div style="margin-bottom:8px"><div style="font-size:11px;color:#ff4466;text-transform:uppercase;letter-spacing:1px;margin-bottom:8px">Key Pain Points</div><div style="background:#1a0808;border-left:3px solid #ff4466;padding:10px 12px;border-radius:4px;margin-bottom:8px">
-          <div style="font-size:13px;color:#e2e8f0">Inventory management is a recurring weak spot in Service Fusion, with prospects citing poor movement/history tracking, weak physical count and min/max reorder workflows, awkward partial PO handling, and limited mobile inventory updates from the field.</div>
+          <div style="font-size:13px;color:#e2e8f0">Company has used Service Fusion for less than 12 months but has many complaints. Staff nicknamed it 'service confusion'.</div>
         </div><div style="background:#1a0808;border-left:3px solid #ff4466;padding:10px 12px;border-radius:4px;margin-bottom:8px">
-          <div style="font-size:13px;color:#e2e8f0">The mobile app and field workflow often create operational friction, with complaints about weak technician usability, missing time-tracking/scheduling needs, inability to handle certain in-field updates, and issues closing jobs when multiple techs are assigned.</div>
-        </div><div style="background:#1a0808;border-left:3px solid #ff4466;padding:10px 12px;border-radius:4px;margin-bottom:8px">
-          <div style="font-size:13px;color:#e2e8f0">Prospects frequently describe Service Fusion as inefficient for day-to-day operations, pointing to heavy manual data entry, slow account/quote setup, reporting glitches, and support that has been difficult to rely on.</div>
+          <div style="font-size:13px;color:#e2e8f0">Prospect currently paying $522/month. Main complaints: progress billing reports require re-engineering their reporting s</div>
         </div></div>
 <div><div style="font-size:11px;color:#00ff88;text-transform:uppercase;letter-spacing:1px;margin-bottom:8px">Genuine Strengths</div><div style="background:#081a08;border-left:3px solid #00ff88;padding:10px 12px;border-radius:4px;margin-bottom:8px">
-          <div style="font-size:13px;color:#e2e8f0">Prospects consistently value Service Fusion’s configurability and recordkeeping, especially custom fields, document storage, and having customer, job, and inventory information centralized in one system.</div>
-        </div><div style="background:#081a08;border-left:3px solid #00ff88;padding:10px 12px;border-radius:4px;margin-bottom:8px">
-          <div style="font-size:13px;color:#e2e8f0">Automated customer texting, technician mobile visibility, and reporting are genuine strengths that users say are deeply embedded in their workflow.</div>
+          <div style="font-size:13px;color:#e2e8f0">Prospect currently uses Service Fusion and states they have no complaints honestly speaking. Platform is pretty good for</div>
         </div></div>
 <!-- FIELD_INTEL_END:Service Fusion -->
     <h2 style="font-size:18px;color:#c8f0dc;margin-bottom:4px">Service Fusion <span style="font-size:11px;color:#ffcc00;background:#1a1400;border:1px solid #ffcc00;padding:2px 8px;border-radius:10px;margin-left:8px">5 field mentions</span><span style="font-size:11px;color:#818CF8;background:#0F172A;border:1px solid #3DC570;padding:2px 8px;border-radius:10px;margin-left:8px">✅ 6 displaced</span></h2>
@@ -1104,21 +1148,15 @@
 
 
 
-
-
-<!-- FIELD_INTEL_START:AlarmBiller updated:2026-06-12 -->
-<div class="section-title">🎙️ Field Intelligence — What Prospects Say (10 raw mentions)</div>
+<!-- FIELD_INTEL_START:AlarmBiller updated:2026-05-29 -->
+<div class="section-title">Field Intelligence — What Prospects Say (9 raw mentions)</div>
 <div style="margin-bottom:8px"><div style="font-size:11px;color:#ff4466;text-transform:uppercase;letter-spacing:1px;margin-bottom:8px">Key Pain Points</div><div style="background:#1a0808;border-left:3px solid #ff4466;padding:10px 12px;border-radius:4px;margin-bottom:8px">
-          <div style="font-size:13px;color:#e2e8f0">AlarmBiller is repeatedly criticized for lacking a real mobile app and integrated GPS tracking, forcing techs to rely on laptops or clunky browser access in the field.</div>
+          <div style="font-size:13px;color:#e2e8f0">Currently using AlarmBiller for RMR billing which makes up 1/3 of business. Frustrations include no GPS tracking, no wor</div>
         </div><div style="background:#1a0808;border-left:3px solid #ff4466;padding:10px 12px;border-radius:4px;margin-bottom:8px">
-          <div style="font-size:13px;color:#e2e8f0">Prospects describe the platform as outdated and stagnant, saying it has changed little in years and is no longer being meaningfully supported or improved.</div>
-        </div><div style="background:#1a0808;border-left:3px solid #ff4466;padding:10px 12px;border-radius:4px;margin-bottom:8px">
-          <div style="font-size:13px;color:#e2e8f0">Users report functional gaps that require workarounds or duplicate systems, including limited billing/invoicing flexibility and incomplete support for Canadian tax workflows.</div>
+          <div style="font-size:13px;color:#e2e8f0">Prospect currently uses AlarmBiller and noted it doesn't have integrated GPS tracking and doesn't have a mobile app. The</div>
         </div></div>
 <div><div style="font-size:11px;color:#00ff88;text-transform:uppercase;letter-spacing:1px;margin-bottom:8px">Genuine Strengths</div><div style="background:#081a08;border-left:3px solid #00ff88;padding:10px 12px;border-radius:4px;margin-bottom:8px">
-          <div style="font-size:13px;color:#e2e8f0">Despite its age, AlarmBiller is seen as rock solid and highly functional for core security-industry billing and RMR processes.</div>
-        </div><div style="background:#081a08;border-left:3px solid #00ff88;padding:10px 12px;border-radius:4px;margin-bottom:8px">
-          <div style="font-size:13px;color:#e2e8f0">A former user said that while AlarmBiller was limited and sometimes laggy, their overall experience was still better than with their current platform.</div>
+          <div style="font-size:13px;color:#e2e8f0">Prospect previously used Alarm Biller and noted it was more limited but they weren't having issues with most processes, </div>
         </div></div>
 <!-- FIELD_INTEL_END:AlarmBiller -->
     <h2 style="font-size:18px;color:#c8f0dc;margin-bottom:4px">AlarmBiller <span style="font-size:11px;color:#ffcc00;background:#1a1400;border:1px solid #ffcc00;padding:2px 8px;border-radius:10px;margin-left:8px">5 field mentions</span><span style="font-size:11px;color:#818CF8;background:#0F172A;border:1px solid #3DC570;padding:2px 8px;border-radius:10px;margin-left:8px">✅ 8 displaced</span></h2>
@@ -1137,21 +1175,15 @@
 
 
 
-
-
-<!-- FIELD_INTEL_START:Jetbuilt updated:2026-06-12 -->
-<div class="section-title">🎙️ Field Intelligence — What Prospects Say (7 raw mentions)</div>
+<!-- FIELD_INTEL_START:Jetbuilt updated:2026-05-29 -->
+<div class="section-title">Field Intelligence — What Prospects Say (6 raw mentions)</div>
 <div style="margin-bottom:8px"><div style="font-size:11px;color:#ff4466;text-transform:uppercase;letter-spacing:1px;margin-bottom:8px">Key Pain Points</div><div style="background:#1a0808;border-left:3px solid #ff4466;padding:10px 12px;border-radius:4px;margin-bottom:8px">
-          <div style="font-size:13px;color:#e2e8f0">Jetbuilt is valued mainly as a proposal tool, but teams still need separate systems for CRM, project/service tracking, time tracking, and mobile field work because those workflows are missing or weak.</div>
+          <div style="font-size:13px;color:#e2e8f0">Noah states Jetbuilt's inventory tracking is 'not super in depth' and lacks capabilities for service contracts: 'I need </div>
         </div><div style="background:#1a0808;border-left:3px solid #ff4466;padding:10px 12px;border-radius:4px;margin-bottom:8px">
-          <div style="font-size:13px;color:#e2e8f0">Prospects report long-standing feature gaps—especially around inventory/asset tracking and service contract management—and feel core functionality has not matured enough over time.</div>
-        </div><div style="background:#1a0808;border-left:3px solid #ff4466;padding:10px 12px;border-radius:4px;margin-bottom:8px">
-          <div style="font-size:13px;color:#e2e8f0">Some integrations and advanced features are seen as unreliable or immature, including QuickBooks syncing discrepancies and drawings/AI outputs that require significant cleanup and only work on small projects.</div>
+          <div style="font-size:13px;color:#e2e8f0">Noah explains 'a lot of it is like missing features' and they've 'been using them for eight years' but features 'never g</div>
         </div></div>
 <div><div style="font-size:11px;color:#00ff88;text-transform:uppercase;letter-spacing:1px;margin-bottom:8px">Genuine Strengths</div><div style="background:#081a08;border-left:3px solid #00ff88;padding:10px 12px;border-radius:4px;margin-bottom:8px">
-          <div style="font-size:13px;color:#e2e8f0">Jetbuilt’s strongest value is its product database and proposal generation, helping teams turn complex design-build quotes into polished, client-ready proposals.</div>
-        </div><div style="background:#081a08;border-left:3px solid #00ff88;padding:10px 12px;border-radius:4px;margin-bottom:8px">
-          <div style="font-size:13px;color:#e2e8f0">Prospects consistently like the professional look and consistency of Jetbuilt proposals, especially compared with manual Excel/Word quoting that was more error-prone.</div>
+          <div style="font-size:13px;color:#e2e8f0">Prospect finds Jetbuilt valuable primarily for its product database and proposal generation capabilities. It packages ev</div>
         </div></div>
 <!-- FIELD_INTEL_END:Jetbuilt -->
     <h2 style="font-size:18px;color:#c8f0dc;margin-bottom:4px">Jetbuilt <span style="font-size:11px;color:#ffcc00;background:#1a1400;border:1px solid #ffcc00;padding:2px 8px;border-radius:10px;margin-left:8px">3 field mentions</span><span style="font-size:11px;color:#818CF8;background:#0F172A;border:1px solid #3DC570;padding:2px 8px;border-radius:10px;margin-left:8px">✅ 1 displaced</span></h2>
@@ -1165,22 +1197,14 @@
   
 
 
-
-
-<!-- FIELD_INTEL_START:ServiceNow updated:2026-06-12 -->
-<div class="section-title">🎙️ Field Intelligence — What Prospects Say (5 raw mentions)</div>
+<!-- FIELD_INTEL_START:ServiceNow updated:2026-05-29 -->
+<div class="section-title">Field Intelligence — What Prospects Say (5 raw mentions)</div>
 <div style="margin-bottom:8px"><div style="font-size:11px;color:#ff4466;text-transform:uppercase;letter-spacing:1px;margin-bottom:8px">Key Pain Points</div><div style="background:#1a0808;border-left:3px solid #ff4466;padding:10px 12px;border-radius:4px;margin-bottom:8px">
-          <div style="font-size:13px;color:#e2e8f0">ServiceNow is often ruled out by smaller or mid-market teams because its field service/GPS tracking capabilities are seen as enterprise-scale and too costly to justify.</div>
+          <div style="font-size:13px;color:#e2e8f0">Prospect looked at ServiceNow as one of the few platforms with GPS tracking for field technicians, but found it 'so expe</div>
         </div><div style="background:#1a0808;border-left:3px solid #ff4466;padding:10px 12px;border-radius:4px;margin-bottom:8px">
-          <div style="font-size:13px;color:#e2e8f0">Prospects view ServiceNow as overly complex and built for very large organizations, creating a perception that it is more platform than they actually need.</div>
-        </div><div style="background:#1a0808;border-left:3px solid #ff4466;padding:10px 12px;border-radius:4px;margin-bottom:8px">
-          <div style="font-size:13px;color:#e2e8f0">Companies serving large enterprise customers can feel forced to accommodate ServiceNow because client requirements for near real-time ticket syncing make integration a must-have and expensive to build if not native.</div>
+          <div style="font-size:13px;color:#e2e8f0">Looked at ServiceNow as potential solution that had GPS tracking feature they needed, but it was 'so expensive' that the</div>
         </div></div>
-<div><div style="font-size:11px;color:#00ff88;text-transform:uppercase;letter-spacing:1px;margin-bottom:8px">Genuine Strengths</div><div style="background:#081a08;border-left:3px solid #00ff88;padding:10px 12px;border-radius:4px;margin-bottom:8px">
-          <div style="font-size:13px;color:#e2e8f0">ServiceNow is consistently recognized as one of the few platforms that supports GPS tracking for field technicians.</div>
-        </div><div style="background:#081a08;border-left:3px solid #00ff88;padding:10px 12px;border-radius:4px;margin-bottom:8px">
-          <div style="font-size:13px;color:#e2e8f0">ServiceNow is widely adopted by large enterprises, making it a common integration requirement for vendors that need to share ticket activity with major customers.</div>
-        </div></div>
+
 <!-- FIELD_INTEL_END:ServiceNow -->
     <h2 style="font-size:18px;color:#e2e8f0;margin-bottom:4px">ServiceNow <span style="font-size:11px;color:#ffcc00;background:#1a1400;border:1px solid #ffcc00;padding:2px 8px;border-radius:10px;margin-left:8px">2 field mentions</span></h2>
     <p style="color:#94a3b8;font-size:12px;margin-bottom:20px">Field intelligence only — no static battle card yet</p>
@@ -1192,21 +1216,11 @@
 
 
 
+<!-- FIELD_INTEL_START:Monday updated:2026-05-29 -->
+<div class="section-title">Field Intelligence — What Prospects Say (4 raw mentions)</div>
 
-
-<!-- FIELD_INTEL_START:Monday updated:2026-06-12 -->
-<div class="section-title">🎙️ Field Intelligence — What Prospects Say (4 raw mentions)</div>
-<div style="margin-bottom:8px"><div style="font-size:11px;color:#ff4466;text-transform:uppercase;letter-spacing:1px;margin-bottom:8px">Key Pain Points</div><div style="background:#1a0808;border-left:3px solid #ff4466;padding:10px 12px;border-radius:4px;margin-bottom:8px">
-          <div style="font-size:13px;color:#e2e8f0">Monday.com is mainly being used for high-level tracking and basic board management, suggesting teams may outgrow it when they need deeper operational workflows.</div>
-        </div><div style="background:#1a0808;border-left:3px solid #ff4466;padding:10px 12px;border-radius:4px;margin-bottom:8px">
-          <div style="font-size:13px;color:#e2e8f0">Prospects note that while Monday.com is flexible, it is not tailored to industry-specific trades use cases, which can limit fit for specialized teams.</div>
-        </div><div style="background:#1a0808;border-left:3px solid #ff4466;padding:10px 12px;border-radius:4px;margin-bottom:8px">
-          <div style="font-size:13px;color:#e2e8f0">Some teams are still transitioning from Excel into Monday.com, indicating adoption may start as a lightweight replacement rather than a fully mature system.</div>
-        </div></div>
 <div><div style="font-size:11px;color:#00ff88;text-transform:uppercase;letter-spacing:1px;margin-bottom:8px">Genuine Strengths</div><div style="background:#081a08;border-left:3px solid #00ff88;padding:10px 12px;border-radius:4px;margin-bottom:8px">
-          <div style="font-size:13px;color:#e2e8f0">Prospects value Monday.com’s flexibility and ability to be configured exactly how their team wants it.</div>
-        </div><div style="background:#081a08;border-left:3px solid #00ff88;padding:10px 12px;border-radius:4px;margin-bottom:8px">
-          <div style="font-size:13px;color:#e2e8f0">Monday.com is appreciated as an easy, always-on board for tracking incoming activity and maintaining visibility into projects.</div>
+          <div style="font-size:13px;color:#e2e8f0">Prospect is actively using Monday.com for back office operations. They like it because they have it configured exactly h</div>
         </div></div>
 <!-- FIELD_INTEL_END:Monday -->
   
@@ -1248,21 +1262,15 @@
 
 
 
-
-
-<!-- FIELD_INTEL_START:D-tools updated:2026-06-12 -->
-<div class="section-title">🎙️ Field Intelligence — What Prospects Say (23 raw mentions)</div>
+<!-- FIELD_INTEL_START:D-tools updated:2026-05-29 -->
+<div class="section-title">Field Intelligence — What Prospects Say (22 raw mentions)</div>
 <div style="margin-bottom:8px"><div style="font-size:11px;color:#ff4466;text-transform:uppercase;letter-spacing:1px;margin-bottom:8px">Key Pain Points</div><div style="background:#1a0808;border-left:3px solid #ff4466;padding:10px 12px;border-radius:4px;margin-bottom:8px">
-          <div style="font-size:13px;color:#e2e8f0">D-Tools often leaves teams stitching together multiple systems for service, inventory, and accounting, causing data mismatches, failed imports, and manual re-entry across platforms.</div>
+          <div style="font-size:13px;color:#e2e8f0">Prospect has used D-tools for 10 years but is frustrated. They started a cloud environment after his investment, promise</div>
         </div><div style="background:#1a0808;border-left:3px solid #ff4466;padding:10px 12px;border-radius:4px;margin-bottom:8px">
-          <div style="font-size:13px;color:#e2e8f0">Prospects repeatedly say D-Tools is weak for field operations and mobile/cloud collaboration, making it hard for technicians and project managers to access tasks, service updates, and customer information in real time.</div>
-        </div><div style="background:#1a0808;border-left:3px solid #ff4466;padding:10px 12px;border-radius:4px;margin-bottom:8px">
-          <div style="font-size:13px;color:#e2e8f0">Users describe D-Tools as inefficient and cumbersome to implement or manage, with too much manual process-pushing, difficult data/package manipulation, and a dated mobile experience.</div>
+          <div style="font-size:13px;color:#e2e8f0">Lacking on field side for communicating with field team. Not cloud-based unless using D-tools Cloud which they don't wan</div>
         </div></div>
 <div><div style="font-size:11px;color:#00ff88;text-transform:uppercase;letter-spacing:1px;margin-bottom:8px">Genuine Strengths</div><div style="background:#081a08;border-left:3px solid #00ff88;padding:10px 12px;border-radius:4px;margin-bottom:8px">
-          <div style="font-size:13px;color:#e2e8f0">D-Tools is consistently valued for strong design and quoting capabilities, especially for complex, large-project proposals.</div>
-        </div><div style="background:#081a08;border-left:3px solid #00ff88;padding:10px 12px;border-radius:4px;margin-bottom:8px">
-          <div style="font-size:13px;color:#e2e8f0">Long-time users say D-Tools is deeply embedded in their quoting and project-tracking workflows, making it a reliable core system for proposal creation and opportunity management.</div>
+          <div style="font-size:13px;color:#e2e8f0">Prospect has been using D-tools SI version for 12 years, considers it strong for quoting and design, tracks project cycl</div>
         </div></div>
 <!-- FIELD_INTEL_END:D-tools -->
   </div>
@@ -1276,19 +1284,11 @@
 
 
 
+<!-- FIELD_INTEL_START:Onebill updated:2026-05-29 -->
+<div class="section-title">Field Intelligence — What Prospects Say (9 raw mentions)</div>
 
-
-<!-- FIELD_INTEL_START:Onebill updated:2026-06-12 -->
-<div class="section-title">🎙️ Field Intelligence — What Prospects Say (9 raw mentions)</div>
-<div style="margin-bottom:8px"><div style="font-size:11px;color:#ff4466;text-transform:uppercase;letter-spacing:1px;margin-bottom:8px">Key Pain Points</div><div style="background:#1a0808;border-left:3px solid #ff4466;padding:10px 12px;border-radius:4px;margin-bottom:8px">
-          <div style="font-size:13px;color:#e2e8f0">OneBill appears strongest for billing but leaves operational workflow gaps, with prospects specifically calling out weak service order handling and relying on ConnectWise to fill that need.</div>
-        </div><div style="background:#1a0808;border-left:3px solid #ff4466;padding:10px 12px;border-radius:4px;margin-bottom:8px">
-          <div style="font-size:13px;color:#e2e8f0">Integration with ConnectWise has been a friction point for some teams, with past manual entry requirements suggesting connector maturity and implementation can be inconsistent.</div>
-        </div></div>
 <div><div style="font-size:11px;color:#00ff88;text-transform:uppercase;letter-spacing:1px;margin-bottom:8px">Genuine Strengths</div><div style="background:#081a08;border-left:3px solid #00ff88;padding:10px 12px;border-radius:4px;margin-bottom:8px">
-          <div style="font-size:13px;color:#e2e8f0">Prospects describe OneBill as a reliable 'set it up and it works' platform for recurring telecom billing, especially once it is in place.</div>
-        </div><div style="background:#081a08;border-left:3px solid #00ff88;padding:10px 12px;border-radius:4px;margin-bottom:8px">
-          <div style="font-size:13px;color:#e2e8f0">Customers generally report a positive working relationship with OneBill and say the vendor is responsive in resolving issues when they come up.</div>
+          <div style="font-size:13px;color:#e2e8f0">Prospect says they have nothing really negative to say about OneBill. They work with them really well. When asked about </div>
         </div></div>
 <!-- FIELD_INTEL_END:Onebill -->
   </div>
@@ -1302,22 +1302,14 @@
 
 
 
-
-
-<!-- FIELD_INTEL_START:Datagate updated:2026-06-12 -->
-<div class="section-title">🎙️ Field Intelligence — What Prospects Say (13 raw mentions)</div>
+<!-- FIELD_INTEL_START:Datagate updated:2026-05-29 -->
+<div class="section-title">Field Intelligence — What Prospects Say (13 raw mentions)</div>
 <div style="margin-bottom:8px"><div style="font-size:11px;color:#ff4466;text-transform:uppercase;letter-spacing:1px;margin-bottom:8px">Key Pain Points</div><div style="background:#1a0808;border-left:3px solid #ff4466;padding:10px 12px;border-radius:4px;margin-bottom:8px">
-          <div style="font-size:13px;color:#e2e8f0">Datagate lacks automated payment reminders and collections, forcing teams to spend days each month manually chasing past-due invoices and resending bills.</div>
+          <div style="font-size:13px;color:#e2e8f0">No automated payment reminders or collections - requires full manual effort spending 2 days emailing/calling past due cu</div>
         </div><div style="background:#1a0808;border-left:3px solid #ff4466;padding:10px 12px;border-radius:4px;margin-bottom:8px">
-          <div style="font-size:13px;color:#e2e8f0">Prospects describe Datagate as overly manual and inflexible, with difficult contract date changes, cumbersome customer setup, and friction handling one-time billing scenarios.</div>
-        </div><div style="background:#1a0808;border-left:3px solid #ff4466;padding:10px 12px;border-radius:4px;margin-bottom:8px">
-          <div style="font-size:13px;color:#e2e8f0">Reporting and integrations are a recurring weakness, with inadequate aging/MRR dashboards and QuickBooks syncs that require manual intervention instead of real-time updates.</div>
+          <div style="font-size:13px;color:#e2e8f0">No automated payment reminders or collections - requires manual 2-day effort monthly to contact past due customers. Cann</div>
         </div></div>
-<div><div style="font-size:11px;color:#00ff88;text-transform:uppercase;letter-spacing:1px;margin-bottom:8px">Genuine Strengths</div><div style="background:#081a08;border-left:3px solid #00ff88;padding:10px 12px;border-radius:4px;margin-bottom:8px">
-          <div style="font-size:13px;color:#e2e8f0">Datagate is consistently recognized as an established player in the telecom/communications billing market and is often evaluated alongside other billing vendors.</div>
-        </div><div style="background:#081a08;border-left:3px solid #00ff88;padding:10px 12px;border-radius:4px;margin-bottom:8px">
-          <div style="font-size:13px;color:#e2e8f0">Datagate has market credibility for communications billing integrations, including being noted as early to market with an Autotask PSA integration.</div>
-        </div></div>
+
 <!-- FIELD_INTEL_END:Datagate -->
   </div>
 
@@ -1327,22 +1319,14 @@
 
 
 
-
-
-<!-- FIELD_INTEL_START:Ipoint updated:2026-06-12 -->
-<div class="section-title">🎙️ Field Intelligence — What Prospects Say (2 raw mentions)</div>
+<!-- FIELD_INTEL_START:Ipoint updated:2026-05-29 -->
+<div class="section-title">Field Intelligence — What Prospects Say (2 raw mentions)</div>
 <div style="margin-bottom:8px"><div style="font-size:11px;color:#ff4466;text-transform:uppercase;letter-spacing:1px;margin-bottom:8px">Key Pain Points</div><div style="background:#1a0808;border-left:3px solid #ff4466;padding:10px 12px;border-radius:4px;margin-bottom:8px">
-          <div style="font-size:13px;color:#e2e8f0">Field teams struggle with iPoint’s technician workflow because unreliable offline capture can lose data and the app experience creates poor adoption.</div>
+          <div style="font-size:13px;color:#e2e8f0">Technicians complain about the app, offline mode doesn't always capture data leading to lost information. Labor tracking</div>
         </div><div style="background:#1a0808;border-left:3px solid #ff4466;padding:10px 12px;border-radius:4px;margin-bottom:8px">
-          <div style="font-size:13px;color:#e2e8f0">Time and labor tracking is cumbersome in iPoint, with manual phase-based workarounds and too many phase options leading to inaccurate billable/non-billable reporting and weak efficiency visibility.</div>
-        </div><div style="background:#1a0808;border-left:3px solid #ff4466;padding:10px 12px;border-radius:4px;margin-bottom:8px">
-          <div style="font-size:13px;color:#e2e8f0">Prospects describe iPoint as slow and clunky, with weak opportunity/project management and limited notes/history that make day-to-day use frustrating.</div>
+          <div style="font-size:13px;color:#e2e8f0">Prospect complains platform is extremely slow, screens constantly flashing and very distracting. Opportunity management </div>
         </div></div>
-<div><div style="font-size:11px;color:#00ff88;text-transform:uppercase;letter-spacing:1px;margin-bottom:8px">Genuine Strengths</div><div style="background:#081a08;border-left:3px solid #00ff88;padding:10px 12px;border-radius:4px;margin-bottom:8px">
-          <div style="font-size:13px;color:#e2e8f0">Recurring billing is functional in iPoint, even if users find it clunky.</div>
-        </div><div style="background:#081a08;border-left:3px solid #00ff88;padding:10px 12px;border-radius:4px;margin-bottom:8px">
-          <div style="font-size:13px;color:#e2e8f0">Some customers stay on iPoint because the operational disruption and transition cost of replacing it are high.</div>
-        </div></div>
+
 <!-- FIELD_INTEL_END:Ipoint -->
   
   
@@ -1381,16 +1365,12 @@
 
 
 
-
-
-<!-- FIELD_INTEL_START:Projx360 updated:2026-06-12 -->
-<div class="section-title">🎙️ Field Intelligence — What Prospects Say (3 raw mentions)</div>
+<!-- FIELD_INTEL_START:Projx360 updated:2026-05-29 -->
+<div class="section-title">Field Intelligence — What Prospects Say (2 raw mentions)</div>
 <div style="margin-bottom:8px"><div style="font-size:11px;color:#ff4466;text-transform:uppercase;letter-spacing:1px;margin-bottom:8px">Key Pain Points</div><div style="background:#1a0808;border-left:3px solid #ff4466;padding:10px 12px;border-radius:4px;margin-bottom:8px">
-          <div style="font-size:13px;color:#e2e8f0">Projx360’s workflow feels clunky and fragmented, making it hard for teams to quickly access ticket notes, site history, and calendar updates without excessive searching or juggling multiple windows.</div>
+          <div style="font-size:13px;color:#e2e8f0">Project management flow is clunky, creates segmented pockets of information, not intuitive for viewing ticket notes or s</div>
         </div><div style="background:#1a0808;border-left:3px solid #ff4466;padding:10px 12px;border-radius:4px;margin-bottom:8px">
-          <div style="font-size:13px;color:#e2e8f0">Prospects report that Projx360 can struggle to scale with business growth, leading some teams to outgrow the platform and move again.</div>
-        </div><div style="background:#1a0808;border-left:3px solid #ff4466;padding:10px 12px;border-radius:4px;margin-bottom:8px">
-          <div style="font-size:13px;color:#e2e8f0">Implementation and adoption can be painful, with reports of long rollout times, limited support, minimal product improvement, and continued reliance on legacy tools even after going live.</div>
+          <div style="font-size:13px;color:#e2e8f0">After leaving D-tools, prospect tried Projx360 but it could never scale with their business growth, forcing another plat</div>
         </div></div>
 
 <!-- FIELD_INTEL_END:Projx360 -->
@@ -1424,33 +1404,91 @@
 
 </div><div class="section-sidebar"><div class="sb-header">✅ 1 Displaced Customer</div><ul><li><span class="chk">✓</span> Creative Vision Tech</li></ul></div></div>
 </div>
-<div id="timleybill" class="section">
-<div class="overview-grid"><div class="overview-item"><div class="label">Competitor</div><div class="value">TimleyBill</div></div><div class="overview-item"><div class="label">Founded</div><div class="value">Est. ~2015</div></div><div class="overview-item"><div class="label">HQ</div><div class="value">Not publicly disclosed</div></div><div class="overview-item"><div class="label">Employees</div><div class="value">Very small team (<20)</div></div><div class="overview-item"><div class="label">Revenue</div><div class="value">Private · undisclosed</div></div><div class="overview-item"><div class="label">Funding</div><div class="value">Private · bootstrapped</div></div><div class="overview-item"><div class="label">Target Market</div><div class="value">Field service / security integrators — billing & quoting</div></div><div class="overview-item"><div class="label">Ownership</div><div class="value">Private</div></div></div>
+<div id="timelybill" class="section">
+<div class="overview-grid"><div class="overview-item"><div class="label">Competitor</div><div class="value">TimelyBill</div></div><div class="overview-item"><div class="label">Founded</div><div class="value">Est. ~2015</div></div><div class="overview-item"><div class="label">HQ</div><div class="value">Not publicly disclosed</div></div><div class="overview-item"><div class="label">Employees</div><div class="value">Very small team (<20)</div></div><div class="overview-item"><div class="label">Revenue</div><div class="value">Private · undisclosed</div></div><div class="overview-item"><div class="label">Funding</div><div class="value">Private · bootstrapped</div></div><div class="overview-item"><div class="label">Target Market</div><div class="value">Field service / security integrators — billing & quoting</div></div><div class="overview-item"><div class="label">Ownership</div><div class="value">Private</div></div></div>
 
-  <h2 style="font-size:18px;color:#e2e8f0;margin-bottom:4px">Timleybill <span style="font-size:11px;color:#ffcc00;background:#1a1400;border:1px solid #ffcc00;padding:2px 8px;border-radius:10px;margin-left:8px">6 field mentions</span></h2>
+  <h2 style="font-size:18px;color:#e2e8f0;margin-bottom:4px">TimelyBill <span style="font-size:11px;color:#ffcc00;background:#1a1400;border:1px solid #ffcc00;padding:2px 8px;border-radius:10px;margin-left:8px">6 field mentions</span></h2>
     <p style="color:#94a3b8;font-size:12px;margin-bottom:20px">Field intelligence only — no static battle card yet</p>
     
 
 
 
-
-
-<!-- FIELD_INTEL_START:Timleybill updated:2026-06-12 -->
-<div class="section-title">🎙️ Field Intelligence — What Prospects Say (6 raw mentions)</div>
+<!-- FIELD_INTEL_START:TimelyBill updated:2026-05-29 -->
+<div class="section-title">Field Intelligence — What Prospects Say (6 raw mentions)</div>
 <div style="margin-bottom:8px"><div style="font-size:11px;color:#ff4466;text-transform:uppercase;letter-spacing:1px;margin-bottom:8px">Key Pain Points</div><div style="background:#1a0808;border-left:3px solid #ff4466;padding:10px 12px;border-radius:4px;margin-bottom:8px">
-          <div style="font-size:13px;color:#e2e8f0">The quoting workflow is a recurring frustration, with prospects saying TimelyBill’s native quoting is inadequate and forces them to buy a separate quoting tool.</div>
+          <div style="font-size:13px;color:#e2e8f0">Prospect uses Timely Bill through Zeus, pays $1000/month. Complaints include: quoting system is inadequate requiring sep</div>
         </div><div style="background:#1a0808;border-left:3px solid #ff4466;padding:10px 12px;border-radius:4px;margin-bottom:8px">
-          <div style="font-size:13px;color:#e2e8f0">Prospects describe parts of the system and integration as clunky, especially around converting quotes into invoices where manual work is still required.</div>
-        </div><div style="background:#1a0808;border-left:3px solid #ff4466;padding:10px 12px;border-radius:4px;margin-bottom:8px">
-          <div style="font-size:13px;color:#e2e8f0">Some users are not fully satisfied overall despite being live on the platform and are actively considering alternatives due to workflow friction.</div>
+          <div style="font-size:13px;color:#e2e8f0">Prospect uses Timely Bill through Zeus, paying $1000/month. Dissatisfied with quoting system - had to subscribe to separ</div>
         </div></div>
-<div><div style="font-size:11px;color:#00ff88;text-transform:uppercase;letter-spacing:1px;margin-bottom:8px">Genuine Strengths</div><div style="background:#081a08;border-left:3px solid #00ff88;padding:10px 12px;border-radius:4px;margin-bottom:8px">
-          <div style="font-size:13px;color:#e2e8f0">The customer portal is a consistently appreciated feature that users specifically call out as a positive.</div>
-        </div><div style="background:#081a08;border-left:3px solid #00ff88;padding:10px 12px;border-radius:4px;margin-bottom:8px">
-          <div style="font-size:13px;color:#e2e8f0">API access/integration capability is present and valued, even if the implementation experience is not fully smooth.</div>
-        </div></div>
-<!-- FIELD_INTEL_END:Timleybill -->
+
+<!-- FIELD_INTEL_END:TimelyBill -->
   </div>
+
+  <div id="idi-costguard" class="section">
+<div class="overview-grid"><div class="overview-item"><div class="label">Competitor</div><div class="value">IDI / CostGuard</div></div><div class="overview-item"><div class="label">Founded</div><div class="value">1970s roots · CostGuard acquired by IDI</div></div><div class="overview-item"><div class="label">HQ</div><div class="value">Victor, NY</div></div><div class="overview-item"><div class="label">Revenue</div><div class="value">Private · undisclosed</div></div><div class="overview-item"><div class="label">Target Market</div><div class="value">Communications providers — billing, OSS/BSS, order management, customer care</div></div><div class="overview-item"><div class="label">Ownership</div><div class="value">Private</div></div></div>
+
+  <h2 style="font-size:18px;color:#e2e8f0;margin-bottom:4px">IDI / CostGuard <span style="font-size:11px;color:#818CF8;background:#0F172A;border:1px solid rgba(99,102,241,0.4);padding:2px 8px;border-radius:10px;margin-left:8px">Billing competitor</span></h2>
+  <p style="color:#94a3b8;font-size:12px;margin-bottom:20px">Carrier-oriented billing and OSS/BSS platform. Stronger fit for traditional communications providers than modern MSPs or service-led operators that need billing, payments, ticket context, customer workflows, and reporting in one place.</p>
+
+  <div class="section-title">How to Position Against IDI / CostGuard</div>
+  <div class="sw-table">
+    <div class="sw-col strengths">
+      <h4>Genuine Strengths</h4>
+      <ul>
+        <li>Deep telecom billing and carrier back-office heritage</li>
+        <li>Recognizable CostGuard brand in communications-provider circles</li>
+        <li>Can appeal to buyers who think in traditional OSS/BSS categories</li>
+      </ul>
+    </div>
+    <div class="sw-col weaknesses">
+      <h4>Pressure Points</h4>
+      <ul>
+        <li>Legacy carrier billing depth does not automatically solve modern service operations</li>
+        <li>May require separate systems for PSA workflow, ticketing, field operations, and customer engagement</li>
+        <li>Rev.io should reframe the decision around revenue operations, not just billing engine replacement</li>
+      </ul>
+    </div>
+  </div>
+  <div class="section-title">Discovery Questions</div>
+  <ol class="questions-list">
+    <li>"Outside of billing, what systems does your team use to manage customer issues, service work, payments, and reporting?"</li>
+    <li>"How much work happens after the invoice is produced — collections, disputes, account changes, service tickets, and customer communication?"</li>
+    <li>"Do you want a carrier billing system, or a customer revenue platform that your operating teams can actually live in?"</li>
+  </ol>
+</div>
+
+  <div id="sandybeaches-intelebill" class="section">
+<div class="overview-grid"><div class="overview-item"><div class="label">Competitor</div><div class="value">Sandy Beaches / Intelebill</div></div><div class="overview-item"><div class="label">Category</div><div class="value">Telecom billing and tax compliance</div></div><div class="overview-item"><div class="label">Revenue</div><div class="value">Private · undisclosed</div></div><div class="overview-item"><div class="label">Target Market</div><div class="value">Telecom providers and service providers needing billing/tax support</div></div><div class="overview-item"><div class="label">Source Signal</div><div class="value">6 source mentions as a billing/tax compliance vendor</div></div></div>
+
+  <h2 style="font-size:18px;color:#e2e8f0;margin-bottom:4px">Sandy Beaches / Intelebill <span style="font-size:11px;color:#ffcc00;background:#1a1400;border:1px solid #ffcc00;padding:2px 8px;border-radius:10px;margin-left:8px">6 source mentions</span></h2>
+  <p style="color:#94a3b8;font-size:12px;margin-bottom:20px">Billing/tax-compliance competitor prospects may evaluate or receive marketing from. Treat as a point-solution threat unless the buyer proves they only need tax-rated billing and not the surrounding revenue operations.</p>
+
+  <div class="section-title">How to Position Against Sandy Beaches / Intelebill</div>
+  <div class="sw-table">
+    <div class="sw-col strengths">
+      <h4>Genuine Strengths</h4>
+      <ul>
+        <li>Focused telecom billing and tax-compliance positioning</li>
+        <li>May resonate with buyers whose pain is narrowly around compliance or invoice taxation</li>
+        <li>Shows up enough in source mentions to remember when billing-only competitors come up</li>
+      </ul>
+    </div>
+    <div class="sw-col weaknesses">
+      <h4>Pressure Points</h4>
+      <ul>
+        <li>Narrow billing/tax solution does not replace customer management, PSA workflow, payments, or operational reporting</li>
+        <li>May leave service teams working from separate ticketing, dispatch, and collections tools</li>
+        <li>Rev.io wins by connecting invoice, customer, service, payment, and revenue context</li>
+      </ul>
+    </div>
+  </div>
+  <div class="section-title">Discovery Questions</div>
+  <ol class="questions-list">
+    <li>"Is your primary issue tax compliance, or the full quote-to-cash and service-to-cash process?"</li>
+    <li>"Where do your billing team, service team, and customer-facing team collaborate today?"</li>
+    <li>"If you solve billing taxes but still need separate PSA, payments, and customer workflow tools, what problem remains?"</li>
+  </ol>
+</div>
 
   <div id="workhorse" class="section">
 <div class="section-grid"><div class="section-grid-main"><div class="overview-grid"><div class="overview-item"><div class="label">Competitor</div><div class="value">WorkHorse SCS</div></div>
@@ -1458,21 +1496,11 @@
 
 
 
+<!-- FIELD_INTEL_START:Workhorse updated:2026-05-29 -->
+<div class="section-title">Field Intelligence — What Prospects Say (4 raw mentions)</div>
 
-
-<!-- FIELD_INTEL_START:Workhorse updated:2026-06-12 -->
-<div class="section-title">🎙️ Field Intelligence — What Prospects Say (4 raw mentions)</div>
-<div style="margin-bottom:8px"><div style="font-size:11px;color:#ff4466;text-transform:uppercase;letter-spacing:1px;margin-bottom:8px">Key Pain Points</div><div style="background:#1a0808;border-left:3px solid #ff4466;padding:10px 12px;border-radius:4px;margin-bottom:8px">
-          <div style="font-size:13px;color:#e2e8f0">Workhorse cannot support mixed tax treatment across line items (e.g., GST vs. GST/PST), creating a major blocker for Canadian operations.</div>
-        </div><div style="background:#1a0808;border-left:3px solid #ff4466;padding:10px 12px;border-radius:4px;margin-bottom:8px">
-          <div style="font-size:13px;color:#e2e8f0">Workhorse lacks automated customer communications for failed or declined payments, forcing teams to manually follow up with customers.</div>
-        </div><div style="background:#1a0808;border-left:3px solid #ff4466;padding:10px 12px;border-radius:4px;margin-bottom:8px">
-          <div style="font-size:13px;color:#e2e8f0">Prospects outgrowing Workhorse want more all-in-one automation as they scale, especially beyond its current billing and CRM capabilities.</div>
-        </div></div>
 <div><div style="font-size:11px;color:#00ff88;text-transform:uppercase;letter-spacing:1px;margin-bottom:8px">Genuine Strengths</div><div style="background:#081a08;border-left:3px solid #00ff88;padding:10px 12px;border-radius:4px;margin-bottom:8px">
-          <div style="font-size:13px;color:#e2e8f0">Prospects value Workhorse’s end-to-end workflow automation from quoting through customer signing, including monitoring agreements, DocuSign, and reduced manual data entry.</div>
-        </div><div style="background:#081a08;border-left:3px solid #00ff88;padding:10px 12px;border-radius:4px;margin-bottom:8px">
-          <div style="font-size:13px;color:#e2e8f0">Workhorse is seen as solid for recurring billing, with useful declined payment reporting and e-signature visibility on quote activity.</div>
+          <div style="font-size:13px;color:#e2e8f0">Prospect really liked Workhorse for its end-to-end automation from quoting through customer signing, monitoring station </div>
         </div></div>
 <!-- FIELD_INTEL_END:Workhorse -->
   
@@ -1513,22 +1541,14 @@
 
 
 
-
-
-<!-- FIELD_INTEL_START:Simpro updated:2026-06-12 -->
-<div class="section-title">🎙️ Field Intelligence — What Prospects Say (11 raw mentions)</div>
+<!-- FIELD_INTEL_START:Simpro updated:2026-05-29 -->
+<div class="section-title">Field Intelligence — What Prospects Say (11 raw mentions)</div>
 <div style="margin-bottom:8px"><div style="font-size:11px;color:#ff4466;text-transform:uppercase;letter-spacing:1px;margin-bottom:8px">Key Pain Points</div><div style="background:#1a0808;border-left:3px solid #ff4466;padding:10px 12px;border-radius:4px;margin-bottom:8px">
-          <div style="font-size:13px;color:#e2e8f0">Simpro creates operational friction by locking jobs when someone is viewing them, preventing multiple users from accessing the same job or making scheduling changes in real time.</div>
+          <div style="font-size:13px;color:#e2e8f0">No project management capabilities, mobile app only shows service jobs and does basic notes poorly. Looking for major im</div>
         </div><div style="background:#1a0808;border-left:3px solid #ff4466;padding:10px 12px;border-radius:4px;margin-bottom:8px">
-          <div style="font-size:13px;color:#e2e8f0">Simpro has key workflow gaps around scheduling and field communication, including closed jobs not scheduling correctly to technicians, no automatic customer scheduling emails, and missing ETA/customer visibility features.</div>
-        </div><div style="background:#1a0808;border-left:3px solid #ff4466;padding:10px 12px;border-radius:4px;margin-bottom:8px">
-          <div style="font-size:13px;color:#e2e8f0">Simpro is seen as a fragmented, add-on-heavy system with limited project management and a service-only mobile app, forcing teams to rely on external tools and pay extra for capabilities like field payments.</div>
+          <div style="font-size:13px;color:#e2e8f0">No project management capability, mobile app is service-only and limited. Cannot show technicians job details effectivel</div>
         </div></div>
-<div><div style="font-size:11px;color:#00ff88;text-transform:uppercase;letter-spacing:1px;margin-bottom:8px">Genuine Strengths</div><div style="background:#081a08;border-left:3px solid #00ff88;padding:10px 12px;border-radius:4px;margin-bottom:8px">
-          <div style="font-size:13px;color:#e2e8f0">Simpro handles recurring revenue and annualized billing well, especially for monitoring fees and annual dues.</div>
-        </div><div style="background:#081a08;border-left:3px solid #00ff88;padding:10px 12px;border-radius:4px;margin-bottom:8px">
-          <div style="font-size:13px;color:#e2e8f0">Simpro generally supports periodic and recurring service scheduling effectively, such as quarterly inspections.</div>
-        </div></div>
+
 <!-- FIELD_INTEL_END:Simpro -->
   
     <div class="overview-item"><div class="label">Founded</div><div class="value">2002 (Australia)</div></div>
@@ -1623,22 +1643,14 @@
 
 
 
-
-
-<!-- FIELD_INTEL_START:Sedona updated:2026-06-12 -->
-<div class="section-title">🎙️ Field Intelligence — What Prospects Say (16 raw mentions)</div>
+<!-- FIELD_INTEL_START:Sedona updated:2026-05-29 -->
+<div class="section-title">Field Intelligence — What Prospects Say (15 raw mentions)</div>
 <div style="margin-bottom:8px"><div style="font-size:11px;color:#ff4466;text-transform:uppercase;letter-spacing:1px;margin-bottom:8px">Key Pain Points</div><div style="background:#1a0808;border-left:3px solid #ff4466;padding:10px 12px;border-radius:4px;margin-bottom:8px">
-          <div style="font-size:13px;color:#e2e8f0">Prospects say Sedona relies on too many manual workarounds because core automation is weak, including task workflows, customer scheduling notifications, email automations, and technician workflow enforcement.</div>
+          <div style="font-size:13px;color:#e2e8f0">Prospect explicitly stated they are not satisfied with Sedona. The mobile app is described as 'horrible' and doesn't pro</div>
         </div><div style="background:#1a0808;border-left:3px solid #ff4466;padding:10px 12px;border-radius:4px;margin-bottom:8px">
-          <div style="font-size:13px;color:#e2e8f0">Users report Sedona feels outdated in key operational areas, citing a poor mobile experience, limited CRM and quoting capabilities, and a lack of visible product innovation despite rising subscription costs.</div>
-        </div><div style="background:#1a0808;border-left:3px solid #ff4466;padding:10px 12px;border-radius:4px;margin-bottom:8px">
-          <div style="font-size:13px;color:#e2e8f0">Teams struggle with disconnected workflows in Sedona, including no real-time pricing sync with quoting tools and time tracking that cannot cleanly separate non-billable hours, forcing external systems and manual verification.</div>
+          <div style="font-size:13px;color:#e2e8f0">Prospect is actively looking to replace Sedona due to lack of automation, missing two-way customer communication for sch</div>
         </div></div>
-<div><div style="font-size:11px;color:#00ff88;text-transform:uppercase;letter-spacing:1px;margin-bottom:8px">Genuine Strengths</div><div style="background:#081a08;border-left:3px solid #00ff88;padding:10px 12px;border-radius:4px;margin-bottom:8px">
-          <div style="font-size:13px;color:#e2e8f0">Sedona is consistently seen as strong for running core accounting and ERP operations in one system, including general ledger, AP/AR, billing, inventory, and service management.</div>
-        </div><div style="background:#081a08;border-left:3px solid #00ff88;padding:10px 12px;border-radius:4px;margin-bottom:8px">
-          <div style="font-size:13px;color:#e2e8f0">Prospects value how deeply Sedona is embedded in recurring revenue and back-office processes, making it a central system for accounting and operational records.</div>
-        </div></div>
+
 <!-- FIELD_INTEL_END:Sedona -->
   
     <div class="overview-item"><div class="label">Parent Company</div><div class="value">Bold Group / EverCommerce</div></div>
@@ -1740,21 +1752,15 @@
 
 
 
-
-
-<!-- FIELD_INTEL_START:Housecall Pro updated:2026-06-12 -->
-<div class="section-title">🎙️ Field Intelligence — What Prospects Say (23 raw mentions)</div>
+<!-- FIELD_INTEL_START:Housecall Pro updated:2026-05-29 -->
+<div class="section-title">Field Intelligence — What Prospects Say (23 raw mentions)</div>
 <div style="margin-bottom:8px"><div style="font-size:11px;color:#ff4466;text-transform:uppercase;letter-spacing:1px;margin-bottom:8px">Key Pain Points</div><div style="background:#1a0808;border-left:3px solid #ff4466;padding:10px 12px;border-radius:4px;margin-bottom:8px">
-          <div style="font-size:13px;color:#e2e8f0">Housecall Pro struggles with recurring billing and service plans, often forcing teams to manage data across multiple systems and creating mismatches with QuickBooks.</div>
+          <div style="font-size:13px;color:#e2e8f0">Cannot mark tickets as emergency or change priority with a button click. No color coding for urgent jobs. Cannot notify </div>
         </div><div style="background:#1a0808;border-left:3px solid #ff4466;padding:10px 12px;border-radius:4px;margin-bottom:8px">
-          <div style="font-size:13px;color:#e2e8f0">Prospects report weak support for complex workflows like multi-stage projects, job progress visibility, and true job profitability tracking, making larger jobs hard to manage accurately.</div>
-        </div><div style="background:#1a0808;border-left:3px solid #ff4466;padding:10px 12px;border-radius:4px;margin-bottom:8px">
-          <div style="font-size:13px;color:#e2e8f0">Housecall Pro is seen as feature-limited for dispatch urgency and accounting flexibility, with no easy way to flag priority jobs and no QuickBooks Desktop integration without extra manual work.</div>
+          <div style="font-size:13px;color:#e2e8f0">Cannot mark tickets as emergency or change priority with one click. No color coding for urgent jobs. Cannot notify techn</div>
         </div></div>
 <div><div style="font-size:11px;color:#00ff88;text-transform:uppercase;letter-spacing:1px;margin-bottom:8px">Genuine Strengths</div><div style="background:#081a08;border-left:3px solid #00ff88;padding:10px 12px;border-radius:4px;margin-bottom:8px">
-          <div style="font-size:13px;color:#e2e8f0">Prospects consistently praise Housecall Pro as a very low-cost option for five users, calling it a 'smoking deal' for the price.</div>
-        </div><div style="background:#081a08;border-left:3px solid #00ff88;padding:10px 12px;border-radius:4px;margin-bottom:8px">
-          <div style="font-size:13px;color:#e2e8f0">For core field service needs, prospects say Housecall Pro is simple and reliable for quoting, scheduling, dispatch, payments, and basic customer record management.</div>
+          <div style="font-size:13px;color:#e2e8f0">Prospect uses Housecall Pro for quoting, scheduling, dispatch, mobile payments, and GPS tracking. Reports no major issue</div>
         </div></div>
 <!-- FIELD_INTEL_END:Housecall Pro -->
   
@@ -1852,21 +1858,15 @@
 
 
 
-
-
-<!-- FIELD_INTEL_START:Jobber updated:2026-06-12 -->
-<div class="section-title">🎙️ Field Intelligence — What Prospects Say (17 raw mentions)</div>
+<!-- FIELD_INTEL_START:Jobber updated:2026-05-29 -->
+<div class="section-title">Field Intelligence — What Prospects Say (17 raw mentions)</div>
 <div style="margin-bottom:8px"><div style="font-size:11px;color:#ff4466;text-transform:uppercase;letter-spacing:1px;margin-bottom:8px">Key Pain Points</div><div style="background:#1a0808;border-left:3px solid #ff4466;padding:10px 12px;border-radius:4px;margin-bottom:8px">
-          <div style="font-size:13px;color:#e2e8f0">Jobber is often seen as too bare-bones beyond scheduling/dispatch, with recurring complaints about missing inventory management, weak project management, and poor support for recurring revenue billing/reporting.</div>
+          <div style="font-size:13px;color:#e2e8f0">Using Jobber for 15 years but frustrated with lack of integration. Nothing talks to each other between Jobber, QuickBook</div>
         </div><div style="background:#1a0808;border-left:3px solid #ff4466;padding:10px 12px;border-radius:4px;margin-bottom:8px">
-          <div style="font-size:13px;color:#e2e8f0">Prospects frequently struggle with disconnected workflows in Jobber, citing limited integrations with QuickBooks, email, and other systems that force manual steps, duplicate work orders, and fragmented customer/job history.</div>
-        </div><div style="background:#1a0808;border-left:3px solid #ff4466;padding:10px 12px;border-radius:4px;margin-bottom:8px">
-          <div style="font-size:13px;color:#e2e8f0">Teams report limited operational visibility in Jobber, including inconsistent technician notes/access and difficulty tracking job profitability or status until after work is completed.</div>
+          <div style="font-size:13px;color:#e2e8f0">Currently using Jobber for scheduling but it requires manual steps with no automation. Out of 15 steps from quote to job</div>
         </div></div>
 <div><div style="font-size:11px;color:#00ff88;text-transform:uppercase;letter-spacing:1px;margin-bottom:8px">Genuine Strengths</div><div style="background:#081a08;border-left:3px solid #00ff88;padding:10px 12px;border-radius:4px;margin-bottom:8px">
-          <div style="font-size:13px;color:#e2e8f0">Prospects genuinely like Jobber’s fast, clean quoting workflow, especially the good-better-best format and simple customer accept/deny experience.</div>
-        </div><div style="background:#081a08;border-left:3px solid #00ff88;padding:10px 12px;border-radius:4px;margin-bottom:8px">
-          <div style="font-size:13px;color:#e2e8f0">Jobber’s interface is praised as intuitive and it is viewed as effective for core scheduling, dispatching, and basic job management.</div>
+          <div style="font-size:13px;color:#e2e8f0">Prospect personally uses Jobber for fast quoting with good-better-best approach. Loves the quick, clean quotes with easy</div>
         </div></div>
 <!-- FIELD_INTEL_END:Jobber -->
   
@@ -1956,18 +1956,6 @@
   <div class="objection"><div class="q">We don't want to lose the simplicity</div><div class="a">"Simplicity is a feature — we get it. Rev.io is built to be intuitive, but it won't hold you back the way Jobber does. The question isn't whether Jobber is easy; it's whether it can run your business as it actually is today — not as it was when you were 5 techs doing residential calls."</div></div>
 </div><div class="section-sidebar"><div class="sb-header">✅ 5 Displaced Customers</div><ul><li><span class="chk">✓</span> Cinemascape</li><li><span class="chk">✓</span> Guardian Advanced Solutions</li><li><span class="chk">✓</span> Hawkeye Protection</li><li><span class="chk">✓</span> Kellsec Security Solutions</li><li><span class="chk">✓</span> Shinntek Solutions</li></ul></div></div>
 </div>
-
-  <div id="sandybeaches" class="section">
-    <div class="section-grid"><div class="section-grid-main">
-      <div class="overview-grid">
-        <div class="overview-item"><div class="label">Competitor</div><div class="value">Sandybeaches</div></div>
-      </div>
-      <h2 style="font-size:18px;color:#c8f0dc;margin-bottom:4px">Sandybeaches <span style="font-size:11px;color:#ffcc00;background:#1a1400;border:1px solid #ffcc00;padding:2px 8px;border-radius:10px;margin-left:8px">🎙️ 6 field mentions</span></h2>
-      <p style="color:#2a5a3a;font-size:12px;margin-bottom:20px">Field intelligence only — no static battle card yet</p>
-      
-    </div></div>
-  </div>
-
 </main>
 
 <footer>
