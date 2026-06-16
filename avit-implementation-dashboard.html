@@ -305,6 +305,29 @@
   .phase.optional .phase-num { border-color:var(--amber); color:#9b6500; }
   .phase h3 { margin:0 0 5px; font-size:18px; }
   .phase p { margin:0; color:var(--muted); font-size:14px; }
+  .phase-detail {
+    margin-top:13px;
+    border:1px solid var(--line);
+    border-radius:8px;
+    background:#f8fbff;
+    overflow:hidden;
+  }
+  .phase-detail summary {
+    cursor:pointer;
+    padding:10px 12px;
+    color:var(--rev-blue);
+    font-size:12px;
+    font-weight:900;
+  }
+  .phase-detail ul {
+    margin:0;
+    padding:0 12px 12px 28px;
+    color:#40516a;
+    font-size:13px;
+    columns:2;
+    column-gap:26px;
+  }
+  .phase-detail li { break-inside:avoid; margin:0 0 6px; }
   .chips { display:flex; flex-wrap:wrap; gap:7px; justify-content:flex-end; }
   .chip {
     border:1px solid var(--line);
@@ -468,6 +491,7 @@
     .hero, .proof-strip, .grid-2, .api-panel { grid-template-columns:1fr; }
     .grid-3, .risk-grid, .role-grid { grid-template-columns:1fr; }
     .phase { grid-template-columns:54px 1fr; }
+    .phase-detail ul { columns:1; }
     .chips { grid-column:2; justify-content:flex-start; }
     .workstream-grid { grid-template-columns:1fr; }
     .workstream-grid .head { display:none; }
@@ -618,7 +642,7 @@
     <div class="timeline">
       <div class="phase"><div class="phase-num">1</div><div><div class="phase-date">Jul 1-3, 2026</div><h3>Kickoff & Planning</h3><p>Confirm deliverables, set expectations, schedule the full onboarding cadence, and begin pre-configuration work. The objective is fast value from what Rev.io PSA delivers today, not custom feature development.</p></div><div class="chips"><span class="chip">Deliverables</span><span class="chip">Expectations</span><span class="chip">Session calendar</span></div></div>
       <div class="phase"><div class="phase-num">2</div><div><div class="phase-date">Jul 1-18, 2026</div><h3>Data Collection & Setup</h3><p>Provide API credentials or API keys from ConnectWise and other source systems where possible. If API access is unavailable, database access is next best; structured exports are the fallback.</p></div><div class="chips"><span class="chip">API keys</span><span class="chip">Data access</span><span class="chip">Payments app</span></div></div>
-      <div class="phase"><div class="phase-num">3</div><div><div class="phase-date">Jul 20-Aug 14, 2026</div><h3>Configuration & Validation</h3><p>Build the Rev.io PSA environment through live working sessions, review setup decisions with AVIT, validate imported records, and resolve configuration exceptions before go-live training.</p></div><div class="chips"><span class="chip">Working sessions</span><span class="chip">Validation</span><span class="chip">Approvals</span></div></div>
+      <div class="phase"><div class="phase-num">3</div><div><div class="phase-date">Jul 20-Aug 14, 2026</div><h3>Configuration & Validation</h3><p>Build the Rev.io PSA environment through live working sessions, review setup decisions with AVIT, validate imported records, and resolve configuration exceptions before go-live training.</p><details class="phase-detail"><summary>Configuration milestone bullets</summary><ul><li>User Management</li><li>System Settings</li><li>Customers &amp; Contacts</li><li>Calendar &amp; Tasks</li><li>Product Catalog</li><li>Packages</li><li>Inventory Management</li><li>Purchase Orders</li><li>Providers</li><li>Quoting</li><li>Ticketing</li><li>Scheduling</li><li>Recurring Services</li><li>Project Management</li><li>Analytics</li><li>Bill Profiles</li><li>Billing</li><li>Full System Run / Ready to Bill Out</li><li>Generate Taxes</li><li>Invoice Templates</li><li>Payment Processors</li><li>Turn on Billing</li></ul></details></div><div class="chips"><span class="chip">Working sessions</span><span class="chip">Validation</span><span class="chip">Approvals</span></div></div>
       <div class="phase"><div class="phase-num">4</div><div><div class="phase-date">Aug 17-Sep 1, 2026</div><h3>Training & Go-Live</h3><p>Complete 6 hours of core configuration and go-live training, covering web, mobile, and Rev.ii. AVIT also receives four additional training sessions for reinforcement, Q&A, deeper module review, final validation, and the September 1 launch handoff.</p></div><div class="chips"><span class="chip">6 core hours</span><span class="chip">4 extra sessions</span><span class="chip">CS handoff</span></div></div>
       <div class="phase optional"><div class="phase-num">!</div><div><div class="phase-date">Client readiness dependency</div><h3>Delay Risk</h3><p>Missed sessions, delayed responses, incomplete data, inaccessible exports, or late payments underwriting materials can push the go-live date. License fees are not credited for client-side scheduling or readiness delays.</p></div><div class="chips"><span class="chip">Same-day responses</span><span class="chip">All sessions attended</span><span class="chip">Data ready</span></div></div>
     </div>
