@@ -214,7 +214,7 @@
 
   .line-item {
     display: grid;
-    grid-template-columns: minmax(112px, .32fr) minmax(160px, 1fr) minmax(130px, .42fr);
+    grid-template-columns: minmax(160px, 1fr) minmax(130px, .42fr);
     gap: 12px;
     align-items: end;
     padding: 16px 22px;
@@ -473,12 +473,13 @@
 
 <script>
   const categories = [
-    { label: "PSA", current: "Current PSA", revio: "Rev.io PSA" },
-    { label: "Inventory Control", current: "Current inventory control", revio: "Rev.io inventory control" },
-    { label: "Ticketing", current: "Current ticketing", revio: "Rev.io ticketing" },
-    { label: "Misc Software 1", current: "Misc software", revio: "Rev.io included / replacement" },
-    { label: "Misc Software 2", current: "Misc software", revio: "Rev.io included / replacement" },
-    { label: "Misc Software 3", current: "Misc software", revio: "Rev.io included / replacement" }
+    { current: "Current PSA", revio: "Rev.io PSA" },
+    { current: "Current inventory control", revio: "Rev.io inventory control" },
+    { current: "Current ticketing", revio: "Rev.io ticketing" },
+    { current: "Misc software", revio: "Rev.io included / replacement" },
+    { current: "Misc software", revio: "Rev.io included / replacement" },
+    { current: "Misc software", revio: "Rev.io included / replacement" },
+    { current: "Current payments processing", revio: "Rev.io payments processing", nameLabel: "Payments Processing" }
   ];
 
   const currentRows = document.getElementById("currentRows");
@@ -498,9 +499,8 @@
     const item = document.createElement("div");
     item.className = "line-item";
     item.innerHTML = `
-      <div class="category">${category.label}</div>
       <div>
-        <label for="${side}-name-${index}">Software / Module</label>
+        <label for="${side}-name-${index}">${category.nameLabel || "Software / Module"}</label>
         <input id="${side}-name-${index}" type="text" value="${side === "current" ? category.current : category.revio}">
       </div>
       <div>
