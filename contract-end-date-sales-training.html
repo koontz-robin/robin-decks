@@ -220,6 +220,90 @@
   .tag.green { background:rgba(0,217,126,.12); color:#07864f; }
   .tag.amber { background:rgba(245,166,35,.14); color:#9b6500; }
   .dark .tag { background:rgba(0,194,255,.13); color:#8fe9ff; }
+  .timeline-board {
+    background:#fff;
+    border:1px solid var(--line);
+    border-radius:10px;
+    padding:24px;
+    box-shadow:0 12px 34px rgba(7,20,38,.07);
+  }
+  .timeline-meta {
+    display:grid;
+    grid-template-columns:repeat(3,minmax(0,1fr));
+    gap:12px;
+    margin-bottom:24px;
+  }
+  .metric {
+    border:1px solid var(--line);
+    border-radius:8px;
+    padding:14px;
+    background:#f8fbff;
+  }
+  .metric strong {
+    display:block;
+    color:var(--rev-blue);
+    font-size:24px;
+    line-height:1;
+    margin-bottom:6px;
+  }
+  .metric span { color:var(--muted); font-size:12px; }
+  .timeline-track {
+    display:grid;
+    grid-template-columns:repeat(6,minmax(88px,1fr));
+    gap:0;
+    min-width:720px;
+    padding-top:10px;
+  }
+  .timeline-scroll { overflow-x:auto; padding-bottom:4px; }
+  .timeline-bars {
+    display:grid;
+    grid-template-columns:repeat(6,1fr);
+    gap:8px;
+    min-width:720px;
+    margin-bottom:12px;
+  }
+  .timeline-bar {
+    border-radius:8px;
+    padding:12px 14px;
+    color:#fff;
+    font-size:12px;
+    font-weight:900;
+    min-height:48px;
+    display:flex;
+    align-items:center;
+  }
+  .timeline-bar.eval { grid-column:1 / 5; background:linear-gradient(90deg,var(--rev-blue),#278dff); }
+  .timeline-bar.notice { grid-column:5 / 7; background:linear-gradient(90deg,var(--rev-amber),var(--rev-red)); }
+  .milestone {
+    border-left:1px solid var(--line);
+    padding:10px 10px 0;
+    min-height:114px;
+    position:relative;
+  }
+  .milestone:last-child { border-right:1px solid var(--line); }
+  .milestone::before {
+    content:"";
+    position:absolute;
+    top:-5px;
+    left:-5px;
+    width:10px;
+    height:10px;
+    border-radius:50%;
+    background:var(--rev-blue);
+  }
+  .milestone.risk::before { background:var(--rev-amber); }
+  .milestone.expire::before { background:var(--rev-red); }
+  .milestone h3 { margin:0 0 5px; font-size:14px; line-height:1.1; }
+  .milestone p { margin:0; color:var(--muted); font-size:12px; line-height:1.35; }
+  .timeline-rule {
+    margin-top:18px;
+    border-radius:8px;
+    padding:16px;
+    background:rgba(0,87,255,.08);
+    border:1px solid rgba(0,87,255,.16);
+    color:#22324b;
+    font-size:14px;
+  }
   .script {
     display:grid;
     gap:12px;
@@ -307,6 +391,7 @@
   @media (max-width:900px) {
     .hero, .grid-2 { grid-template-columns:1fr; }
     .grid-3 { grid-template-columns:1fr; }
+    .timeline-meta { grid-template-columns:1fr; }
     .section-head { display:block; }
     .nav-links { display:none; }
     .script-line { grid-template-columns:1fr; }
@@ -320,6 +405,7 @@
     <div class="nav-links">
       <a href="#why">Why It Matters</a>
       <a href="#benchmarks">Benchmarks</a>
+      <a href="#timeline">Timeline</a>
       <a href="#questions">Questions</a>
       <a href="#talk-track">Talk Track</a>
       <a href="#manager">Manager Guide</a>
@@ -412,6 +498,58 @@
   </div>
 </section>
 
+<section id="timeline" class="dark">
+  <div class="wrap">
+    <div class="section-head">
+      <div>
+        <div class="eyebrow">Outreach timeline</div>
+        <h2>Work backward from the contract expiration date.</h2>
+      </div>
+      <p class="sub">Replacement software decisions need enough time for evaluation, stakeholder alignment, security/procurement, notice, migration, and training. Waiting until the notice window usually means the buyer is already out of calendar.</p>
+    </div>
+    <div class="timeline-board">
+      <div class="timeline-meta">
+        <div class="metric"><strong>84 days</strong><span>Median B2B SaaS sales cycle benchmark across 939 companies.</span></div>
+        <div class="metric"><strong>3-6 mo.</strong><span>Typical mid-market B2B software sales cycle range.</span></div>
+        <div class="metric"><strong>30-60 days</strong><span>Common cancellation or renewal opt-out notice window to verify.</span></div>
+      </div>
+      <div class="timeline-scroll" aria-label="Contract expiration outreach timeline">
+        <div class="timeline-bars">
+          <div class="timeline-bar eval">Replacement software evaluation, business case, demos, security, procurement</div>
+          <div class="timeline-bar notice">Notice period: cancel, downgrade, or opt out before renewal</div>
+        </div>
+        <div class="timeline-track">
+          <div class="milestone">
+            <h3>180 days out</h3>
+            <p>Aggressive outreach starts. Ask renewal date, incumbent, term, notice window, and switching pain.</p>
+          </div>
+          <div class="milestone">
+            <h3>150 days out</h3>
+            <p>Run discovery, quantify the cost of renewing, and identify the economic buyer and operations owner.</p>
+          </div>
+          <div class="milestone">
+            <h3>120 days out</h3>
+            <p>Demo with stakeholders, build the business case, and confirm migration and implementation needs.</p>
+          </div>
+          <div class="milestone risk">
+            <h3>90 days out</h3>
+            <p>Mutual action plan must be active. Start security, procurement, legal, and renewal-exit planning.</p>
+          </div>
+          <div class="milestone risk">
+            <h3>60 days out</h3>
+            <p>Escalation window. Confirm written notice requirements and whether cancellation/downgrade notice is due.</p>
+          </div>
+          <div class="milestone expire">
+            <h3>Expiration date</h3>
+            <p>Target state: customer has already decided, served notice, and is ready for transition or go-live.</p>
+          </div>
+        </div>
+      </div>
+      <div class="timeline-rule"><strong>Rev.io outreach rule:</strong> if a prospect is within six months of contract expiration, treat the account as active displacement motion. If they are inside 90 days and have not started evaluation, the rep should immediately surface renewal risk and build a compressed mutual action plan.</div>
+    </div>
+  </div>
+</section>
+
 <section id="questions">
   <div class="wrap">
     <div class="section-head">
@@ -425,6 +563,7 @@
       <div class="script-line"><div class="script-label">Start simple</div><p>When does your current agreement with your PSA, billing, or incumbent vendor come up for renewal?</p></div>
       <div class="script-line"><div class="script-label">Clarify</div><p>Is that a hard contract end date, an auto-renewal date, or a notice deadline where you have to act before the renewal?</p></div>
       <div class="script-line"><div class="script-label">Vendor-specific</div><p>If it is ConnectWise or Autotask, is the term annual or multi-year, and what written notice is required to cancel, downgrade, or opt out of renewal?</p></div>
+      <div class="script-line"><div class="script-label">Timeline check</div><p>How many days do you have before the notice deadline, and have you already started evaluating replacement options?</p></div>
       <div class="script-line"><div class="script-label">Work backward</div><p>If you wanted to be live before that date, when would you need vendor selection, contracting, migration, and training completed?</p></div>
       <div class="script-line"><div class="script-label">Make sick</div><p>If you renew with the same system, which of these workflow, billing, reporting, or service issues are you agreeing to live with for another term?</p></div>
       <div class="script-line"><div class="script-label">Create next step</div><p>Would it make sense to map the timeline now so we can tell whether a switch is realistic before that renewal window?</p></div>
@@ -534,6 +673,9 @@
       <a class="resource" href="https://www.connectwise.com/globalassets/media/documents/legal/connectwise-software-3rd-party-sales-agreement-terms-and-conditions.pdf" target="_blank" rel="noopener"><strong>ConnectWise: Third-party product terms</strong><span>Includes 60-day downgrade and cancellation notice language, with 30 days possible depending on offering.</span></a>
       <a class="resource" href="https://www.kaseya.com/legal/kaseya-master-agreement/" target="_blank" rel="noopener"><strong>Kaseya: Master agreement</strong><span>Shows committed service terms, automatic renewal, and 30-day cancellation or renewal opt-out notice language.</span></a>
       <a class="resource" href="https://www.datto.com/legal/autotask-psa-datto-rmm-datto-commerce-and-datto-edr-terms-of-us/" target="_blank" rel="noopener"><strong>Autotask PSA terms</strong><span>Confirms Autotask PSA operates under the applicable subscription's committed service term and related product terms.</span></a>
+      <a class="resource" href="https://optif.ai/learn/questions/sales-cycle-length-benchmark/" target="_blank" rel="noopener"><strong>Optifai: B2B SaaS sales cycle benchmarks</strong><span>Provides the 84-day median, 30-90 day mid-market, and 90-180+ day enterprise sales cycle benchmarks.</span></a>
+      <a class="resource" href="https://aexus.com/how-long-is-the-average-b2b-software-sales-cycle/" target="_blank" rel="noopener"><strong>Aexus: B2B software sales cycle timing</strong><span>Supports the 3-6 month mid-market software sales cycle planning assumption.</span></a>
+      <a class="resource" href="https://www.demandgenreport.com/industry-news/the-average-b2b-deal-cycle-lasts-6-months-new-research/47659/" target="_blank" rel="noopener"><strong>Demand Gen Report: B2B deal cycle research</strong><span>Reports that most B2B technology purchases complete within six months, reinforcing the six-month outreach trigger.</span></a>
     </div>
   </div>
 </section>
