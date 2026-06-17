@@ -267,6 +267,44 @@
     color:#29384f;
     font-size:14px;
   }
+  .platform-board {
+    background:#fff;
+    border:1px solid var(--line);
+    border-radius:10px;
+    padding:24px;
+    box-shadow:0 14px 36px rgba(7,20,38,.07);
+  }
+  .platform-rows {
+    display:grid;
+    gap:10px;
+    margin-top:22px;
+  }
+  .platform-row {
+    display:grid;
+    grid-template-columns:190px 1fr 92px 80px;
+    gap:12px;
+    align-items:center;
+    font-size:13px;
+  }
+  .platform-name { font-weight:850; color:#29384f; }
+  .platform-track {
+    height:30px;
+    border-radius:999px;
+    background:#edf3fb;
+    overflow:hidden;
+  }
+  .platform-fill {
+    height:100%;
+    min-width:8px;
+    border-radius:999px;
+    background:linear-gradient(90deg,var(--rev-blue),var(--rev-cyan));
+  }
+  .platform-fill.hot { background:linear-gradient(90deg,var(--rev-green),#18a76f); }
+  .platform-count, .platform-rate {
+    color:var(--muted);
+    text-align:right;
+    font-weight:850;
+  }
   .tag {
     display:inline-flex;
     width:fit-content;
@@ -501,6 +539,8 @@
     .nav-links { display:none; }
     .script-line { grid-template-columns:1fr; }
     .trend-row { grid-template-columns:58px 1fr 50px; }
+    .platform-row { grid-template-columns:1fr; gap:6px; }
+    .platform-count, .platform-rate { text-align:left; }
   }
 </style>
 </head>
@@ -510,6 +550,7 @@
     <div class="brand"><img src="revio-logo-white.png" alt="Rev.io logo"></div>
     <div class="nav-links">
       <a href="#lost-trend">Lost Trend</a>
+      <a href="#universe">Universe</a>
       <a href="#why">Why It Matters</a>
       <a href="#benchmarks">Benchmarks</a>
       <a href="#timeline">Timeline</a>
@@ -568,6 +609,37 @@
         <div class="trend-row"><div class="trend-month">Jun*</div><div class="trend-track"><div class="trend-fill" style="width:18%"></div></div><div class="trend-value">3</div></div>
       </div>
       <div class="trend-note"><strong>What this means:</strong> the sales problem is not just losing to competitors. It is arriving after the incumbent timeline has already controlled the buyer's options. The renewal-cohort motion creates opportunities before the contract becomes the reason we lose.</div>
+    </div>
+  </div>
+</section>
+
+<section id="universe" class="dark">
+  <div class="wrap">
+    <div class="section-head">
+      <div>
+        <div class="eyebrow">Prospect universe</div>
+        <h2>The opportunity is large, but the contract-date data is thin.</h2>
+      </div>
+      <p class="sub">Live Salesforce account pull: all Accounts where Account Type is Warm Prospect or Cold Prospect and Account Status is not Bad. Coverage is based on the Competitor Contract End Date field.</p>
+    </div>
+    <div class="platform-board">
+      <div class="trend-metrics">
+        <div class="trend-metric"><strong>83,353</strong><span>Total warm/cold prospect universe, excluding Account Status = Bad.</span></div>
+        <div class="trend-metric"><strong>102</strong><span>Prospects with Competitor Contract End Date populated.</span></div>
+        <div class="trend-metric"><strong>0.12%</strong><span>Overall contract end-date coverage across the prospect universe.</span></div>
+        <div class="trend-metric"><strong>4,913</strong><span>Prospects with a known PSA platform; 78,440 still have PSA platform blank.</span></div>
+      </div>
+      <div class="platform-rows" aria-label="Competitor contract end date coverage by PSA platform">
+        <div class="platform-row"><div class="platform-name">ConnectWise</div><div class="platform-track"><div class="platform-fill" style="width:100%"></div></div><div class="platform-count">32 / 2,050</div><div class="platform-rate">1.6%</div></div>
+        <div class="platform-row"><div class="platform-name">Autotask / Kaseya</div><div class="platform-track"><div class="platform-fill hot" style="width:88%"></div></div><div class="platform-count">28 / 337</div><div class="platform-rate">8.3%</div></div>
+        <div class="platform-row"><div class="platform-name">Unknown / blank</div><div class="platform-track"><div class="platform-fill" style="width:59%"></div></div><div class="platform-count">19 / 78,440</div><div class="platform-rate">0.02%</div></div>
+        <div class="platform-row"><div class="platform-name">Halo</div><div class="platform-track"><div class="platform-fill hot" style="width:19%"></div></div><div class="platform-count">6 / 103</div><div class="platform-rate">5.8%</div></div>
+        <div class="platform-row"><div class="platform-name">Syncro</div><div class="platform-track"><div class="platform-fill hot" style="width:13%"></div></div><div class="platform-count">4 / 64</div><div class="platform-rate">6.2%</div></div>
+        <div class="platform-row"><div class="platform-name">Jobber</div><div class="platform-track"><div class="platform-fill" style="width:6%"></div></div><div class="platform-count">2 / 96</div><div class="platform-rate">2.1%</div></div>
+        <div class="platform-row"><div class="platform-name">Workhorse</div><div class="platform-track"><div class="platform-fill" style="width:6%"></div></div><div class="platform-count">2 / 57</div><div class="platform-rate">3.5%</div></div>
+        <div class="platform-row"><div class="platform-name">Other named PSA</div><div class="platform-track"><div class="platform-fill" style="width:28%"></div></div><div class="platform-count">9 / 2,206</div><div class="platform-rate">0.4%</div></div>
+      </div>
+      <div class="trend-note"><strong>What this means:</strong> the renewal-cohort strategy has two jobs. First, use the 102 known contract dates immediately. Second, make contract-date capture a required data motion across the 83K prospect universe, especially the 4,913 accounts where we already know the PSA platform.</div>
     </div>
   </div>
 </section>
