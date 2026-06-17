@@ -553,12 +553,13 @@
         <div class="eyebrow">Migration scope</div>
         <h2>Data AVIT should expect Rev.io to move cleanly.</h2>
       </div>
-      <p class="sub">The first implementation risk is not configuration. It is moving the right ConnectWise data while keeping stale CRM noise out of the new operating system.</p>
+      <p class="sub">The first implementation risk is not configuration. It is moving the right ConnectWise and NetSuite data while keeping stale CRM noise out of the new operating system.</p>
     </div>
     <div class="grid-3">
       <div class="card"><span class="tag">Customers</span><h3>Account foundation</h3><p>Company name, ConnectWise account ID, service/billing/listing/site addresses, account creation date, and active status.</p></div>
       <div class="card"><span class="tag">Contacts</span><h3>Clean contact model</h3><p>Full name, title, phone, email, primary contact designation, active status, and selective migration rules for stale contacts.</p></div>
       <div class="card"><span class="tag">Financial history</span><h3>Invoices, payments, credits</h3><p>Invoice number, date, due date, amounts by service/expense/product, credit memos, payments, and outstanding balances. Voided invoices stay out.</p></div>
+      <div class="card"><span class="tag">NetSuite</span><h3>Financial history and inventory management</h3><p>Migrate the NetSuite context needed for customer financial history, SKU discipline, inventory management, product availability, and finance-owned validation.</p></div>
       <div class="card"><span class="tag">Product catalog</span><h3>SKU and service catalog</h3><p>Products with description, rate, cost, status, classification, subcategory, manufacturer, unit of measure, serialized flags, and part numbers.</p></div>
       <div class="card"><span class="tag">Tickets</span><h3>PSA history</h3><p>Description, type, status, priority, severity, opened/closed dates, customer association, and configured reference values.</p></div>
       <div class="card"><span class="tag">Notes</span><h3>Communication record</h3><p>All ticket notes linked to migrated tickets so communication history survives cutover and remains searchable.</p></div>
@@ -589,7 +590,7 @@
     <div class="section-head">
       <div>
         <div class="eyebrow">Data blueprint</div>
-        <h2>Extract, transform, validate. No mystery meat migration.</h2>
+        <h2>Extract, transform, validate. No ambiguous data migration.</h2>
       </div>
       <p class="sub">The plan is designed to make quality measurable: record counts, exception logs, reference-value mapping, sample loads, and formal sign-off.</p>
     </div>
@@ -685,7 +686,7 @@
       <div class="risk high"><span class="tag red">High</span><h3>Product images in quotes</h3><p>Define phase-one workaround or committed roadmap path for default quote-line images.</p></div>
       <div class="risk high"><span class="tag red">High</span><h3>Parent / related account model</h3><p>Build AVIT examples into UAT, including corporate, franchise, owner, sibling, and location relationships.</p></div>
       <div class="risk"><span class="tag amber">Medium</span><h3>Subcontractor workflow</h3><p>Validate one-time work links, photos, signatures, GPS expectations, and access controls.</p></div>
-      <div class="risk"><span class="tag amber">Medium</span><h3>FedEx / shipping charges</h3><p>Decide whether shipping logic belongs in Rev.io, NetSuite, or both.</p></div>
+      <div class="risk"><span class="tag amber">Medium</span><h3>Distribution integrations</h3><p>Decide where distributor ordering, shipping logic, Best Buy Business, FedEx, and related handoffs belong across Rev.io, NetSuite, or connected systems.</p></div>
       <div class="risk"><span class="tag amber">Medium</span><h3>Stale ConnectWise contacts</h3><p>Use selective migration and scrubbing before stale CRM history pollutes Rev.io.</p></div>
     </div>
   </div>
