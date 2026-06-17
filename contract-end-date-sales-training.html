@@ -204,6 +204,69 @@
   .card h3 { margin:0 0 8px; font-size:18px; line-height:1.18; }
   .card p { margin:0; color:var(--muted); font-size:14px; }
   .dark .card p { color:rgba(255,255,255,.72); }
+  .trend-board {
+    background:#fff;
+    border:1px solid var(--line);
+    border-radius:10px;
+    padding:24px;
+    box-shadow:0 14px 36px rgba(7,20,38,.07);
+  }
+  .trend-metrics {
+    display:grid;
+    grid-template-columns:repeat(4,minmax(0,1fr));
+    gap:12px;
+    margin-bottom:22px;
+  }
+  .trend-metric {
+    border:1px solid var(--line);
+    border-radius:8px;
+    padding:16px;
+    background:#f8fbff;
+  }
+  .trend-metric strong {
+    display:block;
+    color:var(--rev-blue);
+    font-size:28px;
+    line-height:1;
+    margin-bottom:7px;
+  }
+  .trend-metric span { color:var(--muted); font-size:12px; line-height:1.35; display:block; }
+  .trend-chart {
+    display:grid;
+    gap:10px;
+  }
+  .trend-row {
+    display:grid;
+    grid-template-columns:72px 1fr 64px;
+    gap:12px;
+    align-items:center;
+    font-size:13px;
+  }
+  .trend-month { font-weight:850; color:#29384f; }
+  .trend-track {
+    height:30px;
+    border-radius:999px;
+    background:#edf3fb;
+    overflow:hidden;
+    position:relative;
+  }
+  .trend-fill {
+    height:100%;
+    min-width:10px;
+    border-radius:999px;
+    background:linear-gradient(90deg,var(--rev-blue),var(--rev-cyan));
+  }
+  .trend-fill.hot { background:linear-gradient(90deg,var(--rev-amber),var(--rev-red)); }
+  .trend-value { color:var(--muted); text-align:right; font-weight:850; }
+  .trend-note {
+    margin-top:16px;
+    border-radius:8px;
+    padding:14px 16px;
+    background:rgba(0,87,255,.08);
+    border:1px solid rgba(0,87,255,.15);
+    color:#29384f;
+    font-size:14px;
+  }
   .tag {
     display:inline-flex;
     width:fit-content;
@@ -430,12 +493,14 @@
   @media (max-width:900px) {
     .hero, .grid-2 { grid-template-columns:1fr; }
     .grid-3 { grid-template-columns:1fr; }
+    .trend-metrics { grid-template-columns:1fr; }
     .timeline-meta { grid-template-columns:1fr; }
     .playbook-row { grid-template-columns:1fr; }
     .proof-grid { grid-template-columns:1fr; }
     .section-head { display:block; }
     .nav-links { display:none; }
     .script-line { grid-template-columns:1fr; }
+    .trend-row { grid-template-columns:58px 1fr 50px; }
   }
 </style>
 </head>
@@ -444,6 +509,7 @@
   <div class="nav-inner">
     <div class="brand"><img src="revio-logo-white.png" alt="Rev.io logo"></div>
     <div class="nav-links">
+      <a href="#lost-trend">Lost Trend</a>
       <a href="#why">Why It Matters</a>
       <a href="#benchmarks">Benchmarks</a>
       <a href="#timeline">Timeline</a>
@@ -476,6 +542,35 @@
     </div>
   </div>
 </header>
+
+<section id="lost-trend">
+  <div class="wrap">
+    <div class="section-head">
+      <div>
+        <div class="eyebrow">Closed-lost trend</div>
+        <h2>"In existing contract" is already costing us winnable timing.</h2>
+      </div>
+      <p class="sub">Salesforce closed-lost data from January through June 12, 2026 shows contract timing is not a theoretical objection. These are prospects that had enough fit to create opportunity motion, but timing with the incumbent contract blocked the deal.</p>
+    </div>
+    <div class="trend-board">
+      <div class="trend-metrics">
+        <div class="trend-metric"><strong>49</strong><span>Closed-lost opportunities tagged "In existing contract" in the Jan-Jun 12 export.</span></div>
+        <div class="trend-metric"><strong>$44.8K</strong><span>Pipeline amount tied to those contract-timing losses.</span></div>
+        <div class="trend-metric"><strong>10.4%</strong><span>May closed-lost share attributed to existing contracts, the highest month in the period.</span></div>
+        <div class="trend-metric"><strong>5.7x</strong><span>Increase in monthly count from January to May: 3 losses to 17 losses.</span></div>
+      </div>
+      <div class="trend-chart" aria-label="Closed lost opportunities due to in existing contract by month">
+        <div class="trend-row"><div class="trend-month">Jan</div><div class="trend-track"><div class="trend-fill" style="width:18%"></div></div><div class="trend-value">3</div></div>
+        <div class="trend-row"><div class="trend-month">Feb</div><div class="trend-track"><div class="trend-fill" style="width:53%"></div></div><div class="trend-value">9</div></div>
+        <div class="trend-row"><div class="trend-month">Mar</div><div class="trend-track"><div class="trend-fill" style="width:47%"></div></div><div class="trend-value">8</div></div>
+        <div class="trend-row"><div class="trend-month">Apr</div><div class="trend-track"><div class="trend-fill" style="width:53%"></div></div><div class="trend-value">9</div></div>
+        <div class="trend-row"><div class="trend-month">May</div><div class="trend-track"><div class="trend-fill hot" style="width:100%"></div></div><div class="trend-value">17</div></div>
+        <div class="trend-row"><div class="trend-month">Jun*</div><div class="trend-track"><div class="trend-fill" style="width:18%"></div></div><div class="trend-value">3</div></div>
+      </div>
+      <div class="trend-note"><strong>What this means:</strong> the sales problem is not just losing to competitors. It is arriving after the incumbent timeline has already controlled the buyer's options. The renewal-cohort motion creates opportunities before the contract becomes the reason we lose.</div>
+    </div>
+  </div>
+</section>
 
 <section id="why">
   <div class="wrap">
