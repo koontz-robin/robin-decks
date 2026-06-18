@@ -1,0 +1,984 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Rev.io Sales Persistence Training</title>
+<style>
+  :root {
+    --bg:#050505;
+    --surface:#12100b;
+    --surface2:#0b0a07;
+    --surface3:#1a160d;
+    --border:#342916;
+    --border-strong:#6f561d;
+    --gold:#f6c343;
+    --gold2:#d99a1e;
+    --yellow:#ffe08a;
+    --text:#f5f1e8;
+    --muted:#a99d87;
+    --soft:#756b58;
+    --red:#ef5b4a;
+    --green:#66d18f;
+  }
+  * { box-sizing:border-box; margin:0; padding:0; }
+  html { scroll-behavior:smooth; }
+  body {
+    min-height:100vh;
+    background:
+      radial-gradient(circle at 82% -8%, rgba(246,195,67,.16), transparent 30%),
+      radial-gradient(circle at 12% 20%, rgba(217,154,30,.08), transparent 26%),
+      linear-gradient(180deg, #080806 0%, #050505 48%, #020202 100%);
+    color:var(--text);
+    font-family:"Segoe UI", system-ui, -apple-system, BlinkMacSystemFont, sans-serif;
+  }
+  a { color:inherit; }
+  .deck-nav {
+    position:sticky;
+    top:0;
+    z-index:20;
+    background:rgba(5,5,5,.88);
+    backdrop-filter:blur(14px);
+    border-bottom:1px solid var(--border);
+  }
+  .nav-inner {
+    max-width:1180px;
+    margin:0 auto;
+    padding:12px 24px;
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    gap:18px;
+  }
+  .brand {
+    display:flex;
+    align-items:center;
+    gap:12px;
+    min-width:210px;
+  }
+  .shield {
+    width:34px;
+    height:38px;
+    background:linear-gradient(145deg, var(--gold), #9e6811);
+    clip-path:polygon(50% 0, 90% 14%, 84% 70%, 50% 100%, 16% 70%, 10% 14%);
+    box-shadow:0 0 22px rgba(246,195,67,.24);
+  }
+  .brand strong { display:block; font-size:14px; color:#fff; letter-spacing:.2px; }
+  .brand span { display:block; color:var(--gold); font-size:9px; font-weight:850; letter-spacing:1.9px; text-transform:uppercase; margin-top:3px; }
+  .links { display:flex; flex-wrap:wrap; gap:7px; justify-content:flex-end; }
+  .links a {
+    text-decoration:none;
+    color:var(--muted);
+    font-size:12px;
+    font-weight:750;
+    padding:7px 10px;
+    border:1px solid transparent;
+    border-radius:7px;
+  }
+  .links a:hover { color:var(--gold); border-color:rgba(246,195,67,.28); background:rgba(246,195,67,.07); }
+  header {
+    max-width:1180px;
+    margin:0 auto;
+    padding:62px 24px 28px;
+  }
+  .hero {
+    min-height:560px;
+    display:grid;
+    grid-template-columns:1.08fr .92fr;
+    gap:34px;
+    align-items:center;
+    border-bottom:1px solid var(--border);
+    padding-bottom:48px;
+  }
+  .kicker, .eyebrow, .tag, .label {
+    color:var(--gold);
+    font-size:10px;
+    font-weight:900;
+    letter-spacing:2px;
+    text-transform:uppercase;
+  }
+  h1 {
+    color:#fff;
+    font-size:66px;
+    line-height:.96;
+    letter-spacing:0;
+    margin:14px 0 20px;
+    max-width:790px;
+  }
+  h1 span, h2 span { color:var(--gold); }
+  .hero-copy {
+    max-width:740px;
+    color:var(--muted);
+    font-size:18px;
+    line-height:1.72;
+  }
+  .hero-actions { display:flex; flex-wrap:wrap; gap:12px; margin-top:28px; }
+  .btn {
+    display:inline-flex;
+    align-items:center;
+    justify-content:center;
+    min-height:42px;
+    padding:10px 16px;
+    border-radius:8px;
+    text-decoration:none;
+    font-size:13px;
+    font-weight:850;
+    border:1px solid var(--border-strong);
+  }
+  .btn.primary {
+    background:linear-gradient(135deg, var(--gold), #bd7a10);
+    color:#100c04;
+    border-color:var(--gold);
+  }
+  .btn.secondary {
+    color:var(--gold);
+    background:rgba(246,195,67,.08);
+  }
+  .hero-panel {
+    border:1px solid var(--border);
+    background:
+      linear-gradient(180deg, rgba(246,195,67,.08), rgba(18,16,11,.94)),
+      var(--surface);
+    border-radius:8px;
+    padding:22px;
+    box-shadow:0 30px 80px rgba(0,0,0,.28);
+  }
+  .big-stat {
+    border:1px solid rgba(246,195,67,.28);
+    background:#050505;
+    border-radius:8px;
+    padding:22px;
+    margin-bottom:14px;
+  }
+  .big-stat strong { display:block; color:var(--gold); font-size:54px; line-height:1; }
+  .big-stat span { display:block; color:var(--muted); font-size:13px; line-height:1.5; margin-top:9px; }
+  .signal-list { display:grid; gap:10px; }
+  .signal {
+    display:grid;
+    grid-template-columns:36px 1fr;
+    gap:12px;
+    padding:14px;
+    background:rgba(5,5,5,.66);
+    border:1px solid var(--border);
+    border-radius:8px;
+  }
+  .signal-num {
+    width:32px;
+    height:32px;
+    display:grid;
+    place-items:center;
+    border-radius:50%;
+    color:#120d04;
+    background:var(--gold);
+    font-weight:950;
+  }
+  .signal h3 { color:#fff; font-size:16px; margin-bottom:4px; }
+  .signal p { color:var(--muted); font-size:13px; line-height:1.55; }
+  section { padding:64px 24px; }
+  section.dark { background:rgba(0,0,0,.28); border-top:1px solid rgba(52,41,22,.55); border-bottom:1px solid rgba(52,41,22,.55); }
+  .wrap { max-width:1180px; margin:0 auto; }
+  .section-head {
+    display:grid;
+    grid-template-columns:minmax(0, 1fr) minmax(280px, 420px);
+    gap:28px;
+    align-items:end;
+    margin-bottom:28px;
+  }
+  h2 {
+    color:#fff;
+    font-size:38px;
+    line-height:1.08;
+    letter-spacing:0;
+    margin-top:10px;
+  }
+  .sub {
+    color:var(--muted);
+    font-size:15px;
+    line-height:1.72;
+  }
+  .grid-2, .grid-3, .grid-4 { display:grid; gap:14px; }
+  .grid-2 { grid-template-columns:repeat(2, minmax(0,1fr)); }
+  .grid-3 { grid-template-columns:repeat(3, minmax(0,1fr)); }
+  .grid-4 { grid-template-columns:repeat(4, minmax(0,1fr)); }
+  .card {
+    background:rgba(18,16,11,.9);
+    border:1px solid var(--border);
+    border-radius:8px;
+    padding:18px;
+    min-height:154px;
+  }
+  .card.gold { border-color:rgba(246,195,67,.42); background:linear-gradient(180deg, rgba(246,195,67,.1), rgba(18,16,11,.94)); }
+  .card h3 { color:#fff; font-size:20px; line-height:1.18; margin:10px 0 9px; }
+  .card p, .card li { color:var(--muted); font-size:13.5px; line-height:1.65; }
+  .card strong { color:var(--text); }
+  .tag {
+    display:inline-flex;
+    padding:4px 8px;
+    border-radius:999px;
+    background:rgba(246,195,67,.1);
+    border:1px solid rgba(246,195,67,.22);
+    letter-spacing:1px;
+    font-size:9px;
+  }
+  .tag.green { color:var(--green); border-color:rgba(102,209,143,.28); background:rgba(102,209,143,.08); }
+  .tag.red { color:var(--red); border-color:rgba(239,91,74,.28); background:rgba(239,91,74,.08); }
+  .metric-row {
+    display:grid;
+    grid-template-columns:repeat(4, minmax(0,1fr));
+    gap:12px;
+    margin-bottom:20px;
+  }
+  .metric {
+    padding:18px;
+    border:1px solid var(--border);
+    background:#050505;
+    border-radius:8px;
+  }
+  .metric strong { display:block; color:var(--gold); font-size:42px; line-height:1; }
+  .metric span { display:block; color:var(--muted); font-size:12px; line-height:1.5; margin-top:8px; }
+  .visual-board {
+    display:grid;
+    grid-template-columns:1.05fr .95fr;
+    gap:14px;
+    margin:20px 0;
+  }
+  .chart-card {
+    border:1px solid var(--border);
+    background:rgba(18,16,11,.9);
+    border-radius:8px;
+    padding:18px;
+  }
+  .chart-title {
+    color:#fff;
+    font-size:18px;
+    font-weight:900;
+    margin:7px 0 14px;
+  }
+  .bar-chart { display:grid; gap:12px; }
+  .bar-row {
+    display:grid;
+    grid-template-columns:118px 1fr 56px;
+    gap:10px;
+    align-items:center;
+  }
+  .bar-label {
+    color:var(--muted);
+    font-size:12px;
+    font-weight:800;
+  }
+  .bar-track {
+    height:20px;
+    background:#050505;
+    border:1px solid var(--border);
+    border-radius:999px;
+    overflow:hidden;
+  }
+  .bar-fill {
+    height:100%;
+    border-radius:999px;
+    background:linear-gradient(90deg, var(--gold2), var(--gold));
+    box-shadow:0 0 18px rgba(246,195,67,.22);
+  }
+  .bar-value {
+    color:var(--yellow);
+    font-size:12px;
+    font-weight:900;
+    text-align:right;
+  }
+  .chart-note {
+    color:var(--soft);
+    font-size:12px;
+    line-height:1.55;
+    margin-top:13px;
+  }
+  .contact-map {
+    display:grid;
+    grid-template-columns:1fr auto 1fr;
+    gap:14px;
+    align-items:center;
+  }
+  .contact-column {
+    display:grid;
+    gap:9px;
+  }
+  .contact-node {
+    padding:11px 12px;
+    border:1px solid var(--border);
+    border-radius:8px;
+    background:#050505;
+  }
+  .contact-node strong {
+    display:block;
+    color:#fff;
+    font-size:13px;
+    margin-bottom:3px;
+  }
+  .contact-node span {
+    display:block;
+    color:var(--muted);
+    font-size:11px;
+    line-height:1.4;
+  }
+  .contact-node.gold {
+    border-color:rgba(246,195,67,.42);
+    background:rgba(246,195,67,.08);
+  }
+  .map-arrow {
+    color:var(--gold);
+    font-size:30px;
+    font-weight:900;
+  }
+  .thread-grid {
+    display:grid;
+    grid-template-columns:repeat(4, minmax(0,1fr));
+    gap:12px;
+    margin-top:14px;
+  }
+  .thread-card {
+    border:1px solid var(--border);
+    background:rgba(5,5,5,.62);
+    border-radius:8px;
+    padding:14px;
+  }
+  .thread-card h3 {
+    color:#fff;
+    font-size:17px;
+    margin:8px 0 7px;
+  }
+  .thread-card p {
+    color:var(--muted);
+    font-size:12.5px;
+    line-height:1.6;
+  }
+  .role-table {
+    width:100%;
+    border-collapse:collapse;
+    margin-top:16px;
+    overflow:hidden;
+    border:1px solid var(--border);
+    border-radius:8px;
+    background:rgba(18,16,11,.86);
+  }
+  .role-table th,
+  .role-table td {
+    text-align:left;
+    padding:12px 14px;
+    border-bottom:1px solid rgba(52,41,22,.72);
+    vertical-align:top;
+  }
+  .role-table th {
+    color:var(--gold);
+    font-size:10px;
+    font-weight:900;
+    letter-spacing:1.4px;
+    text-transform:uppercase;
+    background:rgba(246,195,67,.07);
+  }
+  .role-table td {
+    color:var(--muted);
+    font-size:13px;
+    line-height:1.55;
+  }
+  .role-table td:first-child {
+    color:#fff;
+    font-weight:850;
+    white-space:nowrap;
+  }
+  .role-table tr:last-child td { border-bottom:none; }
+  .ladder {
+    display:grid;
+    gap:11px;
+  }
+  .ladder-step {
+    display:grid;
+    grid-template-columns:92px 1fr 280px;
+    gap:14px;
+    align-items:center;
+    padding:15px;
+    border:1px solid var(--border);
+    border-radius:8px;
+    background:rgba(18,16,11,.82);
+  }
+  .touch {
+    color:#100c04;
+    background:linear-gradient(135deg, var(--gold), var(--gold2));
+    border-radius:6px;
+    padding:10px;
+    text-align:center;
+    font-weight:950;
+    font-size:13px;
+  }
+  .ladder-step h3 { color:#fff; font-size:18px; margin-bottom:5px; }
+  .ladder-step p { color:var(--muted); font-size:13px; line-height:1.55; }
+  .example {
+    background:#000;
+    border:1px solid rgba(246,195,67,.24);
+    border-left:3px solid var(--gold);
+    border-radius:7px;
+    padding:11px 13px;
+    color:#f7e4a2;
+    font-family:"Consolas","SFMono-Regular",monospace;
+    font-size:12px;
+    line-height:1.55;
+  }
+  .comparison {
+    display:grid;
+    grid-template-columns:1fr 1fr;
+    gap:14px;
+  }
+  .bad { border-color:rgba(239,91,74,.35); }
+  .good { border-color:rgba(102,209,143,.35); }
+  .bad .label { color:var(--red); }
+  .good .label { color:var(--green); }
+  .script-box {
+    background:#000;
+    border:1px solid var(--border);
+    border-left:3px solid var(--gold);
+    border-radius:8px;
+    padding:18px 20px;
+    color:#f7e4a2;
+    font-family:"Consolas","SFMono-Regular",monospace;
+    font-size:13px;
+    line-height:1.75;
+  }
+  .scenario {
+    display:grid;
+    grid-template-columns:240px 1fr;
+    gap:14px;
+    padding:16px;
+    border:1px solid var(--border);
+    border-radius:8px;
+    background:rgba(18,16,11,.86);
+    margin-bottom:12px;
+  }
+  .scenario h3 { color:#fff; font-size:18px; margin:5px 0; }
+  .scenario p { color:var(--muted); font-size:13px; line-height:1.6; }
+  .pillbar { display:flex; flex-wrap:wrap; gap:8px; margin-top:14px; }
+  .pill {
+    color:var(--yellow);
+    border:1px solid rgba(246,195,67,.26);
+    background:rgba(246,195,67,.07);
+    border-radius:999px;
+    padding:7px 10px;
+    font-size:12px;
+    font-weight:800;
+  }
+  .manager-list { display:grid; gap:10px; }
+  .check {
+    display:grid;
+    grid-template-columns:28px 1fr;
+    gap:10px;
+    align-items:start;
+    padding:12px;
+    border-radius:7px;
+    background:rgba(5,5,5,.55);
+    border:1px solid var(--border);
+  }
+  .check b {
+    display:grid;
+    place-items:center;
+    width:24px;
+    height:24px;
+    border-radius:50%;
+    background:rgba(246,195,67,.12);
+    border:1px solid rgba(246,195,67,.32);
+    color:var(--gold);
+    font-size:13px;
+  }
+  .check span { color:var(--muted); font-size:13px; line-height:1.55; }
+  .resource-list { display:grid; gap:10px; }
+  .resource {
+    display:flex;
+    justify-content:space-between;
+    gap:16px;
+    padding:14px 16px;
+    border:1px solid var(--border);
+    border-radius:8px;
+    background:rgba(18,16,11,.82);
+    text-decoration:none;
+  }
+  .resource strong { color:#fff; font-size:14px; }
+  .resource span { color:var(--muted); font-size:12px; line-height:1.5; max-width:620px; }
+  footer {
+    max-width:1180px;
+    margin:0 auto;
+    padding:36px 24px 54px;
+    color:var(--soft);
+    font-size:12px;
+    border-top:1px solid var(--border);
+  }
+  @media (max-width:920px) {
+    .nav-inner { align-items:flex-start; flex-direction:column; }
+    .links { justify-content:flex-start; }
+    .hero, .section-head, .grid-2, .grid-3, .grid-4, .metric-row, .comparison, .scenario, .visual-board, .thread-grid, .contact-map { grid-template-columns:1fr; }
+    h1 { font-size:44px; }
+    h2 { font-size:30px; }
+    .ladder-step { grid-template-columns:1fr; }
+    .map-arrow { transform:rotate(90deg); justify-self:center; }
+    .bar-row { grid-template-columns:94px 1fr 48px; }
+    .role-table { display:block; overflow-x:auto; }
+  }
+</style>
+</head>
+<body>
+<nav class="deck-nav">
+  <div class="nav-inner">
+    <div class="brand">
+      <div class="shield" aria-hidden="true"></div>
+      <div><strong>Rev.io Sales Training</strong><span>Professional Persistence</span></div>
+    </div>
+    <div class="links">
+      <a href="#stats">Stats</a>
+      <a href="#principle">Principle</a>
+      <a href="#ladder">Ladder</a>
+      <a href="#multithreading">Threads</a>
+      <a href="#plays">Plays</a>
+      <a href="#scripts">Scripts</a>
+      <a href="#manager">Manager</a>
+      <a href="#resources">Sources</a>
+    </div>
+  </div>
+</nav>
+
+<header>
+  <div class="hero">
+    <div>
+      <div class="kicker">Property Shield palette edition</div>
+      <h1>Do not check in. <span>Create motion.</span></h1>
+      <p class="hero-copy">Persistence is not repeating the same ask until the prospect gives up. It is a disciplined sequence of useful touches that changes the value of every follow-up and earns the right to keep the conversation alive.</p>
+      <div class="hero-actions">
+        <a class="btn primary" href="#ladder">Use the persistence ladder</a>
+        <a class="btn secondary" href="#scripts">Grab the scripts</a>
+      </div>
+    </div>
+    <div class="hero-panel">
+      <div class="big-stat"><strong>7.4</strong><span>Average touches to book a cold outbound meeting, according to Outreach's 2026 cold outreach benchmark.</span></div>
+      <div class="signal-list">
+        <div class="signal"><div class="signal-num">1</div><div><h3>Most reps leave early</h3><p>If the average first response takes 4.8 touches, quitting after 2-3 attempts is not discipline. It is early surrender with nicer shoes.</p></div></div>
+        <div class="signal"><div class="signal-num">2</div><div><h3>Top reps create more meetings</h3><p>Gong found top reps book more than 3x the cold-call meeting rate of average reps.</p></div></div>
+        <div class="signal"><div class="signal-num">3</div><div><h3>Follow-up needs a reason</h3><p>The rep's job is not to be louder. It is to be more relevant with every touch.</p></div></div>
+      </div>
+    </div>
+  </div>
+</header>
+
+<section id="stats">
+  <div class="wrap">
+    <div class="section-head">
+      <div>
+        <div class="eyebrow">The benchmark</div>
+        <h2>Cold meetings are won by reps who stay useful long enough.</h2>
+      </div>
+      <p class="sub">Outbound has become harder. That does not mean the answer is spam. It means reps need a realistic attempt count, a multi-channel plan, and better reasons to re-engage.</p>
+    </div>
+    <div class="metric-row">
+      <div class="metric"><strong>7.4</strong><span>Average touches to book a meeting in Outreach's 2026 cold outreach data.</span></div>
+      <div class="metric"><strong>4.8</strong><span>Average touches to first response in the same benchmark.</span></div>
+      <div class="metric"><strong>3</strong><span>Average cold-call attempts to connect with a lead, per Cognism's 2025 cold-calling benchmark.</span></div>
+      <div class="metric"><strong>5.8%</strong><span>Average cold email reply rate in Belkins' 2025 study.</span></div>
+    </div>
+    <div class="grid-2">
+      <div class="card gold">
+        <span class="tag">Cold call lesson</span>
+        <h3>Execution separates average from elite.</h3>
+        <p>Gong's cold-calling research found average reps booked meetings from cold-call conversations at about <strong>4.6%</strong>, while top reps booked at about <strong>16.7%</strong>. That is not just more activity. It is better targeting, better talk tracks, and better follow-up discipline.</p>
+      </div>
+      <div class="card">
+        <span class="tag">Cold email lesson</span>
+        <h3>Email-only persistence is fragile.</h3>
+        <p>Cold email reply rates often live in the low single digits. Reps should use email as one lane in the cadence, not the whole highway. Phone, LinkedIn, trigger events, proof points, and timing resets all matter.</p>
+      </div>
+    </div>
+    <div class="visual-board">
+      <div class="chart-card">
+        <div class="eyebrow">Attempt reality</div>
+        <div class="chart-title">The meeting usually appears after the early quit point.</div>
+        <div class="bar-chart" aria-label="Outbound touch benchmark bar chart">
+          <div class="bar-row">
+            <div class="bar-label">Typical quit</div>
+            <div class="bar-track"><div class="bar-fill" style="width:25%"></div></div>
+            <div class="bar-value">2-3</div>
+          </div>
+          <div class="bar-row">
+            <div class="bar-label">First reply</div>
+            <div class="bar-track"><div class="bar-fill" style="width:48%"></div></div>
+            <div class="bar-value">4.8</div>
+          </div>
+          <div class="bar-row">
+            <div class="bar-label">Booked mtg</div>
+            <div class="bar-track"><div class="bar-fill" style="width:74%"></div></div>
+            <div class="bar-value">7.4</div>
+          </div>
+          <div class="bar-row">
+            <div class="bar-label">Full motion</div>
+            <div class="bar-track"><div class="bar-fill" style="width:100%"></div></div>
+            <div class="bar-value">8-12</div>
+          </div>
+        </div>
+        <div class="chart-note">Training point: persistence fails when reps stop before the first response benchmark. Coach reps to plan the full motion before judging whether the account is cold.</div>
+      </div>
+      <div class="chart-card">
+        <div class="eyebrow">Execution gap</div>
+        <div class="chart-title">Top reps turn conversations into meetings.</div>
+        <div class="bar-chart" aria-label="Cold call meeting rate bar chart">
+          <div class="bar-row">
+            <div class="bar-label">Average rep</div>
+            <div class="bar-track"><div class="bar-fill" style="width:28%"></div></div>
+            <div class="bar-value">4.6%</div>
+          </div>
+          <div class="bar-row">
+            <div class="bar-label">Top rep</div>
+            <div class="bar-track"><div class="bar-fill" style="width:100%"></div></div>
+            <div class="bar-value">16.7%</div>
+          </div>
+        </div>
+        <div class="chart-note">Training point: more dials alone will not fix weak conversion. The rep needs a reason for the call, a relevant opener, and a follow-up path if the buyer is not ready today.</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="principle" class="dark">
+  <div class="wrap">
+    <div class="section-head">
+      <div>
+        <div class="eyebrow">Core principle</div>
+        <h2>Persistence is not repeating the ask. It is changing the value of the touch.</h2>
+      </div>
+      <p class="sub">The easiest way for reps to become background noise is to send follow-ups that exist only because the rep wants something. The buyer needs a reason to care.</p>
+    </div>
+    <div class="comparison">
+      <div class="card bad">
+        <div class="label">Pestering</div>
+        <h3>The rep-centered follow-up</h3>
+        <p>"Just checking in."</p>
+        <p>"Bumping this to the top of your inbox."</p>
+        <p>"Any update here?"</p>
+        <p>These messages ask for attention without adding value. They train the buyer to ignore the rep.</p>
+      </div>
+      <div class="card good">
+        <div class="label">Professional persistence</div>
+        <h3>The buyer-centered follow-up</h3>
+        <p>"You mentioned dispatch visibility was hurting response time. I pulled together a quick way teams quantify that before they evaluate a replacement."</p>
+        <p>"Your renewal timing changes the plan. Here is the decision path we would need if August is still the target."</p>
+        <p>Every touch gives the buyer a new reason to respond.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="ladder">
+  <div class="wrap">
+    <div class="section-head">
+      <div>
+        <div class="eyebrow">The persistence ladder</div>
+        <h2>Each touch should advance the conversation.</h2>
+      </div>
+      <p class="sub">This is the coaching model: reps can be persistent, but they cannot be lazy. The message must evolve.</p>
+    </div>
+    <div class="ladder">
+      <div class="ladder-step">
+        <div class="touch">Touch 1</div>
+        <div><h3>Targeted reason</h3><p>Lead with why this account, why this person, and why now. Keep the ask small.</p></div>
+        <div class="example">"Saw your team is scaling managed services. Worth comparing how teams keep billing and service workflows from splitting apart?"</div>
+      </div>
+      <div class="ladder-step">
+        <div class="touch">Touch 2</div>
+        <div><h3>Useful insight</h3><p>Bring a benchmark, observation, or problem pattern that makes the outreach worth reading.</p></div>
+        <div class="example">"One pattern we see: teams add RMM/security faster than their billing workflow can support. That usually shows up as leakage."</div>
+      </div>
+      <div class="ladder-step">
+        <div class="touch">Touch 3</div>
+        <div><h3>Pain implication</h3><p>Connect the problem to a cost, risk, delay, or operational consequence.</p></div>
+        <div class="example">"If project work and recurring billing live in separate systems, margin issues usually show up after the month is already gone."</div>
+      </div>
+      <div class="ladder-step">
+        <div class="touch">Touch 4</div>
+        <div><h3>Proof point</h3><p>Use a customer story, competitor displacement angle, or relevant example.</p></div>
+        <div class="example">"We helped a similar team consolidate service, billing, and reporting so they could stop reconciling across spreadsheets."</div>
+      </div>
+      <div class="ladder-step">
+        <div class="touch">Touch 5</div>
+        <div><h3>Timing reset</h3><p>Ask about renewal, evaluation window, hiring, expansion, event follow-up, or budget timing.</p></div>
+        <div class="example">"Is this a bad-fit conversation, or is the better timing around your next PSA or billing renewal window?"</div>
+      </div>
+      <div class="ladder-step">
+        <div class="touch">Touch 6+</div>
+        <div><h3>Clean close or next cycle</h3><p>Earn the yes, the no, or the future date. Do not drift into zombie follow-up.</p></div>
+        <div class="example">"Should I close the loop for now, or reconnect when you are planning Q4 systems priorities?"</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="dark">
+  <div class="wrap">
+    <div class="section-head">
+      <div>
+        <div class="eyebrow">Why prospects go dark</div>
+        <h2>Diagnose the silence before sending another touch.</h2>
+      </div>
+      <p class="sub">Silence is not one objection. It can mean the rep never created pain, the timing is wrong, the wrong person is involved, or the buyer does not trust the path yet.</p>
+    </div>
+    <div class="grid-3">
+      <div class="card"><span class="tag red">No pain</span><h3>They understood the product, not the problem.</h3><p>Next touch should sharpen the business issue, not pitch more features.</p></div>
+      <div class="card"><span class="tag red">No priority</span><h3>It is interesting, but not urgent.</h3><p>Next touch should connect the problem to timing, consequence, or a trigger event.</p></div>
+      <div class="card"><span class="tag red">No authority</span><h3>The contact cannot move the deal.</h3><p>Next touch should ask who owns the decision or give them a reason to bring in the operator or executive.</p></div>
+      <div class="card"><span class="tag">No timeline</span><h3>The buyer has no buying window.</h3><p>Next touch should ask about renewal timing, budget cycle, implementation target, or current initiative.</p></div>
+      <div class="card"><span class="tag">No trust</span><h3>They are not confident switching is worth the risk.</h3><p>Next touch should bring proof, references, implementation plan, or a lower-risk next step.</p></div>
+      <div class="card"><span class="tag green">Real no</span><h3>The best outcome may be disqualification.</h3><p>Professional persistence includes clean exits. A documented no beats a fantasy pipeline ghost.</p></div>
+    </div>
+  </div>
+</section>
+
+<section id="multithreading">
+  <div class="wrap">
+    <div class="section-head">
+      <div>
+        <div class="eyebrow">Multithreading</div>
+        <h2>One contact is not a deal. It is a single point of failure.</h2>
+      </div>
+      <p class="sub">Persistence gets weaker when every touch depends on one person replying. Multithreading gives the deal more ways to move, more internal context, and fewer surprise blockers late in the cycle.</p>
+    </div>
+    <div class="metric-row">
+      <div class="metric"><strong>130%</strong><span>Gong reports multithreading boosts win rates by an average of 130% in deals over $50K.</span></div>
+      <div class="metric"><strong>2.5x</strong><span>Gartner reports buying groups that reach consensus are 2.5x more likely to report a high-quality deal.</span></div>
+      <div class="metric"><strong>94%</strong><span>Forrester reports buyers in groups of six or more see clear benefits from larger buying groups.</span></div>
+      <div class="metric"><strong>8 vs 3</strong><span>Gong found winning deals average about 8 buyer-side email contacts, while losing deals average about 3.</span></div>
+    </div>
+    <div class="visual-board">
+      <div class="chart-card">
+        <div class="eyebrow">Deal risk graphic</div>
+        <div class="chart-title">From one fragile thread to a buying committee.</div>
+        <div class="contact-map" aria-label="Single-threaded versus multi-threaded deal map">
+          <div class="contact-column">
+            <div class="contact-node gold"><strong>Rep</strong><span>Only one path into the account</span></div>
+            <div class="contact-node"><strong>Champion</strong><span>Helpful, but not enough alone</span></div>
+          </div>
+          <div class="map-arrow">></div>
+          <div class="contact-column">
+            <div class="contact-node gold"><strong>Champion</strong><span>Internal advocate</span></div>
+            <div class="contact-node"><strong>Operator</strong><span>Feels workflow pain</span></div>
+            <div class="contact-node"><strong>Finance</strong><span>Owns budget and ROI</span></div>
+            <div class="contact-node"><strong>Executive</strong><span>Owns risk and priority</span></div>
+            <div class="contact-node"><strong>Technical</strong><span>Owns migration confidence</span></div>
+          </div>
+        </div>
+        <div class="chart-note">Training point: the goal is not to spam more people. The goal is to understand the buying group and give each stakeholder a relevant reason to engage.</div>
+      </div>
+      <div class="chart-card">
+        <div class="eyebrow">Buyer coverage</div>
+        <div class="chart-title">Winning deals have broader stakeholder engagement.</div>
+        <div class="bar-chart" aria-label="Winning versus losing buyer contact bar chart">
+          <div class="bar-row">
+            <div class="bar-label">Lost deals</div>
+            <div class="bar-track"><div class="bar-fill" style="width:41%"></div></div>
+            <div class="bar-value">3.38</div>
+          </div>
+          <div class="bar-row">
+            <div class="bar-label">Won deals</div>
+            <div class="bar-track"><div class="bar-fill" style="width:100%"></div></div>
+            <div class="bar-value">8.22</div>
+          </div>
+        </div>
+        <div class="chart-note">Training point: if the rep has one friendly contact and no operator, finance, executive, or technical thread, the forecast should be treated as fragile.</div>
+      </div>
+    </div>
+    <div class="thread-grid">
+      <div class="thread-card"><span class="tag">Champion</span><h3>Give them internal ammo.</h3><p>Send simple language they can forward: business issue, why now, expected impact, and the next decision.</p></div>
+      <div class="thread-card"><span class="tag">Operator</span><h3>Make the pain concrete.</h3><p>Talk workflow, manual effort, reporting gaps, technician visibility, billing cleanup, and the operational cost of waiting.</p></div>
+      <div class="thread-card"><span class="tag">Finance</span><h3>Translate value into math.</h3><p>Use ROI, margin leakage, duplicated tools, implementation cost, payment timing, and budget tradeoffs.</p></div>
+      <div class="thread-card"><span class="tag">Executive</span><h3>Anchor to priority and risk.</h3><p>Frame strategic growth, customer experience, scalability, renewal lock-in, and operational risk.</p></div>
+    </div>
+    <table class="role-table">
+      <thead>
+        <tr><th>Contact type</th><th>What they care about</th><th>Useful persistence angle</th></tr>
+      </thead>
+      <tbody>
+        <tr><td>Champion</td><td>Looking credible internally and solving the problem they raised.</td><td>"Here is a short summary you can forward to the team so the next conversation is not starting from zero."</td></tr>
+        <tr><td>Operator</td><td>Workflow friction, service delivery, dispatch, tickets, reporting, and manual cleanup.</td><td>"The reason I am looping you in is that this usually shows up in day-to-day operations before it shows up in the P&L."</td></tr>
+        <tr><td>Finance</td><td>Total cost, margin impact, billing leakage, implementation cost, and budget timing.</td><td>"If this moves forward, finance will need a clean view of current spend, duplicated tools, and payback assumptions."</td></tr>
+        <tr><td>Executive</td><td>Strategic priority, risk, scale, customer experience, and whether now is worth the change.</td><td>"The executive question is not feature fit. It is whether the current process can support the next stage of growth."</td></tr>
+        <tr><td>Technical owner</td><td>Migration risk, integrations, data quality, implementation resources, and security review.</td><td>"Before this becomes a buying decision, it is worth pressure-testing migration, integrations, and implementation lift."</td></tr>
+      </tbody>
+    </table>
+  </div>
+</section>
+
+<section id="plays">
+  <div class="wrap">
+    <div class="section-head">
+      <div>
+        <div class="eyebrow">Scenario plays</div>
+        <h2>Match the follow-up to the buyer signal.</h2>
+      </div>
+      <p class="sub">The same message should not go to every silent prospect. The signal tells the rep what kind of value the next touch should contain.</p>
+    </div>
+    <div class="scenario">
+      <div><span class="tag">Opened proposal</span><h3>No reply after pricing</h3><p>Likely issue: decision process, value gap, or internal alignment.</p></div>
+      <div class="script-box">"I may be early here, but usually when pricing goes quiet it is either internal alignment or uncertainty on the business case. Would it help if I sent a tighter ROI view and the specific decision steps we would need before implementation?"</div>
+    </div>
+    <div class="scenario">
+      <div><span class="tag">Renewal trigger</span><h3>Timing matters</h3><p>Likely issue: buyer needs help planning backward from the incumbent clock.</p></div>
+      <div class="script-box">"The renewal date changes the plan. If August is still the target, we should work backward from notice, decision, contract, migration, and go-live. Want me to map what that timeline would need to look like?"</div>
+    </div>
+    <div class="scenario">
+      <div><span class="tag">Discovery ghost</span><h3>Pain surfaced, then silence</h3><p>Likely issue: pain was not connected to urgency or priority.</p></div>
+      <div class="script-box">"You mentioned billing cleanup and service visibility were taking too much manual work. I do not want to chase a meeting if this is not a priority, but if those issues are still costing time, I can send a short plan for what teams usually evaluate first."</div>
+    </div>
+    <div class="scenario">
+      <div><span class="tag">Demo complete</span><h3>Next step missing</h3><p>Likely issue: rep showed product but did not anchor the business decision.</p></div>
+      <div class="script-box">"The demo covered a lot. The piece worth deciding now is whether solving [problem] is important enough to put a migration plan around it. Should we schedule 20 minutes to define the decision criteria and timeline?"</div>
+    </div>
+  </div>
+</section>
+
+<section class="dark">
+  <div class="wrap">
+    <div class="section-head">
+      <div>
+        <div class="eyebrow">Cadence design</div>
+        <h2>Use 8-12 touches, but make them different.</h2>
+      </div>
+      <p class="sub">A good cadence is not more email. It is a sequence of channel shifts and message shifts that makes the rep harder to ignore for the right reasons.</p>
+    </div>
+    <div class="grid-4">
+      <div class="card"><span class="tag">Day 1</span><h3>Phone + email</h3><p>Specific reason for outreach, concise business problem, simple ask.</p></div>
+      <div class="card"><span class="tag">Day 3</span><h3>LinkedIn view/connect</h3><p>Light social touch. No novella. Nobody joined LinkedIn to read a treaty.</p></div>
+      <div class="card"><span class="tag">Day 5</span><h3>Insight email</h3><p>Benchmark, pain pattern, or competitor-specific observation.</p></div>
+      <div class="card"><span class="tag">Day 7</span><h3>Phone</h3><p>Call with a different opener tied to the insight, not the same voicemail script.</p></div>
+      <div class="card"><span class="tag">Day 10</span><h3>Proof point</h3><p>Customer story, use case, or before/after operational example.</p></div>
+      <div class="card"><span class="tag">Day 14</span><h3>Timing ask</h3><p>Ask whether renewal, budget cycle, or project timing is the real blocker.</p></div>
+      <div class="card"><span class="tag">Day 21</span><h3>Executive angle</h3><p>Business consequence, risk, cost, or strategic reason this matters above the user level.</p></div>
+      <div class="card"><span class="tag">Day 28</span><h3>Clean close</h3><p>Ask for the no, the better owner, or the right future date.</p></div>
+    </div>
+    <div class="pillbar">
+      <span class="pill">Phone</span>
+      <span class="pill">Email</span>
+      <span class="pill">LinkedIn</span>
+      <span class="pill">Trigger event</span>
+      <span class="pill">Proof point</span>
+      <span class="pill">Timing reset</span>
+      <span class="pill">Clean no</span>
+    </div>
+  </div>
+</section>
+
+<section id="scripts">
+  <div class="wrap">
+    <div class="section-head">
+      <div>
+        <div class="eyebrow">Rep scripts</div>
+        <h2>Useful follow-up beats empty follow-up.</h2>
+      </div>
+      <p class="sub">These are building blocks. Reps should customize the problem, trigger, competitor, and timing for the account.</p>
+    </div>
+    <div class="grid-2">
+      <div class="card">
+        <span class="tag">After first touch</span>
+        <h3>Insight follow-up</h3>
+        <div class="script-box">"One reason I reached out: teams usually do not notice service/billing leakage until reporting gets messy. If that is not on your radar, no issue. If it is, I can send the 3 areas teams usually inspect first."</div>
+      </div>
+      <div class="card">
+        <span class="tag">After discovery</span>
+        <h3>Pain consequence</h3>
+        <div class="script-box">"You mentioned [pain]. The reason I am following up is that teams usually either solve that before the next renewal cycle or accept another year of manual work. Which side are you closer to right now?"</div>
+      </div>
+      <div class="card">
+        <span class="tag">After demo</span>
+        <h3>Decision path</h3>
+        <div class="script-box">"The demo seemed most relevant around [business issue]. Should our next step be a technical review, a pricing/business case pass, or closing the loop until timing is better?"</div>
+      </div>
+      <div class="card">
+        <span class="tag">Breakup</span>
+        <h3>Clean exit</h3>
+        <div class="script-box">"I do not want to keep throwing follow-ups into the void like a tiny sales boomerang. Should I close this out, or is there a better time or person for this conversation?"</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="manager" class="dark">
+  <div class="wrap">
+    <div class="section-head">
+      <div>
+        <div class="eyebrow">Manager guide</div>
+        <h2>Inspect persistence quality, not just activity volume.</h2>
+      </div>
+      <p class="sub">A rep can complete ten bad steps and still create zero buyer value. Managers should coach the quality of the touch, the reason for the channel, and the next expected buyer action.</p>
+    </div>
+    <div class="grid-2">
+      <div class="card">
+        <span class="tag">Pipeline review</span>
+        <h3>Questions managers should ask</h3>
+        <div class="manager-list">
+          <div class="check"><b>1</b><span>What changed between the last touch and this one?</span></div>
+          <div class="check"><b>2</b><span>What buyer signal are we responding to?</span></div>
+          <div class="check"><b>3</b><span>Did the rep add a new insight, proof point, consequence, or timing angle?</span></div>
+          <div class="check"><b>4</b><span>What channel comes next and why?</span></div>
+          <div class="check"><b>5</b><span>What is the clean exit or next-cycle plan if they do not respond?</span></div>
+        </div>
+      </div>
+      <div class="card">
+        <span class="tag green">Behavior standard</span>
+        <h3>What good looks like</h3>
+        <div class="manager-list">
+          <div class="check"><b>OK</b><span>8-12 planned touches before declaring a cold prospect unreachable.</span></div>
+          <div class="check"><b>OK</b><span>At least three channels used across the cadence.</span></div>
+          <div class="check"><b>OK</b><span>No more than two consecutive touches with the same message angle.</span></div>
+          <div class="check"><b>OK</b><span>Every touch tied to pain, trigger, proof, timing, or a clean decision.</span></div>
+          <div class="check"><b>OK</b><span>Clear disposition: meeting, no, wrong person, bad timing, or next-cycle date.</span></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section>
+  <div class="wrap">
+    <div class="section-head">
+      <div>
+        <div class="eyebrow">Training exercise</div>
+        <h2>Make reps rewrite weak follow-ups in real time.</h2>
+      </div>
+      <p class="sub">The best part of this training should be practical. Put bad follow-ups on screen and have reps turn them into buyer-centered touches.</p>
+    </div>
+    <div class="grid-3">
+      <div class="card"><span class="tag red">Bad prompt</span><h3>"Just checking in."</h3><p>Rewrite it using a pain implication, benchmark, or timing question.</p></div>
+      <div class="card"><span class="tag red">Bad prompt</span><h3>"Any update?"</h3><p>Rewrite it with a decision-path question and a low-friction next step.</p></div>
+      <div class="card"><span class="tag red">Bad prompt</span><h3>"Bumping this."</h3><p>Rewrite it with new information the buyer did not have in the prior touch.</p></div>
+    </div>
+    <div class="card gold" style="margin-top:14px; min-height:0;">
+      <span class="tag">Facilitator close</span>
+      <h3>Persistence standard</h3>
+      <p><strong>Professional persistence means the rep can explain why this touch, why this channel, why this buyer, and why now.</strong> If they cannot answer those four questions, they are not being persistent. They are just making noise with CRM timestamps.</p>
+    </div>
+  </div>
+</section>
+
+<section id="resources" class="dark">
+  <div class="wrap">
+    <div class="section-head">
+      <div>
+        <div class="eyebrow">Sources</div>
+        <h2>Benchmarks used in the deck.</h2>
+      </div>
+      <p class="sub">Use the stats as directional coaching benchmarks. Rep performance still depends on list quality, ICP fit, message relevance, channel mix, and manager inspection.</p>
+    </div>
+    <div class="resource-list">
+      <a class="resource" href="https://www.outreach.ai/resources/blog/the-icebox-the-inside-scoop-on-cold-calling-and-emailing" target="_blank" rel="noopener"><strong>Outreach: The Icebox cold outreach report</strong><span>Source for 4.8 touches to first response and 7.4 touches to book a meeting.</span></a>
+      <a class="resource" href="https://www.gong.io/blog/the-hidden-power-of-cold-calling-insights-from-300m-calls" target="_blank" rel="noopener"><strong>Gong: Cold calling insights from 300M calls</strong><span>Source for average vs. top-rep meeting booking rates from cold-call conversations.</span></a>
+      <a class="resource" href="https://www.cognism.com/blog/cold-calling-statistics" target="_blank" rel="noopener"><strong>Cognism: Cold calling statistics</strong><span>Source for average attempts required to connect with a lead.</span></a>
+      <a class="resource" href="https://belkins.io/blog/cold-email-response-rates" target="_blank" rel="noopener"><strong>Belkins: Cold email response rates</strong><span>Source for average cold email reply-rate benchmarks and message-length context.</span></a>
+      <a class="resource" href="https://www.gong.io/blog/data-shows-top-reps-dont-just-sell-they-orchestrate-with-ai" target="_blank" rel="noopener"><strong>Gong: Top reps orchestrate with AI</strong><span>Source for the 130% win-rate lift from multithreading in deals over $50K.</span></a>
+      <a class="resource" href="https://www.gartner.com/en/newsroom/press-releases/2025-05-07-gartner-sales-survey-finds-74-percent-of-b2b-buyer-teams-demonstrate-unhealthy-conflict-during-the-decision-process" target="_blank" rel="noopener"><strong>Gartner: B2B buying group consensus</strong><span>Source for buying groups with consensus being 2.5x more likely to report a high-quality deal.</span></a>
+      <a class="resource" href="https://www.forrester.com/press-newsroom/forrester-2026-the-state-of-business-buying/" target="_blank" rel="noopener"><strong>Forrester: State of Business Buying 2026</strong><span>Source for buyers in groups of six or more reporting clear benefits from larger buying groups.</span></a>
+      <a class="resource" href="https://www.gong.io/blog/army-of-champions-is-must-now-theres-data-to-prove-it" target="_blank" rel="noopener"><strong>Gong: Army of champions</strong><span>Source for winning deals averaging roughly 8 buyer-side contacts by email, compared with roughly 3 in losing deals.</span></a>
+      <a class="resource" href="https://koontz-robin.github.io/robin-decks/contract-end-date-sales-training.html?v=20260617-prospect-universe-coverage" target="_blank" rel="noopener"><strong>Rev.io: Contract End Date Sales Training</strong><span>Companion training for using renewal timing as the reason to persist.</span></a>
+    </div>
+  </div>
+</section>
+
+<footer>Rev.io Sales Training - Professional Persistence - Property Shield black and gold palette - June 2026</footer>
+</body>
+</html>
