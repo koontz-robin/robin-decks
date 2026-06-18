@@ -114,6 +114,7 @@ Repo: `git@github.com:koontz-robin/robin-decks.git`
 | Name | File | URL | Notes |
 |---|---|---|---|
 | Contract End Date Sales Training | contract-end-date-sales-training.html | https://koontz-robin.github.io/robin-decks/contract-end-date-sales-training.html?v=20260617-prospect-universe-coverage | Rev.io sales training deck on contract-end-date discovery, closed-lost trends, prospect universe coverage, renewal cohorts, outreach timeline, and engagement strategy |
+| Sales Persistence Training | sales-persistence-training.html | https://koontz-robin.github.io/robin-decks/sales-persistence-training.html?v=20260618-property-shield | Rev.io sales training deck on professional persistence, cold outreach touch benchmarks, cadence design, scripts, and manager inspection using the Property Shield black and gold palette |
 | Tigerpaw Web Migration Weekly Template | tigerpaw-web-migration-weekly-template-branded.xlsx | https://koontz-robin.github.io/robin-decks/tigerpaw-web-migration-weekly-template-branded.xlsx | Editable weekly Excel forecast template |
 | Beacon | beacon.html | https://koontz-robin.github.io/robin-decks/beacon.html | |
 | Beacon Rubric | beacon-rubric.html | https://koontz-robin.github.io/robin-decks/beacon-rubric.html | |
