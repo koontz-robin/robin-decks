@@ -1,6 +1,6 @@
 # DECKS-LIBRARY.md — Robin's Deck & Dashboard Library
 
-Last updated: 2026-06-08
+Last updated: 2026-06-18
 GitHub Pages base: `https://koontz-robin.github.io/robin-decks/`
 Repo: `git@github.com:koontz-robin/robin-decks.git`
 
@@ -27,7 +27,7 @@ Repo: `git@github.com:koontz-robin/robin-decks.git`
 | PSA Target Tracker | psa-target-tracker.html | https://koontz-robin.github.io/robin-decks/psa-target-tracker.html | On demand |
 | Rep Coaching Dashboard | rep-coaching-dashboard.html | https://koontz-robin.github.io/robin-decks/rep-coaching-dashboard.html | On demand |
 | SDR Efficiency Dashboard | sdr-efficiency.html | https://koontz-robin.github.io/robin-decks/sdr-efficiency.html | On demand |
-| CBR Dashboard | cbr-dashboard.html | https://koontz-robin.github.io/robin-decks/cbr-dashboard.html | On demand |
+| CBR Dashboard | cbr-dashboard.html | https://koontz-robin.github.io/robin-decks/cbr-dashboard.html | Refreshed 2026-06-18; on demand |
 | Competitor Contract End Date Monitor | competitor-contract-enddate-monitor.html | https://koontz-robin.github.io/robin-decks/competitor-contract-enddate-monitor.html | Sales Meeting Coaching Notion contract-timing review |
 | CSA Pipeline Dashboard | csa-pipeline-dashboard.html | https://koontz-robin.github.io/robin-decks/csa-pipeline-dashboard.html | On demand |
 | Monthly Pipeline Dashboard | monthly-pipeline-dashboard.html | https://koontz-robin.github.io/robin-decks/monthly-pipeline-dashboard.html | On demand |
