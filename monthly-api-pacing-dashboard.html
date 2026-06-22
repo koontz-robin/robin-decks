@@ -117,7 +117,14 @@ function valueCell(value,unit,values,index,extra=""){
   return `<td class="num${extra}${trendClass(values,index)}">${fmt(value,unit)}</td>`;
 }
 function detailFeeds(feeds){
-  return [...feeds].sort((a,b)=>(a.id==="closed-won-mrr-by-rep-june-created")-(b.id==="closed-won-mrr-by-rep-june-created"));
+  const bottomOrder=["closed-won-mrr-by-rep-june-created","opps-created-by-rep-nonzero","sdr-influenced-opps-created-by-month"];
+  return [...feeds].sort((a,b)=>{
+    const aIndex=bottomOrder.indexOf(a.id),bIndex=bottomOrder.indexOf(b.id);
+    if(aIndex===-1&&bIndex===-1)return 0;
+    if(aIndex===-1)return -1;
+    if(bIndex===-1)return 1;
+    return aIndex-bIndex;
+  });
 }
 function deltaText(current,previous){
   if(!previous)return "new activity";
