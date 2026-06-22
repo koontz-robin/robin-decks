@@ -21,6 +21,14 @@
 .target-table .attain.watch{color:var(--yellow)}
 .target-table .attain.miss{color:#ff9a9a}
 </style>
+<style>
+.loss-table .loss-value{font-weight:800;color:#d7e2f0}
+.loss-table .loss-pct{color:var(--soft);font-size:10px;margin-left:4px}
+.loss-table .delta{font-weight:900}
+.loss-table .delta.down{color:#43e99a}
+.loss-table .delta.up{color:#ff6b6b}
+.loss-table .delta.flat{color:var(--muted)}
+</style>
 </head>
 <body>
 <main class="shell">
@@ -155,6 +163,29 @@ function closedWonTargetTable(feed,months){
   if(!rows.length)return "";
   return `<div class="target-wrap"><div class="target-title"><h4>Monthly Targets & Attainment</h4><span>Closed Won MRR / target</span></div><table class="target-table"><thead><tr><th>Month</th><th>Product</th><th>Closed Won</th><th>Target</th><th>Attainment</th></tr></thead><tbody>${rows.join("")}</tbody></table></div>`;
 }
+function lossReasonCell(feed,key,value){
+  const total=Number(getMonth(feed,key).actual||0);
+  const pct=total?Math.round((Number(value||0)/total)*100):0;
+  return `<td class="num"><span class="loss-value">${number(value)}</span><span class="loss-pct">(${pct}%)</span></td>`;
+}
+function lossDeltaCell(start,end){
+  const delta=Number(end||0)-Number(start||0);
+  const direction=delta<0?"down":delta>0?"up":"flat";
+  const marker=delta<0?"▼":delta>0?"▲":"—";
+  const value=delta===0?"0":`${delta>0?"+":""}${number(delta)}`;
+  return `<td class="num"><span class="delta ${direction}">${marker} ${value}</span></td>`;
+}
+function lossReasonTable(feed,months){
+  if(feed.id!=="closed-lost-by-loss-reason")return "";
+  const labels=allLabels(feed,months);
+  const monthHeaders=months.map(([,label])=>`<th>${label}</th>`).join("");
+  const startLabel=months[0]?.[1],endLabel=months[months.length-1]?.[1];
+  const rows=labels.map(label=>{
+    const values=seriesFor(feed,label,months);
+    return `<tr><td class="name">${label}</td>${months.map(([key],i)=>lossReasonCell(feed,key,values[i])).join("")}${lossDeltaCell(values[0],values[values.length-1])}</tr>`;
+  }).join("");
+  return `<table class="detail loss-table"><thead><tr><th>Reason</th>${monthHeaders}<th>${startLabel}-${endLabel}</th></tr></thead><tbody>${rows}</tbody></table>`;
+}
 function trendGroups(feeds){
   const feed=id=>feeds.find(item=>item.id===id)||{months:{}};
   const closedWon=feed("closed-won-mrr-by-product"),createdProduct=feed("opps-created-by-product"),createdSource=feed("opps-created-by-marketing-source"),createdRep=feed("opps-created-by-rep-nonzero"),sdr=feed("sdr-influenced-opps-created-by-month"),closedLost=feed("closed-lost-by-loss-reason"),meetings=feed("prospect-meetings-by-rep");
@@ -195,7 +226,8 @@ function render(data){
       const values=seriesFor(feed,label,months),total=values.reduce((a,b)=>a+b,0);
       return `<tr><td class="name">${label}<span>${feed.name}</span></td>${values.map((v,i)=>valueCell(v,feed.unit,values,i)).join("")}<td class="total num">${fmt(total,feed.unit)}</td><td class="spark">${sparkline(values)}</td></tr>`;
     }).join(""):`<tr><td class="name">Rep-level split pending<span>${feed.name}</span></td>${months.map(([key],i)=>valueCell(getMonth(feed,key).actual,feed.unit,months.map(([monthKey])=>Number(getMonth(feed,monthKey).actual||0)),i," muted")).join("")}<td class="total num">${fmt(ytd(feed,months),feed.unit)}</td><td class="spark">${sparkline(months.map(([key])=>Number(getMonth(feed,key).actual||0)))}</td></tr>`;
-    return `<article class="table-panel"><div class="report-title"><div><h3>${feed.name}</h3><span>${feed.source||feed.category||""}</span></div><span>${labels.length?labels.length+" detail rows":"Monthly totals only"}</span></div><table class="detail"><thead><tr><th>Detail</th>${monthHeaders}<th>YTD</th><th>Line Graph</th></tr></thead><tbody>${rows}</tbody></table>${closedWonTargetTable(feed,months)}</article>`;
+    const table=feed.id==="closed-lost-by-loss-reason"?lossReasonTable(feed,months):`<table class="detail"><thead><tr><th>Detail</th>${monthHeaders}<th>YTD</th><th>Line Graph</th></tr></thead><tbody>${rows}</tbody></table>`;
+    return `<article class="table-panel"><div class="report-title"><div><h3>${feed.name}</h3><span>${feed.source||feed.category||""}</span></div><span>${labels.length?labels.length+" detail rows":"Monthly totals only"}</span></div>${table}${closedWonTargetTable(feed,months)}</article>`;
   }).join("");
 }
 async function loadDefault(){try{const res=await fetch("https://raw.githubusercontent.com/koontz-robin/robin-decks/master/monthly-api-pacing-data.json?v=20260622-payments-combined",{cache:"no-store"});if(!res.ok)throw new Error(`HTTP ${res.status}`);render(await res.json())}catch(err){render(FALLBACK_DATA);document.getElementById("stamp").innerHTML=`Fallback data loaded<br>${err.message}`}}
