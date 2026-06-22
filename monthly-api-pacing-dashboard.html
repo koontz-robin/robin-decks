@@ -68,6 +68,9 @@ tbody tr:hover td{background:#171d30}
 .target-sub .attain.good,.loss-table .delta.down{color:var(--cyan)}
 .target-sub .attain.miss,.loss-table .delta.up{color:var(--pink)}
 .loss-table .loss-value{color:#f4f7ff}
+.section-total td{background:#171d30;color:#f5f7ff;font-weight:900;border-bottom-color:rgba(116,103,255,.32)}
+.section-total td:first-child{background:#1b2135;color:#fff}
+.section-total .name span{color:#9aa3cc}
 code{color:var(--cyan)}
 @media(max-width:1120px){.brand-logo{position:static;width:104px;margin:0 0 12px}.actions{margin-top:16px;padding-top:0;justify-content:flex-start}.topbar{display:block;padding-right:0}}
 </style>
@@ -237,6 +240,9 @@ function lossReasonCell(feed,key,value){
   const pct=total?Math.round((Number(value||0)/total)*100):0;
   return `<td class="num"><span class="loss-value">${number(value)}</span><span class="loss-pct">(${pct}%)</span></td>`;
 }
+function lossTotalCell(value){
+  return `<td class="num"><span class="loss-value">${number(value)}</span></td>`;
+}
 function lossDeltaCell(start,end){
   const delta=Number(end||0)-Number(start||0);
   const direction=delta<0?"down":delta>0?"up":"flat";
@@ -249,11 +255,17 @@ function lossReasonTable(feed,months){
   const labels=allLabels(feed,months);
   const monthHeaders=months.map(([,label])=>`<th>${label}</th>`).join("");
   const startLabel=months[0]?.[1],endLabel=months[months.length-1]?.[1];
+  const totals=months.map(([key])=>Number(getMonth(feed,key).actual||0));
+  const totalRow=`<tr class="section-total"><td class="name">Total<span>${feed.name}</span></td>${totals.map(lossTotalCell).join("")}${lossDeltaCell(totals[0],totals[totals.length-1])}</tr>`;
   const rows=labels.map(label=>{
     const values=seriesFor(feed,label,months);
     return `<tr><td class="name">${label}</td>${months.map(([key],i)=>lossReasonCell(feed,key,values[i])).join("")}${lossDeltaCell(values[0],values[values.length-1])}</tr>`;
   }).join("");
-  return `<table class="detail loss-table"><thead><tr><th>Reason</th>${monthHeaders}<th>${startLabel}-${endLabel}</th></tr></thead><tbody>${rows}</tbody></table>`;
+  return `<table class="detail loss-table"><thead><tr><th>Reason</th>${monthHeaders}<th>${startLabel}-${endLabel}</th></tr></thead><tbody>${totalRow}${rows}</tbody></table>`;
+}
+function sectionTotalRow(feed,months){
+  const values=months.map(([key])=>Number(getMonth(feed,key).actual||0));
+  return `<tr class="section-total"><td class="name">Total<span>${feed.name}</span></td>${values.map((v,i)=>valueCell(v,feed.unit,values,i)).join("")}<td class="total num">${fmt(weightedFeedYtd(feed,months),feed.unit)}</td><td class="spark">${sparkline(values)}</td></tr>`;
 }
 function trendGroups(feeds){
   const feed=id=>feeds.find(item=>item.id===id)||{months:{}};
@@ -291,6 +303,7 @@ function render(data){
   }).join("");
   document.getElementById("detailTables").innerHTML=detailFeeds(feeds).map(feed=>{
     const labels=allLabels(feed,months);
+    const totalRow=sectionTotalRow(feed,months);
     const rows=labels.length?labels.map(label=>{
       const values=seriesFor(feed,label,months),total=values.reduce((a,b)=>a+b,0);
       const cells=feed.id==="closed-won-mrr-by-product"?months.map(([key],i)=>bookingCell(feed,label,key,values[i],values,i)).join(""):values.map((v,i)=>valueCell(v,feed.unit,values,i)).join("");
@@ -298,7 +311,7 @@ function render(data){
       const totalCell=feed.id==="closed-won-mrr-by-product"?bookingTotalCell(feed,label,months,values):`<td class="total num">${fmt(ytdValue,feed.unit)}</td>`;
       return `<tr><td class="name">${label}<span>${feed.name}</span></td>${cells}${totalCell}<td class="spark">${sparkline(values)}</td></tr>`;
     }).join(""):`<tr><td class="name">Rep-level split pending<span>${feed.name}</span></td>${months.map(([key],i)=>valueCell(getMonth(feed,key).actual,feed.unit,months.map(([monthKey])=>Number(getMonth(feed,monthKey).actual||0)),i," muted")).join("")}<td class="total num">${fmt(weightedFeedYtd(feed,months),feed.unit)}</td><td class="spark">${sparkline(months.map(([key])=>Number(getMonth(feed,key).actual||0)))}</td></tr>`;
-    const table=feed.id==="closed-lost-by-loss-reason"?lossReasonTable(feed,months):`<table class="detail"><thead><tr><th>Detail</th>${monthHeaders}<th>YTD</th><th>Line Graph</th></tr></thead><tbody>${rows}</tbody></table>`;
+    const table=feed.id==="closed-lost-by-loss-reason"?lossReasonTable(feed,months):`<table class="detail"><thead><tr><th>Detail</th>${monthHeaders}<th>YTD</th><th>Line Graph</th></tr></thead><tbody>${totalRow}${rows}</tbody></table>`;
     return `<article class="table-panel"><div class="report-title"><div><h3>${feed.name}</h3><span>${feed.source||feed.category||""}</span></div><span>${labels.length?labels.length+" detail rows":"Monthly totals only"}</span></div>${table}</article>`;
   }).join("");
 }
