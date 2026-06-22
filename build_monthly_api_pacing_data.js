@@ -114,6 +114,8 @@ function setMonth(feed, monthIndex, actual, breakdown, options = {}) {
     notes: options.notes,
     wins: options.wins,
     total: options.total,
+    amount: options.amount,
+    count: options.count,
     breakdown: breakdown || []
   };
 }
@@ -269,6 +271,14 @@ const feeds = [
     source: "Salesforce closed-won opportunities by CloseDate / nonzero opportunities by CreatedDate"
   }),
   feed({
+    id: "average-deal-size-by-product",
+    name: "Average Deal Size by Product",
+    category: "Closed Won",
+    metric: "Average Deal Size",
+    unit: "currency",
+    source: "Salesforce closed-won opportunities by CloseDate; excludes blank or $0 Amount"
+  }),
+  feed({
     id: "opps-created-by-marketing-source",
     name: "Opportunities Created by Marketing Source",
     category: "Pipeline Creation",
@@ -377,13 +387,34 @@ for (let index = 0; index < MONTHS.length; index++) {
     notes: index === 5 ? "Calendar close rate: closed-won opportunities in the month divided by opportunities created in the month with Amount > 0." : undefined
   });
 
+  const averageDealSizeByProduct = {};
+  for (const row of wonRows.filter(row => Number(row.Amount || 0) > 0)) {
+    const product = normalizeProduct(row.Product_Type__c);
+    if (!averageDealSizeByProduct[product]) averageDealSizeByProduct[product] = { label: product, amount: 0, count: 0 };
+    averageDealSizeByProduct[product].amount += Number(row.Amount || 0);
+    averageDealSizeByProduct[product].count += 1;
+  }
+  const averageDealSizeBreakdown = Object.values(averageDealSizeByProduct)
+    .filter(item => item.count > 0)
+    .map(item => ({ ...item, value: item.amount / item.count }))
+    .sort((a, b) => b.value - a.value || b.count - a.count || a.label.localeCompare(b.label));
+  const averageDealSizeAmount = averageDealSizeBreakdown.reduce((sum, item) => sum + item.amount, 0);
+  const averageDealSizeCount = averageDealSizeBreakdown.reduce((sum, item) => sum + item.count, 0);
+  setMonth(feeds[4], index, averageDealSizeCount ? averageDealSizeAmount / averageDealSizeCount : 0, averageDealSizeBreakdown, {
+    status,
+    reports: averageDealSizeCount ? 1 : 0,
+    amount: averageDealSizeAmount,
+    count: averageDealSizeCount,
+    notes: index === 5 ? "Average uses Closed Won opportunities with Amount > 0 and a populated Amount." : undefined
+  });
+
   const bySource = {};
   for (const row of createdRows) addBreakdown(bySource, sourceName(row), 1);
-  setMonth(feeds[4], index, Object.values(bySource).reduce((sum, value) => sum + value, 0), topBreakdown(bySource), { status, reports: createdRows.length ? 1 : 0 });
+  setMonth(feeds[5], index, Object.values(bySource).reduce((sum, value) => sum + value, 0), topBreakdown(bySource), { status, reports: createdRows.length ? 1 : 0 });
 
   const byRep = {};
   for (const row of createdRowsWithAmount) addBreakdown(byRep, row.Owner, 1);
-  setMonth(feeds[5], index, Object.values(byRep).reduce((sum, value) => sum + value, 0), topBreakdown(byRep, 15), {
+  setMonth(feeds[6], index, Object.values(byRep).reduce((sum, value) => sum + value, 0), topBreakdown(byRep, 15), {
     status,
     reports: Object.keys(byRep).length ? 1 : 0,
     notes: index === 5 ? "Filtered to opportunities with Amount > 0, per Ryan's requirement." : undefined
@@ -392,7 +423,7 @@ for (let index = 0; index < MONTHS.length; index++) {
   const sdrRows = sdrInfluencedOpps.filter(row => monthKey(row.CreatedDate) === ym);
   const bySdr = {};
   for (const row of sdrRows) addBreakdown(bySdr, row.SDR_Influence__c, 1);
-  setMonth(feeds[6], index, sdrRows.length, topBreakdown(bySdr, 20), {
+  setMonth(feeds[7], index, sdrRows.length, topBreakdown(bySdr, 20), {
     status,
     reports: Object.keys(bySdr).length ? 1 : 0,
     notes: index === 5 ? "Counts opportunities created in the month with SDR_Influence__c populated and not None." : undefined
@@ -404,7 +435,7 @@ for (let index = 0; index < MONTHS.length; index++) {
     const reason = row.Loss_Reason__c || "Unknown";
     if (!EXCLUDED_CLOSED_LOST_REASONS.has(reason)) addBreakdown(byReason, reason, 1);
   }
-  setMonth(feeds[7], index, Object.values(byReason).reduce((sum, value) => sum + value, 0), topBreakdown(byReason), { status, reports: Object.keys(byReason).length ? 1 : 0 });
+  setMonth(feeds[8], index, Object.values(byReason).reduce((sum, value) => sum + value, 0), topBreakdown(byReason), { status, reports: Object.keys(byReason).length ? 1 : 0 });
 
   const meetingRows = prospectMeetings.filter(row => monthKey(row.ActivityDate) === ym);
   const byMeetingRep = {};
@@ -412,7 +443,7 @@ for (let index = 0; index < MONTHS.length; index++) {
     const owner = normalizeName(row.Owner?.Name);
     if (AE_CAPACITY_REPS.includes(owner)) addBreakdown(byMeetingRep, owner, 1);
   }
-  setMonth(feeds[8], index, Object.values(byMeetingRep).reduce((sum, value) => sum + value, 0), topBreakdown(byMeetingRep, 20), {
+  setMonth(feeds[9], index, Object.values(byMeetingRep).reduce((sum, value) => sum + value, 0), topBreakdown(byMeetingRep, 20), {
     status,
     reports: Object.keys(byMeetingRep).length ? 1 : 0,
     notes: index === 5 ? "Prospect meetings use the AE capacity dashboard ruleset and seven-AE roster." : undefined

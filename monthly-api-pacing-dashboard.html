@@ -135,7 +135,17 @@ function visibleMonths(data){
 }
 const ytd=(feed,months)=>months.reduce((sum,[key])=>sum+Number(getMonth(feed,key).actual||0),0);
 function winRate(wins,total){return total?wins/total*100:0}
+function averageDealSize(amount,count){return count?amount/count:0}
 function weightedFeedYtd(feed,months){
+  if(feed.id==="average-deal-size-by-product"){
+    const totals=months.reduce((memo,[key])=>{
+      const month=getMonth(feed,key);
+      memo.amount+=Number(month.amount||0);
+      memo.count+=Number(month.count||0);
+      return memo;
+    },{amount:0,count:0});
+    return averageDealSize(totals.amount,totals.count);
+  }
   if(feed.id!=="win-rate-by-product")return ytd(feed,months);
   const totals=months.reduce((memo,[key])=>{
     const month=getMonth(feed,key);
@@ -146,6 +156,15 @@ function weightedFeedYtd(feed,months){
   return winRate(totals.wins,totals.total);
 }
 function weightedLabelYtd(feed,label,months){
+  if(feed.id==="average-deal-size-by-product"){
+    const totals=months.reduce((memo,[key])=>{
+      const item=(getMonth(feed,key).breakdown||[]).find(row=>row.label===label);
+      memo.amount+=Number(item?.amount||0);
+      memo.count+=Number(item?.count||0);
+      return memo;
+    },{amount:0,count:0});
+    return averageDealSize(totals.amount,totals.count);
+  }
   const totals=months.reduce((memo,[key])=>{
     const item=(getMonth(feed,key).breakdown||[]).find(row=>row.label===label);
     memo.wins+=Number(item?.wins||0);
@@ -302,7 +321,7 @@ function render(data){
     const rows=labels.length?labels.map(label=>{
       const values=seriesFor(feed,label,months),total=values.reduce((a,b)=>a+b,0);
       const cells=feed.id==="closed-won-mrr-by-product"?months.map(([key],i)=>bookingCell(feed,label,key,values[i],values,i)).join(""):values.map((v,i)=>valueCell(v,feed.unit,values,i)).join("");
-      const ytdValue=feed.id==="win-rate-by-product"?weightedLabelYtd(feed,label,months):total;
+      const ytdValue=(feed.id==="win-rate-by-product"||feed.id==="average-deal-size-by-product")?weightedLabelYtd(feed,label,months):total;
       const totalCell=feed.id==="closed-won-mrr-by-product"?bookingTotalCell(feed,label,months,values):`<td class="total num">${fmt(ytdValue,feed.unit)}</td>`;
       return `<tr><td class="name">${label}<span>${feed.name}</span></td>${cells}${totalCell}<td class="spark">${sparkline(values)}</td></tr>`;
     }).join(""):`<tr><td class="name">Rep-level split pending<span>${feed.name}</span></td>${months.map(([key],i)=>valueCell(getMonth(feed,key).actual,feed.unit,months.map(([monthKey])=>Number(getMonth(feed,monthKey).actual||0)),i," muted")).join("")}<td class="total num">${fmt(weightedFeedYtd(feed,months),feed.unit)}</td><td class="spark">${sparkline(months.map(([key])=>Number(getMonth(feed,key).actual||0)))}</td></tr>`;
@@ -310,7 +329,7 @@ function render(data){
     return `<article class="table-panel"><div class="report-title"><div><h3>${feed.name}</h3><span>${feed.source||feed.category||""}</span></div><span>${labels.length?labels.length+" detail rows":"Monthly totals only"}</span></div>${table}</article>`;
   }).join("");
 }
-async function loadDefault(){try{const res=await fetch("https://raw.githubusercontent.com/koontz-robin/robin-decks/master/monthly-api-pacing-data.json?v=20260622-calendar-close-rate",{cache:"no-store"});if(!res.ok)throw new Error(`HTTP ${res.status}`);render(await res.json())}catch(err){render(FALLBACK_DATA);document.getElementById("stamp").innerHTML=`Fallback data loaded<br>${err.message}`}}
+async function loadDefault(){try{const res=await fetch("https://raw.githubusercontent.com/koontz-robin/robin-decks/master/monthly-api-pacing-data.json?v=20260622-avg-deal-size",{cache:"no-store"});if(!res.ok)throw new Error(`HTTP ${res.status}`);render(await res.json())}catch(err){render(FALLBACK_DATA);document.getElementById("stamp").innerHTML=`Fallback data loaded<br>${err.message}`}}
 loadDefault();
 </script>
 </body>
