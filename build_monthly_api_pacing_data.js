@@ -59,6 +59,7 @@ function normalizeName(name) {
 function normalizeProduct(value) {
   const product = value || "Other / Not Set";
   if (product === "Billing" || product === "Billing Add-on" || product === "Billing / Odin" || product === "Odin") return "Billing";
+  if (product === "Payments AR" || product === "Payments AP" || product === "Payments") return "Payments";
   if (product === "PSA") return "PSA 2.0";
   return product;
 }
