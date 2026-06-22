@@ -25,11 +25,11 @@
     </div>
   </header>
   <section>
-    <div class="section-head"><div><h2>Report Summary</h2><p>Each report as a row with Jan-Dec values and a trend line.</p></div></div>
+    <div class="section-head"><div><h2>Report Summary</h2><p>Each report as a row with completed and current-month values plus a trend line.</p></div></div>
     <div class="table-panel"><table class="summary"><thead id="summaryHead"></thead><tbody id="summaryBody"></tbody></table></div>
   </section>
   <section>
-    <div class="section-head"><div><h2>Report Breakdowns</h2><p>Each product, source, rep, or loss reason is a row. The sparkline shows the full-year monthly trend.</p></div></div>
+    <div class="section-head"><div><h2>Report Breakdowns</h2><p>Each product, source, rep, or loss reason is a row. The sparkline shows the visible monthly trend.</p></div></div>
     <div id="detailTables"></div>
     <div class="note">Data source: <code>monthly-api-pacing-data.json</code>. Salesforce-backed rows refresh through the dashboard data builder.</div>
   </section>
@@ -41,22 +41,29 @@ const currency=n=>new Intl.NumberFormat("en-US",{style:"currency",currency:"USD"
 const number=n=>new Intl.NumberFormat("en-US",{maximumFractionDigits:0}).format(n||0);
 const fmt=(v,u)=>u==="currency"?currency(v):u==="percent"?`${Math.round(v||0)}%`:number(v);
 const getMonth=(feed,key)=>feed.months&&feed.months[key]||{actual:0,target:0,status:"future",reports:0,breakdown:[]};
-const ytd=feed=>MONTHS.reduce((sum,[key])=>sum+Number(getMonth(feed,key).actual||0),0);
-function seriesFor(feed,label){
-  return MONTHS.map(([key])=>{
+function visibleMonths(data){
+  const year=Number(data.year)||new Date().getFullYear();
+  const now=new Date();
+  if(year<now.getFullYear())return MONTHS;
+  if(year>now.getFullYear())return [];
+  return MONTHS.slice(0,now.getMonth()+1);
+}
+const ytd=(feed,months)=>months.reduce((sum,[key])=>sum+Number(getMonth(feed,key).actual||0),0);
+function seriesFor(feed,label,months){
+  return months.map(([key])=>{
     const item=(getMonth(feed,key).breakdown||[]).find(row=>row.label===label);
     return item?Number(item.value||0):0;
   });
 }
-function allLabels(feed){
+function allLabels(feed,months){
   const seen=new Set();
-  for(const [key] of MONTHS) for(const item of getMonth(feed,key).breakdown||[]) if(item.value) seen.add(item.label);
+  for(const [key] of months) for(const item of getMonth(feed,key).breakdown||[]) if(item.value) seen.add(item.label);
   let labels=[...seen];
   if(feed.id==="opps-created-by-rep-nonzero"){
     const juneActive=new Set((getMonth(feed,"jun").breakdown||[]).filter(item=>Number(item.value||0)>0).map(item=>item.label));
     labels=labels.filter(label=>juneActive.has(label));
   }
-  return labels.sort((a,b)=>seriesFor(feed,b).reduce((x,y)=>x+y,0)-seriesFor(feed,a).reduce((x,y)=>x+y,0)||a.localeCompare(b));
+  return labels.sort((a,b)=>seriesFor(feed,b,months).reduce((x,y)=>x+y,0)-seriesFor(feed,a,months).reduce((x,y)=>x+y,0)||a.localeCompare(b));
 }
 function sparkline(values){
   const w=140,h=34,p=3,max=Math.max(...values,1),step=(w-p*2)/(values.length-1);
@@ -81,22 +88,24 @@ function valueCell(value,unit,values,index,extra=""){
 }
 function render(data){
   const feeds=data.feeds||[];
+  const months=visibleMonths(data);
+  const latestMonth=months[months.length-1]?.[0];
   document.getElementById("title").textContent=data.title||"Sales KPIs - Monthly Pacing Dashboard";
   document.getElementById("subtitle").textContent=`${data.summaryLabel||"Reports"} by month for ${data.year||"the year"}, with detail rows and line graphs.`;
   document.getElementById("stamp").innerHTML=`As of ${data.asOf||"not set"}<br>${feeds.length} reports tracked`;
-  const monthHeaders=MONTHS.map(([,label])=>`<th>${label}</th>`).join("");
+  const monthHeaders=months.map(([,label])=>`<th>${label}</th>`).join("");
   document.getElementById("summaryHead").innerHTML=`<tr><th>Report</th>${monthHeaders}<th>YTD</th><th>Trend</th><th>Status</th></tr>`;
   document.getElementById("summaryBody").innerHTML=feeds.map(feed=>{
-    const values=MONTHS.map(([key])=>Number(getMonth(feed,key).actual||0));
-    const status=getMonth(feed,"jun").status||"missing";
+    const values=months.map(([key])=>Number(getMonth(feed,key).actual||0));
+    const status=latestMonth?getMonth(feed,latestMonth).status||"missing":"missing";
     return `<tr><td class="name">${feed.name}<span>${feed.category||""} · ${feed.source||""}</span></td>${values.map((v,i)=>valueCell(v,feed.unit,values,i)).join("")}<td class="total num">${fmt(values.reduce((a,b)=>a+b,0),feed.unit)}</td><td class="spark">${sparkline(values)}</td><td><span class="pill ${status}">${status}</span></td></tr>`;
   }).join("");
   document.getElementById("detailTables").innerHTML=feeds.map(feed=>{
-    const labels=allLabels(feed);
+    const labels=allLabels(feed,months);
     const rows=labels.length?labels.map(label=>{
-      const values=seriesFor(feed,label),total=values.reduce((a,b)=>a+b,0);
+      const values=seriesFor(feed,label,months),total=values.reduce((a,b)=>a+b,0);
       return `<tr><td class="name">${label}<span>${feed.name}</span></td>${values.map((v,i)=>valueCell(v,feed.unit,values,i)).join("")}<td class="total num">${fmt(total,feed.unit)}</td><td class="spark">${sparkline(values)}</td></tr>`;
-    }).join(""):`<tr><td class="name">Rep-level split pending<span>${feed.name}</span></td>${MONTHS.map(([key],i)=>valueCell(getMonth(feed,key).actual,feed.unit,MONTHS.map(([monthKey])=>Number(getMonth(feed,monthKey).actual||0)),i," muted")).join("")}<td class="total num">${fmt(ytd(feed),feed.unit)}</td><td class="spark">${sparkline(MONTHS.map(([key])=>Number(getMonth(feed,key).actual||0)))}</td></tr>`;
+    }).join(""):`<tr><td class="name">Rep-level split pending<span>${feed.name}</span></td>${months.map(([key],i)=>valueCell(getMonth(feed,key).actual,feed.unit,months.map(([monthKey])=>Number(getMonth(feed,monthKey).actual||0)),i," muted")).join("")}<td class="total num">${fmt(ytd(feed,months),feed.unit)}</td><td class="spark">${sparkline(months.map(([key])=>Number(getMonth(feed,key).actual||0)))}</td></tr>`;
     return `<article class="table-panel"><div class="report-title"><div><h3>${feed.name}</h3><span>${feed.source||feed.category||""}</span></div><span>${labels.length?labels.length+" detail rows":"Monthly totals only"}</span></div><table class="detail"><thead><tr><th>Detail</th>${monthHeaders}<th>YTD</th><th>Line Graph</th></tr></thead><tbody>${rows}</tbody></table></article>`;
   }).join("");
 }
