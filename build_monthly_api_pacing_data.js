@@ -343,12 +343,17 @@ for (let index = 0; index < MONTHS.length; index++) {
   });
 
   const createdRows = created.filter(row => monthKey(row.CreatedDate) === ym);
+  const createdRowsWithAmount = createdRows.filter(row => Number(row.Amount || 0) > 0);
   const createdByProduct = {};
-  for (const row of createdRows) addBreakdown(createdByProduct, normalizeProduct(row.Product_Type__c), 1);
-  setMonth(feeds[2], index, createdRows.length, topBreakdown(createdByProduct), { status, reports: createdRows.length ? 1 : 0 });
+  for (const row of createdRowsWithAmount) addBreakdown(createdByProduct, normalizeProduct(row.Product_Type__c), 1);
+  setMonth(feeds[2], index, createdRowsWithAmount.length, topBreakdown(createdByProduct), {
+    status,
+    reports: createdRowsWithAmount.length ? 1 : 0,
+    notes: index === 5 ? "Filtered to opportunities with Amount > 0, per Ryan's requirement." : undefined
+  });
 
   const winRateByProduct = {};
-  for (const row of createdRows.filter(row => Number(row.Amount || 0) > 0)) {
+  for (const row of createdRowsWithAmount) {
     const product = normalizeProduct(row.Product_Type__c);
     if (!winRateByProduct[product]) winRateByProduct[product] = { label: product, wins: 0, total: 0 };
     winRateByProduct[product].total += 1;
@@ -373,7 +378,7 @@ for (let index = 0; index < MONTHS.length; index++) {
   setMonth(feeds[4], index, Object.values(bySource).reduce((sum, value) => sum + value, 0), topBreakdown(bySource), { status, reports: createdRows.length ? 1 : 0 });
 
   const byRep = {};
-  for (const row of createdRows.filter(row => Number(row.Amount || 0) > 0)) addBreakdown(byRep, row.Owner, 1);
+  for (const row of createdRowsWithAmount) addBreakdown(byRep, row.Owner, 1);
   setMonth(feeds[5], index, Object.values(byRep).reduce((sum, value) => sum + value, 0), topBreakdown(byRep, 15), {
     status,
     reports: Object.keys(byRep).length ? 1 : 0,
