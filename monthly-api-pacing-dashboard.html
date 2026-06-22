@@ -86,6 +86,9 @@ function trendClass(values,index){
 function valueCell(value,unit,values,index,extra=""){
   return `<td class="num${extra}${trendClass(values,index)}">${fmt(value,unit)}</td>`;
 }
+function detailFeeds(feeds){
+  return [...feeds].sort((a,b)=>(a.id==="closed-won-mrr-by-rep-june-created")-(b.id==="closed-won-mrr-by-rep-june-created"));
+}
 function render(data){
   const feeds=data.feeds||[];
   const months=visibleMonths(data);
@@ -100,7 +103,7 @@ function render(data){
     const status=latestMonth?getMonth(feed,latestMonth).status||"missing":"missing";
     return `<tr><td class="name">${feed.name}<span>${feed.category||""} · ${feed.source||""}</span></td>${values.map((v,i)=>valueCell(v,feed.unit,values,i)).join("")}<td class="total num">${fmt(values.reduce((a,b)=>a+b,0),feed.unit)}</td><td class="spark">${sparkline(values)}</td><td><span class="pill ${status}">${status}</span></td></tr>`;
   }).join("");
-  document.getElementById("detailTables").innerHTML=feeds.map(feed=>{
+  document.getElementById("detailTables").innerHTML=detailFeeds(feeds).map(feed=>{
     const labels=allLabels(feed,months);
     const rows=labels.length?labels.map(label=>{
       const values=seriesFor(feed,label,months),total=values.reduce((a,b)=>a+b,0);
