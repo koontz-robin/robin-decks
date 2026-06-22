@@ -177,17 +177,59 @@ async function fetchSdrInfluencedOpportunities() {
   return sfQuery(base, token, query);
 }
 
-const deck = readJson("sf_june_deck_data.json", {});
-const pace = readJson("sf_2026_pipeline_pace.json", {});
-const created = deck.created_2026_jan_jun || [];
-const won = deck.closed_won_2026_jan_jun || [];
-const lost = deck.closed_lost_2026_jan_jun || [];
-const juneCreatedReps = new Set(
-  created
-    .filter(row => monthKey(row.CreatedDate) === "2026-06")
-    .map(row => row.Owner)
-    .filter(Boolean)
-);
+async function fetchOpportunityRows() {
+  const { base, token } = await sfAuth();
+  const fields = `
+    Id, Name, Amount, StageName, Product_Type__c, Probability,
+    CloseDate, CreatedDate, Lead_Direction__c, Marketing_Source__c,
+    Marketing_Sub_source__c, Loss_Reason__c, Account.Name, Owner.Name
+  `;
+  const [created, won, lost] = await Promise.all([
+    sfQuery(base, token, `
+      SELECT ${fields}
+      FROM Opportunity
+      WHERE CreatedDate >= 2026-01-01T00:00:00Z
+        AND CreatedDate < 2026-07-01T00:00:00Z
+        AND IsDeleted = false
+    `),
+    sfQuery(base, token, `
+      SELECT ${fields}
+      FROM Opportunity
+      WHERE CloseDate >= 2026-01-01
+        AND CloseDate <= 2026-06-30
+        AND StageName = 'Closed Won'
+        AND IsDeleted = false
+    `),
+    sfQuery(base, token, `
+      SELECT ${fields}
+      FROM Opportunity
+      WHERE CloseDate >= 2026-01-01
+        AND CloseDate <= 2026-06-30
+        AND StageName = 'Closed Lost'
+        AND IsDeleted = false
+    `)
+  ]);
+  return { created: created.map(flattenOpportunity), won: won.map(flattenOpportunity), lost: lost.map(flattenOpportunity) };
+}
+
+function flattenOpportunity(row) {
+  return {
+    Id: row.Id,
+    Name: row.Name || "",
+    Amount: Number(row.Amount || 0),
+    StageName: row.StageName || "",
+    Product_Type__c: row.Product_Type__c || "",
+    Probability: row.Probability,
+    CloseDate: row.CloseDate || "",
+    CreatedDate: row.CreatedDate || "",
+    Lead_Direction__c: row.Lead_Direction__c || "",
+    Marketing_Source__c: row.Marketing_Source__c || "",
+    Marketing_Sub_source__c: row.Marketing_Sub_source__c || "",
+    Loss_Reason__c: row.Loss_Reason__c || "",
+    Account: row.Account?.Name || "",
+    Owner: normalizeName(row.Owner?.Name || "")
+  };
+}
 
 const feeds = [
   feed({
@@ -261,6 +303,13 @@ const feeds = [
 ];
 
 async function main() {
+const { created, won, lost } = await fetchOpportunityRows();
+const juneCreatedReps = new Set(
+  created
+    .filter(row => monthKey(row.CreatedDate) === "2026-06")
+    .map(row => row.Owner)
+    .filter(Boolean)
+);
 const prospectMeetings = await fetchProspectMeetings();
 const sdrInfluencedOpps = await fetchSdrInfluencedOpportunities();
 
@@ -332,7 +381,7 @@ for (let index = 0; index < MONTHS.length; index++) {
 const output = {
   title: "Sales KPIs - Monthly Pacing Dashboard",
   year: 2026,
-  asOf: "2026-06-15",
+  asOf: new Date().toISOString().slice(0, 10),
   summaryLabel: "Ryan's starting report set",
   feeds
 };
