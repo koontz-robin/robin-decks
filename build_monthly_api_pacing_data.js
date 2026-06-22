@@ -262,11 +262,11 @@ const feeds = [
   }),
   feed({
     id: "win-rate-by-product",
-    name: "Win Rate by Product",
+    name: "Calendar Close Rate by Product",
     category: "Pipeline Creation",
-    metric: "Win Rate",
+    metric: "Calendar Close Rate",
     unit: "percent",
-    source: "Salesforce opportunities by CreatedDate; excludes Amount = 0"
+    source: "Salesforce closed-won opportunities by CloseDate / nonzero opportunities by CreatedDate"
   }),
   feed({
     id: "opps-created-by-marketing-source",
@@ -357,7 +357,11 @@ for (let index = 0; index < MONTHS.length; index++) {
     const product = normalizeProduct(row.Product_Type__c);
     if (!winRateByProduct[product]) winRateByProduct[product] = { label: product, wins: 0, total: 0 };
     winRateByProduct[product].total += 1;
-    if (row.StageName === "Closed Won") winRateByProduct[product].wins += 1;
+  }
+  for (const row of wonRows.filter(row => Number(row.Amount || 0) > 0)) {
+    const product = normalizeProduct(row.Product_Type__c);
+    if (!winRateByProduct[product]) winRateByProduct[product] = { label: product, wins: 0, total: 0 };
+    winRateByProduct[product].wins += 1;
   }
   const winRateBreakdown = Object.values(winRateByProduct)
     .filter(item => item.total > 0)
@@ -370,7 +374,7 @@ for (let index = 0; index < MONTHS.length; index++) {
     reports: winRateTotal ? 1 : 0,
     wins: winRateWins,
     total: winRateTotal,
-    notes: index === 5 ? "Win rate excludes opportunities with Amount = 0." : undefined
+    notes: index === 5 ? "Calendar close rate: closed-won opportunities in the month divided by opportunities created in the month with Amount > 0." : undefined
   });
 
   const bySource = {};
