@@ -75,7 +75,8 @@ const PRODUCT_TARGETS={
 };
 const currency=n=>new Intl.NumberFormat("en-US",{style:"currency",currency:"USD",maximumFractionDigits:0}).format(n||0);
 const number=n=>new Intl.NumberFormat("en-US",{maximumFractionDigits:0}).format(n||0);
-const fmt=(v,u)=>u==="currency"?currency(v):u==="percent"?`${Math.round(v||0)}%`:number(v);
+const percent=n=>`${Number(n||0).toFixed(1)}%`;
+const fmt=(v,u)=>u==="currency"?currency(v):u==="percent"?percent(v):number(v);
 const getMonth=(feed,key)=>feed.months&&feed.months[key]||{actual:0,target:0,status:"future",reports:0,breakdown:[]};
 function visibleMonths(data){
   const year=Number(data.year)||new Date().getFullYear();
@@ -85,6 +86,26 @@ function visibleMonths(data){
   return MONTHS.slice(0,now.getMonth()+1);
 }
 const ytd=(feed,months)=>months.reduce((sum,[key])=>sum+Number(getMonth(feed,key).actual||0),0);
+function winRate(wins,total){return total?wins/total*100:0}
+function weightedFeedYtd(feed,months){
+  if(feed.id!=="win-rate-by-product")return ytd(feed,months);
+  const totals=months.reduce((memo,[key])=>{
+    const month=getMonth(feed,key);
+    memo.wins+=Number(month.wins||0);
+    memo.total+=Number(month.total||0);
+    return memo;
+  },{wins:0,total:0});
+  return winRate(totals.wins,totals.total);
+}
+function weightedLabelYtd(feed,label,months){
+  const totals=months.reduce((memo,[key])=>{
+    const item=(getMonth(feed,key).breakdown||[]).find(row=>row.label===label);
+    memo.wins+=Number(item?.wins||0);
+    memo.total+=Number(item?.total||0);
+    return memo;
+  },{wins:0,total:0});
+  return winRate(totals.wins,totals.total);
+}
 function seriesFor(feed,label,months){
   return months.map(([key])=>{
     const item=(getMonth(feed,key).breakdown||[]).find(row=>row.label===label);
@@ -93,7 +114,7 @@ function seriesFor(feed,label,months){
 }
 function allLabels(feed,months){
   const seen=new Set();
-  for(const [key] of months) for(const item of getMonth(feed,key).breakdown||[]) if(item.value) seen.add(item.label);
+  for(const [key] of months) for(const item of getMonth(feed,key).breakdown||[]) if(item.value||Number(item.total||0)>0) seen.add(item.label);
   let labels=[...seen];
   if(feed.id==="opps-created-by-rep-nonzero"){
     const juneActive=new Set((getMonth(feed,"jun").breakdown||[]).filter(item=>Number(item.value||0)>0).map(item=>item.label));
@@ -217,21 +238,22 @@ function render(data){
   document.getElementById("summaryBody").innerHTML=feeds.map(feed=>{
     const values=months.map(([key])=>Number(getMonth(feed,key).actual||0));
     const status=latestMonth?getMonth(feed,latestMonth).status||"missing":"missing";
-    return `<tr><td class="name">${feed.name}<span>${feed.category||""} · ${feed.source||""}</span></td>${values.map((v,i)=>valueCell(v,feed.unit,values,i)).join("")}<td class="total num">${fmt(values.reduce((a,b)=>a+b,0),feed.unit)}</td><td class="spark">${sparkline(values)}</td><td><span class="pill ${status}">${status}</span></td></tr>`;
+    return `<tr><td class="name">${feed.name}<span>${feed.category||""} · ${feed.source||""}</span></td>${values.map((v,i)=>valueCell(v,feed.unit,values,i)).join("")}<td class="total num">${fmt(weightedFeedYtd(feed,months),feed.unit)}</td><td class="spark">${sparkline(values)}</td><td><span class="pill ${status}">${status}</span></td></tr>`;
   }).join("");
   document.getElementById("detailTables").innerHTML=detailFeeds(feeds).map(feed=>{
     const labels=allLabels(feed,months);
     const rows=labels.length?labels.map(label=>{
       const values=seriesFor(feed,label,months),total=values.reduce((a,b)=>a+b,0);
       const cells=feed.id==="closed-won-mrr-by-product"?months.map(([key],i)=>bookingCell(feed,label,key,values[i],values,i)).join(""):values.map((v,i)=>valueCell(v,feed.unit,values,i)).join("");
-      const totalCell=feed.id==="closed-won-mrr-by-product"?bookingTotalCell(feed,label,months,values):`<td class="total num">${fmt(total,feed.unit)}</td>`;
+      const ytdValue=feed.id==="win-rate-by-product"?weightedLabelYtd(feed,label,months):total;
+      const totalCell=feed.id==="closed-won-mrr-by-product"?bookingTotalCell(feed,label,months,values):`<td class="total num">${fmt(ytdValue,feed.unit)}</td>`;
       return `<tr><td class="name">${label}<span>${feed.name}</span></td>${cells}${totalCell}<td class="spark">${sparkline(values)}</td></tr>`;
-    }).join(""):`<tr><td class="name">Rep-level split pending<span>${feed.name}</span></td>${months.map(([key],i)=>valueCell(getMonth(feed,key).actual,feed.unit,months.map(([monthKey])=>Number(getMonth(feed,monthKey).actual||0)),i," muted")).join("")}<td class="total num">${fmt(ytd(feed,months),feed.unit)}</td><td class="spark">${sparkline(months.map(([key])=>Number(getMonth(feed,key).actual||0)))}</td></tr>`;
+    }).join(""):`<tr><td class="name">Rep-level split pending<span>${feed.name}</span></td>${months.map(([key],i)=>valueCell(getMonth(feed,key).actual,feed.unit,months.map(([monthKey])=>Number(getMonth(feed,monthKey).actual||0)),i," muted")).join("")}<td class="total num">${fmt(weightedFeedYtd(feed,months),feed.unit)}</td><td class="spark">${sparkline(months.map(([key])=>Number(getMonth(feed,key).actual||0)))}</td></tr>`;
     const table=feed.id==="closed-lost-by-loss-reason"?lossReasonTable(feed,months):`<table class="detail"><thead><tr><th>Detail</th>${monthHeaders}<th>YTD</th><th>Line Graph</th></tr></thead><tbody>${rows}</tbody></table>`;
     return `<article class="table-panel"><div class="report-title"><div><h3>${feed.name}</h3><span>${feed.source||feed.category||""}</span></div><span>${labels.length?labels.length+" detail rows":"Monthly totals only"}</span></div>${table}</article>`;
   }).join("");
 }
-async function loadDefault(){try{const res=await fetch("https://raw.githubusercontent.com/koontz-robin/robin-decks/master/monthly-api-pacing-data.json?v=20260622-billing-odin",{cache:"no-store"});if(!res.ok)throw new Error(`HTTP ${res.status}`);render(await res.json())}catch(err){render(FALLBACK_DATA);document.getElementById("stamp").innerHTML=`Fallback data loaded<br>${err.message}`}}
+async function loadDefault(){try{const res=await fetch("https://raw.githubusercontent.com/koontz-robin/robin-decks/master/monthly-api-pacing-data.json?v=20260622-win-rate-product",{cache:"no-store"});if(!res.ok)throw new Error(`HTTP ${res.status}`);render(await res.json())}catch(err){render(FALLBACK_DATA);document.getElementById("stamp").innerHTML=`Fallback data loaded<br>${err.message}`}}
 document.getElementById("dataFile").addEventListener("change",async event=>{const[file]=event.target.files;if(!file)return;render(JSON.parse(await file.text()))});
 document.getElementById("resetBtn").addEventListener("click",loadDefault);
 loadDefault();
