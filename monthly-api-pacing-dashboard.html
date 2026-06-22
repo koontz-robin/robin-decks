@@ -23,6 +23,54 @@
 .loss-table .delta.up{color:#ff6b6b}
 .loss-table .delta.flat{color:var(--muted)}
 </style>
+<style>
+:root{--bg:#070b14;--panel:#101420;--panel2:#151927;--line:#293047;--text:#f4f7ff;--muted:#8d97bd;--soft:#58617f;--cyan:#2ee6be;--green:#2ee6be;--yellow:#f1c75b;--red:#ff5d74;--violet:#7467ff;--pink:#ff4f87}
+body{background:linear-gradient(90deg,rgba(36,32,84,.42),rgba(6,15,16,.76) 48%,#061011),var(--bg);letter-spacing:0}
+body:before{content:"";position:fixed;inset:0;pointer-events:none;background:linear-gradient(rgba(255,255,255,.018) 1px,transparent 1px),linear-gradient(90deg,rgba(255,255,255,.014) 1px,transparent 1px);background-size:92px 92px;mask-image:linear-gradient(180deg,rgba(0,0,0,.9),rgba(0,0,0,.15));opacity:.5}
+.shell{max-width:1840px;padding:22px 28px 42px}
+.topbar{align-items:flex-start;border-bottom:0;padding:0 144px 18px 0;position:relative}
+.eyebrow,.section-head h2{color:#9aa3cc;font-size:13px;letter-spacing:2.2px}
+h1{font-size:34px;font-weight:900;color:#fff;letter-spacing:0}
+.subhead{color:#8e97bd}
+.actions{align-items:flex-start;gap:12px;padding-top:56px}
+.brand-logo{position:absolute;top:2px;right:0;width:120px;height:auto;display:block;filter:drop-shadow(0 0 18px rgba(116,103,255,.28))}
+.stamp{color:#7f89ad}
+button,.file-label{background:#171c2d;border-color:#2d344d;color:#dce4ff;border-radius:999px}
+button:hover,.file-label:hover{border-color:var(--violet);box-shadow:0 0 0 3px rgba(116,103,255,.16)}
+.trend-panel,.table-panel{background:linear-gradient(180deg,rgba(21,25,39,.96),rgba(16,20,32,.98));border-color:#2a314b;border-radius:10px;box-shadow:0 18px 48px rgba(0,0,0,.34)}
+.trend-panel{border-top-color:var(--violet);box-shadow:0 20px 52px rgba(31,25,83,.35)}
+.trend-panel h2,.report-title h3{color:#fff}
+.trend-group{border-top-color:#2d344d}
+.trend-group.positive h3{color:var(--cyan)}
+.trend-group.negative h3{color:var(--pink)}
+.trend-list{color:#9aa3c4}
+.section-head{margin-top:28px}
+.section-head p,.report-title span,.note{color:#737d9e}
+table{font-size:12px}
+th{background:#151b2d;color:#8d97bd}
+th:first-child{background:#171d30;color:#9aa3ff}
+td{border-bottom-color:rgba(255,255,255,.07);border-left-color:rgba(255,255,255,.045)}
+td:first-child{background:#101420}
+tbody tr:hover td{background:#171d30}
+.name{color:#f6f8ff}
+.name span{color:#697395}
+.total{color:#fff}
+.spark path.line{stroke:var(--violet)}
+.spark path.area{fill:rgba(116,103,255,.13)}
+.spark circle{fill:var(--pink)}
+.trend-up{background:rgba(46,230,190,.12);color:#4ff0ce}
+.trend-down{background:rgba(255,79,135,.14);color:#ff7da5}
+.trend-flat{background:rgba(241,199,91,.12);color:#f5d77d}
+.mtd{background:rgba(116,103,255,.18);color:#aaa2ff}
+.final{background:rgba(46,230,190,.13);color:#53f1cf}
+.future{background:rgba(141,151,189,.12);color:#8d97bd}
+.missing{background:rgba(255,79,135,.12);color:#ff8bad}
+.target-sub .attain.good,.loss-table .delta.down{color:var(--cyan)}
+.target-sub .attain.miss,.loss-table .delta.up{color:var(--pink)}
+.loss-table .loss-value{color:#f4f7ff}
+code{color:var(--cyan)}
+@media(max-width:1120px){.brand-logo{position:static;width:104px;margin:0 0 12px}.actions{margin-top:16px;padding-top:0;justify-content:flex-start}.topbar{display:block;padding-right:0}}
+</style>
 </head>
 <body>
 <main class="shell">
@@ -33,6 +81,7 @@
       <div class="subhead" id="subtitle">Table view of Ryan's report set, broken down by month with row-level trend lines.</div>
     </div>
     <div class="actions">
+      <img class="brand-logo" src="revio-logo-white.png" alt="Rev.io">
       <label class="file-label" for="dataFile">Load JSON</label>
       <input id="dataFile" type="file" accept="application/json,.json">
       <button id="resetBtn" type="button">Reset</button>
