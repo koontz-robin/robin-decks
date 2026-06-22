@@ -24,12 +24,12 @@
 .loss-table .delta.flat{color:var(--muted)}
 </style>
 <style>
-.observations-panel{margin:20px 0 18px;padding:18px 20px;border-top:3px solid var(--cyan);background:linear-gradient(180deg,var(--panel2),var(--panel));border-right:1px solid var(--line);border-bottom:1px solid var(--line);border-left:1px solid var(--line);border-radius:8px;box-shadow:0 18px 42px rgba(0,0,0,.22)}
-.observations-panel h2{margin:0 0 12px;font-size:19px;letter-spacing:0}
-.observations-list{margin:0;padding-left:19px;color:var(--muted);font-size:14px;line-height:1.55}
-.observations-list li+li{margin-top:6px}
+.observations-panel{margin:24px 0 26px;padding:28px 32px;border-top:5px solid var(--cyan);background:linear-gradient(180deg,var(--panel2),var(--panel));border-right:1px solid var(--line);border-bottom:1px solid var(--line);border-left:1px solid var(--line);border-radius:12px;box-shadow:0 22px 58px rgba(0,0,0,.28)}
+.observations-panel h2{margin:0 0 18px;font-size:28px;letter-spacing:0}
+.observations-list{margin:0;padding-left:24px;color:var(--muted);font-size:18px;line-height:1.5}
+.observations-list li+li{margin-top:12px}
 .observations-list strong{color:#fff}
-@media(max-width:680px){.observations-panel{padding:15px}}
+@media(max-width:680px){.observations-panel{padding:20px}.observations-panel h2{font-size:24px}.observations-list{font-size:16px}}
 </style>
 <style>
 :root{--bg:#070b14;--panel:#101420;--panel2:#151927;--line:#293047;--text:#f4f7ff;--muted:#8d97bd;--soft:#58617f;--cyan:#2ee6be;--green:#2ee6be;--yellow:#f1c75b;--red:#ff5d74;--violet:#7467ff;--pink:#ff4f87}
@@ -105,19 +105,6 @@ code{color:var(--cyan)}
       <li><strong>Largest PSA client:</strong> Closed AVIT last week with 95 standard users and $8,500 MRR, our largest PSA client to date.</li>
       <li><strong>CSA expansion:</strong> Expanded the CSA team to help drive the Tigerpaw customer migration initiative.</li>
     </ul>
-  </section>
-  <section class="trend-panel">
-    <h2>Current Trends</h2>
-    <div class="trend-groups">
-      <div class="trend-group positive">
-        <h3>Positive Trends</h3>
-        <ul class="trend-list" id="positiveTrendList"></ul>
-      </div>
-      <div class="trend-group negative">
-        <h3>Negative Trends</h3>
-        <ul class="trend-list" id="negativeTrendList"></ul>
-      </div>
-    </div>
   </section>
   <section>
     <div class="section-head"><div><h2>Report Summary</h2><p>Each report as a row with completed and current-month values plus a trend line.</p></div></div>
@@ -324,9 +311,6 @@ function render(data){
   const latestMonth=months[months.length-1]?.[0];
   document.getElementById("title").textContent="Rev.io Sales KPIs";
   document.getElementById("stamp").innerHTML=`As of ${data.asOf||"not set"}<br>${feeds.length} reports tracked`;
-  const trends=trendGroups(feeds);
-  document.getElementById("positiveTrendList").innerHTML=trends.positive.map(item=>`<li>${item}</li>`).join("");
-  document.getElementById("negativeTrendList").innerHTML=trends.negative.map(item=>`<li>${item}</li>`).join("");
   const monthHeaders=months.map(([,label])=>`<th>${label}</th>`).join("");
   document.getElementById("summaryHead").innerHTML=`<tr><th>Report</th>${monthHeaders}<th>YTD</th><th>Trend</th><th>Status</th></tr>`;
   document.getElementById("summaryBody").innerHTML=feeds.map(feed=>{
