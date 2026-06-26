@@ -1,0 +1,593 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Revii AI | Rev.io</title>
+<style>
+  :root {
+    --bg: #07111f;
+    --panel: #101a2a;
+    --panel-2: #152236;
+    --line: #26374f;
+    --ink: #eef5ff;
+    --muted: #9aacbf;
+    --blue: #1667cc;
+    --green: #6ebe4f;
+    --teal: #2499b6;
+    --orange: #fc6120;
+    --yellow: #f5b64b;
+    --red: #ff6b77;
+    --white: #ffffff;
+  }
+
+  * { box-sizing: border-box; }
+
+  body {
+    margin: 0;
+    min-height: 100vh;
+    font-family: "Inter", "Segoe UI", Arial, sans-serif;
+    color: var(--ink);
+    background:
+      linear-gradient(90deg, rgba(255,255,255,.03) 1px, transparent 1px),
+      linear-gradient(180deg, rgba(255,255,255,.03) 1px, transparent 1px),
+      var(--bg);
+    background-size: 36px 36px;
+  }
+
+  a { color: inherit; text-decoration: none; }
+
+  .refresh {
+    position: fixed;
+    top: 12px;
+    right: 14px;
+    z-index: 20;
+    border: 1px solid var(--line);
+    background: #142238;
+    color: var(--ink);
+    border-radius: 8px;
+    padding: 8px 12px;
+    font-size: 12px;
+    cursor: pointer;
+  }
+
+  .shell {
+    width: min(1180px, calc(100% - 32px));
+    margin: 0 auto;
+  }
+
+  .hero {
+    min-height: 92vh;
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) 430px;
+    gap: 34px;
+    align-items: center;
+    padding: 54px 0 34px;
+  }
+
+  .logo {
+    height: 40px;
+    width: 160px;
+    object-fit: contain;
+    margin-bottom: 46px;
+  }
+
+  .eyebrow {
+    color: var(--teal);
+    font-size: 12px;
+    font-weight: 900;
+    letter-spacing: 2.4px;
+    text-transform: uppercase;
+    margin-bottom: 14px;
+  }
+
+  h1 {
+    margin: 0;
+    max-width: 820px;
+    font-size: 72px;
+    line-height: .96;
+    letter-spacing: 0;
+  }
+
+  .hero-copy {
+    max-width: 720px;
+    margin: 24px 0 30px;
+    color: #c4d2e2;
+    font-size: 18px;
+    line-height: 1.55;
+  }
+
+  .hero-actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 12px;
+  }
+
+  .pill {
+    border: 1px solid var(--line);
+    border-radius: 999px;
+    padding: 10px 14px;
+    background: rgba(16,26,42,.82);
+    color: #d9e7f7;
+    font-size: 13px;
+    font-weight: 800;
+  }
+
+  .ai-console {
+    background: var(--panel);
+    border: 1px solid var(--line);
+    border-radius: 8px;
+    overflow: hidden;
+    box-shadow: 0 24px 80px rgba(0,0,0,.28);
+  }
+
+  .console-top {
+    height: 44px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 0 16px;
+    border-bottom: 1px solid var(--line);
+    background: #0b1423;
+  }
+
+  .dot { width: 9px; height: 9px; border-radius: 50%; background: var(--red); }
+  .dot:nth-child(2) { background: var(--yellow); }
+  .dot:nth-child(3) { background: var(--green); }
+
+  .console-title {
+    margin-left: auto;
+    color: var(--muted);
+    font-size: 11px;
+    font-weight: 900;
+    letter-spacing: 1.8px;
+    text-transform: uppercase;
+  }
+
+  .console-body { padding: 22px; }
+
+  .prompt {
+    border: 1px solid #2d425f;
+    border-radius: 8px;
+    background: #0b1423;
+    padding: 16px;
+    margin-bottom: 16px;
+  }
+
+  .prompt-label {
+    color: var(--green);
+    font-size: 11px;
+    font-weight: 900;
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+    margin-bottom: 8px;
+  }
+
+  .prompt p {
+    margin: 0;
+    color: #d9e7f7;
+    font-size: 15px;
+    line-height: 1.5;
+  }
+
+  .signal-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 10px;
+  }
+
+  .signal {
+    min-height: 94px;
+    border: 1px solid var(--line);
+    border-radius: 8px;
+    padding: 14px;
+    background: var(--panel-2);
+  }
+
+  .signal strong {
+    display: block;
+    font-size: 24px;
+    color: #fff;
+    margin-bottom: 5px;
+  }
+
+  .signal span {
+    color: var(--muted);
+    font-size: 11px;
+    font-weight: 900;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    line-height: 1.35;
+  }
+
+  section {
+    padding: 56px 0;
+    border-top: 1px solid rgba(255,255,255,.08);
+  }
+
+  .section-head {
+    display: flex;
+    justify-content: space-between;
+    gap: 28px;
+    align-items: end;
+    margin-bottom: 24px;
+  }
+
+  .section-head h2 {
+    margin: 0;
+    font-size: 44px;
+    line-height: 1.05;
+  }
+
+  .section-head p {
+    margin: 0;
+    max-width: 520px;
+    color: var(--muted);
+    line-height: 1.55;
+  }
+
+  .capability-grid {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 14px;
+  }
+
+  .card {
+    position: relative;
+    min-height: 248px;
+    border: 1px solid var(--line);
+    border-radius: 8px;
+    background: rgba(16,26,42,.92);
+    padding: 20px;
+    overflow: hidden;
+  }
+
+  .card::before {
+    content: "";
+    position: absolute;
+    inset: 0 0 auto;
+    height: 4px;
+    background: var(--accent, var(--green));
+  }
+
+  .card .tag {
+    color: var(--accent, var(--green));
+    font-size: 10px;
+    font-weight: 900;
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+    margin-bottom: 18px;
+  }
+
+  .card h3 {
+    margin: 0 0 12px;
+    font-size: 21px;
+    line-height: 1.12;
+  }
+
+  .card p {
+    margin: 0;
+    color: var(--muted);
+    font-size: 13.5px;
+    line-height: 1.52;
+  }
+
+  .blue { --accent: var(--blue); }
+  .green { --accent: var(--green); }
+  .teal { --accent: var(--teal); }
+  .orange { --accent: var(--orange); }
+  .yellow { --accent: var(--yellow); }
+  .red { --accent: var(--red); }
+
+  .workflow {
+    display: grid;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: 14px;
+  }
+
+  .step {
+    border: 1px solid var(--line);
+    border-radius: 8px;
+    background: rgba(16,26,42,.88);
+    padding: 18px;
+    min-height: 210px;
+  }
+
+  .step b {
+    display: block;
+    color: var(--teal);
+    font-size: 12px;
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+    margin-bottom: 14px;
+  }
+
+  .step h3 {
+    margin: 0 0 10px;
+    font-size: 19px;
+  }
+
+  .step p {
+    margin: 0;
+    color: var(--muted);
+    font-size: 13px;
+    line-height: 1.48;
+  }
+
+  .prompt-wall {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 14px;
+  }
+
+  .ask {
+    border: 1px solid var(--line);
+    border-radius: 8px;
+    background: #0d1829;
+    padding: 18px;
+  }
+
+  .ask .label {
+    color: var(--green);
+    font-size: 10px;
+    font-weight: 900;
+    letter-spacing: 1.4px;
+    text-transform: uppercase;
+    margin-bottom: 12px;
+  }
+
+  .ask p {
+    margin: 0;
+    color: #dce8f6;
+    font-size: 15px;
+    line-height: 1.48;
+  }
+
+  .value-band {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 16px;
+  }
+
+  .value-card {
+    border: 1px solid var(--line);
+    border-radius: 8px;
+    background: rgba(16,26,42,.9);
+    padding: 24px;
+  }
+
+  .value-card h3 {
+    margin: 0 0 12px;
+    font-size: 26px;
+  }
+
+  .value-card p {
+    margin: 0;
+    color: var(--muted);
+    line-height: 1.6;
+  }
+
+  .talk-track {
+    border: 1px solid rgba(110,190,79,.34);
+    border-radius: 8px;
+    background: rgba(110,190,79,.09);
+    padding: 26px;
+  }
+
+  .talk-track h2 {
+    margin: 0 0 14px;
+    font-size: 32px;
+  }
+
+  .talk-track p {
+    margin: 0;
+    color: #edf8ec;
+    font-size: 18px;
+    line-height: 1.6;
+  }
+
+  footer {
+    padding: 26px 0 42px;
+    color: #5d7088;
+    font-size: 12px;
+    text-align: center;
+  }
+
+  @media (max-width: 980px) {
+    .hero,
+    .value-band {
+      grid-template-columns: 1fr;
+    }
+    .hero { min-height: auto; padding-top: 72px; }
+    h1 { font-size: 54px; }
+    .section-head h2 { font-size: 36px; }
+    .capability-grid,
+    .workflow {
+      grid-template-columns: 1fr 1fr;
+    }
+  }
+
+  @media (max-width: 640px) {
+    .shell { width: min(100% - 22px, 1180px); }
+    h1 { font-size: 40px; line-height: 1.02; }
+    .hero-copy { font-size: 16px; }
+    .signal-grid,
+    .capability-grid,
+    .workflow,
+    .prompt-wall {
+      grid-template-columns: 1fr;
+    }
+    .section-head { display: block; }
+    .section-head p { margin-top: 12px; }
+  }
+</style>
+</head>
+<body>
+<button class="refresh" onclick="window.location.reload(true)">Refresh</button>
+<main class="shell">
+  <header class="hero">
+    <div>
+      <img class="logo" src="revio-logo.png" alt="Rev.io">
+      <div class="eyebrow">Revii AI</div>
+      <h1>AI built for the work service providers actually do.</h1>
+      <p class="hero-copy">Revii brings agentic AI into Rev.io workflows so teams can summarize accounts, ask operational questions, create cleaner tickets, spot trends, protect revenue, and move faster without waiting on custom reports.</p>
+      <div class="hero-actions">
+        <div class="pill">Customer summaries</div>
+        <div class="pill">Voice commands</div>
+        <div class="pill">Revenue intelligence</div>
+        <div class="pill">Workflow assistance</div>
+      </div>
+    </div>
+
+    <aside class="ai-console" aria-label="Revii AI console">
+      <div class="console-top">
+        <div class="dot"></div>
+        <div class="dot"></div>
+        <div class="dot"></div>
+        <div class="console-title">Ask Revii</div>
+      </div>
+      <div class="console-body">
+        <div class="prompt">
+          <div class="prompt-label">Example prompt</div>
+          <p>Show me customers with rising ticket volume, declining margin, unpaid invoices, or missed recurring charges.</p>
+        </div>
+        <div class="signal-grid">
+          <div class="signal"><strong>PSA</strong><span>Tickets, time, projects, dispatch</span></div>
+          <div class="signal"><strong>Billing</strong><span>Revenue, invoices, usage, leakage</span></div>
+          <div class="signal"><strong>Mobile</strong><span>Voice commands for field teams</span></div>
+          <div class="signal"><strong>Insights</strong><span>Summaries, trends, next actions</span></div>
+        </div>
+      </div>
+    </aside>
+  </header>
+
+  <section>
+    <div class="section-head">
+      <h2>What Revii can do.</h2>
+      <p>Revii is not a generic chatbot bolted onto a PSA. It is an AI layer designed around the operating data Rev.io already manages across service, billing, customer, and revenue workflows.</p>
+    </div>
+
+    <div class="capability-grid">
+      <article class="card green">
+        <div class="tag">Customer intelligence</div>
+        <h3>AI-generated customer summaries</h3>
+        <p>Get fast customer overviews across servicing and billing data so sales, support, and leadership can walk into conversations with context instead of tabs.</p>
+      </article>
+      <article class="card teal">
+        <div class="tag">Mobile + field</div>
+        <h3>Voice commands for tickets and time</h3>
+        <p>Field teams can use Revii voice workflows to create or update tickets, capture notes, and handle time-entry work without breaking momentum.</p>
+      </article>
+      <article class="card blue">
+        <div class="tag">Revenue protection</div>
+        <h3>Find billing and revenue leakage</h3>
+        <p>Ask Revii to surface missed billing, usage without charges, margin gaps, overdue balances, or account behavior that deserves a closer look.</p>
+      </article>
+      <article class="card orange">
+        <div class="tag">Operational reporting</div>
+        <h3>Ask questions without building reports</h3>
+        <p>Turn natural-language questions into instant operational answers across customers, tickets, projects, billing, profitability, and trends.</p>
+      </article>
+      <article class="card yellow">
+        <div class="tag">Service workflows</div>
+        <h3>Summarize, triage, and route work</h3>
+        <p>Use AI to condense messy ticket histories, highlight urgency, suggest next steps, and help teams prioritize work that would otherwise sit in a queue.</p>
+      </article>
+      <article class="card red">
+        <div class="tag">Executive visibility</div>
+        <h3>Spot trends before they become surprises</h3>
+        <p>Revii helps leadership see patterns in service load, customer sentiment, technician performance, revenue risk, and customer profitability.</p>
+      </article>
+    </div>
+  </section>
+
+  <section>
+    <div class="section-head">
+      <h2>Where Revii fits in the day.</h2>
+      <p>Revii is most valuable when it lives in the workflows your teams already touch instead of forcing them into a separate AI side quest.</p>
+    </div>
+
+    <div class="workflow">
+      <div class="step">
+        <b>Morning</b>
+        <h3>Start with signal</h3>
+        <p>See which customers, tickets, projects, invoices, or revenue events need attention before the day gets away from the team.</p>
+      </div>
+      <div class="step">
+        <b>During work</b>
+        <h3>Move faster</h3>
+        <p>Summarize histories, create cleaner notes, update tickets, and ask account questions without digging through disconnected screens.</p>
+      </div>
+      <div class="step">
+        <b>Review</b>
+        <h3>Catch risk</h3>
+        <p>Use Revii to identify leakage, stale follow-up, repeated service issues, sentiment changes, and margin risk before they become bigger problems.</p>
+      </div>
+      <div class="step">
+        <b>Leadership</b>
+        <h3>Explain the business</h3>
+        <p>Turn operating data into plain-language answers leaders can use for coaching, forecasting, account reviews, and strategic decisions.</p>
+      </div>
+    </div>
+  </section>
+
+  <section>
+    <div class="section-head">
+      <h2>Questions users can ask Revii.</h2>
+      <p>The point is not AI novelty. The point is making Rev.io data easier to use at the exact moment someone needs an answer.</p>
+    </div>
+
+    <div class="prompt-wall">
+      <article class="ask">
+        <div class="label">Account management</div>
+        <p>Summarize this customer's open tickets, unpaid invoices, recent opportunities, and any churn risk signals.</p>
+      </article>
+      <article class="ask">
+        <div class="label">Service leadership</div>
+        <p>Which customers had the biggest increase in ticket volume this month, and what themes are showing up?</p>
+      </article>
+      <article class="ask">
+        <div class="label">Finance</div>
+        <p>Find accounts with active services, usage, or project work that may not be billed correctly.</p>
+      </article>
+      <article class="ask">
+        <div class="label">Dispatch</div>
+        <p>Which urgent tickets need attention, which techs are overloaded, and what should be routed next?</p>
+      </article>
+      <article class="ask">
+        <div class="label">Executive review</div>
+        <p>Show me customers with low profitability, rising service cost, declining sentiment, or expansion potential.</p>
+      </article>
+      <article class="ask">
+        <div class="label">Field technician</div>
+        <p>Create a ticket note from this voice update, summarize the work completed, and prepare the time entry.</p>
+      </article>
+    </div>
+  </section>
+
+  <section>
+    <div class="value-band">
+      <div class="value-card">
+        <h3>Built into the operating system, not bolted beside it.</h3>
+        <p>Revii is powerful because Rev.io sits at the intersection of service delivery, billing, payments, projects, customer data, and revenue workflows. That gives AI the business context it needs to be useful instead of just clever.</p>
+      </div>
+      <div class="value-card">
+        <h3>Agentic AI outcomes, measured by use.</h3>
+        <p>Revii AI Credits track agentic AI outcomes initiated by users in the Revii interface. The first included allowance gives teams room to adopt AI naturally, then usage can scale with the workflows that prove value.</p>
+      </div>
+    </div>
+  </section>
+
+  <section>
+    <div class="talk-track">
+      <h2>Simple talk track</h2>
+      <p>Revii is Rev.io's AI layer for service providers. It helps teams use the data already living in Rev.io: tickets, customers, invoices, usage, projects, payments, and revenue. Instead of making people build reports or dig across screens, Revii lets them ask questions, summarize accounts, create cleaner updates, spot trends, and catch risk. The value is not that it is AI. The value is that it makes the operating system easier to understand and faster to act on.</p>
+    </div>
+  </section>
+
+  <footer>
+    Revii AI by Rev.io. Built for service providers, billing teams, and operators who need answers inside the workflow.
+  </footer>
+</main>
+</body>
+</html>
