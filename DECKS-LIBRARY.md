@@ -78,6 +78,7 @@ Repo: `git@github.com:koontz-robin/robin-decks.git`
 |---|---|---|---|
 | PSA Calculator — Saved Scenario | psa-calculator.html | https://koontz-robin.github.io/robin-decks/psa-calculator.html?standardQty=5&standardRate=115&fieldQty=2&fieldRate=30&reviiQty=100&reviiRate=0.50&commVolume=10000&commPercent=3&monthlyMinimum=1000&cloudBackupGb=400&cloudBackupRate=0.10&rmmEndpoints=60&rmmRate=2.00&edrEndpoints=130&edrRate=1.20&setupQty=1&setupRate=2500&trainingQty=0&trainingRate=0&monthlyOrder=minimum%2Cstandard%2Cfield%2Crevii%2Ccommunications%2Ccloud-backup%2Crmm%2Cedr | Prefilled PSA package scenario saved from Ryan's calculator link |
 | ROI Comparison Calculator | roi-comparison-calculator.html | https://koontz-robin.github.io/robin-decks/roi-comparison-calculator.html | Fillable current software vs. Rev.io calculator |
+| Intermedia Resource Hub | intermedia/ | https://koontz-robin.github.io/robin-decks/intermedia/ | External customer-facing resource hub |
 | ROI — C1ST | roi-c1st.html | https://koontz-robin.github.io/robin-decks/roi-c1st.html | |
 | ROI — DFW Security | roi-dfw-security.html | https://koontz-robin.github.io/robin-decks/roi-dfw-security.html | PSA + AR Payments, security integrator, Jake Borah |
 | ROI — Celerius | roi-celerius.html | https://koontz-robin.github.io/robin-decks/roi-celerius.html | |

@@ -1,0 +1,416 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Intermedia Resource Hub | Rev.io</title>
+<style>
+  :root {
+    --bg: #07111f;
+    --panel: #101a2a;
+    --panel-2: #152236;
+    --line: #26374f;
+    --ink: #eef5ff;
+    --muted: #9aacbf;
+    --blue: #1667cc;
+    --green: #6ebe4f;
+    --teal: #2499b6;
+    --orange: #fc6120;
+    --yellow: #f5b64b;
+    --white: #ffffff;
+  }
+
+  * { box-sizing: border-box; }
+
+  body {
+    margin: 0;
+    min-height: 100vh;
+    font-family: "Inter", "Segoe UI", Arial, sans-serif;
+    color: var(--ink);
+    background:
+      linear-gradient(90deg, rgba(255,255,255,.032) 1px, transparent 1px),
+      linear-gradient(180deg, rgba(255,255,255,.032) 1px, transparent 1px),
+      radial-gradient(circle at 78% 16%, rgba(36,153,182,.14), transparent 32%),
+      var(--bg);
+    background-size: 36px 36px, 36px 36px, auto, auto;
+  }
+
+  a { color: inherit; text-decoration: none; }
+
+  .shell {
+    width: min(1160px, calc(100% - 32px));
+    margin: 0 auto;
+  }
+
+  header {
+    padding: 54px 0 42px;
+  }
+
+  .brand {
+    display: flex;
+    align-items: center;
+    gap: 18px;
+    margin-bottom: 46px;
+  }
+
+  .brand img {
+    height: 38px;
+    max-width: 190px;
+    object-fit: contain;
+  }
+
+  .brand .intermedia {
+    background: var(--white);
+    border-radius: 8px;
+    padding: 7px 11px;
+  }
+
+  .divider {
+    width: 1px;
+    height: 40px;
+    background: var(--line);
+  }
+
+  .hero {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) 340px;
+    gap: 36px;
+    align-items: end;
+  }
+
+  .eyebrow {
+    color: var(--teal);
+    font-size: 12px;
+    font-weight: 900;
+    letter-spacing: 2.4px;
+    text-transform: uppercase;
+    margin-bottom: 14px;
+  }
+
+  h1 {
+    margin: 0;
+    max-width: 760px;
+    font-size: 68px;
+    line-height: .96;
+    letter-spacing: 0;
+  }
+
+  .intro {
+    margin: 24px 0 0;
+    max-width: 690px;
+    color: #c4d2e2;
+    font-size: 18px;
+    line-height: 1.55;
+  }
+
+  .status-box {
+    border: 1px solid var(--line);
+    border-radius: 8px;
+    background: rgba(16,26,42,.9);
+    padding: 22px;
+  }
+
+  .status-box h2 {
+    margin: 0 0 14px;
+    font-size: 16px;
+  }
+
+  .status-row {
+    display: flex;
+    justify-content: space-between;
+    gap: 16px;
+    padding: 10px 0;
+    border-top: 1px solid rgba(255,255,255,.08);
+    color: var(--muted);
+    font-size: 13px;
+  }
+
+  .status-row strong { color: var(--ink); }
+
+  section {
+    padding: 34px 0 58px;
+  }
+
+  .section-title {
+    display: flex;
+    justify-content: space-between;
+    align-items: end;
+    gap: 24px;
+    margin-bottom: 20px;
+  }
+
+  .section-title h2 {
+    margin: 0;
+    font-size: 34px;
+  }
+
+  .section-title p {
+    margin: 0;
+    max-width: 460px;
+    color: var(--muted);
+    font-size: 14px;
+    line-height: 1.45;
+  }
+
+  .grid {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 16px;
+  }
+
+  .card {
+    position: relative;
+    min-height: 230px;
+    border: 1px solid var(--line);
+    border-radius: 8px;
+    background: rgba(16,26,42,.92);
+    padding: 22px;
+    overflow: hidden;
+    transition: transform .15s ease, border-color .15s ease, background .15s ease;
+  }
+
+  .card:hover {
+    transform: translateY(-2px);
+    border-color: var(--accent, var(--green));
+    background: rgba(21,34,54,.98);
+  }
+
+  .card::before {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 4px;
+    background: var(--accent, var(--green));
+  }
+
+  .tag {
+    color: var(--accent, var(--green));
+    font-size: 11px;
+    font-weight: 900;
+    letter-spacing: 1.6px;
+    text-transform: uppercase;
+    margin-bottom: 18px;
+  }
+
+  .card h3 {
+    margin: 0 0 10px;
+    font-size: 25px;
+    line-height: 1.1;
+  }
+
+  .card p {
+    margin: 0;
+    color: var(--muted);
+    font-size: 14px;
+    line-height: 1.5;
+  }
+
+  .open {
+    position: absolute;
+    left: 22px;
+    bottom: 20px;
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    color: #fff;
+    font-size: 13px;
+    font-weight: 800;
+  }
+
+  .open span {
+    width: 9px;
+    height: 9px;
+    border-radius: 50%;
+    background: var(--accent, var(--green));
+  }
+
+  .accent-blue { --accent: var(--blue); }
+  .accent-green { --accent: var(--green); }
+  .accent-teal { --accent: var(--teal); }
+  .accent-orange { --accent: var(--orange); }
+  .accent-yellow { --accent: var(--yellow); }
+
+  .order {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 12px;
+  }
+
+  .step {
+    border: 1px solid var(--line);
+    border-radius: 8px;
+    background: rgba(16,26,42,.82);
+    padding: 16px;
+  }
+
+  .step b {
+    display: block;
+    color: var(--green);
+    font-size: 12px;
+    letter-spacing: 1.4px;
+    text-transform: uppercase;
+    margin-bottom: 10px;
+  }
+
+  .step span {
+    display: block;
+    color: var(--ink);
+    font-size: 15px;
+    font-weight: 800;
+    line-height: 1.25;
+    margin-bottom: 8px;
+  }
+
+  .step p {
+    margin: 0;
+    color: var(--muted);
+    font-size: 12.5px;
+    line-height: 1.42;
+  }
+
+  .note {
+    border: 1px solid rgba(110,190,79,.32);
+    border-radius: 8px;
+    background: rgba(110,190,79,.08);
+    padding: 18px 20px;
+    color: #eaf7e8;
+    font-size: 14px;
+    line-height: 1.55;
+  }
+
+  .note strong { color: #fff; }
+
+  footer {
+    padding: 24px 0 42px;
+    color: #63758b;
+    font-size: 12px;
+    text-align: center;
+  }
+
+  @media (max-width: 860px) {
+    .hero,
+    .grid,
+    .order {
+      grid-template-columns: 1fr;
+    }
+    h1 { font-size: 48px; }
+    .section-title { display: block; }
+    .section-title p { margin-top: 10px; }
+  }
+
+  @media (max-width: 560px) {
+    .shell { width: min(100% - 22px, 1160px); }
+    .brand { align-items: flex-start; flex-direction: column; }
+    .divider { display: none; }
+    h1 { font-size: 38px; line-height: 1.02; }
+    .intro { font-size: 16px; }
+  }
+</style>
+</head>
+<body>
+<main class="shell">
+  <header>
+    <div class="brand">
+      <img src="../revio-logo.png" alt="Rev.io">
+      <div class="divider"></div>
+      <img class="intermedia" src="../intermedia-logo.png" alt="Intermedia">
+    </div>
+
+    <div class="hero">
+      <div>
+        <div class="eyebrow">Intermedia Resource Hub</div>
+        <h1>One place for every Rev.io resource built for Intermedia.</h1>
+        <p class="intro">A stable, public GitHub Pages hub for the Intermedia materials created by Rev.io. These links are designed to be viewable outside the Rev.io organization and not expire.</p>
+      </div>
+
+      <aside class="status-box">
+        <h2>External access status</h2>
+        <div class="status-row"><span>Hosted on</span><strong>GitHub Pages</strong></div>
+        <div class="status-row"><span>Login required</span><strong>No</strong></div>
+        <div class="status-row"><span>Link expiration</span><strong>None</strong></div>
+        <div class="status-row"><span>Audience</span><strong>Intermedia + Rev.io</strong></div>
+      </aside>
+    </div>
+  </header>
+
+  <section>
+    <div class="section-title">
+      <h2>Featured materials</h2>
+      <p>Use this as the client-facing table of contents. Each card opens a permanent public URL under the same GitHub Pages site.</p>
+    </div>
+
+    <div class="grid">
+      <a class="card accent-green" href="../Intermedia_Revii_AI_Billing_Modernization.pptx">
+        <div class="tag">PowerPoint download</div>
+        <h3>Revii AI Billing Modernization PPTX</h3>
+        <p>Editable customer-ready PowerPoint deck showing how Intermedia can adopt Revii gradually while bringing proprietary billing logic into Rev.io.</p>
+        <div class="open"><span></span>Download PPTX</div>
+      </a>
+
+      <a class="card accent-teal" href="../intermedia-revii-modernization.html">
+        <div class="tag">AI modernization page</div>
+        <h3>Revii AI Billing Modernization Webpage</h3>
+        <p>AI-centric webpage covering HostPilot, Atlas, BRM, Rev.io Billing, Revii prompts, phased adoption, and revenue assurance.</p>
+        <div class="open"><span></span>Open webpage</div>
+      </a>
+
+      <a class="card accent-blue" href="../roi-intermedia.html">
+        <div class="tag">ROI analysis</div>
+        <h3>Intermedia ROI Analysis</h3>
+        <p>Business value assessment using the $439.23M ARR assumption, proposal pricing, revenue leakage framing, and current-state billing cost model.</p>
+        <div class="open"><span></span>Open ROI page</div>
+      </a>
+
+      <a class="card accent-orange" href="../intermedia-demo-agenda.html">
+        <div class="tag">Demo agenda</div>
+        <h3>Intermedia Demo Agenda</h3>
+        <p>Branded call-opening agenda for the Intermedia sandbox demo, structured around billing architecture, core platform flow, and time blocks.</p>
+        <div class="open"><span></span>Open agenda</div>
+      </a>
+    </div>
+  </section>
+
+  <section>
+    <div class="section-title">
+      <h2>Suggested viewing order</h2>
+      <p>When sending this to the customer, the PPTX is the main artifact. The web pages are supporting materials.</p>
+    </div>
+
+    <div class="order">
+      <div class="step">
+        <b>Step 01</b>
+        <span>Send the hub link</span>
+        <p>Use this page as the single stable external repository.</p>
+      </div>
+      <div class="step">
+        <b>Step 02</b>
+        <span>Open the PPTX</span>
+        <p>Use the deck for the actual customer conversation.</p>
+      </div>
+      <div class="step">
+        <b>Step 03</b>
+        <span>Support with AI page</span>
+        <p>Use the Revii webpage when they want more detail on phased adoption.</p>
+      </div>
+      <div class="step">
+        <b>Step 04</b>
+        <span>Back it with ROI</span>
+        <p>Use the ROI page for investment, ARR, and leakage framing.</p>
+      </div>
+    </div>
+  </section>
+
+  <section>
+    <div class="note">
+      <strong>Stable link note:</strong> These URLs are hosted on the public `koontz-robin.github.io/robin-decks` GitHub Pages site. They do not rely on Discord attachments, Salesforce links, SharePoint sharing tokens, or time-limited signed URLs.
+    </div>
+  </section>
+
+  <footer>
+    Rev.io x Intermedia resource hub. Last updated June 26, 2026.
+  </footer>
+</main>
+</body>
+</html>
