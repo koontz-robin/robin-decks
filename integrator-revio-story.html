@@ -1,0 +1,477 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Rev.io for Modern Integrators</title>
+<style>
+  :root {
+    --navy:#102f50;
+    --deep:#071827;
+    --panel:#102235;
+    --panel-2:#152b40;
+    --cyan:#28c3ed;
+    --green:#34d17a;
+    --text:#f6fbff;
+    --muted:#a9bdd0;
+    --line:rgba(255,255,255,.13);
+    --paper:#f4f7fa;
+    --ink:#10243a;
+  }
+  * { box-sizing:border-box; }
+  html { scroll-behavior:smooth; }
+  body {
+    margin:0;
+    font-family:Aptos, "Segoe UI", system-ui, -apple-system, BlinkMacSystemFont, sans-serif;
+    background:var(--deep);
+    color:var(--text);
+  }
+  a { color:inherit; }
+  .site-header {
+    position:sticky;
+    top:0;
+    z-index:20;
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    gap:24px;
+    padding:14px clamp(18px, 5vw, 64px);
+    background:rgba(7,24,39,.88);
+    border-bottom:1px solid var(--line);
+    backdrop-filter:blur(18px);
+  }
+  .logo {
+    height:32px;
+    width:auto;
+    object-fit:contain;
+  }
+  .nav {
+    display:flex;
+    align-items:center;
+    gap:8px;
+    flex-wrap:wrap;
+    justify-content:flex-end;
+  }
+  .nav a {
+    text-decoration:none;
+    color:#dcebf5;
+    font-size:12px;
+    font-weight:800;
+    padding:8px 10px;
+    border-radius:6px;
+  }
+  .nav a:hover { background:rgba(255,255,255,.08); color:#fff; }
+  .hero {
+    min-height:clamp(760px, 92vh, 980px);
+    position:relative;
+    display:grid;
+    align-items:center;
+    overflow:hidden;
+    padding:96px clamp(22px, 7vw, 92px) 64px;
+    background:
+      linear-gradient(90deg, rgba(7,24,39,.98) 0%, rgba(13,40,68,.90) 45%, rgba(13,40,68,.42) 100%),
+      url("assets/integrator-revio-story/image1.png") center/cover no-repeat;
+  }
+  .hero-inner {
+    width:min(1120px, 100%);
+    display:grid;
+    grid-template-columns:minmax(0, 1fr) minmax(320px, 520px);
+    gap:48px;
+    align-items:center;
+  }
+  .eyebrow {
+    color:var(--cyan);
+    font-size:12px;
+    font-weight:900;
+    letter-spacing:2.4px;
+    text-transform:uppercase;
+    margin:0 0 16px;
+  }
+  h1, h2, h3, p { margin-top:0; }
+  h1 {
+    font-size:clamp(44px, 7vw, 92px);
+    line-height:.95;
+    letter-spacing:0;
+    margin-bottom:22px;
+    max-width:780px;
+  }
+  h2 {
+    font-size:clamp(30px, 4vw, 58px);
+    line-height:1;
+    letter-spacing:0;
+    margin-bottom:18px;
+  }
+  h3 {
+    font-size:20px;
+    margin-bottom:10px;
+    letter-spacing:0;
+  }
+  .hero-copy {
+    color:#d7e7f2;
+    font-size:clamp(18px, 2vw, 24px);
+    line-height:1.45;
+    max-width:710px;
+    margin-bottom:32px;
+  }
+  .actions { display:flex; gap:12px; flex-wrap:wrap; }
+  .button {
+    display:inline-flex;
+    align-items:center;
+    justify-content:center;
+    min-height:44px;
+    padding:0 18px;
+    border-radius:6px;
+    text-decoration:none;
+    font-weight:900;
+    font-size:14px;
+    border:1px solid var(--line);
+  }
+  .button.primary {
+    border-color:transparent;
+    color:#06131f;
+    background:linear-gradient(135deg, var(--cyan), var(--green));
+  }
+  .button.secondary { color:#fff; background:rgba(255,255,255,.08); }
+  .hero-card {
+    background:rgba(8,24,37,.72);
+    border:1px solid var(--line);
+    border-radius:8px;
+    padding:22px;
+    box-shadow:0 22px 70px rgba(0,0,0,.32);
+  }
+  .metric-grid {
+    display:grid;
+    grid-template-columns:repeat(2, minmax(0, 1fr));
+    gap:12px;
+  }
+  .metric {
+    background:rgba(255,255,255,.06);
+    border:1px solid var(--line);
+    border-radius:8px;
+    padding:18px;
+  }
+  .metric strong {
+    display:block;
+    color:#fff;
+    font-size:30px;
+    line-height:1;
+    margin-bottom:8px;
+  }
+  .metric span {
+    display:block;
+    color:var(--muted);
+    font-size:12px;
+    font-weight:800;
+    text-transform:uppercase;
+    letter-spacing:1px;
+  }
+  section {
+    padding:84px clamp(22px, 7vw, 92px);
+  }
+  .section-inner { max-width:1180px; margin:0 auto; }
+  .split {
+    display:grid;
+    grid-template-columns:minmax(0, .9fr) minmax(360px, 1.1fr);
+    gap:46px;
+    align-items:center;
+  }
+  .lead {
+    color:var(--muted);
+    font-size:18px;
+    line-height:1.65;
+    max-width:720px;
+  }
+  .dark-section { background:linear-gradient(180deg, #081827, #0e2234); }
+  .paper-section {
+    background:var(--paper);
+    color:var(--ink);
+  }
+  .paper-section .eyebrow { color:#1586a8; }
+  .paper-section .lead { color:#53697b; }
+  .feature-strip {
+    margin-top:28px;
+    display:grid;
+    grid-template-columns:repeat(3, minmax(0, 1fr));
+    gap:14px;
+  }
+  .feature {
+    background:rgba(255,255,255,.06);
+    border:1px solid var(--line);
+    border-radius:8px;
+    padding:18px;
+  }
+  .feature p { color:var(--muted); line-height:1.55; margin:0; }
+  .paper-section .feature {
+    background:#fff;
+    border-color:#dce4eb;
+    box-shadow:0 16px 42px rgba(16,36,58,.08);
+  }
+  .paper-section .feature p { color:#5d7181; }
+  .visual {
+    width:100%;
+    display:block;
+    border-radius:8px;
+    box-shadow:0 26px 80px rgba(0,0,0,.28);
+  }
+  .visual.clean {
+    box-shadow:none;
+    border-radius:0;
+  }
+  .tile-visual {
+    width:100%;
+    max-width:680px;
+    display:block;
+    margin:28px auto 0;
+  }
+  .ai-card {
+    background:#0d1d2d;
+    border:1px solid rgba(40,195,237,.24);
+    border-radius:8px;
+    padding:20px;
+    box-shadow:0 24px 70px rgba(0,0,0,.2);
+  }
+  .ai-bar {
+    background:linear-gradient(135deg, #166bd8, #35cb75);
+    color:#fff;
+    font-weight:900;
+    border-radius:6px;
+    padding:16px 18px;
+    margin-bottom:16px;
+  }
+  .prompt {
+    background:#15283b;
+    border:1px solid var(--line);
+    border-radius:6px;
+    color:#d7e7f2;
+    padding:14px 16px;
+    margin:10px 0;
+    font-size:14px;
+  }
+  .billing-grid {
+    display:grid;
+    grid-template-columns:repeat(2, minmax(0, 1fr));
+    gap:18px;
+    margin-top:30px;
+  }
+  .billing-card {
+    background:#fff;
+    border:1px solid #dce4eb;
+    border-top:4px solid var(--cyan);
+    border-radius:8px;
+    padding:24px;
+    box-shadow:0 16px 42px rgba(16,36,58,.08);
+  }
+  .billing-card h3 { color:#10243a; }
+  .billing-card ul {
+    margin:14px 0 0;
+    padding-left:18px;
+    color:#53697b;
+    line-height:1.8;
+  }
+  .partner-wall {
+    display:grid;
+    grid-template-columns:1fr 1fr;
+    gap:26px;
+    align-items:center;
+    margin-top:34px;
+  }
+  .partner-card {
+    background:rgba(255,255,255,.06);
+    border:1px solid var(--line);
+    border-radius:8px;
+    padding:22px;
+    min-height:160px;
+    display:grid;
+    place-items:center;
+  }
+  .partner-card img {
+    max-width:100%;
+    max-height:112px;
+    object-fit:contain;
+  }
+  .events {
+    display:grid;
+    grid-template-columns:repeat(3, minmax(0, 1fr));
+    gap:12px;
+    margin-top:30px;
+  }
+  .event {
+    border:1px solid var(--line);
+    background:rgba(255,255,255,.06);
+    border-radius:8px;
+    padding:16px;
+  }
+  .event time {
+    display:block;
+    color:var(--cyan);
+    font-weight:900;
+    font-size:13px;
+    margin-bottom:8px;
+  }
+  .event strong { display:block; margin-bottom:4px; }
+  .event span { color:var(--muted); font-size:13px; }
+  .final {
+    min-height:360px;
+    display:grid;
+    align-items:center;
+    background:
+      linear-gradient(90deg, rgba(7,24,39,.98), rgba(7,24,39,.72)),
+      url("assets/integrator-revio-story/image30.png") center/cover no-repeat;
+  }
+  .final h2 { max-width:760px; }
+  .final p { color:#d7e7f2; max-width:680px; font-size:18px; line-height:1.6; }
+  @media (max-width:900px) {
+    .site-header { position:relative; align-items:flex-start; flex-direction:column; }
+    .nav { justify-content:flex-start; }
+    .hero { min-height:auto; }
+    .hero-inner, .split, .partner-wall { grid-template-columns:1fr; }
+    .feature-strip, .billing-grid, .events { grid-template-columns:1fr; }
+    .hero-card { max-width:520px; }
+  }
+  @media (max-width:560px) {
+    .metric-grid { grid-template-columns:1fr; }
+    section { padding:58px 18px; }
+    .hero { padding:58px 18px; }
+    .nav a { padding-left:0; }
+  }
+</style>
+</head>
+<body>
+<header class="site-header">
+  <img class="logo" src="assets/integrator-revio-story/image2.png" alt="Rev.io">
+  <nav class="nav" aria-label="Page sections">
+    <a href="#proof">Proof</a>
+    <a href="#psa">PSA</a>
+    <a href="#ai">AI</a>
+    <a href="#billing">Billing</a>
+    <a href="#partners">Partners</a>
+    <a href="#road">Road</a>
+  </nav>
+</header>
+
+<main>
+  <section class="hero">
+    <div class="hero-inner">
+      <div>
+        <p class="eyebrow">Rev.io for Integrators</p>
+        <h1>AI native. All in one. Built for what&apos;s next.</h1>
+        <p class="hero-copy">A modern operating platform for security, alarm, and technology integrators that need recurring revenue billing, service operations, mobile execution, and customer visibility in one connected system.</p>
+        <div class="actions">
+          <a class="button primary" href="#psa">Explore the story</a>
+          <a class="button secondary" href="#billing">See billing workflows</a>
+        </div>
+      </div>
+      <aside class="hero-card" id="proof" aria-label="Rev.io proof points">
+        <p class="eyebrow">Trusted by 1,000+ service providers</p>
+        <div class="metric-grid">
+          <div class="metric"><strong>180+</strong><span>US-based employees</span></div>
+          <div class="metric"><strong>40+</strong><span>Years industry experience</span></div>
+          <div class="metric"><strong>9x</strong><span>Inc. 5000 recipient</span></div>
+          <div class="metric"><strong>4x</strong><span>Great Places to Work</span></div>
+        </div>
+      </aside>
+    </div>
+  </section>
+
+  <section class="paper-section" id="psa">
+    <div class="section-inner split">
+      <div>
+        <p class="eyebrow">Designed for the modern integrator</p>
+        <h2>Everything your team needs to run service, projects, billing, and growth.</h2>
+        <p class="lead">Rev.io PSA brings together the day-to-day workflows integrators depend on: service desk, scheduling, dispatch, inventory, quoting, invoicing, payments, reporting, mobile work, and customer self-service.</p>
+        <div class="feature-strip">
+          <div class="feature"><h3>Streamline operations</h3><p>Centralize work orders, tickets, project activity, technician schedules, parts, labor, and customer history.</p></div>
+          <div class="feature"><h3>Improve client experience</h3><p>Give customers clear billing, fast service updates, and better visibility without adding admin overhead.</p></div>
+          <div class="feature"><h3>Scale profitably</h3><p>Use real-time insights and automation to reduce manual tasks while recurring revenue grows.</p></div>
+        </div>
+        <img class="tile-visual" src="assets/integrator-revio-story/image9.png" alt="Rev.io PSA feature tiles">
+      </div>
+      <img class="visual" src="assets/integrator-revio-story/image13.png" alt="Rev.io PSA billing dashboard">
+    </div>
+  </section>
+
+  <section class="dark-section" id="ai">
+    <div class="section-inner split">
+      <div>
+        <p class="eyebrow">PSA software</p>
+        <h2>Reimagine PSA with AI at the core.</h2>
+        <p class="lead">Rev.io&apos;s next-gen PSA uses AI and mobile-first design to simplify service delivery, accelerate cash flow, and keep field and back-office teams productive wherever they work.</p>
+        <div class="ai-card" aria-label="Ask Rev.ii prompt examples">
+          <div class="ai-bar">Ask Rev.ii</div>
+          <div class="prompt">Summarize this customer ticket activity for the last 30 days.</div>
+          <div class="prompt">Provide this customer&apos;s patterns of ticket activity for the last 30 days.</div>
+          <div class="prompt">Surface risk, context, and next steps before the team has to dig.</div>
+        </div>
+      </div>
+      <img class="visual clean" src="assets/integrator-revio-story/image17.png" alt="Rev.io mobile-first service ticket screen">
+    </div>
+  </section>
+
+  <section class="paper-section" id="billing">
+    <div class="section-inner">
+      <p class="eyebrow">Recurring payments</p>
+      <h2>RMR billing without complexity.</h2>
+      <p class="lead">Integrator revenue is rarely simple. Rev.io supports recurring contracts, custom cycles, prorations, bundled services, consolidated invoicing, payments, and cash-flow visibility without forcing teams into manual workarounds.</p>
+      <div class="billing-grid">
+        <article class="billing-card">
+          <h3>Automated recurring billing</h3>
+          <ul>
+            <li>Automates the full billing lifecycle with less manual input.</li>
+            <li>Reduces errors and streamlines contract management.</li>
+            <li>Scales as recurring revenue grows.</li>
+          </ul>
+        </article>
+        <article class="billing-card">
+          <h3>Flexible invoicing</h3>
+          <ul>
+            <li>Supports proration, bundling, and custom billing cycles.</li>
+            <li>Enables consolidated or client-specific invoices.</li>
+            <li>Improves cash flow with consistent, accurate billing.</li>
+          </ul>
+        </article>
+      </div>
+    </div>
+  </section>
+
+  <section class="dark-section" id="partners">
+    <div class="section-inner">
+      <p class="eyebrow">Integrations and partnerships</p>
+      <h2>Powerful partnerships that drive growth.</h2>
+      <p class="lead">Rev.io partners with organizations that help alarm and security integrators thrive, including monitoring service providers, security dealer groups, alarm associations, ICT communities, and the tools teams already rely on.</p>
+      <div class="partner-wall">
+        <div class="partner-card"><img src="assets/integrator-revio-story/image24.png" alt="Affinity Billing logo"></div>
+        <div class="partner-card"><img src="assets/integrator-revio-story/image28.png" alt="SIA logo"></div>
+        <div class="partner-card"><img src="assets/integrator-revio-story/image26.png" alt="The Monitoring Association logo"></div>
+        <div class="partner-card"><img src="assets/integrator-revio-story/image27.png" alt="PSA Security Network logo"></div>
+      </div>
+    </div>
+  </section>
+
+  <section class="dark-section" id="road">
+    <div class="section-inner">
+      <p class="eyebrow">Rev.io on the road</p>
+      <h2>Showing up where integrators, MSPs, and channel partners make decisions.</h2>
+      <div class="events">
+        <div class="event"><time>Apr 7-9</time><strong>Boot Camp (Kaseya)</strong><span>Dallas, TX</span></div>
+        <div class="event"><time>Apr 13-14</time><strong>MSP Summit</strong><span>Las Vegas, NV</span></div>
+        <div class="event"><time>Apr 14-16</time><strong>Channel Partners Conference</strong><span>Las Vegas, NV</span></div>
+        <div class="event"><time>Apr 26-29</time><strong>SkySwitch Vectors</strong><span>Orlando, FL</span></div>
+        <div class="event"><time>Apr 27-30</time><strong>Kaseya Connect</strong><span>Las Vegas, NV</span></div>
+        <div class="event"><time>May 12-13</time><strong>Women of the Channel West</strong><span>Carlsbad, CA</span></div>
+        <div class="event"><time>Jun 1-4</time><strong>ESX</strong><span>Irving, TX</span></div>
+        <div class="event"><time>Jun 7-9</time><strong>Pax8 Beyond</strong><span>Salt Lake City, UT</span></div>
+        <div class="event"><time>Jun 17-19</time><strong>InfoComm</strong><span>Las Vegas, NV</span></div>
+      </div>
+    </div>
+  </section>
+
+  <section class="final">
+    <div class="section-inner">
+      <p class="eyebrow">One connected platform</p>
+      <h2>From service delivery to recurring revenue, Rev.io gives integrators a cleaner way to operate.</h2>
+      <p>Built to reduce disconnected systems, simplify billing complexity, and bring AI-supported workflows into the parts of the business where time gets lost.</p>
+    </div>
+  </section>
+</main>
+</body>
+</html>
