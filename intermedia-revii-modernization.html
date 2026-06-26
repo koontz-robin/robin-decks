@@ -1,0 +1,676 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Revii AI Billing Modernization - Intermedia</title>
+<style>
+  :root {
+    --bg: #07111f;
+    --panel: #101a2a;
+    --panel-2: #0b1524;
+    --panel-3: #152236;
+    --ink: #eef5ff;
+    --muted: #91a2b8;
+    --line: #26374f;
+    --rev-blue: #1667cc;
+    --rev-green: #6ebe4f;
+    --rev-teal: #2499b6;
+    --rev-orange: #fc6120;
+    --yellow: #f5b64b;
+    --red: #ff6b77;
+  }
+
+  * { box-sizing: border-box; }
+
+  body {
+    margin: 0;
+    min-height: 100vh;
+    font-family: "Inter", "Segoe UI", Arial, sans-serif;
+    color: var(--ink);
+    background:
+      linear-gradient(90deg, rgba(255,255,255,.035) 1px, transparent 1px),
+      linear-gradient(180deg, rgba(255,255,255,.035) 1px, transparent 1px),
+      var(--bg);
+    background-size: 36px 36px;
+  }
+
+  .refresh {
+    position: fixed;
+    top: 12px;
+    right: 14px;
+    z-index: 20;
+    border: 1px solid var(--line);
+    background: #142238;
+    color: var(--ink);
+    border-radius: 8px;
+    padding: 8px 12px;
+    font-size: 12px;
+    cursor: pointer;
+  }
+
+  .shell { width: min(1180px, calc(100% - 32px)); margin: 0 auto; }
+
+  .hero {
+    min-height: 92vh;
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) 430px;
+    gap: 34px;
+    align-items: center;
+    padding: 54px 0 34px;
+  }
+
+  .brand-row {
+    display: flex;
+    align-items: center;
+    gap: 18px;
+    margin-bottom: 34px;
+  }
+
+  .logo {
+    height: 38px;
+    max-width: 190px;
+    object-fit: contain;
+  }
+
+  .logo.intermedia {
+    background: #fff;
+    border-radius: 8px;
+    padding: 7px 11px;
+  }
+
+  .divider {
+    width: 1px;
+    height: 40px;
+    background: var(--line);
+  }
+
+  .eyebrow {
+    color: var(--rev-teal);
+    font-size: 12px;
+    font-weight: 800;
+    letter-spacing: 2.5px;
+    text-transform: uppercase;
+    margin-bottom: 14px;
+  }
+
+  h1 {
+    margin: 0;
+    max-width: 760px;
+    font-size: 74px;
+    line-height: .96;
+    letter-spacing: 0;
+  }
+
+  .hero-copy {
+    max-width: 690px;
+    margin: 24px 0 30px;
+    color: #b9c7d8;
+    font-size: 18px;
+    line-height: 1.55;
+  }
+
+  .hero-actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 12px;
+  }
+
+  .pill {
+    border: 1px solid var(--line);
+    border-radius: 999px;
+    padding: 10px 14px;
+    background: rgba(16,26,42,.82);
+    color: #d9e7f7;
+    font-size: 13px;
+    font-weight: 700;
+  }
+
+  .ai-console {
+    background: var(--panel);
+    border: 1px solid var(--line);
+    border-radius: 8px;
+    box-shadow: 0 24px 80px rgba(0,0,0,.28);
+    overflow: hidden;
+  }
+
+  .console-top {
+    height: 44px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 0 16px;
+    border-bottom: 1px solid var(--line);
+    background: var(--panel-2);
+  }
+
+  .dot { width: 9px; height: 9px; border-radius: 50%; background: var(--red); }
+  .dot:nth-child(2) { background: var(--yellow); }
+  .dot:nth-child(3) { background: var(--rev-green); }
+  .console-title { margin-left: auto; color: var(--muted); font-size: 11px; font-weight: 800; letter-spacing: 1.8px; text-transform: uppercase; }
+
+  .console-body { padding: 22px; }
+
+  .prompt {
+    border: 1px solid #2d425f;
+    border-radius: 8px;
+    background: #0b1423;
+    padding: 16px;
+    margin-bottom: 16px;
+  }
+
+  .prompt-label {
+    color: var(--rev-green);
+    font-size: 11px;
+    font-weight: 800;
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+    margin-bottom: 8px;
+  }
+
+  .prompt p {
+    margin: 0;
+    color: #d9e7f7;
+    font-size: 15px;
+    line-height: 1.5;
+  }
+
+  .signal-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 10px;
+  }
+
+  .signal {
+    min-height: 92px;
+    border: 1px solid var(--line);
+    border-radius: 8px;
+    padding: 14px;
+    background: var(--panel-3);
+  }
+
+  .signal strong {
+    display: block;
+    font-size: 22px;
+    color: #fff;
+    margin-bottom: 4px;
+  }
+
+  .signal span {
+    color: var(--muted);
+    font-size: 11px;
+    font-weight: 800;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    line-height: 1.35;
+  }
+
+  section {
+    padding: 56px 0;
+    border-top: 1px solid rgba(255,255,255,.08);
+  }
+
+  .section-head {
+    display: flex;
+    justify-content: space-between;
+    gap: 28px;
+    align-items: end;
+    margin-bottom: 24px;
+  }
+
+  .section-head h2 {
+    margin: 0;
+    font-size: 44px;
+    line-height: 1.05;
+  }
+
+  .section-head p {
+    margin: 0;
+    max-width: 520px;
+    color: var(--muted);
+    line-height: 1.55;
+  }
+
+  .system-map {
+    display: grid;
+    grid-template-columns: 1fr 80px 1fr;
+    align-items: stretch;
+    gap: 14px;
+  }
+
+  .stack {
+    border: 1px solid var(--line);
+    border-radius: 8px;
+    background: rgba(16,26,42,.88);
+    padding: 20px;
+  }
+
+  .stack-title {
+    color: var(--muted);
+    font-size: 11px;
+    font-weight: 900;
+    letter-spacing: 1.8px;
+    text-transform: uppercase;
+    margin-bottom: 14px;
+  }
+
+  .node {
+    border-left: 4px solid var(--rev-blue);
+    background: #0b1423;
+    border-radius: 8px;
+    padding: 13px 14px;
+    margin: 10px 0;
+  }
+
+  .node.legacy { border-left-color: var(--rev-orange); }
+  .node.ai { border-left-color: var(--rev-green); }
+  .node.host { border-left-color: var(--yellow); }
+
+  .node b { display: block; color: #fff; font-size: 14px; margin-bottom: 4px; }
+  .node span { color: var(--muted); font-size: 13px; line-height: 1.45; }
+
+  .arrow-box {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--rev-green);
+    font-size: 34px;
+    font-weight: 900;
+  }
+
+  .phase-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 14px;
+  }
+
+  .phase {
+    background: rgba(16,26,42,.92);
+    border: 1px solid var(--line);
+    border-radius: 8px;
+    padding: 20px;
+    min-height: 286px;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .phase::before {
+    content: "";
+    position: absolute;
+    left: 0;
+    top: 0;
+    height: 4px;
+    width: 100%;
+    background: var(--phase-color, var(--rev-blue));
+  }
+
+  .phase:nth-child(1) { --phase-color: var(--rev-teal); }
+  .phase:nth-child(2) { --phase-color: var(--rev-blue); }
+  .phase:nth-child(3) { --phase-color: var(--rev-green); }
+  .phase:nth-child(4) { --phase-color: var(--rev-orange); }
+
+  .phase-num {
+    color: var(--phase-color, var(--rev-blue));
+    font-size: 12px;
+    font-weight: 900;
+    letter-spacing: 1.6px;
+    text-transform: uppercase;
+    margin-bottom: 18px;
+  }
+
+  .phase h3 {
+    margin: 0 0 12px;
+    font-size: 20px;
+    line-height: 1.12;
+  }
+
+  .phase p {
+    color: var(--muted);
+    font-size: 13px;
+    line-height: 1.55;
+    margin: 0 0 14px;
+  }
+
+  .mini-list {
+    display: grid;
+    gap: 8px;
+    color: #d3dfec;
+    font-size: 12.5px;
+    line-height: 1.35;
+  }
+
+  .mini-list div {
+    border: 1px solid rgba(255,255,255,.08);
+    border-radius: 8px;
+    padding: 8px 9px;
+    background: rgba(7,17,31,.7);
+  }
+
+  .prompt-wall {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    gap: 14px;
+  }
+
+  .ask-card {
+    border: 1px solid var(--line);
+    border-radius: 8px;
+    background: #0d1829;
+    padding: 18px;
+  }
+
+  .ask-card .tag {
+    color: var(--rev-green);
+    font-size: 10px;
+    font-weight: 900;
+    letter-spacing: 1.4px;
+    text-transform: uppercase;
+    margin-bottom: 12px;
+  }
+
+  .ask-card p {
+    margin: 0;
+    color: #dce8f6;
+    font-size: 15px;
+    line-height: 1.48;
+  }
+
+  .value-band {
+    display: grid;
+    grid-template-columns: 1.1fr .9fr;
+    gap: 18px;
+  }
+
+  .value-card {
+    border: 1px solid var(--line);
+    border-radius: 8px;
+    background: rgba(16,26,42,.9);
+    padding: 24px;
+  }
+
+  .value-card h3 {
+    margin: 0 0 12px;
+    font-size: 26px;
+  }
+
+  .value-card p {
+    margin: 0;
+    color: var(--muted);
+    line-height: 1.6;
+  }
+
+  .metrics {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 12px;
+  }
+
+  .metric {
+    border-radius: 8px;
+    border: 1px solid var(--line);
+    background: #0b1423;
+    padding: 18px;
+  }
+
+  .metric strong {
+    display: block;
+    color: #fff;
+    font-size: 25px;
+    line-height: 1;
+    margin-bottom: 8px;
+  }
+
+  .metric span {
+    display: block;
+    color: var(--muted);
+    font-size: 11px;
+    font-weight: 800;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    line-height: 1.35;
+  }
+
+  .talk-track {
+    border: 1px solid rgba(110,190,79,.34);
+    background: rgba(110,190,79,.09);
+    border-radius: 8px;
+    padding: 26px;
+  }
+
+  .talk-track h2 {
+    margin: 0 0 14px;
+    font-size: 30px;
+  }
+
+  .talk-track p {
+    margin: 0;
+    color: #edf8ec;
+    font-size: 18px;
+    line-height: 1.62;
+  }
+
+  .footer {
+    padding: 26px 0 42px;
+    color: #5d7088;
+    font-size: 12px;
+    text-align: center;
+  }
+
+  @media (max-width: 980px) {
+    .hero,
+    .system-map,
+    .value-band {
+      grid-template-columns: 1fr;
+    }
+
+    .hero { min-height: auto; padding-top: 72px; }
+    h1 { font-size: 54px; }
+    .section-head h2 { font-size: 36px; }
+    .arrow-box { min-height: 42px; transform: rotate(90deg); }
+    .phase-grid { grid-template-columns: 1fr 1fr; }
+    .prompt-wall { grid-template-columns: 1fr; }
+  }
+
+  @media (max-width: 620px) {
+    .shell { width: min(100% - 22px, 1180px); }
+    .brand-row { align-items: flex-start; flex-direction: column; gap: 12px; }
+    .divider { display: none; }
+    h1 { font-size: 40px; line-height: 1.02; }
+    .section-head h2 { font-size: 30px; }
+    .hero-copy { font-size: 16px; }
+    .signal-grid,
+    .phase-grid,
+    .metrics {
+      grid-template-columns: 1fr;
+    }
+    .section-head { display: block; }
+    .section-head p { margin-top: 12px; }
+    .phase { min-height: 0; }
+  }
+</style>
+</head>
+<body>
+<button class="refresh" onclick="window.location.reload(true)">Refresh</button>
+
+<main class="shell">
+  <header class="hero">
+    <div>
+      <div class="brand-row">
+        <img class="logo" src="https://koontz-robin.github.io/robin-decks/revio-logo.png" alt="Rev.io">
+        <div class="divider"></div>
+        <img class="logo intermedia" src="https://koontz-robin.github.io/robin-decks/intermedia-logo.png" alt="Intermedia">
+      </div>
+      <div class="eyebrow">Revii AI modernization use case</div>
+      <h1>Bring Intermedia's proprietary billing logic into a smarter Rev.io engine.</h1>
+      <p class="hero-copy">A phased AI path that lets Intermedia keep HostPilot where it matters, retire Atlas and BRM risk over time, and use Revii to make billing intelligence searchable, explainable, and revenue-protective.</p>
+      <div class="hero-actions">
+        <div class="pill">$439.23M ARR protected</div>
+        <div class="pill">HostPilot can remain customer-facing</div>
+        <div class="pill">Atlas + BRM logic modernized over time</div>
+      </div>
+    </div>
+
+    <aside class="ai-console" aria-label="Revii AI command center">
+      <div class="console-top">
+        <div class="dot"></div>
+        <div class="dot"></div>
+        <div class="dot"></div>
+        <div class="console-title">Revii Billing Intelligence</div>
+      </div>
+      <div class="console-body">
+        <div class="prompt">
+          <div class="prompt-label">Example Revii prompt</div>
+          <p>Find reseller invoices where usage increased, margin compressed, or HostPilot totals no longer match generated charges.</p>
+        </div>
+        <div class="signal-grid">
+          <div class="signal"><strong>1,000+</strong><span>SKU relationships to normalize</span></div>
+          <div class="signal"><strong>3</strong><span>Billing systems to reconcile</span></div>
+          <div class="signal"><strong>0.28%</strong><span>Leakage offset threshold</span></div>
+          <div class="signal"><strong>AI</strong><span>Reporting and revenue assurance layer</span></div>
+        </div>
+      </div>
+    </aside>
+  </header>
+
+  <section>
+    <div class="section-head">
+      <h2>The modernization path is gradual by design.</h2>
+      <p>Intermedia does not need a risky big-bang migration. Rev.io can become the billing engine underneath the proprietary experience, while Revii helps teams understand, validate, and improve every step.</p>
+    </div>
+
+    <div class="system-map">
+      <div class="stack">
+        <div class="stack-title">Current operating reality</div>
+        <div class="node legacy"><b>Atlas</b><span>Legacy provisioning and billing logic that still requires developer attention.</span></div>
+        <div class="node legacy"><b>Oracle BRM</b><span>UCaaS, CCaaS, usage buckets, CDR rating, and channel billing complexity.</span></div>
+        <div class="node host"><b>HostPilot</b><span>Customer-facing invoice, payment, portal, and proprietary account experience.</span></div>
+        <div class="node legacy"><b>Manual reconciliation</b><span>Billing teams and engineers keep disconnected systems in sync.</span></div>
+      </div>
+
+      <div class="arrow-box">-&gt;</div>
+
+      <div class="stack">
+        <div class="stack-title">Phased Rev.io + Revii future state</div>
+        <div class="node ai"><b>Rev.io Billing</b><span>Modern charge generation, recurring billing, CDR processing, tax-ready output, and invoice XML.</span></div>
+        <div class="node ai"><b>Revii AI</b><span>Natural-language billing analysis, exception detection, migration QA, and revenue assurance.</span></div>
+        <div class="node host"><b>HostPilot</b><span>Can continue as the familiar customer-facing experience while the engine modernizes underneath.</span></div>
+        <div class="node ai"><b>Single billing dataset</b><span>The foundation for AI reporting, margin visibility, leakage detection, and faster product changes.</span></div>
+      </div>
+    </div>
+  </section>
+
+  <section>
+    <div class="section-head">
+      <h2>Four phases of Revii adoption.</h2>
+      <p>Each phase creates business value without asking Intermedia to bet the entire migration on day one.</p>
+    </div>
+
+    <div class="phase-grid">
+      <article class="phase">
+        <div class="phase-num">Phase 01</div>
+        <h3>AI visibility before migration</h3>
+        <p>Revii starts by helping Intermedia understand the current state across Atlas, BRM, HostPilot, CDRs, and SKU exports.</p>
+        <div class="mini-list">
+          <div>Summarize billing exceptions</div>
+          <div>Find reconciliation mismatches</div>
+          <div>Flag stale SKUs and duplicate pricing</div>
+        </div>
+      </article>
+
+      <article class="phase">
+        <div class="phase-num">Phase 02</div>
+        <h3>Rev.io as the billing engine</h3>
+        <p>Rev.io takes over charge generation, rating, usage, tax-ready data, and invoice XML while HostPilot stays customer-facing.</p>
+        <div class="mini-list">
+          <div>Generate charges centrally</div>
+          <div>Process PSTN CDRs and overages</div>
+          <div>Feed HostPilot with validated invoice data</div>
+        </div>
+      </article>
+
+      <article class="phase">
+        <div class="phase-num">Phase 03</div>
+        <h3>Revenue assurance with Revii</h3>
+        <p>Once Rev.io owns more billing data, Revii watches for leakage, margin compression, missing usage, and pricing drift.</p>
+        <div class="mini-list">
+          <div>Detect usage without charges</div>
+          <div>Compare wholesale and retail logic</div>
+          <div>Surface distributor margin risk</div>
+        </div>
+      </article>
+
+      <article class="phase">
+        <div class="phase-num">Phase 04</div>
+        <h3>Move tribal logic into Rev.io</h3>
+        <p>Legacy billing rules become documented, searchable, testable, and configurable instead of living in custom code and engineering memory.</p>
+        <div class="mini-list">
+          <div>Translate BRM rules into Rev.io logic</div>
+          <div>Create migration QA checklists</div>
+          <div>Build institutional billing memory</div>
+        </div>
+      </article>
+    </div>
+  </section>
+
+  <section>
+    <div class="section-head">
+      <h2>What Intermedia teams could ask Revii.</h2>
+      <p>The use case lands best when it feels operational, not abstract. These are the kinds of questions Revii should help answer as billing moves into Rev.io.</p>
+    </div>
+
+    <div class="prompt-wall">
+      <article class="ask-card">
+        <div class="tag">Billing operations</div>
+        <p>Which reseller invoices had usage overages last month, and which ones did not produce expected charges?</p>
+      </article>
+      <article class="ask-card">
+        <div class="tag">Finance</div>
+        <p>Where do Atlas, BRM, and HostPilot totals disagree, and what accounts create the largest reconciliation gap?</p>
+      </article>
+      <article class="ask-card">
+        <div class="tag">Revenue assurance</div>
+        <p>Show me customers where usage increased but recurring invoice revenue stayed flat or declined.</p>
+      </article>
+      <article class="ask-card">
+        <div class="tag">Product catalog</div>
+        <p>Which SKUs have active subscribers but no current rate mapping, stale pricing, or missing tax treatment?</p>
+      </article>
+      <article class="ask-card">
+        <div class="tag">Channel billing</div>
+        <p>Find distributor and reseller accounts where wholesale and retail pricing appear misaligned.</p>
+      </article>
+      <article class="ask-card">
+        <div class="tag">Migration QA</div>
+        <p>Compare pre-migration BRM charges against Rev.io-generated charges and explain every variance over threshold.</p>
+      </article>
+    </div>
+  </section>
+
+  <section>
+    <div class="value-band">
+      <div class="value-card">
+        <h3>The business case is revenue protection, not chatbot theater.</h3>
+        <p>For Intermedia, Revii is valuable because the billing environment is complex, high-volume, and business-critical. At $439.23M in ARR, even a small amount of leakage, billing drift, or operational delay matters. Revii gives Intermedia a path to understand billing behavior in real time while Rev.io becomes the modern engine underneath the customer experience they already trust.</p>
+      </div>
+      <div class="metrics">
+        <div class="metric"><strong>$439.23M</strong><span>Annual recurring revenue assumption</span></div>
+        <div class="metric"><strong>$1.22M</strong><span>Year 1 Rev.io investment modeled</span></div>
+        <div class="metric"><strong>0.28%</strong><span>Leakage prevention offsets investment</span></div>
+        <div class="metric"><strong>1</strong><span>Modern billing intelligence layer</span></div>
+      </div>
+    </div>
+  </section>
+
+  <section>
+    <div class="talk-track">
+      <h2>One-minute talk track</h2>
+      <p>Kuldip, the way I would think about Revii for Intermedia is not as a chatbot sitting on top of billing. It is a billing intelligence layer that helps you modernize safely. You already have a proprietary environment in HostPilot, plus Atlas and BRM carrying a lot of legacy billing logic. Rev.io can become the modern charge generation and rating engine underneath that, while HostPilot continues to serve the customer-facing experience where needed. Then Revii helps your team inspect billing data, catch reconciliation issues, explain invoice changes, identify leakage, and gradually document and move legacy billing rules into Rev.io. So instead of a risky big-bang migration, Intermedia gets a phased path: first visibility, then charge generation, then revenue assurance, then deeper modernization.</p>
+    </div>
+  </section>
+
+  <div class="footer">
+    Prepared for Intermedia by Rev.io. This use case is based on Intermedia discovery notes, the June 2026 proposal model, and the phased Rev.io Billing modernization path.
+  </div>
+</main>
+</body>
+</html>

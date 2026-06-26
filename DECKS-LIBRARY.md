@@ -84,6 +84,7 @@ Repo: `git@github.com:koontz-robin/robin-decks.git`
 | ROI — CompSys | roi-compsys.html | https://koontz-robin.github.io/robin-decks/roi-compsys.html | |
 | ROI — Interactive Control Systems | roi-interactive-control-systems.html | https://koontz-robin.github.io/robin-decks/roi-interactive-control-systems.html | |
 | ROI — Intermedia | roi-intermedia.html | https://koontz-robin.github.io/robin-decks/roi-intermedia.html | |
+| Revii AI Billing Modernization — Intermedia | intermedia-revii-modernization.html | https://koontz-robin.github.io/robin-decks/intermedia-revii-modernization.html | AI-centric phased billing modernization use case |
 | ROI — Scipio | roi-scipio.html | https://koontz-robin.github.io/robin-decks/roi-scipio.html | |
 | ROI — Silver Shield | roi-silver-shield.html | https://koontz-robin.github.io/robin-decks/roi-silver-shield.html | |
 | ROI — Sinch Voyant | roi-sinch-voyant.html | https://koontz-robin.github.io/robin-decks/roi-sinch-voyant.html | |
