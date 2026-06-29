@@ -1,0 +1,608 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Revii AI for Communications Service Providers</title>
+<style>
+  :root {
+    --ink: #111827;
+    --muted: #536174;
+    --blue: #115cff;
+    --teal: #16a3b8;
+    --green: #39a85a;
+    --orange: #f1652a;
+    --line: #d8e0ea;
+    --paper: #f6f8fb;
+    --white: #fff;
+    --charcoal: #121826;
+    --slate: #202a3a;
+  }
+
+  * { box-sizing: border-box; }
+  html { scroll-behavior: smooth; }
+  body {
+    margin: 0;
+    color: var(--ink);
+    background: var(--paper);
+    font-family: "Inter", "Segoe UI", Arial, sans-serif;
+  }
+
+  nav {
+    position: sticky;
+    top: 0;
+    z-index: 50;
+    height: 58px;
+    padding: 0 28px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    background: rgba(255,255,255,.94);
+    border-bottom: 1px solid var(--line);
+    backdrop-filter: blur(14px);
+  }
+
+  .brand {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    font-weight: 850;
+    color: var(--charcoal);
+  }
+
+  .brand img {
+    width: 34px;
+    height: 34px;
+    object-fit: contain;
+  }
+
+  .nav-links {
+    display: flex;
+    gap: 18px;
+  }
+
+  .nav-links a {
+    color: #475569;
+    text-decoration: none;
+    font-size: 13px;
+    font-weight: 750;
+  }
+
+  .nav-links a:hover { color: var(--blue); }
+
+  .hero {
+    min-height: calc(100vh - 58px);
+    padding: 54px 32px 30px;
+    display: grid;
+    align-items: center;
+    background:
+      linear-gradient(120deg, rgba(17,92,255,.10), rgba(22,163,184,.08) 45%, rgba(57,168,90,.10)),
+      var(--white);
+  }
+
+  .hero-grid {
+    width: min(1160px, 100%);
+    margin: 0 auto;
+    display: grid;
+    grid-template-columns: minmax(0, 1.02fr) minmax(360px, .8fr);
+    gap: 36px;
+    align-items: center;
+  }
+
+  .eyebrow {
+    color: var(--teal);
+    font-size: 12px;
+    font-weight: 900;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    margin-bottom: 16px;
+  }
+
+  h1 {
+    margin: 0;
+    max-width: 780px;
+    font-size: clamp(42px, 6vw, 78px);
+    line-height: .95;
+    letter-spacing: 0;
+  }
+
+  .hero-copy {
+    max-width: 720px;
+    margin: 24px 0 28px;
+    color: #425066;
+    font-size: 19px;
+    line-height: 1.55;
+  }
+
+  .hero-pills {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+  }
+
+  .pill {
+    border: 1px solid var(--line);
+    background: rgba(255,255,255,.78);
+    border-radius: 999px;
+    padding: 10px 14px;
+    color: #263244;
+    font-size: 13px;
+    font-weight: 800;
+  }
+
+  .product-shot {
+    border: 1px solid #243348;
+    border-radius: 8px;
+    overflow: hidden;
+    box-shadow: 0 28px 80px rgba(21, 34, 55, .24);
+    background: var(--charcoal);
+  }
+
+  .product-shot img {
+    display: block;
+    width: 100%;
+    aspect-ratio: 16 / 10;
+    object-fit: cover;
+    object-position: center;
+  }
+
+  .console-strip {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    border-top: 1px solid #2d394c;
+    background: #151f2d;
+  }
+
+  .console-stat {
+    padding: 16px;
+    border-right: 1px solid #2d394c;
+  }
+
+  .console-stat:last-child { border-right: 0; }
+  .console-stat strong { display: block; color: #fff; font-size: 18px; margin-bottom: 4px; }
+  .console-stat span { color: #a9b7c9; font-size: 11px; font-weight: 850; letter-spacing: 1px; text-transform: uppercase; }
+
+  section {
+    padding: 78px 32px;
+  }
+
+  .wrap {
+    width: min(1120px, 100%);
+    margin: 0 auto;
+  }
+
+  .section-head {
+    max-width: 770px;
+    margin-bottom: 32px;
+  }
+
+  .section-head.center {
+    margin-left: auto;
+    margin-right: auto;
+    text-align: center;
+  }
+
+  .section-head h2 {
+    margin: 0;
+    font-size: clamp(30px, 4vw, 48px);
+    line-height: 1.05;
+    letter-spacing: 0;
+  }
+
+  .section-head p {
+    margin: 14px 0 0;
+    color: var(--muted);
+    font-size: 17px;
+    line-height: 1.6;
+  }
+
+  .dark {
+    color: var(--white);
+    background:
+      linear-gradient(135deg, #121826, #1c2a3e 62%, #132630);
+  }
+
+  .dark .section-head p { color: #b2c0d3; }
+
+  .map {
+    display: grid;
+    grid-template-columns: 1fr 84px 1fr;
+    gap: 14px;
+    align-items: stretch;
+  }
+
+  .stack {
+    border: 1px solid rgba(255,255,255,.16);
+    background: rgba(255,255,255,.06);
+    border-radius: 8px;
+    padding: 20px;
+  }
+
+  .stack-title {
+    color: #9eb4ce;
+    font-size: 11px;
+    font-weight: 900;
+    letter-spacing: 1.7px;
+    text-transform: uppercase;
+    margin-bottom: 14px;
+  }
+
+  .node {
+    border-left: 4px solid var(--teal);
+    border-radius: 8px;
+    background: rgba(8,14,24,.74);
+    padding: 13px 14px;
+    margin: 10px 0;
+  }
+
+  .node.old { border-left-color: var(--orange); }
+  .node.ai { border-left-color: var(--green); }
+  .node.bill { border-left-color: var(--blue); }
+  .node b { display: block; color: #fff; margin-bottom: 4px; }
+  .node span { color: #aebcd0; font-size: 13px; line-height: 1.45; }
+
+  .arrow {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #8be39d;
+    font-size: 38px;
+    font-weight: 900;
+  }
+
+  .grid-3 {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 16px;
+  }
+
+  .capability {
+    min-height: 230px;
+    border: 1px solid var(--line);
+    border-radius: 8px;
+    background: var(--white);
+    padding: 22px;
+    box-shadow: 0 16px 40px rgba(20, 29, 45, .06);
+  }
+
+  .capability .num {
+    width: 34px;
+    height: 34px;
+    display: grid;
+    place-items: center;
+    border-radius: 8px;
+    color: #fff;
+    background: var(--blue);
+    font-size: 13px;
+    font-weight: 900;
+    margin-bottom: 18px;
+  }
+
+  .capability:nth-child(2) .num,
+  .capability:nth-child(5) .num { background: var(--teal); }
+  .capability:nth-child(3) .num,
+  .capability:nth-child(6) .num { background: var(--green); }
+
+  .capability h3 {
+    margin: 0 0 10px;
+    font-size: 22px;
+    line-height: 1.15;
+  }
+
+  .capability p {
+    margin: 0;
+    color: var(--muted);
+    font-size: 15px;
+    line-height: 1.55;
+  }
+
+  .compare {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 18px;
+  }
+
+  .compare-panel {
+    border: 1px solid var(--line);
+    border-radius: 8px;
+    background: var(--white);
+    overflow: hidden;
+  }
+
+  .compare-panel h3 {
+    margin: 0;
+    padding: 18px 20px;
+    color: #fff;
+    background: var(--slate);
+    font-size: 20px;
+  }
+
+  .compare-panel.ai h3 { background: var(--blue); }
+
+  .row {
+    display: grid;
+    grid-template-columns: 165px 1fr;
+    gap: 12px;
+    padding: 16px 20px;
+    border-top: 1px solid var(--line);
+  }
+
+  .row strong {
+    color: var(--ink);
+    font-size: 13px;
+    line-height: 1.35;
+  }
+
+  .row span {
+    color: var(--muted);
+    font-size: 14px;
+    line-height: 1.45;
+  }
+
+  .prompt-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 14px;
+  }
+
+  .prompt {
+    border: 1px solid rgba(255,255,255,.18);
+    border-radius: 8px;
+    background: rgba(255,255,255,.08);
+    padding: 18px;
+  }
+
+  .prompt .tag {
+    color: #8be39d;
+    font-size: 10px;
+    font-weight: 900;
+    letter-spacing: 1.4px;
+    text-transform: uppercase;
+    margin-bottom: 12px;
+  }
+
+  .prompt p {
+    margin: 0;
+    color: #edf5ff;
+    font-size: 16px;
+    line-height: 1.5;
+  }
+
+  .talk-track {
+    border: 1px solid rgba(17,92,255,.18);
+    border-radius: 8px;
+    background: var(--white);
+    padding: 28px;
+    box-shadow: 0 18px 50px rgba(20,29,45,.07);
+  }
+
+  .talk-track h2 {
+    margin: 0 0 14px;
+    font-size: 32px;
+  }
+
+  .talk-track p {
+    margin: 0;
+    color: #3f4d61;
+    font-size: 18px;
+    line-height: 1.65;
+  }
+
+  footer {
+    padding: 28px 32px 42px;
+    color: #6c7889;
+    font-size: 12px;
+    text-align: center;
+  }
+
+  @media (max-width: 960px) {
+    .hero-grid,
+    .map,
+    .compare {
+      grid-template-columns: 1fr;
+    }
+
+    .hero { min-height: auto; }
+    .product-shot { max-width: 680px; }
+    .arrow { min-height: 42px; transform: rotate(90deg); }
+    .grid-3 { grid-template-columns: repeat(2, 1fr); }
+  }
+
+  @media (max-width: 680px) {
+    nav { padding: 0 16px; }
+    .nav-links { display: none; }
+    .hero,
+    section { padding-left: 18px; padding-right: 18px; }
+    .hero-grid { grid-template-columns: 1fr; }
+    .console-strip,
+    .grid-3,
+    .prompt-grid {
+      grid-template-columns: 1fr;
+    }
+    .row {
+      grid-template-columns: 1fr;
+      gap: 4px;
+    }
+  }
+</style>
+</head>
+<body>
+<nav>
+  <div class="brand">
+    <img src="revio-logo.png" alt="Rev.io logo">
+    <span>Revii AI for Telecom</span>
+  </div>
+  <div class="nav-links">
+    <a href="#fit">Why It Fits</a>
+    <a href="#capabilities">Capabilities</a>
+    <a href="#prompts">Prompts</a>
+    <a href="#talk-track">Talk Track</a>
+  </div>
+</nav>
+
+<header class="hero">
+  <div class="hero-grid">
+    <div>
+      <div class="eyebrow">AI-powered PSA for communications providers</div>
+      <h1>Revii turns telecom service work into connected operational intelligence.</h1>
+      <p class="hero-copy">For communications and telecom service providers, Revii AI sits inside Rev.io PSA to connect tickets, dispatch, customer history, time, projects, service activity, and billing context. The result is fewer manual handoffs, better revenue capture, and faster answers across the business.</p>
+      <div class="hero-pills">
+        <div class="pill">UCaaS, VoIP, circuits, internet, managed services</div>
+        <div class="pill">Service + billing context in one place</div>
+        <div class="pill">AI support for dispatch, notes, triage, and reporting</div>
+      </div>
+    </div>
+
+    <aside class="product-shot" aria-label="Revii AI product example">
+      <img src="demo-step9-reviize.png" alt="Revii AI rewriting technician notes inside a service ticket">
+      <div class="console-strip">
+        <div class="console-stat"><strong>Tickets</strong><span>Triaged faster</span></div>
+        <div class="console-stat"><strong>Time</strong><span>Captured cleaner</span></div>
+        <div class="console-stat"><strong>Billing</strong><span>Less leakage</span></div>
+      </div>
+    </aside>
+  </div>
+</header>
+
+<section class="dark" id="fit">
+  <div class="wrap">
+    <div class="section-head">
+      <h2>Telecom providers do not just need AI. They need AI that understands the handoff between service and revenue.</h2>
+      <p>Communications providers live in the messy middle of customer support, field work, provisioning, contract changes, usage, account hierarchy, and billing readiness. Revii makes that work easier to search, summarize, route, and act on.</p>
+    </div>
+
+    <div class="map">
+      <div class="stack">
+        <div class="stack-title">Traditional operating reality</div>
+        <div class="node old"><b>Disconnected ticketing</b><span>Customer issues, dispatch updates, installation work, and escalations live across separate tools or inboxes.</span></div>
+        <div class="node old"><b>Manual time and notes</b><span>Technicians and support reps write inconsistent notes, miss billable activity, or clean up documentation later.</span></div>
+        <div class="node old"><b>Billing blind spots</b><span>Completed work, usage-related changes, and service adjustments can fall between operations and billing.</span></div>
+      </div>
+      <div class="arrow">→</div>
+      <div class="stack">
+        <div class="stack-title">Rev.io PSA + Revii AI</div>
+        <div class="node ai"><b>Intelligent service workflow</b><span>Revii helps summarize customer history, route tickets, rewrite notes, and surface what needs attention.</span></div>
+        <div class="node bill"><b>Connected billing context</b><span>Service activity, time, customer records, and billing signals live closer together in the Rev.io operating model.</span></div>
+        <div class="node ai"><b>Operational visibility</b><span>Leadership can ask better questions about backlog, revenue leakage, customer trends, and team performance.</span></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="capabilities">
+  <div class="wrap">
+    <div class="section-head center">
+      <h2>What Revii can do for a communications service provider.</h2>
+      <p>Based on Rev.io's AI-powered PSA positioning: automate workflows, connect service and billing, capture revenue, improve visibility, route tickets, and reduce repetitive work.</p>
+    </div>
+
+    <div class="grid-3">
+      <article class="capability">
+        <div class="num">01</div>
+        <h3>Summarize customer context</h3>
+        <p>Give support, dispatch, and account teams a quick read on recent tickets, open issues, recurring service complaints, and account activity before they act.</p>
+      </article>
+      <article class="capability">
+        <div class="num">02</div>
+        <h3>Turn rough notes into clean documentation</h3>
+        <p>Help technicians convert shorthand into professional, customer-ready updates for installs, repairs, circuit issues, voice changes, or managed service work.</p>
+      </article>
+      <article class="capability">
+        <div class="num">03</div>
+        <h3>Protect billable work</h3>
+        <p>Spot service activity, time, parts, project work, or change requests that should be reviewed before revenue slips through manual gaps.</p>
+      </article>
+      <article class="capability">
+        <div class="num">04</div>
+        <h3>Route and prioritize tickets</h3>
+        <p>Use customer, service type, issue history, SLA urgency, and operational signals to help teams move tickets to the right queue faster.</p>
+      </article>
+      <article class="capability">
+        <div class="num">05</div>
+        <h3>Expose operating trends</h3>
+        <p>Ask plain-language questions about backlog, dispatch volume, repeat issues, service types, technician workload, and customer risk patterns.</p>
+      </article>
+      <article class="capability">
+        <div class="num">06</div>
+        <h3>Connect service to billing readiness</h3>
+        <p>Help teams see whether installation, activation, project completion, or support activity is ready for invoice, contract, or billing follow-up.</p>
+      </article>
+    </div>
+  </div>
+</section>
+
+<section>
+  <div class="wrap">
+    <div class="section-head">
+      <h2>Revii replaces manual PSA friction with telecom-specific operating leverage.</h2>
+      <p>The point is not a generic chatbot. The point is AI that lives where service work, customer history, and revenue responsibility already meet.</p>
+    </div>
+
+    <div class="compare">
+      <div class="compare-panel">
+        <h3>Traditional PSA workflow</h3>
+        <div class="row"><strong>Workflow automation</strong><span>Manual assignments, status updates, and handoffs require constant team oversight.</span></div>
+        <div class="row"><strong>Service and billing</strong><span>Completed work may require separate billing review, spreadsheets, or tribal knowledge.</span></div>
+        <div class="row"><strong>Revenue capture</strong><span>Time, parts, usage-related changes, and service adjustments can be missed.</span></div>
+        <div class="row"><strong>Visibility</strong><span>Reporting is often backward-looking and depends on someone building the right report.</span></div>
+      </div>
+
+      <div class="compare-panel ai">
+        <h3>Rev.io PSA with Revii AI</h3>
+        <div class="row"><strong>Workflow automation</strong><span>AI-assisted summaries, routing, documentation, and triggers help work move faster.</span></div>
+        <div class="row"><strong>Service and billing</strong><span>Customer, ticket, time, project, and billing context can live in one connected operating model.</span></div>
+        <div class="row"><strong>Revenue capture</strong><span>Billable events are easier to identify across service activity, technician time, and operational follow-up.</span></div>
+        <div class="row"><strong>Visibility</strong><span>Teams can ask natural-language questions about work, trends, customers, and revenue risk.</span></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="dark" id="prompts">
+  <div class="wrap">
+    <div class="section-head center">
+      <h2>Questions a telecom team could ask Revii.</h2>
+      <p>These prompts make the story concrete for a provider selling voice, internet, UCaaS, circuits, managed services, or multi-location communications support.</p>
+    </div>
+
+    <div class="prompt-grid">
+      <div class="prompt">
+        <div class="tag">Customer history</div>
+        <p>Summarize this customer's last 90 days of tickets, escalations, dispatches, and open billing-sensitive issues.</p>
+      </div>
+      <div class="prompt">
+        <div class="tag">Revenue leakage</div>
+        <p>Show me service tickets from this week that include billable time, parts, project work, or contract changes that have not been reviewed for billing.</p>
+      </div>
+      <div class="prompt">
+        <div class="tag">Ticket routing</div>
+        <p>Which open tickets look like voice quality, circuit, equipment, provisioning, or managed service issues, and who should own each next step?</p>
+      </div>
+      <div class="prompt">
+        <div class="tag">Dispatch readiness</div>
+        <p>Which field visits are missing enough detail for the technician to complete the job without calling the office?</p>
+      </div>
+      <div class="prompt">
+        <div class="tag">Executive visibility</div>
+        <p>What service categories are driving the most repeat work this month, and which customers are at risk because of unresolved operational patterns?</p>
+      </div>
+      <div class="prompt">
+        <div class="tag">Billing readiness</div>
+        <p>Which completed installs, activations, or service changes are ready for billing follow-up, and which ones need more documentation first?</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="talk-track">
+  <div class="wrap">
+    <div class="talk-track">
+      <h2>Simple sales talk track</h2>
+      <p>For a communications provider, Revii is valuable because the operation is high-volume, service-heavy, and revenue-sensitive. A technician note, dispatch update, install milestone, or support escalation is not just operational noise. It can affect customer experience, billing accuracy, margin, and retention. Rev.io PSA gives the team one operating layer for service work, and Revii adds AI assistance inside that layer so teams can summarize account history, clean up notes, route tickets, find missed billables, and understand what is happening across the business without waiting on manual report building.</p>
+    </div>
+  </div>
+</section>
+
+<footer>Rev.io internal sales enablement page · Revii AI for communications and telecom service providers · June 29, 2026</footer>
+</body>
+</html>
