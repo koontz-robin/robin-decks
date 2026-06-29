@@ -1,0 +1,470 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Why Intermedia Should Switch to Rev.io</title>
+<style>
+  :root {
+    --bg: #07111f;
+    --panel: #101a2a;
+    --panel-2: #152236;
+    --ink: #eef5ff;
+    --muted: #a9b8cb;
+    --line: #26374f;
+    --blue: #1667cc;
+    --green: #6ebe4f;
+    --teal: #2499b6;
+    --orange: #fc6120;
+    --yellow: #f5b64b;
+    --paper: #f7f9fc;
+    --dark-text: #162033;
+  }
+
+  * { box-sizing: border-box; }
+  html { scroll-behavior: smooth; }
+  body {
+    margin: 0;
+    color: var(--ink);
+    background: var(--bg);
+    font-family: "Inter", "Segoe UI", Arial, sans-serif;
+  }
+
+  nav {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    z-index: 20;
+    height: 54px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 26px;
+    background: rgba(7,17,31,.92);
+    border-bottom: 1px solid rgba(255,255,255,.08);
+    backdrop-filter: blur(12px);
+  }
+
+  .brand-row {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+  }
+
+  .brand-row img {
+    height: 30px;
+    max-width: 132px;
+    object-fit: contain;
+  }
+
+  .brand-row .intermedia {
+    background: #fff;
+    border-radius: 6px;
+    padding: 5px 8px;
+  }
+
+  .divider {
+    width: 1px;
+    height: 26px;
+    background: rgba(255,255,255,.18);
+  }
+
+  .nav-title {
+    color: rgba(255,255,255,.64);
+    font-size: 12px;
+    font-weight: 800;
+    letter-spacing: 1.4px;
+    text-transform: uppercase;
+  }
+
+  .slide {
+    min-height: 100vh;
+    padding: 86px 44px 46px;
+    display: flex;
+    align-items: center;
+    border-bottom: 1px solid rgba(255,255,255,.08);
+    background:
+      linear-gradient(90deg, rgba(255,255,255,.035) 1px, transparent 1px),
+      linear-gradient(180deg, rgba(255,255,255,.035) 1px, transparent 1px),
+      var(--bg);
+    background-size: 36px 36px;
+  }
+
+  .slide.light {
+    color: var(--dark-text);
+    background: var(--paper);
+  }
+
+  .wrap {
+    width: min(1140px, 100%);
+    margin: 0 auto;
+  }
+
+  .eyebrow {
+    color: var(--teal);
+    font-size: 12px;
+    font-weight: 900;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    margin-bottom: 16px;
+  }
+
+  .light .eyebrow { color: var(--blue); }
+
+  h1, h2 {
+    margin: 0;
+    letter-spacing: 0;
+    line-height: .98;
+  }
+
+  h1 {
+    max-width: 890px;
+    font-size: clamp(48px, 7vw, 86px);
+  }
+
+  h2 {
+    max-width: 880px;
+    font-size: clamp(38px, 5vw, 62px);
+  }
+
+  .lead {
+    max-width: 760px;
+    margin: 26px 0 0;
+    color: #c4d1e1;
+    font-size: 20px;
+    line-height: 1.55;
+  }
+
+  .light .lead { color: #526176; }
+
+  .metrics {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 16px;
+    margin-top: 42px;
+  }
+
+  .metric {
+    border: 1px solid var(--line);
+    border-radius: 8px;
+    background: rgba(16,26,42,.86);
+    padding: 22px;
+  }
+
+  .metric strong {
+    display: block;
+    color: var(--green);
+    font-size: 40px;
+    line-height: 1;
+    margin-bottom: 10px;
+  }
+
+  .metric span {
+    color: var(--muted);
+    font-size: 12px;
+    font-weight: 900;
+    letter-spacing: 1.3px;
+    line-height: 1.35;
+    text-transform: uppercase;
+  }
+
+  .split {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 24px;
+    margin-top: 34px;
+  }
+
+  .card {
+    border: 1px solid var(--line);
+    border-radius: 8px;
+    background: rgba(16,26,42,.88);
+    padding: 24px;
+    min-height: 210px;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .light .card {
+    border-color: #dbe3ee;
+    background: #fff;
+    box-shadow: 0 16px 42px rgba(22,32,51,.06);
+  }
+
+  .card::before {
+    content: "";
+    position: absolute;
+    inset: 0 auto auto 0;
+    width: 100%;
+    height: 5px;
+    background: var(--blue);
+  }
+
+  .card.green::before { background: var(--green); }
+  .card.teal::before { background: var(--teal); }
+  .card.orange::before { background: var(--orange); }
+  .card.yellow::before { background: var(--yellow); }
+
+  .card h3 {
+    margin: 0 0 12px;
+    font-size: 25px;
+    line-height: 1.15;
+  }
+
+  .card p {
+    margin: 0;
+    color: var(--muted);
+    font-size: 16px;
+    line-height: 1.55;
+  }
+
+  .light .card p { color: #5d6c80; }
+
+  .timeline {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 14px;
+    margin-top: 38px;
+  }
+
+  .step {
+    border: 1px solid rgba(255,255,255,.13);
+    border-radius: 8px;
+    background: rgba(255,255,255,.06);
+    padding: 20px;
+    min-height: 236px;
+  }
+
+  .step .num {
+    color: var(--green);
+    font-size: 12px;
+    font-weight: 900;
+    letter-spacing: 1.4px;
+    text-transform: uppercase;
+    margin-bottom: 20px;
+  }
+
+  .step h3 {
+    margin: 0 0 10px;
+    font-size: 20px;
+    line-height: 1.15;
+  }
+
+  .step p {
+    margin: 0;
+    color: var(--muted);
+    font-size: 14px;
+    line-height: 1.5;
+  }
+
+  .ai-console {
+    margin-top: 34px;
+    border: 1px solid var(--line);
+    border-radius: 8px;
+    background: #0b1524;
+    overflow: hidden;
+  }
+
+  .console-top {
+    height: 42px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 0 16px;
+    background: #101a2a;
+    border-bottom: 1px solid var(--line);
+  }
+
+  .dot {
+    width: 9px;
+    height: 9px;
+    border-radius: 50%;
+    background: var(--orange);
+  }
+
+  .dot:nth-child(2) { background: var(--yellow); }
+  .dot:nth-child(3) { background: var(--green); }
+  .console-label {
+    margin-left: auto;
+    color: #8091a8;
+    font-size: 11px;
+    font-weight: 900;
+    letter-spacing: 1.6px;
+    text-transform: uppercase;
+  }
+
+  .console-body {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 12px;
+    padding: 18px;
+  }
+
+  .prompt {
+    border: 1px solid #2d425f;
+    border-radius: 8px;
+    background: #101a2a;
+    padding: 16px;
+  }
+
+  .prompt .tag {
+    color: var(--green);
+    font-size: 10px;
+    font-weight: 900;
+    letter-spacing: 1.3px;
+    text-transform: uppercase;
+    margin-bottom: 10px;
+  }
+
+  .prompt p {
+    margin: 0;
+    color: #e7f0fb;
+    font-size: 15px;
+    line-height: 1.45;
+  }
+
+  .closing {
+    max-width: 940px;
+    border-left: 7px solid var(--green);
+    padding-left: 28px;
+  }
+
+  .closing h2 { max-width: 920px; }
+
+  @media (max-width: 900px) {
+    nav { position: static; }
+    .nav-title { display: none; }
+    .slide { padding: 48px 22px; }
+    .split,
+    .metrics,
+    .timeline,
+    .console-body {
+      grid-template-columns: 1fr;
+    }
+    .step { min-height: 0; }
+  }
+</style>
+</head>
+<body>
+<nav>
+  <div class="brand-row">
+    <img src="revio-logo.png" alt="Rev.io">
+    <div class="divider"></div>
+    <img class="intermedia" src="intermedia-logo.png" alt="Intermedia">
+  </div>
+  <div class="nav-title">Why Intermedia Should Switch to Rev.io</div>
+</nav>
+
+<section class="slide">
+  <div class="wrap">
+    <div class="eyebrow">Billing modernization case</div>
+    <h1>Intermedia has outgrown the billing platform carrying its growth.</h1>
+    <p class="lead">BRM has been pushed hard by strong engineering work, but the business is now running into a scale ceiling: long bill runs, month-end pressure, and more complexity with every partner, customer, and market added.</p>
+    <div class="metrics">
+      <div class="metric"><strong>1.5M</strong><span>Billing lines running today</span></div>
+      <div class="metric"><strong>48 hrs</strong><span>Current bill-run window</span></div>
+      <div class="metric"><strong>3M</strong><span>Lines needed for the next phase</span></div>
+    </div>
+  </div>
+</section>
+
+<section class="slide light">
+  <div class="wrap">
+    <div class="eyebrow">The breaking point</div>
+    <h2>The issue is not effort. It is architecture.</h2>
+    <p class="lead">Intermedia has bought time through multi-threading, performance tuning, and real engineering investment. But if bill runs are already spilling past the first of the month, every growth initiative makes the operational risk bigger.</p>
+    <div class="split">
+      <article class="card orange">
+        <h3>Bill runs are too long</h3>
+        <p>A 48-hour cycle creates pressure around month-end close, downstream reporting, partner timelines, customer experience, and finance confidence.</p>
+      </article>
+      <article class="card yellow">
+        <h3>Scale increases the strain</h3>
+        <p>Every new partner, customer, product bundle, and market expansion adds more lines, more exceptions, and more dependency on custom billing work.</p>
+      </article>
+    </div>
+  </div>
+</section>
+
+<section class="slide">
+  <div class="wrap">
+    <div class="eyebrow">The growth risk</div>
+    <h2>Ascend growth needs a billing engine with a path to 3 million lines.</h2>
+    <p class="lead">Intermedia is not solving for today's billing run only. It is solving for the next wave of partner-led growth, larger customer volume, more products, and more market expansion. BRM does not give the business a credible path to that future.</p>
+    <div class="timeline">
+      <div class="step"><div class="num">Pressure 01</div><h3>More partners</h3><p>Partner invoicing models become harder to support and reconcile when billing logic stays custom.</p></div>
+      <div class="step"><div class="num">Pressure 02</div><h3>More customers</h3><p>Higher customer volume increases line count, exceptions, bill-run windows, and operational exposure.</p></div>
+      <div class="step"><div class="num">Pressure 03</div><h3>More markets</h3><p>New market entry adds billing rules, taxes, product packaging, and reporting complexity.</p></div>
+      <div class="step"><div class="num">Pressure 04</div><h3>More engineering drag</h3><p>Engineering time keeps flowing into billing capabilities instead of product and growth work.</p></div>
+    </div>
+  </div>
+</section>
+
+<section class="slide light">
+  <div class="wrap">
+    <div class="eyebrow">The opportunity cost</div>
+    <h2>Intermedia should not have to build commodity billing capabilities in-house.</h2>
+    <p class="lead">Anniversary billing, invoice-level detail, and partner invoicing models are exactly the kinds of capabilities a purpose-built billing platform should already handle. Rev.io lets Intermedia shift engineering energy back toward differentiation.</p>
+    <div class="split">
+      <article class="card orange">
+        <h3>Today: engineering-owned billing burden</h3>
+        <p>Performance tuning, custom billing logic, billing-model development, and exception handling consume technical capacity that could be pointed at growth.</p>
+      </article>
+      <article class="card green">
+        <h3>With Rev.io: platform-owned billing execution</h3>
+        <p>Rev.io is built for complex communications billing, including high-volume bill runs, detailed invoicing, recurring models, usage, and partner billing structures.</p>
+      </article>
+    </div>
+  </div>
+</section>
+
+<section class="slide">
+  <div class="wrap">
+    <div class="eyebrow">The Rev.io answer</div>
+    <h2>Rev.io gives Intermedia a faster, purpose-built billing foundation.</h2>
+    <p class="lead">The reason to lead with architecture and performance is simple: billing speed, scale, and reliability are the heart of the problem. Rev.io brings the platform, industry billing depth, and technical expertise to solve that problem directly.</p>
+    <div class="split">
+      <article class="card green">
+        <h3>Faster bill-run execution</h3>
+        <p>Move from a fragile, heavily tuned billing run toward a platform designed for communications billing performance and repeatable monthly execution.</p>
+      </article>
+      <article class="card teal">
+        <h3>Built-in telecom billing capabilities</h3>
+        <p>Support anniversary billing, invoice-level detail, partner invoicing models, usage complexity, and customer-specific billing needs without rebuilding them from scratch.</p>
+      </article>
+    </div>
+  </div>
+</section>
+
+<section class="slide">
+  <div class="wrap">
+    <div class="eyebrow">Revii AI automation</div>
+    <h2>Rev.io also brings native AI through Revii.</h2>
+    <p class="lead">Revii adds an automation and intelligence layer on top of the billing and operations data, helping teams ask better questions, find issues faster, and reduce manual work around billing workflows.</p>
+    <div class="ai-console">
+      <div class="console-top">
+        <div class="dot"></div>
+        <div class="dot"></div>
+        <div class="dot"></div>
+        <div class="console-label">Revii AI examples</div>
+      </div>
+      <div class="console-body">
+        <div class="prompt"><div class="tag">Bill-run insight</div><p>Show the exceptions most likely to delay this month's billing cycle.</p></div>
+        <div class="prompt"><div class="tag">Revenue assurance</div><p>Identify accounts where usage, partner pricing, or invoice detail changed unexpectedly.</p></div>
+        <div class="prompt"><div class="tag">Operational automation</div><p>Summarize billing issues by partner, product, and customer segment for leadership review.</p></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="slide light">
+  <div class="wrap closing">
+    <div class="eyebrow">Why switch now</div>
+    <h2>Rev.io lets Intermedia stop stretching BRM and start scaling billing.</h2>
+    <p class="lead">The business has already proven it can engineer around the current platform's limits. The question is whether it should keep doing that. Rev.io gives Intermedia a purpose-built path to faster bill runs, 3 million-line scale, native AI automation with Revii, and fewer engineering cycles spent rebuilding billing capabilities that should already exist.</p>
+  </div>
+</section>
+
+</body>
+</html>
