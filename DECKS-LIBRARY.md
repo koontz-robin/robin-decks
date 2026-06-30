@@ -21,7 +21,7 @@ Repo: `git@github.com:koontz-robin/robin-decks.git`
 | Sales KPI Results - Q2 2026 | sales-kpi-results-q2-2026.html | https://koontz-robin.github.io/robin-decks/sales-kpi-results-q2-2026.html | Snapshot from Q2 26 workbook tab |
 | CSA Cohorts | csa-cohorts.html | https://koontz-robin.github.io/robin-decks/csa-cohorts.html | Snapshot copy of Sales Opportunities Created |
 | 2026 PSA Team Tracker | 2026-psa-team-tracker.html | https://koontz-robin.github.io/robin-decks/2026-psa-team-tracker.html | Nightly (11pm ET) |
-| Monthly Report Pacing Dashboard | monthly-api-pacing-dashboard.html | https://koontz-robin.github.io/robin-decks/monthly-api-pacing-dashboard.html | Daily (9am ET) |
+| Monthly Report Pacing Dashboard | monthly-api-pacing-dashboard.html | https://koontz-robin.github.io/robin-decks/monthly-api-pacing-dashboard.html | JSON-driven monthly pacing for Ryan's starting report set |
 | PSA Onboarding Tracker | psa-onboarding-tracker.html | https://koontz-robin.github.io/robin-decks/psa-onboarding-tracker.html | Daily (8am & 1pm ET) |
 | PSA Opportunity Dashboard | psa-opportunity-dashboard.html | https://koontz-robin.github.io/robin-decks/psa-opportunity-dashboard.html | On demand |
 | PSA Target Tracker | psa-target-tracker.html | https://koontz-robin.github.io/robin-decks/psa-target-tracker.html | On demand |
@@ -78,13 +78,17 @@ Repo: `git@github.com:koontz-robin/robin-decks.git`
 | Name | File | URL | Notes |
 |---|---|---|---|
 | PSA Calculator — Saved Scenario | psa-calculator.html | https://koontz-robin.github.io/robin-decks/psa-calculator.html?standardQty=5&standardRate=115&fieldQty=2&fieldRate=30&reviiQty=100&reviiRate=0.50&commVolume=10000&commPercent=3&monthlyMinimum=1000&cloudBackupGb=400&cloudBackupRate=0.10&rmmEndpoints=60&rmmRate=2.00&edrEndpoints=130&edrRate=1.20&setupQty=1&setupRate=2500&trainingQty=0&trainingRate=0&monthlyOrder=minimum%2Cstandard%2Cfield%2Crevii%2Ccommunications%2Ccloud-backup%2Crmm%2Cedr | Prefilled PSA package scenario saved from Ryan's calculator link |
+| Revii AI Overview | revii-ai.html | https://koontz-robin.github.io/robin-decks/revii-ai.html | General Revii AI capabilities presentation page |
 | ROI Comparison Calculator | roi-comparison-calculator.html | https://koontz-robin.github.io/robin-decks/roi-comparison-calculator.html | Fillable current software vs. Rev.io calculator |
+| Intermedia Resource Hub | intermedia/ | https://koontz-robin.github.io/robin-decks/intermedia/ | External customer-facing resource hub |
 | ROI — C1ST | roi-c1st.html | https://koontz-robin.github.io/robin-decks/roi-c1st.html | |
 | ROI — DFW Security | roi-dfw-security.html | https://koontz-robin.github.io/robin-decks/roi-dfw-security.html | PSA + AR Payments, security integrator, Jake Borah |
 | ROI — Celerius | roi-celerius.html | https://koontz-robin.github.io/robin-decks/roi-celerius.html | |
 | ROI — CompSys | roi-compsys.html | https://koontz-robin.github.io/robin-decks/roi-compsys.html | |
 | ROI — Interactive Control Systems | roi-interactive-control-systems.html | https://koontz-robin.github.io/robin-decks/roi-interactive-control-systems.html | |
 | ROI — Intermedia | roi-intermedia.html | https://koontz-robin.github.io/robin-decks/roi-intermedia.html | |
+| Revii AI Billing Modernization — Intermedia PPTX | Intermedia_Revii_AI_Billing_Modernization.pptx | https://koontz-robin.github.io/robin-decks/Intermedia_Revii_AI_Billing_Modernization.pptx | Customer-ready PowerPoint |
+| Revii AI Billing Modernization — Intermedia | intermedia-revii-modernization.html | https://koontz-robin.github.io/robin-decks/intermedia-revii-modernization.html | AI-centric phased billing modernization use case |
 | ROI — Scipio | roi-scipio.html | https://koontz-robin.github.io/robin-decks/roi-scipio.html | |
 | ROI — Silver Shield | roi-silver-shield.html | https://koontz-robin.github.io/robin-decks/roi-silver-shield.html | |
 | ROI — Sinch Voyant | roi-sinch-voyant.html | https://koontz-robin.github.io/robin-decks/roi-sinch-voyant.html | |
