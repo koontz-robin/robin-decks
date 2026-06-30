@@ -430,7 +430,13 @@ def main():
   <div class="table-wrap">
   <table>
     <thead><tr>
-      <th class="sortable" onclick="sortTable(this,0)" data-col="0">Client <span class="sort-icon">⇅</span></th><th class="sortable" style="text-align:center" onclick="sortTable(this,1)" data-col="1">Payments <span class="sort-icon">⇅</span></th><th class="sortable" style="text-align:right" onclick="sortTable(this,2)" data-col="2">Avg MRR <span class="sort-icon">⇅</span></th><th class="sortable" onclick="sortTable(this,3)" data-col="3">Last CBR <span class="sort-icon">⇅</span></th><th class="sortable" onclick="sortTable(this,4)" data-col="4">Status <span class="sort-icon">⇅</span></th><th class="sortable" onclick="sortTable(this,5)" data-col="5">Last Activity <span class="sort-icon">⇅</span></th><th>Closed Won Opportunities</th>
+      <th class="sortable" onclick="sortTable(this,0)" data-col="0">Client <span class="sort-icon">⇅</span><input class="col-filter" data-col="0" oninput="filterTable(this)" onclick="event.stopPropagation()" placeholder="Filter client"></th>
+      <th class="sortable" style="text-align:center" onclick="sortTable(this,1)" data-col="1">Payments <span class="sort-icon">⇅</span><input class="col-filter" data-col="1" oninput="filterTable(this)" onclick="event.stopPropagation()" placeholder="✓ or —"></th>
+      <th class="sortable" style="text-align:right" onclick="sortTable(this,2)" data-col="2">Avg MRR <span class="sort-icon">⇅</span><input class="col-filter" data-col="2" oninput="filterTable(this)" onclick="event.stopPropagation()" placeholder="Filter MRR"></th>
+      <th class="sortable" onclick="sortTable(this,3)" data-col="3">Last CBR <span class="sort-icon">⇅</span><input class="col-filter" data-col="3" oninput="filterTable(this)" onclick="event.stopPropagation()" placeholder="YYYY-MM-DD"></th>
+      <th class="sortable" onclick="sortTable(this,4)" data-col="4">Status <span class="sort-icon">⇅</span><input class="col-filter" data-col="4" oninput="filterTable(this)" onclick="event.stopPropagation()" placeholder="Current / Never"></th>
+      <th class="sortable" onclick="sortTable(this,5)" data-col="5">Last Activity <span class="sort-icon">⇅</span><input class="col-filter" data-col="5" oninput="filterTable(this)" onclick="event.stopPropagation()" placeholder="YYYY-MM-DD"></th>
+      <th class="sortable" onclick="sortTable(this,6)" data-col="6">Closed Won Opportunities <span class="sort-icon">⇅</span><input class="col-filter" data-col="6" oninput="filterTable(this)" onclick="event.stopPropagation()" placeholder="Filter opps"></th>
     </tr></thead>
     <tbody>{rows}</tbody>
   </table>
@@ -515,6 +521,9 @@ th.sortable{{cursor:pointer;user-select:none;white-space:nowrap}}
 th.sortable:hover{{color:#f8fafc;background:#2d3f55}}
 .sort-icon{{font-size:11px;color:#475569;margin-left:4px}}
 th{{padding:8px 12px;font-size:10px;color:#475569;text-align:left;text-transform:uppercase;font-weight:700;white-space:nowrap}}
+.col-filter{{display:block;width:100%;min-width:92px;margin-top:6px;padding:5px 7px;border:1px solid #243247;border-radius:6px;background:#020817;color:#cbd5e1;font-size:11px;font-weight:500;text-transform:none;letter-spacing:0;outline:none}}
+.col-filter:focus{{border-color:#38bdf8;box-shadow:0 0 0 2px #38bdf820}}
+.col-filter::placeholder{{color:#475569}}
 .acct-row td{{padding:9px 12px;border-bottom:1px solid #0f172a}}
 .acct-row:last-child td{{border-bottom:none}}
 .acct-row:hover td{{background:rgba(255,255,255,0.02)}}
@@ -599,7 +608,7 @@ function switchProd(ownerIdx, prodIdx) {{
 function sortTable(th, colIdx) {{
   const table = th.closest('table');
   const tbody = table.querySelector('tbody');
-  const rows = Array.from(tbody.querySelectorAll('tr.cr'));
+  const rows = Array.from(tbody.querySelectorAll('tr.acct-row'));
   const asc = th.dataset.dir !== 'asc';
   th.dataset.dir = asc ? 'asc' : 'desc';
   table.querySelectorAll('th.sortable .sort-icon').forEach(i => i.textContent = '⇅');
@@ -609,6 +618,10 @@ function sortTable(th, colIdx) {{
     if (!td) return '';
     const txt = td.innerText.trim();
     if (colIdx === 2) return parseFloat(txt.replace(/[$,]/g,'')) || 0;
+    if (colIdx === 3 || colIdx === 5) {{
+      const date = txt.match(/\\d{{4}}-\\d{{2}}-\\d{{2}}/);
+      return date ? date[0] : '';
+    }}
     return txt.toLowerCase();
   }};
   rows.sort((a, b) => {{
@@ -619,11 +632,28 @@ function sortTable(th, colIdx) {{
   }});
   rows.forEach(row => {{
     tbody.appendChild(row);
-    const detailId = row.getAttribute('onclick') ? row.getAttribute('onclick').match(/toggle\('([^']+)'\)/) : null;
+    const detailId = row.getAttribute('onclick') ? row.getAttribute('onclick').match(/toggle\\('([^']+)'\\)/) : null;
     if (detailId) {{
       const detail = document.getElementById('a_' + detailId[1]);
       if (detail) tbody.appendChild(detail);
     }}
+  }});
+}}
+function filterTable(input) {{
+  const table = input.closest('table');
+  const tbody = table.querySelector('tbody');
+  const filters = Array.from(table.querySelectorAll('.col-filter')).map(f => ({{
+    col: Number(f.dataset.col),
+    value: f.value.trim().toLowerCase()
+  }})).filter(f => f.value);
+
+  tbody.querySelectorAll('tr.acct-row').forEach(row => {{
+    const cells = row.querySelectorAll('td');
+    const visible = filters.every(filter => {{
+      const cell = cells[filter.col];
+      return cell && cell.innerText.toLowerCase().includes(filter.value);
+    }});
+    row.style.display = visible ? '' : 'none';
   }});
 }}
 </script>
