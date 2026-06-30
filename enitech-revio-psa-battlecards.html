@@ -1,0 +1,306 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Enitech Solutions - Rev.io PSA Battlecards</title>
+<style>
+  :root {
+    --bg: #08111f;
+    --panel: #0f172a;
+    --panel2: #111c31;
+    --border: #26364d;
+    --text: #e5edf7;
+    --muted: #94a3b8;
+    --soft: #64748b;
+    --green: #3dc570;
+    --blue: #38bdf8;
+    --amber: #f59e0b;
+    --red: #f87171;
+  }
+  * { box-sizing: border-box; }
+  body {
+    margin: 0;
+    background:
+      linear-gradient(180deg, rgba(61,197,112,0.10), transparent 330px),
+      var(--bg);
+    color: var(--text);
+    font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+    line-height: 1.5;
+  }
+  .shell { max-width: 1180px; margin: 0 auto; padding: 34px 22px 54px; }
+  header {
+    display: grid;
+    grid-template-columns: 1fr auto;
+    gap: 24px;
+    align-items: start;
+    border-bottom: 1px solid var(--border);
+    padding-bottom: 22px;
+    margin-bottom: 24px;
+  }
+  .logo { width: 132px; height: auto; display: block; margin-left: auto; }
+  .eyebrow {
+    color: var(--green);
+    font-weight: 800;
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+    font-size: 11px;
+    margin-bottom: 10px;
+  }
+  h1 {
+    margin: 0;
+    font-size: clamp(30px, 5vw, 54px);
+    line-height: 1.02;
+    letter-spacing: 0;
+  }
+  .subtitle {
+    margin-top: 12px;
+    color: var(--muted);
+    max-width: 790px;
+    font-size: 16px;
+  }
+  .actions { display: flex; gap: 10px; margin-top: 18px; flex-wrap: wrap; }
+  button, .link-button {
+    border: 1px solid rgba(61,197,112,0.45);
+    background: rgba(61,197,112,0.12);
+    color: #dff7e8;
+    border-radius: 7px;
+    padding: 9px 12px;
+    font: inherit;
+    font-size: 13px;
+    font-weight: 800;
+    cursor: pointer;
+    text-decoration: none;
+  }
+  button:hover, .link-button:hover { border-color: var(--green); background: rgba(61,197,112,0.20); }
+  .meta {
+    min-width: 235px;
+    background: rgba(15,23,42,0.78);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 14px;
+    color: var(--muted);
+    font-size: 12px;
+  }
+  .meta-row { display: flex; justify-content: space-between; gap: 14px; padding: 6px 0; border-bottom: 1px solid rgba(148,163,184,0.12); }
+  .meta-row:last-child { border-bottom: 0; }
+  .meta-row strong { color: var(--text); text-align: right; }
+  .thesis {
+    background: linear-gradient(180deg, rgba(17,28,49,0.96), rgba(15,23,42,0.96));
+    border: 1px solid var(--border);
+    border-left: 4px solid var(--green);
+    border-radius: 8px;
+    padding: 20px;
+    margin: 22px 0;
+  }
+  .thesis h2, section h2 { margin: 0 0 10px; font-size: 22px; letter-spacing: 0; }
+  .thesis p { margin: 8px 0 0; color: #c9d7e8; font-size: 15px; }
+  .grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 18px; }
+  section {
+    background: rgba(15,23,42,0.86);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 20px;
+  }
+  .competitor {
+    color: var(--blue);
+    font-size: 12px;
+    font-weight: 900;
+    letter-spacing: 1.2px;
+    text-transform: uppercase;
+    margin-bottom: 6px;
+  }
+  .callout {
+    background: rgba(56,189,248,0.08);
+    border: 1px solid rgba(56,189,248,0.22);
+    border-radius: 7px;
+    padding: 13px;
+    color: #d8effb;
+    font-size: 14px;
+    margin: 14px 0;
+  }
+  h3 {
+    margin: 20px 0 8px;
+    color: #d7f5e2;
+    font-size: 14px;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+  }
+  ul, ol { margin: 8px 0 0; padding-left: 20px; color: #cbd7e6; }
+  li { margin: 7px 0; }
+  .danger h3 { color: #ffd7a3; }
+  .question-list li { color: #dce8f7; }
+  .objection {
+    display: grid;
+    grid-template-columns: 0.85fr 1.35fr;
+    gap: 12px;
+    padding: 12px 0;
+    border-top: 1px solid rgba(148,163,184,0.14);
+  }
+  .objection:first-of-type { border-top: 0; }
+  .q { color: #fff0c4; font-weight: 800; }
+  .a { color: #cbd7e6; }
+  .path, .note {
+    margin-top: 18px;
+    background: rgba(17,28,49,0.72);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 18px;
+  }
+  .path h2, .note h2 { font-size: 19px; }
+  .note p { color: #cbd7e6; margin: 8px 0; }
+  .footer { color: var(--soft); text-align: center; font-size: 12px; margin-top: 26px; }
+  @media (max-width: 820px) {
+    header, .grid, .objection { grid-template-columns: 1fr; }
+    .logo { margin-left: 0; }
+    .meta { min-width: 0; }
+  }
+  @media print {
+    body { background: #fff; color: #111827; }
+    .shell { max-width: none; padding: 18px; }
+    header, section, .thesis, .path, .note { break-inside: avoid; border-color: #d1d5db; background: #fff; }
+    .subtitle, .thesis p, ul, ol, .a, .note p, .callout { color: #1f2937; }
+    .competitor, h3, .eyebrow, .q, .meta-row strong { color: #111827; }
+    .actions { display: none; }
+    .logo { filter: invert(1); }
+  }
+</style>
+</head>
+<body>
+<main class="shell">
+  <header>
+    <div>
+      <div class="eyebrow">Rev.io PSA Competitive Battlecards</div>
+      <h1>Enitech Solutions</h1>
+      <p class="subtitle">Account-specific positioning for Rev.io PSA against Halo PSA and Autotask. Built for discovery prep, Salesforce notes, and Notion account planning.</p>
+      <div class="actions">
+        <button onclick="window.print()">Print / Save as PDF</button>
+        <a class="link-button" href="#sf-note">Jump to Salesforce Note</a>
+      </div>
+    </div>
+    <div>
+      <img class="logo" src="revio-logo-white.png" alt="Rev.io">
+      <div class="meta">
+        <div class="meta-row"><span>Owner</span><strong>Connor Flynn</strong></div>
+        <div class="meta-row"><span>Product</span><strong>PSA 2.0</strong></div>
+        <div class="meta-row"><span>Stage</span><strong>Discovery Scheduled</strong></div>
+        <div class="meta-row"><span>Amount</span><strong>$1,000</strong></div>
+        <div class="meta-row"><span>Close Date</span><strong>2026-07-31</strong></div>
+        <div class="meta-row"><span>Source</span><strong>Pax8 Beyond 26</strong></div>
+      </div>
+    </div>
+  </header>
+
+  <div class="thesis">
+    <h2>Sales Thesis</h2>
+    <p>Lead with Rev.io PSA as the revenue operations PSA, not just another service desk. Halo and Autotask are credible, but force the decision around whether Enitech can run quote, agreement, service delivery, recurring billing, invoice, payment, and reporting in one operating motion.</p>
+    <p>Rev.io wins when the pain is quote-to-cash, billing accuracy, payment collection, recurring revenue, and reducing manual handoffs. If the buying criteria collapses to pure ticketing UI or Kaseya stack stickiness, Halo and Autotask become more dangerous.</p>
+  </div>
+
+  <div class="grid">
+    <section>
+      <div class="competitor">Battlecard 1</div>
+      <h2>Rev.io PSA vs Halo PSA</h2>
+      <div class="callout">Halo is a strong modern PSA. Do not dismiss it. Acknowledge the UI, ticketing experience, and integration story, then pivot to billing, payments, and revenue operations.</div>
+
+      <h3>Where Rev.io Wins</h3>
+      <ul>
+        <li>Native billing strength for recurring, one-time, and usage-style revenue.</li>
+        <li>Integrated payment and collection workflow instead of separate processor reconciliation.</li>
+        <li>Better fit for MSPs selling beyond standard managed IT: cloud, voice, internet, security, and bundled services.</li>
+        <li>Cleaner quote-to-cash story from opportunity to quote to agreement to invoice to payment.</li>
+        <li>Roadmap partnership angle for a high-fit customer instead of a generic PSA implementation lane.</li>
+      </ul>
+
+      <div class="danger">
+        <h3>Where Halo Is Dangerous</h3>
+        <ul>
+          <li>Modern UI and strong service desk reputation.</li>
+          <li>All-inclusive pricing story.</li>
+          <li>Broad MSP ecosystem and integration momentum.</li>
+          <li>Buyers focused on ITIL, asset/change management, ticketing polish, and technician UX.</li>
+        </ul>
+      </div>
+
+      <h3>Discovery Landmines</h3>
+      <ol class="question-list">
+        <li>If you choose Halo, what system owns billing and payment collection?</li>
+        <li>How many tools are involved between quote approval and cash collected?</li>
+        <li>Do you need one invoice across managed IT plus other recurring services?</li>
+        <li>What revenue leakage or manual reconciliation exists after tickets or projects are completed?</li>
+        <li>Are you evaluating PSA features, or the full customer lifecycle from sale to service to invoice to payment?</li>
+      </ol>
+
+      <h3>Talk Track</h3>
+      <div class="callout">Halo is probably the cleanest-looking PSA in the conversation, and if this were purely a ticketing UI decision, I would take them seriously. Where Rev.io separates is after the ticket: agreements, billing, payment collection, and multi-service revenue.</div>
+
+      <h3>Objection Handling</h3>
+      <div class="objection"><div class="q">Halo has better UI.</div><div class="a">Fair. Halo is strong there. But UI does not collect cash, reconcile invoices, or handle complex recurring revenue. If the business problem is bigger than ticketing, Rev.io deserves the deeper look.</div></div>
+      <div class="objection"><div class="q">Halo includes everything.</div><div class="a">Included features only matter if they solve the full workflow. The question is whether Halo includes the billing, payment, and revenue automation Enitech actually needs.</div></div>
+    </section>
+
+    <section>
+      <div class="competitor">Battlecard 2</div>
+      <h2>Rev.io PSA vs Autotask</h2>
+      <div class="callout">Autotask is mature and sticky, especially inside Kaseya/Datto. Separate mature ticketing from modern revenue operations.</div>
+
+      <h3>Where Rev.io Wins</h3>
+      <ul>
+        <li>Less Kaseya dependency and fewer bundle/contract lock-in concerns.</li>
+        <li>Modern operating flow versus a legacy MSP stack.</li>
+        <li>Stronger billing and payments story when recurring revenue and collections matter.</li>
+        <li>More flexibility for providers that do not want to stay boxed into pure managed IT workflows.</li>
+        <li>Executive conversation around margin, cash collection, revenue leakage, and operational scale.</li>
+      </ul>
+
+      <div class="danger">
+        <h3>Where Autotask Is Dangerous</h3>
+        <ul>
+          <li>Strong Datto RMM, IT Glue, and broader Kaseya ecosystem tie-ins.</li>
+          <li>Mature service desk and reporting.</li>
+          <li>Kaseya bundle economics may look attractive upfront.</li>
+          <li>If Enitech already lives in Kaseya and values integration over flexibility, Autotask can feel like the default.</li>
+        </ul>
+      </div>
+
+      <h3>Discovery Landmines</h3>
+      <ol class="question-list">
+        <li>Are you already standardized on Kaseya/Datto, or trying to avoid more lock-in?</li>
+        <li>How many steps happen after a quote is approved before the client is billed and payment is collected?</li>
+        <li>Where does billing break when services are recurring, bundled, or non-standard?</li>
+        <li>Do technicians like the PSA enough to keep time and notes current?</li>
+        <li>Is the buying priority ticketing maturity, or reducing manual work across sales, service, billing, and collections?</li>
+      </ol>
+
+      <h3>Talk Track</h3>
+      <div class="callout">Autotask is a safe-looking choice if Enitech wants a traditional MSP PSA, especially inside Kaseya. The risk is ending up with a mature ticketing system but still needing separate processes for billing, payments, and revenue operations.</div>
+
+      <h3>Objection Handling</h3>
+      <div class="objection"><div class="q">Autotask is proven.</div><div class="a">Agreed. Autotask is proven for service desk. The decision is whether proven ticketing solves Enitech's broader operating model: quote-to-cash, billing accuracy, and reducing manual revenue work.</div></div>
+      <div class="objection"><div class="q">The Kaseya bundle is cheaper.</div><div class="a">It may be cheaper on a line-item basis. The real comparison is total cost: PSA plus billing tools, payment processing, reconciliation labor, contract risk, and the cost of workarounds.</div></div>
+    </section>
+  </div>
+
+  <div class="path">
+    <h2>Recommended Discovery Path</h2>
+    <ol>
+      <li>Start broad: What triggered the PSA evaluation now?</li>
+      <li>Identify competitor shape: Are Halo and Autotask active options, or just names on the shortlist?</li>
+      <li>Force business criteria: What has to improve: ticketing, billing, projects, reporting, payments, or all of it?</li>
+      <li>Quantify manual work: Where does work leave the PSA and move into spreadsheets, QuickBooks, portals, or manual reconciliation?</li>
+      <li>Split the decision: If service desk is equal, who wins on billing, collections, and recurring revenue operations?</li>
+    </ol>
+  </div>
+
+  <div class="note" id="sf-note">
+    <h2>Salesforce Note Version</h2>
+    <p>Created Enitech-specific competitive battlecards for Rev.io PSA vs Halo PSA and Autotask.</p>
+    <p>Primary Rev.io thesis: position Rev.io as the revenue operations PSA, not just another service desk. Halo is strongest on modern UI and ticketing; Autotask is strongest on mature service desk and Kaseya/Datto ecosystem. Rev.io should win if Enitech cares about quote-to-cash, complex recurring billing, integrated payments/collections, multi-service revenue, and reducing manual handoffs across sales, service, billing, and cash collection.</p>
+    <p>Rep guidance: do not dismiss Halo. Acknowledge UI/service desk strength, then ask what system owns billing and payment collection. Do not dismiss Autotask. Acknowledge maturity, then test for Kaseya lock-in, manual billing work, and total cost of workarounds. Force the evaluation away from feature checklist and toward business workflow: quote, agreement, service delivery, invoice, payment, reporting.</p>
+    <p>Recommended positioning line: Halo and Autotask are both credible PSAs. Rev.io is the stronger fit if Enitech wants one operating motion from sale to service to invoice to payment, especially if billing complexity, recurring revenue, and manual reconciliation are part of the pain.</p>
+  </div>
+
+  <div class="footer">Prepared for Enitech Solutions - Rev.io PSA competitive discovery - 2026-06-30</div>
+</main>
+</body>
+</html>
