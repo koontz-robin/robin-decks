@@ -298,6 +298,38 @@
     gap:12px;
     margin-top:30px;
   }
+  .screenshot-grid {
+    display:grid;
+    grid-template-columns:repeat(2, minmax(0, 1fr));
+    gap:18px;
+    margin-top:34px;
+  }
+  .screenshot-card {
+    background:#fff;
+    border:1px solid #dce4eb;
+    border-radius:8px;
+    overflow:hidden;
+    box-shadow:0 18px 48px rgba(16,36,58,.1);
+  }
+  .screenshot-card.wide { grid-column:1 / -1; }
+  .screenshot-card img {
+    width:100%;
+    height:100%;
+    aspect-ratio:16 / 9;
+    object-fit:cover;
+    object-position:top left;
+  }
+  .screenshot-card.mobile img {
+    aspect-ratio:9 / 14;
+    object-fit:contain;
+    background:#edf3f8;
+  }
+  .screenshot-caption {
+    padding:12px 14px;
+    color:#53697b;
+    font-size:13px;
+    font-weight:800;
+  }
   .event {
     border:1px solid var(--line);
     background:rgba(255,255,255,.06);
@@ -323,19 +355,69 @@
   }
   .final h2 { max-width:760px; }
   .final p { color:#d7e7f2; max-width:680px; font-size:18px; line-height:1.6; }
+  .slide-controls {
+    position:fixed;
+    right:22px;
+    bottom:22px;
+    z-index:80;
+    display:flex;
+    align-items:center;
+    gap:10px;
+    background:rgba(7,24,39,.92);
+    border:1px solid var(--line);
+    border-radius:8px;
+    padding:10px;
+    box-shadow:0 18px 46px rgba(0,0,0,.28);
+    backdrop-filter:blur(12px);
+  }
+  .slide-controls button {
+    width:42px;
+    height:42px;
+    border:0;
+    border-radius:6px;
+    background:linear-gradient(135deg, var(--cyan), var(--green));
+    color:#06131f;
+    font-size:20px;
+    font-weight:900;
+    cursor:pointer;
+  }
+  .slide-controls button:disabled { opacity:.32; cursor:not-allowed; }
+  .slide-count {
+    min-width:58px;
+    text-align:center;
+    color:#dcebf5;
+    font-size:13px;
+    font-weight:900;
+  }
+  .deck-ready { overflow:hidden; }
+  .deck-ready main>section { display:none; }
+  .deck-ready main>section.active {
+    display:grid;
+    align-items:center;
+    height:calc(100vh - 61px);
+    min-height:0;
+    overflow:auto;
+  }
+  .deck-ready main>section.hero.active {
+    height:calc(100vh - 61px);
+    min-height:0;
+  }
   @media (max-width:900px) {
     .site-header { position:relative; align-items:flex-start; flex-direction:column; }
     .nav { justify-content:flex-start; }
     .hero { min-height:auto; }
-    .hero-inner, .split, .partner-wall { grid-template-columns:1fr; }
+    .hero-inner, .split, .partner-wall, .screenshot-grid { grid-template-columns:1fr; }
+    .screenshot-card.wide { grid-column:auto; }
     .feature-strip, .billing-grid, .events { grid-template-columns:1fr; }
     .hero-card { max-width:520px; }
+    .deck-ready main>section.active, .deck-ready main>section.hero.active { height:calc(100vh - 133px); }
   }
   @media (max-width:560px) {
     .metric-grid { grid-template-columns:1fr; }
     section { padding:58px 18px; }
     .hero { padding:58px 18px; }
     .nav a { padding-left:0; }
+    .slide-controls { left:14px; right:14px; bottom:14px; justify-content:space-between; }
   }
 </style>
 </head>
@@ -348,11 +430,12 @@
     <a href="#ai">AI</a>
     <a href="#billing">Billing</a>
     <a href="#partners">Partners</a>
+    <a href="#screenshots">Screenshots</a>
   </nav>
 </header>
 
 <main>
-  <section class="hero">
+  <section class="hero" id="overview">
     <div class="hero-inner">
       <div>
         <p class="eyebrow">Rev.io for Integrators</p>
@@ -449,7 +532,37 @@
     </div>
   </section>
 
-  <section class="final">
+  <section class="paper-section" id="screenshots">
+    <div class="section-inner">
+      <p class="eyebrow">Product screenshots</p>
+      <h2>Modern workflows for dispatch, projects, billing, mobile work, and Rev.ii.</h2>
+      <p class="lead">The updated Rev.io interface gives integrator teams a clearer operational path from work assignment to project tracking, field time, invoicing, and AI-supported customer context.</p>
+      <div class="screenshot-grid">
+        <figure class="screenshot-card wide">
+          <img src="assets/revio-product-screenshots/dispatch-board.png" alt="Rev.io dispatch board screenshot">
+          <figcaption class="screenshot-caption">Dispatch board</figcaption>
+        </figure>
+        <figure class="screenshot-card">
+          <img src="assets/revio-product-screenshots/project-management-gantt.png" alt="Rev.io project management Gantt screenshot">
+          <figcaption class="screenshot-caption">Project management Gantt</figcaption>
+        </figure>
+        <figure class="screenshot-card">
+          <img src="assets/revio-product-screenshots/new-invoice-dropdown.png" alt="Rev.io new invoice dropdown screenshot">
+          <figcaption class="screenshot-caption">New invoice workflow</figcaption>
+        </figure>
+        <figure class="screenshot-card mobile">
+          <img src="assets/revio-product-screenshots/mobile-time-tracking.png" alt="Rev.io mobile app time tracking screenshot">
+          <figcaption class="screenshot-caption">Mobile time tracking</figcaption>
+        </figure>
+        <figure class="screenshot-card">
+          <img src="assets/revio-product-screenshots/revii-updated-ui.png" alt="Updated Rev.ii UI screenshot">
+          <figcaption class="screenshot-caption">Updated Rev.ii UI</figcaption>
+        </figure>
+      </div>
+    </div>
+  </section>
+
+  <section class="final" id="close">
     <div class="section-inner">
       <p class="eyebrow">One connected platform</p>
       <h2>From service delivery to recurring revenue, Rev.io gives integrators a cleaner way to operate.</h2>
@@ -457,5 +570,62 @@
     </div>
   </section>
 </main>
+<div class="slide-controls" aria-label="Slide controls">
+  <button type="button" data-slide-prev aria-label="Previous slide">‹</button>
+  <div class="slide-count" aria-live="polite">1 / 1</div>
+  <button type="button" data-slide-next aria-label="Next slide">›</button>
+</div>
+<script>
+(() => {
+  const slides = Array.from(document.querySelectorAll('main > section'));
+  const counter = document.querySelector('.slide-count');
+  const prev = document.querySelector('[data-slide-prev]');
+  const next = document.querySelector('[data-slide-next]');
+  if (!slides.length || !counter || !prev || !next) return;
+
+  document.body.classList.add('deck-ready');
+  let index = Math.max(0, slides.findIndex((slide) => slide.id && window.location.hash === `#${slide.id}`));
+  if (index < 0) index = 0;
+
+  const show = (nextIndex, pushHash = true) => {
+    index = Math.min(Math.max(nextIndex, 0), slides.length - 1);
+    slides.forEach((slide, slideIndex) => slide.classList.toggle('active', slideIndex === index));
+    counter.textContent = `${index + 1} / ${slides.length}`;
+    prev.disabled = index === 0;
+    next.disabled = index === slides.length - 1;
+    const id = slides[index].id;
+    if (pushHash && id) history.replaceState(null, '', `#${id}`);
+  };
+
+  prev.addEventListener('click', () => show(index - 1));
+  next.addEventListener('click', () => show(index + 1));
+  document.addEventListener('keydown', (event) => {
+    if (event.key === 'ArrowRight' || event.key === 'PageDown' || event.key === ' ') {
+      event.preventDefault();
+      show(index + 1);
+    }
+    if (event.key === 'ArrowLeft' || event.key === 'PageUp') {
+      event.preventDefault();
+      show(index - 1);
+    }
+  });
+  document.querySelectorAll('a[href^="#"]').forEach((link) => {
+    link.addEventListener('click', (event) => {
+      const id = link.getAttribute('href').slice(1);
+      const targetIndex = slides.findIndex((slide) => slide.id === id);
+      if (targetIndex >= 0) {
+        event.preventDefault();
+        show(targetIndex);
+      }
+    });
+  });
+  window.addEventListener('hashchange', () => {
+    const id = window.location.hash.slice(1);
+    const targetIndex = slides.findIndex((slide) => slide.id === id);
+    if (targetIndex >= 0) show(targetIndex, false);
+  });
+  show(index, false);
+})();
+</script>
 </body>
 </html>
