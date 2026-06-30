@@ -635,21 +635,54 @@ function sortTable(th, colIdx) {{
         f.write(html)
     print(f"Built: {len(html):,} chars")
 
-    # Push via workspace git + robin-decks remote
-    import subprocess, shutil
+    # Publish from a clean checkout so the dirty/diverged workspace branch cannot
+    # hide a rejected push.
+    import shutil, subprocess, tempfile
     SSH_KEY = "/home/openclaw/.openclaw/ssh/id_ed25519"
-    env = {**os.environ, "GIT_SSH_COMMAND": f"ssh -i {SSH_KEY} -o StrictHostKeyChecking=no"}
+    env = {
+        **os.environ,
+        "GIT_SSH_COMMAND": (
+            f"ssh -i {SSH_KEY} -o StrictHostKeyChecking=no "
+            "-o UserKnownHostsFile=/dev/null"
+        ),
+    }
 
-    ws = "/home/openclaw/.openclaw/workspace"
-    shutil.copy(OUTPUT_FILE, f"{ws}/cbr-dashboard.html")
-    for cmd in [
-        f"cd {ws} && git add cbr-dashboard.html build_cbr_dashboard.py",
-        f'cd {ws} && git commit -m "CBR Dashboard v2 — tabs, PSA split, excl Channel/Usman"',
-        f"cd {ws} && git push robin-decks push-q2-board:master",
-    ]:
-        r = subprocess.run(cmd, shell=True, capture_output=True, text=True, env=env)
+    def run_git(cmd, cwd):
+        r = subprocess.run(cmd, cwd=cwd, capture_output=True, text=True, env=env)
         out = (r.stdout + r.stderr).strip()
-        print(f"  {out[:120]}")
+        if out:
+            print(f"  {out}")
+        if r.returncode != 0:
+            raise RuntimeError(f"Command failed: {' '.join(cmd)}")
+
+    with tempfile.TemporaryDirectory(prefix="cbr-dashboard-publish.") as tmp:
+        repo = os.path.join(tmp, "repo")
+        run_git(
+            [
+                "git", "clone", "--depth", "1",
+                "git@github.com:koontz-robin/robin-decks.git", repo,
+            ],
+            tmp,
+        )
+        shutil.copy(OUTPUT_FILE, os.path.join(repo, "cbr-dashboard.html"))
+        run_git(["git", "config", "user.name", "Robin"], repo)
+        run_git(["git", "config", "user.email", "robin.bot@rev.io"], repo)
+        run_git(["git", "add", "cbr-dashboard.html"], repo)
+
+        status = subprocess.run(
+            ["git", "status", "--short"],
+            cwd=repo,
+            capture_output=True,
+            text=True,
+            env=env,
+            check=True,
+        ).stdout.strip()
+        if status:
+            msg = f"CBR Dashboard refresh - {datetime.utcnow():%Y-%m-%d %H:%M UTC}"
+            run_git(["git", "commit", "-m", msg], repo)
+            run_git(["git", "push", "origin", "master"], repo)
+        else:
+            print("  No dashboard changes to publish")
     print("✅ Done")
 
 
