@@ -165,6 +165,7 @@
     text-transform:uppercase;
     letter-spacing:1px;
   }
+  .hero-card .screenshot-card { margin-top:16px; }
   section {
     padding:84px clamp(22px, 7vw, 92px);
   }
@@ -330,6 +331,8 @@
     font-size:13px;
     font-weight:800;
   }
+  .stacked-shots { display:grid; gap:16px; }
+  .paired-shots { display:grid; grid-template-columns:1fr 1fr; gap:16px; margin-top:28px; }
   .event {
     border:1px solid var(--line);
     background:rgba(255,255,255,.06);
@@ -406,7 +409,7 @@
     .site-header { position:relative; align-items:flex-start; flex-direction:column; }
     .nav { justify-content:flex-start; }
     .hero { min-height:auto; }
-    .hero-inner, .split, .partner-wall, .screenshot-grid { grid-template-columns:1fr; }
+    .hero-inner, .split, .partner-wall, .screenshot-grid, .paired-shots { grid-template-columns:1fr; }
     .screenshot-card.wide { grid-column:auto; }
     .feature-strip, .billing-grid, .events { grid-template-columns:1fr; }
     .hero-card { max-width:520px; }
@@ -430,7 +433,6 @@
     <a href="#ai">AI</a>
     <a href="#billing">Billing</a>
     <a href="#partners">Partners</a>
-    <a href="#screenshots">Screenshots</a>
   </nav>
 </header>
 
@@ -454,6 +456,10 @@
           <div class="metric"><strong>9x</strong><span>Inc. 5000 recipient</span></div>
           <div class="metric"><strong>4x</strong><span>Great Places to Work</span></div>
         </div>
+        <figure class="screenshot-card">
+          <img src="assets/revio-product-screenshots/revii-updated-ui.png" alt="Updated Rev.ii UI screenshot">
+          <figcaption class="screenshot-caption">Rev.ii brings customer context forward</figcaption>
+        </figure>
       </aside>
     </div>
   </section>
@@ -469,9 +475,15 @@
           <div class="feature"><h3>Improve client experience</h3><p>Give customers clear billing, fast service updates, and better visibility without adding admin overhead.</p></div>
           <div class="feature"><h3>Scale profitably</h3><p>Use real-time insights and automation to reduce manual tasks while recurring revenue grows.</p></div>
         </div>
-        <img class="tile-visual" src="assets/integrator-revio-story/image9.png" alt="Rev.io PSA feature tiles">
+        <figure class="screenshot-card" style="margin-top:28px">
+          <img src="assets/revio-product-screenshots/dispatch-board.png" alt="Rev.io dispatch board screenshot">
+          <figcaption class="screenshot-caption">Dispatch board for service teams</figcaption>
+        </figure>
       </div>
-      <img class="visual" src="assets/integrator-revio-story/image13.png" alt="Rev.io PSA billing dashboard">
+      <figure class="screenshot-card">
+        <img src="assets/revio-product-screenshots/project-management-gantt.png" alt="Rev.io project management Gantt screenshot">
+        <figcaption class="screenshot-caption">Project management Gantt</figcaption>
+      </figure>
     </div>
   </section>
 
@@ -488,7 +500,16 @@
           <div class="prompt">Surface risk, context, and next steps before the team has to dig.</div>
         </div>
       </div>
-      <img class="visual clean" src="assets/integrator-revio-story/image17.png" alt="Rev.io mobile-first service ticket screen">
+      <div class="stacked-shots">
+        <figure class="screenshot-card">
+          <img src="assets/revio-product-screenshots/revii-updated-ui.png" alt="Updated Rev.ii UI screenshot">
+          <figcaption class="screenshot-caption">Updated Rev.ii UI</figcaption>
+        </figure>
+        <figure class="screenshot-card mobile">
+          <img src="assets/revio-product-screenshots/mobile-time-tracking.png" alt="Rev.io mobile app time tracking screenshot">
+          <figcaption class="screenshot-caption">Mobile time tracking</figcaption>
+        </figure>
+      </div>
     </div>
   </section>
 
@@ -515,6 +536,16 @@
           </ul>
         </article>
       </div>
+      <div class="paired-shots">
+        <figure class="screenshot-card">
+          <img src="assets/revio-product-screenshots/new-invoice-dropdown.png" alt="Rev.io new invoice dropdown screenshot">
+          <figcaption class="screenshot-caption">New invoice workflow</figcaption>
+        </figure>
+        <figure class="screenshot-card">
+          <img src="assets/revio-product-screenshots/project-management-gantt.png" alt="Rev.io project management Gantt screenshot">
+          <figcaption class="screenshot-caption">Project billing visibility</figcaption>
+        </figure>
+      </div>
     </div>
   </section>
 
@@ -529,34 +560,14 @@
         <div class="partner-card esa-card"><img src="assets/integrator-revio-story/image26.png" alt="ESA Electronic Security Association logo"></div>
         <div class="partner-card"><img src="assets/integrator-revio-story/image27.png" alt="PSA Security Network logo"></div>
       </div>
-    </div>
-  </section>
-
-  <section class="paper-section" id="screenshots">
-    <div class="section-inner">
-      <p class="eyebrow">Product screenshots</p>
-      <h2>Modern workflows for dispatch, projects, billing, mobile work, and Rev.ii.</h2>
-      <p class="lead">The updated Rev.io interface gives integrator teams a clearer operational path from work assignment to project tracking, field time, invoicing, and AI-supported customer context.</p>
-      <div class="screenshot-grid">
-        <figure class="screenshot-card wide">
+      <div class="paired-shots">
+        <figure class="screenshot-card">
           <img src="assets/revio-product-screenshots/dispatch-board.png" alt="Rev.io dispatch board screenshot">
-          <figcaption class="screenshot-caption">Dispatch board</figcaption>
-        </figure>
-        <figure class="screenshot-card">
-          <img src="assets/revio-product-screenshots/project-management-gantt.png" alt="Rev.io project management Gantt screenshot">
-          <figcaption class="screenshot-caption">Project management Gantt</figcaption>
-        </figure>
-        <figure class="screenshot-card">
-          <img src="assets/revio-product-screenshots/new-invoice-dropdown.png" alt="Rev.io new invoice dropdown screenshot">
-          <figcaption class="screenshot-caption">New invoice workflow</figcaption>
-        </figure>
-        <figure class="screenshot-card mobile">
-          <img src="assets/revio-product-screenshots/mobile-time-tracking.png" alt="Rev.io mobile app time tracking screenshot">
-          <figcaption class="screenshot-caption">Mobile time tracking</figcaption>
+          <figcaption class="screenshot-caption">Operational visibility across connected partners</figcaption>
         </figure>
         <figure class="screenshot-card">
           <img src="assets/revio-product-screenshots/revii-updated-ui.png" alt="Updated Rev.ii UI screenshot">
-          <figcaption class="screenshot-caption">Updated Rev.ii UI</figcaption>
+          <figcaption class="screenshot-caption">AI-supported customer context</figcaption>
         </figure>
       </div>
     </div>
@@ -567,6 +578,10 @@
       <p class="eyebrow">One connected platform</p>
       <h2>From service delivery to recurring revenue, Rev.io gives integrators a cleaner way to operate.</h2>
       <p>Built to reduce disconnected systems, simplify billing complexity, and bring AI-supported workflows into the parts of the business where time gets lost.</p>
+      <figure class="screenshot-card wide" style="margin-top:28px">
+        <img src="assets/revio-product-screenshots/mobile-time-tracking.png" alt="Rev.io mobile app time tracking screenshot">
+        <figcaption class="screenshot-caption">Field work, billing, projects, and AI context in one operating layer</figcaption>
+      </figure>
     </div>
   </section>
 </main>

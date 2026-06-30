@@ -70,6 +70,12 @@ section{padding:82px 28px}
 .screenshot-card img{width:100%;height:100%;aspect-ratio:16/9;object-fit:cover;object-position:top left}
 .screenshot-card.mobile img{aspect-ratio:9/14;object-fit:contain;background:#edf3f8}
 .screenshot-caption{padding:12px 14px;color:#506680;font-size:13px;font-weight:800}
+.proof-layout{display:grid;grid-template-columns:.95fr 1.05fr;gap:34px;align-items:center;margin-top:34px}
+.proof-layout .proof-grid{margin-top:0}
+.stacked-shots{display:grid;gap:16px}
+.paired-shots{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-top:24px}
+.logo-card.text-logo{font-size:24px;font-weight:950;color:var(--ink);text-align:center;letter-spacing:0}
+.logo-card.text-logo small{display:block;margin-top:8px;color:var(--muted);font-size:12px;font-weight:800;text-transform:uppercase;letter-spacing:.12em}
 .final{background:#061528;color:#fff;text-align:center}
 .final .lead{margin-left:auto;margin-right:auto;color:rgba(255,255,255,.78)}
 .slide-controls{position:fixed;right:22px;bottom:22px;z-index:80;display:flex;align-items:center;gap:10px;background:rgba(255,255,255,.94);border:1px solid var(--line);border-radius:8px;padding:10px;box-shadow:0 18px 46px rgba(16,35,63,.18);backdrop-filter:blur(12px)}
@@ -80,7 +86,7 @@ section{padding:82px 28px}
 .deck-ready main>section{display:none}
 .deck-ready main>section.active{display:grid;align-items:center;height:calc(100vh - 67px);min-height:0;overflow:auto}
 .deck-ready main>section.hero.active{height:calc(100vh - 67px);min-height:0}
-@media(max-width:900px){.site-header{position:static;align-items:flex-start;flex-direction:column}.feature-grid,.split,.release-grid,.screenshot-grid{grid-template-columns:1fr}.screenshot-card.wide{grid-column:auto}.proof-grid,.logo-wall{grid-template-columns:repeat(2,minmax(0,1fr))}.event-grid{grid-template-columns:1fr 1fr}.hero{min-height:720px}.deck-ready main>section.active,.deck-ready main>section.hero.active{height:calc(100vh - 139px)}}
+@media(max-width:900px){.site-header{position:static;align-items:flex-start;flex-direction:column}.feature-grid,.split,.release-grid,.screenshot-grid,.proof-layout,.paired-shots{grid-template-columns:1fr}.screenshot-card.wide{grid-column:auto}.proof-grid,.logo-wall{grid-template-columns:repeat(2,minmax(0,1fr))}.event-grid{grid-template-columns:1fr 1fr}.hero{min-height:720px}.deck-ready main>section.active,.deck-ready main>section.hero.active{height:calc(100vh - 139px)}}
 @media(max-width:560px){section{padding:58px 18px}.hero-inner{padding:74px 18px 44px}.proof-grid,.pill-grid,.logo-wall,.event-grid{grid-template-columns:1fr}.release ul{columns:1}.nav{gap:12px}.site-header{padding:14px 18px}.slide-controls{left:14px;right:14px;bottom:14px;justify-content:space-between}}
 </style>
 </head>
@@ -90,10 +96,9 @@ section{padding:82px 28px}
   <nav class="nav" aria-label="Page sections">
     <a href="#proof">Proof</a>
     <a href="#psa">PSA</a>
-    <a href="#pax8">Pax8</a>
     <a href="#billing">Billing</a>
     <a href="#protect">Protect</a>
-    <a href="#screenshots">Screenshots</a>
+    <a href="#integrations">Integrations</a>
     <a href="#releases">Releases</a>
   </nav>
 </header>
@@ -106,7 +111,7 @@ section{padding:82px 28px}
       <p class="hero-copy">A modern operating platform for MSPs that need PSA, billing, payments, automation, integrations, and AI-supported workflows in one connected system.</p>
       <div class="hero-actions">
         <a class="button primary" href="#psa">Explore the platform</a>
-        <a class="button secondary" href="#releases">See what's new</a>
+        <a class="button secondary" href="#integrations">See integrations</a>
       </div>
     </div>
   </section>
@@ -116,11 +121,17 @@ section{padding:82px 28px}
       <p class="eyebrow">By the numbers</p>
       <h2>Built on proven service-provider experience.</h2>
       <p class="lead">Backed by years of industry success and recognition, Rev.io helps service businesses scale with confidence, agility, and operational control.</p>
-      <div class="proof-grid">
-        <div class="proof-card"><b>180+</b><span>US-based employees</span></div>
-        <div class="proof-card"><b>40+</b><span>Years industry experience</span></div>
-        <div class="proof-card"><b>9x</b><span>Inc. 5000 recipient</span></div>
-        <div class="proof-card"><b>1,000+</b><span>Service providers trust Rev.io</span></div>
+      <div class="proof-layout">
+        <div class="proof-grid">
+          <div class="proof-card"><b>180+</b><span>US-based employees</span></div>
+          <div class="proof-card"><b>40+</b><span>Years industry experience</span></div>
+          <div class="proof-card"><b>9x</b><span>Inc. 5000 recipient</span></div>
+          <div class="proof-card"><b>1,000+</b><span>Service providers trust Rev.io</span></div>
+        </div>
+        <figure class="screenshot-card">
+          <img src="assets/revio-product-screenshots/revii-updated-ui.png" alt="Updated Rev.ii UI screenshot">
+          <figcaption class="screenshot-caption">Rev.ii brings operational context forward</figcaption>
+        </figure>
       </div>
     </div>
   </section>
@@ -130,7 +141,16 @@ section{padding:82px 28px}
       <p class="eyebrow">Everything you need</p>
       <h2>Run a modern MSP from one connected platform.</h2>
       <div class="feature-grid">
-        <div class="feature-image"><img src="assets/msp-revio-psa-story/image9.png" alt="Rev.io PSA dashboard visual"></div>
+        <div class="stacked-shots">
+          <figure class="screenshot-card">
+            <img src="assets/revio-product-screenshots/dispatch-board.png" alt="Rev.io dispatch board screenshot">
+            <figcaption class="screenshot-caption">Dispatch board</figcaption>
+          </figure>
+          <figure class="screenshot-card">
+            <img src="assets/revio-product-screenshots/project-management-gantt.png" alt="Rev.io project management Gantt screenshot">
+            <figcaption class="screenshot-caption">Project management Gantt</figcaption>
+          </figure>
+        </div>
         <div>
           <p class="lead">Rev.io PSA connects service delivery, recurring contracts, dispatch, project work, reporting, and customer context so teams spend less time jumping between systems.</p>
           <div class="pill-grid">
@@ -141,21 +161,6 @@ section{padding:82px 28px}
           </div>
         </div>
       </div>
-    </div>
-  </section>
-
-  <section class="dark" id="pax8">
-    <div class="inner split">
-      <div>
-        <p class="eyebrow">Featured partnership</p>
-        <h2>The Pax8 Marketplace, integrated into Rev.io.</h2>
-        <p class="lead">With Pax8 channel champion Rob Rae on the Rev.io board, the future of MSP automation is closer to the workflows teams already use.</p>
-        <div class="pill-grid">
-          <div class="pill"><strong>Real-time marketplace access</strong><span>Cloud products, pricing, and inventory available from within Rev.io PSA.</span></div>
-          <div class="pill"><strong>End-to-end efficiency</strong><span>Support instant provisioning, automated billing, and asset tracking.</span></div>
-        </div>
-      </div>
-      <div class="feature-image"><img src="assets/msp-revio-psa-story/image12.png" alt="Pax8 marketplace partnership visual"></div>
     </div>
   </section>
 
@@ -171,7 +176,10 @@ section{padding:82px 28px}
           <div class="icon-item"><div class="icon-box"><img src="assets/msp-revio-psa-story/image15.svg" alt=""></div><div><h3>Cash in and cash out</h3><p>Automate recurring billing, collections, payments, vendor payments, and fraud controls.</p></div></div>
           <div class="icon-item"><div class="icon-box"><img src="assets/msp-revio-psa-story/image13.svg" alt=""></div><div><h3>Agent management</h3><p>Streamline commissions and provide portal visibility for partner relationships.</p></div></div>
         </div>
-        <div class="feature-image"><img src="assets/msp-revio-psa-story/image14.png" alt="Communications billing illustration"></div>
+        <figure class="screenshot-card">
+          <img src="assets/revio-product-screenshots/new-invoice-dropdown.png" alt="Rev.io new invoice dropdown screenshot">
+          <figcaption class="screenshot-caption">Invoice creation connected to the operating record</figcaption>
+        </figure>
       </div>
     </div>
   </section>
@@ -188,7 +196,10 @@ section{padding:82px 28px}
           <div class="pill"><strong>Cloud backup</strong><span>Back up endpoints, servers, and cloud data with ransomware-resistant protection from Rev.io.</span></div>
         </div>
       </div>
-      <div class="feature-image"><img src="assets/msp-revio-psa-story/image22.png" alt="Cyber Protect dashboard visual"></div>
+      <figure class="screenshot-card mobile">
+        <img src="assets/revio-product-screenshots/mobile-time-tracking.png" alt="Rev.io mobile app time tracking screenshot">
+        <figcaption class="screenshot-caption">Mobile time tracking keeps field work connected</figcaption>
+      </figure>
     </div>
   </section>
 
@@ -202,7 +213,13 @@ section{padding:82px 28px}
         <div class="logo-card"><img src="assets/msp-revio-psa-story/image25.png" alt="Integration partner logo"></div>
         <div class="logo-card"><img src="assets/msp-revio-psa-story/image24.png" alt="Integration partner logo"></div>
         <div class="logo-card"><img src="assets/msp-revio-psa-story/image28.png" alt="Integration partner logo"></div>
+        <div class="logo-card text-logo">NinjaOne<small>RMM</small></div>
+        <div class="logo-card text-logo">Datto<small>IT operations</small></div>
       </div>
+      <figure class="screenshot-card wide" style="margin-top:26px">
+        <img src="assets/revio-product-screenshots/revii-updated-ui.png" alt="Updated Rev.ii UI screenshot">
+        <figcaption class="screenshot-caption">Rev.ii helps surface context across connected systems</figcaption>
+      </figure>
     </div>
   </section>
 
@@ -221,34 +238,14 @@ section{padding:82px 28px}
         <div class="event"><time>Jun 7-9</time><strong>Pax8 Beyond</strong><span>Salt Lake City, UT</span></div>
         <div class="event"><time>Jun 17-19</time><strong>InfoComm</strong><span>Las Vegas, NV</span></div>
       </div>
-    </div>
-  </section>
-
-  <section class="feature-band" id="screenshots">
-    <div class="inner">
-      <p class="eyebrow">Product screenshots</p>
-      <h2>The updated Rev.io experience in the workflows teams use every day.</h2>
-      <p class="lead">Dispatch, project management, mobile time tracking, invoice creation, and Rev.ii all show up as connected operational workflows instead of disconnected point tools.</p>
-      <div class="screenshot-grid">
-        <figure class="screenshot-card wide">
+      <div class="paired-shots">
+        <figure class="screenshot-card">
           <img src="assets/revio-product-screenshots/dispatch-board.png" alt="Rev.io dispatch board screenshot">
-          <figcaption class="screenshot-caption">Dispatch board</figcaption>
+          <figcaption class="screenshot-caption">Live dispatch visibility for event follow-up</figcaption>
         </figure>
         <figure class="screenshot-card">
           <img src="assets/revio-product-screenshots/project-management-gantt.png" alt="Rev.io project management Gantt screenshot">
-          <figcaption class="screenshot-caption">Project management Gantt</figcaption>
-        </figure>
-        <figure class="screenshot-card">
-          <img src="assets/revio-product-screenshots/new-invoice-dropdown.png" alt="Rev.io new invoice dropdown screenshot">
-          <figcaption class="screenshot-caption">New invoice workflow</figcaption>
-        </figure>
-        <figure class="screenshot-card mobile">
-          <img src="assets/revio-product-screenshots/mobile-time-tracking.png" alt="Rev.io mobile app time tracking screenshot">
-          <figcaption class="screenshot-caption">Mobile time tracking</figcaption>
-        </figure>
-        <figure class="screenshot-card">
-          <img src="assets/revio-product-screenshots/revii-updated-ui.png" alt="Updated Rev.ii UI screenshot">
-          <figcaption class="screenshot-caption">Updated Rev.ii UI</figcaption>
+          <figcaption class="screenshot-caption">Project timelines for implementation conversations</figcaption>
         </figure>
       </div>
     </div>
@@ -274,6 +271,16 @@ section{padding:82px 28px}
           </ul>
         </article>
       </div>
+      <div class="paired-shots">
+        <figure class="screenshot-card">
+          <img src="assets/revio-product-screenshots/project-management-gantt.png" alt="Rev.io project management Gantt screenshot">
+          <figcaption class="screenshot-caption">Project management</figcaption>
+        </figure>
+        <figure class="screenshot-card mobile">
+          <img src="assets/revio-product-screenshots/mobile-time-tracking.png" alt="Rev.io mobile app time tracking screenshot">
+          <figcaption class="screenshot-caption">Mobile field work</figcaption>
+        </figure>
+      </div>
     </div>
   </section>
 
@@ -282,6 +289,10 @@ section{padding:82px 28px}
       <p class="eyebrow">All in one. Built for what's next.</p>
       <h2>Rev.io helps MSPs connect service delivery, recurring revenue, automation, and AI into one operating story.</h2>
       <p class="lead">From PSA to billing to protection and integrations, the platform is built to help service providers grow faster and work smarter.</p>
+      <figure class="screenshot-card wide" style="margin-top:28px;text-align:left">
+        <img src="assets/revio-product-screenshots/revii-updated-ui.png" alt="Updated Rev.ii UI screenshot">
+        <figcaption class="screenshot-caption">A connected operating layer with AI-assisted context</figcaption>
+      </figure>
     </div>
   </section>
 </main>
