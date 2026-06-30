@@ -55,6 +55,9 @@ section{padding:82px 28px}
 .logo-wall{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:18px;margin-top:32px}
 .logo-card{min-height:124px;border:1px solid var(--line);border-radius:8px;background:#fff;display:grid;place-items:center;padding:20px;box-shadow:0 14px 34px rgba(16,35,63,.08)}
 .logo-card img{max-height:72px;width:auto}
+.integration-layout{display:grid;grid-template-columns:.9fr 1.1fr;gap:28px;align-items:start;margin-top:32px}
+.integration-layout .logo-wall{grid-template-columns:repeat(2,minmax(0,1fr));margin-top:0}
+.integration-layout .screenshot-card img{aspect-ratio:16/10;object-fit:contain;background:#eef4f8}
 .event-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:14px;margin-top:32px}
 .event{background:#fff;border:1px solid var(--line);border-radius:8px;padding:18px}
 .event time{display:block;color:var(--cyan);font-weight:900;font-size:13px}
@@ -86,7 +89,7 @@ section{padding:82px 28px}
 .deck-ready main>section{display:none}
 .deck-ready main>section.active{display:grid;align-items:center;height:calc(100vh - 67px);min-height:0;overflow:auto}
 .deck-ready main>section.hero.active{height:calc(100vh - 67px);min-height:0}
-@media(max-width:900px){.site-header{position:static;align-items:flex-start;flex-direction:column}.feature-grid,.split,.release-grid,.screenshot-grid,.proof-layout,.paired-shots{grid-template-columns:1fr}.screenshot-card.wide{grid-column:auto}.proof-grid,.logo-wall{grid-template-columns:repeat(2,minmax(0,1fr))}.event-grid{grid-template-columns:1fr 1fr}.hero{min-height:720px}.deck-ready main>section.active,.deck-ready main>section.hero.active{height:calc(100vh - 139px)}}
+@media(max-width:900px){.site-header{position:static;align-items:flex-start;flex-direction:column}.feature-grid,.split,.release-grid,.screenshot-grid,.proof-layout,.paired-shots,.integration-layout{grid-template-columns:1fr}.screenshot-card.wide{grid-column:auto}.proof-grid,.logo-wall,.integration-layout .logo-wall{grid-template-columns:repeat(2,minmax(0,1fr))}.event-grid{grid-template-columns:1fr 1fr}.hero{min-height:720px}.deck-ready main>section.active,.deck-ready main>section.hero.active{height:calc(100vh - 139px)}}
 @media(max-width:560px){section{padding:58px 18px}.hero-inner{padding:74px 18px 44px}.proof-grid,.pill-grid,.logo-wall,.event-grid{grid-template-columns:1fr}.release ul{columns:1}.nav{gap:12px}.site-header{padding:14px 18px}.slide-controls{left:14px;right:14px;bottom:14px;justify-content:space-between}}
 </style>
 </head>
@@ -208,18 +211,20 @@ section{padding:82px 28px}
       <p class="eyebrow">Powerful integrations</p>
       <h2>Keep your MSP connected to the tools it already trusts.</h2>
       <p class="lead">Rev.io connects with essential service-provider systems, including carriers, accounting software, tax engines, payment processors, and partner ecosystems.</p>
-      <div class="logo-wall">
-        <div class="logo-card"><img src="assets/msp-revio-psa-story/image26.png" alt="Integration partner logo"></div>
-        <div class="logo-card"><img src="assets/msp-revio-psa-story/image25.png" alt="Integration partner logo"></div>
-        <div class="logo-card"><img src="assets/msp-revio-psa-story/image24.png" alt="Integration partner logo"></div>
-        <div class="logo-card"><img src="assets/msp-revio-psa-story/image28.png" alt="Integration partner logo"></div>
-        <div class="logo-card text-logo">NinjaOne<small>RMM</small></div>
-        <div class="logo-card text-logo">Datto<small>IT operations</small></div>
+      <div class="integration-layout">
+        <div class="logo-wall">
+          <div class="logo-card"><img src="assets/msp-revio-psa-story/image26.png" alt="Integration partner logo"></div>
+          <div class="logo-card"><img src="assets/msp-revio-psa-story/image25.png" alt="Integration partner logo"></div>
+          <div class="logo-card"><img src="assets/msp-revio-psa-story/image24.png" alt="Integration partner logo"></div>
+          <div class="logo-card"><img src="assets/msp-revio-psa-story/image28.png" alt="Integration partner logo"></div>
+          <div class="logo-card text-logo">NinjaOne<small>RMM</small></div>
+          <div class="logo-card text-logo">Datto<small>IT operations</small></div>
+        </div>
+        <figure class="screenshot-card">
+          <img src="assets/revio-product-screenshots/revii-updated-ui.png" alt="Updated Rev.ii UI screenshot">
+          <figcaption class="screenshot-caption">Rev.ii helps surface context across connected systems</figcaption>
+        </figure>
       </div>
-      <figure class="screenshot-card wide" style="margin-top:26px">
-        <img src="assets/revio-product-screenshots/revii-updated-ui.png" alt="Updated Rev.ii UI screenshot">
-        <figcaption class="screenshot-caption">Rev.ii helps surface context across connected systems</figcaption>
-      </figure>
     </div>
   </section>
 
