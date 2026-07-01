@@ -13,6 +13,12 @@ body { margin:0; background:var(--bg); color:var(--text); font-family:-apple-sys
 h1 { margin:0; font-size:28px; letter-spacing:0; }
 .lede { color:var(--muted); margin:8px 0 0; max-width:950px; line-height:1.45; }
 .stamp { color:var(--muted); font-size:13px; text-align:right; white-space:nowrap; }
+.page-tabs { display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); gap:12px; margin-bottom:16px; }
+.page-tab { text-align:left; background:var(--panel); border:1px solid var(--line); color:var(--text); border-radius:8px; padding:16px; cursor:pointer; }
+.page-tab strong { display:block; font-size:18px; margin-bottom:4px; }
+.page-tab span { color:var(--muted); font-size:13px; }
+.page-tab.active { border-color:var(--green); background:#10231a; }
+.page-section.hidden-page { display:none; }
 .metrics { display:grid; grid-template-columns:repeat(5,minmax(0,1fr)); gap:12px; margin-bottom:14px; }
 .metric,.controls,.table-wrap { background:var(--panel); border:1px solid var(--line); border-radius:8px; }
 .metric { padding:14px; }
@@ -43,7 +49,7 @@ a:hover { text-decoration:underline; }
 .reason { max-width:360px; color:#c9d6e2; font-size:12px; line-height:1.45; }
 .blurb { max-width:360px; line-height:1.45; }
 .hidden { display:none; }
-@media (max-width:900px) { .wrap { padding:18px; } .top { flex-direction:column; } .stamp { text-align:left; white-space:normal; } .metrics { grid-template-columns:1fr; } input { min-width:100%; } }
+@media (max-width:900px) { .wrap { padding:18px; } .top { flex-direction:column; } .stamp { text-align:left; white-space:normal; } .metrics,.page-tabs { grid-template-columns:1fr; } input { min-width:100%; } }
 </style>
 </head>
 <body>
@@ -51,29 +57,35 @@ a:hover { text-decoration:underline; }
   <section class="top">
     <div>
       <h1>Jamie SDR Prospecting Dashboard</h1>
-      <p class="lede">Most recent closed-lost opportunity per Jamie-owned account from 2023-2026, filtered to Billing, Odin, and PSA Web. Client and Partner account types are excluded. Account and opportunity names link back to Salesforce.</p>
+      <p class="lede">Two-page SDR dashboard for Jamie-owned Salesforce accounts: closed-lost reengagement targets for Emily, plus billing-platform accounts that look worth calling.</p>
     </div>
-    <div class="stamp">Generated Jul 1, 2026 8:47 AM ET<br>405 accounts · $970,093 total opp value</div>
+    <div class="stamp">Generated Jul 1, 2026 9:05 AM ET<br>405 reengagement accounts · 171 billing accounts</div>
   </section>
-  <section class="metrics">
-    <div class="metric"><div class="label">Accounts</div><div class="value">405</div><div class="note">deduped by account</div></div>
-    <div class="metric"><div class="label">High Priority</div><div class="value">57</div><div class="note">best Emily starting list</div></div>
-    <div class="metric"><div class="label">Medium Priority</div><div class="value">198</div><div class="note">worth sequencing</div></div>
-    <div class="metric"><div class="label">Lower Priority</div><div class="value">150</div><div class="note">use with caution</div></div>
-    <div class="metric"><div class="label">Total Value</div><div class="value">$970,093</div><div class="note">closed-lost amount</div></div>
+  <section class="page-tabs">
+    <button class="page-tab active" data-page-target="reengagement"><strong>Reengagement Opps</strong><span>Closed-lost Billing, Odin, and PSA Web opps with Emily blurbs</span></button>
+    <button class="page-tab" data-page-target="billing"><strong>Good Billing Accounts to Call</strong><span>Jamie-owned accounts using OneBill, Datagate, TimelyBill, Sandy Beaches, or Quickbooks</span></button>
   </section>
-  <section class="controls">
-    <div class="tabs"><button class="tab active" data-tab="All">All <span>405</span></button>
-<button class="tab" data-tab="Billing">Billing <span>231</span></button>
-<button class="tab" data-tab="Odin">Odin <span>7</span></button>
-<button class="tab" data-tab="PSA Web">PSA Web <span>167</span></button></div>
-    <input id="search" type="search" placeholder="Search account, opportunity, lost reason, blurb">
-    <select id="priority"><option value="">All priorities</option><option>High</option><option>Medium</option><option>Lower</option></select>
-  </section>
-  <section class="table-wrap">
-    <table>
-      <thead><tr><th>Account</th><th>Opportunity</th><th>Product</th><th>Amount</th><th>Lost Date</th><th>Rank</th><th>Lost Reason</th><th>Emily Blurb</th></tr></thead>
-      <tbody>
+
+  <section class="page-section" id="page-reengagement">
+    <section class="metrics">
+      <div class="metric"><div class="label">Accounts</div><div class="value">405</div><div class="note">deduped by account</div></div>
+      <div class="metric"><div class="label">High Priority</div><div class="value">57</div><div class="note">best Emily starting list</div></div>
+      <div class="metric"><div class="label">Medium Priority</div><div class="value">198</div><div class="note">worth sequencing</div></div>
+      <div class="metric"><div class="label">Lower Priority</div><div class="value">150</div><div class="note">use with caution</div></div>
+      <div class="metric"><div class="label">Total Value</div><div class="value">$970,093</div><div class="note">closed-lost amount</div></div>
+    </section>
+    <section class="controls">
+      <div class="tabs"><button class="tab active" data-prospect-tab="All">All <span>405</span></button>
+<button class="tab" data-prospect-tab="Billing">Billing <span>231</span></button>
+<button class="tab" data-prospect-tab="Odin">Odin <span>7</span></button>
+<button class="tab" data-prospect-tab="PSA Web">PSA Web <span>167</span></button></div>
+      <input id="prospectSearch" type="search" placeholder="Search account, opportunity, lost reason, blurb">
+      <select id="priority"><option value="">All priorities</option><option>High</option><option>Medium</option><option>Lower</option></select>
+    </section>
+    <section class="table-wrap">
+      <table>
+        <thead><tr><th>Account</th><th>Opportunity</th><th>Product</th><th>Amount</th><th>Lost Date</th><th>Rank</th><th>Lost Reason</th><th>Emily Blurb</th></tr></thead>
+        <tbody id="prospectBody">
             <tr data-tab="Billing" data-priority="High" data-search="a.f. daniel technology group a.f. daniel technology group - billing price cancelled before disco pricing is the factor here, wants to consolidate ss and cored billing but not enough ss traffic to justify high high reengagement priority. product-fit gap may have changed; commercial objection worth retesting; enough time has passed since loss.">
               <td>
                 <a class="account" href="https://rev-io.my.salesforce.com/001PX000001QMZ1YAO" target="_blank" rel="noopener">A.F. Daniel Technology Group</a>
@@ -7363,33 +7375,2307 @@ a:hover { text-decoration:underline; }
               <td class="blurb">Lower reengagement priority. account-type wording needs caution; structural account change; recent loss.</td>
             </tr>
             </tbody>
-    </table>
+      </table>
+    </section>
+  </section>
+
+  <section class="page-section hidden-page" id="page-billing">
+    <section class="metrics">
+      <div class="metric"><div class="label">Accounts</div><div class="value">171</div><div class="note">client account types excluded</div></div>
+      <div class="metric"><div class="label">Quickbooks</div><div class="value">100</div><div class="note">billing platform field</div></div>
+      <div class="metric"><div class="label">Datagate</div><div class="value">42</div><div class="note">billing platform field</div></div>
+      <div class="metric"><div class="label">OneBill</div><div class="value">15</div><div class="note">billing platform field</div></div>
+      <div class="metric"><div class="label">Other Targets</div><div class="value">4</div><div class="note">TimelyBill + Sandy Beaches</div></div>
+    </section>
+    <section class="controls">
+      <div class="tabs"><button class="tab active" data-platform-tab="All">All <span>171</span></button>
+<button class="tab" data-platform-tab="OneBill">OneBill <span>15</span></button>
+<button class="tab" data-platform-tab="Datagate">Datagate <span>42</span></button>
+<button class="tab" data-platform-tab="TimelyBill">TimelyBill <span>4</span></button>
+<button class="tab" data-platform-tab="Sandy Beaches">Sandy Beaches <span>0</span></button>
+<button class="tab" data-platform-tab="Quickbooks">Quickbooks <span>100</span></button></div>
+      <input id="billingSearch" type="search" placeholder="Search account, type, platform, phone, website">
+    </section>
+    <section class="table-wrap">
+      <table>
+        <thead><tr><th>Account</th><th>Billing Platform</th><th>Website</th><th>Phone</th><th>Last Activity</th><th>Created</th></tr></thead>
+        <tbody id="billingBody">
+            <tr data-platform="Datagate" data-search="1010 technology center cold prospect datagate (989) 358-6060 1010tc.com 2026-06-24">
+              <td>
+                <a class="account" href="https://rev-io.my.salesforce.com/001PX00000CzoyfYAB" target="_blank" rel="noopener">1010 technology center</a>
+                <div class="sub">Cold Prospect</div>
+              </td>
+              <td>Datagate</td>
+              <td><a href="https://1010tc.com" target="_blank" rel="noopener">1010tc.com</a></td>
+              <td>(989) 358-6060</td>
+              <td>2026-06-24</td>
+              <td>2023-09-14</td>
+            </tr>
+            
+
+            <tr data-platform="Datagate" data-search="aatrox communications cold prospect datagate  aatroxcommunications.com.au 2025-05-20">
+              <td>
+                <a class="account" href="https://rev-io.my.salesforce.com/0016O00003HMqAfQAL" target="_blank" rel="noopener">Aatrox Communications</a>
+                <div class="sub">Cold Prospect</div>
+              </td>
+              <td>Datagate</td>
+              <td><a href="https://aatroxcommunications.com.au" target="_blank" rel="noopener">aatroxcommunications.com.au</a></td>
+              <td><span class="muted">-</span></td>
+              <td>2025-05-20</td>
+              <td>2022-05-19</td>
+            </tr>
+            
+
+            <tr data-platform="Datagate" data-search="adamscomm warm prospect datagate (508) 866-4086 adamscomm.net 2026-06-19">
+              <td>
+                <a class="account" href="https://rev-io.my.salesforce.com/0011C00002ZajpmQAB" target="_blank" rel="noopener">Adamscomm</a>
+                <div class="sub">Warm Prospect</div>
+              </td>
+              <td>Datagate</td>
+              <td><a href="https://adamscomm.net" target="_blank" rel="noopener">adamscomm.net</a></td>
+              <td>(508) 866-4086</td>
+              <td>2026-06-19</td>
+              <td>2019-08-22</td>
+            </tr>
+            
+
+            <tr data-platform="Datagate" data-search="aictriad cold prospect datagate  aictriad.com 2026-06-29">
+              <td>
+                <a class="account" href="https://rev-io.my.salesforce.com/001PX00000VmAhaYAF" target="_blank" rel="noopener">Aictriad</a>
+                <div class="sub">Cold Prospect</div>
+              </td>
+              <td>Datagate</td>
+              <td><a href="https://aictriad.com" target="_blank" rel="noopener">aictriad.com</a></td>
+              <td><span class="muted">-</span></td>
+              <td>2026-06-29</td>
+              <td>2025-07-09</td>
+            </tr>
+            
+
+            <tr data-platform="Datagate" data-search="arnet technologies cold prospect datagate (614) 412-2404 arnettechnologies.com 2026-06-29">
+              <td>
+                <a class="account" href="https://rev-io.my.salesforce.com/0016O00003YR1pmQAD" target="_blank" rel="noopener">Arnet Technologies</a>
+                <div class="sub">Cold Prospect</div>
+              </td>
+              <td>Datagate</td>
+              <td><a href="https://arnettechnologies.com" target="_blank" rel="noopener">arnettechnologies.com</a></td>
+              <td>(614) 412-2404</td>
+              <td>2026-06-29</td>
+              <td>2023-04-13</td>
+            </tr>
+            
+
+            <tr data-platform="Datagate" data-search="aurora computer technologies warm prospect datagate (718) 981-2363 auroracomputer.com 2026-02-18">
+              <td>
+                <a class="account" href="https://rev-io.my.salesforce.com/0016O00003XCffAQAT" target="_blank" rel="noopener">Aurora Computer Technologies</a>
+                <div class="sub">Warm Prospect</div>
+              </td>
+              <td>Datagate</td>
+              <td><a href="https://auroracomputer.com" target="_blank" rel="noopener">auroracomputer.com</a></td>
+              <td>(718) 981-2363</td>
+              <td>2026-02-18</td>
+              <td>2023-04-10</td>
+            </tr>
+            
+
+            <tr data-platform="Datagate" data-search="axon consulting services cold prospect datagate (201) 639-4310 axoncs.com 2026-02-05">
+              <td>
+                <a class="account" href="https://rev-io.my.salesforce.com/0011C000033TbBuQAK" target="_blank" rel="noopener">Axon Consulting Services</a>
+                <div class="sub">Cold Prospect</div>
+              </td>
+              <td>Datagate</td>
+              <td><a href="https://axoncs.com" target="_blank" rel="noopener">axoncs.com</a></td>
+              <td>(201) 639-4310</td>
+              <td>2026-02-05</td>
+              <td>2021-04-26</td>
+            </tr>
+            
+
+            <tr data-platform="Datagate" data-search="blended technology solutions warm prospect datagate (937) 424-3975 blendedtechnology.com 2026-03-03">
+              <td>
+                <a class="account" href="https://rev-io.my.salesforce.com/0011500001Yd9UTAAZ" target="_blank" rel="noopener">Blended Technology Solutions</a>
+                <div class="sub">Warm Prospect</div>
+              </td>
+              <td>Datagate</td>
+              <td><a href="https://blendedtechnology.com" target="_blank" rel="noopener">blendedtechnology.com</a></td>
+              <td>(937) 424-3975</td>
+              <td>2026-03-03</td>
+              <td>2016-12-06</td>
+            </tr>
+            
+
+            <tr data-platform="Datagate" data-search="bluecastle it solutions cold prospect datagate  bluecastleit.com 2026-02-09">
+              <td>
+                <a class="account" href="https://rev-io.my.salesforce.com/0016O00003dmowqQAA" target="_blank" rel="noopener">Bluecastle IT Solutions</a>
+                <div class="sub">Cold Prospect</div>
+              </td>
+              <td>Datagate</td>
+              <td><a href="https://bluecastleit.com" target="_blank" rel="noopener">bluecastleit.com</a></td>
+              <td><span class="muted">-</span></td>
+              <td>2026-02-09</td>
+              <td>2023-07-20</td>
+            </tr>
+            
+
+            <tr data-platform="Datagate" data-search="compassmsp warm prospect datagate (860) 249-1200 compassmsp.com 2026-06-03">
+              <td>
+                <a class="account" href="https://rev-io.my.salesforce.com/0011C00002rgI3WQAU" target="_blank" rel="noopener">CompassMSP</a>
+                <div class="sub">Warm Prospect</div>
+              </td>
+              <td>Datagate</td>
+              <td><a href="https://compassmsp.com" target="_blank" rel="noopener">compassmsp.com</a></td>
+              <td>(860) 249-1200</td>
+              <td>2026-06-03</td>
+              <td>2020-09-14</td>
+            </tr>
+            
+
+            <tr data-platform="Datagate" data-search="comresource warm prospect datagate (614) 221-6348 comresource.com 2026-06-23">
+              <td>
+                <a class="account" href="https://rev-io.my.salesforce.com/0016O00003U0Lp2QAF" target="_blank" rel="noopener">ComResource</a>
+                <div class="sub">Warm Prospect</div>
+              </td>
+              <td>Datagate</td>
+              <td><a href="https://comresource.com" target="_blank" rel="noopener">comresource.com</a></td>
+              <td>(614) 221-6348</td>
+              <td>2026-06-23</td>
+              <td>2023-02-02</td>
+            </tr>
+            
+
+            <tr data-platform="Datagate" data-search="comstar technologies, llc tigerpaw churn datagate (610) 692-4021 https://www.neweratech.com/ 2025-11-19">
+              <td>
+                <a class="account" href="https://rev-io.my.salesforce.com/0011C00001tiRR7QAM" target="_blank" rel="noopener">Comstar Technologies, LLC</a>
+                <div class="sub">Tigerpaw Churn</div>
+              </td>
+              <td>Datagate</td>
+              <td><a href="https://www.neweratech.com/" target="_blank" rel="noopener">https://www.neweratech.com/</a></td>
+              <td>(610) 692-4021</td>
+              <td>2025-11-19</td>
+              <td>2018-01-18</td>
+            </tr>
+            
+
+            <tr data-platform="Datagate" data-search="connection tech communications cold prospect datagate (267) 454-6575 connectiontech.net 2026-03-12">
+              <td>
+                <a class="account" href="https://rev-io.my.salesforce.com/001PX00000D4eQpYAJ" target="_blank" rel="noopener">Connection Tech Communications</a>
+                <div class="sub">Cold Prospect</div>
+              </td>
+              <td>Datagate</td>
+              <td><a href="https://connectiontech.net" target="_blank" rel="noopener">connectiontech.net</a></td>
+              <td>(267) 454-6575</td>
+              <td>2026-03-12</td>
+              <td>2024-06-11</td>
+            </tr>
+            
+
+            <tr data-platform="Datagate" data-search="converged technologies warm prospect datagate 7328870642 convergedtechnologies.net 2025-12-29">
+              <td>
+                <a class="account" href="https://rev-io.my.salesforce.com/001PX00000W3lKyYAJ" target="_blank" rel="noopener">Converged Technologies</a>
+                <div class="sub">Warm Prospect</div>
+              </td>
+              <td>Datagate</td>
+              <td><a href="https://convergedtechnologies.net" target="_blank" rel="noopener">convergedtechnologies.net</a></td>
+              <td>7328870642</td>
+              <td>2025-12-29</td>
+              <td>2025-07-15</td>
+            </tr>
+            
+
+            <tr data-platform="Datagate" data-search="cts cold prospect datagate (203) 333-5387 cttsllc.com 2026-05-19">
+              <td>
+                <a class="account" href="https://rev-io.my.salesforce.com/0016O00003eblcpQAA" target="_blank" rel="noopener">Cts</a>
+                <div class="sub">Cold Prospect</div>
+              </td>
+              <td>Datagate</td>
+              <td><a href="https://cttsllc.com" target="_blank" rel="noopener">cttsllc.com</a></td>
+              <td>(203) 333-5387</td>
+              <td>2026-05-19</td>
+              <td>2023-08-09</td>
+            </tr>
+            
+
+            <tr data-platform="Datagate" data-search="current-concepts corporation cold prospect datagate (603) 353-4040 current-concepts.com 2025-08-22">
+              <td>
+                <a class="account" href="https://rev-io.my.salesforce.com/001PX000001reY6YAI" target="_blank" rel="noopener">Current-Concepts Corporation</a>
+                <div class="sub">Cold Prospect</div>
+              </td>
+              <td>Datagate</td>
+              <td><a href="https://current-concepts.com" target="_blank" rel="noopener">current-concepts.com</a></td>
+              <td>(603) 353-4040</td>
+              <td>2025-08-22</td>
+              <td>2023-09-19</td>
+            </tr>
+            
+
+            <tr data-platform="Datagate" data-search="datapro telecom solutions warm prospect datagate 201-751-1003 dataprots.com 2026-06-04">
+              <td>
+                <a class="account" href="https://rev-io.my.salesforce.com/001PX00000P31IyYAJ" target="_blank" rel="noopener">Datapro Telecom Solutions</a>
+                <div class="sub">Warm Prospect</div>
+              </td>
+              <td>Datagate</td>
+              <td><a href="https://dataprots.com" target="_blank" rel="noopener">dataprots.com</a></td>
+              <td>201-751-1003</td>
+              <td>2026-06-04</td>
+              <td>2025-02-12</td>
+            </tr>
+            
+
+            <tr data-platform="Datagate" data-search="dato technology warm prospect datagate (586) 944-8500 datotechnology.com 2026-06-23">
+              <td>
+                <a class="account" href="https://rev-io.my.salesforce.com/0011C00002cocylQAA" target="_blank" rel="noopener">Dato Technology</a>
+                <div class="sub">Warm Prospect</div>
+              </td>
+              <td>Datagate</td>
+              <td><a href="https://datotechnology.com" target="_blank" rel="noopener">datotechnology.com</a></td>
+              <td>(586) 944-8500</td>
+              <td>2026-06-23</td>
+              <td>2019-10-21</td>
+            </tr>
+            
+
+            <tr data-platform="Datagate" data-search="dlt resolution warm prospect datagate (800) 463-5465 dlttelecom.com 2026-06-10">
+              <td>
+                <a class="account" href="https://rev-io.my.salesforce.com/0011C00002WEC5PQAX" target="_blank" rel="noopener">DLT Resolution</a>
+                <div class="sub">Warm Prospect</div>
+              </td>
+              <td>Datagate</td>
+              <td><a href="https://dlttelecom.com" target="_blank" rel="noopener">dlttelecom.com</a></td>
+              <td>(800) 463-5465</td>
+              <td>2026-06-10</td>
+              <td>2019-06-26</td>
+            </tr>
+            
+
+            <tr data-platform="Datagate" data-search="ds tech cold prospect datagate +1 906-786-0057 dstech.net 2026-04-22">
+              <td>
+                <a class="account" href="https://rev-io.my.salesforce.com/0016O00003ebh9SQAQ" target="_blank" rel="noopener">DS Tech</a>
+                <div class="sub">Cold Prospect</div>
+              </td>
+              <td>Datagate</td>
+              <td><a href="https://dstech.net" target="_blank" rel="noopener">dstech.net</a></td>
+              <td>+1 906-786-0057</td>
+              <td>2026-04-22</td>
+              <td>2023-08-09</td>
+            </tr>
+            
+
+            <tr data-platform="Datagate" data-search="iris technology group warm prospect datagate 724-204-1760 iristechgroup.com 2026-06-18">
+              <td>
+                <a class="account" href="https://rev-io.my.salesforce.com/001PX00000f3AOEYA2" target="_blank" rel="noopener">Iris Technology Group</a>
+                <div class="sub">Warm Prospect</div>
+              </td>
+              <td>Datagate</td>
+              <td><a href="https://iristechgroup.com" target="_blank" rel="noopener">iristechgroup.com</a></td>
+              <td>724-204-1760</td>
+              <td>2026-06-18</td>
+              <td>2026-01-02</td>
+            </tr>
+            
+
+            <tr data-platform="Datagate" data-search="it support specialists cold prospect datagate (216) 771-1600 itsscle.com 2026-06-29">
+              <td>
+                <a class="account" href="https://rev-io.my.salesforce.com/0016O00003dAAcjQAG" target="_blank" rel="noopener">IT Support Specialists</a>
+                <div class="sub">Cold Prospect</div>
+              </td>
+              <td>Datagate</td>
+              <td><a href="https://itsscle.com" target="_blank" rel="noopener">itsscle.com</a></td>
+              <td>(216) 771-1600</td>
+              <td>2026-06-29</td>
+              <td>2023-07-17</td>
+            </tr>
+            
+
+            <tr data-platform="Datagate" data-search="limebox networks warm prospect datagate (856) 942-4079 limeboxnetworks.com 2026-03-12">
+              <td>
+                <a class="account" href="https://rev-io.my.salesforce.com/0011C00001oP7dNQAS" target="_blank" rel="noopener">Limebox Networks</a>
+                <div class="sub">Warm Prospect</div>
+              </td>
+              <td>Datagate</td>
+              <td><a href="https://limeboxnetworks.com" target="_blank" rel="noopener">limeboxnetworks.com</a></td>
+              <td>(856) 942-4079</td>
+              <td>2026-03-12</td>
+              <td>2017-10-23</td>
+            </tr>
+            
+
+            <tr data-platform="Datagate" data-search="mikopia prospect datagate  mikopia.com 2026-06-03">
+              <td>
+                <a class="account" href="https://rev-io.my.salesforce.com/001PX00000M0beJYAR" target="_blank" rel="noopener">MiKopia</a>
+                <div class="sub">Prospect</div>
+              </td>
+              <td>Datagate</td>
+              <td><a href="https://mikopia.com" target="_blank" rel="noopener">mikopia.com</a></td>
+              <td><span class="muted">-</span></td>
+              <td>2026-06-03</td>
+              <td>2024-12-04</td>
+            </tr>
+            
+
+            <tr data-platform="Datagate" data-search="motiva networks cold prospect datagate (646) 374-1820 motiva.net 2026-02-05">
+              <td>
+                <a class="account" href="https://rev-io.my.salesforce.com/001PX00000AZJrgYAH" target="_blank" rel="noopener">Motiva Networks</a>
+                <div class="sub">Cold Prospect</div>
+              </td>
+              <td>Datagate</td>
+              <td><a href="https://motiva.net" target="_blank" rel="noopener">motiva.net</a></td>
+              <td>(646) 374-1820</td>
+              <td>2026-02-05</td>
+              <td>2024-04-25</td>
+            </tr>
+            
+
+            <tr data-platform="Datagate" data-search="n-mesh technologies warm prospect datagate (724) 204-1760 nmeshtech.com 2026-05-26">
+              <td>
+                <a class="account" href="https://rev-io.my.salesforce.com/0016O00003V9WBUQA3" target="_blank" rel="noopener">N-Mesh Technologies</a>
+                <div class="sub">Warm Prospect</div>
+              </td>
+              <td>Datagate</td>
+              <td><a href="https://nmeshtech.com" target="_blank" rel="noopener">nmeshtech.com</a></td>
+              <td>(724) 204-1760</td>
+              <td>2026-05-26</td>
+              <td>2023-02-23</td>
+            </tr>
+            
+
+            <tr data-platform="Datagate" data-search="netcov warm prospect datagate (888) 800-0433 netcov.com 2026-06-03">
+              <td>
+                <a class="account" href="https://rev-io.my.salesforce.com/0011C00002l00DSQAY" target="_blank" rel="noopener">NetCov</a>
+                <div class="sub">Warm Prospect</div>
+              </td>
+              <td>Datagate</td>
+              <td><a href="https://netcov.com" target="_blank" rel="noopener">netcov.com</a></td>
+              <td>(888) 800-0433</td>
+              <td>2026-06-03</td>
+              <td>2020-04-30</td>
+            </tr>
+            
+
+            <tr data-platform="Datagate" data-search="new era technology, us warm prospect datagate (877) 696-7720 neweratech.com 2026-06-30">
+              <td>
+                <a class="account" href="https://rev-io.my.salesforce.com/0011C00001zsSUKQA2" target="_blank" rel="noopener">New Era Technology, US</a>
+                <div class="sub">Warm Prospect</div>
+              </td>
+              <td>Datagate</td>
+              <td><a href="https://neweratech.com" target="_blank" rel="noopener">neweratech.com</a></td>
+              <td>(877) 696-7720</td>
+              <td>2026-06-30</td>
+              <td>2018-05-17</td>
+            </tr>
+            
+
+            <tr data-platform="Datagate" data-search="pathfinder technology solutions prospect datagate (716) 236-9304 pathfindertechsolutions.com 2026-06-18">
+              <td>
+                <a class="account" href="https://rev-io.my.salesforce.com/001PX00000Md4a9YAB" target="_blank" rel="noopener">Pathfinder Technology Solutions</a>
+                <div class="sub">Prospect</div>
+              </td>
+              <td>Datagate</td>
+              <td><a href="https://pathfindertechsolutions.com" target="_blank" rel="noopener">pathfindertechsolutions.com</a></td>
+              <td>(716) 236-9304</td>
+              <td>2026-06-18</td>
+              <td>2024-12-18</td>
+            </tr>
+            
+
+            <tr data-platform="Datagate" data-search="pbxstore warm prospect datagate (877) 702-2077 pbxstore.com 2026-04-27">
+              <td>
+                <a class="account" href="https://rev-io.my.salesforce.com/001PX000008HyCrYAK" target="_blank" rel="noopener">PBXstore</a>
+                <div class="sub">Warm Prospect</div>
+              </td>
+              <td>Datagate</td>
+              <td><a href="https://pbxstore.com" target="_blank" rel="noopener">pbxstore.com</a></td>
+              <td>(877) 702-2077</td>
+              <td>2026-04-27</td>
+              <td>2022-06-13</td>
+            </tr>
+            
+
+            <tr data-platform="Datagate" data-search="red arrow technologies warm prospect datagate (732) 813-3939 redarrowtech.com 2026-06-25">
+              <td>
+                <a class="account" href="https://rev-io.my.salesforce.com/001PX00000Ir3n9YAB" target="_blank" rel="noopener">Red Arrow Technologies</a>
+                <div class="sub">Warm Prospect</div>
+              </td>
+              <td>Datagate</td>
+              <td><a href="https://redarrowtech.com" target="_blank" rel="noopener">redarrowtech.com</a></td>
+              <td>(732) 813-3939</td>
+              <td>2026-06-25</td>
+              <td>2024-09-30</td>
+            </tr>
+            
+
+            <tr data-platform="Datagate" data-search="semperon corp warm prospect datagate (484) 653-5550 semperon.com 2026-03-12">
+              <td>
+                <a class="account" href="https://rev-io.my.salesforce.com/0016O00003aAPtlQAG" target="_blank" rel="noopener">Semperon Corp</a>
+                <div class="sub">Warm Prospect</div>
+              </td>
+              <td>Datagate</td>
+              <td><a href="https://semperon.com" target="_blank" rel="noopener">semperon.com</a></td>
+              <td>(484) 653-5550</td>
+              <td>2026-03-12</td>
+              <td>2023-05-25</td>
+            </tr>
+            
+
+            <tr data-platform="Datagate" data-search="simply technology warm prospect datagate (248) 885-5515 simplytechnology.com 2026-06-01">
+              <td>
+                <a class="account" href="https://rev-io.my.salesforce.com/0011C00002pb91aQAA" target="_blank" rel="noopener">Simply Technology</a>
+                <div class="sub">Warm Prospect</div>
+              </td>
+              <td>Datagate</td>
+              <td><a href="https://simplytechnology.com" target="_blank" rel="noopener">simplytechnology.com</a></td>
+              <td>(248) 885-5515</td>
+              <td>2026-06-01</td>
+              <td>2020-07-24</td>
+            </tr>
+            
+
+            <tr data-platform="Datagate" data-search="skynet innovations cold prospect datagate (513) 549-5031 skynetinnovations.com 2026-06-29">
+              <td>
+                <a class="account" href="https://rev-io.my.salesforce.com/001PX00000EGf8oYAD" target="_blank" rel="noopener">Skynet Innovations</a>
+                <div class="sub">Cold Prospect</div>
+              </td>
+              <td>Datagate</td>
+              <td><a href="https://skynetinnovations.com" target="_blank" rel="noopener">skynetinnovations.com</a></td>
+              <td>(513) 549-5031</td>
+              <td>2026-06-29</td>
+              <td>2024-07-03</td>
+            </tr>
+            
+
+            <tr data-platform="Datagate" data-search="smart ip solutions warm prospect datagate (215) 355-2400 smartipsolutions.com 2026-04-22">
+              <td>
+                <a class="account" href="https://rev-io.my.salesforce.com/0011C00001zrOtvQAE" target="_blank" rel="noopener">Smart IP Solutions</a>
+                <div class="sub">Warm Prospect</div>
+              </td>
+              <td>Datagate</td>
+              <td><a href="https://smartipsolutions.com" target="_blank" rel="noopener">smartipsolutions.com</a></td>
+              <td>(215) 355-2400</td>
+              <td>2026-04-22</td>
+              <td>2018-05-10</td>
+            </tr>
+            
+
+            <tr data-platform="Datagate" data-search="statewide communications prospect datagate +1 800 773 4724 statewide.com 2026-04-20">
+              <td>
+                <a class="account" href="https://rev-io.my.salesforce.com/0016O00003YR0LvQAL" target="_blank" rel="noopener">Statewide Communications</a>
+                <div class="sub">Prospect</div>
+              </td>
+              <td>Datagate</td>
+              <td><a href="https://statewide.com" target="_blank" rel="noopener">statewide.com</a></td>
+              <td>+1 800 773 4724</td>
+              <td>2026-04-20</td>
+              <td>2023-04-13</td>
+            </tr>
+            
+
+            <tr data-platform="Datagate" data-search="telecorp warm prospect datagate (856) 384-6000 telecorpinc.com 2026-06-24">
+              <td>
+                <a class="account" href="https://rev-io.my.salesforce.com/0016O00003HJYd8QAH" target="_blank" rel="noopener">Telecorp</a>
+                <div class="sub">Warm Prospect</div>
+              </td>
+              <td>Datagate</td>
+              <td><a href="https://telecorpinc.com" target="_blank" rel="noopener">telecorpinc.com</a></td>
+              <td>(856) 384-6000</td>
+              <td>2026-06-24</td>
+              <td>2022-04-29</td>
+            </tr>
+            
+
+            <tr data-platform="Datagate" data-search="trace routes warm prospect datagate (419) 874-9600 tracerts.com 2026-03-16">
+              <td>
+                <a class="account" href="https://rev-io.my.salesforce.com/0016O00003HLwv6QAD" target="_blank" rel="noopener">Trace Routes</a>
+                <div class="sub">Warm Prospect</div>
+              </td>
+              <td>Datagate</td>
+              <td><a href="https://tracerts.com" target="_blank" rel="noopener">tracerts.com</a></td>
+              <td>(419) 874-9600</td>
+              <td>2026-03-16</td>
+              <td>2022-05-17</td>
+            </tr>
+            
+
+            <tr data-platform="Datagate" data-search="twinscellular warm prospect datagate (262) 632-3642 twinscellular.com 2026-06-24">
+              <td>
+                <a class="account" href="https://rev-io.my.salesforce.com/0011500001UY3qjAAD" target="_blank" rel="noopener">Twinscellular</a>
+                <div class="sub">Warm Prospect</div>
+              </td>
+              <td>Datagate</td>
+              <td><a href="https://twinscellular.com" target="_blank" rel="noopener">twinscellular.com</a></td>
+              <td>(262) 632-3642</td>
+              <td>2026-06-24</td>
+              <td>2016-09-14</td>
+            </tr>
+            
+
+            <tr data-platform="Datagate" data-search="velocity.net warm prospect datagate (814) 838-8153 vnet.us 2026-06-09">
+              <td>
+                <a class="account" href="https://rev-io.my.salesforce.com/0011500001HNPwcAAH" target="_blank" rel="noopener">Velocity.Net</a>
+                <div class="sub">Warm Prospect</div>
+              </td>
+              <td>Datagate</td>
+              <td><a href="https://vnet.us" target="_blank" rel="noopener">vnet.us</a></td>
+              <td>(814) 838-8153</td>
+              <td>2026-06-09</td>
+              <td>2014-07-16</td>
+            </tr>
+            
+
+            <tr data-platform="Datagate" data-search="voip systems usa warm prospect datagate (856) 761-1000 voipsystemsusa.com 2026-04-23">
+              <td>
+                <a class="account" href="https://rev-io.my.salesforce.com/0011500001HNPoCAAX" target="_blank" rel="noopener">VOIP Systems USA</a>
+                <div class="sub">Warm Prospect</div>
+              </td>
+              <td>Datagate</td>
+              <td><a href="https://voipsystemsusa.com" target="_blank" rel="noopener">voipsystemsusa.com</a></td>
+              <td>(856) 761-1000</td>
+              <td>2026-04-23</td>
+              <td>2014-03-18</td>
+            </tr>
+            
+
+            <tr data-platform="Datagate" data-search="wyant computer services cold prospect datagate (231) 946-5969 gowyant.com 2026-05-19">
+              <td>
+                <a class="account" href="https://rev-io.my.salesforce.com/0016O000036GROEQA4" target="_blank" rel="noopener">Wyant Computer Services</a>
+                <div class="sub">Cold Prospect</div>
+              </td>
+              <td>Datagate</td>
+              <td><a href="https://gowyant.com" target="_blank" rel="noopener">gowyant.com</a></td>
+              <td>(231) 946-5969</td>
+              <td>2026-05-19</td>
+              <td>2021-07-21</td>
+            </tr>
+            
+
+            <tr data-platform="Intelebill" data-search="edge fibernet cold prospect intelebill +16462571500 edgefibernet.com 2026-03-19">
+              <td>
+                <a class="account" href="https://rev-io.my.salesforce.com/001PX00000j3sA3YAI" target="_blank" rel="noopener">Edge Fibernet</a>
+                <div class="sub">Cold Prospect</div>
+              </td>
+              <td>Intelebill</td>
+              <td><a href="https://edgefibernet.com" target="_blank" rel="noopener">edgefibernet.com</a></td>
+              <td>+16462571500</td>
+              <td>2026-03-19</td>
+              <td>2026-03-17</td>
+            </tr>
+            
+
+            <tr data-platform="Intelebill" data-search="everest bbn churn intelebill (800) 242-1662 x4 everestbroadband.com 2026-02-10">
+              <td>
+                <a class="account" href="https://rev-io.my.salesforce.com/0011500001HNQBMAA5" target="_blank" rel="noopener">Everest BBN</a>
+                <div class="sub">Churn</div>
+              </td>
+              <td>Intelebill</td>
+              <td><a href="https://everestbroadband.com" target="_blank" rel="noopener">everestbroadband.com</a></td>
+              <td>(800) 242-1662 x4</td>
+              <td>2026-02-10</td>
+              <td>2015-03-06</td>
+            </tr>
+            
+
+            <tr data-platform="Intelebill" data-search="future subnets warm prospect intelebill (203) 702-1317 futuresubnets.com 2026-06-25">
+              <td>
+                <a class="account" href="https://rev-io.my.salesforce.com/0016O00003T46y9QAB" target="_blank" rel="noopener">Future Subnets</a>
+                <div class="sub">Warm Prospect</div>
+              </td>
+              <td>Intelebill</td>
+              <td><a href="https://futuresubnets.com" target="_blank" rel="noopener">futuresubnets.com</a></td>
+              <td>(203) 702-1317</td>
+              <td>2026-06-25</td>
+              <td>2023-01-17</td>
+            </tr>
+            
+
+            <tr data-platform="Intelebill" data-search="geostar communications warm prospect intelebill (866) 986-1066 geostarllc.net 2026-05-18">
+              <td>
+                <a class="account" href="https://rev-io.my.salesforce.com/0011500001KCI31AAH" target="_blank" rel="noopener">GeoStar Communications</a>
+                <div class="sub">Warm Prospect</div>
+              </td>
+              <td>Intelebill</td>
+              <td><a href="https://geostarllc.net" target="_blank" rel="noopener">geostarllc.net</a></td>
+              <td>(866) 986-1066</td>
+              <td>2026-05-18</td>
+              <td>2016-03-28</td>
+            </tr>
+            
+
+            <tr data-platform="Intelebill" data-search="lightspeed telecommunications llc warm prospect intelebill (212) 631-7556 lightspeedtelecom.com 2026-06-02">
+              <td>
+                <a class="account" href="https://rev-io.my.salesforce.com/0016O00003XBzTAQA1" target="_blank" rel="noopener">Lightspeed Telecommunications LLC</a>
+                <div class="sub">Warm Prospect</div>
+              </td>
+              <td>Intelebill</td>
+              <td><a href="https://lightspeedtelecom.com" target="_blank" rel="noopener">lightspeedtelecom.com</a></td>
+              <td>(212) 631-7556</td>
+              <td>2026-06-02</td>
+              <td>2023-04-05</td>
+            </tr>
+            
+
+            <tr data-platform="Intelebill" data-search="nexline communications warm prospect intelebill  mynexline.com 2026-04-23">
+              <td>
+                <a class="account" href="https://rev-io.my.salesforce.com/0016O00003b5O0zQAE" target="_blank" rel="noopener">Nexline Communications</a>
+                <div class="sub">Warm Prospect</div>
+              </td>
+              <td>Intelebill</td>
+              <td><a href="https://mynexline.com" target="_blank" rel="noopener">mynexline.com</a></td>
+              <td><span class="muted">-</span></td>
+              <td>2026-04-23</td>
+              <td>2023-06-06</td>
+            </tr>
+            
+
+            <tr data-platform="Intelebill" data-search="pureedge technologies warm prospect intelebill (570) 994-1104 x100 pureedgetechnologies.com 2026-06-16">
+              <td>
+                <a class="account" href="https://rev-io.my.salesforce.com/0011500001HNPkrAAH" target="_blank" rel="noopener">PureEdge Technologies</a>
+                <div class="sub">Warm Prospect</div>
+              </td>
+              <td>Intelebill</td>
+              <td><a href="https://pureedgetechnologies.com" target="_blank" rel="noopener">pureedgetechnologies.com</a></td>
+              <td>(570) 994-1104 x100</td>
+              <td>2026-06-16</td>
+              <td>2013-10-29</td>
+            </tr>
+            
+
+            <tr data-platform="Intelebill" data-search="reliable pbx warm prospect intelebill +18557353600 reliablepbx.com 2026-06-22">
+              <td>
+                <a class="account" href="https://rev-io.my.salesforce.com/001PX00000e4VnnYAE" target="_blank" rel="noopener">Reliable PBX</a>
+                <div class="sub">Warm Prospect</div>
+              </td>
+              <td>Intelebill</td>
+              <td><a href="https://reliablepbx.com" target="_blank" rel="noopener">reliablepbx.com</a></td>
+              <td>+18557353600</td>
+              <td>2026-06-22</td>
+              <td>2025-12-11</td>
+            </tr>
+            
+
+            <tr data-platform="Intelebill" data-search="solitran warm prospect intelebill (917) 701-6503 solitran.com 2026-02-25">
+              <td>
+                <a class="account" href="https://rev-io.my.salesforce.com/0011C00002xEHFtQAO" target="_blank" rel="noopener">Solitran</a>
+                <div class="sub">Warm Prospect</div>
+              </td>
+              <td>Intelebill</td>
+              <td><a href="https://solitran.com" target="_blank" rel="noopener">solitran.com</a></td>
+              <td>(917) 701-6503</td>
+              <td>2026-02-25</td>
+              <td>2020-12-23</td>
+            </tr>
+            
+
+            <tr data-platform="Intelebill" data-search="virtel voice / netexpress warm prospect intelebill (734) 794-7004 gonetexpress.com 2026-06-03">
+              <td>
+                <a class="account" href="https://rev-io.my.salesforce.com/0011C00002aOVfXQAW" target="_blank" rel="noopener">Virtel Voice / Netexpress</a>
+                <div class="sub">Warm Prospect</div>
+              </td>
+              <td>Intelebill</td>
+              <td><a href="https://gonetexpress.com" target="_blank" rel="noopener">gonetexpress.com</a></td>
+              <td>(734) 794-7004</td>
+              <td>2026-06-03</td>
+              <td>2019-09-11</td>
+            </tr>
+            
+
+            <tr data-platform="OneBill" data-search="avad technologies warm prospect onebill (904) 328-1502 avadtechnologies.com 2026-02-25">
+              <td>
+                <a class="account" href="https://rev-io.my.salesforce.com/0011500001HNQ4BAAX" target="_blank" rel="noopener">AVAD Technologies</a>
+                <div class="sub">Warm Prospect</div>
+              </td>
+              <td>OneBill</td>
+              <td><a href="https://avadtechnologies.com" target="_blank" rel="noopener">avadtechnologies.com</a></td>
+              <td>(904) 328-1502</td>
+              <td>2026-02-25</td>
+              <td>2014-10-10</td>
+            </tr>
+            
+
+            <tr data-platform="OneBill" data-search="big water tech tigerpaw churn reinvent (onebill) (248) 350-2020 bigwatertech.com 2026-03-19">
+              <td>
+                <a class="account" href="https://rev-io.my.salesforce.com/0016O00003dmodoQAA" target="_blank" rel="noopener">Big Water Tech</a>
+                <div class="sub">Tigerpaw Churn</div>
+              </td>
+              <td>Reinvent (Onebill)</td>
+              <td><a href="https://bigwatertech.com" target="_blank" rel="noopener">bigwatertech.com</a></td>
+              <td>(248) 350-2020</td>
+              <td>2026-03-19</td>
+              <td>2023-07-20</td>
+            </tr>
+            
+
+            <tr data-platform="OneBill" data-search="cloudco partners rev.io billing churn onebill (716) 912-4046 cloudcopartner.com 2025-06-13">
+              <td>
+                <a class="account" href="https://rev-io.my.salesforce.com/0011C00002Wz8V4QAJ" target="_blank" rel="noopener">CloudCo Partners</a>
+                <div class="sub">Rev.io Billing Churn</div>
+              </td>
+              <td>OneBill</td>
+              <td><a href="https://cloudcopartner.com" target="_blank" rel="noopener">cloudcopartner.com</a></td>
+              <td>(716) 912-4046</td>
+              <td>2025-06-13</td>
+              <td>2019-07-09</td>
+            </tr>
+            
+
+            <tr data-platform="OneBill" data-search="cts companies warm prospect reinvent (onebill) (248) 334-5800 cts-companies.com 2026-06-25">
+              <td>
+                <a class="account" href="https://rev-io.my.salesforce.com/0011C0000274oM0QAI" target="_blank" rel="noopener">CTS Companies</a>
+                <div class="sub">Warm Prospect</div>
+              </td>
+              <td>Reinvent (Onebill)</td>
+              <td><a href="https://cts-companies.com" target="_blank" rel="noopener">cts-companies.com</a></td>
+              <td>(248) 334-5800</td>
+              <td>2026-06-25</td>
+              <td>2018-10-01</td>
+            </tr>
+            
+
+            <tr data-platform="OneBill" data-search="fiberdial cold prospect onebill (845) 444-3545 fiberdial.com 2025-09-09">
+              <td>
+                <a class="account" href="https://rev-io.my.salesforce.com/0016O00003E15v3QAB" target="_blank" rel="noopener">Fiberdial</a>
+                <div class="sub">Cold Prospect</div>
+              </td>
+              <td>OneBill</td>
+              <td><a href="https://fiberdial.com" target="_blank" rel="noopener">fiberdial.com</a></td>
+              <td>(845) 444-3545</td>
+              <td>2025-09-09</td>
+              <td>2022-02-04</td>
+            </tr>
+            
+
+            <tr data-platform="OneBill" data-search="hemisphere communications warm prospect reinvent (onebill) (716) 646-1773 hemisphere.net 2026-02-03">
+              <td>
+                <a class="account" href="https://rev-io.my.salesforce.com/0016O00003dmuPyQAI" target="_blank" rel="noopener">Hemisphere Communications</a>
+                <div class="sub">Warm Prospect</div>
+              </td>
+              <td>Reinvent (Onebill)</td>
+              <td><a href="https://hemisphere.net" target="_blank" rel="noopener">hemisphere.net</a></td>
+              <td>(716) 646-1773</td>
+              <td>2026-02-03</td>
+              <td>2023-07-20</td>
+            </tr>
+            
+
+            <tr data-platform="OneBill" data-search="jelltel warm prospect onebill 855.jell.tel jelltel.com 2026-02-26">
+              <td>
+                <a class="account" href="https://rev-io.my.salesforce.com/0011C00002bYfUEQA0" target="_blank" rel="noopener">JellTel</a>
+                <div class="sub">Warm Prospect</div>
+              </td>
+              <td>OneBill</td>
+              <td><a href="https://jelltel.com" target="_blank" rel="noopener">jelltel.com</a></td>
+              <td>855.Jell.Tel</td>
+              <td>2026-02-26</td>
+              <td>2017-04-24</td>
+            </tr>
+            
+
+            <tr data-platform="OneBill" data-search="net activity warm prospect onebill (216) 503-5150 netactivity.us 2025-07-01">
+              <td>
+                <a class="account" href="https://rev-io.my.salesforce.com/0011C00002ysPy5QAE" target="_blank" rel="noopener">Net Activity</a>
+                <div class="sub">Warm Prospect</div>
+              </td>
+              <td>OneBill</td>
+              <td><a href="https://netactivity.us" target="_blank" rel="noopener">netactivity.us</a></td>
+              <td>(216) 503-5150</td>
+              <td>2025-07-01</td>
+              <td>2021-01-28</td>
+            </tr>
+            
+
+            <tr data-platform="OneBill" data-search="netcarrier warm prospect onebill (215) 257-4917 netcarrier.com 2026-06-03">
+              <td>
+                <a class="account" href="https://rev-io.my.salesforce.com/0011500001HNQOwAAP" target="_blank" rel="noopener">NetCarrier</a>
+                <div class="sub">Warm Prospect</div>
+              </td>
+              <td>OneBill</td>
+              <td><a href="https://netcarrier.com" target="_blank" rel="noopener">netcarrier.com</a></td>
+              <td>(215) 257-4917</td>
+              <td>2026-06-03</td>
+              <td>2016-02-04</td>
+            </tr>
+            
+
+            <tr data-platform="OneBill" data-search="over the wire warm prospect onebill 1300 689 689 https://overthewire.com.au/ 2025-06-04">
+              <td>
+                <a class="account" href="https://rev-io.my.salesforce.com/0011C0000322RB0QAM" target="_blank" rel="noopener">Over the Wire</a>
+                <div class="sub">Warm Prospect</div>
+              </td>
+              <td>OneBill</td>
+              <td><a href="https://overthewire.com.au/" target="_blank" rel="noopener">https://overthewire.com.au/</a></td>
+              <td>1300 689 689</td>
+              <td>2025-06-04</td>
+              <td>2021-03-22</td>
+            </tr>
+            
+
+            <tr data-platform="OneBill" data-search="positive tech solutions warm prospect onebill (845) 783-0046 positive.tech 2025-07-30">
+              <td>
+                <a class="account" href="https://rev-io.my.salesforce.com/0016O00003IOekjQAD" target="_blank" rel="noopener">Positive Tech Solutions</a>
+                <div class="sub">Warm Prospect</div>
+              </td>
+              <td>OneBill</td>
+              <td><a href="https://positive.tech" target="_blank" rel="noopener">positive.tech</a></td>
+              <td>(845) 783-0046</td>
+              <td>2025-07-30</td>
+              <td>2022-05-26</td>
+            </tr>
+            
+
+            <tr data-platform="OneBill" data-search="sensitek warm prospect onebill (908) 764-1876 sensitek.com 2026-02-12">
+              <td>
+                <a class="account" href="https://rev-io.my.salesforce.com/0011C000024KhnIQAS" target="_blank" rel="noopener">Sensitek</a>
+                <div class="sub">Warm Prospect</div>
+              </td>
+              <td>OneBill</td>
+              <td><a href="https://sensitek.com" target="_blank" rel="noopener">sensitek.com</a></td>
+              <td>(908) 764-1876</td>
+              <td>2026-02-12</td>
+              <td>2018-08-08</td>
+            </tr>
+            
+
+            <tr data-platform="OneBill" data-search="sparkplug ip warm prospect onebill (616) 250-7010 sparkplug-ip.com 2026-04-03">
+              <td>
+                <a class="account" href="https://rev-io.my.salesforce.com/0011500001HNPo0AAH" target="_blank" rel="noopener">SparkPlug IP</a>
+                <div class="sub">Warm Prospect</div>
+              </td>
+              <td>OneBill</td>
+              <td><a href="https://sparkplug-ip.com" target="_blank" rel="noopener">sparkplug-ip.com</a></td>
+              <td>(616) 250-7010</td>
+              <td>2026-04-03</td>
+              <td>2014-03-12</td>
+            </tr>
+            
+
+            <tr data-platform="OneBill" data-search="teklink warm prospect onebill (718) 306-2468 theteklink.com 2026-06-18">
+              <td>
+                <a class="account" href="https://rev-io.my.salesforce.com/0011C00002M7COmQAN" target="_blank" rel="noopener">Teklink</a>
+                <div class="sub">Warm Prospect</div>
+              </td>
+              <td>OneBill</td>
+              <td><a href="https://theteklink.com" target="_blank" rel="noopener">theteklink.com</a></td>
+              <td>(718) 306-2468</td>
+              <td>2026-06-18</td>
+              <td>2019-02-07</td>
+            </tr>
+            
+
+            <tr data-platform="OneBill" data-search="voicenext warm prospect onebill (732) 653-5000 voicenext.com 2026-06-19">
+              <td>
+                <a class="account" href="https://rev-io.my.salesforce.com/0011500001HNPq9AAH" target="_blank" rel="noopener">Voicenext</a>
+                <div class="sub">Warm Prospect</div>
+              </td>
+              <td>OneBill</td>
+              <td><a href="https://voicenext.com" target="_blank" rel="noopener">voicenext.com</a></td>
+              <td>(732) 653-5000</td>
+              <td>2026-06-19</td>
+              <td>2014-05-19</td>
+            </tr>
+            
+
+            <tr data-platform="Quickbooks" data-search="24 7 network services cold prospect quickbooks  24-7networkservices.com 2026-02-23">
+              <td>
+                <a class="account" href="https://rev-io.my.salesforce.com/001PX00000hblFLYAY" target="_blank" rel="noopener">24 7 Network Services</a>
+                <div class="sub">Cold Prospect</div>
+              </td>
+              <td>Quickbooks</td>
+              <td><a href="https://24-7networkservices.com" target="_blank" rel="noopener">24-7networkservices.com</a></td>
+              <td><span class="muted">-</span></td>
+              <td>2026-02-23</td>
+              <td>2026-02-19</td>
+            </tr>
+            
+
+            <tr data-platform="Quickbooks" data-search="advantage voice &amp; data warm prospect quickbooks (732) 438-8888 advantagetel.com 2026-03-17">
+              <td>
+                <a class="account" href="https://rev-io.my.salesforce.com/001PX00000CcIY8YAN" target="_blank" rel="noopener">Advantage Voice &amp; Data</a>
+                <div class="sub">Warm Prospect</div>
+              </td>
+              <td>Quickbooks</td>
+              <td><a href="https://advantagetel.com" target="_blank" rel="noopener">advantagetel.com</a></td>
+              <td>(732) 438-8888</td>
+              <td>2026-03-17</td>
+              <td>2024-06-03</td>
+            </tr>
+            
+
+            <tr data-platform="Quickbooks" data-search="american broadband and telecommunications cold prospect bequick (866) 765-2628 http://ambt.net 2025-08-21">
+              <td>
+                <a class="account" href="https://rev-io.my.salesforce.com/0016O00003XC3wbQAD" target="_blank" rel="noopener">American Broadband and Telecommunications</a>
+                <div class="sub">Cold Prospect</div>
+              </td>
+              <td>Bequick</td>
+              <td><a href="http://ambt.net" target="_blank" rel="noopener">http://ambt.net</a></td>
+              <td>(866) 765-2628</td>
+              <td>2025-08-21</td>
+              <td>2023-04-06</td>
+            </tr>
+            
+
+            <tr data-platform="Quickbooks" data-search="anchor telecom, inc cold prospect quickbooks (401) 792-8001 https://rhodeislandtel.com/ 2025-09-24">
+              <td>
+                <a class="account" href="https://rev-io.my.salesforce.com/001PX00000AczklYAB" target="_blank" rel="noopener">Anchor Telecom, Inc</a>
+                <div class="sub">Cold Prospect</div>
+              </td>
+              <td>Quickbooks</td>
+              <td><a href="https://rhodeislandtel.com/" target="_blank" rel="noopener">https://rhodeislandtel.com/</a></td>
+              <td>(401) 792-8001</td>
+              <td>2025-09-24</td>
+              <td>2024-04-26</td>
+            </tr>
+            
+
+            <tr data-platform="Quickbooks" data-search="aspire technology partners warm prospect quickbooks (732) 847-9600 aspiretransforms.com 2026-06-03">
+              <td>
+                <a class="account" href="https://rev-io.my.salesforce.com/0011C00002QfWaEQAV" target="_blank" rel="noopener">Aspire Technology Partners</a>
+                <div class="sub">Warm Prospect</div>
+              </td>
+              <td>Quickbooks</td>
+              <td><a href="https://aspiretransforms.com" target="_blank" rel="noopener">aspiretransforms.com</a></td>
+              <td>(732) 847-9600</td>
+              <td>2026-06-03</td>
+              <td>2019-04-02</td>
+            </tr>
+            
+
+            <tr data-platform="Quickbooks" data-search="atec group cold prospect quickbooks (518) 452-3700 atecgroup.com 2025-06-06">
+              <td>
+                <a class="account" href="https://rev-io.my.salesforce.com/0016O00003dmorfQAA" target="_blank" rel="noopener">Atec Group</a>
+                <div class="sub">Cold Prospect</div>
+              </td>
+              <td>Quickbooks</td>
+              <td><a href="https://atecgroup.com" target="_blank" rel="noopener">atecgroup.com</a></td>
+              <td>(518) 452-3700</td>
+              <td>2025-06-06</td>
+              <td>2023-07-20</td>
+            </tr>
+            
+
+            <tr data-platform="Quickbooks" data-search="bizvoip.com churn quickbooks (718) 906-6600 bizvoip.com 2022-11-09">
+              <td>
+                <a class="account" href="https://rev-io.my.salesforce.com/0011500001aKNLHAA4" target="_blank" rel="noopener">bizvoip.com</a>
+                <div class="sub">Churn</div>
+              </td>
+              <td>Quickbooks</td>
+              <td><a href="https://bizvoip.com" target="_blank" rel="noopener">bizvoip.com</a></td>
+              <td>(718) 906-6600</td>
+              <td>2022-11-09</td>
+              <td>2017-01-17</td>
+            </tr>
+            
+
+            <tr data-platform="Quickbooks" data-search="brash concepts cold prospect quickbooks (516) 500-8600 brashconcepts.com 2026-06-29">
+              <td>
+                <a class="account" href="https://rev-io.my.salesforce.com/0011C00002pywbcQAA" target="_blank" rel="noopener">Brash Concepts</a>
+                <div class="sub">Cold Prospect</div>
+              </td>
+              <td>Quickbooks</td>
+              <td><a href="https://brashconcepts.com" target="_blank" rel="noopener">brashconcepts.com</a></td>
+              <td>(516) 500-8600</td>
+              <td>2026-06-29</td>
+              <td>2020-07-31</td>
+            </tr>
+            
+
+            <tr data-platform="Quickbooks" data-search="bridgeline gs cold prospect quickbooks (860) 937-6400 https://www.bridgelinegs.com/ 2026-02-02">
+              <td>
+                <a class="account" href="https://rev-io.my.salesforce.com/001PX00000ApZKYYA3" target="_blank" rel="noopener">Bridgeline GS</a>
+                <div class="sub">Cold Prospect</div>
+              </td>
+              <td>Quickbooks</td>
+              <td><a href="https://www.bridgelinegs.com/" target="_blank" rel="noopener">https://www.bridgelinegs.com/</a></td>
+              <td>(860) 937-6400</td>
+              <td>2026-02-02</td>
+              <td>2024-04-30</td>
+            </tr>
+            
+
+            <tr data-platform="Quickbooks" data-search="bsd tech cold prospect quickbooks  techbybsd.com 2026-06-29">
+              <td>
+                <a class="account" href="https://rev-io.my.salesforce.com/001PX00000os7uWYAQ" target="_blank" rel="noopener">BSD Tech</a>
+                <div class="sub">Cold Prospect</div>
+              </td>
+              <td>Quickbooks</td>
+              <td><a href="https://techbybsd.com" target="_blank" rel="noopener">techbybsd.com</a></td>
+              <td><span class="muted">-</span></td>
+              <td>2026-06-29</td>
+              <td>2026-06-11</td>
+            </tr>
+            
+
+            <tr data-platform="Quickbooks" data-search="caricomm warm prospect quickbooks  caricomm.com 2026-06-02">
+              <td>
+                <a class="account" href="https://rev-io.my.salesforce.com/001PX00000XtlrOYAR" target="_blank" rel="noopener">Caricomm</a>
+                <div class="sub">Warm Prospect</div>
+              </td>
+              <td>Quickbooks</td>
+              <td><a href="https://caricomm.com" target="_blank" rel="noopener">caricomm.com</a></td>
+              <td><span class="muted">-</span></td>
+              <td>2026-06-02</td>
+              <td>2025-08-21</td>
+            </tr>
+            
+
+            <tr data-platform="Quickbooks" data-search="cayenne corp cold prospect quickbooks (718) 704-0510 cayennecorp.com 2024-10-11">
+              <td>
+                <a class="account" href="https://rev-io.my.salesforce.com/001PX00000CVNZMYA5" target="_blank" rel="noopener">Cayenne Corp</a>
+                <div class="sub">Cold Prospect</div>
+              </td>
+              <td>Quickbooks</td>
+              <td><a href="https://cayennecorp.com" target="_blank" rel="noopener">cayennecorp.com</a></td>
+              <td>(718) 704-0510</td>
+              <td>2024-10-11</td>
+              <td>2024-05-31</td>
+            </tr>
+            
+
+            <tr data-platform="Quickbooks" data-search="challenger telecom warm prospect quickbooks  challengertelecom.net 2026-03-18">
+              <td>
+                <a class="account" href="https://rev-io.my.salesforce.com/0016O00003FQhvQQAT" target="_blank" rel="noopener">Challenger Telecom</a>
+                <div class="sub">Warm Prospect</div>
+              </td>
+              <td>Quickbooks</td>
+              <td><a href="https://challengertelecom.net" target="_blank" rel="noopener">challengertelecom.net</a></td>
+              <td><span class="muted">-</span></td>
+              <td>2026-03-18</td>
+              <td>2022-03-09</td>
+            </tr>
+            
+
+            <tr data-platform="Quickbooks" data-search="choice iot warm prospect quickbooks (516) 380-4444 choiceiot.com 2026-06-02">
+              <td>
+                <a class="account" href="https://rev-io.my.salesforce.com/0011C00001yadhiQAA" target="_blank" rel="noopener">Choice IoT</a>
+                <div class="sub">Warm Prospect</div>
+              </td>
+              <td>Quickbooks</td>
+              <td><a href="https://choiceiot.com" target="_blank" rel="noopener">choiceiot.com</a></td>
+              <td>(516) 380-4444</td>
+              <td>2026-06-02</td>
+              <td>2018-04-23</td>
+            </tr>
+            
+
+            <tr data-platform="Quickbooks" data-search="cityscape connect cold prospect quickbooks (267) 269-6852 https://www.cityscapetechs.com/voice-over-ip 2024-12-12">
+              <td>
+                <a class="account" href="https://rev-io.my.salesforce.com/0011C00002uk0fSQAQ" target="_blank" rel="noopener">Cityscape Connect</a>
+                <div class="sub">Cold Prospect</div>
+              </td>
+              <td>Quickbooks</td>
+              <td><a href="https://www.cityscapetechs.com/voice-over-ip" target="_blank" rel="noopener">https://www.cityscapetechs.com/voice-over-ip</a></td>
+              <td>(267) 269-6852</td>
+              <td>2024-12-12</td>
+              <td>2020-10-27</td>
+            </tr>
+            
+
+            <tr data-platform="Quickbooks" data-search="clear voice communications cold prospect quickbooks (888) 802-5327 callclearvoice.com 2025-08-21">
+              <td>
+                <a class="account" href="https://rev-io.my.salesforce.com/001PX00000AYYmHYAX" target="_blank" rel="noopener">Clear Voice Communications</a>
+                <div class="sub">Cold Prospect</div>
+              </td>
+              <td>Quickbooks</td>
+              <td><a href="https://callclearvoice.com" target="_blank" rel="noopener">callclearvoice.com</a></td>
+              <td>(888) 802-5327</td>
+              <td>2025-08-21</td>
+              <td>2024-04-24</td>
+            </tr>
+            
+
+            <tr data-platform="Quickbooks" data-search="clearcom it solutions cold prospect quickbooks (508) 892-5555 clearcomit.com 2026-06-19">
+              <td>
+                <a class="account" href="https://rev-io.my.salesforce.com/0016O00003dmpC1QAI" target="_blank" rel="noopener">Clearcom It Solutions</a>
+                <div class="sub">Cold Prospect</div>
+              </td>
+              <td>Quickbooks</td>
+              <td><a href="https://clearcomit.com" target="_blank" rel="noopener">clearcomit.com</a></td>
+              <td>(508) 892-5555</td>
+              <td>2026-06-19</td>
+              <td>2023-07-20</td>
+            </tr>
+            
+
+            <tr data-platform="Quickbooks" data-search="clocktower technology services, inc. warm prospect quickbooks (508) 541-6143 clocktowertech.com 2025-12-01">
+              <td>
+                <a class="account" href="https://rev-io.my.salesforce.com/0016O000037dXppQAE" target="_blank" rel="noopener">Clocktower Technology Services, Inc.</a>
+                <div class="sub">Warm Prospect</div>
+              </td>
+              <td>Quickbooks</td>
+              <td><a href="https://clocktowertech.com" target="_blank" rel="noopener">clocktowertech.com</a></td>
+              <td>(508) 541-6143</td>
+              <td>2025-12-01</td>
+              <td>2021-08-20</td>
+            </tr>
+            
+
+            <tr data-platform="Quickbooks" data-search="cogent communications warm prospect quickbooks (202) 295-4200 cogentco.com 2026-06-22">
+              <td>
+                <a class="account" href="https://rev-io.my.salesforce.com/0016O00003HMqBiQAL" target="_blank" rel="noopener">Cogent Communications</a>
+                <div class="sub">Warm Prospect</div>
+              </td>
+              <td>Quickbooks</td>
+              <td><a href="https://cogentco.com" target="_blank" rel="noopener">cogentco.com</a></td>
+              <td>(202) 295-4200</td>
+              <td>2026-06-22</td>
+              <td>2022-05-19</td>
+            </tr>
+            
+
+            <tr data-platform="Quickbooks" data-search="communication solutions inc warm prospect quickbooks (330) 645-4169 comsolutionsinc.com 2026-05-05">
+              <td>
+                <a class="account" href="https://rev-io.my.salesforce.com/0016O00003V9UXfQAN" target="_blank" rel="noopener">Communication Solutions Inc</a>
+                <div class="sub">Warm Prospect</div>
+              </td>
+              <td>Quickbooks</td>
+              <td><a href="https://comsolutionsinc.com" target="_blank" rel="noopener">comsolutionsinc.com</a></td>
+              <td>(330) 645-4169</td>
+              <td>2026-05-05</td>
+              <td>2023-02-23</td>
+            </tr>
+            
+
+            <tr data-platform="Quickbooks" data-search="complete technology resources, inc cold prospect quickbooks (508) 909-5961 https://completetechnologyresources.com/ 2026-05-07">
+              <td>
+                <a class="account" href="https://rev-io.my.salesforce.com/001PX00000ApvbGYAR" target="_blank" rel="noopener">Complete Technology Resources, Inc</a>
+                <div class="sub">Cold Prospect</div>
+              </td>
+              <td>Quickbooks</td>
+              <td><a href="https://completetechnologyresources.com/" target="_blank" rel="noopener">https://completetechnologyresources.com/</a></td>
+              <td>(508) 909-5961</td>
+              <td>2026-05-07</td>
+              <td>2024-04-30</td>
+            </tr>
+            
+
+            <tr data-platform="Quickbooks" data-search="cost cutters warm prospect quickbooks (917) 519-1542 http://thecostcutters.com/ 2026-06-22">
+              <td>
+                <a class="account" href="https://rev-io.my.salesforce.com/0011500001HNPp3AAH" target="_blank" rel="noopener">Cost Cutters</a>
+                <div class="sub">Warm Prospect</div>
+              </td>
+              <td>Quickbooks</td>
+              <td><a href="http://thecostcutters.com/" target="_blank" rel="noopener">http://thecostcutters.com/</a></td>
+              <td>(917) 519-1542</td>
+              <td>2026-06-22</td>
+              <td>2014-04-11</td>
+            </tr>
+            
+
+            <tr data-platform="Quickbooks" data-search="craftech computer solutions cold prospect quickbooks (610) 566-0980 http://www.craftech.com 2026-05-19">
+              <td>
+                <a class="account" href="https://rev-io.my.salesforce.com/001PX00000CNFvVYAX" target="_blank" rel="noopener">CrafTech Computer Solutions</a>
+                <div class="sub">Cold Prospect</div>
+              </td>
+              <td>Quickbooks</td>
+              <td><a href="http://www.craftech.com" target="_blank" rel="noopener">http://www.craftech.com</a></td>
+              <td>(610) 566-0980</td>
+              <td>2026-05-19</td>
+              <td>2023-09-19</td>
+            </tr>
+            
+
+            <tr data-platform="Quickbooks" data-search="cran-com warm prospect quickbooks (888) 230-3330 crancominc.com 2026-06-25">
+              <td>
+                <a class="account" href="https://rev-io.my.salesforce.com/001PX00000D52BNYAZ" target="_blank" rel="noopener">CRAN-COM</a>
+                <div class="sub">Warm Prospect</div>
+              </td>
+              <td>Quickbooks</td>
+              <td><a href="https://crancominc.com" target="_blank" rel="noopener">crancominc.com</a></td>
+              <td>(888) 230-3330</td>
+              <td>2026-06-25</td>
+              <td>2023-12-20</td>
+            </tr>
+            
+
+            <tr data-platform="Quickbooks" data-search="cumulus global warm prospect quickbooks (508) 948-4070 cumulusglobal.com 2025-11-11">
+              <td>
+                <a class="account" href="https://rev-io.my.salesforce.com/0011C00002aLNXaQAO" target="_blank" rel="noopener">Cumulus Global</a>
+                <div class="sub">Warm Prospect</div>
+              </td>
+              <td>Quickbooks</td>
+              <td><a href="https://cumulusglobal.com" target="_blank" rel="noopener">cumulusglobal.com</a></td>
+              <td>(508) 948-4070</td>
+              <td>2025-11-11</td>
+              <td>2019-09-03</td>
+            </tr>
+            
+
+            <tr data-platform="Quickbooks" data-search="dbs communications inc cold prospect quickbooks (216) 265-3200 dbscommunications.net 2025-07-25">
+              <td>
+                <a class="account" href="https://rev-io.my.salesforce.com/0016O00003ebh6tQAA" target="_blank" rel="noopener">Dbs Communications Inc</a>
+                <div class="sub">Cold Prospect</div>
+              </td>
+              <td>Quickbooks</td>
+              <td><a href="https://dbscommunications.net" target="_blank" rel="noopener">dbscommunications.net</a></td>
+              <td>(216) 265-3200</td>
+              <td>2025-07-25</td>
+              <td>2023-08-09</td>
+            </tr>
+            
+
+            <tr data-platform="Quickbooks" data-search="decamind warm prospect quickbooks (212) 500-0598 decamind.com 2025-05-16">
+              <td>
+                <a class="account" href="https://rev-io.my.salesforce.com/0011C000022hhEEQAY" target="_blank" rel="noopener">Decamind</a>
+                <div class="sub">Warm Prospect</div>
+              </td>
+              <td>Quickbooks</td>
+              <td><a href="https://decamind.com" target="_blank" rel="noopener">decamind.com</a></td>
+              <td>(212) 500-0598</td>
+              <td>2025-05-16</td>
+              <td>2018-07-05</td>
+            </tr>
+            
+
+            <tr data-platform="Quickbooks" data-search="digiclick corp. warm prospect quickbooks (917) 440-5191 digiclick.com 2025-04-01">
+              <td>
+                <a class="account" href="https://rev-io.my.salesforce.com/0011500001hVqBXAA0" target="_blank" rel="noopener">DigiClick Corp.</a>
+                <div class="sub">Warm Prospect</div>
+              </td>
+              <td>Quickbooks</td>
+              <td><a href="https://digiclick.com" target="_blank" rel="noopener">digiclick.com</a></td>
+              <td>(917) 440-5191</td>
+              <td>2025-04-01</td>
+              <td>2017-07-19</td>
+            </tr>
+            
+
+            <tr data-platform="Quickbooks" data-search="digital innovation cold prospect quickbooks (215) 248-5001 www.digitalinnovation.info/ 2026-06-04">
+              <td>
+                <a class="account" href="https://rev-io.my.salesforce.com/0016O00003ebiXmQAI" target="_blank" rel="noopener">Digital Innovation</a>
+                <div class="sub">Cold Prospect</div>
+              </td>
+              <td>Quickbooks</td>
+              <td><a href="https://www.digitalinnovation.info/" target="_blank" rel="noopener">www.digitalinnovation.info/</a></td>
+              <td>(215) 248-5001</td>
+              <td>2026-06-04</td>
+              <td>2023-08-09</td>
+            </tr>
+            
+
+            <tr data-platform="Quickbooks" data-search="dioguardi consultation group warm prospect quickbooks (516) 813-0435 dioguardi.net 2026-06-25">
+              <td>
+                <a class="account" href="https://rev-io.my.salesforce.com/0016O00003dmoY3QAI" target="_blank" rel="noopener">Dioguardi Consultation Group</a>
+                <div class="sub">Warm Prospect</div>
+              </td>
+              <td>Quickbooks</td>
+              <td><a href="https://dioguardi.net" target="_blank" rel="noopener">dioguardi.net</a></td>
+              <td>(516) 813-0435</td>
+              <td>2026-06-25</td>
+              <td>2023-07-20</td>
+            </tr>
+            
+
+            <tr data-platform="Quickbooks" data-search="ekaru cold prospect quickbooks +19786924200 ekaru.com 2026-06-22">
+              <td>
+                <a class="account" href="https://rev-io.my.salesforce.com/001PX00000CVAJPYA5" target="_blank" rel="noopener">Ekaru</a>
+                <div class="sub">Cold Prospect</div>
+              </td>
+              <td>Quickbooks</td>
+              <td><a href="https://ekaru.com" target="_blank" rel="noopener">ekaru.com</a></td>
+              <td>+19786924200</td>
+              <td>2026-06-22</td>
+              <td>2023-07-20</td>
+            </tr>
+            
+
+            <tr data-platform="Quickbooks" data-search="evolving technologies cold prospect quickbooks (810) 534-3000 http://evolvingtelecomanddata.com/ 2025-05-22">
+              <td>
+                <a class="account" href="https://rev-io.my.salesforce.com/001PX000008r550YAA" target="_blank" rel="noopener">Evolving Technologies</a>
+                <div class="sub">Cold Prospect</div>
+              </td>
+              <td>Quickbooks</td>
+              <td><a href="http://evolvingtelecomanddata.com/" target="_blank" rel="noopener">http://evolvingtelecomanddata.com/</a></td>
+              <td>(810) 534-3000</td>
+              <td>2025-05-22</td>
+              <td>2024-03-23</td>
+            </tr>
+            
+
+            <tr data-platform="Quickbooks" data-search="fusion networks warm prospect quickbooks (844) 330-6995 fusionnetworks.net 2026-06-23">
+              <td>
+                <a class="account" href="https://rev-io.my.salesforce.com/0016O00003HJVFYQA5" target="_blank" rel="noopener">Fusion Networks</a>
+                <div class="sub">Warm Prospect</div>
+              </td>
+              <td>Quickbooks</td>
+              <td><a href="https://fusionnetworks.net" target="_blank" rel="noopener">fusionnetworks.net</a></td>
+              <td>(844) 330-6995</td>
+              <td>2026-06-23</td>
+              <td>2016-04-05</td>
+            </tr>
+            
+
+            <tr data-platform="Quickbooks" data-search="go2 cold prospect quickbooks (610) 567-3462 http://go2tech.com 2025-03-05">
+              <td>
+                <a class="account" href="https://rev-io.my.salesforce.com/001PX00000988XtYAI" target="_blank" rel="noopener">GO2</a>
+                <div class="sub">Cold Prospect</div>
+              </td>
+              <td>Quickbooks</td>
+              <td><a href="http://go2tech.com" target="_blank" rel="noopener">http://go2tech.com</a></td>
+              <td>(610) 567-3462</td>
+              <td>2025-03-05</td>
+              <td>2024-03-28</td>
+            </tr>
+            
+
+            <tr data-platform="Quickbooks" data-search="helient warm prospect quickbooks (732) 204-7410 helient.com 2026-06-16">
+              <td>
+                <a class="account" href="https://rev-io.my.salesforce.com/0016O00003ebkJLQAY" target="_blank" rel="noopener">Helient</a>
+                <div class="sub">Warm Prospect</div>
+              </td>
+              <td>Quickbooks</td>
+              <td><a href="https://helient.com" target="_blank" rel="noopener">helient.com</a></td>
+              <td>(732) 204-7410</td>
+              <td>2026-06-16</td>
+              <td>2023-08-09</td>
+            </tr>
+            
+
+            <tr data-platform="Quickbooks" data-search="hover networks warm prospect quickbooks (716) 650-5655 hovernetworks.com 2026-06-23">
+              <td>
+                <a class="account" href="https://rev-io.my.salesforce.com/0011C00002SEGyiQAH" target="_blank" rel="noopener">Hover Networks</a>
+                <div class="sub">Warm Prospect</div>
+              </td>
+              <td>Quickbooks</td>
+              <td><a href="https://hovernetworks.com" target="_blank" rel="noopener">hovernetworks.com</a></td>
+              <td>(716) 650-5655</td>
+              <td>2026-06-23</td>
+              <td>2019-04-26</td>
+            </tr>
+            
+
+            <tr data-platform="Quickbooks" data-search="independent connections rev.io billing churn quickbooks (413) 997-5500 independent-connections.com 2025-02-25">
+              <td>
+                <a class="account" href="https://rev-io.my.salesforce.com/0011500001hU7elAAC" target="_blank" rel="noopener">Independent Connections</a>
+                <div class="sub">Rev.io Billing Churn</div>
+              </td>
+              <td>Quickbooks</td>
+              <td><a href="https://independent-connections.com" target="_blank" rel="noopener">independent-connections.com</a></td>
+              <td>(413) 997-5500</td>
+              <td>2025-02-25</td>
+              <td>2017-07-06</td>
+            </tr>
+            
+
+            <tr data-platform="Quickbooks" data-search="information and communications services churn quickbooks (614) 285-4901 team-icsc.com 2019-12-19">
+              <td>
+                <a class="account" href="https://rev-io.my.salesforce.com/0011500001HNPnMAAX" target="_blank" rel="noopener">Information and Communications Services</a>
+                <div class="sub">Churn</div>
+              </td>
+              <td>Quickbooks</td>
+              <td><a href="https://team-icsc.com" target="_blank" rel="noopener">team-icsc.com</a></td>
+              <td>(614) 285-4901</td>
+              <td>2019-12-19</td>
+              <td>2014-02-20</td>
+            </tr>
+            
+
+            <tr data-platform="Quickbooks" data-search="intenna systems, inc cold prospect quickbooks (609) 714-8268 http://intennasystems.com 2025-08-12">
+              <td>
+                <a class="account" href="https://rev-io.my.salesforce.com/001PX00000CjNw1YAF" target="_blank" rel="noopener">Intenna Systems, Inc</a>
+                <div class="sub">Cold Prospect</div>
+              </td>
+              <td>Quickbooks</td>
+              <td><a href="http://intennasystems.com" target="_blank" rel="noopener">http://intennasystems.com</a></td>
+              <td>(609) 714-8268</td>
+              <td>2025-08-12</td>
+              <td>2024-06-05</td>
+            </tr>
+            
+
+            <tr data-platform="Quickbooks" data-search="ippbx warm prospect quickbooks (888) 964-4625 ippbx.com 2026-06-02">
+              <td>
+                <a class="account" href="https://rev-io.my.salesforce.com/0011C00002ivnWkQAI" target="_blank" rel="noopener">IPPBX</a>
+                <div class="sub">Warm Prospect</div>
+              </td>
+              <td>Quickbooks</td>
+              <td><a href="https://ippbx.com" target="_blank" rel="noopener">ippbx.com</a></td>
+              <td>(888) 964-4625</td>
+              <td>2026-06-02</td>
+              <td>2020-02-10</td>
+            </tr>
+            
+
+            <tr data-platform="Quickbooks" data-search="irvine consulting services, inc. warm prospect quickbooks (510) 482-9522 irvineconsulting.com 2026-06-10">
+              <td>
+                <a class="account" href="https://rev-io.my.salesforce.com/0011C00002uFjfkQAC" target="_blank" rel="noopener">Irvine Consulting Services, Inc.</a>
+                <div class="sub">Warm Prospect</div>
+              </td>
+              <td>Quickbooks</td>
+              <td><a href="https://irvineconsulting.com" target="_blank" rel="noopener">irvineconsulting.com</a></td>
+              <td>(510) 482-9522</td>
+              <td>2026-06-10</td>
+              <td>2020-10-13</td>
+            </tr>
+            
+
+            <tr data-platform="Quickbooks" data-search="it meristem cold prospect quickbooks (714) 694-2897 http://itmeristem.com 2026-06-23">
+              <td>
+                <a class="account" href="https://rev-io.my.salesforce.com/001PX00000D6j3GYAR" target="_blank" rel="noopener">IT Meristem</a>
+                <div class="sub">Cold Prospect</div>
+              </td>
+              <td>Quickbooks</td>
+              <td><a href="http://itmeristem.com" target="_blank" rel="noopener">http://itmeristem.com</a></td>
+              <td>(714) 694-2897</td>
+              <td>2026-06-23</td>
+              <td>2024-06-12</td>
+            </tr>
+            
+
+            <tr data-platform="Quickbooks" data-search="itdata cold prospect quickbooks (800) 883-5413 itdata.com 2026-06-29">
+              <td>
+                <a class="account" href="https://rev-io.my.salesforce.com/001PX000001rdaYYAQ" target="_blank" rel="noopener">ITDATA</a>
+                <div class="sub">Cold Prospect</div>
+              </td>
+              <td>Quickbooks</td>
+              <td><a href="https://itdata.com" target="_blank" rel="noopener">itdata.com</a></td>
+              <td>(800) 883-5413</td>
+              <td>2026-06-29</td>
+              <td>2023-09-19</td>
+            </tr>
+            
+
+            <tr data-platform="Quickbooks" data-search="jmi technology warm prospect quickbooks (516) 298-3654 jmitech.net 2026-04-21">
+              <td>
+                <a class="account" href="https://rev-io.my.salesforce.com/0011500001HNPyZAAX" target="_blank" rel="noopener">JMI Technology</a>
+                <div class="sub">Warm Prospect</div>
+              </td>
+              <td>Quickbooks</td>
+              <td><a href="https://jmitech.net" target="_blank" rel="noopener">jmitech.net</a></td>
+              <td>(516) 298-3654</td>
+              <td>2026-04-21</td>
+              <td>2014-08-19</td>
+            </tr>
+            
+
+            <tr data-platform="Quickbooks" data-search="knight nets inc tigerpaw churn quickbooks (917) 299-5795 knightnets.com 2026-06-25">
+              <td>
+                <a class="account" href="https://rev-io.my.salesforce.com/001PX000004hTgtYAE" target="_blank" rel="noopener">Knight Nets Inc</a>
+                <div class="sub">Tigerpaw Churn</div>
+              </td>
+              <td>Quickbooks</td>
+              <td><a href="https://knightnets.com" target="_blank" rel="noopener">knightnets.com</a></td>
+              <td>(917) 299-5795</td>
+              <td>2026-06-25</td>
+              <td>2023-12-20</td>
+            </tr>
+            
+
+            <tr data-platform="Quickbooks" data-search="lightning telecom warm prospect quickbooks +1 (718) 412-9188 lightningtelecom.com 2025-11-03">
+              <td>
+                <a class="account" href="https://rev-io.my.salesforce.com/0016O00003NqvoOQAR" target="_blank" rel="noopener">Lightning Telecom</a>
+                <div class="sub">Warm Prospect</div>
+              </td>
+              <td>Quickbooks</td>
+              <td><a href="https://lightningtelecom.com" target="_blank" rel="noopener">lightningtelecom.com</a></td>
+              <td>+1 (718) 412-9188</td>
+              <td>2025-11-03</td>
+              <td>2022-10-07</td>
+            </tr>
+            
+
+            <tr data-platform="Quickbooks" data-search="linc project warm prospect quickbooks (646) 494-4535 lincproject.net 2025-06-11">
+              <td>
+                <a class="account" href="https://rev-io.my.salesforce.com/0011C00002izKcOQAU" target="_blank" rel="noopener">Linc project</a>
+                <div class="sub">Warm Prospect</div>
+              </td>
+              <td>Quickbooks</td>
+              <td><a href="https://lincproject.net" target="_blank" rel="noopener">lincproject.net</a></td>
+              <td>(646) 494-4535</td>
+              <td>2025-06-11</td>
+              <td>2020-02-18</td>
+            </tr>
+            
+
+            <tr data-platform="Quickbooks" data-search="lps associates warm prospect quickbooks (800) 856-9610 lpsav.com 2026-05-01">
+              <td>
+                <a class="account" href="https://rev-io.my.salesforce.com/0011C00002nSsFpQAK" target="_blank" rel="noopener">LPS Associates</a>
+                <div class="sub">Warm Prospect</div>
+              </td>
+              <td>Quickbooks</td>
+              <td><a href="https://lpsav.com" target="_blank" rel="noopener">lpsav.com</a></td>
+              <td>(800) 856-9610</td>
+              <td>2026-05-01</td>
+              <td>2020-06-02</td>
+            </tr>
+            
+
+            <tr data-platform="Quickbooks" data-search="m2ngage2 churn quickbooks (877) 928-3292 http://www.m2ngage.com 2025-08-19">
+              <td>
+                <a class="account" href="https://rev-io.my.salesforce.com/0011C00002atbWKQAY" target="_blank" rel="noopener">M2nGage2</a>
+                <div class="sub">Churn</div>
+              </td>
+              <td>Quickbooks</td>
+              <td><a href="http://www.m2ngage.com" target="_blank" rel="noopener">http://www.m2ngage.com</a></td>
+              <td>(877) 928-3292</td>
+              <td>2025-08-19</td>
+              <td>2019-09-16</td>
+            </tr>
+            
+
+            <tr data-platform="Quickbooks" data-search="max communications cold prospect quickbooks (856) 825-6000 maxcommusa.com 2026-01-02">
+              <td>
+                <a class="account" href="https://rev-io.my.salesforce.com/001PX000007QbZTYA0" target="_blank" rel="noopener">MAX Communications</a>
+                <div class="sub">Cold Prospect</div>
+              </td>
+              <td>Quickbooks</td>
+              <td><a href="https://maxcommusa.com" target="_blank" rel="noopener">maxcommusa.com</a></td>
+              <td>(856) 825-6000</td>
+              <td>2026-01-02</td>
+              <td>2024-02-21</td>
+            </tr>
+            
+
+            <tr data-platform="Quickbooks" data-search="merrill &amp; associates cold prospect quickbooks (800) 253-3111 merrillusa.com 2026-06-29">
+              <td>
+                <a class="account" href="https://rev-io.my.salesforce.com/001PX00000ZbCwFYAV" target="_blank" rel="noopener">Merrill &amp; Associates</a>
+                <div class="sub">Cold Prospect</div>
+              </td>
+              <td>Quickbooks</td>
+              <td><a href="https://merrillusa.com" target="_blank" rel="noopener">merrillusa.com</a></td>
+              <td>(800) 253-3111</td>
+              <td>2026-06-29</td>
+              <td>2025-09-25</td>
+            </tr>
+            
+
+            <tr data-platform="Quickbooks" data-search="metrotel networks warm prospect quickbooks (516) 563-2477 metrotelnetworks.com 2026-06-03">
+              <td>
+                <a class="account" href="https://rev-io.my.salesforce.com/0016O00003ebjnbQAA" target="_blank" rel="noopener">Metrotel Networks</a>
+                <div class="sub">Warm Prospect</div>
+              </td>
+              <td>Quickbooks</td>
+              <td><a href="https://metrotelnetworks.com" target="_blank" rel="noopener">metrotelnetworks.com</a></td>
+              <td>(516) 563-2477</td>
+              <td>2026-06-03</td>
+              <td>2023-08-09</td>
+            </tr>
+            
+
+            <tr data-platform="Quickbooks" data-search="mis solutions cold prospect quickbooks (513) 793-6222 mis.tech 2026-06-29">
+              <td>
+                <a class="account" href="https://rev-io.my.salesforce.com/001PX0000026dOQYAY" target="_blank" rel="noopener">MIS Solutions</a>
+                <div class="sub">Cold Prospect</div>
+              </td>
+              <td>Quickbooks</td>
+              <td><a href="https://mis.tech" target="_blank" rel="noopener">mis.tech</a></td>
+              <td>(513) 793-6222</td>
+              <td>2026-06-29</td>
+              <td>2023-09-29</td>
+            </tr>
+            
+
+            <tr data-platform="Quickbooks" data-search="moore communications cold prospect quickbooks (978) 597-0204 moorecommunications.com 2025-12-10">
+              <td>
+                <a class="account" href="https://rev-io.my.salesforce.com/001PX00000B4AddYAF" target="_blank" rel="noopener">Moore Communications</a>
+                <div class="sub">Cold Prospect</div>
+              </td>
+              <td>Quickbooks</td>
+              <td><a href="https://moorecommunications.com" target="_blank" rel="noopener">moorecommunications.com</a></td>
+              <td>(978) 597-0204</td>
+              <td>2025-12-10</td>
+              <td>2024-05-03</td>
+            </tr>
+            
+
+            <tr data-platform="Quickbooks" data-search="msp networks cold prospect quickbooks (516) 403-9001 mspnetworks.com 2025-04-04">
+              <td>
+                <a class="account" href="https://rev-io.my.salesforce.com/0016O00003ebcsZQAQ" target="_blank" rel="noopener">MSP Networks</a>
+                <div class="sub">Cold Prospect</div>
+              </td>
+              <td>Quickbooks</td>
+              <td><a href="https://mspnetworks.com" target="_blank" rel="noopener">mspnetworks.com</a></td>
+              <td>(516) 403-9001</td>
+              <td>2025-04-04</td>
+              <td>2023-08-09</td>
+            </tr>
+            
+
+            <tr data-platform="Quickbooks" data-search="nettology cold prospect quickbooks (610) 558-1730 nettology.net 2026-03-24">
+              <td>
+                <a class="account" href="https://rev-io.my.salesforce.com/0011C0000321HyzQAE" target="_blank" rel="noopener">Nettology</a>
+                <div class="sub">Cold Prospect</div>
+              </td>
+              <td>Quickbooks</td>
+              <td><a href="https://nettology.net" target="_blank" rel="noopener">nettology.net</a></td>
+              <td>(610) 558-1730</td>
+              <td>2026-03-24</td>
+              <td>2021-03-17</td>
+            </tr>
+            
+
+            <tr data-platform="Quickbooks" data-search="network task group warm prospect quickbooks (716) 608-2053 networktaskgroup.com 2026-06-04">
+              <td>
+                <a class="account" href="https://rev-io.my.salesforce.com/0011500001MCHpzAAH" target="_blank" rel="noopener">Network Task Group</a>
+                <div class="sub">Warm Prospect</div>
+              </td>
+              <td>Quickbooks</td>
+              <td><a href="https://networktaskgroup.com" target="_blank" rel="noopener">networktaskgroup.com</a></td>
+              <td>(716) 608-2053</td>
+              <td>2026-06-04</td>
+              <td>2016-06-07</td>
+            </tr>
+            
+
+            <tr data-platform="Quickbooks" data-search="nny online churn quickbooks (315) 782-0239 http://nnyonline.com/ 2024-02-13">
+              <td>
+                <a class="account" href="https://rev-io.my.salesforce.com/0016O00003dpCFUQA2" target="_blank" rel="noopener">NNY Online</a>
+                <div class="sub">Churn</div>
+              </td>
+              <td>Quickbooks</td>
+              <td><a href="http://nnyonline.com/" target="_blank" rel="noopener">http://nnyonline.com/</a></td>
+              <td>(315) 782-0239</td>
+              <td>2024-02-13</td>
+              <td>2023-07-28</td>
+            </tr>
+            
+
+            <tr data-platform="Quickbooks" data-search="noroc broadband cold prospect quickbooks (717) 540-3908 http://norocbroadband.net 2025-04-08">
+              <td>
+                <a class="account" href="https://rev-io.my.salesforce.com/001PX00000AY3wzYAD" target="_blank" rel="noopener">Noroc Broadband</a>
+                <div class="sub">Cold Prospect</div>
+              </td>
+              <td>Quickbooks</td>
+              <td><a href="http://norocbroadband.net" target="_blank" rel="noopener">http://norocbroadband.net</a></td>
+              <td>(717) 540-3908</td>
+              <td>2025-04-08</td>
+              <td>2024-04-24</td>
+            </tr>
+            
+
+            <tr data-platform="Quickbooks" data-search="north atlantic networks cold prospect quickbooks (508) 339-0482 http://nan.com 2026-05-19">
+              <td>
+                <a class="account" href="https://rev-io.my.salesforce.com/001PX000008mVJoYAM" target="_blank" rel="noopener">North Atlantic Networks</a>
+                <div class="sub">Cold Prospect</div>
+              </td>
+              <td>Quickbooks</td>
+              <td><a href="http://nan.com" target="_blank" rel="noopener">http://nan.com</a></td>
+              <td>(508) 339-0482</td>
+              <td>2026-05-19</td>
+              <td>2024-03-21</td>
+            </tr>
+            
+
+            <tr data-platform="Quickbooks" data-search="nu-tel communications warm prospect quickbooks (973) 227-9664 nu-tel.com 2026-04-30">
+              <td>
+                <a class="account" href="https://rev-io.my.salesforce.com/0011500001cCmbIAAS" target="_blank" rel="noopener">Nu-TEL Communications</a>
+                <div class="sub">Warm Prospect</div>
+              </td>
+              <td>Quickbooks</td>
+              <td><a href="https://nu-tel.com" target="_blank" rel="noopener">nu-tel.com</a></td>
+              <td>(973) 227-9664</td>
+              <td>2026-04-30</td>
+              <td>2017-03-01</td>
+            </tr>
+            
+
+            <tr data-platform="Quickbooks" data-search="oho connect churn quickbooks (513) 272-2777 ohoconnect.com 2026-03-27">
+              <td>
+                <a class="account" href="https://rev-io.my.salesforce.com/0011C00002iTkkMQAS" target="_blank" rel="noopener">OHO Connect</a>
+                <div class="sub">Churn</div>
+              </td>
+              <td>Quickbooks</td>
+              <td><a href="https://ohoconnect.com" target="_blank" rel="noopener">ohoconnect.com</a></td>
+              <td>(513) 272-2777</td>
+              <td>2026-03-27</td>
+              <td>2020-02-03</td>
+            </tr>
+            
+
+            <tr data-platform="Quickbooks" data-search="omnicaas cold prospect quickbooks 813-920-0085 https://omnicaas.com/ 2026-06-30">
+              <td>
+                <a class="account" href="https://rev-io.my.salesforce.com/001PX00000mRvubYAC" target="_blank" rel="noopener">OmniCaaS</a>
+                <div class="sub">Cold Prospect</div>
+              </td>
+              <td>Quickbooks</td>
+              <td><a href="https://omnicaas.com/" target="_blank" rel="noopener">https://omnicaas.com/</a></td>
+              <td>813-920-0085</td>
+              <td>2026-06-30</td>
+              <td>2026-05-12</td>
+            </tr>
+            
+
+            <tr data-platform="Quickbooks" data-search="oncomm communications cold prospect quickbooks (614) 221-4007 http://www.on-comm.com 2025-03-19">
+              <td>
+                <a class="account" href="https://rev-io.my.salesforce.com/001PX00000AYYSwYAP" target="_blank" rel="noopener">Oncomm Communications</a>
+                <div class="sub">Cold Prospect</div>
+              </td>
+              <td>Quickbooks</td>
+              <td><a href="http://www.on-comm.com" target="_blank" rel="noopener">http://www.on-comm.com</a></td>
+              <td>(614) 221-4007</td>
+              <td>2025-03-19</td>
+              <td>2024-04-24</td>
+            </tr>
+            
+
+            <tr data-platform="Quickbooks" data-search="oneitz cold prospect quickbooks  oneitz.com 2026-06-04">
+              <td>
+                <a class="account" href="https://rev-io.my.salesforce.com/001PX00000nvnHVYAY" target="_blank" rel="noopener">OneITz</a>
+                <div class="sub">Cold Prospect</div>
+              </td>
+              <td>Quickbooks</td>
+              <td><a href="https://oneitz.com" target="_blank" rel="noopener">oneitz.com</a></td>
+              <td><span class="muted">-</span></td>
+              <td>2026-06-04</td>
+              <td>2026-06-01</td>
+            </tr>
+            
+
+            <tr data-platform="Quickbooks" data-search="power 3 communications cold prospect quickbooks (508) 543-7500 power3comm.com 2025-12-10">
+              <td>
+                <a class="account" href="https://rev-io.my.salesforce.com/001PX00000D6pDGYAZ" target="_blank" rel="noopener">Power 3 Communications</a>
+                <div class="sub">Cold Prospect</div>
+              </td>
+              <td>Quickbooks</td>
+              <td><a href="https://power3comm.com" target="_blank" rel="noopener">power3comm.com</a></td>
+              <td>(508) 543-7500</td>
+              <td>2025-12-10</td>
+              <td>2024-06-12</td>
+            </tr>
+            
+
+            <tr data-platform="Quickbooks" data-search="power tech business solutions warm prospect quickbooks (845) 400-8800 powertbs.com 2026-05-06">
+              <td>
+                <a class="account" href="https://rev-io.my.salesforce.com/0011C00002mk8VEQAY" target="_blank" rel="noopener">Power Tech Business Solutions</a>
+                <div class="sub">Warm Prospect</div>
+              </td>
+              <td>Quickbooks</td>
+              <td><a href="https://powertbs.com" target="_blank" rel="noopener">powertbs.com</a></td>
+              <td>(845) 400-8800</td>
+              <td>2026-05-06</td>
+              <td>2020-05-13</td>
+            </tr>
+            
+
+            <tr data-platform="Quickbooks" data-search="precise telecom solutions cold prospect quickbooks (847) 942-3086 https://www.precisetelecom.com/ 2025-03-14">
+              <td>
+                <a class="account" href="https://rev-io.my.salesforce.com/001PX00000AY2pnYAD" target="_blank" rel="noopener">Precise Telecom Solutions</a>
+                <div class="sub">Cold Prospect</div>
+              </td>
+              <td>Quickbooks</td>
+              <td><a href="https://www.precisetelecom.com/" target="_blank" rel="noopener">https://www.precisetelecom.com/</a></td>
+              <td>(847) 942-3086</td>
+              <td>2025-03-14</td>
+              <td>2024-04-24</td>
+            </tr>
+            
+
+            <tr data-platform="Quickbooks" data-search="preferred tel warm prospect quickbooks (718) 500-3150 preferredtel.com 2026-06-23">
+              <td>
+                <a class="account" href="https://rev-io.my.salesforce.com/0011C00002vRtv6QAC" target="_blank" rel="noopener">Preferred Tel</a>
+                <div class="sub">Warm Prospect</div>
+              </td>
+              <td>Quickbooks</td>
+              <td><a href="https://preferredtel.com" target="_blank" rel="noopener">preferredtel.com</a></td>
+              <td>(718) 500-3150</td>
+              <td>2026-06-23</td>
+              <td>2020-11-04</td>
+            </tr>
+            
+
+            <tr data-platform="Quickbooks" data-search="proactiverisk warm prospect quickbooks +19732981160 proactiverisk.com 2026-06-18">
+              <td>
+                <a class="account" href="https://rev-io.my.salesforce.com/001PX00000a207zYAA" target="_blank" rel="noopener">PROACTIVERISK</a>
+                <div class="sub">Warm Prospect</div>
+              </td>
+              <td>Quickbooks</td>
+              <td><a href="https://proactiverisk.com" target="_blank" rel="noopener">proactiverisk.com</a></td>
+              <td>+19732981160</td>
+              <td>2026-06-18</td>
+              <td>2025-10-04</td>
+            </tr>
+            
+
+            <tr data-platform="Quickbooks" data-search="prospeed.net warm prospect quickbooks/excel (603) 897-7300 http://www.prospeed.net/ 2025-04-24">
+              <td>
+                <a class="account" href="https://rev-io.my.salesforce.com/0011500001HNQAHAA5" target="_blank" rel="noopener">Prospeed.net</a>
+                <div class="sub">Warm Prospect</div>
+              </td>
+              <td>Quickbooks/Excel</td>
+              <td><a href="http://www.prospeed.net/" target="_blank" rel="noopener">http://www.prospeed.net/</a></td>
+              <td>(603) 897-7300</td>
+              <td>2025-04-24</td>
+              <td>2015-01-28</td>
+            </tr>
+            
+
+            <tr data-platform="Quickbooks" data-search="r-options cold prospect quickbooks (585) 366-4125 roptionsinc.com 2026-03-24">
+              <td>
+                <a class="account" href="https://rev-io.my.salesforce.com/001PX00000dwI7xYAE" target="_blank" rel="noopener">R-Options</a>
+                <div class="sub">Cold Prospect</div>
+              </td>
+              <td>Quickbooks</td>
+              <td><a href="https://roptionsinc.com" target="_blank" rel="noopener">roptionsinc.com</a></td>
+              <td>(585) 366-4125</td>
+              <td>2026-03-24</td>
+              <td>2025-12-09</td>
+            </tr>
+            
+
+            <tr data-platform="Quickbooks" data-search="rci communications churn quickbooks (517) 663-7514 rcicommunications.com 2025-08-11">
+              <td>
+                <a class="account" href="https://rev-io.my.salesforce.com/0011C00001oNy2MQAS" target="_blank" rel="noopener">RCI Communications</a>
+                <div class="sub">Churn</div>
+              </td>
+              <td>Quickbooks</td>
+              <td><a href="https://rcicommunications.com" target="_blank" rel="noopener">rcicommunications.com</a></td>
+              <td>(517) 663-7514</td>
+              <td>2025-08-11</td>
+              <td>2017-10-13</td>
+            </tr>
+            
+
+            <tr data-platform="Quickbooks" data-search="remipbx warm prospect quickbooks (401) 240-2919 remipbx.com 2026-06-12">
+              <td>
+                <a class="account" href="https://rev-io.my.salesforce.com/0016O00003GRvPUQA1" target="_blank" rel="noopener">RemiPBX</a>
+                <div class="sub">Warm Prospect</div>
+              </td>
+              <td>Quickbooks</td>
+              <td><a href="https://remipbx.com" target="_blank" rel="noopener">remipbx.com</a></td>
+              <td>(401) 240-2919</td>
+              <td>2026-06-12</td>
+              <td>2022-04-11</td>
+            </tr>
+            
+
+            <tr data-platform="Quickbooks" data-search="sedona technologies cold prospect quickbooks (877) 854-3548 sedonatek.com 2026-06-19">
+              <td>
+                <a class="account" href="https://rev-io.my.salesforce.com/0016O00003ebk6fQAA" target="_blank" rel="noopener">Sedona Technologies</a>
+                <div class="sub">Cold Prospect</div>
+              </td>
+              <td>Quickbooks</td>
+              <td><a href="https://sedonatek.com" target="_blank" rel="noopener">sedonatek.com</a></td>
+              <td>(877) 854-3548</td>
+              <td>2026-06-19</td>
+              <td>2023-08-09</td>
+            </tr>
+            
+
+            <tr data-platform="Quickbooks" data-search="seltec cold prospect quickbooks (301) 363-7930 seltec.net 2026-06-18">
+              <td>
+                <a class="account" href="https://rev-io.my.salesforce.com/001PX00000PMBT5YAP" target="_blank" rel="noopener">SelTec</a>
+                <div class="sub">Cold Prospect</div>
+              </td>
+              <td>Quickbooks</td>
+              <td><a href="https://seltec.net" target="_blank" rel="noopener">seltec.net</a></td>
+              <td>(301) 363-7930</td>
+              <td>2026-06-18</td>
+              <td>2025-02-19</td>
+            </tr>
+            
+
+            <tr data-platform="Quickbooks" data-search="sipiq churn quickbooks (646) 278-6226 www.sipiq.com 2025-07-15">
+              <td>
+                <a class="account" href="https://rev-io.my.salesforce.com/0011C00001tlIGJQA2" target="_blank" rel="noopener">sipIQ</a>
+                <div class="sub">Churn</div>
+              </td>
+              <td>Quickbooks</td>
+              <td><a href="https://www.sipiq.com" target="_blank" rel="noopener">www.sipiq.com</a></td>
+              <td>(646) 278-6226</td>
+              <td>2025-07-15</td>
+              <td>2018-02-06</td>
+            </tr>
+            
+
+            <tr data-platform="Quickbooks" data-search="smb networks warm prospect quickbooks (203) 815-1685 https://www.smbnetworksllc.com/ 2025-04-04">
+              <td>
+                <a class="account" href="https://rev-io.my.salesforce.com/0011C00002G6IkOQAV" target="_blank" rel="noopener">SMB Networks</a>
+                <div class="sub">Warm Prospect</div>
+              </td>
+              <td>Quickbooks</td>
+              <td><a href="https://www.smbnetworksllc.com/" target="_blank" rel="noopener">https://www.smbnetworksllc.com/</a></td>
+              <td>(203) 815-1685</td>
+              <td>2025-04-04</td>
+              <td>2018-11-07</td>
+            </tr>
+            
+
+            <tr data-platform="Quickbooks" data-search="synergy broadband warm prospect quickbooks (734) 222-6060 http://www.synergybroadband.com 2026-04-23">
+              <td>
+                <a class="account" href="https://rev-io.my.salesforce.com/0011500001HNQ3UAAX" target="_blank" rel="noopener">Synergy Broadband</a>
+                <div class="sub">Warm Prospect</div>
+              </td>
+              <td>Quickbooks</td>
+              <td><a href="http://www.synergybroadband.com" target="_blank" rel="noopener">http://www.synergybroadband.com</a></td>
+              <td>(734) 222-6060</td>
+              <td>2026-04-23</td>
+              <td>2014-09-23</td>
+            </tr>
+            
+
+            <tr data-platform="Quickbooks" data-search="target communications international cold prospect quickbooks (513) 842-6571 contacttci.com 2026-05-19">
+              <td>
+                <a class="account" href="https://rev-io.my.salesforce.com/001PX00000AVWkEYAX" target="_blank" rel="noopener">Target Communications International</a>
+                <div class="sub">Cold Prospect</div>
+              </td>
+              <td>Quickbooks</td>
+              <td><a href="https://contacttci.com" target="_blank" rel="noopener">contacttci.com</a></td>
+              <td>(513) 842-6571</td>
+              <td>2026-05-19</td>
+              <td>2024-04-24</td>
+            </tr>
+            
+
+            <tr data-platform="Quickbooks" data-search="tec prospect quickbooks (440) 333-5903 tec4it.com 2026-06-22">
+              <td>
+                <a class="account" href="https://rev-io.my.salesforce.com/0016O00003dmoAhQAI" target="_blank" rel="noopener">TEC</a>
+                <div class="sub">Prospect</div>
+              </td>
+              <td>Quickbooks</td>
+              <td><a href="https://tec4it.com" target="_blank" rel="noopener">tec4it.com</a></td>
+              <td>(440) 333-5903</td>
+              <td>2026-06-22</td>
+              <td>2023-07-20</td>
+            </tr>
+            
+
+            <tr data-platform="Quickbooks" data-search="technologyx warm prospect quickbooks +1 609-479-1979 technology-x.com 2026-06-18">
+              <td>
+                <a class="account" href="https://rev-io.my.salesforce.com/001PX000001rf53YAA" target="_blank" rel="noopener">TechnoLogyx</a>
+                <div class="sub">Warm Prospect</div>
+              </td>
+              <td>Quickbooks</td>
+              <td><a href="https://technology-x.com" target="_blank" rel="noopener">technology-x.com</a></td>
+              <td>+1 609-479-1979</td>
+              <td>2026-06-18</td>
+              <td>2023-09-19</td>
+            </tr>
+            
+
+            <tr data-platform="Quickbooks" data-search="telektronics warm prospect quickbooks (330) 893-4909 blushiftwireless.com 2025-04-15">
+              <td>
+                <a class="account" href="https://rev-io.my.salesforce.com/0016O00003dq4AKQAY" target="_blank" rel="noopener">Telektronics</a>
+                <div class="sub">Warm Prospect</div>
+              </td>
+              <td>Quickbooks</td>
+              <td><a href="https://blushiftwireless.com" target="_blank" rel="noopener">blushiftwireless.com</a></td>
+              <td>(330) 893-4909</td>
+              <td>2025-04-15</td>
+              <td>2023-07-31</td>
+            </tr>
+            
+
+            <tr data-platform="Quickbooks" data-search="the avail group warm prospect quickbooks (201) 234-8909 availgroup.net 2025-04-14">
+              <td>
+                <a class="account" href="https://rev-io.my.salesforce.com/0011500001HNPo7AAH" target="_blank" rel="noopener">The Avail Group</a>
+                <div class="sub">Warm Prospect</div>
+              </td>
+              <td>Quickbooks</td>
+              <td><a href="https://availgroup.net" target="_blank" rel="noopener">availgroup.net</a></td>
+              <td>(201) 234-8909</td>
+              <td>2025-04-14</td>
+              <td>2014-03-14</td>
+            </tr>
+            
+
+            <tr data-platform="Quickbooks" data-search="tnt systems cold prospect quickbooks (978) 435-3200 tntsys.com 2026-05-06">
+              <td>
+                <a class="account" href="https://rev-io.my.salesforce.com/001PX00000IvjsTYAR" target="_blank" rel="noopener">TNT Systems</a>
+                <div class="sub">Cold Prospect</div>
+              </td>
+              <td>Quickbooks</td>
+              <td><a href="https://tntsys.com" target="_blank" rel="noopener">tntsys.com</a></td>
+              <td>(978) 435-3200</td>
+              <td>2026-05-06</td>
+              <td>2024-10-01</td>
+            </tr>
+            
+
+            <tr data-platform="Quickbooks" data-search="trunetex warm prospect quickbooks (857) 663-6333 trunetex.com 2026-02-17">
+              <td>
+                <a class="account" href="https://rev-io.my.salesforce.com/0011C00002mjDyXQAU" target="_blank" rel="noopener">Trunetex</a>
+                <div class="sub">Warm Prospect</div>
+              </td>
+              <td>Quickbooks</td>
+              <td><a href="https://trunetex.com" target="_blank" rel="noopener">trunetex.com</a></td>
+              <td>(857) 663-6333</td>
+              <td>2026-02-17</td>
+              <td>2020-05-12</td>
+            </tr>
+            
+
+            <tr data-platform="Quickbooks" data-search="two river technology group cold prospect quickbooks (732) 391-4770 tworivertech.com 2026-06-29">
+              <td>
+                <a class="account" href="https://rev-io.my.salesforce.com/001PX00000B4oBGYAZ" target="_blank" rel="noopener">Two River Technology Group</a>
+                <div class="sub">Cold Prospect</div>
+              </td>
+              <td>Quickbooks</td>
+              <td><a href="https://tworivertech.com" target="_blank" rel="noopener">tworivertech.com</a></td>
+              <td>(732) 391-4770</td>
+              <td>2026-06-29</td>
+              <td>2023-12-20</td>
+            </tr>
+            
+
+            <tr data-platform="Quickbooks" data-search="unified office cold prospect quickbooks (888) 279-5358 unifiedoffice.com 2026-05-19">
+              <td>
+                <a class="account" href="https://rev-io.my.salesforce.com/0011C00002i5m6MQAQ" target="_blank" rel="noopener">Unified Office</a>
+                <div class="sub">Cold Prospect</div>
+              </td>
+              <td>Quickbooks</td>
+              <td><a href="https://unifiedoffice.com" target="_blank" rel="noopener">unifiedoffice.com</a></td>
+              <td>(888) 279-5358</td>
+              <td>2026-05-19</td>
+              <td>2020-01-28</td>
+            </tr>
+            
+
+            <tr data-platform="Quickbooks" data-search="valiant technology cold prospect quickbooks (646) 775-2771 https://thevaliantway.com/services/ 2024-10-11">
+              <td>
+                <a class="account" href="https://rev-io.my.salesforce.com/001PX000008JEFZYA4" target="_blank" rel="noopener">Valiant Technology</a>
+                <div class="sub">Cold Prospect</div>
+              </td>
+              <td>Quickbooks</td>
+              <td><a href="https://thevaliantway.com/services/" target="_blank" rel="noopener">https://thevaliantway.com/services/</a></td>
+              <td>(646) 775-2771</td>
+              <td>2024-10-11</td>
+              <td>2024-03-12</td>
+            </tr>
+            
+
+            <tr data-platform="Quickbooks" data-search="vanbelkum warm prospect quickbooks (616) 974-8200 vanbelkum.com 2026-06-25">
+              <td>
+                <a class="account" href="https://rev-io.my.salesforce.com/0016O00003OvvZoQAJ" target="_blank" rel="noopener">VanBelkum</a>
+                <div class="sub">Warm Prospect</div>
+              </td>
+              <td>Quickbooks</td>
+              <td><a href="https://vanbelkum.com" target="_blank" rel="noopener">vanbelkum.com</a></td>
+              <td>(616) 974-8200</td>
+              <td>2026-06-25</td>
+              <td>2022-10-27</td>
+            </tr>
+            
+
+            <tr data-platform="Quickbooks" data-search="vencom communications, inc. warm prospect quickbooks (508) 482-5800 vencominc.com 2026-06-18">
+              <td>
+                <a class="account" href="https://rev-io.my.salesforce.com/0016O00003ebjBjQAI" target="_blank" rel="noopener">Vencom Communications, Inc.</a>
+                <div class="sub">Warm Prospect</div>
+              </td>
+              <td>Quickbooks</td>
+              <td><a href="https://vencominc.com" target="_blank" rel="noopener">vencominc.com</a></td>
+              <td>(508) 482-5800</td>
+              <td>2026-06-18</td>
+              <td>2023-08-09</td>
+            </tr>
+            
+
+            <tr data-platform="Quickbooks" data-search="vermont connections cold prospect quickbooks (802) 527-8248 vtct.com 2026-02-18">
+              <td>
+                <a class="account" href="https://rev-io.my.salesforce.com/001PX00000CAG2zYAH" target="_blank" rel="noopener">Vermont Connections</a>
+                <div class="sub">Cold Prospect</div>
+              </td>
+              <td>Quickbooks</td>
+              <td><a href="https://vtct.com" target="_blank" rel="noopener">vtct.com</a></td>
+              <td>(802) 527-8248</td>
+              <td>2026-02-18</td>
+              <td>2023-07-20</td>
+            </tr>
+            
+
+            <tr data-platform="Quickbooks" data-search="w. o&#x27;donnell consulting warm prospect quickbooks (212) 838-3339 wodonnell.com 2026-06-25">
+              <td>
+                <a class="account" href="https://rev-io.my.salesforce.com/0016O00003dmox4QAA" target="_blank" rel="noopener">W. O&#x27;Donnell Consulting</a>
+                <div class="sub">Warm Prospect</div>
+              </td>
+              <td>Quickbooks</td>
+              <td><a href="https://wodonnell.com" target="_blank" rel="noopener">wodonnell.com</a></td>
+              <td>(212) 838-3339</td>
+              <td>2026-06-25</td>
+              <td>2023-07-20</td>
+            </tr>
+            
+
+            <tr data-platform="Quickbooks" data-search="wan dynamics churn quickbooks (216) 307-2404 http://www.wandynamics.com/ 2022-11-09">
+              <td>
+                <a class="account" href="https://rev-io.my.salesforce.com/0011500001U7aqEAAR" target="_blank" rel="noopener">WAN Dynamics</a>
+                <div class="sub">Churn</div>
+              </td>
+              <td>Quickbooks</td>
+              <td><a href="http://www.wandynamics.com/" target="_blank" rel="noopener">http://www.wandynamics.com/</a></td>
+              <td>(216) 307-2404</td>
+              <td>2022-11-09</td>
+              <td>2016-09-02</td>
+            </tr>
+            
+
+            <tr data-platform="Quickbooks" data-search="warp7 cold prospect quickbooks (856) 582-6262 gowarp7.com 2026-06-29">
+              <td>
+                <a class="account" href="https://rev-io.my.salesforce.com/001PX00000D6ld3YAB" target="_blank" rel="noopener">Warp7</a>
+                <div class="sub">Cold Prospect</div>
+              </td>
+              <td>Quickbooks</td>
+              <td><a href="https://gowarp7.com" target="_blank" rel="noopener">gowarp7.com</a></td>
+              <td>(856) 582-6262</td>
+              <td>2026-06-29</td>
+              <td>2024-06-12</td>
+            </tr>
+            
+
+            <tr data-platform="Quickbooks" data-search="web jogger warm prospect quickbooks (845) 757-4000 webjogger.com 2025-11-20">
+              <td>
+                <a class="account" href="https://rev-io.my.salesforce.com/0011C00002i5opEQAQ" target="_blank" rel="noopener">Web Jogger</a>
+                <div class="sub">Warm Prospect</div>
+              </td>
+              <td>Quickbooks</td>
+              <td><a href="https://webjogger.com" target="_blank" rel="noopener">webjogger.com</a></td>
+              <td>(845) 757-4000</td>
+              <td>2025-11-20</td>
+              <td>2020-01-28</td>
+            </tr>
+            
+
+            <tr data-platform="Quickbooks" data-search="williams communications services cold prospect quickbooks (603) 427-2922 williamscommunicationsservices.com 2025-10-23">
+              <td>
+                <a class="account" href="https://rev-io.my.salesforce.com/001PX00000AZLNEYA5" target="_blank" rel="noopener">Williams Communications Services</a>
+                <div class="sub">Cold Prospect</div>
+              </td>
+              <td>Quickbooks</td>
+              <td><a href="https://williamscommunicationsservices.com" target="_blank" rel="noopener">williamscommunicationsservices.com</a></td>
+              <td>(603) 427-2922</td>
+              <td>2025-10-23</td>
+              <td>2024-04-25</td>
+            </tr>
+            
+
+            <tr data-platform="Quickbooks" data-search="worksighted cold prospect quickbooks (616) 546-2691 worksighted.com 2026-06-29">
+              <td>
+                <a class="account" href="https://rev-io.my.salesforce.com/0016O00003T2KXvQAN" target="_blank" rel="noopener">Worksighted</a>
+                <div class="sub">Cold Prospect</div>
+              </td>
+              <td>Quickbooks</td>
+              <td><a href="https://worksighted.com" target="_blank" rel="noopener">worksighted.com</a></td>
+              <td>(616) 546-2691</td>
+              <td>2026-06-29</td>
+              <td>2023-01-09</td>
+            </tr>
+            
+
+            <tr data-platform="Quickbooks" data-search="your tech team cold prospect quickbooks (732) 667-3409 technicianteam.com 2025-04-02">
+              <td>
+                <a class="account" href="https://rev-io.my.salesforce.com/0016O00003dmom8QAA" target="_blank" rel="noopener">Your Tech Team</a>
+                <div class="sub">Cold Prospect</div>
+              </td>
+              <td>Quickbooks</td>
+              <td><a href="https://technicianteam.com" target="_blank" rel="noopener">technicianteam.com</a></td>
+              <td>(732) 667-3409</td>
+              <td>2025-04-02</td>
+              <td>2023-07-20</td>
+            </tr>
+            
+
+            <tr data-platform="Quickbooks" data-search="yovu warm prospect quickbooks (844) 685-1001 yovu.ca 2026-06-23">
+              <td>
+                <a class="account" href="https://rev-io.my.salesforce.com/0011C00001oOXyJQAW" target="_blank" rel="noopener">YOVU</a>
+                <div class="sub">Warm Prospect</div>
+              </td>
+              <td>Quickbooks</td>
+              <td><a href="https://yovu.ca" target="_blank" rel="noopener">yovu.ca</a></td>
+              <td>(844) 685-1001</td>
+              <td>2026-06-23</td>
+              <td>2017-10-18</td>
+            </tr>
+            
+
+            <tr data-platform="TimelyBill" data-search="clarity technologies group warm prospect timelybill (973) 440-5811 claritytg.com 2026-04-08">
+              <td>
+                <a class="account" href="https://rev-io.my.salesforce.com/0011C00002ixD7eQAE" target="_blank" rel="noopener">Clarity Technologies Group</a>
+                <div class="sub">Warm Prospect</div>
+              </td>
+              <td>TimelyBill</td>
+              <td><a href="https://claritytg.com" target="_blank" rel="noopener">claritytg.com</a></td>
+              <td>(973) 440-5811</td>
+              <td>2026-04-08</td>
+              <td>2020-02-13</td>
+            </tr>
+            
+
+            <tr data-platform="TimelyBill" data-search="norcom solutions warm prospect timelybill (914) 747-8855 norcom.tech 2026-04-28">
+              <td>
+                <a class="account" href="https://rev-io.my.salesforce.com/0011C00002dQvHSQA0" target="_blank" rel="noopener">Norcom Solutions</a>
+                <div class="sub">Warm Prospect</div>
+              </td>
+              <td>TimelyBill</td>
+              <td><a href="https://norcom.tech" target="_blank" rel="noopener">norcom.tech</a></td>
+              <td>(914) 747-8855</td>
+              <td>2026-04-28</td>
+              <td>2019-11-01</td>
+            </tr>
+            
+
+            <tr data-platform="TimelyBill" data-search="plum voice warm prospect timelybill (303) 861-1223 plumvoice.com 2026-03-19">
+              <td>
+                <a class="account" href="https://rev-io.my.salesforce.com/0011500001dyFjJAAU" target="_blank" rel="noopener">Plum Voice</a>
+                <div class="sub">Warm Prospect</div>
+              </td>
+              <td>TimelyBill</td>
+              <td><a href="https://plumvoice.com" target="_blank" rel="noopener">plumvoice.com</a></td>
+              <td>(303) 861-1223</td>
+              <td>2026-03-19</td>
+              <td>2017-03-31</td>
+            </tr>
+            
+
+            <tr data-platform="TimelyBill" data-search="yorktel / kinly warm prospect timelybill (732) 413-6000 yorktel.com 2026-03-17">
+              <td>
+                <a class="account" href="https://rev-io.my.salesforce.com/0011C00002ke8RRQAY" target="_blank" rel="noopener">Yorktel / Kinly</a>
+                <div class="sub">Warm Prospect</div>
+              </td>
+              <td>TimelyBill</td>
+              <td><a href="https://yorktel.com" target="_blank" rel="noopener">yorktel.com</a></td>
+              <td>(732) 413-6000</td>
+              <td>2026-03-17</td>
+              <td>2020-03-17</td>
+            </tr>
+            </tbody>
+      </table>
+    </section>
   </section>
 </main>
 <script>
-const rows=[...document.querySelectorAll('tbody tr')];
-const tabs=[...document.querySelectorAll('.tab')];
-const search=document.getElementById('search');
+const prospectRows=[...document.querySelectorAll('#prospectBody tr')];
+const billingRows=[...document.querySelectorAll('#billingBody tr')];
+const prospectTabs=[...document.querySelectorAll('[data-prospect-tab]')];
+const platformTabs=[...document.querySelectorAll('[data-platform-tab]')];
+const pageTabs=[...document.querySelectorAll('[data-page-target]')];
+const prospectSearch=document.getElementById('prospectSearch');
+const billingSearch=document.getElementById('billingSearch');
 const priority=document.getElementById('priority');
-let activeTab='All';
-function applyFilters(){
-  const q=search.value.trim().toLowerCase();
+let activeProspectTab='All';
+let activePlatformTab='All';
+function applyProspectFilters(){
+  const q=prospectSearch.value.trim().toLowerCase();
   const p=priority.value;
-  rows.forEach(row=>{
-    const okTab=activeTab==='All'||row.dataset.tab===activeTab;
+  prospectRows.forEach(row=>{
+    const okTab=activeProspectTab==='All'||row.dataset.tab===activeProspectTab;
     const okPriority=!p||row.dataset.priority===p;
     const okSearch=!q||row.dataset.search.includes(q);
     row.classList.toggle('hidden', !(okTab&&okPriority&&okSearch));
   });
 }
-tabs.forEach(tab=>tab.addEventListener('click',()=>{
-  tabs.forEach(t=>t.classList.remove('active'));
+function applyBillingFilters(){
+  const q=billingSearch.value.trim().toLowerCase();
+  billingRows.forEach(row=>{
+    const okTab=activePlatformTab==='All'||row.dataset.platform===activePlatformTab;
+    const okSearch=!q||row.dataset.search.includes(q);
+    row.classList.toggle('hidden', !(okTab&&okSearch));
+  });
+}
+pageTabs.forEach(tab=>tab.addEventListener('click',()=>{
+  pageTabs.forEach(t=>t.classList.remove('active'));
   tab.classList.add('active');
-  activeTab=tab.dataset.tab;
-  applyFilters();
+  document.querySelectorAll('.page-section').forEach(section=>section.classList.add('hidden-page'));
+  document.getElementById('page-'+tab.dataset.pageTarget).classList.remove('hidden-page');
 }));
-search.addEventListener('input', applyFilters);
-priority.addEventListener('input', applyFilters);
+prospectTabs.forEach(tab=>tab.addEventListener('click',()=>{
+  prospectTabs.forEach(t=>t.classList.remove('active'));
+  tab.classList.add('active');
+  activeProspectTab=tab.dataset.prospectTab;
+  applyProspectFilters();
+}));
+platformTabs.forEach(tab=>tab.addEventListener('click',()=>{
+  platformTabs.forEach(t=>t.classList.remove('active'));
+  tab.classList.add('active');
+  activePlatformTab=tab.dataset.platformTab;
+  applyBillingFilters();
+}));
+prospectSearch.addEventListener('input', applyProspectFilters);
+billingSearch.addEventListener('input', applyBillingFilters);
+priority.addEventListener('input', applyProspectFilters);
 </script>
 </body>
 </html>
