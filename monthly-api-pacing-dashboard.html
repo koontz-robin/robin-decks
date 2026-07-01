@@ -334,7 +334,7 @@ function render(data){
     return `<article class="table-panel"><div class="report-title"><div><h3>${feed.name}</h3><span>${feed.source||feed.category||""}</span></div><span>${labels.length?labels.length+" detail rows":"Monthly totals only"}</span></div>${table}</article>`;
   }).join("");
 }
-async function loadDefault(){try{const res=await fetch("https://raw.githubusercontent.com/koontz-robin/robin-decks/master/monthly-api-pacing-data.json?v=20260630-1322",{cache:"no-store"});if(!res.ok)throw new Error(`HTTP ${res.status}`);render(await res.json())}catch(err){render(FALLBACK_DATA);document.getElementById("stamp").innerHTML=`Fallback data loaded<br>${err.message}`}}
+async function loadDefault(){try{const res=await fetch("https://raw.githubusercontent.com/koontz-robin/robin-decks/master/monthly-api-pacing-data.json?v=20260701-1318",{cache:"no-store"});if(!res.ok)throw new Error(`HTTP ${res.status}`);render(await res.json())}catch(err){render(FALLBACK_DATA);document.getElementById("stamp").innerHTML=`Fallback data loaded<br>${err.message}`}}
 loadDefault();
 </script>
 </body>
