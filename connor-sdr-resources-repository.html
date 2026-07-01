@@ -1,0 +1,144 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Connor's SDR Resources Repository</title>
+<style>
+:root {
+  --bg: #0b0f14;
+  --panel: #111820;
+  --panel2: #151f2a;
+  --line: #273444;
+  --text: #ecf3f8;
+  --muted: #91a2b3;
+  --green: #37d99e;
+  --blue: #58a6ff;
+}
+* { box-sizing: border-box; }
+body {
+  margin: 0;
+  min-height: 100vh;
+  background:
+    linear-gradient(180deg, rgba(55,217,158,0.08), transparent 280px),
+    var(--bg);
+  color: var(--text);
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+}
+.wrap { max-width: 1180px; margin: 0 auto; padding: 34px 24px 52px; }
+.top {
+  display: flex;
+  justify-content: space-between;
+  gap: 20px;
+  align-items: flex-start;
+  padding-bottom: 22px;
+  border-bottom: 1px solid var(--line);
+  margin-bottom: 22px;
+}
+h1 { margin: 0; font-size: 34px; line-height: 1.08; letter-spacing: 0; }
+.lede { color: var(--muted); margin: 8px 0 0; max-width: 760px; line-height: 1.5; }
+.stamp { color: var(--muted); font-size: 13px; text-align: right; white-space: nowrap; }
+.grid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 14px; }
+.card {
+  min-height: 220px;
+  display: flex;
+  flex-direction: column;
+  background: linear-gradient(180deg, var(--panel2), var(--panel));
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  padding: 18px;
+  color: inherit;
+  text-decoration: none;
+  transition: transform .16s ease, border-color .16s ease, box-shadow .16s ease;
+}
+.card:hover {
+  transform: translateY(-2px);
+  border-color: rgba(88,166,255,.78);
+  box-shadow: 0 16px 36px rgba(0,0,0,.28);
+}
+.eyebrow {
+  color: var(--green);
+  font-size: 11px;
+  font-weight: 800;
+  letter-spacing: 1.2px;
+  text-transform: uppercase;
+  margin-bottom: 12px;
+}
+.card h2 { margin: 0 0 8px; font-size: 20px; line-height: 1.2; letter-spacing: 0; }
+.card p { color: var(--muted); margin: 0; line-height: 1.48; font-size: 14px; flex: 1; }
+.status {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+  border-top: 1px solid rgba(145,162,179,.16);
+  padding-top: 13px;
+  margin-top: 18px;
+  color: var(--muted);
+  font-size: 12px;
+}
+.dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 999px;
+  background: var(--green);
+  box-shadow: 0 0 9px rgba(55,217,158,.8);
+}
+.dot.blue { background: var(--blue); box-shadow: 0 0 9px rgba(88,166,255,.75); }
+@media (max-width: 860px) {
+  .wrap { padding: 24px 16px 40px; }
+  .top { flex-direction: column; }
+  .stamp { text-align: left; white-space: normal; }
+  .grid { grid-template-columns: 1fr; }
+  .card { min-height: 168px; }
+}
+</style>
+</head>
+<body>
+<main class="wrap">
+  <header class="top">
+    <div>
+      <h1>Connor's SDR Resources Repository</h1>
+      <p class="lede">A focused launchpad for Connor's SDR prospecting, reengagement planning, and battle-card reference work.</p>
+    </div>
+    <div class="stamp">Rev.io SDR Resources<br>Updated July 1, 2026</div>
+  </header>
+
+  <section class="grid" aria-label="SDR resources">
+    <a class="card" href="https://koontz-robin.github.io/robin-decks/connor-sdr-prospecting-dashboard.html?v=9b5e031c" target="_blank" rel="noopener">
+      <div class="eyebrow">Prospecting</div>
+      <h2>Connor SDR Prospecting Dashboard</h2>
+      <p>Three-tab territory dashboard with reengagement opps, billing-platform accounts, and PSA-platform accounts for calling.</p>
+      <div class="status"><span class="dot"></span>Live dashboard</div>
+    </a>
+
+    <a class="card" href="https://koontz-robin.github.io/rev-forecast/battle-cards.html?v=5" target="_blank" rel="noopener">
+      <div class="eyebrow">Enablement</div>
+      <h2>Battle Cards</h2>
+      <p>Competitive and discovery reference material for positioning Rev.io against relevant platforms and objections.</p>
+      <div class="status"><span class="dot blue"></span>Reference library</div>
+    </a>
+
+    <a class="card" href="https://tony-kaylee.github.io/apollo3-reengagement-dashboard/" target="_blank" rel="noopener">
+      <div class="eyebrow">Reengagement</div>
+      <h2>Apollo 3 Reengagement Dashboard</h2>
+      <p>Additional Apollo 3 reengagement resource for SDR follow-up planning and account prioritization.</p>
+      <div class="status"><span class="dot"></span>Live dashboard</div>
+    </a>
+
+    <a class="card" href="https://koontz-robin.github.io/robin-decks/connor-psa-no-activity-2026.html?v=2164559d" target="_blank" rel="noopener">
+      <div class="eyebrow">No 2026 Activity</div>
+      <h2>Connor PSA Accounts to Call</h2>
+      <p>Connor-owned ConnectWise and Autotask PSA accounts with no Account Last Activity dated in 2026.</p>
+      <div class="status"><span class="dot"></span>Live dashboard</div>
+    </a>
+
+    <a class="card" href="https://koontz-robin.github.io/robin-decks/connor-billing-no-activity-2026.html?v=1dea4c3f" target="_blank" rel="noopener">
+      <div class="eyebrow">No 2026 Activity</div>
+      <h2>Connor Billing Accounts to Call</h2>
+      <p>Connor-owned OneBill, Datagate, TimelyBill, Sandy Beaches, and Quickbooks billing accounts with no Account Last Activity dated in 2026.</p>
+      <div class="status"><span class="dot"></span>Live dashboard</div>
+    </a>
+  </section>
+</main>
+</body>
+</html>
