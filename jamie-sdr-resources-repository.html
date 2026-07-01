@@ -1,0 +1,132 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Jamie's SDR Resources Repository</title>
+<style>
+:root {
+  --bg: #0b0f14;
+  --panel: #111820;
+  --panel2: #151f2a;
+  --line: #273444;
+  --text: #ecf3f8;
+  --muted: #91a2b3;
+  --green: #37d99e;
+  --blue: #58a6ff;
+  --amber: #f2b84b;
+}
+* { box-sizing: border-box; }
+body {
+  margin: 0;
+  min-height: 100vh;
+  background:
+    linear-gradient(180deg, rgba(55,217,158,0.08), transparent 280px),
+    var(--bg);
+  color: var(--text);
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+}
+.wrap { max-width: 1180px; margin: 0 auto; padding: 34px 24px 52px; }
+.top {
+  display: flex;
+  justify-content: space-between;
+  gap: 20px;
+  align-items: flex-start;
+  padding-bottom: 22px;
+  border-bottom: 1px solid var(--line);
+  margin-bottom: 22px;
+}
+h1 { margin: 0; font-size: 34px; line-height: 1.08; letter-spacing: 0; }
+.lede { color: var(--muted); margin: 8px 0 0; max-width: 760px; line-height: 1.5; }
+.stamp { color: var(--muted); font-size: 13px; text-align: right; white-space: nowrap; }
+.grid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 14px; }
+.card {
+  min-height: 220px;
+  display: flex;
+  flex-direction: column;
+  background: linear-gradient(180deg, var(--panel2), var(--panel));
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  padding: 18px;
+  color: inherit;
+  text-decoration: none;
+  transition: transform .16s ease, border-color .16s ease, box-shadow .16s ease;
+}
+.card:hover {
+  transform: translateY(-2px);
+  border-color: rgba(88,166,255,.78);
+  box-shadow: 0 16px 36px rgba(0,0,0,.28);
+}
+.eyebrow {
+  color: var(--green);
+  font-size: 11px;
+  font-weight: 800;
+  letter-spacing: 1.2px;
+  text-transform: uppercase;
+  margin-bottom: 12px;
+}
+.card h2 { margin: 0 0 8px; font-size: 20px; line-height: 1.2; letter-spacing: 0; }
+.card p { color: var(--muted); margin: 0; line-height: 1.48; font-size: 14px; flex: 1; }
+.status {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+  border-top: 1px solid rgba(145,162,179,.16);
+  padding-top: 13px;
+  margin-top: 18px;
+  color: var(--muted);
+  font-size: 12px;
+}
+.dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 999px;
+  background: var(--green);
+  box-shadow: 0 0 9px rgba(55,217,158,.8);
+}
+.dot.external { background: var(--amber); box-shadow: 0 0 9px rgba(242,184,75,.75); }
+.dot.blue { background: var(--blue); box-shadow: 0 0 9px rgba(88,166,255,.75); }
+@media (max-width: 860px) {
+  .wrap { padding: 24px 16px 40px; }
+  .top { flex-direction: column; }
+  .stamp { text-align: left; white-space: normal; }
+  .grid { grid-template-columns: 1fr; }
+  .card { min-height: 168px; }
+}
+</style>
+</head>
+<body>
+<main class="wrap">
+  <header class="top">
+    <div>
+      <h1>Jamie's SDR Resources Repository</h1>
+      <p class="lede">A focused launchpad for Jamie's SDR prospecting, holiday-aware outreach planning, and battle-card reference work.</p>
+    </div>
+    <div class="stamp">Rev.io SDR Resources<br>Updated July 1, 2026</div>
+  </header>
+
+  <section class="grid" aria-label="SDR resources">
+    <a class="card" href="https://koontz-robin.github.io/robin-decks/jamie-sdr-prospecting-dashboard.html?v=6a0dad5c" target="_blank" rel="noopener">
+      <div class="eyebrow">Prospecting</div>
+      <h2>Jamie SDR Prospecting Dashboard</h2>
+      <p>Three-tab territory dashboard with reengagement opps, billing-platform accounts, and PSA-platform accounts for calling.</p>
+      <div class="status"><span class="dot"></span>Live dashboard</div>
+    </a>
+
+    <a class="card" href="https://www.chabad.org/holidays/default_cdo/year/2026/jewish/holidays-2026.htm" target="_blank" rel="noopener">
+      <div class="eyebrow">Planning</div>
+      <h2>2026 Jewish Holidays Calendar</h2>
+      <p>Reference calendar for outreach timing, avoiding awkward asks, and planning sequences around observed holidays.</p>
+      <div class="status"><span class="dot external"></span>External resource</div>
+    </a>
+
+    <a class="card" href="https://koontz-robin.github.io/rev-forecast/battle-cards.html?v=5" target="_blank" rel="noopener">
+      <div class="eyebrow">Enablement</div>
+      <h2>Battle Cards</h2>
+      <p>Competitive and discovery reference material for positioning Rev.io against relevant platforms and objections.</p>
+      <div class="status"><span class="dot blue"></span>Reference library</div>
+    </a>
+  </section>
+</main>
+</body>
+</html>
