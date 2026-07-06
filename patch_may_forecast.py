@@ -36,7 +36,7 @@ MONTHLY_QUOTAS = {
     # June is the Q2 remainder after April quota + May quota, so product totals reconcile to Q2.
     'June': {'PSA':38000,'Billing':17368,'Payments':11040,'Cyber':8700,'CommerceHub':0},
     # July combines CommerceHub and Cyber Protect under one target.
-    'July': {'PSA':42000,'Billing':9752,'Payments':11040,'Cyber':9967,'CommerceHub':0},
+    'July': {'PSA':42000,'Billing':12368,'Payments':11040,'Cyber':9967,'CommerceHub':0},
 }
 DEFAULT_MONTH_QUOTAS = {'PSA':30000,'Billing':13368,'Payments':10540,'Cyber':4500,'CommerceHub':1667}
 TARGET_QUOTAS = MONTHLY_QUOTAS.get(TARGET_MONTH, DEFAULT_MONTH_QUOTAS)
