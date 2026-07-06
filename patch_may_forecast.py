@@ -15,8 +15,9 @@ MONTH_ID = MONTH_SLUG
 DATA_FILE = f'{WORKSPACE}/sf_{MONTH_SLUG}_opps.json'
 MONTH_NAMES = ['January','February','March','April','May','June','July','August','September','October','November','December']
 FROZEN_MONTHS = set(MONTH_NAMES[:max(now.month - 1, 0)])
+HISTORICAL_MONTH = TARGET_MONTH in FROZEN_MONTHS
 
-if TARGET_MONTH in FROZEN_MONTHS and os.environ.get('ALLOW_FROZEN_MONTH_PATCH') != '1':
+if HISTORICAL_MONTH and os.environ.get('ALLOW_FROZEN_MONTH_PATCH') != '1':
     raise SystemExit(f'{TARGET_MONTH} forecast data is locked; set ALLOW_FROZEN_MONTH_PATCH=1 to rebuild it intentionally.')
 
 with open(DATA_FILE) as f:
@@ -109,12 +110,17 @@ def opp_row(o):
 def build_month_tab():
     display = 'block' if TARGET_MONTH == now.strftime('%B') else 'none'
     lines = [f'<div id="tab-{TARGET_MONTH}" class="tab-content" style="display:{display}">']
-    total_pipe = sum(o.get('Amount',0) or 0 for o in opps if o.get('StageName') != 'Closed Won')
     total_cw   = sum(buckets[p]['closed'] for p in PRODUCTS)
-    open_count = sum(len(buckets[p]['opps']) for p in PRODUCTS)
-    total_worst  = total_cw + sum(o.get('Amount',0) or 0 for p in PRODUCTS for o in buckets[p]['opps'] if o.get('Forecast_Status__c') == 'Worst Case')
-    total_likely = total_cw + sum(o.get('Amount',0) or 0 for p in PRODUCTS for o in buckets[p]['opps'] if o.get('Forecast_Status__c') in ('Worst Case','Most Likely'))
-    total_best   = total_cw + sum(o.get('Amount',0) or 0 for p in PRODUCTS for o in buckets[p]['opps'] if o.get('Forecast_Status__c') in ('Worst Case','Most Likely','Best Case'))
+    if HISTORICAL_MONTH:
+        total_pipe = 0
+        open_count = 0
+        total_worst = total_likely = total_best = total_cw
+    else:
+        total_pipe = sum(o.get('Amount',0) or 0 for o in opps if o.get('StageName') != 'Closed Won')
+        open_count = sum(len(buckets[p]['opps']) for p in PRODUCTS)
+        total_worst  = total_cw + sum(o.get('Amount',0) or 0 for p in PRODUCTS for o in buckets[p]['opps'] if o.get('Forecast_Status__c') == 'Worst Case')
+        total_likely = total_cw + sum(o.get('Amount',0) or 0 for p in PRODUCTS for o in buckets[p]['opps'] if o.get('Forecast_Status__c') in ('Worst Case','Most Likely'))
+        total_best   = total_cw + sum(o.get('Amount',0) or 0 for p in PRODUCTS for o in buckets[p]['opps'] if o.get('Forecast_Status__c') in ('Worst Case','Most Likely','Best Case'))
     lines.append(f'''    <div class="summary-bar">
       <div class="sum-item"><div class="sum-label">{TARGET_MONTH} Pipeline</div><div class="sum-val">{fmt(total_pipe)}</div></div>
       <div class="sum-item"><div class="sum-label">Open Opps</div><div class="sum-val">{open_count}</div></div>
@@ -126,7 +132,7 @@ def build_month_tab():
 
     for idx, p in enumerate(PRODUCTS):
         b = buckets[p]
-        opp_list = sorted(b['opps'], key=lambda o: (
+        opp_list = [] if HISTORICAL_MONTH else sorted(b['opps'], key=lambda o: (
             ['Worst Case','Most Likely','Best Case',''].index(o.get('Forecast_Status__c','') if o.get('Forecast_Status__c','') in ['Worst Case','Most Likely','Best Case'] else ''),
             -(o.get('Amount') or 0)
         ))
@@ -146,6 +152,20 @@ def build_month_tab():
         best_pct   = min(best/quota*100,100) if quota else 0
         c = PROD_COLORS[p]
         mkt_chip = f'<span class="meta-chip" style="border-color:rgba(168,85,247,0.3);color:#a855f7">🟣 {len(mkt_opps)} mktg</span>' if mkt_opps else ''
+        opp_toggle = ''
+        if opp_list:
+            opp_toggle = f'''
+  <div class="opp-toggle" onclick="toggle('{MONTH_ID}-{idx}')">
+    <span id="toggle-label-{MONTH_ID}-{idx}">▶ Show all {len(opp_list)} opportunities</span>
+    <span class="toggle-amt">{fmt(pipe)} total</span>
+  </div>
+  <div id="opps-{MONTH_ID}-{idx}" class="opp-list" style="display:none">
+    <table class="opp-table">
+      <thead><tr><th>Account</th><th>Amount</th><th>Stage</th><th>Owner</th><th>Prob</th></tr></thead>
+      <tbody>{''.join(opp_row(o) for o in opp_list)}
+</tbody>
+    </table>
+  </div>'''
         lines.append(f'''
 <div class="product-section" id="prod-{MONTH_ID}-{idx}">
   <div class="prod-header">
@@ -193,17 +213,7 @@ def build_month_tab():
       </span>
     </div>
   </div>
-  <div class="opp-toggle" onclick="toggle('{MONTH_ID}-{idx}')">
-    <span id="toggle-label-{MONTH_ID}-{idx}">▶ Show all {len(opp_list)} opportunities</span>
-    <span class="toggle-amt">{fmt(pipe)} total</span>
-  </div>
-  <div id="opps-{MONTH_ID}-{idx}" class="opp-list" style="display:none">
-    <table class="opp-table">
-      <thead><tr><th>Account</th><th>Amount</th><th>Stage</th><th>Owner</th><th>Prob</th></tr></thead>
-      <tbody>{''.join(opp_row(o) for o in opp_list)}
-</tbody>
-    </table>
-  </div>
+{opp_toggle}
 </div>''')
     lines.append('  </div>\n')
     return '\n'.join(lines)
@@ -305,25 +315,31 @@ html = html[:q2_start] + build_q2_bar() + html[q2_end:]
 
 date_str = now.strftime('%B %-d, %Y').upper()
 html = re.sub(r'GENERATED [A-Z]+ \d+, \d{4}', f'GENERATED {date_str}', html)
-html = re.sub(r'Live Salesforce data · Jan–[A-Z][a-z]{2} 2026', f'Live Salesforce data · Jan–{TARGET_MONTH[:3]} 2026', html)
-html = re.sub(r"window\.addEventListener\('DOMContentLoaded', \(\) => switchTab\('[A-Z][a-z]+'\)\);",
-              f"window.addEventListener('DOMContentLoaded', () => switchTab('{TARGET_MONTH}'));",
-              html)
-html = re.sub(
-    r'(id="btn-[A-Z][a-z]+" class=")([^"]*)"',
-    lambda m: m.group(1) + ' '.join(c for c in m.group(2).split() if c != 'active') + '"',
-    html,
-)
-html = re.sub(
-    rf'(id="btn-{TARGET_MONTH}" class=")([^"]*)"',
-    lambda m: m.group(1) + ' '.join([*(c for c in m.group(2).split() if c != 'active'), 'active']) + '"',
-    html,
-    count=1,
-)
+if not HISTORICAL_MONTH:
+    html = re.sub(r'Live Salesforce data · Jan–[A-Z][a-z]{2} 2026', f'Live Salesforce data · Jan–{TARGET_MONTH[:3]} 2026', html)
+    html = re.sub(r"window\.addEventListener\('DOMContentLoaded', \(\) => switchTab\('[A-Z][a-z]+'\)\);",
+                  f"window.addEventListener('DOMContentLoaded', () => switchTab('{TARGET_MONTH}'));",
+                  html)
+    html = re.sub(
+        r'(id="btn-[A-Z][a-z]+" class=")([^"]*)"',
+        lambda m: m.group(1) + ' '.join(c for c in m.group(2).split() if c != 'active') + '"',
+        html,
+    )
+    html = re.sub(
+        rf'(id="btn-{TARGET_MONTH}" class=")([^"]*)"',
+        lambda m: m.group(1) + ' '.join([*(c for c in m.group(2).split() if c != 'active'), 'active']) + '"',
+        html,
+        count=1,
+    )
 
 with open(f'{WORKSPACE}/forecast.html','w') as f:
     f.write(html)
 
 total_cw  = sum(buckets[p]['closed'] for p in PRODUCTS)
-total_pipe = sum(o.get('Amount',0) or 0 for o in opps if o.get('StageName') != 'Closed Won')
-print(f'{TARGET_MONTH} data patched — CW: {fmt(total_cw)} | Pipeline: {fmt(total_pipe)} | {sum(len(buckets[p]["opps"]) for p in PRODUCTS)} open opps')
+if HISTORICAL_MONTH:
+    total_pipe = 0
+    open_count = 0
+else:
+    total_pipe = sum(o.get('Amount',0) or 0 for o in opps if o.get('StageName') != 'Closed Won')
+    open_count = sum(len(buckets[p]["opps"]) for p in PRODUCTS)
+print(f'{TARGET_MONTH} data patched — CW: {fmt(total_cw)} | Pipeline: {fmt(total_pipe)} | {open_count} open opps')
