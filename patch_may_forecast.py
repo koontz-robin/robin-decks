@@ -34,6 +34,8 @@ MONTHLY_QUOTAS = {
     'May':  {'PSA':36000,'Billing':10252,'Payments':11040,'Cyber':2478,'CommerceHub':2956},
     # June is the Q2 remainder after April quota + May quota, so product totals reconcile to Q2.
     'June': {'PSA':38000,'Billing':17368,'Payments':11040,'Cyber':8700,'CommerceHub':0},
+    # July combines CommerceHub and Cyber Protect under one target.
+    'July': {'PSA':42000,'Billing':9752,'Payments':11040,'Cyber':9967,'CommerceHub':0},
 }
 DEFAULT_MONTH_QUOTAS = {'PSA':30000,'Billing':13368,'Payments':10540,'Cyber':4500,'CommerceHub':1667}
 TARGET_QUOTAS = MONTHLY_QUOTAS.get(TARGET_MONTH, DEFAULT_MONTH_QUOTAS)
@@ -258,17 +260,35 @@ def build_q2_bar():
 with open(f'{WORKSPACE}/forecast.html') as f:
     html = f.read()
 
-# Replace target month tab
-tab_start = html.index(f'<div id="tab-{TARGET_MONTH}"')
-next_tab = re.search(r'\n\s*<div id="tab-[A-Z][a-z]+"', html[tab_start + 1:])
-pipeline_section = html.find('<!--\n  PIPELINE SOURCE SPLIT', tab_start)
-if next_tab:
-    tab_end = tab_start + 1 + next_tab.start()
-elif pipeline_section != -1:
-    tab_end = pipeline_section
+if f'id="btn-{TARGET_MONTH}"' not in html:
+    month_button = f'    <button id="btn-{TARGET_MONTH}" class="tab-btn" onclick="switchTab(\'{TARGET_MONTH}\')">{TARGET_MONTH}</button>\n'
+    html, inserted = re.subn(
+        r'(<div class="month-tabs">.*?)(\n\s*</div>)',
+        lambda m: m.group(1).rstrip() + '\n' + month_button + m.group(2),
+        html,
+        count=1,
+        flags=re.S,
+    )
+    if not inserted:
+        raise RuntimeError('Could not find month tab button container in forecast.html')
+
+# Replace or add target month tab
+tab_start = html.find(f'<div id="tab-{TARGET_MONTH}"')
+if tab_start != -1:
+    next_tab = re.search(r'\n\s*<div id="tab-[A-Z][a-z]+"', html[tab_start + 1:])
+    pipeline_section = html.find('<!--\n  PIPELINE SOURCE SPLIT', tab_start)
+    if next_tab:
+        tab_end = tab_start + 1 + next_tab.start()
+    elif pipeline_section != -1:
+        tab_end = pipeline_section
+    else:
+        tab_end = html.index('<div class="footer">', tab_start)
+    html = html[:tab_start] + build_month_tab() + '\n\n  ' + html[tab_end:]
 else:
-    tab_end = html.index('<div class="footer">', tab_start)
-html = html[:tab_start] + build_month_tab() + '\n\n  ' + html[tab_end:]
+    insert_at = html.find('<!--\n  PIPELINE SOURCE SPLIT')
+    if insert_at == -1:
+        insert_at = html.index('<div class="footer">')
+    html = html[:insert_at] + build_month_tab() + '\n\n  ' + html[insert_at:]
 
 # Replace Q2 bar
 q2_start = html.index('<div class="q2-bar-section">')
@@ -285,12 +305,21 @@ html = html[:q2_start] + build_q2_bar() + html[q2_end:]
 
 date_str = now.strftime('%B %-d, %Y').upper()
 html = re.sub(r'GENERATED [A-Z]+ \d+, \d{4}', f'GENERATED {date_str}', html)
+html = re.sub(r'Live Salesforce data · Jan–[A-Z][a-z]{2} 2026', f'Live Salesforce data · Jan–{TARGET_MONTH[:3]} 2026', html)
 html = re.sub(r"window\.addEventListener\('DOMContentLoaded', \(\) => switchTab\('[A-Z][a-z]+'\)\);",
               f"window.addEventListener('DOMContentLoaded', () => switchTab('{TARGET_MONTH}'));",
               html)
-html = re.sub(r'id="btn-[A-Z][a-z]+" class="tab-btn active"', lambda m: m.group(0).replace(' active', ''), html)
-html = html.replace(f'id="btn-{TARGET_MONTH}" class="tab-btn "', f'id="btn-{TARGET_MONTH}" class="tab-btn active "')
-html = html.replace(f'id="btn-{TARGET_MONTH}" class="tab-btn"', f'id="btn-{TARGET_MONTH}" class="tab-btn active"')
+html = re.sub(
+    r'(id="btn-[A-Z][a-z]+" class=")([^"]*)"',
+    lambda m: m.group(1) + ' '.join(c for c in m.group(2).split() if c != 'active') + '"',
+    html,
+)
+html = re.sub(
+    rf'(id="btn-{TARGET_MONTH}" class=")([^"]*)"',
+    lambda m: m.group(1) + ' '.join([*(c for c in m.group(2).split() if c != 'active'), 'active']) + '"',
+    html,
+    count=1,
+)
 
 with open(f'{WORKSPACE}/forecast.html','w') as f:
     f.write(html)
