@@ -37,7 +37,6 @@ PRODUCT_GOALS = [
 KNOWN_AES = {
     "Andy Whisenant",
     "Connor Flynn",
-    "Husam Zalmiyar",
     "Jake Borah",
     "Jamie Butler",
     "Jaylin Bender",
@@ -49,6 +48,7 @@ NAME_ALIASES = {
 }
 EXCLUDED_REPS = {
     "Davis" + " Herndon",
+    "Husam Zalmiyar",
     "Jake Mitchell",
 }
 ROLE_GROUPS = {
@@ -454,6 +454,8 @@ def build_html(opps, members):
             sdr_weekly_totals[week_id]["amount"] += opp["Amount"]
             sdr_opps_by_rep[sdr].append(sdr_opp)
 
+        if opp["Owner"] in EXCLUDED_REPS:
+            continue
         group = classify_rep(opp["Owner"], opp["OwnerRole"], members)
         if not week_id or group not in {"AE", "CSA"}:
             continue
