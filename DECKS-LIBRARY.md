@@ -18,6 +18,7 @@ Repo: `git@github.com:koontz-robin/robin-decks.git`
 | AE Capacity Dashboard | ae-capacity-dashboard.html | https://koontz-robin.github.io/robin-decks/ae-capacity-dashboard.html | Daily (12pm ET, weekdays) |
 | AE Capacity Slide (EXECUTE theme) | ae-capacity-slide.html | https://koontz-robin.github.io/robin-decks/ae-capacity-slide.html | Manual |
 | Sales Opportunities Created | june-ae-csa-opportunities.html | https://koontz-robin.github.io/robin-decks/june-ae-csa-opportunities.html | Hourly (9am-5pm ET, weekdays) |
+| July Opportunity Created Report | july-ae-csa-opportunities.html | https://koontz-robin.github.io/robin-decks/july-ae-csa-opportunities.html | July copy of Sales Opportunities Created with July calendar weeks |
 | Sales KPI Results - Q2 2026 | sales-kpi-results-q2-2026.html | https://koontz-robin.github.io/robin-decks/sales-kpi-results-q2-2026.html | Snapshot from Q2 26 workbook tab |
 | CSA Cohorts | csa-cohorts.html | https://koontz-robin.github.io/robin-decks/csa-cohorts.html | Snapshot copy of Sales Opportunities Created |
 | 2026 PSA Team Tracker | 2026-psa-team-tracker.html | https://koontz-robin.github.io/robin-decks/2026-psa-team-tracker.html | Nightly (11pm ET) |
@@ -66,6 +67,7 @@ Repo: `git@github.com:koontz-robin/robin-decks.git`
 | Name | File | URL | Notes |
 |---|---|---|---|
 | Rev.io PSA vs ConnectWise | revio-psa-vs-connectwise.html | https://koontz-robin.github.io/robin-decks/revio-psa-vs-connectwise.html | |
+| Enitech Solutions - Rev.io PSA Web Deck | enitech-revio-psa-web-deck.html | https://koontz-robin.github.io/robin-decks/enitech-revio-psa-web-deck.html | Rev.io PSA vs Halo PSA and Autotask account-specific web deck |
 | Rev.io vs ConnectWise | revio-vs-connectwise.html | https://koontz-robin.github.io/robin-decks/revio-vs-connectwise.html | |
 | Integrator vs MSP | integrator-vs-msp.html | https://koontz-robin.github.io/robin-decks/integrator-vs-msp.html | |
 | PSA Feature Gap | psa-feature-gap.html | https://koontz-robin.github.io/robin-decks/psa-feature-gap.html | |
