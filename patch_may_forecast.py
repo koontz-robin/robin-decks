@@ -30,7 +30,9 @@ with open(f'{WORKSPACE}/q2_reengagement_baseline.json') as f:
 PRODUCTS = ['PSA', 'Billing', 'Payments', 'Cyber', 'CommerceHub']
 PROD_COLORS = {'PSA':'#00ff88','Billing':'#00e5ff','Payments':'#7c3aed','Cyber':'#ff6b35','CommerceHub':'#ffd700'}
 PROD_LABELS = {'PSA':'PSA','Billing':'Billing / Odin','Payments':'Payments','Cyber':'Cyber Protect','CommerceHub':'CommerceHub'}
-Q2_QUOTAS  = {'PSA':102000,'Billing':40988,'Payments':32620,'Cyber':13500,'CommerceHub':8801}
+QUARTER_LABEL = 'Q3 2026'
+QUARTER_MONTHS = ['July', 'August', 'September']
+QUARTER_QUOTAS = {'PSA':138000,'Billing':42104,'Payments':30740,'Cyber':33702,'CommerceHub':0}
 MONTHLY_QUOTAS = {
     'May':  {'PSA':36000,'Billing':10252,'Payments':11040,'Cyber':2478,'CommerceHub':2956},
     # June is the Q2 remainder after April quota + May quota, so product totals reconcile to Q2.
@@ -218,8 +220,8 @@ def build_month_tab():
     lines.append('  </div>\n')
     return '\n'.join(lines)
 
-def build_q2_bar():
-    q2_cw = defaultdict(float)
+def build_quarter_bar():
+    quarter_cw = defaultdict(float)
 
     def add_closed_month(month_name):
         slug = month_name.lower()
@@ -234,23 +236,24 @@ def build_q2_bar():
             with open(path) as f:
                 for o in json.load(f):
                     if o.get('StageName') == 'Closed Won':
-                        q2_cw[prod_key_for_month(o.get('Product_Type__c',''), month_name)] += (o.get('Amount') or 0)
+                        quarter_cw[prod_key_for_month(o.get('Product_Type__c',''), month_name)] += (o.get('Amount') or 0)
             return
 
-    add_closed_month('April')
-    add_closed_month('May')
-    if MONTH_SLUG == 'june':
-        for p in PRODUCTS:
-            q2_cw[p] += buckets[p]['closed']
-    else:
-        add_closed_month('June')
+    for month_name in QUARTER_MONTHS:
+        if MONTH_SLUG == month_name.lower():
+            for p in PRODUCTS:
+                quarter_cw[p] += buckets[p]['closed']
+        else:
+            add_closed_month(month_name)
 
-    total_cw    = sum(q2_cw.values())
-    total_quota = sum(Q2_QUOTAS.values())
+    total_cw    = sum(quarter_cw.values())
+    total_quota = sum(QUARTER_QUOTAS.values())
     total_pct   = total_cw/total_quota*100 if total_quota else 0
     prods_html = ''
     for p in PRODUCTS:
-        c = PROD_COLORS[p]; cw = q2_cw[p]; quota = Q2_QUOTAS[p]
+        c = PROD_COLORS[p]; cw = quarter_cw[p]; quota = QUARTER_QUOTAS[p]
+        if quota == 0 and cw == 0:
+            continue
         pct = min(cw/quota*100,100) if quota else 0
         prods_html += f'''<div class="q2-prod">
       <div class="q2-prod-label">{PROD_LABELS[p]}</div>
@@ -261,7 +264,7 @@ def build_q2_bar():
       <div class="q2-prod-target">/ {fmt(quota)}</div>
     </div>'''
     return f'''<div class="q2-bar-section">
-    <div class="q2-bar-title">Q2 2026 CLOSED WON — {total_pct:.1f}% of {fmt(total_quota)} target ({fmt(total_cw)} closed)</div>
+    <div class="q2-bar-title">{QUARTER_LABEL} CLOSED WON — {total_pct:.1f}% of {fmt(total_quota)} target ({fmt(total_cw)} closed)</div>
     <div class="q2-products">
       {prods_html}
     </div>
@@ -311,7 +314,7 @@ while pos < len(html):
             q2_end = pos + 6
             break
     pos += 1
-html = html[:q2_start] + build_q2_bar() + html[q2_end:]
+html = html[:q2_start] + build_quarter_bar() + html[q2_end:]
 
 date_str = now.strftime('%B %-d, %Y').upper()
 html = re.sub(r'GENERATED [A-Z]+ \d+, \d{4}', f'GENERATED {date_str}', html)
