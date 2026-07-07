@@ -15,7 +15,8 @@ H2 growth requires a more intentional pipeline manufacturing system, not just mo
 2. The current team can sell more with the same platform if the motion becomes more specialized and trigger-driven.
 3. Best-fit pipeline comes from timing, trust, and proof: contract expirations, referrals, partner ecosystems, and credible product narratives.
 4. Revii and configurable integrations need to become commercial packaging stories, not only product capabilities.
-5. H2 needs clear start / stop / continue commitments from GTM.
+5. Expansion requires complete enough Billing-to-PSA feature parity, simple pricing paths, and demo-ready integration proof.
+6. H2 needs clear start / stop / continue commitments from GTM.
 
 ## Proposed Deck Flow
 
@@ -24,16 +25,17 @@ H2 growth requires a more intentional pipeline manufacturing system, not just mo
 3. Why Pipeline Creation Is the Constraint - coverage, conversion, and ACV math
 4. Direct Sales Role Evolution - from generalist coverage to motion ownership
 5. H2 Pipeline Motion - trigger-based, referral-led, proof-backed
-6. Competitor Contract Expiration Radar - competitor by month and ownership model
-7. Referral Generation System - clients, implementation partners, community, vendors
-8. Tenured Rep Vision - senior reps as market-makers, not only closers
-9. Strategic Partner Org Mapping - Pax8, NinjaOne, Acronis, and adjacent ecosystems
-10. What GTM Must Be Able to Say - crisp claims, proof, and objection answers
-11. Positioning + Proof to Drive Lead Volume - evidence library and campaign hooks
-12. Revii Monetization + Packaging - commercial model, attach paths, expansion story
-13. Configurable Integrations Narrative - buyer-facing value, proof, and roadmap ask
-14. Start / Stop / Continue - operating commitments for H2
-15. Leadership Decisions Needed - asks, owners, timelines
+6. Pipeline Creation Levers - stats, conversion ratios, source diversification, and investment levers
+7. Competitor Contract Expiration Radar - competitor by month and ownership model
+8. Contract Timing Operating Motion - incentives, inspection, attack windows, auto-renewal prevention
+9. Referral Generation System - clients, implementation partners, community, vendors
+10. Tenured Rep Vision / Partner Org Mapping - Pax8, NinjaOne, Acronis, top 10 MSP partners
+11. What GTM Must Be Able to Say - crisp claims, proof, and objection answers
+12. Positioning + Proof to Drive Lead Volume - evidence library and campaign hooks
+13. Revii Monetization + Packaging - commercial model, attach paths, expansion story
+14. Product Readiness - feature parity, simple pricing paths, non-negotiable integrations with proof
+15. Start / Stop / Continue - operating commitments for H2
+16. Leadership Decisions Needed - asks, owners, timelines
 
 ## Data Inputs to Pull
 
@@ -42,6 +44,10 @@ H2 growth requires a more intentional pipeline manufacturing system, not just mo
 - Referral/channel data from channel slides, tradeshow/community assets, and opportunity source data.
 - Partner ecosystem notes for Pax8, NinjaOne, Acronis, ConnectWise, HaloPSA, Syncro, Autotask.
 - Revii and integration positioning from existing Revii pages, tech stack pages, and product screenshots.
+- Website RAD / paid media / social outreach performance where available.
+- Mutual customer lists and partner relationship maps for Pax8, NinjaOne, Acronis, plus top 10 MSP partners.
+- Billing-to-PSA feature parity gaps and non-negotiable integration checklist with proof assets.
+- Pricing options for three paths: Billing-led, PSA-led, and suite/expansion-led.
 - Start / stop / continue from Ryan and sales leadership input.
 
 ## Initial Slide Claims to Validate
@@ -52,6 +58,10 @@ H2 growth requires a more intentional pipeline manufacturing system, not just mo
 - Tenured reps should spend less time on generic prospecting and more time on named ecosystems, referral partners, and complex account mapping.
 - Revii should be packaged as a monetizable productivity and intelligence layer, not a vague AI feature.
 - Configurable integrations should be framed as buyer control and implementation confidence, not engineering plumbing.
+- Competitor contract end dates should be treated as a first-class GTM data field and incentive category.
+- Dedicated channel capacity should focus on bidirectional referrals; partners that do not generate pipeline should be deprioritized.
+- Tenured reps should own org mapping, onsite partner meetings, referral contests, and co-branded proof with large referral partners.
+- Billing-to-PSA expansion needs feature parity, easy pricing, and integration proof before GTM can credibly scale the narrative.
 
 ## Open Questions for Ryan
 
@@ -60,4 +70,3 @@ H2 growth requires a more intentional pipeline manufacturing system, not just mo
 - Is this Ryan-only content, or will slides be merged into a larger offsite deck?
 - Should Revii pricing/package recommendations be explicit or framed as options?
 - Who owns partner mapping data for Pax8, NinjaOne, and Acronis?
-
