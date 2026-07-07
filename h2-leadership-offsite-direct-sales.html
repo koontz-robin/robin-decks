@@ -1,0 +1,360 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>H2 Leadership Offsite - Direct Sales Growth Motion</title>
+<link href="https://fonts.googleapis.com/css2?family=Open+Sans:wght@400;600;700;800&family=Montserrat:wght@700;800;900&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --navy:#1D3756;
+    --deep:#071426;
+    --cyan:#2399B5;
+    --green:#6EBE4F;
+    --blue:#0057ff;
+    --amber:#f5a623;
+    --red:#c9252d;
+    --ink:#172033;
+    --muted:#718096;
+    --line:#dbe5f1;
+    --paper:#ffffff;
+    --wash:#f4f7fb;
+  }
+  * { box-sizing:border-box; }
+  html, body { margin:0; height:100%; overflow:hidden; font-family:"Open Sans", Arial, sans-serif; background:var(--wash); color:var(--ink); }
+  .deck { position:relative; width:100vw; height:100vh; }
+  .slide {
+    position:absolute;
+    inset:0;
+    display:flex;
+    flex-direction:column;
+    opacity:0;
+    pointer-events:none;
+    transition:opacity .25s ease;
+    background:var(--wash);
+  }
+  .slide.active { opacity:1; pointer-events:auto; }
+  .top-stripe { height:4px; background:linear-gradient(90deg,var(--cyan),var(--green)); flex-shrink:0; }
+  .slide-header {
+    background:var(--navy);
+    color:#fff;
+    min-height:74px;
+    padding:14px 44px;
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    gap:24px;
+    flex-shrink:0;
+  }
+  .slide-tag { color:var(--green); font-size:10px; font-weight:800; letter-spacing:2px; text-transform:uppercase; margin-bottom:3px; }
+  .slide-header h2 { margin:0; font-size:21px; line-height:1.08; font-weight:850; letter-spacing:0; }
+  .header-meta { text-align:right; color:rgba(255,255,255,.46); font-size:11px; }
+  .logo { height:28px; width:auto; display:block; margin-left:auto; margin-bottom:6px; }
+  .slide-body { flex:1; padding:30px 44px 58px; overflow:hidden; }
+  .cover {
+    color:#fff;
+    background:
+      radial-gradient(circle at 18% 18%, rgba(35,153,181,.30), transparent 27%),
+      radial-gradient(circle at 82% 8%, rgba(110,190,79,.20), transparent 22%),
+      linear-gradient(135deg,#071426,#102945 58%,#0a1d34);
+    justify-content:center;
+  }
+  .cover .top-stripe, .cover .slide-header { display:none; }
+  .cover-inner { max-width:1080px; margin:0 auto; padding:0 54px; }
+  .kicker { display:inline-block; border:1px solid rgba(255,255,255,.22); border-radius:999px; padding:7px 15px; color:#b8f4ff; font-size:11px; letter-spacing:2px; font-weight:900; text-transform:uppercase; }
+  h1 { margin:22px 0 16px; font-family:Montserrat, "Open Sans", sans-serif; font-size:64px; line-height:1.03; letter-spacing:-1px; max-width:950px; }
+  .cover-sub { max-width:780px; color:rgba(255,255,255,.75); font-size:18px; line-height:1.55; }
+  .cover-grid { display:grid; grid-template-columns:repeat(4,minmax(0,1fr)); gap:14px; margin-top:34px; }
+  .cover-card { background:rgba(255,255,255,.07); border:1px solid rgba(255,255,255,.12); border-radius:8px; padding:17px 16px; min-height:104px; }
+  .cover-card strong { display:block; color:#fff; font-family:Montserrat, sans-serif; font-size:26px; margin-bottom:7px; }
+  .cover-card span { color:rgba(255,255,255,.48); font-size:10px; font-weight:850; text-transform:uppercase; letter-spacing:1.4px; }
+  .grid-2 { display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); gap:18px; }
+  .grid-3 { display:grid; grid-template-columns:repeat(3,minmax(0,1fr)); gap:16px; }
+  .grid-4 { display:grid; grid-template-columns:repeat(4,minmax(0,1fr)); gap:14px; }
+  .card {
+    background:#fff;
+    border:1px solid var(--line);
+    border-radius:8px;
+    padding:20px;
+    box-shadow:0 12px 28px rgba(29,55,86,.07);
+  }
+  .card.dark { background:var(--navy); color:#fff; border-color:transparent; }
+  .card h3 { margin:0 0 8px; color:var(--navy); font-size:18px; line-height:1.18; }
+  .card.dark h3 { color:#fff; }
+  .card p { margin:0; color:var(--muted); font-size:14px; line-height:1.45; }
+  .card.dark p { color:rgba(255,255,255,.72); }
+  .metric { text-align:center; }
+  .metric strong { display:block; font-family:Montserrat, sans-serif; font-size:34px; line-height:1; color:var(--cyan); margin-bottom:8px; }
+  .metric span { color:var(--muted); font-size:10px; font-weight:850; text-transform:uppercase; letter-spacing:1.3px; }
+  .section-label { display:flex; align-items:center; gap:12px; margin:0 0 16px; color:var(--muted); font-size:11px; font-weight:900; letter-spacing:2px; text-transform:uppercase; }
+  .section-label::after { content:""; flex:1; height:1px; background:var(--line); }
+  .big-claim {
+    background:#fff;
+    border-left:6px solid var(--green);
+    border-radius:8px;
+    padding:22px 24px;
+    box-shadow:0 12px 28px rgba(29,55,86,.07);
+    margin-bottom:18px;
+  }
+  .big-claim h3 { margin:0 0 7px; font-size:25px; color:var(--navy); }
+  .big-claim p { margin:0; color:#526174; font-size:15px; }
+  table { width:100%; border-collapse:collapse; background:#fff; border:1px solid var(--line); border-radius:8px; overflow:hidden; box-shadow:0 12px 28px rgba(29,55,86,.06); }
+  th { background:#edf3f9; color:#64748b; font-size:10px; text-transform:uppercase; letter-spacing:1px; text-align:left; padding:10px 12px; }
+  td { border-top:1px solid #edf2f7; padding:10px 12px; font-size:12px; color:#334155; vertical-align:top; }
+  td:first-child { font-weight:800; color:var(--navy); }
+  .num { text-align:right; white-space:nowrap; font-variant-numeric:tabular-nums; }
+  .pill { display:inline-flex; align-items:center; border-radius:999px; padding:3px 8px; font-size:10px; font-weight:900; letter-spacing:.7px; text-transform:uppercase; background:rgba(35,153,181,.12); color:var(--cyan); }
+  .pill.green { background:rgba(110,190,79,.16); color:#3f8d28; }
+  .pill.amber { background:rgba(245,166,35,.16); color:#a26100; }
+  .split {
+    display:grid;
+    grid-template-columns:.9fr 1.1fr;
+    gap:18px;
+    align-items:stretch;
+  }
+  .quote {
+    background:var(--navy);
+    color:#fff;
+    border-radius:8px;
+    padding:24px;
+    display:flex;
+    flex-direction:column;
+    justify-content:center;
+  }
+  .quote strong { color:var(--green); font-size:13px; text-transform:uppercase; letter-spacing:1.5px; margin-bottom:10px; }
+  .quote p { margin:0; font-size:22px; line-height:1.25; font-weight:800; }
+  .nav {
+    position:fixed;
+    bottom:0;
+    left:0;
+    right:0;
+    height:44px;
+    background:rgba(7,20,38,.96);
+    border-top:1px solid rgba(255,255,255,.12);
+    color:rgba(255,255,255,.6);
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    padding:0 28px;
+    z-index:100;
+  }
+  .nav button { background:rgba(255,255,255,.08); border:1px solid rgba(255,255,255,.14); color:#fff; border-radius:6px; height:28px; padding:0 12px; font-weight:800; cursor:pointer; }
+  .nav button:disabled { opacity:.35; cursor:default; }
+  .dots { display:flex; gap:6px; }
+  .dot { width:7px; height:7px; border-radius:50%; background:rgba(255,255,255,.22); }
+  .dot.active { background:var(--green); }
+  @media (max-width:900px) {
+    html, body { overflow:auto; }
+    .slide { position:relative; min-height:100vh; opacity:1; pointer-events:auto; display:none; }
+    .slide.active { display:flex; }
+    .grid-2, .grid-3, .grid-4, .cover-grid, .split { grid-template-columns:1fr; }
+    h1 { font-size:42px; }
+    .slide-body { overflow:auto; padding:24px 18px 70px; }
+    .slide-header { padding:14px 18px; }
+  }
+</style>
+</head>
+<body>
+<div class="deck">
+  <section class="slide cover active">
+    <div class="cover-inner">
+      <span class="kicker">H2 Leadership Offsite</span>
+      <h1>Direct Sales Growth Motion</h1>
+      <p class="cover-sub">How Rev.io sells more with the same platform by evolving roles, manufacturing better pipeline, monetizing Revii, and turning partner ecosystems plus integration proof into repeatable GTM leverage.</p>
+      <div class="cover-grid">
+        <div class="cover-card"><strong>Pipeline</strong><span>Primary constraint</span></div>
+        <div class="cover-card"><strong>Triggers</strong><span>Contract timing + intent</span></div>
+        <div class="cover-card"><strong>Referrals</strong><span>Trust-based lead volume</span></div>
+        <div class="cover-card"><strong>Revii</strong><span>Packaging + monetization</span></div>
+      </div>
+    </div>
+  </section>
+
+  <section class="slide">
+    <div class="top-stripe"></div>
+    <header class="slide-header">
+      <div><div class="slide-tag">Executive Thesis</div><h2>H2 growth requires a pipeline system, not just more rep effort</h2></div>
+      <div class="header-meta"><img class="logo" src="revio-logo-white.png" alt="Rev.io">Ryan Koontz · Direct Sales</div>
+    </header>
+    <div class="slide-body">
+      <div class="big-claim">
+        <h3>We have to manufacture more qualified, higher-value pipeline from the same platform.</h3>
+        <p>The current motion can close business, but volume misses when pipeline is too broad, too low-ACV, or created without a compelling timing trigger.</p>
+      </div>
+      <div class="grid-3">
+        <div class="card metric"><strong>25-28%</strong><span>Observed demo-to-close range in AE motions</span></div>
+        <div class="card metric"><strong>~$650-$800</strong><span>Observed AE average MRR per deal</span></div>
+        <div class="card metric"><strong>4x+</strong><span>Required coverage if win rates stay near SaaS norms</span></div>
+      </div>
+    </div>
+  </section>
+
+  <section class="slide">
+    <div class="top-stripe"></div>
+    <header class="slide-header">
+      <div><div class="slide-tag">Pipeline Motion</div><h2>Move from generic opportunity creation to trigger-based pipeline creation</h2></div>
+      <div class="header-meta"><img class="logo" src="revio-logo-white.png" alt="Rev.io">Draft framework</div>
+    </header>
+    <div class="slide-body">
+      <div class="grid-4">
+        <div class="card"><h3>Contract Expiration</h3><p>Competitor renewal timing creates urgency, budget context, and a reason to evaluate before the incumbent re-locks the account.</p></div>
+        <div class="card"><h3>Referral Generation</h3><p>Client, vendor, community, and implementation referrals should be treated as a managed pipeline source, not happy accidents.</p></div>
+        <div class="card"><h3>Partner Org Mapping</h3><p>Pax8, NinjaOne, Acronis, and similar ecosystems need named owners, relationship maps, and account-level plays.</p></div>
+        <div class="card"><h3>Proof + Positioning</h3><p>GTM needs crisp proof for why Rev.io PSA, Billing, Payments, Cyber Protect, CommerceHub, and Revii matter now.</p></div>
+      </div>
+    </div>
+  </section>
+
+  <section class="slide">
+    <div class="top-stripe"></div>
+    <header class="slide-header">
+      <div><div class="slide-tag">Role Evolution</div><h2>Direct Sales roles need clearer ownership of motions, not just territories</h2></div>
+      <div class="header-meta"><img class="logo" src="revio-logo-white.png" alt="Rev.io">Working model</div>
+    </header>
+    <div class="slide-body">
+      <table>
+        <thead><tr><th>Role</th><th>Current Risk</th><th>H2 Evolution</th><th>What Changes</th></tr></thead>
+        <tbody>
+          <tr><td>Tenured AEs</td><td>Too much generic prospecting and reactive deal work</td><td>Market-makers for named segments and partner ecosystems</td><td>Own referral maps, target accounts, contract-timing plays, and executive relationships</td></tr>
+          <tr><td>SDRs</td><td>Activity can outrun ICP quality</td><td>Trigger and signal operators</td><td>Prioritize contract events, partner signals, tech-stack fit, and referral paths</td></tr>
+          <tr><td>Channel / Partners</td><td>Influence is undercounted and under-systematized</td><td>Pipeline source with attribution discipline</td><td>Map partners to accounts, track source, and create repeatable co-sell plays</td></tr>
+          <tr><td>GTM / Product Marketing</td><td>Messaging can stay too abstract</td><td>Proof engine for lead volume</td><td>Give Sales claims, stories, proof, ROI, packaging, and objection handling</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </section>
+
+  <section class="slide">
+    <div class="top-stripe"></div>
+    <header class="slide-header">
+      <div><div class="slide-tag">Contract Expiration Radar</div><h2>Competitor expirations become the H2 timing engine</h2></div>
+      <div class="header-meta"><img class="logo" src="revio-logo-white.png" alt="Rev.io">Data pull pending</div>
+    </header>
+    <div class="slide-body">
+      <div class="split">
+        <div class="quote"><strong>Slide intent</strong><p>Turn contract end dates into a monthly attack plan by competitor, owner, and next best action.</p></div>
+        <table>
+          <thead><tr><th>Competitor</th><th>Jul</th><th>Aug</th><th>Sep</th><th>Oct</th><th>Primary Play</th></tr></thead>
+          <tbody>
+            <tr><td>ConnectWise</td><td class="num">TBD</td><td class="num">TBD</td><td class="num">TBD</td><td class="num">TBD</td><td>Migration risk + contract buyout narrative</td></tr>
+            <tr><td>HaloPSA</td><td class="num">TBD</td><td class="num">TBD</td><td class="num">TBD</td><td class="num">TBD</td><td>Workflow fit + telecom specialization</td></tr>
+            <tr><td>Syncro</td><td class="num">TBD</td><td class="num">TBD</td><td class="num">TBD</td><td class="num">TBD</td><td>Growth ceiling + integrated billing story</td></tr>
+            <tr><td>Autotask</td><td class="num">TBD</td><td class="num">TBD</td><td class="num">TBD</td><td class="num">TBD</td><td>Complexity reduction + PSA control</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </section>
+
+  <section class="slide">
+    <div class="top-stripe"></div>
+    <header class="slide-header">
+      <div><div class="slide-tag">Referral System</div><h2>Referral generation needs to become an operating motion</h2></div>
+      <div class="header-meta"><img class="logo" src="revio-logo-white.png" alt="Rev.io">H2 operating design</div>
+    </header>
+    <div class="slide-body">
+      <div class="grid-3">
+        <div class="card"><h3>Client Referrals</h3><p>Codify when to ask, who asks, and what proof asset supports the ask after successful implementations or value moments.</p></div>
+        <div class="card"><h3>Vendor Referrals</h3><p>Map partner sellers and customer success teams at Pax8, NinjaOne, Acronis, and adjacent vendors.</p></div>
+        <div class="card"><h3>Community Referrals</h3><p>Turn events, PAC, and community touchpoints into tracked introductions and co-sell opportunities.</p></div>
+      </div>
+    </div>
+  </section>
+
+  <section class="slide">
+    <div class="top-stripe"></div>
+    <header class="slide-header">
+      <div><div class="slide-tag">GTM Narrative</div><h2>What GTM must be able to say clearly</h2></div>
+      <div class="header-meta"><img class="logo" src="revio-logo-white.png" alt="Rev.io">Positioning checklist</div>
+    </header>
+    <div class="slide-body">
+      <div class="grid-2">
+        <div class="card dark"><h3>Core Claim</h3><p>Rev.io helps communications providers and MSP-adjacent operators consolidate billing, operations, automation, and intelligence in one platform built for their actual workflow.</p></div>
+        <div class="card"><h3>Proof Required</h3><p>Customer examples, migration stories, ROI calculators, integration proof, contract-switching plays, and Revii use cases that make the value tangible.</p></div>
+        <div class="card"><h3>Lead Volume Hook</h3><p>Use specific market pain: contract renewal pressure, broken billing/PSA handoffs, integration fatigue, manual operations, and AI productivity expectations.</p></div>
+        <div class="card"><h3>Objection Answer</h3><p>Show that integration flexibility and Revii intelligence reduce change-management risk instead of adding another layer of tools.</p></div>
+      </div>
+    </div>
+  </section>
+
+  <section class="slide">
+    <div class="top-stripe"></div>
+    <header class="slide-header">
+      <div><div class="slide-tag">Revii + Integrations</div><h2>Package Revii and configurable integrations as commercial levers</h2></div>
+      <div class="header-meta"><img class="logo" src="revio-logo-white.png" alt="Rev.io">Packaging narrative</div>
+    </header>
+    <div class="slide-body">
+      <div class="grid-3">
+        <div class="card"><h3>Revii Monetization</h3><p>Define attach paths: included intelligence layer, premium automation tier, workflow assistant add-on, or usage-based productivity packaging.</p></div>
+        <div class="card"><h3>Packaging Proof</h3><p>Quantify time saved, ticket reduction, sales/admin productivity, and customer-facing workflow improvements.</p></div>
+        <div class="card"><h3>Configurable Integrations</h3><p>Position as buyer control: customers can adapt Rev.io around their stack instead of being boxed into rigid workflows.</p></div>
+      </div>
+    </div>
+  </section>
+
+  <section class="slide">
+    <div class="top-stripe"></div>
+    <header class="slide-header">
+      <div><div class="slide-tag">Start / Stop / Continue</div><h2>H2 operating commitments</h2></div>
+      <div class="header-meta"><img class="logo" src="revio-logo-white.png" alt="Rev.io">Draft</div>
+    </header>
+    <div class="slide-body">
+      <table>
+        <thead><tr><th>Start</th><th>Stop</th><th>Continue</th></tr></thead>
+        <tbody>
+          <tr>
+            <td>Monthly competitor-expiration plays by owner</td>
+            <td>Counting low-fit opp creation as equal to qualified pipeline</td>
+            <td>AE capacity inspection and pipeline accountability</td>
+          </tr>
+          <tr>
+            <td>Named partner org maps for Pax8, NinjaOne, Acronis</td>
+            <td>Letting referrals remain untracked and relationship-dependent</td>
+            <td>Community/event motion where it creates measurable pipeline</td>
+          </tr>
+          <tr>
+            <td>Revii packaging tests and integration proof assets</td>
+            <td>Positioning AI and integrations as generic feature bullets</td>
+            <td>Product-specific dashboards and proof-backed sales narratives</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </section>
+</div>
+
+<div class="nav">
+  <button id="prev">Prev</button>
+  <div class="dots" id="dots"></div>
+  <div><span id="counter">1 / 9</span></div>
+  <button id="next">Next</button>
+</div>
+
+<script>
+const slides = [...document.querySelectorAll('.slide')];
+const dots = document.getElementById('dots');
+let current = 0;
+slides.forEach((_, i) => {
+  const d = document.createElement('span');
+  d.className = 'dot' + (i === 0 ? ' active' : '');
+  d.addEventListener('click', () => show(i));
+  dots.appendChild(d);
+});
+function show(i) {
+  current = Math.max(0, Math.min(slides.length - 1, i));
+  slides.forEach((s, idx) => s.classList.toggle('active', idx === current));
+  [...document.querySelectorAll('.dot')].forEach((d, idx) => d.classList.toggle('active', idx === current));
+  document.getElementById('counter').textContent = `${current + 1} / ${slides.length}`;
+  document.getElementById('prev').disabled = current === 0;
+  document.getElementById('next').disabled = current === slides.length - 1;
+}
+document.getElementById('prev').addEventListener('click', () => show(current - 1));
+document.getElementById('next').addEventListener('click', () => show(current + 1));
+document.addEventListener('keydown', e => {
+  if (e.key === 'ArrowRight' || e.key === 'PageDown') show(current + 1);
+  if (e.key === 'ArrowLeft' || e.key === 'PageUp') show(current - 1);
+});
+show(0);
+</script>
+</body>
+</html>
