@@ -15,9 +15,10 @@ H2 growth requires a more intentional pipeline manufacturing system, not just mo
 2. The current team can sell more with the same platform if the motion becomes more specialized and trigger-driven.
 3. Best-fit pipeline comes from timing, trust, and proof: contract expirations, referrals, partner ecosystems, and credible product narratives.
 4. Revii and configurable integrations need to become commercial packaging stories, not only product capabilities.
-5. Leadership needs six-month product and source-mix graphs to see where opportunity creation is concentrated and where attribution is too weak.
-6. Expansion requires complete enough Billing-to-PSA feature parity, simple pricing paths, a true trial experience, billing automation proof, and demo-ready integration proof.
-7. H2 needs clear start / stop / continue commitments from GTM.
+5. The $30K/month PSA MRR target has to be translated into wins, demos, created opportunities, and the gap versus current creation pace.
+6. Leadership needs six-month product and source-mix graphs to see where opportunity creation is concentrated and where attribution is too weak.
+7. Expansion requires complete enough Billing-to-PSA feature parity, simple pricing paths, a true trial experience, billing automation proof, and demo-ready integration proof.
+8. H2 needs clear start / stop / continue commitments from GTM.
 
 ## Proposed Deck Flow
 
@@ -27,23 +28,25 @@ H2 growth requires a more intentional pipeline manufacturing system, not just mo
 4. Direct Sales Role Evolution - from generalist coverage to motion ownership
 5. H2 Pipeline Motion - trigger-based, referral-led, proof-backed
 6. Pipeline Creation Levers - stats, conversion ratios, source diversification, and investment levers
-7. Opportunities Created by Product - Jan-Jun 2026 created opportunity mix by product
-8. Opportunities Created by Marketing Sub-Source - Jan-Jun 2026 created opportunity mix by sub-source
-9. Competitor Contract Expiration Radar - competitor by month and ownership model
-10. Contract Timing Operating Motion - incentives, inspection, attack windows, auto-renewal prevention
-11. Referral Generation System - clients, implementation partners, community, vendors
-12. Tenured Rep Vision / Partner Org Mapping - Pax8, NinjaOne, Acronis, top 10 MSP partners
-13. What GTM Must Be Able to Say - crisp claims, proof, and objection answers
-14. Positioning + Proof to Drive Lead Volume - evidence library and campaign hooks
-15. Revii Monetization + Packaging - commercial model, attach paths, expansion story
-16. Product Readiness - feature parity, simple pricing paths, non-negotiable integrations with proof
-17. Trial + Billing Automation - trial experience and ability to automate Rev.io's own billing scenarios
-18. Start / Stop / Continue - operating commitments for H2
-19. Leadership Decisions Needed - asks, owners, timelines
+7. PSA $30K MRR Math - wins, demo-quality opps, broad created-opportunity needs, and gap versus current pace
+8. Opportunities Created by Product - Jan-Jun 2026 created opportunity mix by product
+9. Opportunities Created by Marketing Sub-Source - Jan-Jun 2026 created opportunity mix by sub-source
+10. Competitor Contract Expiration Radar - competitor by month and ownership model
+11. Contract Timing Operating Motion - incentives, inspection, attack windows, auto-renewal prevention
+12. Referral Generation System - clients, implementation partners, community, vendors
+13. Tenured Rep Vision / Partner Org Mapping - Pax8, NinjaOne, Acronis, top 10 MSP partners
+14. What GTM Must Be Able to Say - crisp claims, proof, and objection answers
+15. Positioning + Proof to Drive Lead Volume - evidence library and campaign hooks
+16. Revii Monetization + Packaging - commercial model, attach paths, expansion story
+17. Product Readiness - feature parity, simple pricing paths, non-negotiable integrations with proof
+18. Trial + Billing Automation - trial experience and ability to automate Rev.io's own billing scenarios
+19. Start / Stop / Continue - operating commitments for H2
+20. Leadership Decisions Needed - asks, owners, timelines
 
 ## Data Inputs to Pull
 
 - Pipeline coverage and current conversion math from forecast, pipeline pace, and Q2 KPI files.
+- PSA $30K/month MRR model from current KPI and Salesforce outcome data: ~$808 current PSA MRR per win, ~37-38 wins/month needed, ~27.6% MSP AE demo-to-deal ratio, ~10.0% broad resolved PSA opportunity win rate, 164 June AE/CSA PSA-created opportunities, and 117 Q2 avg PSA-created opportunities/month in the Jan-Jun dataset.
 - Competitor contract expiration dataset from `competitor_end_date_accounts.json` and monitor reports.
 - Referral/channel data from channel slides, tradeshow/community assets, and opportunity source data.
 - Partner ecosystem notes for Pax8, NinjaOne, Acronis, ConnectWise, HaloPSA, Syncro, Autotask.
@@ -72,6 +75,7 @@ H2 growth requires a more intentional pipeline manufacturing system, not just mo
 - Billing-to-PSA expansion needs feature parity, easy pricing, and integration proof before GTM can credibly scale the narrative.
 - A true trial experience should shift GTM from "trust our demo" to "prove it in your workflow."
 - Rev.io should be able to automate its own billing for every scenario it asks customers to buy; otherwise pricing, packaging, and automation claims lose credibility.
+- Closing $30K/month in PSA MRR requires roughly 37-38 PSA wins/month at the current average MRR per win. At current demo-to-deal rates, that requires about 134-138 demo-quality PSA opportunities; at the broader resolved PSA opportunity win rate, it requires roughly 371-381 created PSA opportunities/month.
 - Product opportunity creation is heavily concentrated in PSA 2.0, while Billing/Odin is the second-largest creation bucket and should anchor suite expansion analysis.
 - Marketing sub-source attribution is too incomplete to confidently defend channel ROI: 869 of 1,328 Jan-Jun created opportunities are Unknown/Not Set.
 
