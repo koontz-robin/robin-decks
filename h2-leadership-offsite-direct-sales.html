@@ -5,6 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>H2 Leadership Offsite - Direct Sales Growth Motion</title>
 <link href="https://fonts.googleapis.com/css2?family=Open+Sans:wght@400;600;700;800&family=Montserrat:wght@700;800;900&display=swap" rel="stylesheet">
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
 <style>
   :root {
     --navy:#1D3756;
@@ -139,6 +140,35 @@
   }
   .action strong { color:var(--navy); font-size:13px; text-transform:uppercase; letter-spacing:1px; }
   .action span { color:#475569; font-size:13px; line-height:1.45; }
+  .chart-layout {
+    display:grid;
+    grid-template-columns:1.35fr .65fr;
+    gap:18px;
+    align-items:stretch;
+    height:100%;
+  }
+  .chart-panel {
+    background:#fff;
+    border:1px solid var(--line);
+    border-radius:8px;
+    padding:18px;
+    box-shadow:0 12px 28px rgba(29,55,86,.07);
+    min-height:0;
+  }
+  .chart-wrap { position:relative; height:430px; }
+  .chart-note { display:grid; gap:12px; }
+  .callout {
+    background:#fff;
+    border:1px solid var(--line);
+    border-left:5px solid var(--cyan);
+    border-radius:8px;
+    padding:15px 16px;
+    box-shadow:0 8px 18px rgba(29,55,86,.05);
+  }
+  .callout.green { border-left-color:var(--green); }
+  .callout.amber { border-left-color:var(--amber); }
+  .callout strong { display:block; color:var(--navy); font-size:13px; text-transform:uppercase; letter-spacing:1px; margin-bottom:6px; }
+  .callout span { color:#526174; font-size:13px; line-height:1.42; }
   .nav {
     position:fixed;
     bottom:0;
@@ -163,10 +193,11 @@
     html, body { overflow:auto; }
     .slide { position:relative; min-height:100vh; opacity:1; pointer-events:auto; display:none; }
     .slide.active { display:flex; }
-    .grid-2, .grid-3, .grid-4, .cover-grid, .split { grid-template-columns:1fr; }
+    .grid-2, .grid-3, .grid-4, .cover-grid, .split, .chart-layout { grid-template-columns:1fr; }
     h1 { font-size:42px; }
     .slide-body { overflow:auto; padding:24px 18px 70px; }
     .slide-header { padding:14px 18px; }
+    .chart-wrap { height:360px; }
   }
 </style>
 </head>
@@ -236,6 +267,42 @@
         <div class="card"><h3>Measure the Funnel</h3><ul><li>Pipeline creation stats by product, rep, and source</li><li>Conversion ratios by channel and stage</li><li>Pipeline coverage needed by target and win rate</li></ul></div>
         <div class="card"><h3>Diversify Sources</h3><ul><li>More tradeshows</li><li>More website RADs</li><li>More paid media</li><li>More referrals</li><li>More sales and social outreach</li></ul></div>
         <div class="card"><h3>Rank by Yield</h3><ul><li>Do not treat all opps as equal</li><li>Prioritize source + ICP combinations with real close rate</li><li>Shift investment away from low-yield noise</li></ul></div>
+      </div>
+    </div>
+  </section>
+
+  <section class="slide">
+    <div class="top-stripe"></div>
+    <header class="slide-header">
+      <div><div class="slide-tag">Product Mix</div><h2>Opportunities created by product over the last 6 months</h2></div>
+      <div class="header-meta"><img class="logo" src="revio-logo-white.png" alt="Rev.io">Jan-Jun 2026 Salesforce-created opps</div>
+    </header>
+    <div class="slide-body">
+      <div class="chart-layout">
+        <div class="chart-panel"><div class="chart-wrap"><canvas id="productCreatedChart"></canvas></div></div>
+        <div class="chart-note">
+          <div class="callout green"><strong>PSA carries volume</strong><span>PSA 2.0 represents 845 of 1,328 created opportunities, making it the dominant H2 pipeline motion to inspect for quality, conversion, and ACV.</span></div>
+          <div class="callout"><strong>Billing / Odin is second</strong><span>Billing, Odin, and Billing add-ons combine for 206 created opportunities. That is the clearest base for suite expansion and packaging proof.</span></div>
+          <div class="callout amber"><strong>Data hygiene matters</strong><span>Unknown product tagging rose sharply in May and June. If product is not clean at creation, leadership cannot confidently shift resources by product line.</span></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="slide">
+    <div class="top-stripe"></div>
+    <header class="slide-header">
+      <div><div class="slide-tag">Marketing Sub-Source</div><h2>Opportunities created by marketing sub-source over the last 6 months</h2></div>
+      <div class="header-meta"><img class="logo" src="revio-logo-white.png" alt="Rev.io">Jan-Jun 2026 Salesforce-created opps</div>
+    </header>
+    <div class="slide-body">
+      <div class="chart-layout">
+        <div class="chart-panel"><div class="chart-wrap"><canvas id="subSourceCreatedChart"></canvas></div></div>
+        <div class="chart-note">
+          <div class="callout green"><strong>Request Demo leads known sources</strong><span>Request Demo created 163 opportunities, the largest known sub-source. This is the cleanest signal for improving website conversion and RAD quality.</span></div>
+          <div class="callout"><strong>Events are scattered but real</strong><span>ISC West, TMTBootcamp, Channel Partners, Pax8 Beyond, AIN, and other events show meaningful bursts that need follow-up discipline and attribution consistency.</span></div>
+          <div class="callout amber"><strong>Unknown is too high</strong><span>869 opportunities have no useful sub-source. That makes channel ROI harder to defend and hides which motions deserve more investment.</span></div>
+        </div>
       </div>
     </div>
   </section>
@@ -446,11 +513,24 @@
 <div class="nav">
   <button id="prev">Prev</button>
   <div class="dots" id="dots"></div>
-  <div><span id="counter">1 / 15</span></div>
+  <div><span id="counter">1 / 17</span></div>
   <button id="next">Next</button>
 </div>
 
 <script>
+const monthLabels = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun'];
+const chartColors = {
+  cyan:'#2399B5',
+  green:'#6EBE4F',
+  navy:'#1D3756',
+  amber:'#f5a623',
+  blue:'#0057ff',
+  red:'#c9252d',
+  slate:'#718096',
+  lavender:'#7c3aed',
+  teal:'#0f766e',
+  orange:'#ea580c'
+};
 const slides = [...document.querySelectorAll('.slide')];
 const dots = document.getElementById('dots');
 let current = 0;
@@ -474,6 +554,47 @@ document.addEventListener('keydown', e => {
   if (e.key === 'ArrowRight' || e.key === 'PageDown') show(current + 1);
   if (e.key === 'ArrowLeft' || e.key === 'PageUp') show(current - 1);
 });
+function buildStackedChart(canvasId, datasets) {
+  if (!window.Chart) return;
+  const canvas = document.getElementById(canvasId);
+  if (!canvas) return;
+  new Chart(canvas, {
+    type:'bar',
+    data:{ labels:monthLabels, datasets },
+    options:{
+      responsive:true,
+      maintainAspectRatio:false,
+      plugins:{
+        legend:{ position:'bottom', labels:{ boxWidth:12, boxHeight:12, color:'#334155', font:{ size:11, family:'Open Sans' } } },
+        tooltip:{ mode:'index', intersect:false }
+      },
+      scales:{
+        x:{ stacked:true, grid:{ display:false }, ticks:{ color:'#526174', font:{ family:'Open Sans', weight:700 } } },
+        y:{ stacked:true, beginAtZero:true, grid:{ color:'#e7eef7' }, ticks:{ color:'#526174', precision:0 } }
+      }
+    }
+  });
+}
+buildStackedChart('productCreatedChart', [
+  { label:'PSA 2.0', data:[208,154,132,129,125,97], backgroundColor:chartColors.cyan },
+  { label:'Billing / Odin', data:[40,37,53,34,24,18], backgroundColor:chartColors.green },
+  { label:'Payments AR', data:[22,20,18,25,19,4], backgroundColor:chartColors.navy },
+  { label:'Cyber Protect', data:[15,6,5,2,3,0], backgroundColor:chartColors.amber },
+  { label:'CommerceHub', data:[0,0,11,0,0,0], backgroundColor:chartColors.blue },
+  { label:'Unknown / Not Set', data:[3,8,0,10,37,69], backgroundColor:chartColors.slate }
+]);
+buildStackedChart('subSourceCreatedChart', [
+  { label:'Request Demo', data:[46,34,26,20,28,9], backgroundColor:chartColors.green },
+  { label:'Facebook Ads', data:[24,15,5,2,6,5], backgroundColor:chartColors.blue },
+  { label:'ISC West 26', data:[0,0,18,7,7,3], backgroundColor:chartColors.cyan },
+  { label:'Outbound', data:[10,7,4,3,4,3], backgroundColor:chartColors.navy },
+  { label:'TMTBootcamp', data:[0,0,0,13,3,0], backgroundColor:chartColors.amber },
+  { label:'Channel Partners 26', data:[0,0,1,7,6,1], backgroundColor:chartColors.lavender },
+  { label:'Pax8 Beyond 26', data:[0,0,0,0,0,15], backgroundColor:chartColors.teal },
+  { label:'AIN 26', data:[3,6,1,2,1,1], backgroundColor:chartColors.orange },
+  { label:'Other Known', data:[17,24,22,20,22,8], backgroundColor:'#94a3b8' },
+  { label:'Unknown / Not Set', data:[188,139,142,126,131,143], backgroundColor:'#cbd5e1' }
+]);
 show(0);
 </script>
 </body>
