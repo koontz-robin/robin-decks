@@ -1,0 +1,364 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Robin Q2 2026 Impact - Rev.io Sales</title>
+<style>
+  :root {
+    --navy:#0f172a;
+    --panel:#162033;
+    --panel-2:#1e293b;
+    --line:#2d3a50;
+    --text:#eef4fb;
+    --muted:#8da0b4;
+    --soft:#b8c6d8;
+    --green:#3DC570;
+    --blue:#38bdf8;
+    --purple:#a78bfa;
+    --orange:#f5a623;
+    --red:#ef4444;
+  }
+  * { box-sizing:border-box; }
+  body {
+    margin:0;
+    background:var(--navy);
+    color:var(--text);
+    font-family:"Segoe UI", system-ui, -apple-system, sans-serif;
+    line-height:1.5;
+  }
+  .wrap { max-width:1180px; margin:0 auto; padding:34px 28px 54px; }
+  .top {
+    display:flex;
+    align-items:flex-start;
+    justify-content:space-between;
+    gap:28px;
+    margin-bottom:26px;
+    border-bottom:1px solid var(--line);
+    padding-bottom:24px;
+  }
+  .brand { display:flex; align-items:center; gap:14px; color:var(--muted); font-size:13px; font-weight:700; letter-spacing:1px; text-transform:uppercase; }
+  .brand img { width:86px; height:auto; object-fit:contain; }
+  h1 { margin:14px 0 8px; font-size:38px; line-height:1.05; letter-spacing:0; }
+  .subtitle { max-width:780px; color:var(--soft); font-size:16px; margin:0; }
+  .meta {
+    min-width:210px;
+    color:var(--muted);
+    font-size:12px;
+    text-align:right;
+    padding-top:8px;
+  }
+  .hero {
+    display:grid;
+    grid-template-columns:repeat(4, minmax(0, 1fr));
+    gap:14px;
+    margin:22px 0 22px;
+  }
+  .metric, .panel {
+    background:var(--panel);
+    border:1px solid var(--line);
+    border-radius:8px;
+  }
+  .metric { padding:18px 18px 16px; min-height:122px; }
+  .metric strong { display:block; font-size:32px; line-height:1; margin-bottom:8px; letter-spacing:0; }
+  .metric span { display:block; color:var(--muted); font-size:11px; text-transform:uppercase; letter-spacing:1.2px; font-weight:800; }
+  .metric p { margin:8px 0 0; color:var(--soft); font-size:12px; }
+  .green { color:var(--green); }
+  .blue { color:var(--blue); }
+  .purple { color:var(--purple); }
+  .orange { color:var(--orange); }
+  .section { margin-top:30px; }
+  .section-title {
+    display:flex;
+    align-items:center;
+    gap:12px;
+    color:var(--muted);
+    font-size:12px;
+    font-weight:900;
+    letter-spacing:2px;
+    text-transform:uppercase;
+    margin:0 0 12px;
+  }
+  .section-title::after { content:""; height:1px; background:var(--line); flex:1; }
+  .panel { padding:18px; }
+  .note {
+    background:#111c30;
+    border:1px solid var(--line);
+    border-left:4px solid var(--blue);
+    border-radius:8px;
+    padding:14px 16px;
+    color:var(--soft);
+    font-size:13px;
+  }
+  .grid-2 { display:grid; grid-template-columns:1fr 1fr; gap:14px; }
+  .grid-3 { display:grid; grid-template-columns:repeat(3, minmax(0, 1fr)); gap:14px; }
+  h2, h3 { margin:0; letter-spacing:0; }
+  h2 { font-size:21px; }
+  h3 { font-size:15px; margin-bottom:8px; }
+  p { margin:0; }
+  ul { margin:10px 0 0; padding-left:18px; color:var(--soft); font-size:13px; }
+  li { margin:5px 0; }
+  table { width:100%; border-collapse:collapse; overflow:hidden; border-radius:8px; background:var(--panel); }
+  th {
+    text-align:left;
+    color:var(--muted);
+    background:#111c30;
+    font-size:10px;
+    text-transform:uppercase;
+    letter-spacing:1px;
+    padding:10px 12px;
+    border-bottom:1px solid var(--line);
+  }
+  td {
+    padding:10px 12px;
+    border-bottom:1px solid rgba(255,255,255,.07);
+    color:var(--soft);
+    font-size:12px;
+    vertical-align:top;
+  }
+  tr:last-child td { border-bottom:0; }
+  td:first-child { color:var(--text); font-weight:700; }
+  .num { text-align:right; white-space:nowrap; font-variant-numeric:tabular-nums; }
+  .pill {
+    display:inline-flex;
+    align-items:center;
+    border-radius:999px;
+    padding:3px 8px;
+    font-size:10px;
+    font-weight:800;
+    letter-spacing:.6px;
+    text-transform:uppercase;
+    background:rgba(56,189,248,.12);
+    color:var(--blue);
+    white-space:nowrap;
+  }
+  .pill.auto { background:rgba(61,197,112,.12); color:var(--green); }
+  .pill.deck { background:rgba(167,139,250,.12); color:var(--purple); }
+  .pill.analysis { background:rgba(245,166,35,.13); color:var(--orange); }
+  .source-list a { color:var(--blue); text-decoration:none; }
+  .source-list a:hover { text-decoration:underline; }
+  .footer {
+    color:#5f728a;
+    font-size:11px;
+    text-align:center;
+    border-top:1px solid var(--line);
+    padding-top:20px;
+    margin-top:34px;
+  }
+  @media (max-width:900px) {
+    .top { display:block; }
+    .meta { text-align:left; margin-top:14px; }
+    .hero, .grid-2, .grid-3 { grid-template-columns:1fr; }
+    h1 { font-size:30px; }
+    .wrap { padding:24px 16px 42px; }
+    table { display:block; overflow-x:auto; }
+  }
+</style>
+</head>
+<body>
+<main class="wrap">
+  <header class="top">
+    <div>
+      <div class="brand"><img src="revio-logo-white.png" alt="Rev.io">AI Sales Team</div>
+      <h1>Robin Q2 2026 Impact</h1>
+      <p class="subtitle">Reference summary of the conservative productivity value, operating coverage, and Discord request volume Robin supported across Ryan Koontz and the Rev.io Sales Team in Q2 2026.</p>
+    </div>
+    <div class="meta">
+      Q2 period: Apr 1 - Jun 30, 2026<br>
+      Built: Jul 7, 2026<br>
+      Scope: bot-visible Discord plus published sales dashboards
+    </div>
+  </header>
+
+  <section class="hero" aria-label="Impact headline metrics">
+    <div class="metric">
+      <strong class="green">~125+ hrs</strong>
+      <span>Total Q2 productivity impact</span>
+      <p>Recurring automation run-rate plus documented Q2 one-time builds.</p>
+    </div>
+    <div class="metric">
+      <strong class="blue">$12K-$15K</strong>
+      <span>Conservative internal value</span>
+      <p>Uses the existing $75/hr productivity model; excludes revenue upside.</p>
+    </div>
+    <div class="metric">
+      <strong class="purple">16</strong>
+      <span>Active automations</span>
+      <p>Recurring reports, dashboards, grading workflows, monitors, and alerts.</p>
+    </div>
+    <div class="metric">
+      <strong class="orange">2,234</strong>
+      <span>Likely Discord requests</span>
+      <p>Across 4 servers, 13 readable channels, and 25 unique requesters.</p>
+    </div>
+  </section>
+
+  <section class="note">
+    <strong>Conservative model:</strong> recurring work is valued at roughly $75/hr and only repeatable admin, reporting, research, and first-draft analysis time is counted. Revenue influence, faster coaching cycles, renewal saves, leadership responsiveness, and always-on availability are treated as upside, not included in headline ROI.
+  </section>
+
+  <section class="section">
+    <div class="section-title">Executive Summary</div>
+    <div class="grid-3">
+      <article class="panel">
+        <h3>Recurring Leverage</h3>
+        <p style="color:var(--soft);font-size:13px;">The source impact dashboard shows a conservative <strong style="color:var(--green)">~28 hours saved per month</strong>, or about <strong style="color:var(--green)">~84 hours in Q2</strong>, from recurring work.</p>
+      </article>
+      <article class="panel">
+        <h3>One-Time Q2 Builds</h3>
+        <p style="color:var(--soft);font-size:13px;">Documented Q2 analysis, decks, and dashboards added <strong style="color:var(--orange)">~$3.1K</strong> of conservative project value through the dashboard's April-May cut.</p>
+      </article>
+      <article class="panel">
+        <h3>Team Reach</h3>
+        <p style="color:var(--soft);font-size:13px;">Discord history showed <strong style="color:var(--blue)">2,914 human messages</strong> and <strong style="color:var(--blue)">25 requesters</strong> using Robin across visible sales channels.</p>
+      </article>
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="section-title">Q2 Impact by Team</div>
+    <div class="grid-2">
+      <article class="panel">
+        <h3>AE Team</h3>
+        <ul>
+          <li>Forecast dashboard with product-level scenarios, Q2 attainment, and marketing attribution.</li>
+          <li>AE capacity dashboard tracking completed prospect meetings and projected capacity.</li>
+          <li>Pipeline dashboard, rep coaching metrics, and Q2 board efficiency analysis.</li>
+        </ul>
+      </article>
+      <article class="panel">
+        <h3>SDR Team</h3>
+        <ul>
+          <li>SDR pacing report for meetings booked, calls, contacts, and week-over-week trends.</li>
+          <li>Daily discovery meeting summaries and scorecard workflows.</li>
+          <li>SDR efficiency dashboard and influence visibility for June opportunity creation.</li>
+        </ul>
+      </article>
+      <article class="panel">
+        <h3>CSA and Customer Motion</h3>
+        <ul>
+          <li>PSA onboarding tracker and RTS monitor for client status, escalations, and risk flags.</li>
+          <li>ROI dashboards for Scipio, Celerius, C1st, Compsys, Intermedia, Silver Shield, and Sinch Voyant.</li>
+          <li>Closed-loss and feature request analysis loops feeding Product and customer conversations.</li>
+        </ul>
+      </article>
+      <article class="panel">
+        <h3>Leadership</h3>
+        <ul>
+          <li>Q2 board deck, monthly update decks, forecast summaries, and live reference pages.</li>
+          <li>Fast analysis and response support for Ryan, Sales Leadership, and Rev.io Sales channels.</li>
+          <li>Always-on support layer for questions, data pulls, writing, and dashboard changes.</li>
+        </ul>
+      </article>
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="section-title">Recurring Operating Surface</div>
+    <table>
+      <thead>
+        <tr>
+          <th>Workflow</th>
+          <th>Type</th>
+          <th>Frequency</th>
+          <th class="num">Time Saved</th>
+          <th class="num">Value / Mo</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr><td>Forecast Dashboard</td><td><span class="pill auto">Automation</span></td><td>Daily, 8AM ET</td><td class="num">4 hrs</td><td class="num">$300</td></tr>
+        <tr><td>Discovery Call Auto-Grader</td><td><span class="pill auto">Automation</span></td><td>Every 30 min</td><td class="num">4 hrs</td><td class="num">$300</td></tr>
+        <tr><td>CBR Call Auto-Grader</td><td><span class="pill auto">Automation</span></td><td>Every 30 min</td><td class="num">2 hrs</td><td class="num">$150</td></tr>
+        <tr><td>Daily Sales Activity Scorecard</td><td><span class="pill auto">Automation</span></td><td>Daily, Mon-Fri</td><td class="num">3 hrs</td><td class="num">$225</td></tr>
+        <tr><td>Kaia Sales Relay</td><td><span class="pill auto">Automation</span></td><td>Daily</td><td class="num">1.5 hrs</td><td class="num">$110</td></tr>
+        <tr><td>SDR Pacing Report</td><td><span class="pill auto">Automation</span></td><td>Daily, Mon-Fri</td><td class="num">2.5 hrs</td><td class="num">$190</td></tr>
+        <tr><td>Q2 Apollo 2 Re-engagement Tracker</td><td><span class="pill auto">Automation</span></td><td>Daily, Mon-Fri</td><td class="num">2 hrs</td><td class="num">$150</td></tr>
+        <tr><td>PSA Onboarding Tracker</td><td><span class="pill">Dashboard</span></td><td>Daily</td><td class="num">2 hrs</td><td class="num">$150</td></tr>
+        <tr><td>RTS Monitor - PSA Clients</td><td><span class="pill auto">Automation</span></td><td>Every 30 min</td><td class="num">2 hrs</td><td class="num">$150</td></tr>
+        <tr><td>PSA Release Monitor</td><td><span class="pill auto">Automation</span></td><td>Daily</td><td class="num">1 hr</td><td class="num">$75</td></tr>
+        <tr><td>Feature Request Pipeline</td><td><span class="pill auto">Automation</span></td><td>Weekly</td><td class="num">1 hr</td><td class="num">$75</td></tr>
+        <tr><td>Closed Loss Monthly Report</td><td><span class="pill auto">Automation</span></td><td>Monthly</td><td class="num">2 hrs</td><td class="num">$150</td></tr>
+        <tr><td>Battlecard Weekly Refresh</td><td><span class="pill">Dashboard</span></td><td>Weekly</td><td class="num">1 hr</td><td class="num">$75</td></tr>
+        <tr><td>AE Capacity Dashboard</td><td><span class="pill">Dashboard</span></td><td>Daily, Mon-Fri</td><td class="num">1 hr</td><td class="num">$75</td></tr>
+        <tr><td>Daily Discovery Meetings Summary</td><td><span class="pill auto">Automation</span></td><td>Daily, Mon-Fri</td><td class="num">1 hr</td><td class="num">$75</td></tr>
+        <tr><td>Discord Sales Team Channel</td><td><span class="pill auto">Always On</span></td><td>24/7</td><td class="num">Ongoing</td><td class="num">Scales</td></tr>
+      </tbody>
+    </table>
+  </section>
+
+  <section class="section">
+    <div class="section-title">Documented Q2 Builds</div>
+    <table>
+      <thead>
+        <tr>
+          <th>Project</th>
+          <th>Type</th>
+          <th>Delivered</th>
+          <th class="num">Est. Value</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr><td>Q2 Board Deck</td><td><span class="pill analysis">Analysis</span></td><td>April 2026</td><td class="num">$450</td></tr>
+        <tr><td>ROI Dashboards, 7 accounts</td><td><span class="pill">Dashboard</span></td><td>April-May 2026</td><td class="num">$1,300</td></tr>
+        <tr><td>RTS Dashboard</td><td><span class="pill">Dashboard</span></td><td>April 2026</td><td class="num">$300</td></tr>
+        <tr><td>Rep Coaching Dashboard</td><td><span class="pill">Dashboard</span></td><td>April 2026</td><td class="num">$225</td></tr>
+        <tr><td>Monthly Pipeline Dashboard</td><td><span class="pill">Dashboard</span></td><td>April 2026</td><td class="num">$225</td></tr>
+        <tr><td>Territory Map</td><td><span class="pill">Dashboard</span></td><td>April 2026</td><td class="num">$225</td></tr>
+        <tr><td>Tradeshow MQL Dashboard</td><td><span class="pill">Dashboard</span></td><td>April 2026</td><td class="num">$225</td></tr>
+        <tr><td>SDR Efficiency Dashboard</td><td><span class="pill">Dashboard</span></td><td>April 2026</td><td class="num">$150</td></tr>
+        <tr><td><strong>Explicit Q2 build total</strong></td><td></td><td>Dashboard-documented Apr-May work</td><td class="num"><strong>$3,100</strong></td></tr>
+      </tbody>
+    </table>
+  </section>
+
+  <section class="section">
+    <div class="section-title">Discord Request Reach</div>
+    <div class="hero" style="margin-top:0">
+      <div class="metric"><strong class="blue">4</strong><span>Servers</span><p>Koontz, Robin, Rev.io Sales, Sales Leadership.</p></div>
+      <div class="metric"><strong class="blue">13</strong><span>Readable channels</span><p>Visible to the configured Discord bot.</p></div>
+      <div class="metric"><strong class="blue">31</strong><span>Human users</span><p>Across all visible human message history.</p></div>
+      <div class="metric"><strong class="blue">25</strong><span>Requesters</span><p>Users with at least one likely request.</p></div>
+    </div>
+    <table>
+      <thead>
+        <tr>
+          <th>Rank</th>
+          <th>User</th>
+          <th class="num">Likely Requests</th>
+          <th>Primary Request Surface</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr><td>1</td><td>Ryan</td><td class="num">1,209</td><td>Robin #general, Sales Leadership #general, Rev.io Sales</td></tr>
+        <tr><td>2</td><td>JayS</td><td class="num">184</td><td>Sales Leadership #general</td></tr>
+        <tr><td>3</td><td>Jamie Butler</td><td class="num">168</td><td>Rev.io Sales #personalization, #general, #solutionengineer</td></tr>
+        <tr><td>4</td><td>Cam Sharpe</td><td class="num">108</td><td>Sales Leadership #general, Rev.io Sales</td></tr>
+        <tr><td>5</td><td>Salin</td><td class="num">102</td><td>Sales Leadership #general, Rev.io Sales #callblitz</td></tr>
+        <tr><td>6</td><td>Connor Flynn</td><td class="num">98</td><td>Rev.io Sales #personalization, #general</td></tr>
+        <tr><td>7</td><td>Bryan Bettiol</td><td class="num">80</td><td>Sales Leadership #general, Rev.io Sales #solutionengineer</td></tr>
+        <tr><td>8</td><td>Reid Doster</td><td class="num">77</td><td>Sales Leadership #general, Rev.io Sales #csa</td></tr>
+        <tr><td>9</td><td>Tony</td><td class="num">50</td><td>Rev.io Sales #solutionengineer</td></tr>
+        <tr><td>10</td><td>JaylinB</td><td class="num">32</td><td>Rev.io Sales #general, #callblitz, #personalization</td></tr>
+        <tr><td>11-25</td><td>15 additional requesters</td><td class="num">126</td><td>Rev.io Sales general, CSA, meeting-scorecards, and support channels</td></tr>
+      </tbody>
+    </table>
+  </section>
+
+  <section class="section">
+    <div class="section-title">Source Notes</div>
+    <div class="panel source-list">
+      <ul>
+        <li>Impact model and recurring automation list: <a href="robin-impact.html">Robin Business Impact Dashboard</a>, last updated Jun 1, 2026.</li>
+        <li>Q2 one-time build value: dashboard-documented April-May projects only; June ad-hoc value is not included in the $3.1K explicit build total.</li>
+        <li>Discord request counts: scraped Jul 7, 2026 from the Discord bot's visible history. "Likely request" includes mentions, questions, commands, attachments needing review, and phrases such as "can you", "update", "build", "review", "send", "fix", "refresh", and similar ask patterns.</li>
+        <li>Conservative totals intentionally exclude revenue influence, renewal saves, coaching speed, reduced leadership latency, and strategic upside.</li>
+      </ul>
+    </div>
+  </section>
+
+  <footer class="footer">
+    Robin - Built for Ryan Koontz and the Rev.io Sales Team - Q2 2026 Impact Reference
+  </footer>
+</main>
+</body>
+</html>
