@@ -90,6 +90,7 @@ Repo: `git@github.com:koontz-robin/robin-decks.git`
 | ROI — CompSys | roi-compsys.html | https://koontz-robin.github.io/robin-decks/roi-compsys.html | |
 | ROI — Interactive Control Systems | roi-interactive-control-systems.html | https://koontz-robin.github.io/robin-decks/roi-interactive-control-systems.html | |
 | ROI — Intermedia | roi-intermedia.html | https://koontz-robin.github.io/robin-decks/roi-intermedia.html | |
+| ROI — SouthEast Telephone | roi-southeast-telephone.html | https://koontz-robin.github.io/robin-decks/roi-southeast-telephone.html | Billing + PSA ROI analysis from Salesforce activity and public business context |
 | Revii AI Billing Modernization — Intermedia PPTX | Intermedia_Revii_AI_Billing_Modernization.pptx | https://koontz-robin.github.io/robin-decks/Intermedia_Revii_AI_Billing_Modernization.pptx | Customer-ready PowerPoint |
 | Revii AI Billing Modernization — Intermedia | intermedia-revii-modernization.html | https://koontz-robin.github.io/robin-decks/intermedia-revii-modernization.html | AI-centric phased billing modernization use case |
 | ROI — Scipio | roi-scipio.html | https://koontz-robin.github.io/robin-decks/roi-scipio.html | |

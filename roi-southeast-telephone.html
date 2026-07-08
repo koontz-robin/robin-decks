@@ -1,0 +1,174 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Rev.io ROI Analysis - SouthEast Telephone</title>
+<style>
+  :root {
+    --navy:#173657; --blue:#1667cc; --green:#3dc570; --cyan:#0ea5c8;
+    --ink:#172033; --muted:#65758a; --line:#d9e4ee; --wash:#f5f8fb;
+    --paper:#ffffff; --soft:#eaf6fb; --warn:#b7791f; --danger:#c84c4c;
+  }
+  * { box-sizing:border-box; }
+  body { margin:0; font-family:"Segoe UI",system-ui,-apple-system,sans-serif; color:var(--ink); background:var(--wash); line-height:1.45; }
+  header { background:linear-gradient(135deg, rgba(23,54,87,.98), rgba(22,103,204,.88)), url("https://southeasttelephone.net/wp-content/uploads/2025/05/emergency-phone-solutions.webp"); background-size:cover; background-position:center; color:white; }
+  .hero { max-width:1180px; margin:0 auto; padding:28px 26px 64px; }
+  .topbar { display:flex; align-items:center; justify-content:space-between; gap:24px; margin-bottom:58px; }
+  .brand { display:flex; align-items:center; gap:16px; font-weight:800; letter-spacing:.2px; }
+  .brand img { width:124px; height:auto; filter:brightness(0) invert(1); }
+  .brand span { border-left:1px solid rgba(255,255,255,.35); padding-left:16px; color:rgba(255,255,255,.82); }
+  .print { border:1px solid rgba(255,255,255,.38); border-radius:8px; padding:9px 13px; background:rgba(255,255,255,.09); color:white; font-weight:800; cursor:pointer; }
+  .kicker { display:inline-block; border:1px solid rgba(255,255,255,.32); border-radius:99px; padding:6px 12px; font-size:11px; font-weight:900; letter-spacing:1.4px; text-transform:uppercase; color:#d9fbff; }
+  h1 { max-width:850px; margin:18px 0 16px; font-size:54px; line-height:1.02; letter-spacing:0; }
+  .subtitle { max-width:780px; color:rgba(255,255,255,.82); font-size:18px; }
+  .meta { display:grid; grid-template-columns:repeat(4,1fr); gap:14px; margin-top:42px; }
+  .meta-card { background:rgba(255,255,255,.1); border:1px solid rgba(255,255,255,.18); border-radius:8px; padding:16px; backdrop-filter:blur(6px); }
+  .label { font-size:10px; font-weight:900; letter-spacing:1.2px; text-transform:uppercase; color:rgba(255,255,255,.64); }
+  .value { margin-top:4px; font-size:17px; font-weight:900; }
+  main { max-width:1180px; margin:0 auto; padding:34px 26px 70px; }
+  section { background:var(--paper); border:1px solid var(--line); border-radius:8px; padding:30px; margin:18px 0; box-shadow:0 10px 28px rgba(23,54,87,.06); }
+  .section-kicker { color:var(--blue); font-size:11px; font-weight:900; letter-spacing:1.5px; text-transform:uppercase; margin-bottom:8px; }
+  h2 { margin:0 0 10px; font-size:30px; letter-spacing:0; }
+  .lead { max-width:860px; color:var(--muted); font-size:16px; margin:0 0 24px; }
+  .grid { display:grid; grid-template-columns:repeat(3,1fr); gap:14px; }
+  .card { border:1px solid var(--line); border-radius:8px; padding:18px; background:#fbfdff; }
+  .card h3 { margin:0 0 8px; font-size:15px; }
+  .card p { margin:0; color:var(--muted); font-size:13px; }
+  .metric-grid { display:grid; grid-template-columns:repeat(4,1fr); gap:14px; }
+  .metric { text-align:center; border:1px solid var(--line); border-radius:8px; padding:20px 14px; background:linear-gradient(180deg,#fff,#f7fbff); }
+  .metric strong { display:block; font-size:30px; color:var(--navy); line-height:1; }
+  .metric span { display:block; margin-top:8px; font-size:11px; color:var(--muted); font-weight:900; letter-spacing:.9px; text-transform:uppercase; }
+  table { width:100%; border-collapse:collapse; margin-top:16px; }
+  th { text-align:left; padding:11px 12px; background:#eef5fa; color:#516176; font-size:10px; letter-spacing:1px; text-transform:uppercase; }
+  td { padding:13px 12px; border-bottom:1px solid var(--line); vertical-align:top; font-size:13px; color:#4d5c70; }
+  td:first-child { color:var(--ink); font-weight:800; }
+  .num { text-align:right; font-weight:900; color:var(--navy); white-space:nowrap; }
+  .total td { background:#eefaf2; color:#176c39; font-size:15px; font-weight:900; border-top:2px solid #bfe9cd; }
+  .split { display:grid; grid-template-columns:1fr 1fr; gap:16px; }
+  .today { border-top:4px solid var(--danger); }
+  .future { border-top:4px solid var(--green); }
+  .callout { border:1px solid #f1d49b; background:#fff9eb; border-radius:8px; padding:18px; color:#73500f; }
+  .source { color:#8190a4; font-size:11px; margin-top:18px; }
+  .footer { color:#8a97aa; font-size:11px; text-align:center; padding:18px 0 0; }
+  @media(max-width:850px){ h1{font-size:38px}.meta,.metric-grid,.grid,.split{grid-template-columns:1fr}.hero,main{padding-left:18px;padding-right:18px}section{padding:22px}.topbar{align-items:flex-start;flex-direction:column} }
+</style>
+</head>
+<body>
+<header>
+  <div class="hero">
+    <div class="topbar">
+      <div class="brand"><img src="https://koontz-robin.github.io/robin-decks/revio-logo.png" alt="Rev.io"><span>ROI Analysis</span></div>
+      <button class="print" onclick="window.print()">Print / Save PDF</button>
+    </div>
+    <div class="kicker">Business Value Assessment</div>
+    <h1>SouthEast Telephone revenue operations case</h1>
+    <p class="subtitle">A focused ROI view for replacing disconnected billing, payment, customer portal, and service workflow steps with Rev.io Billing, Payments, and PSA.</p>
+    <div class="meta">
+      <div class="meta-card"><div class="label">Salesforce Status</div><div class="value">Warm Prospect</div></div>
+      <div class="meta-card"><div class="label">Current Opps</div><div class="value">Billing + PSA</div></div>
+      <div class="meta-card"><div class="label">Active Contact</div><div class="value">Josh Faw</div></div>
+      <div class="meta-card"><div class="label">Prepared</div><div class="value">July 2026</div></div>
+    </div>
+  </div>
+</header>
+
+<main>
+  <section>
+    <div class="section-kicker">Executive Summary</div>
+    <h2>The ROI is in fewer systems, cleaner handoffs, and faster cash visibility.</h2>
+    <p class="lead">SouthEast Telephone sells life-safety communications where recurring service, accurate service addresses, emergency endpoint records, customer portal access, taxes, payments, and support workflows all matter. Salesforce shows they are evaluating both Billing and PSA, with specific follow-up around QuickBooks Online, RangerMSP, customer hierarchy, migration/onboarding, AR, and AP.</p>
+    <div class="metric-grid">
+      <div class="metric"><strong>$4.5k</strong><span>Monthly Rev.io scope in SF opps</span></div>
+      <div class="metric"><strong>$54k</strong><span>Annual platform investment modeled</span></div>
+      <div class="metric"><strong>$83k</strong><span>Conservative annual value pool</span></div>
+      <div class="metric"><strong>1.5x</strong><span>Modeled first-year return</span></div>
+    </div>
+  </section>
+
+  <section>
+    <div class="section-kicker">What We Know</div>
+    <h2>SouthEast is not just buying billing software.</h2>
+    <p class="lead">The public business model points to recurring, compliance-sensitive services: emergency pool phones, elevator phones, POTS replacement, fire alarm panel communication, internet, static IPs, and support. The Salesforce demo notes show they are looking for a platform path that can begin with QuickBooks Online and expand into PSA when RangerMSP data is ready.</p>
+    <div class="grid">
+      <div class="card"><h3>Recurring endpoint billing</h3><p>Pool phones, elevator phones, fire panel communication, wireless POTS replacement, and internet services create monthly recurring charges plus equipment, trip, labor, and install fees.</p></div>
+      <div class="card"><h3>Customer hierarchy matters</h3><p>The team asked about one customer portal login across multiple customer accounts via hierarchy, which is highly relevant for property managers, HOAs, builders, and multi-site accounts.</p></div>
+      <div class="card"><h3>Finance wants turnkey coverage</h3><p>Josh specifically asked for more AP detail because the goal is to process AR and AP through Rev.io for complete bookkeeping and reporting.</p></div>
+      <div class="card"><h3>Integration path must be staged</h3><p>They asked whether Rev.io can start with QuickBooks Online migration and bring RangerMSP into Rev.io PSA later. That suggests a phased implementation will land better than a big-bang pitch.</p></div>
+      <div class="card"><h3>Tax/service location accuracy</h3><p>Demo recap covered service-location addresses, automated tax calculation, and compliance reporting. For life-safety communications, address accuracy is not cosmetic.</p></div>
+      <div class="card"><h3>Active buying motion</h3><p>Salesforce shows a Billing opportunity at Stage 3 and a PSA opportunity at Stage 2, both with July 31 close dates. Next meeting is positioned around portal, pricing, migration, onboarding, and AP.</p></div>
+    </div>
+  </section>
+
+  <section>
+    <div class="section-kicker">Cost of Today</div>
+    <h2>Conservative annual value model</h2>
+    <p class="lead">This is a directional ROI model, not a promise. It uses intentionally modest assumptions for a sub-100-employee telecom/CSP with recurring services, field work, customer support, QuickBooks, and an incumbent PSA/contact database.</p>
+    <table>
+      <thead><tr><th>Value Driver</th><th>Conservative Assumption</th><th class="num">Annual Value</th></tr></thead>
+      <tbody>
+        <tr><td>Billing and invoice preparation time</td><td>10 hours/week removed from recurring billing, one-time charges, rate changes, address cleanup, and invoice review at $45/hour fully loaded.</td><td class="num">$23,400</td></tr>
+        <tr><td>Payment collections and AR follow-up</td><td>5 hours/week removed through customer portal, stored payment methods, payment workflows, and automated overdue communication.</td><td class="num">$11,700</td></tr>
+        <tr><td>Service-to-billing leakage</td><td>Capture only $2,000/month of missed labor, trip, equipment, monitoring, or service changes across field/service activity.</td><td class="num">$24,000</td></tr>
+        <tr><td>Customer portal deflection</td><td>4 hours/week removed from invoice copies, payment questions, account hierarchy questions, and basic account maintenance.</td><td class="num">$9,360</td></tr>
+        <tr><td>Reporting and finance reconciliation</td><td>6 hours/month removed from QuickBooks/reporting reconciliation and manual management reporting.</td><td class="num">$3,240</td></tr>
+        <tr><td>Compliance and address risk reduction</td><td>Soft-dollar value for cleaner service locations, taxation, contract pricing, expiration reporting, and account documentation.</td><td class="num">$12,000</td></tr>
+        <tr class="total"><td>Total conservative annual value</td><td>Operational savings plus recovered revenue, before strategic growth upside.</td><td class="num">$83,700</td></tr>
+      </tbody>
+    </table>
+  </section>
+
+  <section>
+    <div class="section-kicker">Investment View</div>
+    <h2>Modeled against current Salesforce opportunity scope</h2>
+    <p class="lead">Salesforce currently shows a Billing opportunity with $3,500 in monthly fees and a PSA opportunity with $1,000 amount. Using that combined $4,500/month as the platform investment, the modeled value pool supports a positive first-year business case if the team validates even a modest amount of leakage and manual finance work.</p>
+    <div class="metric-grid">
+      <div class="metric"><strong>$4,500</strong><span>Modeled monthly investment</span></div>
+      <div class="metric"><strong>$54,000</strong><span>Annual investment</span></div>
+      <div class="metric"><strong>$29,700</strong><span>Net value after platform cost</span></div>
+      <div class="metric"><strong>7.7 mo</strong><span>Simple payback period</span></div>
+    </div>
+    <div class="callout"><strong>Best sales angle:</strong> do not sell this as "software replacement." Sell it as a staged operating model: start with Billing, Payments, portal, tax, and QuickBooks workflows; then add PSA/RangerMSP migration once internal records and service process are ready.</div>
+  </section>
+
+  <section>
+    <div class="section-kicker">Before / After</div>
+    <h2>What changes operationally</h2>
+    <div class="split">
+      <div class="card today">
+        <h3>Current-state risk</h3>
+        <p>QuickBooks remains the finance anchor, RangerMSP stores internal customer records, customer account hierarchy needs a portal answer, AP is not yet clearly mapped, and field/service activity can require manual billing handoff. That creates friction exactly where SouthEast wants a turnkey bookkeeping and reporting workflow.</p>
+      </div>
+      <div class="card future">
+        <h3>Rev.io target state</h3>
+        <p>Billing rules, service addresses, customer portal, payments, collections, tax calculation, quote/order workflow, and service activity live in a connected model. QuickBooks can be handled first, while PSA/RangerMSP migration becomes a second phase instead of a blocker.</p>
+      </div>
+    </div>
+  </section>
+
+  <section>
+    <div class="section-kicker">Friday Meeting Plan</div>
+    <h2>Use the next call to validate the ROI, not just demo features.</h2>
+    <table>
+      <thead><tr><th>Question</th><th>Why It Matters</th><th>ROI Lever</th></tr></thead>
+      <tbody>
+        <tr><td>How many active recurring service endpoints do you bill today?</td><td>Pool phones, elevator phones, fire panels, POTS replacement, internet, and monitoring volume drive billing automation value.</td><td>Revenue leakage + billing time</td></tr>
+        <tr><td>How many invoices or customer accounts require parent-child handling?</td><td>This turns the portal/hierarchy question into quantified support deflection and AR improvement.</td><td>Portal deflection + customer experience</td></tr>
+        <tr><td>How many hours does Sherry's team spend on AP/AR/bookkeeping each week?</td><td>AP is a named concern. Quantifying it will decide whether Payments is a must-have or a later phase.</td><td>Finance time + reporting</td></tr>
+        <tr><td>Where do field labor, trip charges, equipment, and monitoring changes get missed?</td><td>Even small leakage across life-safety service work can pay for a meaningful chunk of the platform.</td><td>Recovered revenue</td></tr>
+        <tr><td>Which RangerMSP data is customer-facing versus internal-only?</td><td>Josh already distinguished internal records from invoice/customer-facing records. That supports phased PSA migration.</td><td>Implementation scope control</td></tr>
+      </tbody>
+    </table>
+  </section>
+
+  <section>
+    <div class="section-kicker">Source Notes</div>
+    <h2>Basis of analysis</h2>
+    <p class="lead">Built from Salesforce account/opportunity/activity data, SouthEast Telephone's public website, and accessible Notion database searches. Exact Notion lookup did not return a page titled "SouthEast Telephone" in the accessible Master Client List, PSA Clients, or Sales Meeting Coaching databases; nearby pages existed, but were not used as source material.</p>
+    <div class="source">Public references used for business-model context: southeasttelephone.net home/services pages and public company profile snippets. Salesforce source records: account, Josh Faw contact, Billing opportunity, PSA opportunity, June 29 request-demo activities, July 8 demo follow-up, and July 10 scheduled follow-up.</div>
+  </section>
+
+  <div class="footer">Prepared for internal Rev.io selling support. ROI model is directional and should be validated with SouthEast Telephone before presenting as a customer-facing business case.</div>
+</main>
+</body>
+</html>
