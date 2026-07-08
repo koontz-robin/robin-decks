@@ -1314,9 +1314,10 @@
       <div class="sum-item"><div class="sum-label">June Pipeline</div><div class="sum-val">$0</div></div>
       <div class="sum-item"><div class="sum-label">Open Opps</div><div class="sum-val">0</div></div>
       <div class="sum-item"><div class="sum-label">June CW</div><div class="sum-val">$21,409</div></div>
-      <div class="sum-item highlight"><div class="sum-label">Worst Case</div><div class="sum-val red">$21,409</div></div>
-      <div class="sum-item highlight"><div class="sum-label">Most Likely</div><div class="sum-val yellow">$21,409</div></div>
-      <div class="sum-item highlight"><div class="sum-label">Best Case</div><div class="sum-val green">$21,409</div></div>
+      
+      <div class="sum-item highlight"><div class="sum-label">Final Sales</div><div class="sum-val green">$21,409</div></div>
+      <div class="sum-item highlight"><div class="sum-label">Closed Won Opps</div><div class="sum-val yellow">45</div></div>
+      <div class="sum-item highlight"><div class="sum-label">Month Status</div><div class="sum-val green">Locked</div></div>
     </div>
 
 <div class="product-section" id="prod-june-0">
@@ -1324,29 +1325,23 @@
     <div class="prod-title">
       <div class="prod-dot" style="background:#00ff88;box-shadow:0 0 8px #00ff88"></div>
       <h2 style="color:#00ff88;text-shadow:0 0 20px #00ff8866">PSA</h2>
-      <div class="live-dot"></div>
+      
     </div>
     <div class="prod-meta">
-      <span class="meta-chip">Pipeline: <strong>$0</strong></span>
-      <span class="meta-chip">0 opps</span>
-      <span class="meta-chip">0 tagged</span>
-      
+      <span class="meta-chip">Final Sales: <strong>$16,181</strong></span>
+      <span class="meta-chip">16 closed won</span>
       <span class="meta-chip quota">Quota: $38,000</span>
     </div>
   </div>
   <div class="scenarios-row">
-    <div class="scenario worst"><div class="s-label">WORST CASE</div><div class="s-val">$16,181</div></div>
-    <div class="scenario likely"><div class="s-label">MOST LIKELY</div><div class="s-val">$16,181</div></div>
-    <div class="scenario best"><div class="s-label">BEST CASE</div><div class="s-val">$16,181</div></div>
-    <div class="scenario closed">
-      <div class="s-label">JUNE CLOSED WON</div>
-      <div class="s-val">$16,181</div>
-      <div class="s-sub">42.6% of quota</div>
-    </div>
+    <div class="scenario closed"><div class="s-label">FINAL SALES</div><div class="s-val">$16,181</div><div class="s-sub">locked after month-end</div></div>
+    <div class="scenario closed"><div class="s-label">CLOSED WON OPPS</div><div class="s-val">16</div></div>
+    <div class="scenario closed"><div class="s-label">PIPELINE</div><div class="s-val">$0</div><div class="s-sub">closed month</div></div>
+    <div class="scenario closed"><div class="s-label">JUNE CLOSED WON</div><div class="s-val">$16,181</div><div class="s-sub">42.6% of quota</div></div>
   </div>
   <div class="quota-bar-wrap">
     <div class="quota-bar-header">
-      <span class="quota-bar-label">JUNE QUOTA ATTAINMENT</span>
+      <span class="quota-bar-label">JUNE FINAL QUOTA ATTAINMENT</span>
       <span class="quota-bar-vals">
         <strong style="color:#00ff88;font-size:18px">42.6%</strong>
         <span style="color:#555;font-size:12px"> &nbsp;·&nbsp; $16,181 / $38,000 target</span>
@@ -1354,18 +1349,21 @@
     </div>
     <div class="quota-track">
       <div class="quota-fill" style="width:42.6%;background:#00ff88;box-shadow:0 0 10px #00ff8888"></div>
-      <div class="quota-likely-marker" style="left:42.6%" title="Most Likely"></div>
+      
     </div>
-    <div class="quota-bar-footer">
-      <span style="color:#555;font-size:11px">
-        🔴 Worst: <strong style="color:#ff6666">42.6%</strong>
-        &nbsp;·&nbsp; 🟡 Most Likely: <strong style="color:#ffd700">42.6%</strong>
-        &nbsp;·&nbsp; 🟢 Best Case: <strong style="color:#00ff88">42.6%</strong>
-        &nbsp;·&nbsp; Target: $38,000
-      </span>
-    </div>
+    
   </div>
 
+  <div class="opp-toggle" onclick="toggle('june-0')">
+    <span id="toggle-label-june-0">▼ Closed won 16 opportunities</span>
+    <span class="toggle-amt">$16,181 total</span>
+  </div>
+  <div id="opps-june-0" class="opp-list" style="display:block">
+    <table class="opp-table">
+      <thead><tr><th>Account</th><th>Amount</th><th>Stage</th><th>Owner</th><th>Close Date / Product</th></tr></thead>
+      <tbody><tr><td>AVIT</td><td style="color:var(--cyan);font-weight:700">$8,500</td><td><span class="stage-pill won">Closed Won</span></td><td>Connor Flynn</td><td>2026-06-26<span class="badge-mkt">PSA</span></td></tr><tr><td>Logic People</td><td style="color:var(--cyan);font-weight:700">$1,000</td><td><span class="stage-pill won">Closed Won</span></td><td>Jamie Butler</td><td>2026-06-09<span class="badge-mkt">PSA</span></td></tr><tr><td>IBA</td><td style="color:var(--cyan);font-weight:700">$1,000</td><td><span class="stage-pill won">Closed Won</span></td><td>Jake Borah</td><td>2026-06-23<span class="badge-mkt">PSA</span></td></tr><tr><td>West Virginia Security</td><td style="color:var(--cyan);font-weight:700">$810</td><td><span class="stage-pill won">Closed Won</span></td><td>Jake Borah</td><td>2026-06-26<span class="badge-mkt">PSA</span></td></tr><tr><td>Fountaine Information Systems</td><td style="color:var(--cyan);font-weight:700">$735</td><td><span class="stage-pill won">Closed Won</span></td><td>Connor Flynn</td><td>2026-06-16<span class="badge-mkt">PSA</span></td></tr><tr><td>MR Solutions</td><td style="color:var(--cyan);font-weight:700">$710</td><td><span class="stage-pill won">Closed Won</span></td><td>Jake Borah</td><td>2026-06-04<span class="badge-mkt">PSA</span></td></tr><tr><td>Scheer Security Alarm Systems</td><td style="color:var(--cyan);font-weight:700">$575</td><td><span class="stage-pill won">Closed Won</span></td><td>Patrick Davies</td><td>2026-06-02<span class="badge-mkt">PSA</span></td></tr><tr><td>Copper Clad Systems</td><td style="color:var(--cyan);font-weight:700">$575</td><td><span class="stage-pill won">Closed Won</span></td><td>Patrick Davies</td><td>2026-06-23<span class="badge-mkt">PSA</span></td></tr><tr><td>K&L Telecom</td><td style="color:var(--cyan);font-weight:700">$500</td><td><span class="stage-pill won">Closed Won</span></td><td>Jamie Butler</td><td>2026-06-12<span class="badge-mkt">PSA</span></td></tr><tr><td>Valentine Systems</td><td style="color:var(--cyan);font-weight:700">$500</td><td><span class="stage-pill won">Closed Won</span></td><td>Jamie Butler</td><td>2026-06-25<span class="badge-mkt">PSA</span></td></tr><tr><td>Intrepid Security & Protection</td><td style="color:var(--cyan);font-weight:700">$500</td><td><span class="stage-pill won">Closed Won</span></td><td>Jaylin Bender</td><td>2026-06-27<span class="badge-mkt">PSA</span></td></tr><tr><td>America's Phone Guys</td><td style="color:var(--cyan);font-weight:700">$400</td><td><span class="stage-pill won">Closed Won</span></td><td>Connor Flynn</td><td>2026-06-29<span class="badge-mkt">PSA</span></td></tr><tr><td>Roadrunner Lock & Safe</td><td style="color:var(--cyan);font-weight:700">$160</td><td><span class="stage-pill won">Closed Won</span></td><td>Ingrid Beard</td><td>2026-06-24<span class="badge-mkt">PSA</span></td></tr><tr><td>Network Enhancement Systems</td><td style="color:var(--cyan);font-weight:700">$148</td><td><span class="stage-pill won">Closed Won</span></td><td>Ingrid Beard</td><td>2026-06-17<span class="badge-mkt">PSA</span></td></tr><tr><td>Intec - CA</td><td style="color:var(--cyan);font-weight:700">$66</td><td><span class="stage-pill won">Closed Won</span></td><td>Ingrid Beard</td><td>2026-06-17<span class="badge-mkt">PSA</span></td></tr><tr><td>West Coast Cabling, Inc.</td><td style="color:var(--cyan);font-weight:700">$2</td><td><span class="stage-pill won">Closed Won</span></td><td>Ingrid Beard</td><td>2026-06-24<span class="badge-mkt">PSA</span></td></tr></tbody>
+    </table>
+  </div>
 </div>
 
 <div class="product-section" id="prod-june-1">
@@ -1373,29 +1371,23 @@
     <div class="prod-title">
       <div class="prod-dot" style="background:#00e5ff;box-shadow:0 0 8px #00e5ff"></div>
       <h2 style="color:#00e5ff;text-shadow:0 0 20px #00e5ff66">Billing / Odin</h2>
-      <div class="live-dot"></div>
+      
     </div>
     <div class="prod-meta">
-      <span class="meta-chip">Pipeline: <strong>$0</strong></span>
-      <span class="meta-chip">0 opps</span>
-      <span class="meta-chip">0 tagged</span>
-      
+      <span class="meta-chip">Final Sales: <strong>$3,500</strong></span>
+      <span class="meta-chip">6 closed won</span>
       <span class="meta-chip quota">Quota: $17,368</span>
     </div>
   </div>
   <div class="scenarios-row">
-    <div class="scenario worst"><div class="s-label">WORST CASE</div><div class="s-val">$3,500</div></div>
-    <div class="scenario likely"><div class="s-label">MOST LIKELY</div><div class="s-val">$3,500</div></div>
-    <div class="scenario best"><div class="s-label">BEST CASE</div><div class="s-val">$3,500</div></div>
-    <div class="scenario closed">
-      <div class="s-label">JUNE CLOSED WON</div>
-      <div class="s-val">$3,500</div>
-      <div class="s-sub">20.2% of quota</div>
-    </div>
+    <div class="scenario closed"><div class="s-label">FINAL SALES</div><div class="s-val">$3,500</div><div class="s-sub">locked after month-end</div></div>
+    <div class="scenario closed"><div class="s-label">CLOSED WON OPPS</div><div class="s-val">6</div></div>
+    <div class="scenario closed"><div class="s-label">PIPELINE</div><div class="s-val">$0</div><div class="s-sub">closed month</div></div>
+    <div class="scenario closed"><div class="s-label">JUNE CLOSED WON</div><div class="s-val">$3,500</div><div class="s-sub">20.2% of quota</div></div>
   </div>
   <div class="quota-bar-wrap">
     <div class="quota-bar-header">
-      <span class="quota-bar-label">JUNE QUOTA ATTAINMENT</span>
+      <span class="quota-bar-label">JUNE FINAL QUOTA ATTAINMENT</span>
       <span class="quota-bar-vals">
         <strong style="color:#00e5ff;font-size:18px">20.2%</strong>
         <span style="color:#555;font-size:12px"> &nbsp;·&nbsp; $3,500 / $17,368 target</span>
@@ -1403,18 +1395,21 @@
     </div>
     <div class="quota-track">
       <div class="quota-fill" style="width:20.2%;background:#00e5ff;box-shadow:0 0 10px #00e5ff88"></div>
-      <div class="quota-likely-marker" style="left:20.2%" title="Most Likely"></div>
+      
     </div>
-    <div class="quota-bar-footer">
-      <span style="color:#555;font-size:11px">
-        🔴 Worst: <strong style="color:#ff6666">20.2%</strong>
-        &nbsp;·&nbsp; 🟡 Most Likely: <strong style="color:#ffd700">20.2%</strong>
-        &nbsp;·&nbsp; 🟢 Best Case: <strong style="color:#00ff88">20.2%</strong>
-        &nbsp;·&nbsp; Target: $17,368
-      </span>
-    </div>
+    
   </div>
 
+  <div class="opp-toggle" onclick="toggle('june-1')">
+    <span id="toggle-label-june-1">▼ Closed won 6 opportunities</span>
+    <span class="toggle-amt">$3,500 total</span>
+  </div>
+  <div id="opps-june-1" class="opp-list" style="display:block">
+    <table class="opp-table">
+      <thead><tr><th>Account</th><th>Amount</th><th>Stage</th><th>Owner</th><th>Close Date / Product</th></tr></thead>
+      <tbody><tr><td>All Serve Communications</td><td style="color:var(--cyan);font-weight:700">$1,500</td><td><span class="stage-pill won">Closed Won</span></td><td>Jamie Butler</td><td>2026-06-02<span class="badge-mkt">Billing / Odin</span></td></tr><tr><td>K&L Telecom</td><td style="color:var(--cyan);font-weight:700">$500</td><td><span class="stage-pill won">Closed Won</span></td><td>Jamie Butler</td><td>2026-06-09<span class="badge-mkt">Billing / Odin</span></td></tr><tr><td>Global Data Technologies</td><td style="color:var(--cyan);font-weight:700">$500</td><td><span class="stage-pill won">Closed Won</span></td><td>Ingrid Beard</td><td>2026-06-12<span class="badge-mkt">Billing / Odin</span></td></tr><tr><td>Womack Technologies</td><td style="color:var(--cyan);font-weight:700">$500</td><td><span class="stage-pill won">Closed Won</span></td><td>Connor Flynn</td><td>2026-06-23<span class="badge-mkt">Billing / Odin</span></td></tr><tr><td>Tribe Connect</td><td style="color:var(--cyan);font-weight:700">$500</td><td><span class="stage-pill won">Closed Won</span></td><td>Andy Whisenant</td><td>2026-06-26<span class="badge-mkt">Billing / Odin</span></td></tr><tr><td>Global Data Technologies</td><td style="color:var(--cyan);font-weight:700">$0</td><td><span class="stage-pill won">Closed Won</span></td><td>Ingrid Beard</td><td>2026-06-12<span class="badge-mkt">Billing / Odin</span></td></tr></tbody>
+    </table>
+  </div>
 </div>
 
 <div class="product-section" id="prod-june-2">
@@ -1422,29 +1417,23 @@
     <div class="prod-title">
       <div class="prod-dot" style="background:#7c3aed;box-shadow:0 0 8px #7c3aed"></div>
       <h2 style="color:#7c3aed;text-shadow:0 0 20px #7c3aed66">Payments</h2>
-      <div class="live-dot"></div>
+      
     </div>
     <div class="prod-meta">
-      <span class="meta-chip">Pipeline: <strong>$0</strong></span>
-      <span class="meta-chip">0 opps</span>
-      <span class="meta-chip">0 tagged</span>
-      
+      <span class="meta-chip">Final Sales: <strong>$1,728</strong></span>
+      <span class="meta-chip">8 closed won</span>
       <span class="meta-chip quota">Quota: $11,040</span>
     </div>
   </div>
   <div class="scenarios-row">
-    <div class="scenario worst"><div class="s-label">WORST CASE</div><div class="s-val">$1,728</div></div>
-    <div class="scenario likely"><div class="s-label">MOST LIKELY</div><div class="s-val">$1,728</div></div>
-    <div class="scenario best"><div class="s-label">BEST CASE</div><div class="s-val">$1,728</div></div>
-    <div class="scenario closed">
-      <div class="s-label">JUNE CLOSED WON</div>
-      <div class="s-val">$1,728</div>
-      <div class="s-sub">15.7% of quota</div>
-    </div>
+    <div class="scenario closed"><div class="s-label">FINAL SALES</div><div class="s-val">$1,728</div><div class="s-sub">locked after month-end</div></div>
+    <div class="scenario closed"><div class="s-label">CLOSED WON OPPS</div><div class="s-val">8</div></div>
+    <div class="scenario closed"><div class="s-label">PIPELINE</div><div class="s-val">$0</div><div class="s-sub">closed month</div></div>
+    <div class="scenario closed"><div class="s-label">JUNE CLOSED WON</div><div class="s-val">$1,728</div><div class="s-sub">15.7% of quota</div></div>
   </div>
   <div class="quota-bar-wrap">
     <div class="quota-bar-header">
-      <span class="quota-bar-label">JUNE QUOTA ATTAINMENT</span>
+      <span class="quota-bar-label">JUNE FINAL QUOTA ATTAINMENT</span>
       <span class="quota-bar-vals">
         <strong style="color:#7c3aed;font-size:18px">15.7%</strong>
         <span style="color:#555;font-size:12px"> &nbsp;·&nbsp; $1,728 / $11,040 target</span>
@@ -1452,18 +1441,21 @@
     </div>
     <div class="quota-track">
       <div class="quota-fill" style="width:15.7%;background:#7c3aed;box-shadow:0 0 10px #7c3aed88"></div>
-      <div class="quota-likely-marker" style="left:15.7%" title="Most Likely"></div>
+      
     </div>
-    <div class="quota-bar-footer">
-      <span style="color:#555;font-size:11px">
-        🔴 Worst: <strong style="color:#ff6666">15.7%</strong>
-        &nbsp;·&nbsp; 🟡 Most Likely: <strong style="color:#ffd700">15.7%</strong>
-        &nbsp;·&nbsp; 🟢 Best Case: <strong style="color:#00ff88">15.7%</strong>
-        &nbsp;·&nbsp; Target: $11,040
-      </span>
-    </div>
+    
   </div>
 
+  <div class="opp-toggle" onclick="toggle('june-2')">
+    <span id="toggle-label-june-2">▼ Closed won 8 opportunities</span>
+    <span class="toggle-amt">$1,728 total</span>
+  </div>
+  <div id="opps-june-2" class="opp-list" style="display:block">
+    <table class="opp-table">
+      <thead><tr><th>Account</th><th>Amount</th><th>Stage</th><th>Owner</th><th>Close Date / Product</th></tr></thead>
+      <tbody><tr><td>JD Telecom</td><td style="color:var(--cyan);font-weight:700">$555</td><td><span class="stage-pill won">Closed Won</span></td><td>Ingrid Beard</td><td>2026-06-01<span class="badge-mkt">Payments</span></td></tr><tr><td>Franklin Electric Co Inc</td><td style="color:var(--cyan);font-weight:700">$514</td><td><span class="stage-pill won">Closed Won</span></td><td>Ingrid Beard</td><td>2026-06-17<span class="badge-mkt">Payments</span></td></tr><tr><td>Innovative IOT</td><td style="color:var(--cyan);font-weight:700">$275</td><td><span class="stage-pill won">Closed Won</span></td><td>Justin Lee</td><td>2026-06-23<span class="badge-mkt">Payments</span></td></tr><tr><td>Minuteman Security Systems</td><td style="color:var(--cyan);font-weight:700">$184</td><td><span class="stage-pill won">Closed Won</span></td><td>Ingrid Beard</td><td>2026-06-15<span class="badge-mkt">Payments</span></td></tr><tr><td>Franklin Electric Co Inc</td><td style="color:var(--cyan);font-weight:700">$50</td><td><span class="stage-pill won">Closed Won</span></td><td>Ingrid Beard</td><td>2026-06-17<span class="badge-mkt">Payments</span></td></tr><tr><td>Logic People</td><td style="color:var(--cyan);font-weight:700">$50</td><td><span class="stage-pill won">Closed Won</span></td><td>Justin Lee</td><td>2026-06-23<span class="badge-mkt">Payments</span></td></tr><tr><td>Trails Country Security</td><td style="color:var(--cyan);font-weight:700">$50</td><td><span class="stage-pill won">Closed Won</span></td><td>Justin Lee</td><td>2026-06-25<span class="badge-mkt">Payments</span></td></tr><tr><td>Underdog Fire & Security</td><td style="color:var(--cyan);font-weight:700">$50</td><td><span class="stage-pill won">Closed Won</span></td><td>Justin Lee</td><td>2026-06-29<span class="badge-mkt">Payments</span></td></tr></tbody>
+    </table>
+  </div>
 </div>
 
 <div class="product-section" id="prod-june-3">
@@ -1471,29 +1463,23 @@
     <div class="prod-title">
       <div class="prod-dot" style="background:#ff6b35;box-shadow:0 0 8px #ff6b35"></div>
       <h2 style="color:#ff6b35;text-shadow:0 0 20px #ff6b3566">CommerceHub / Cyber Protect</h2>
-      <div class="live-dot"></div>
+      
     </div>
     <div class="prod-meta">
-      <span class="meta-chip">Pipeline: <strong>$0</strong></span>
-      <span class="meta-chip">0 opps</span>
-      <span class="meta-chip">0 tagged</span>
-      
+      <span class="meta-chip">Final Sales: <strong>$0</strong></span>
+      <span class="meta-chip">0 closed won</span>
       <span class="meta-chip quota">Quota: $8,700</span>
     </div>
   </div>
   <div class="scenarios-row">
-    <div class="scenario worst"><div class="s-label">WORST CASE</div><div class="s-val">$0</div></div>
-    <div class="scenario likely"><div class="s-label">MOST LIKELY</div><div class="s-val">$0</div></div>
-    <div class="scenario best"><div class="s-label">BEST CASE</div><div class="s-val">$0</div></div>
-    <div class="scenario closed">
-      <div class="s-label">JUNE CLOSED WON</div>
-      <div class="s-val">$0</div>
-      <div class="s-sub">0.0% of quota</div>
-    </div>
+    <div class="scenario closed"><div class="s-label">FINAL SALES</div><div class="s-val">$0</div><div class="s-sub">locked after month-end</div></div>
+    <div class="scenario closed"><div class="s-label">CLOSED WON OPPS</div><div class="s-val">0</div></div>
+    <div class="scenario closed"><div class="s-label">PIPELINE</div><div class="s-val">$0</div><div class="s-sub">closed month</div></div>
+    <div class="scenario closed"><div class="s-label">JUNE CLOSED WON</div><div class="s-val">$0</div><div class="s-sub">0.0% of quota</div></div>
   </div>
   <div class="quota-bar-wrap">
     <div class="quota-bar-header">
-      <span class="quota-bar-label">JUNE QUOTA ATTAINMENT</span>
+      <span class="quota-bar-label">JUNE FINAL QUOTA ATTAINMENT</span>
       <span class="quota-bar-vals">
         <strong style="color:#ff6b35;font-size:18px">0.0%</strong>
         <span style="color:#555;font-size:12px"> &nbsp;·&nbsp; $0 / $8,700 target</span>
@@ -1501,20 +1487,26 @@
     </div>
     <div class="quota-track">
       <div class="quota-fill" style="width:0.0%;background:#ff6b35;box-shadow:0 0 10px #ff6b3588"></div>
-      <div class="quota-likely-marker" style="left:0.0%" title="Most Likely"></div>
+      
     </div>
-    <div class="quota-bar-footer">
-      <span style="color:#555;font-size:11px">
-        🔴 Worst: <strong style="color:#ff6666">0.0%</strong>
-        &nbsp;·&nbsp; 🟡 Most Likely: <strong style="color:#ffd700">0.0%</strong>
-        &nbsp;·&nbsp; 🟢 Best Case: <strong style="color:#00ff88">0.0%</strong>
-        &nbsp;·&nbsp; Target: $8,700
-      </span>
-    </div>
+    
   </div>
 
+  <div class="opp-toggle" onclick="toggle('june-3')">
+    <span id="toggle-label-june-3">▼ Closed won 0 opportunities</span>
+    <span class="toggle-amt">$0 total</span>
+  </div>
+  <div id="opps-june-3" class="opp-list" style="display:block">
+    <table class="opp-table">
+      <thead><tr><th>Account</th><th>Amount</th><th>Stage</th><th>Owner</th><th>Close Date / Product</th></tr></thead>
+      <tbody></tbody>
+    </table>
+  </div>
 </div>
   </div>
+
+
+  
 
 
   

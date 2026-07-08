@@ -395,18 +395,19 @@ else:
         insert_at = html.index('<div class="footer">')
     html = html[:insert_at] + build_month_tab() + '\n\n  ' + html[insert_at:]
 
-# Replace Q2 bar
-q2_start = html.index('<div class="q2-bar-section">')
-depth, pos = 0, q2_start
-while pos < len(html):
-    if html[pos:pos+4] == '<div': depth += 1
-    elif html[pos:pos+6] == '</div>':
-        depth -= 1
-        if depth == 0:
-            q2_end = pos + 6
-            break
-    pos += 1
-html = html[:q2_start] + build_quarter_bar() + html[q2_end:]
+# Replace the active-quarter bar only when patching a month in that quarter.
+if TARGET_MONTH in QUARTER_MONTHS:
+    q2_start = html.index('<div class="q2-bar-section">')
+    depth, pos = 0, q2_start
+    while pos < len(html):
+        if html[pos:pos+4] == '<div': depth += 1
+        elif html[pos:pos+6] == '</div>':
+            depth -= 1
+            if depth == 0:
+                q2_end = pos + 6
+                break
+        pos += 1
+    html = html[:q2_start] + build_quarter_bar() + html[q2_end:]
 
 date_str = now.strftime('%B %-d, %Y').upper()
 html = re.sub(r'GENERATED [A-Z]+ \d+, \d{4}', f'GENERATED {date_str}', html)
