@@ -396,7 +396,8 @@ with open(f'{WORKSPACE}/forecast.html') as f:
     html = f.read()
 
 if f'id="btn-{TARGET_MONTH}"' not in html:
-    month_button = f'    <button id="btn-{TARGET_MONTH}" class="tab-btn" onclick="switchTab(\'{TARGET_MONTH}\')">{TARGET_MONTH}</button>\n'
+    month_button_class = 'tab-btn locked' if HISTORICAL_MONTH else 'tab-btn'
+    month_button = f'    <button id="btn-{TARGET_MONTH}" class="{month_button_class}" onclick="switchTab(\'{TARGET_MONTH}\')">{TARGET_MONTH}</button>\n'
     html, inserted = re.subn(
         r'(<div class="month-tabs">.*?)(\n\s*</div>)',
         lambda m: m.group(1).rstrip() + '\n' + month_button + m.group(2),
@@ -406,6 +407,14 @@ if f'id="btn-{TARGET_MONTH}"' not in html:
     )
     if not inserted:
         raise RuntimeError('Could not find month tab button container in forecast.html')
+
+for month_name in FROZEN_MONTHS:
+    html = re.sub(
+        rf'(id="btn-{month_name}" class=")([^"]*)"',
+        lambda m: m.group(1) + ' '.join(dict.fromkeys([*m.group(2).split(), 'locked'])) + '"',
+        html,
+        count=1,
+    )
 
 # Replace or add target month tab
 tab_start = html.find(f'<div id="tab-{TARGET_MONTH}"')
