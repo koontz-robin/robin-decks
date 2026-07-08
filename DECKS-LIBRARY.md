@@ -34,6 +34,7 @@ Repo: `git@github.com:koontz-robin/robin-decks.git`
 | CSA Pipeline Dashboard | csa-pipeline-dashboard.html | https://koontz-robin.github.io/robin-decks/csa-pipeline-dashboard.html | On demand |
 | Monthly Pipeline Dashboard | monthly-pipeline-dashboard.html | https://koontz-robin.github.io/robin-decks/monthly-pipeline-dashboard.html | On demand |
 | 2026 Pipeline Pace | 2026-pipeline-pace.html | https://koontz-robin.github.io/robin-decks/2026-pipeline-pace.html | On demand |
+| July/Q3 Product Sales Targets | sales-product-targets-july-q3.html | https://koontz-robin.github.io/robin-decks/sales-product-targets-july-q3.html | On demand |
 | RTS Dashboard | rts-dashboard.html | https://koontz-robin.github.io/robin-decks/rts-dashboard.html | On demand |
 | Q2 Re-engagement Tracker | q2-reengagement-tracker.html | https://koontz-robin.github.io/robin-decks/q2-reengagement-tracker.html | On demand |
 | PSA SMC Re-engagement Tracker | smc-reengagement-tracker.html | https://koontz-robin.github.io/robin-decks/smc-reengagement-tracker.html | On demand; SMC since Jul 2025 |

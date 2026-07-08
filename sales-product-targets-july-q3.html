@@ -1,0 +1,250 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>July and Q3 Product Sales Targets</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800;900&display=swap" rel="stylesheet">
+<style>
+:root { --bg:#02050b; --panel:#070b13; --panel2:#0c111c; --line:#1e2638; --text:#f4f7ff; --muted:#8d97bd; --soft:#58617f; --cyan:#2ee6be; --green:#50ff8a; --pink:#ff5d74; --violet:#7467ff; }
+* { box-sizing:border-box; }
+body { margin:0; min-height:100vh; color:var(--text); font-family:Inter,system-ui,sans-serif; background:radial-gradient(circle at 14% 0%,rgba(116,103,255,.34),transparent 430px),radial-gradient(circle at 88% 18%,rgba(46,230,190,.14),transparent 430px),linear-gradient(90deg,rgba(9,10,22,.98),rgba(2,8,9,.98) 58%,#020606),var(--bg); }
+body:before { content:""; position:fixed; inset:0; pointer-events:none; background:linear-gradient(rgba(255,255,255,.014) 1px,transparent 1px),linear-gradient(90deg,rgba(255,255,255,.01) 1px,transparent 1px); background-size:92px 92px; opacity:.34; }
+.shell { position:relative; max-width:1500px; margin:0 auto; padding:26px 30px 44px; }
+.topbar { display:flex; justify-content:space-between; align-items:flex-start; gap:28px; padding-bottom:22px; }
+.brand { width:118px; height:auto; filter:drop-shadow(0 0 18px rgba(116,103,255,.28)); }
+.eyebrow { color:#9aa3cc; font-size:11px; font-weight:900; letter-spacing:2px; text-transform:uppercase; }
+h1 { margin:8px 0 0; max-width:900px; font-size:42px; line-height:1.02; letter-spacing:0; }
+.subhead { max-width:820px; margin-top:10px; color:var(--muted); line-height:1.45; font-size:14px; }
+.stamp { margin-top:8px; color:#737d9e; font-size:12px; line-height:1.5; text-align:right; }
+.kpis { display:grid; grid-template-columns:repeat(4,minmax(0,1fr)); gap:12px; margin:6px 0 18px; }
+.kpi,.target-card,.panel { background:linear-gradient(180deg,rgba(12,17,28,.98),rgba(7,11,19,.99)); border:1px solid var(--line); border-radius:10px; box-shadow:0 22px 58px rgba(0,0,0,.42); }
+.kpi { padding:17px; border-top:3px solid var(--accent,var(--violet)); }
+.kpi span { display:block; color:var(--muted); font-size:10px; font-weight:900; letter-spacing:1.3px; text-transform:uppercase; }
+.kpi strong { display:block; margin-top:8px; font-size:30px; line-height:1; }
+.kpi em { display:block; margin-top:6px; color:var(--soft); font-size:12px; font-style:normal; }
+.cards { display:grid; grid-template-columns:repeat(3,minmax(0,1fr)); gap:14px; }
+.target-card { padding:18px; border-top:4px solid var(--accent); }
+.card-head { display:flex; justify-content:space-between; gap:14px; align-items:flex-start; }
+h2 { margin:5px 0 0; font-size:24px; letter-spacing:0; }
+.pill { border:1px solid color-mix(in srgb, var(--accent) 38%, transparent); color:var(--accent); background:color-mix(in srgb, var(--accent) 12%, transparent); border-radius:999px; padding:5px 9px; font-size:10px; font-weight:900; text-transform:uppercase; letter-spacing:.9px; white-space:nowrap; }
+.metric-row { display:flex; justify-content:space-between; align-items:baseline; gap:18px; margin:22px 0 14px; padding-bottom:14px; border-bottom:1px solid rgba(255,255,255,.08); }
+.metric-row span { color:var(--muted); font-size:12px; font-weight:800; }
+.metric-row strong { color:var(--accent); font-size:30px; }
+.bar-wrap { margin-top:15px; }
+.bar-wrap.quarter { opacity:.9; }
+.bar-label,.bar-foot { display:flex; justify-content:space-between; gap:12px; align-items:center; }
+.bar-label span { color:var(--muted); font-size:10px; font-weight:900; letter-spacing:1.2px; text-transform:uppercase; }
+.bar-label b { color:var(--accent); font-size:12px; }
+.bar { height:8px; margin-top:7px; border-radius:999px; overflow:hidden; background:rgba(255,255,255,.08); }
+.bar i { display:block; height:100%; border-radius:999px; background:linear-gradient(90deg,var(--accent),#fff); }
+.bar-foot { margin-top:6px; color:var(--soft); font-size:11px; font-weight:700; }
+.pipeline { display:grid; grid-template-columns:repeat(3,minmax(0,1fr)); gap:8px; margin-top:17px; }
+.pipeline div { padding:10px; border:1px solid rgba(255,255,255,.07); border-radius:8px; background:rgba(255,255,255,.025); min-height:68px; }
+.pipeline b { display:block; color:#fff; font-size:17px; }
+.pipeline span { display:block; margin-top:4px; color:var(--soft); font-size:10px; font-weight:800; line-height:1.25; text-transform:uppercase; letter-spacing:.8px; }
+.section-head { display:flex; justify-content:space-between; align-items:flex-end; gap:16px; margin:24px 0 10px; }
+.section-head h2 { margin:0; font-size:20px; }
+.section-head p { margin:5px 0 0; color:var(--muted); font-size:13px; }
+.panel { overflow:auto; }
+table { width:100%; border-collapse:collapse; min-width:980px; font-size:12px; }
+th,td { padding:11px 12px; border-bottom:1px solid rgba(255,255,255,.07); border-left:1px solid rgba(255,255,255,.045); text-align:right; white-space:nowrap; }
+th { background:#0c1322; color:#8d97bd; font-size:10px; font-weight:900; text-transform:uppercase; letter-spacing:1.1px; }
+th:first-child,td:first-child { text-align:left; border-left:0; }
+td:first-child { color:#fff; }
+td strong { color:#fff; }
+td span { display:block; margin-top:3px; color:var(--soft); font-size:10px; }
+.empty { color:var(--muted); text-align:center; }
+.note { margin-top:18px; color:var(--soft); font-size:12px; line-height:1.5; }
+@media(max-width:1100px) { .topbar { display:block; } .brand { margin-bottom:14px; } .stamp { text-align:left; } .kpis,.cards { grid-template-columns:repeat(2,minmax(0,1fr)); } }
+@media(max-width:740px) { .shell { padding:22px 16px 36px; } h1 { font-size:32px; } .kpis,.cards,.pipeline { grid-template-columns:1fr; } }
+</style>
+</head>
+<body>
+<main class="shell">
+  <header class="topbar">
+    <div>
+      <img class="brand" src="revio-logo-white.png" alt="Rev.io">
+      <div class="eyebrow">Sales Targets</div>
+      <h1>July and Q3 Product-Line Targets</h1>
+      <p class="subhead">Closed-won MRR targets and current attainment for the requested product lines: PSA, Billing/Odin, and Cyber Protect. Q3 uses July through September targets; current Q3 actuals reflect July closed-won records in the Salesforce forecast export.</p>
+    </div>
+    <div class="stamp">Refreshed Jul 8, 2026 3:51 PM ET<br>Source: Salesforce forecast export · 137 July opportunities</div>
+  </header>
+  <section class="kpis">
+    <div class="kpi" style="--accent:var(--green)"><span>July Target</span><strong>$64,335</strong><em>PSA + Billing/Odin + Cyber Protect</em></div>
+    <div class="kpi" style="--accent:var(--cyan)"><span>July Actual</span><strong>$1,777</strong><em>2.8% attainment</em></div>
+    <div class="kpi" style="--accent:var(--violet)"><span>Q3 Target</span><strong>$213,806</strong><em>July through September</em></div>
+    <div class="kpi" style="--accent:var(--pink)"><span>Open July Pipeline</span><strong>$108,204</strong><em>Open MRR in these product lines</em></div>
+  </section>
+  <section class="cards">
+    
+      <section class="target-card" style="--accent:#50ff8a">
+        <div class="card-head">
+          <div>
+            <div class="eyebrow">Product Line</div>
+            <h2>PSA</h2>
+          </div>
+          <div class="pill">1 won</div>
+        </div>
+        <div class="metric-row">
+          <span>July Closed Won MRR</span>
+          <strong>$800</strong>
+        </div>
+        <div class="bar-wrap">
+          <div class="bar-label"><span>July Target</span><b>1.9%</b></div>
+          <div class="bar"><i style="width:1.9%"></i></div>
+          <div class="bar-foot"><span>$800 / $42,000</span><span>$41,200 left</span></div>
+        </div>
+        <div class="bar-wrap quarter">
+          <div class="bar-label"><span>Q3 Target</span><b>0.6%</b></div>
+          <div class="bar"><i style="width:0.6%"></i></div>
+          <div class="bar-foot"><span>$800 / $138,000</span><span>Jul-Sep</span></div>
+        </div>
+        <div class="pipeline">
+          <div><b>$81,670</b><span>Open July Pipeline</span></div>
+          <div><b>$10,362</b><span>Weighted Pipeline</span></div>
+          <div><b>75</b><span>Open Opps</span></div>
+        </div>
+      </section>
+
+      <section class="target-card" style="--accent:#2ee6be">
+        <div class="card-head">
+          <div>
+            <div class="eyebrow">Product Line</div>
+            <h2>Billing / Odin</h2>
+          </div>
+          <div class="pill">3 won</div>
+        </div>
+        <div class="metric-row">
+          <span>July Closed Won MRR</span>
+          <strong>$977</strong>
+        </div>
+        <div class="bar-wrap">
+          <div class="bar-label"><span>July Target</span><b>7.9%</b></div>
+          <div class="bar"><i style="width:7.9%"></i></div>
+          <div class="bar-foot"><span>$977 / $12,368</span><span>$11,391 left</span></div>
+        </div>
+        <div class="bar-wrap quarter">
+          <div class="bar-label"><span>Q3 Target</span><b>2.3%</b></div>
+          <div class="bar"><i style="width:2.3%"></i></div>
+          <div class="bar-foot"><span>$977 / $42,104</span><span>Jul-Sep</span></div>
+        </div>
+        <div class="pipeline">
+          <div><b>$17,544</b><span>Open July Pipeline</span></div>
+          <div><b>$2,843</b><span>Weighted Pipeline</span></div>
+          <div><b>15</b><span>Open Opps</span></div>
+        </div>
+      </section>
+
+      <section class="target-card" style="--accent:#ff5d74">
+        <div class="card-head">
+          <div>
+            <div class="eyebrow">Product Line</div>
+            <h2>Cyber Protect</h2>
+          </div>
+          <div class="pill">0 won</div>
+        </div>
+        <div class="metric-row">
+          <span>July Closed Won MRR</span>
+          <strong>$0</strong>
+        </div>
+        <div class="bar-wrap">
+          <div class="bar-label"><span>July Target</span><b>0.0%</b></div>
+          <div class="bar"><i style="width:0.0%"></i></div>
+          <div class="bar-foot"><span>$0 / $9,967</span><span>$9,967 left</span></div>
+        </div>
+        <div class="bar-wrap quarter">
+          <div class="bar-label"><span>Q3 Target</span><b>0.0%</b></div>
+          <div class="bar"><i style="width:0.0%"></i></div>
+          <div class="bar-foot"><span>$0 / $33,702</span><span>Jul-Sep</span></div>
+        </div>
+        <div class="pipeline">
+          <div><b>$8,990</b><span>Open July Pipeline</span></div>
+          <div><b>$6,190</b><span>Weighted Pipeline</span></div>
+          <div><b>3</b><span>Open Opps</span></div>
+        </div>
+      </section>
+  </section>
+  <section class="section-head">
+    <div><h2>Target Summary</h2><p>July and Q3 targets with current closed-won MRR attainment.</p></div>
+  </section>
+  <section class="panel">
+    <table>
+      <thead><tr><th>Product</th><th>July Target</th><th>July Actual</th><th>July Attainment</th><th>Q3 Target</th><th>Q3 Attainment</th><th>Open Pipeline</th></tr></thead>
+      <tbody>
+            <tr>
+              <td><strong>PSA</strong><span>1 closed won · 75 open</span></td>
+              <td>$42,000</td>
+              <td>$800</td>
+              <td>1.9%</td>
+              <td>$138,000</td>
+              <td>0.6%</td>
+              <td>$81,670</td>
+            </tr>
+
+            <tr>
+              <td><strong>Billing / Odin</strong><span>3 closed won · 15 open</span></td>
+              <td>$12,368</td>
+              <td>$977</td>
+              <td>7.9%</td>
+              <td>$42,104</td>
+              <td>2.3%</td>
+              <td>$17,544</td>
+            </tr>
+
+            <tr>
+              <td><strong>Cyber Protect</strong><span>0 closed won · 3 open</span></td>
+              <td>$9,967</td>
+              <td>$0</td>
+              <td>0.0%</td>
+              <td>$33,702</td>
+              <td>0.0%</td>
+              <td>$8,990</td>
+            </tr></tbody>
+    </table>
+  </section>
+  <section class="section-head">
+    <div><h2>Closed-Won Detail</h2><p>Closed-won July bookings included in the actuals above.</p></div>
+  </section>
+  <section class="panel">
+    <table>
+      <thead><tr><th>Product</th><th>Account / Opportunity</th><th>MRR</th><th>Owner</th><th>Close Date</th></tr></thead>
+      <tbody>
+        <tr>
+          <td>Billing / Odin</td>
+          <td><strong>B. Moyer Radio Communications LLC</strong><span>Moyer - PSA Monthly Min Increase</span></td>
+          <td>$160</td>
+          <td>Ingrid Beard</td>
+          <td>2026-07-01</td>
+        </tr>
+
+        <tr>
+          <td>Billing / Odin</td>
+          <td><strong>Veterans Communications Corp</strong><span>Vetcom - PSA Monthly Min Increase</span></td>
+          <td>$217</td>
+          <td>Ingrid Beard</td>
+          <td>2026-07-03</td>
+        </tr>
+
+        <tr>
+          <td>Billing / Odin</td>
+          <td><strong>SpectrumVoIP</strong><span>SpectrumVoIP - ConnectWise Integration</span></td>
+          <td>$600</td>
+          <td>Justin Lee</td>
+          <td>2026-07-06</td>
+        </tr>
+
+        <tr>
+          <td>PSA</td>
+          <td><strong>Cameras Onsite</strong><span>Camera Onsite</span></td>
+          <td>$800</td>
+          <td>Justin Lee</td>
+          <td>2026-07-02</td>
+        </tr></tbody>
+    </table>
+  </section>
+  <p class="note">Target source: July and Q3 target values supplied on July 6, 2026. July Cyber Protect target combines CommerceHub/Cyber Protect under the Cyber Protect target bucket, matching the forecast configuration.</p>
+</main>
+</body>
+</html>
