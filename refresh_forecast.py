@@ -43,7 +43,9 @@ print(f"📅 Fetching opps for {month_start} → {month_end}")
 # ── Step 3: Fetch opps from Salesforce ───────────────────────────────────────
 query = f"""
 SELECT Id, Name, StageName, Amount, Product_Type__c, Probability,
-       CloseDate, Forecast_Status__c, Account.Name, Owner.Name
+       CloseDate, Forecast_Status__c, Account.Name, Owner.Name,
+       (SELECT Id, Quantity, UnitPrice, TotalPrice, Product2.Name, Product2.Family
+        FROM OpportunityLineItems)
 FROM Opportunity
 WHERE CloseDate >= {month_start}
   AND CloseDate <= {month_end}
