@@ -44,6 +44,7 @@ DEFAULT_MONTH_QUOTAS = {'PSA':30000,'Billing':13368,'Payments':10540,'Cyber':450
 TARGET_QUOTAS = MONTHLY_QUOTAS.get(TARGET_MONTH, DEFAULT_MONTH_QUOTAS)
 MANUAL_CLOSED_TOTAL_OVERRIDES = {
     ('June', 'PSA'): 19735.28,
+    ('June', 'Billing'): 4000.00,
 }
 
 STAGE_PILLS = {
@@ -130,11 +131,11 @@ for (month_name, product), override_total in MANUAL_CLOSED_TOTAL_OVERRIDES.items
         continue
     buckets[product]['closed'] = override_total
     buckets[product]['closed_opps'].append({
-        'Account': 'Manual PSA MRR true-up',
-        'Name': 'Manual PSA MRR true-up',
+        'Account': f'Manual {prod_label(product)} MRR true-up',
+        'Name': f'Manual {prod_label(product)} MRR true-up',
         'Owner': 'Sales Ops',
         'CloseDate': '2026-06-30',
-        'Product_Type__c': 'PSA MRR',
+        'Product_Type__c': f'{prod_label(product)} MRR',
         'StageName': 'Closed Won',
         '_booking_amount': delta,
         '_booking_product': product,
