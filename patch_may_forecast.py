@@ -42,6 +42,9 @@ MONTHLY_QUOTAS = {
 }
 DEFAULT_MONTH_QUOTAS = {'PSA':30000,'Billing':13368,'Payments':10540,'Cyber':4500,'CommerceHub':1667}
 TARGET_QUOTAS = MONTHLY_QUOTAS.get(TARGET_MONTH, DEFAULT_MONTH_QUOTAS)
+MANUAL_CLOSED_TOTAL_OVERRIDES = {
+    ('June', 'PSA'): 19735.28,
+}
 
 STAGE_PILLS = {
     '1- Discovery Scheduled':           '<span class="stage-pill s1">Discovery Sched</span>',
@@ -97,7 +100,9 @@ def prod_label(p):
         return 'CommerceHub / Cyber Protect'
     return PROD_LABELS[p]
 
-def fmt(n): return f'${n:,.0f}'
+def fmt(n):
+    cents = round((float(n or 0) - int(float(n or 0))) * 100)
+    return f'${n:,.2f}' if cents else f'${n:,.0f}'
 
 def closed_opp_count():
     return sum(1 for o in opps if o.get('StageName') == 'Closed Won')
@@ -115,6 +120,26 @@ for o in opps:
             buckets[booking_product]['closed_opps'].append(closed_row)
     else:
         buckets[p]['opps'].append(o)
+
+for (month_name, product), override_total in MANUAL_CLOSED_TOTAL_OVERRIDES.items():
+    if TARGET_MONTH != month_name:
+        continue
+    current_total = buckets[product]['closed']
+    delta = round(override_total - current_total, 2)
+    if abs(delta) < 0.01:
+        continue
+    buckets[product]['closed'] = override_total
+    buckets[product]['closed_opps'].append({
+        'Account': 'Manual PSA MRR true-up',
+        'Name': 'Manual PSA MRR true-up',
+        'Owner': 'Sales Ops',
+        'CloseDate': '2026-06-30',
+        'Product_Type__c': 'PSA MRR',
+        'StageName': 'Closed Won',
+        '_booking_amount': delta,
+        '_booking_product': product,
+        '_manual_adjustment': True,
+    })
 
 apr_cw = defaultdict(float)
 for o in apr_opps:
@@ -206,18 +231,22 @@ def build_month_tab():
         best_pct   = min(best/quota*100,100) if quota else 0
         c = PROD_COLORS[p]
         if HISTORICAL_MONTH:
+            actual_closed_count = sum(1 for o in opp_list if not o.get('_manual_adjustment'))
+            adjustment_count = sum(1 for o in opp_list if o.get('_manual_adjustment'))
+            closed_count_label = f'{actual_closed_count} closed won' + (' + true-up' if adjustment_count else '')
+            toggle_label = f'Closed won {actual_closed_count} opportunities' + (' + true-up' if adjustment_count else '')
             meta_html = f'''<span class="meta-chip">Final Sales: <strong>{fmt(cw)}</strong></span>
-      <span class="meta-chip">{len(opp_list)} closed won</span>
+      <span class="meta-chip">{closed_count_label}</span>
       <span class="meta-chip quota">Quota: {fmt(quota)}</span>'''
             scenario_html = f'''<div class="scenario closed"><div class="s-label">FINAL SALES</div><div class="s-val">{fmt(cw)}</div><div class="s-sub">locked after month-end</div></div>
-    <div class="scenario closed"><div class="s-label">CLOSED WON OPPS</div><div class="s-val">{len(opp_list)}</div></div>
+    <div class="scenario closed"><div class="s-label">CLOSED WON OPPS</div><div class="s-val">{actual_closed_count}</div></div>
     <div class="scenario closed"><div class="s-label">PIPELINE</div><div class="s-val">{fmt(pipe)}</div><div class="s-sub">closed month</div></div>
     <div class="scenario closed"><div class="s-label">{TARGET_MONTH.upper()} CLOSED WON</div><div class="s-val">{fmt(cw)}</div><div class="s-sub">{cw_pct:.1f}% of quota</div></div>'''
             quota_label = f'{TARGET_MONTH.upper()} FINAL QUOTA ATTAINMENT'
             quota_footer = ''
             opp_toggle = f'''
   <div class="opp-toggle" onclick="toggle('{MONTH_ID}-{idx}')">
-    <span id="toggle-label-{MONTH_ID}-{idx}">▼ Closed won {len(opp_list)} opportunities</span>
+    <span id="toggle-label-{MONTH_ID}-{idx}">▼ {toggle_label}</span>
     <span class="toggle-amt">{fmt(cw)} total</span>
   </div>
   <div id="opps-{MONTH_ID}-{idx}" class="opp-list" style="display:block">
