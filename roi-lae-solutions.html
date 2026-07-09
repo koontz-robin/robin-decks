@@ -1,0 +1,278 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Rev.io ROI Analysis - LAE Solutions</title>
+<style>
+  :root {
+    --navy:#173657; --blue:#1667cc; --green:#35b86d; --cyan:#0ea5c8;
+    --ink:#172033; --muted:#607186; --line:#d8e4ee; --wash:#f4f8fb;
+    --paper:#ffffff; --gold:#f5b84b; --teal:#18a99b; --rose:#d65d76;
+    --softgreen:#eefbf4; --softblue:#eef7ff; --softgold:#fff7e5;
+  }
+  * { box-sizing:border-box; }
+  body {
+    margin:0;
+    font-family:"Segoe UI",system-ui,-apple-system,sans-serif;
+    color:var(--ink);
+    background:linear-gradient(180deg,#eef6fb 0,#fbfdff 48%,#eff8f4 100%);
+    line-height:1.45;
+  }
+  header {
+    color:#fff;
+    background:
+      linear-gradient(135deg,rgba(14,39,67,.97),rgba(22,103,204,.84) 55%,rgba(24,169,155,.72)),
+      url("https://images.unsplash.com/photo-1504917595217-d4dc5ebe6122?auto=format&fit=crop&w=1800&q=80");
+    background-size:cover;
+    background-position:center;
+    position:relative;
+    overflow:hidden;
+  }
+  header::after {
+    content:"";
+    position:absolute;
+    left:0;
+    right:0;
+    bottom:-1px;
+    height:58px;
+    background:linear-gradient(180deg,rgba(244,248,251,0),var(--wash));
+  }
+  .hero { max-width:1180px; margin:0 auto; padding:28px 26px 76px; position:relative; z-index:1; }
+  .topbar { display:flex; align-items:center; justify-content:space-between; gap:24px; margin-bottom:58px; }
+  .brand { display:flex; align-items:center; gap:16px; font-weight:800; }
+  .brand img { width:124px; height:auto; }
+  .brand span { border-left:1px solid rgba(255,255,255,.35); padding-left:16px; color:rgba(255,255,255,.84); }
+  .print {
+    border:1px solid rgba(255,255,255,.38);
+    border-radius:8px;
+    padding:9px 13px;
+    background:rgba(255,255,255,.12);
+    color:#fff;
+    font-weight:800;
+    cursor:pointer;
+    box-shadow:0 10px 24px rgba(0,0,0,.12);
+  }
+  .kicker { display:inline-block; border:1px solid rgba(255,255,255,.32); border-radius:99px; padding:6px 12px; font-size:11px; font-weight:900; letter-spacing:1.4px; text-transform:uppercase; color:#e9fdff; background:rgba(255,255,255,.1); }
+  h1 { max-width:890px; margin:18px 0 16px; font-size:54px; line-height:1.02; letter-spacing:0; }
+  .subtitle { max-width:820px; color:rgba(255,255,255,.84); font-size:18px; }
+  .meta { display:grid; grid-template-columns:repeat(4,1fr); gap:14px; margin-top:42px; }
+  .meta-card { background:rgba(255,255,255,.13); border:1px solid rgba(255,255,255,.22); border-radius:8px; padding:16px; backdrop-filter:blur(6px); box-shadow:0 16px 34px rgba(5,21,39,.12); }
+  .label { font-size:10px; font-weight:900; letter-spacing:1.2px; text-transform:uppercase; color:rgba(255,255,255,.66); }
+  .value { margin-top:4px; font-size:17px; font-weight:900; }
+  main { max-width:1180px; margin:-28px auto 0; padding:34px 26px 70px; position:relative; z-index:2; }
+  section {
+    background:linear-gradient(180deg,#ffffff,#fbfdff);
+    border:1px solid rgba(216,228,238,.9);
+    border-radius:8px;
+    padding:32px;
+    margin:18px 0;
+    box-shadow:0 18px 44px rgba(23,54,87,.08);
+    position:relative;
+    overflow:hidden;
+  }
+  section::before { content:""; position:absolute; top:0; left:0; right:0; height:4px; background:linear-gradient(90deg,var(--blue),var(--cyan),var(--green)); }
+  section:nth-of-type(2n) { background:linear-gradient(180deg,#fafdff,#f3f8fc); }
+  section:nth-of-type(3n)::before { background:linear-gradient(90deg,var(--teal),var(--green),var(--gold)); }
+  section:nth-of-type(4n)::before { background:linear-gradient(90deg,var(--navy),var(--blue),var(--rose)); }
+  .section-kicker { color:var(--blue); font-size:11px; font-weight:900; letter-spacing:1.5px; text-transform:uppercase; margin-bottom:8px; }
+  h2 { margin:0 0 10px; font-size:30px; letter-spacing:0; }
+  .lead { max-width:900px; color:var(--muted); font-size:16px; margin:0 0 24px; }
+  .metric-grid { display:grid; grid-template-columns:repeat(4,1fr); gap:14px; }
+  .metric {
+    text-align:center;
+    border:1px solid rgba(255,255,255,.75);
+    border-radius:8px;
+    padding:22px 14px;
+    background:linear-gradient(160deg,#ffffff 0,var(--softblue) 100%);
+    box-shadow:0 14px 30px rgba(23,54,87,.09);
+  }
+  .metric:nth-child(2) { background:linear-gradient(160deg,#ffffff 0,var(--softgreen) 100%); }
+  .metric:nth-child(3) { background:linear-gradient(160deg,#ffffff 0,var(--softgold) 100%); }
+  .metric:nth-child(4) { background:linear-gradient(160deg,#ffffff 0,#f5f0ff 100%); }
+  .metric strong { display:block; font-size:30px; color:var(--navy); line-height:1; }
+  .metric span { display:block; margin-top:8px; font-size:11px; color:var(--muted); font-weight:900; letter-spacing:.9px; text-transform:uppercase; }
+  .grid { display:grid; grid-template-columns:repeat(3,1fr); gap:14px; }
+  .card {
+    border:1px solid rgba(216,228,238,.95);
+    border-radius:8px;
+    padding:18px;
+    background:linear-gradient(180deg,#ffffff,#f7fbff);
+    box-shadow:0 8px 22px rgba(23,54,87,.05);
+  }
+  .card:nth-child(3n+1) { border-top:4px solid var(--blue); }
+  .card:nth-child(3n+2) { border-top:4px solid var(--teal); }
+  .card:nth-child(3n) { border-top:4px solid var(--gold); }
+  .card h3 { margin:0 0 8px; font-size:15px; }
+  .card p { margin:0; color:var(--muted); font-size:13px; }
+  .split { display:grid; grid-template-columns:1fr 1fr; gap:16px; }
+  .today { border-top:4px solid var(--rose); }
+  .future { border-top:4px solid var(--green); }
+  table { width:100%; border-collapse:separate; border-spacing:0; margin-top:16px; overflow:hidden; border-radius:8px; border:1px solid var(--line); background:#fff; }
+  th { text-align:left; padding:12px 13px; background:linear-gradient(90deg,#eaf3fb,#eef9f7); color:#516176; font-size:10px; letter-spacing:1px; text-transform:uppercase; }
+  td { padding:14px 13px; border-bottom:1px solid var(--line); vertical-align:top; font-size:13px; color:#4d5c70; }
+  tbody tr:nth-child(even) td { background:#f8fbfe; }
+  td:first-child { color:var(--ink); font-weight:800; }
+  .callout { border:1px solid #f1d49b; background:linear-gradient(135deg,#fff9eb,#fffdf7); border-radius:8px; padding:18px 20px; color:#73500f; box-shadow:0 12px 28px rgba(183,121,31,.09); }
+  .status { display:inline-block; border-radius:99px; padding:4px 9px; font-size:10px; font-weight:900; letter-spacing:.8px; text-transform:uppercase; }
+  .live { color:#176c39; background:#e7f7ed; }
+  .roadmap { color:#73500f; background:#fff4d8; }
+  .gap { color:#8b2f43; background:#fdecef; }
+  .timeline { display:grid; gap:12px; margin-top:18px; }
+  .step { display:grid; grid-template-columns:150px 1fr; gap:16px; border:1px solid var(--line); border-radius:8px; padding:14px; background:#fff; }
+  .step strong { color:var(--navy); }
+  .step span { color:var(--muted); font-size:13px; }
+  .source { color:#8190a4; font-size:11px; margin-top:18px; }
+  .footer { color:#8a97aa; font-size:11px; text-align:center; padding:18px 0 0; }
+  @media(max-width:850px){ h1{font-size:38px}.meta,.metric-grid,.grid,.split{grid-template-columns:1fr}.step{grid-template-columns:1fr}.hero,main{padding-left:18px;padding-right:18px}section{padding:22px}.topbar{align-items:flex-start;flex-direction:column} }
+</style>
+</head>
+<body>
+<header>
+  <div class="hero">
+    <div class="topbar">
+      <div class="brand"><img src="https://koontz-robin.github.io/robin-decks/revio-logo-white.png" alt="Rev.io"><span>ROI Analysis</span></div>
+      <button class="print" onclick="window.print()">Print / Save PDF</button>
+    </div>
+    <div class="kicker">Business Value Assessment</div>
+    <h1>LAE Solutions operating platform ROI case</h1>
+    <p class="subtitle">A focused evaluation summary for moving from fragmented CRM, quoting, field service, and accounting workflows into a Rev.io PSA Web operating model.</p>
+    <div class="meta">
+      <div class="meta-card"><div class="label">Company</div><div class="value">LAE Solutions</div></div>
+      <div class="meta-card"><div class="label">Industry</div><div class="value">Security Integrator</div></div>
+      <div class="meta-card"><div class="label">Focus</div><div class="value">PSA Web</div></div>
+      <div class="meta-card"><div class="label">Prepared</div><div class="value">July 2026</div></div>
+    </div>
+  </div>
+</header>
+
+<main>
+  <section>
+    <div class="section-kicker">Executive Summary</div>
+    <h2>The ROI case is operating leverage, not another point solution.</h2>
+    <p class="lead">LAE Solutions is deciding whether to standardize around Rev.io or continue investing in a separate CRM-led path while phasing out parts of the current field-service stack. The clearest value case for Rev.io is reducing duplicate entry, tightening quote-to-job handoffs, protecting the current payment speed from deposit invoices, improving field execution, and creating one operating source of truth for a five-year platform decision.</p>
+    <div class="metric-grid">
+      <div class="metric"><strong>4</strong><span>Core systems in current workflow</span></div>
+      <div class="metric"><strong>$1.31k</strong><span>Modeled monthly PSA scope</span></div>
+      <div class="metric"><strong>5 yr</strong><span>Platform decision horizon</span></div>
+      <div class="metric"><strong>7/31</strong><span>Target decision timing</span></div>
+    </div>
+    <div class="callout" style="margin-top:20px;"><strong>Quantification note:</strong> This ROI view is intentionally directional until LAE validates monthly proposal count, invoice volume, billing-admin hours, field tech count, warehouse activity, and average project value. The strongest next step is to turn these value levers into a measured payback model using LAE's actual operating data.</div>
+  </section>
+
+  <section>
+    <div class="section-kicker">Current State</div>
+    <h2>LAE's workflow is effective, but too much work happens twice.</h2>
+    <p class="lead">The current stack uses separate systems for CRM, quoting, field-service execution, and accounting. That has helped the business keep moving, but it creates repeated handoffs, manual reconciliation, and uncertainty about which platform should be the long-term system of record.</p>
+    <div class="grid">
+      <div class="card"><h3>CRM and quoting are split</h3><p>Customer and opportunity activity begins outside the field-service platform, while accepted proposals have to become operational work somewhere else.</p></div>
+      <div class="card"><h3>Billing is recreated manually</h3><p>The initial deposit invoice is generated from the quoting flow, but later project invoices are rebuilt manually in the field-service system and reconciled in accounting.</p></div>
+      <div class="card"><h3>Project billing is phased</h3><p>Common project structures include deposit, progress, and final-payment models. Any replacement workflow must support that rhythm without slowing cash collection.</p></div>
+      <div class="card"><h3>Inventory visibility needs attention</h3><p>Inventory and truck-stock workflows have been a gap in alternate paths under consideration and should be validated directly by warehouse and operations users.</p></div>
+      <div class="card"><h3>Sales follow-up can leak</h3><p>Tasks, follow-ups, and handoffs can fall through cracks when CRM, quoting, and operations do not share a clean workflow.</p></div>
+      <div class="card"><h3>The decision has long tail risk</h3><p>LAE is making a multi-year platform decision. A lateral move that preserves manual work would create switching cost without enough operational lift.</p></div>
+    </div>
+  </section>
+
+  <section>
+    <div class="section-kicker">Recommended Story</div>
+    <h2>Rev.io should be evaluated as the quote-to-cash operating layer.</h2>
+    <p class="lead">The strongest evaluation path is not a generic feature demo. LAE needs to see one accepted proposal become a Rev.io quote, move through approval, create a job or project, support phased invoicing, feed field execution, and reconcile cleanly with accounting.</p>
+    <div class="split">
+      <div class="card today"><h3>Current operating reality</h3><p>Zoho, Portal, SimPro, and QuickBooks each support part of the workflow. The business can operate, but teams still bridge gaps manually between sales, project billing, field work, and accounting.</p></div>
+      <div class="card future"><h3>Target operating model</h3><p>Rev.io becomes the operational hub for customer records, quotes, jobs, projects, tickets, time, invoices, field updates, assets, and reporting, while accounting remains the financial ledger.</p></div>
+    </div>
+  </section>
+
+  <section>
+    <div class="section-kicker">ROI Levers</div>
+    <h2>Where the measurable value should come from</h2>
+    <p class="lead">The financial case should be validated with LAE's actual volumes, but the value pools are clear. Each one reduces manual work, protects cash timing, or lowers the risk of choosing the wrong long-term operating system.</p>
+    <table>
+      <thead><tr><th>Value Lever</th><th>Current Friction</th><th>Rev.io Path</th><th>Data Needed to Quantify</th></tr></thead>
+      <tbody>
+        <tr><td>Duplicate invoice work</td><td>Later-stage invoices are recreated manually and then reconciled in accounting.</td><td>Use project and progress-invoicing workflows to reduce rebuild work and keep billing tied to the operational record.</td><td>Monthly project count, invoices per project, admin minutes per invoice.</td></tr>
+        <tr><td>Faster cash collection</td><td>Deposit billing works well today and cannot be weakened by a new process.</td><td>Preserve deposit and progress billing while reducing manual follow-up and reconciliation around subsequent invoices.</td><td>Average project value, payment terms, days-to-deposit, days-to-final invoice.</td></tr>
+        <tr><td>Quote-to-job handoff</td><td>Accepted proposals require translation into operational work.</td><td>Accepted Portal proposal can sync into Rev.io quote workflow, then feed job, project, or ticket creation after review.</td><td>Accepted proposal volume, re-entry time, handoff error rate.</td></tr>
+        <tr><td>Field labor accuracy</td><td>Field execution needs reliable clock-in, job time, travel time, and multi-tech visibility.</td><td>Mobile time, GPS/geofencing, multiple techs per ticket, individual time logs, field notes, and customer signatures.</td><td>Field tech count, jobs per week, time adjustment rate, missed labor capture.</td></tr>
+        <tr><td>Inventory and truck stock</td><td>Current and alternate workflows need clearer inventory coverage for operations and warehouse users.</td><td>Use product catalog, job materials, inventory movement, and role-specific demos to validate fit.</td><td>SKU count, truck-stock value, purchase frequency, stockout/rework rate.</td></tr>
+        <tr><td>Reporting and management visibility</td><td>Fragmented systems make it harder to answer operating questions without manual reporting.</td><td>Use dashboards, SQL reporting, and natural-language data exploration to give leadership faster answers.</td><td>Recurring reporting hours, reports produced, decision cadence.</td></tr>
+      </tbody>
+    </table>
+  </section>
+
+  <section>
+    <div class="section-kicker">Capability Map</div>
+    <h2>What Rev.io should prove to LAE</h2>
+    <table>
+      <thead><tr><th>LAE Requirement</th><th>Rev.io Positioning</th><th>Proof Point for Evaluation</th></tr></thead>
+      <tbody>
+        <tr><td>Portal integration</td><td>Portal proposals can sync into Rev.io quotes, including customers, contacts, proposal line items, and product-catalog creation when needed.</td><td>Run a live accepted Portal quote and trace exactly what flows into Rev.io.</td></tr>
+        <tr><td>Internal review before operations</td><td>Sync trigger can be configured around the desired proposal status rather than being locked to one acceptance event.</td><td>Show an internal review step before quote approval creates downstream work.</td></tr>
+        <tr><td>Progress invoicing</td><td>Rev.io supports project and progress invoicing models for deposit, progress, final-payment, and service-work billing paths.</td><td>Model 20/60/20, 60/40, and 100% service invoice examples.</td></tr>
+        <tr><td>CRM discipline</td><td>Opportunities, stages, dashboards, activities, quote links, and sales workflows support a cleaner pipeline motion.</td><td>Show opportunity stages, linked quote activity, follow-up tasks, and dashboard visibility.</td></tr>
+        <tr><td>Lead handling</td><td>Lead functionality is in final delivery path and should support early-stage contacts before full account creation.</td><td>Clarify timing and show the expected account/lead flow when available.</td></tr>
+        <tr><td>Mobile field service</td><td>Offline access, GPS/geofencing, day clock-in/out, multiple technicians, customer e-signature, and field payment collection support job execution.</td><td>Show a technician workflow from dispatch through time entry, field update, signature, and payment.</td></tr>
+        <tr><td>Asset and inspection history</td><td>Assets can track serial, location, manufacturer details, service dates, service history, notes, and recurring inspection schedules.</td><td>Use a commercial security or fire-inspection scenario.</td></tr>
+        <tr><td>AI and analytics</td><td>Natural-language data exploration, SQL reporting, and real-time dashboards can reduce manual reporting work.</td><td>Ask operational questions in plain English and show live dashboard output.</td></tr>
+        <tr><td>Accounting alignment</td><td>Rev.io should be positioned as the operating source of truth while QuickBooks remains the accounting ledger.</td><td>Show the invoice and reconciliation path clearly enough for finance to validate.</td></tr>
+      </tbody>
+    </table>
+  </section>
+
+  <section>
+    <div class="section-kicker">Live vs. Roadmap</div>
+    <h2>Be explicit about what is ready now and what still needs product work.</h2>
+    <p class="lead">LAE's decision depends on trust. The evaluation should separate current functionality from active roadmap items and open gaps so the team can make a clear decision without discovering surprises after commitment.</p>
+    <table>
+      <thead><tr><th>Area</th><th>Status</th><th>Customer-Facing Guidance</th></tr></thead>
+      <tbody>
+        <tr><td>Portal customers and contacts</td><td><span class="status live">Live</span></td><td>Bi-directional customer and contact synchronization is available.</td></tr>
+        <tr><td>Portal proposal to Rev.io quote</td><td><span class="status live">Live</span></td><td>Proposal and line-item sync into Rev.io quote workflow is available and should be demonstrated live.</td></tr>
+        <tr><td>Portal-created product catalog items</td><td><span class="status live">Live</span></td><td>New product catalog items can be created automatically when not already present in Rev.io.</td></tr>
+        <tr><td>Portal notes</td><td><span class="status gap">Gap</span></td><td>Internal and customer-facing notes from Portal are not yet syncing and should be captured as a requirement.</td></tr>
+        <tr><td>Signed proposal PDF attachment</td><td><span class="status gap">Gap</span></td><td>Signed PDF attachment sync is not available today and should not be represented as current-state functionality.</td></tr>
+        <tr><td>Invoice-level data from Portal</td><td><span class="status gap">Gap</span></td><td>Invoice data from Portal is not currently syncing into Rev.io.</td></tr>
+        <tr><td>Leads</td><td><span class="status roadmap">Roadmap</span></td><td>Lead functionality is close to launch and should be discussed with timing caveats.</td></tr>
+        <tr><td>Zoho integration</td><td><span class="status roadmap">Roadmap</span></td><td>Zoho integration is on the roadmap and should be treated as planned, not current-state functionality.</td></tr>
+        <tr><td>HubSpot integration</td><td><span class="status live">Live</span></td><td>HubSpot integration is available for teams that want a CRM-connected path outside Zoho.</td></tr>
+      </tbody>
+    </table>
+  </section>
+
+  <section>
+    <div class="section-kicker">Decision Criteria</div>
+    <h2>The evaluation should answer five questions.</h2>
+    <div class="grid">
+      <div class="card"><h3>1. Does the Portal flow actually work?</h3><p>LAE should see a real accepted proposal move into Rev.io and understand exactly what syncs, what does not, and which status triggers the handoff.</p></div>
+      <div class="card"><h3>2. Is invoicing better, not lateral?</h3><p>The new workflow must simplify deposit, progress, final, and service billing rather than forcing the team to recreate invoices in a different place.</p></div>
+      <div class="card"><h3>3. Can each department validate fit?</h3><p>Billing, warehouse, operations, and field teams need short role-specific demos instead of one long generalized walkthrough.</p></div>
+      <div class="card"><h3>4. Does Rev.io replace enough of the stack?</h3><p>Rev.io should be evaluated against the full operating workflow, not only as a replacement for one current tool.</p></div>
+      <div class="card"><h3>5. Is the roadmap acceptable?</h3><p>Open items such as notes, signed PDFs, invoice data, leads, and Zoho integration should be acknowledged and mapped to decision risk.</p></div>
+      <div class="card"><h3>6. Is this a five-year foundation?</h3><p>The platform should support LAE's strategic shift toward larger commercial work, recurring inspections, and more disciplined operating visibility.</p></div>
+    </div>
+  </section>
+
+  <section>
+    <div class="section-kicker">Evaluation Plan</div>
+    <h2>Recommended next steps before commitment</h2>
+    <div class="timeline">
+      <div class="step"><strong>Step 1</strong><span>Send a concise Portal integration scope showing current sync objects, trigger logic, open gaps, and roadmap caveats.</span></div>
+      <div class="step"><strong>Step 2</strong><span>Record a tailored 20-minute evaluation video for the LAE team that shows the target workflow without requiring every department to sit through a long live call.</span></div>
+      <div class="step"><strong>Step 3</strong><span>Run a live Portal-to-Rev.io demo using an accepted quote scenario and trace the downstream quote, approval, job, project, and invoice path.</span></div>
+      <div class="step"><strong>Step 4</strong><span>Hold department-specific reviews for billing, warehouse, operations, and field users so each team can validate its part of the operating model.</span></div>
+      <div class="step"><strong>Step 5</strong><span>Convert the directional ROI levers into a quantified business case using LAE's actual invoice volume, proposal count, field labor, warehouse activity, and reporting time.</span></div>
+    </div>
+  </section>
+
+  <section>
+    <div class="section-kicker">Bottom Line</div>
+    <h2>Rev.io wins if it proves the transition reduces operating drag.</h2>
+    <p class="lead">The opportunity is strongest when positioned around business process consolidation: one customer record, one quote-to-job path, one project invoicing workflow, cleaner field execution, stronger reporting, and fewer manual bridges between systems. The risk is over-positioning roadmap items or asking LAE to trust a workflow that has not been demonstrated end to end. A live Portal integration proof, a finance-ready invoicing path, and short role-based demos are the fastest way to turn the evaluation into a confident decision.</p>
+    <div class="callout"><strong>Recommended framing:</strong> Rev.io is not asking LAE to choose another disconnected tool. The decision is whether Rev.io can become the operating layer that connects sales, quoting, projects, service, field labor, billing, and reporting for the next five years.</div>
+  </section>
+
+  <div class="footer">Prepared for LAE Solutions discussion | Rev.io ROI Analysis | July 2026</div>
+</main>
+</body>
+</html>
