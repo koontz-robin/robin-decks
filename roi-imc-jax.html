@@ -1,0 +1,244 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Rev.io Business Case - IMC Jax</title>
+<style>
+  :root {
+    --navy:#173657; --blue:#1667cc; --green:#35b86d; --cyan:#0ea5c8;
+    --ink:#172033; --muted:#607186; --line:#d8e4ee; --wash:#f4f8fb;
+    --paper:#ffffff; --gold:#f5b84b; --teal:#18a99b; --rose:#d65d76;
+  }
+  * { box-sizing:border-box; }
+  body {
+    margin:0;
+    font-family:"Segoe UI",system-ui,-apple-system,sans-serif;
+    color:var(--ink);
+    background:linear-gradient(180deg,#eef6fb 0,#fbfdff 48%,#eef7f4 100%);
+    line-height:1.45;
+  }
+  header {
+    color:#fff;
+    background:
+      linear-gradient(135deg,rgba(15,44,73,.98),rgba(22,103,204,.84) 56%,rgba(24,169,155,.72)),
+      url("https://images.unsplash.com/photo-1497366754035-f200968a6e72?auto=format&fit=crop&w=1800&q=80");
+    background-size:cover;
+    background-position:center;
+    position:relative;
+    overflow:hidden;
+  }
+  header::after {
+    content:"";
+    position:absolute;
+    left:0;
+    right:0;
+    bottom:-1px;
+    height:58px;
+    background:linear-gradient(180deg,rgba(244,248,251,0),var(--wash));
+  }
+  .hero { max-width:1180px; margin:0 auto; padding:28px 26px 76px; position:relative; z-index:1; }
+  .topbar { display:flex; align-items:center; justify-content:space-between; gap:24px; margin-bottom:58px; }
+  .brand { display:flex; align-items:center; gap:16px; font-weight:800; }
+  .brand img { width:124px; height:auto; }
+  .brand span { border-left:1px solid rgba(255,255,255,.35); padding-left:16px; color:rgba(255,255,255,.84); }
+  .print {
+    border:1px solid rgba(255,255,255,.38);
+    border-radius:8px;
+    padding:9px 13px;
+    background:rgba(255,255,255,.12);
+    color:#fff;
+    font-weight:800;
+    cursor:pointer;
+    box-shadow:0 10px 24px rgba(0,0,0,.12);
+  }
+  .kicker { display:inline-block; border:1px solid rgba(255,255,255,.32); border-radius:99px; padding:6px 12px; font-size:11px; font-weight:900; letter-spacing:1.4px; text-transform:uppercase; color:#e9fdff; background:rgba(255,255,255,.1); }
+  h1 { max-width:880px; margin:18px 0 16px; font-size:54px; line-height:1.02; letter-spacing:0; }
+  .subtitle { max-width:800px; color:rgba(255,255,255,.84); font-size:18px; }
+  .meta { display:grid; grid-template-columns:repeat(4,1fr); gap:14px; margin-top:42px; }
+  .meta-card { background:rgba(255,255,255,.13); border:1px solid rgba(255,255,255,.22); border-radius:8px; padding:16px; backdrop-filter:blur(6px); box-shadow:0 16px 34px rgba(5,21,39,.12); }
+  .label { font-size:10px; font-weight:900; letter-spacing:1.2px; text-transform:uppercase; color:rgba(255,255,255,.66); }
+  .value { margin-top:4px; font-size:17px; font-weight:900; }
+  main { max-width:1180px; margin:-28px auto 0; padding:34px 26px 70px; position:relative; z-index:2; }
+  section {
+    background:linear-gradient(180deg,#ffffff,#fbfdff);
+    border:1px solid rgba(216,228,238,.9);
+    border-radius:8px;
+    padding:32px;
+    margin:18px 0;
+    box-shadow:0 18px 44px rgba(23,54,87,.08);
+    position:relative;
+    overflow:hidden;
+  }
+  section::before { content:""; position:absolute; top:0; left:0; right:0; height:4px; background:linear-gradient(90deg,var(--blue),var(--cyan),var(--green)); }
+  section:nth-of-type(2n) { background:linear-gradient(180deg,#fafdff,#f3f8fc); }
+  section:nth-of-type(3n)::before { background:linear-gradient(90deg,var(--teal),var(--green),var(--gold)); }
+  section:nth-of-type(4n)::before { background:linear-gradient(90deg,var(--navy),var(--blue),var(--rose)); }
+  .section-kicker { color:var(--blue); font-size:11px; font-weight:900; letter-spacing:1.5px; text-transform:uppercase; margin-bottom:8px; }
+  h2 { margin:0 0 10px; font-size:30px; letter-spacing:0; }
+  .lead { max-width:900px; color:var(--muted); font-size:16px; margin:0 0 24px; }
+  .metric-grid { display:grid; grid-template-columns:repeat(4,1fr); gap:14px; }
+  .metric {
+    text-align:center;
+    border:1px solid rgba(255,255,255,.75);
+    border-radius:8px;
+    padding:22px 14px;
+    background:linear-gradient(160deg,#ffffff 0,#eef7ff 100%);
+    box-shadow:0 14px 30px rgba(23,54,87,.09);
+  }
+  .metric:nth-child(2) { background:linear-gradient(160deg,#ffffff 0,#eefbf7 100%); }
+  .metric:nth-child(3) { background:linear-gradient(160deg,#ffffff 0,#fff7e5 100%); }
+  .metric:nth-child(4) { background:linear-gradient(160deg,#ffffff 0,#f5f0ff 100%); }
+  .metric strong { display:block; font-size:30px; color:var(--navy); line-height:1; }
+  .metric span { display:block; margin-top:8px; font-size:11px; color:var(--muted); font-weight:900; letter-spacing:.9px; text-transform:uppercase; }
+  .grid { display:grid; grid-template-columns:repeat(3,1fr); gap:14px; }
+  .card {
+    border:1px solid rgba(216,228,238,.95);
+    border-radius:8px;
+    padding:18px;
+    background:linear-gradient(180deg,#ffffff,#f7fbff);
+    box-shadow:0 8px 22px rgba(23,54,87,.05);
+  }
+  .card:nth-child(3n+1) { border-top:4px solid var(--blue); }
+  .card:nth-child(3n+2) { border-top:4px solid var(--teal); }
+  .card:nth-child(3n) { border-top:4px solid var(--gold); }
+  .card h3 { margin:0 0 8px; font-size:15px; }
+  .card p { margin:0; color:var(--muted); font-size:13px; }
+  .split { display:grid; grid-template-columns:1fr 1fr; gap:16px; }
+  .today { border-top:4px solid var(--rose); }
+  .future { border-top:4px solid var(--green); }
+  table { width:100%; border-collapse:separate; border-spacing:0; margin-top:16px; overflow:hidden; border-radius:8px; border:1px solid var(--line); background:#fff; }
+  th { text-align:left; padding:12px 13px; background:linear-gradient(90deg,#eaf3fb,#eef9f7); color:#516176; font-size:10px; letter-spacing:1px; text-transform:uppercase; }
+  td { padding:14px 13px; border-bottom:1px solid var(--line); vertical-align:top; font-size:13px; color:#4d5c70; }
+  tbody tr:nth-child(even) td { background:#f8fbfe; }
+  td:first-child { color:var(--ink); font-weight:800; }
+  .callout { border:1px solid #f1d49b; background:linear-gradient(135deg,#fff9eb,#fffdf7); border-radius:8px; padding:18px 20px; color:#73500f; box-shadow:0 12px 28px rgba(183,121,31,.09); }
+  .timeline { display:grid; gap:12px; margin-top:18px; }
+  .step { display:grid; grid-template-columns:140px 1fr; gap:16px; border:1px solid var(--line); border-radius:8px; padding:14px; background:#fff; }
+  .step strong { color:var(--navy); }
+  .step span { color:var(--muted); font-size:13px; }
+  .footer { color:#8a97aa; font-size:11px; text-align:center; padding:18px 0 0; }
+  @media(max-width:850px){ h1{font-size:38px}.meta,.metric-grid,.grid,.split{grid-template-columns:1fr}.step{grid-template-columns:1fr}.hero,main{padding-left:18px;padding-right:18px}section{padding:22px}.topbar{align-items:flex-start;flex-direction:column} }
+</style>
+</head>
+<body>
+<header>
+  <div class="hero">
+    <div class="topbar">
+      <div class="brand"><img src="https://koontz-robin.github.io/robin-decks/revio-logo-white.png" alt="Rev.io"><span>Business Case</span></div>
+      <button class="print" onclick="window.print()">Print / Save PDF</button>
+    </div>
+    <div class="kicker">PSA + Billing Evaluation</div>
+    <h1>IMC Jax operating system case</h1>
+    <p class="subtitle">A customer-facing summary for consolidating customer records, recurring services, ticketing, field work, and billing into a cleaner Rev.io operating model.</p>
+    <div class="meta">
+      <div class="meta-card"><div class="label">Company</div><div class="value">IMCJAX, LLC</div></div>
+      <div class="meta-card"><div class="label">Focus</div><div class="value">PSA Web + Billing</div></div>
+      <div class="meta-card"><div class="label">Team Scope</div><div class="value">9-11 PSA users</div></div>
+      <div class="meta-card"><div class="label">Prepared</div><div class="value">July 2026</div></div>
+    </div>
+  </div>
+</header>
+
+<main>
+  <section>
+    <div class="section-kicker">Executive Summary</div>
+    <h2>IMC Jax has outgrown folder-based operations.</h2>
+    <p class="lead">IMC Jax supports business communications, connectivity, managed IT, hosted voice, SD-WAN, cloud, virtual help desk, and cabling services. The current operating model relies heavily on SharePoint, OneDrive, email, and disconnected records. Rev.io gives the team a structured path to manage customers, services, agreements, tickets, work orders, billing, and reporting from one connected workflow.</p>
+    <div class="metric-grid">
+      <div class="metric"><strong>9-11</strong><span>Expected PSA users</span></div>
+      <div class="metric"><strong>$1k</strong><span>Monthly PSA minimum discussed</span></div>
+      <div class="metric"><strong>7/20</strong><span>Full-team demo scheduled</span></div>
+      <div class="metric"><strong>5-6</strong><span>Typical implementation weeks</span></div>
+    </div>
+  </section>
+
+  <section>
+    <div class="section-kicker">Current State</div>
+    <h2>The biggest issue is not one missing feature. It is fragmented customer context.</h2>
+    <p class="lead">IMC Jax is managing a telecom and service business without a dedicated PSA. Customer information is split across multiple records, folders, and manual processes, which makes it harder for sales, service, field, and finance teams to see the full customer picture.</p>
+    <div class="grid">
+      <div class="card"><h3>Multiple customer records</h3><p>Different services for the same customer can live as separate records, which prevents a one-click view of every active service, location, agreement, and request.</p></div>
+      <div class="card"><h3>Manual recurring agreements</h3><p>Recurring services and renewals are currently managed through email and shared files instead of structured agreements with terms, services, and reminders.</p></div>
+      <div class="card"><h3>No formal ticket intake</h3><p>Trouble tickets, outside-team assignments, and sold work orders need a controlled process that can move completed work back toward billing.</p></div>
+      <div class="card"><h3>Limited field access</h3><p>Field teams need mobile access to ticket details, assignments, updates, and job context without relying on office staff to relay information.</p></div>
+      <div class="card"><h3>Billing decision pending</h3><p>The team is evaluating how SkySwitch billing, direct Rev.io billing, and Rev.io PSA should fit together as the operating model matures.</p></div>
+      <div class="card"><h3>Implementation clarity matters</h3><p>IMC Jax wants a clear view of migration scope, timing, training, limitations, and support before committing to the transition.</p></div>
+    </div>
+  </section>
+
+  <section>
+    <div class="section-kicker">Recommended Story</div>
+    <h2>Show the full customer lifecycle, not disconnected modules.</h2>
+    <p class="lead">The next meeting should be built around one complete journey: customer structure, quote, product/service setup, agreement, ticket/work order, field update, billing handoff, profitability reporting, and exports. That is the clearest way to answer IMC Jax's actual question: can Rev.io become the operating system for the business?</p>
+    <div class="split">
+      <div class="card today"><h3>Today</h3><p>Customer records, recurring services, ticket history, documents, and service context live across separate folders and manual processes. The team can get work done, but finding the full picture takes effort.</p></div>
+      <div class="card future"><h3>With Rev.io</h3><p>Customer hierarchy, services, agreements, tickets, documents, work orders, billing handoffs, and reporting can live in one structured workflow that scales with the business.</p></div>
+    </div>
+  </section>
+
+  <section>
+    <div class="section-kicker">Capability Map</div>
+    <h2>What Rev.io should prove in the next demo</h2>
+    <table>
+      <thead><tr><th>IMC Jax Need</th><th>Rev.io Positioning</th><th>Demo Proof Point</th></tr></thead>
+      <tbody>
+        <tr><td>Single customer view</td><td>Centralize account details, locations, services, tickets, documents, and related activity.</td><td>Open one customer record and show the full service/account history in context.</td></tr>
+        <tr><td>Parent-child account structure</td><td>Support both billing roll-up relationships and related-account visibility where billing does not roll up.</td><td>Show a parent customer with child locations and service records at each location.</td></tr>
+        <tr><td>Recurring services and renewals</td><td>Move recurring agreements out of manual file/email tracking and into structured terms, service lines, reminders, and renewals.</td><td>Create or review an agreement with multiple services and renewal notifications.</td></tr>
+        <tr><td>Ticketing and work orders</td><td>Standardize ticket intake, boards, status, inside/outside team assignment, and completed-work billing flow.</td><td>Create a ticket, assign field work, update status, and show the billing handoff.</td></tr>
+        <tr><td>Mobile field access</td><td>Give field users mobile access to the work they need without full back-office access.</td><td>Show field-user workflow and mobile-friendly ticket updates.</td></tr>
+        <tr><td>Billing and QuickBooks</td><td>Clarify the operational difference between SkySwitch billing, direct Rev.io billing, PSA billing for non-telecom services, and finance exports.</td><td>Use a side-by-side billing path and explain where QuickBooks fits.</td></tr>
+        <tr><td>Customer communication</td><td>Support customer portal, service communication, survey-style follow-up, and engagement workflows where appropriate.</td><td>Show portal/customer-facing workflow and communication points.</td></tr>
+        <tr><td>Implementation confidence</td><td>Set expectations around a typical 5-6 week onboarding process, dedicated onboarding support, LMS resources, data imports, and training.</td><td>Walk through migration inputs, training path, and the first 30 days after signature.</td></tr>
+      </tbody>
+    </table>
+  </section>
+
+  <section>
+    <div class="section-kicker">Billing Decision</div>
+    <h2>The SkySwitch vs. direct Rev.io billing question needs a clean comparison.</h2>
+    <p class="lead">IMC Jax is already familiar with Rev.io through SkySwitch, but the SkySwitch environment is different from a direct Rev.io billing relationship. The best customer-facing explanation should be simple: PSA can help run the service business, while the billing path determines how much control IMC Jax has over product catalog, billing rules, customer portal, reporting, API access, telecom usage, and tax.</p>
+    <div class="grid">
+      <div class="card"><h3>Stay on SkySwitch billing</h3><p>Lower change management, but limited control and no native integration path into the Rev.io PSA environment for broader billing workflows.</p></div>
+      <div class="card"><h3>Use PSA billing for non-telecom</h3><p>Good fit for circuits, cameras, service tickets, projects, work orders, and non-usage-based items that do not require telecom tax/rating.</p></div>
+      <div class="card"><h3>Move to direct Rev.io billing</h3><p>More control over billing configuration, catalog, reporting, portal, API access, and future operating-model flexibility, with separate pricing and migration planning.</p></div>
+    </div>
+  </section>
+
+  <section>
+    <div class="section-kicker">Business Case</div>
+    <h2>Where the value should come from</h2>
+    <p class="lead">The ROI case should focus on operational leverage, not just software replacement. The strongest value pools are reduced administrative effort, faster access to customer context, fewer missed billing handoffs, cleaner renewal management, and better visibility into customer profitability.</p>
+    <div class="grid">
+      <div class="card"><h3>Fewer internal searches</h3><p>Reduce the time spent finding customer data, service details, documents, ticket history, and current account status across folders and email.</p></div>
+      <div class="card"><h3>Cleaner billing handoffs</h3><p>Completed work orders and service changes can flow toward billing with less reliance on memory, side conversations, or manual re-entry.</p></div>
+      <div class="card"><h3>Renewal discipline</h3><p>Agreement terms and reminders can create a proactive customer-engagement rhythm rather than depending on manual follow-up.</p></div>
+      <div class="card"><h3>Better team visibility</h3><p>Inside staff, outside field teams, sales, and leadership can work from the same customer context instead of maintaining separate views of the customer.</p></div>
+      <div class="card"><h3>Scalable customer hierarchy</h3><p>Parent-child and related-account structures support multi-location customers and more complex relationships without flattening everything into one list.</p></div>
+      <div class="card"><h3>More informed growth</h3><p>Profitability reporting and cleaner exports give leadership a better view of where service work, recurring revenue, and customer effort are creating or eroding margin.</p></div>
+    </div>
+  </section>
+
+  <section>
+    <div class="section-kicker">Evaluation Plan</div>
+    <h2>Recommended path to a confident decision</h2>
+    <div class="timeline">
+      <div class="step"><strong>Before 7/20</strong><span>Send the formal quote, PSA training library, and SkySwitch vs. direct Rev.io billing comparison so the IMC Jax team can review before the full-team demo.</span></div>
+      <div class="step"><strong>7/20 Demo</strong><span>Run a cradle-to-grave customer lifecycle walkthrough with end users: customer setup, hierarchy, quote, agreement, ticket/work order, field update, billing, reporting, and exports.</span></div>
+      <div class="step"><strong>After Demo</strong><span>Confirm fit, user mix, billing strategy, QuickBooks expectations, data migration scope, and implementation timeline.</span></div>
+      <div class="step"><strong>Decision</strong><span>Align on PSA scope first, then decide whether direct Rev.io billing should be part of the initial project or a staged follow-on migration.</span></div>
+    </div>
+  </section>
+
+  <section>
+    <div class="section-kicker">Decision Summary</div>
+    <h2>The right close is operational confidence.</h2>
+    <p class="lead">IMC Jax does not need another generic software demo. They need to see that Rev.io can organize the business around a single customer record, support multi-service and multi-location relationships, formalize recurring agreements, create accountable ticket/work-order flow, give field users mobile access, and clarify how billing should evolve beyond the SkySwitch environment.</p>
+    <div class="callout"><strong>Recommended emphasis:</strong> Lead with the customer lifecycle and the billing decision framework. That keeps the conversation anchored in how IMC Jax actually works, while still giving their team enough detail to judge implementation effort and long-term fit.</div>
+  </section>
+
+  <div class="footer">Prepared for IMC Jax and Rev.io evaluation discussions. Content reflects current discovery and should be refined as the July 20 demo adds new information.</div>
+</main>
+</body>
+</html>
