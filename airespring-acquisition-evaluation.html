@@ -79,7 +79,7 @@
   h1 { font-size:clamp(36px, 5vw, 62px); line-height:1.02; letter-spacing:-1.4px; margin-bottom:18px; }
   h1 span { color:var(--rev-cyan); }
   .hero-sub { max-width:790px; margin:0 auto 34px; color:rgba(255,255,255,.72); font-size:18px; line-height:1.62; }
-  .hero-stats { display:grid; grid-template-columns:repeat(4, 1fr); gap:16px; margin-top:26px; }
+  .hero-stats { display:grid; grid-template-columns:repeat(auto-fit, minmax(150px, 1fr)); gap:16px; margin-top:26px; }
   .stat {
     background:rgba(255,255,255,.07);
     border:1px solid rgba(255,255,255,.12);
@@ -211,6 +211,7 @@
     <a href="#overview">Overview</a>
     <a href="#current">Current State</a>
     <a href="#risks">Risks</a>
+    <a href="#metrics">Metrics</a>
     <a href="#fit">Rev.io Fit</a>
     <a href="#demo">Demo Plan</a>
     <a href="#questions">Open Questions</a>
@@ -228,6 +229,8 @@
       <div class="stat"><div class="num">2x</div><div class="label">Approximate revenue scale after merger</div></div>
       <div class="stat"><div class="num">2027</div><div class="label">October target pressure for integration completion</div></div>
       <div class="stat"><div class="num">5-6%</div><div class="label">Estimated AirSpring international billing mix</div></div>
+      <div class="stat"><div class="num">9,069</div><div class="label">AirSpring billing accounts/items provided in notes</div></div>
+      <div class="stat"><div class="num">20%</div><div class="label">Assumed overall growth after initial migration</div></div>
       <div class="stat"><div class="num">17 wks</div><div class="label">Approximate KPMG engagement duration discussed</div></div>
     </div>
   </div>
@@ -268,6 +271,14 @@
       <div class="snapshot-card">
         <div class="snapshot-label">Timeline Pressure</div>
         <div class="snapshot-val">The integration team expects strong pressure to complete integration work by October 2027.</div>
+      </div>
+      <div class="snapshot-card">
+        <div class="snapshot-label">Integration Scope</div>
+        <div class="snapshot-val">The stated consolidation plan is full integration across all systems and teams, not just billing.</div>
+      </div>
+      <div class="snapshot-card">
+        <div class="snapshot-label">AirSpring Order Management</div>
+        <div class="snapshot-val">AirSpring uses DAX, a homegrown order-management platform; CRM details are still unclear.</div>
       </div>
     </div>
   </div>
@@ -317,6 +328,83 @@
         <div class="card-body">There has been discussion about moving NuCo to a completely new billing platform. The IMO is not voting for that because it would materially extend the integration timeline, but KPMG may still evaluate it.</div>
         <div class="tag amber">Competitive risk</div>
       </div>
+      <div class="card">
+        <div class="card-label">Risk 7</div>
+        <div class="card-title">Agent commissions unknown</div>
+        <div class="card-body">The notes flag an unanswered question: whether AirSpring runs agent commissions out of RiverRock or another incumbent platform. If yes, migration scope expands beyond billing output.</div>
+        <div class="tag amber">Open dependency</div>
+      </div>
+      <div class="card">
+        <div class="card-label">Risk 8</div>
+        <div class="card-title">Voice CDR growth may outpace company growth</div>
+        <div class="card-body">Overall growth is assumed at 20%, but call-record processing may grow faster because Spectrotel voice is expected to migrate onto the AirSpring voice network.</div>
+        <div class="tag red">Capacity risk</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="slide light" id="metrics">
+  <div class="content">
+    <div class="section-head">
+      <div class="section-kicker cyan">Operational Metrics</div>
+      <h2>New notes add concrete bill-run and growth assumptions</h2>
+      <p class="section-sub">These details sharpen the scalability story: the concern is not abstract system size, it is bill-run completion, usage rating, and CDR processing under a combined NuCo load.</p>
+    </div>
+    <div class="table-wrap">
+      <table>
+        <thead>
+          <tr>
+            <th>Billing Segment</th>
+            <th>Provided Count</th>
+            <th>Evaluation Implication</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><strong>Weekly bills</strong>Approximately 61 per week</td>
+            <td>366</td>
+            <td>Rev.io should show how high-frequency billing is managed, monitored, and reconciled.</td>
+          </tr>
+          <tr>
+            <td><strong>Cycle 15</strong>15th of the month</td>
+            <td>1,272</td>
+            <td>Include bill-cycle scheduling and operational controls in the evaluation narrative.</td>
+          </tr>
+          <tr>
+            <td><strong>Cycle 32</strong>25th of the month</td>
+            <td>2,347</td>
+            <td>Show capacity planning across multiple monthly cycles rather than one aggregate bill run.</td>
+          </tr>
+          <tr>
+            <td><strong>Cycle 31</strong>Last day of the month</td>
+            <td>5,084</td>
+            <td>Month-end processing is the largest visible load and should anchor performance proof.</td>
+          </tr>
+          <tr>
+            <td><strong>Total</strong>AirSpring billing numbers provided</td>
+            <td>9,069</td>
+            <td>Use as the baseline for test-data modeling and combined-company load assumptions.</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+    <div class="card-grid" style="margin-top:20px;">
+      <div class="card">
+        <div class="card-label">Day-One Load</div>
+        <div class="card-title">Plan for 2x demand at NuCo migration completion</div>
+        <div class="card-body">The notes state expected demand on the system is 2x on day one, with significant call-record rating and processing. KPMG will likely expect a quantitative model, not just confidence.</div>
+      </div>
+      <div class="card">
+        <div class="card-label">Future Growth</div>
+        <div class="card-title">Use 20% overall growth, but isolate CDR growth</div>
+        <div class="card-body">Overall growth can be modeled at 20%, but CDR growth may exceed that as Spectrotel voice moves onto the AirSpring network. Treat voice usage separately in capacity planning.</div>
+      </div>
+      <div class="card">
+        <div class="card-label">Load Reduction</div>
+        <div class="card-title">Order processing may move out of Rev.io</div>
+        <div class="card-body">The notes say there are plans to separate order processing from Rev.io so Rev.io is used for rating and billing. That should be positioned as a positive performance and load-management lever.</div>
+      </div>
     </div>
   </div>
 </section>
@@ -364,6 +452,11 @@
             <td>Position Rev.io as the repeatable acquisition integration layer for future companies, not just a one-time AirSpring migration.</td>
           </tr>
           <tr>
+            <td><strong>Operational readiness</strong>KPMG needs confidence beyond features.</td>
+            <td>The notes call out scalability, capacity planning, availability, business continuity, disaster recovery, infrastructure readiness, and integration flexibility.</td>
+            <td>Bring technical leadership and proof artifacts covering BCDR, monitoring, architecture, API strategy, and performance planning.</td>
+          </tr>
+          <tr>
             <td><strong>New Rev.io</strong>The modern platform needs careful naming.</td>
             <td>The team agreed to move away from calling it PSA and refer to it as new Rev.io.</td>
             <td>Show shared backend continuity, modern UI, AI capabilities, stronger order/service management, and lower migration friction.</td>
@@ -384,20 +477,20 @@
     <div class="flow">
       <div class="flow-step">
         <div class="step-num">First Hour</div>
-        <div class="step-title">Current Spectrotel Rev.io environment</div>
-        <div class="step-body">Show what Spectrotel owns and uses today. Establish current-state credibility before jumping into future-state capabilities.</div>
+        <div class="step-title">Current-state Rev.io, not new Rev.io</div>
+        <div class="step-body">Start with Spectrotel's current Rev.io environment. Limit "this will be different in new Rev.io" comments during this section so KPMG and AirSpring can compare current state cleanly.</div>
       </div>
       <div class="flow-arrow">></div>
       <div class="flow-step">
         <div class="step-num">Next 30 Minutes</div>
-        <div class="step-title">Broader Rev.io billing capabilities</div>
-        <div class="step-body">Use a Rev.io demo environment to cover internationalization, usage rating, mobility, infrastructure, and scale not fully visible in Spectrotel's instance.</div>
+        <div class="step-title">Broader Rev.io readiness and capacity</div>
+        <div class="step-body">Cover scalability, capacity planning, availability, BCDR, infrastructure readiness, integration flexibility, internationalization, usage rating, and mobility.</div>
       </div>
       <div class="flow-arrow">></div>
       <div class="flow-step">
-        <div class="step-num">Final 30 Minutes</div>
-        <div class="step-title">New Rev.io platform vision</div>
-        <div class="step-body">Present modern UI, AI-native workflows, order/service management, and the shared backend story that reduces migration friction.</div>
+        <div class="step-num">Last, or Session 2</div>
+        <div class="step-title">New Rev.io roadmap and platform vision</div>
+        <div class="step-body">Move roadmap and new Rev.io last, and consider making it a second session if time is tight. That is where current-state differences should be highlighted.</div>
       </div>
     </div>
     <div class="note">
@@ -418,21 +511,21 @@
         <div class="card-label">AirSpring Data and Billing</div>
         <div class="card-title">Clarify the actual migration surface</div>
         <div class="card-body">
-          Confirm AirSpring product catalog quality, customer-level customization, bill-cycle structure, weekly billing scope, high-usage controls, tax rules, invoice formats, current RiverRock data exports, and whether mobility/prepaid is material or marginal.
+          Confirm AirSpring product catalog quality, customer-level customization, bill-cycle structure, weekly billing scope, high-usage controls, tax rules, invoice formats, current RiverRock data exports, circuit billing, and whether mobility/prepaid is material or marginal.
         </div>
       </div>
       <div class="card">
         <div class="card-label">Stakeholders</div>
         <div class="card-title">Map who can influence the recommendation</div>
         <div class="card-body">
-          Confirm AirSpring attendees beyond Shannon, KPMG decision participants, Sanjay's technical proof requirements, John Moss's evaluation role, and Mitch Wright's specific multi-currency acceptance criteria.
+          Confirm AirSpring attendees beyond Shannon, KPMG decision participants, Sanjay's technical proof requirements, John Moss's evaluation role, Mitch Wright's specific multi-currency acceptance criteria, and the power users who identified RiverRock slowness/manual work.
         </div>
       </div>
       <div class="card">
         <div class="card-label">Technical Proof</div>
         <div class="card-title">Bring evidence to the scalability question</div>
         <div class="card-body">
-          Prepare infrastructure architecture, transaction-volume benchmarks, bill-run timing examples, test-data approach, monitoring controls, and escalation resources who can speak credibly to platform performance.
+          Prepare infrastructure architecture, transaction-volume benchmarks, bill-run timing examples, test-data approach, monitoring controls, BCDR/availability proof, and escalation resources who can speak credibly to platform performance.
         </div>
       </div>
       <div class="card">
@@ -440,6 +533,20 @@
         <div class="card-title">Avoid premature certainty on the path</div>
         <div class="card-body">
           Keep the migration recommendation open until discovery is complete: AirSpring into current Spectrotel Rev.io first, direct-to-new Rev.io where possible, or phased capability activation depending on data quality and timeline.
+        </div>
+      </div>
+      <div class="card">
+        <div class="card-label">Department Workflows</div>
+        <div class="card-title">Identify billing touchpoints outside finance</div>
+        <div class="card-body">
+          The notes ask how implementation, service delivery, and sales update data or initiate workflows in the billing platform at both companies. Those users and handoffs need to be mapped before migration design.
+        </div>
+      </div>
+      <div class="card">
+        <div class="card-label">Integrations and Commissions</div>
+        <div class="card-title">Confirm platform dependencies</div>
+        <div class="card-body">
+          Identify proprietary and third-party integrations in the AirSpring stack, whether agent commissions run from the incumbent platform, and how DAX/order management connects to billing today.
         </div>
       </div>
     </div>
