@@ -194,12 +194,58 @@
     font-size:13px;
     line-height:1.6;
   }
+  .call-list { display:grid; gap:14px; max-width:980px; margin:0 auto; }
+  .call-item {
+    background:#fff;
+    border:1px solid var(--line);
+    border-radius:10px;
+    box-shadow:0 4px 14px rgba(23,32,51,.05);
+    overflow:hidden;
+  }
+  .call-item summary {
+    cursor:pointer;
+    list-style:none;
+    display:grid;
+    grid-template-columns:150px 1fr auto;
+    gap:16px;
+    align-items:center;
+    padding:18px 20px;
+  }
+  .call-item summary::-webkit-details-marker { display:none; }
+  .call-date {
+    color:var(--rev-blue);
+    font-size:12px;
+    font-weight:950;
+    letter-spacing:1px;
+    text-transform:uppercase;
+  }
+  .call-title { font-size:16px; font-weight:950; }
+  .call-meta { color:var(--muted); font-size:12px; margin-top:4px; line-height:1.4; }
+  .call-toggle {
+    color:var(--muted);
+    border:1px solid var(--line);
+    border-radius:999px;
+    padding:5px 10px;
+    font-size:11px;
+    font-weight:900;
+    text-transform:uppercase;
+  }
+  .call-item[open] .call-toggle { color:var(--rev-blue); border-color:rgba(0,87,255,.25); background:rgba(0,87,255,.06); }
+  .call-body {
+    border-top:1px solid var(--line);
+    padding:18px 20px 20px;
+    display:grid;
+    gap:12px;
+  }
+  .call-body p, .call-body li { color:var(--muted); font-size:13px; line-height:1.6; }
+  .call-body ul { margin-left:18px; display:grid; gap:6px; }
   footer { background:var(--navy); color:rgba(255,255,255,.54); text-align:center; padding:22px; font-size:12px; }
   @media (max-width:800px) {
     nav { position:static; height:auto; padding:16px; align-items:flex-start; flex-direction:column; }
     .nav-links { overflow-x:auto; width:100%; padding-bottom:2px; }
     .slide { min-height:auto; padding:46px 18px; }
     .hero-stats, .two-col, .flow { grid-template-columns:1fr; }
+    .call-item summary { grid-template-columns:1fr; gap:8px; }
     .flow-arrow { justify-content:center; transform:rotate(90deg); min-height:26px; }
   }
 </style>
@@ -209,6 +255,7 @@
   <div class="brand">rev<span>.</span>io x AirSpring</div>
   <div class="nav-links">
     <a href="#overview">Overview</a>
+    <a href="#calls">Call History</a>
     <a href="#current">Current State</a>
     <a href="#risks">Risks</a>
     <a href="#metrics">Metrics</a>
@@ -232,6 +279,39 @@
       <div class="stat"><div class="num">9,069</div><div class="label">AirSpring billing accounts/items provided in notes</div></div>
       <div class="stat"><div class="num">20%</div><div class="label">Assumed overall growth after initial migration</div></div>
       <div class="stat"><div class="num">17 wks</div><div class="label">Approximate KPMG engagement duration discussed</div></div>
+    </div>
+  </div>
+</section>
+
+<section class="slide white" id="calls">
+  <div class="content">
+    <div class="section-head">
+      <div class="section-kicker">Call History</div>
+      <h2>Past calls and meeting summaries</h2>
+      <p class="section-sub">This section is the running log of recorded calls used to update the evaluation summary. New completed transcripts can be added here as separate dropdowns.</p>
+    </div>
+    <div class="call-list">
+      <details class="call-item" open>
+        <summary>
+          <div class="call-date">July 9, 2026</div>
+          <div>
+            <div class="call-title">Pre-demo sync with Toni</div>
+            <div class="call-meta">Participants included Rev.io sales leadership and Spectrotel. AirSpring context was discussed for the upcoming KPMG evaluation demo.</div>
+          </div>
+          <div class="call-toggle">Summary</div>
+        </summary>
+        <div class="call-body">
+          <p>The call framed the Spectrotel/AirSpring merger as a Charles Bank-backed combination where KPMG will evaluate systems applications, with billing under the highest scrutiny. The group aligned that Rev.io should first demonstrate Spectrotel's current-state environment, then broaden into capabilities Spectrotel is not using today, and only then discuss new Rev.io/roadmap.</p>
+          <ul>
+            <li>KPMG, Sanjay, Mitch Wright, and John Moss were identified as critical evaluation stakeholders.</li>
+            <li>AirSpring currently uses RiverRock and appears to have highly manual, customer-specific billing customization.</li>
+            <li>AirSpring has usage billing, weekly billing, circuit billing, voice/long-distance usage, CAD/EUR billing, and a small mobility component.</li>
+            <li>Scalability is the top technical concern: NuCo demand is expected to be 2x at migration completion, with CDR processing likely growing faster than overall company growth.</li>
+            <li>The IMO appears to prefer keeping NuCo billing in Rev.io if Rev.io can prove scale, migration discipline, and AirSpring-specific billing fit.</li>
+            <li>The recommended demo flow is current-state Rev.io first, broader readiness/capacity second, and new Rev.io or roadmap last, potentially in a second session.</li>
+          </ul>
+        </div>
+      </details>
     </div>
   </div>
 </section>
