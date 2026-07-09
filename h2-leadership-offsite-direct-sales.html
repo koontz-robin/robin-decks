@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>H2 Leadership Offsite - Direct Sales Growth Motion</title>
+<title>H2 Sales Growth Motion</title>
 <link href="https://fonts.googleapis.com/css2?family=Open+Sans:wght@400;600;700;800&family=Montserrat:wght@700;800;900&display=swap" rel="stylesheet">
 <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
 <style>
@@ -157,6 +157,25 @@
   }
   .chart-wrap { position:relative; height:430px; }
   .chart-note { display:grid; gap:12px; }
+  .dual-chart-grid {
+    display:grid;
+    grid-template-columns:repeat(2,minmax(0,1fr));
+    gap:18px;
+    height:100%;
+  }
+  .dual-chart-panel {
+    background:#fff;
+    border:1px solid var(--line);
+    border-radius:8px;
+    padding:18px;
+    box-shadow:0 12px 28px rgba(29,55,86,.07);
+    display:flex;
+    flex-direction:column;
+    min-height:0;
+  }
+  .dual-chart-panel h3 { margin:0 0 4px; color:var(--navy); font-size:18px; }
+  .dual-chart-panel p { margin:0 0 12px; color:var(--muted); font-size:12px; line-height:1.4; }
+  .dual-chart-wrap { position:relative; flex:1; min-height:0; }
   .callout {
     background:#fff;
     border:1px solid var(--line);
@@ -193,7 +212,7 @@
     html, body { overflow:auto; }
     .slide { position:relative; min-height:100vh; opacity:1; pointer-events:auto; display:none; }
     .slide.active { display:flex; }
-    .grid-2, .grid-3, .grid-4, .cover-grid, .split, .chart-layout { grid-template-columns:1fr; }
+    .grid-2, .grid-3, .grid-4, .cover-grid, .split, .chart-layout, .dual-chart-grid { grid-template-columns:1fr; }
     h1 { font-size:42px; }
     .slide-body { overflow:auto; padding:24px 18px 70px; }
     .slide-header { padding:14px 18px; }
@@ -206,7 +225,7 @@
   <section class="slide cover active">
     <div class="cover-inner">
       <span class="kicker">H2 Leadership Offsite</span>
-      <h1>Direct Sales Growth Motion</h1>
+      <h1>H2 Sales Growth Motion</h1>
       <p class="cover-sub">How Rev.io sells more with the same platform by evolving roles, manufacturing better pipeline, monetizing Revii, and turning partner ecosystems plus integration proof into repeatable GTM leverage.</p>
       <div class="cover-grid">
         <div class="cover-card"><strong>Pipeline</strong><span>Primary growth constraint</span></div>
@@ -239,15 +258,21 @@
   <section class="slide">
     <div class="top-stripe"></div>
     <header class="slide-header">
-      <div><div class="slide-tag">Pipeline Motion</div><h2>Move from generic opportunity creation to trigger-based pipeline creation</h2></div>
-      <div class="header-meta"><img class="logo" src="revio-logo-white.png" alt="Rev.io">Draft framework</div>
+      <div><div class="slide-tag">Pipeline Creation</div><h2>PSA and Billing creation need separate inspection</h2></div>
+      <div class="header-meta"><img class="logo" src="revio-logo-white.png" alt="Rev.io">Jan-Jun 2026 Salesforce-created opps</div>
     </header>
     <div class="slide-body">
-      <div class="grid-4">
-        <div class="card"><h3>Contract Expiration</h3><p>Competitor renewal timing creates urgency, budget context, and a reason to evaluate before the incumbent re-locks the account.</p></div>
-        <div class="card"><h3>Referral Generation</h3><p>Client, vendor, community, and implementation referrals should be treated as a managed pipeline source, not happy accidents.</p></div>
-        <div class="card"><h3>Partner Org Mapping</h3><p>Pax8, NinjaOne, Acronis, and similar ecosystems need named owners, relationship maps, and account-level plays.</p></div>
-        <div class="card"><h3>Proof + Positioning</h3><p>GTM needs crisp proof for why Rev.io PSA, Billing, Payments, Cyber Protect, CommerceHub, and Revii matter now.</p></div>
+      <div class="dual-chart-grid">
+        <div class="dual-chart-panel">
+          <h3>PSA 2.0 created opportunities</h3>
+          <p>Monthly opportunity count with created pipeline value, showing volume decline from January peak but still the dominant H2 pipeline motion.</p>
+          <div class="dual-chart-wrap"><canvas id="psaMonthlyChart"></canvas></div>
+        </div>
+        <div class="dual-chart-panel">
+          <h3>Billing created opportunities</h3>
+          <p>Monthly Billing/Odin opportunity count with created pipeline value, showing lower volume but meaningful expansion economics when values hold.</p>
+          <div class="dual-chart-wrap"><canvas id="billingMonthlyChart"></canvas></div>
+        </div>
       </div>
     </div>
   </section>
@@ -603,6 +628,69 @@ function buildStackedChart(canvasId, datasets) {
     }
   });
 }
+function buildMonthlyValueChart(canvasId, label, counts, amounts, color) {
+  if (!window.Chart) return;
+  const canvas = document.getElementById(canvasId);
+  if (!canvas) return;
+  new Chart(canvas, {
+    type:'bar',
+    data:{
+      labels:monthLabels,
+      datasets:[
+        {
+          label:`${label} opps created`,
+          data:counts,
+          backgroundColor:color,
+          borderRadius:6,
+          yAxisID:'count'
+        },
+        {
+          label:'Created pipeline value ($K)',
+          data:amounts.map(v => Math.round(v / 1000)),
+          backgroundColor:'rgba(29,55,86,.72)',
+          borderRadius:6,
+          yAxisID:'value'
+        }
+      ]
+    },
+    options:{
+      responsive:true,
+      maintainAspectRatio:false,
+      plugins:{
+        legend:{ position:'bottom', labels:{ boxWidth:12, boxHeight:12, color:'#334155', font:{ size:11, family:'Open Sans' } } },
+        tooltip:{
+          mode:'index',
+          intersect:false,
+          callbacks:{
+            label(ctx) {
+              if (ctx.dataset.yAxisID === 'value') return `${ctx.dataset.label}: $${ctx.raw}K`;
+              return `${ctx.dataset.label}: ${ctx.raw}`;
+            }
+          }
+        }
+      },
+      scales:{
+        x:{ grid:{ display:false }, ticks:{ color:'#526174', font:{ family:'Open Sans', weight:700 } } },
+        count:{ beginAtZero:true, position:'left', grid:{ color:'#e7eef7' }, ticks:{ color:'#526174', precision:0 }, title:{ display:true, text:'Opps', color:'#526174', font:{ family:'Open Sans', weight:800 } } },
+        value:{ beginAtZero:true, position:'right', grid:{ drawOnChartArea:false }, ticks:{ color:'#526174', callback:v => `$${v}K` }, title:{ display:true, text:'Pipeline', color:'#526174', font:{ family:'Open Sans', weight:800 } } }
+      }
+    }
+  });
+}
+buildMonthlyValueChart(
+  'psaMonthlyChart',
+  'PSA',
+  [208,154,132,129,125,97],
+  [178810,131299,117382,114875,106790,91669],
+  chartColors.cyan
+);
+buildMonthlyValueChart(
+  'billingMonthlyChart',
+  'Billing',
+  [40,37,53,34,24,18],
+  [43775,24565,44822,41687,13990,19819],
+  chartColors.green
+);
 buildStackedChart('productCreatedChart', [
   { label:'PSA 2.0', data:[208,154,132,129,125,97], backgroundColor:chartColors.cyan },
   { label:'Billing / Odin', data:[40,37,53,34,24,18], backgroundColor:chartColors.green },
