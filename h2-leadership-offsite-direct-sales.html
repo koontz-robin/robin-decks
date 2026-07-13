@@ -871,7 +871,8 @@ buildStackedChart('subSourceCreatedChart', [
   { label:'Other Known', data:[17,24,22,20,22,8], backgroundColor:'#94a3b8' },
   { label:'Unknown / Not Set', data:[188,139,142,126,131,143], backgroundColor:'#cbd5e1' }
 ]);
-show(0);
+const requestedSlide = Number(new URLSearchParams(window.location.search).get('slide'));
+show(Number.isFinite(requestedSlide) ? requestedSlide - 1 : 0);
 </script>
 </body>
 </html>
