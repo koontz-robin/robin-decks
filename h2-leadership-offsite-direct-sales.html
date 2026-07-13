@@ -157,6 +157,40 @@
   .org-tier-card .org-metrics { display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); gap:8px; }
   .org-tier-card .org-metrics span { display:block; color:var(--muted); font-size:9px; font-weight:850; text-transform:uppercase; letter-spacing:.8px; }
   .org-tier-card .org-metrics strong { display:block; color:var(--navy); font-family:Montserrat, sans-serif; font-size:18px; line-height:1.1; margin-top:3px; }
+  .dark-table-wrap {
+    height:100%;
+    display:flex;
+    align-items:center;
+  }
+  table.dark-table {
+    background:#171717;
+    border:2px solid #3b3b3b;
+    border-radius:0;
+    box-shadow:none;
+  }
+  .dark-table th,
+  .dark-table td {
+    background:#171717;
+    border-top:2px solid #3b3b3b;
+    border-right:2px solid #3b3b3b;
+    color:#f2f2f2;
+    font-size:27px;
+    line-height:1.35;
+    padding:18px 20px;
+    vertical-align:top;
+  }
+  .dark-table th {
+    border-top:0;
+    color:#f2f2f2;
+    font-size:25px;
+    font-weight:800;
+    letter-spacing:0;
+    text-transform:none;
+  }
+  .dark-table th:last-child,
+  .dark-table td:last-child { border-right:0; }
+  .dark-table td:first-child { color:#f2f2f2; font-weight:700; }
+  .dark-table .num { text-align:left; }
   .chart-layout {
     display:grid;
     grid-template-columns:1.35fr .65fr;
@@ -259,6 +293,11 @@
     .slide-body { overflow:auto; padding:24px 18px 70px; }
     .slide-header { padding:14px 18px; }
     .chart-wrap { height:360px; }
+    .dark-table-wrap { align-items:flex-start; overflow:auto; }
+    .dark-table { min-width:1080px; }
+    .dark-table th,
+    .dark-table td { font-size:20px; padding:14px 16px; }
+    .dark-table th { font-size:19px; }
   }
 </style>
 </head>
@@ -442,39 +481,8 @@
       <div class="header-meta"><img class="logo" src="revio-logo-white.png" alt="Rev.io">H2 coverage model</div>
     </header>
     <div class="slide-body">
-      <div class="org-tier-grid">
-        <div class="org-tier-card">
-          <h3>Strategic Account Executive</h3>
-          <div class="rep-list">Jamie</div>
-          <div class="org-metrics">
-            <div><span>Quarterly Quota</span><strong>$20K</strong></div>
-            <div><span>TAM</span><strong>5,000</strong></div>
-            <div><span>Employees</span><strong>75+</strong></div>
-            <div><span>Comm. Billing</span><strong>$250K+</strong></div>
-          </div>
-        </div>
-        <div class="org-tier-card">
-          <h3>Mid-market Account Executive</h3>
-          <div class="rep-list">Andy, Connor</div>
-          <div class="org-metrics">
-            <div><span>Quarterly Quota</span><strong>$15K</strong></div>
-            <div><span>TAM</span><strong>10,000</strong></div>
-            <div><span>Employees</span><strong>25-75</strong></div>
-            <div><span>Comm. Billing</span><strong>$50K-$250K</strong></div>
-          </div>
-        </div>
-        <div class="org-tier-card">
-          <h3>Commercial Account Executive</h3>
-          <div class="rep-list">Abbey, Jaylin, Jake, Patrick</div>
-          <div class="org-metrics">
-            <div><span>Quarterly Quota</span><strong>$10K</strong></div>
-            <div><span>TAM</span><strong>20,000</strong></div>
-            <div><span>Employees</span><strong>&lt;25</strong></div>
-            <div><span>Comm. Billing</span><strong>&lt;$50K</strong></div>
-          </div>
-        </div>
-      </div>
-      <table>
+      <div class="dark-table-wrap">
+      <table class="dark-table">
         <thead><tr><th>Title</th><th>Rep</th><th>Quarterly Quota</th><th>Employee Threshold</th><th>Communications Billing Threshold</th><th>TAM</th></tr></thead>
         <tbody>
           <tr><td>Strategic Account Executive</td><td>Jamie</td><td class="num">$20,000</td><td>75+</td><td>$250k+</td><td class="num">5,000</td></tr>
@@ -482,6 +490,7 @@
           <tr><td>Commercial Account Executive</td><td>Abbey, Jaylin, Jake, Patrick</td><td class="num">$10,000</td><td>&lt;25</td><td>&lt; $50k</td><td class="num">20,000</td></tr>
         </tbody>
       </table>
+      </div>
     </div>
   </section>
 
