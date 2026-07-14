@@ -16,17 +16,55 @@ table { width:100%; border-collapse:collapse; } thead tr { background:rgba(255,2
 .opp-link { color:var(--accent); text-decoration:none; font-weight:500; } .opp-link:hover { text-decoration:underline; } .subtext { color:var(--muted); font-size:12px; margin-top:2px; max-width:360px; } .badge { display:inline-block; padding:2px 8px; border-radius:10px; font-size:11px; font-weight:700; white-space:nowrap; } .urgent-badge { background:rgba(239,83,80,.2); color:#ef5350; } .soon-badge { background:rgba(255,167,38,.2); color:#ffa726; } .moderate-badge { background:rgba(102,187,106,.2); color:#66bb6a; } .future-badge { background:rgba(66,165,245,.2); color:#42a5f5; } .past-badge { background:rgba(255,112,67,.2); color:#ff7043; } .unknown-badge { background:rgba(136,144,181,.18); color:#b4b9d2; } .high-badge { background:rgba(102,187,106,.2); color:#66bb6a; } .medium-badge { background:rgba(255,167,38,.2); color:#ffa726; } .low-badge { background:rgba(239,83,80,.18); color:#ef9a9a; }
 @media (max-width:980px) { .content,.header,.nav-bar { padding-left:16px; padding-right:16px; } table { display:block; overflow-x:auto; } .subtitle { max-width:100%; } }
 </style></head><body><main class="shell">
-<header class="header"><div class="header-top"><div><div class="title">Competitor Contract End Date Monitor</div><div class="subtitle">Sales Meeting Coaching signals where a competitor renewal, expiration, lock-in, or contract timing was mentioned. Daily refresh prunes rows after the matched Salesforce account has Competitor Contract End Date populated.</div></div><div class="stat-pills"><div class="stat-pill">Active <span>13</span></div><div class="stat-pill hot">Next 30d <span>2</span></div><div class="stat-pill warn">Needs match <span>13</span></div><div class="stat-pill">Generated <span>Jul 14 17:22 UTC</span></div></div></div></header>
-<nav class="nav-bar"><a href="#owner-manual-match-needed" class="nav-link">Manual</a></nav>
+<header class="header"><div class="header-top"><div><div class="title">Competitor Contract End Date Monitor</div><div class="subtitle">Sales Meeting Coaching signals where a competitor renewal, expiration, lock-in, or contract timing was mentioned. Sorted by Salesforce account owner, with unmatched rows separated for cleanup.</div></div><div class="stat-pills"><div class="stat-pill">Active <span>13</span></div><div class="stat-pill hot">Next 30d <span>2</span></div><div class="stat-pill">Owner matched <span>12</span></div><div class="stat-pill warn">Needs match <span>1</span></div><div class="stat-pill">Generated <span>Jul 14 17:28 UTC</span></div></div></div></header>
+<nav class="nav-bar"><a href="#owner-ardit-berdyna" class="nav-link">Ardit</a> <a href="#owner-jamie-butler" class="nav-link">Jamie</a> <a href="#owner-andy-whisenant" class="nav-link">Andy</a> <a href="#owner-jake-mitchell" class="nav-link">Jake</a> <a href="#owner-connor-flynn" class="nav-link">Connor</a> <a href="#owner-patrick-davies" class="nav-link">Patrick</a> <a href="#owner-manual-match-needed" class="nav-link">Manual</a></nav>
 <div class="content">
-  <div class="legend"><span class="legend-title">Contract timing:</span><span class="legend-item"><span class="legend-dot" style="background:var(--past)"></span>Past</span><span class="legend-item"><span class="legend-dot" style="background:var(--urgent)"></span>Next 30d</span><span class="legend-item"><span class="legend-dot" style="background:var(--soon)"></span>Next 90d</span><span class="legend-item"><span class="legend-dot" style="background:var(--moderate)"></span>Next 180d</span><span class="legend-item"><span class="legend-dot" style="background:var(--future)"></span>Future</span><span class="legend-item"><span class="legend-dot" style="background:var(--muted)"></span>Needs date</span><span class="legend-title">Source:</span><span class="legend-item">14 reviewed</span><span class="legend-item">1 pruned</span><span class="legend-item">11 strong signals</span></div>
+  <div class="legend"><span class="legend-title">Contract timing:</span><span class="legend-item"><span class="legend-dot" style="background:var(--past)"></span>Past</span><span class="legend-item"><span class="legend-dot" style="background:var(--urgent)"></span>Next 30d</span><span class="legend-item"><span class="legend-dot" style="background:var(--soon)"></span>Next 90d</span><span class="legend-item"><span class="legend-dot" style="background:var(--moderate)"></span>Next 180d</span><span class="legend-item"><span class="legend-dot" style="background:var(--future)"></span>Future</span><span class="legend-item"><span class="legend-dot" style="background:var(--muted)"></span>Needs date</span><span class="legend-title">Source:</span><span class="legend-item">14 reviewed</span><span class="legend-item">1 pruned by exact event match</span><span class="legend-item">11 strong signals</span></div>
   
-    <div class="owner-section" id="owner-manual-match-needed">
+    <div class="owner-section" id="owner-ardit-berdyna">
       <div class="owner-header">
-        <div class="owner-name">Manual Match Needed</div>
+        <div class="owner-name">Ardit Berdyna</div>
         <div class="owner-meta">
-          <span class="count-badge">13 signals</span>
-          <span class="pill past-pill">4 past</span><span class="pill urgent-pill">2 next 30d</span>
+          <span class="count-badge">1 signal</span>
+          <span class="pill past-pill">1 past</span><span class="pill matched-pill">1 SF matched</span>
+        </div>
+      </div>
+      <table>
+        <thead>
+          <tr>
+            <th>Account / Meeting</th>
+            <th>Contract Date</th>
+            <th>Timing</th>
+            <th>Signal</th>
+            <th>Competitor / Contract</th>
+            <th>Quality</th>
+            <th>Salesforce</th>
+          </tr>
+        </thead>
+        <tbody>
+        <tr class="row-past">
+          <td>
+            <a href="https://app.notion.com/p/Rev-io-Ryan-Hawkins-Post-ISC-West-Discovery-Call-33da59b7e7b281649dcbc19b05ed5018" target="_blank" class="opp-link">Modern Wave</a>
+            <div class="subtext">Rev.io &amp; Ryan Hawkins | Post ISC West Discovery Call</div>
+          </td>
+          <td>May 01, 2026</td>
+          <td><span class="badge past-badge">74d past</span></td>
+          <td>renewal in 3-4 weeks; renewal in May</td>
+          <td>Jobber</td>
+          <td><span class="badge high-badge">Strong</span></td>
+          <td>SF blank<div class="subtext"><a href="https://rev-io.my.salesforce.com/001PX00000ihGpvYAE" target="_blank" class="opp-link">Modern Wave</a></div></td>
+        </tr>
+        <tr class="quote-row">
+          <td colspan="7"><strong>Source:</strong> With a Jobber renewal in 3-4 weeks, there was a real timeline to leverage ... Business Issue identified: Yes (Jobber renewal in May)<span class="why"> Direct reference to incumbent vendor renewal timing that could affect evaluation/decision timeline.</span></td>
+        </tr></tbody>
+      </table>
+    </div>
+    <div class="owner-section" id="owner-jamie-butler">
+      <div class="owner-header">
+        <div class="owner-name">Jamie Butler</div>
+        <div class="owner-meta">
+          <span class="count-badge">3 signals</span>
+          <span class="pill past-pill">1 past</span><span class="pill matched-pill">3 SF matched</span>
         </div>
       </div>
       <table>
@@ -52,26 +90,64 @@ table { width:100%; border-collapse:collapse; } thead tr { background:rgba(255,2
           <td>just renewed on May 1st</td>
           <td>PSA contract</td>
           <td><span class="badge high-badge">Strong</span></td>
-          <td>Needs match<div class="subtext">Manual match needed</div></td>
+          <td>SF date: 2027-05-01<div class="subtext"><a href="https://rev-io.my.salesforce.com/0016O00003dmoY3QAI" target="_blank" class="opp-link">Dioguardi Consultation Group</a></div></td>
         </tr>
         <tr class="quote-row">
           <td colspan="7"><strong>Source:</strong> the prospect actually revealed he just renewed his PSA contract on May 1st<span class="why"> Explicit mention that the prospect renewed their incumbent PSA contract, which directly affects replacement timing and buying window.</span></td>
         </tr>
-        <tr class="row-past">
+        <tr class="row-future">
           <td>
-            <a href="https://app.notion.com/p/Rev-io-Ryan-Hawkins-Post-ISC-West-Discovery-Call-33da59b7e7b281649dcbc19b05ed5018" target="_blank" class="opp-link">Modern Wave</a>
-            <div class="subtext">Rev.io &amp; Ryan Hawkins | Post ISC West Discovery Call</div>
+            <a href="https://app.notion.com/p/Discovery-Call-Versatile-VoIP-Rev-io-35ea59b7e7b281a9a531d4ae8ee8f6df" target="_blank" class="opp-link">Versatile VoIP</a>
+            <div class="subtext">(Discovery Call) Versatile VoIP &amp; Rev.io</div>
           </td>
-          <td>May 01, 2026</td>
-          <td><span class="badge past-badge">74d past</span></td>
-          <td>renewal in 3-4 weeks; renewal in May</td>
-          <td>Jobber</td>
-          <td><span class="badge high-badge">Strong</span></td>
-          <td>Needs match<div class="subtext">Manual match needed</div></td>
+          <td>Oct 20, 2027</td>
+          <td><span class="badge future-badge">463d</span></td>
+          <td>Agreement changes status in October 2027; vague contract/agreement timing reference.</td>
+          <td>Agreement with purchaser</td>
+          <td><span class="badge low-badge">Maybe</span></td>
+          <td>SF date: 2026-11-01<div class="subtext"><a href="https://rev-io.my.salesforce.com/001PX00000lFpVOYA0" target="_blank" class="opp-link">Versatile VoIP</a></div></td>
         </tr>
         <tr class="quote-row">
-          <td colspan="7"><strong>Source:</strong> With a Jobber renewal in 3-4 weeks, there was a real timeline to leverage ... Business Issue identified: Yes (Jobber renewal in May)<span class="why"> Direct reference to incumbent vendor renewal timing that could affect evaluation/decision timeline.</span></td>
+          <td colspan="7"><strong>Source:</strong> &quot;The agreement with the purchaser is that all the networking stuff stays on that side and all the voice stuff stays on this side. They will become a referring agent in October of 2027.&quot;<span class="why"> Mentions an agreement and a future date when the relationship changes, which may indicate contract timing, though not clearly an incumbent software/vendor renewal or expiration.</span></td>
         </tr>
+        <tr class="row-unknown">
+          <td>
+            <a href="https://app.notion.com/p/Discovery-Call-Dioguardi-Consultation-Group-Rev-io-358a59b7e7b281e7b082f9e2dd7c7874" target="_blank" class="opp-link">Dioguardi Consultation Group</a>
+            <div class="subtext">(Discovery Call) Dioguardi Consultation Group &amp; Rev.io</div>
+          </td>
+          <td>contract just auto-renewed; maybe 4-5 months callback timing</td>
+          <td><span class="badge unknown-badge">Needs date</span></td>
+          <td>contract just auto-renewed; maybe 4-5 months callback timing</td>
+          <td>current contract</td>
+          <td><span class="badge high-badge">Strong</span></td>
+          <td>SF date: 2027-05-01<div class="subtext"><a href="https://rev-io.my.salesforce.com/0016O00003dmoY3QAI" target="_blank" class="opp-link">Dioguardi Consultation Group</a></div></td>
+        </tr>
+        <tr class="quote-row">
+          <td colspan="7"><strong>Source:</strong> When a prospect tells you their contract just auto-renewed, that&#x27;s the moment to lock in a specific callback date with calendar invites, not &quot;maybe 4-5 months.&quot;<span class="why"> References an incumbent contract auto-renewal and a vague follow-up window tied to contract timing.</span></td>
+        </tr></tbody>
+      </table>
+    </div>
+    <div class="owner-section" id="owner-andy-whisenant">
+      <div class="owner-header">
+        <div class="owner-name">Andy Whisenant</div>
+        <div class="owner-meta">
+          <span class="count-badge">4 signals</span>
+          <span class="pill past-pill">1 past</span><span class="pill urgent-pill">2 next 30d</span><span class="pill matched-pill">4 SF matched</span>
+        </div>
+      </div>
+      <table>
+        <thead>
+          <tr>
+            <th>Account / Meeting</th>
+            <th>Contract Date</th>
+            <th>Timing</th>
+            <th>Signal</th>
+            <th>Competitor / Contract</th>
+            <th>Quality</th>
+            <th>Salesforce</th>
+          </tr>
+        </thead>
+        <tbody>
         <tr class="row-past">
           <td>
             <a href="https://app.notion.com/p/Reminder-Discovery-Call-Parrk-Analytics-Rev-io-RMM-351a59b7e7b2811e90cbdb323ffb3d51" target="_blank" class="opp-link">Parrk Analytics</a>
@@ -82,25 +158,10 @@ table { width:100%; border-collapse:collapse; } thead tr { background:rgba(255,2
           <td>Contract renewal on May 2nd</td>
           <td>Current software stack / incumbent vendor contract</td>
           <td><span class="badge high-badge">Strong</span></td>
-          <td>Needs match<div class="subtext">Manual match needed</div></td>
+          <td>SF date: 2027-05-01<div class="subtext"><a href="https://rev-io.my.salesforce.com/001PX00000l6O9RYAU" target="_blank" class="opp-link">Parrk Analytics</a></div></td>
         </tr>
         <tr class="quote-row">
           <td colspan="7"><strong>Source:</strong> Identified the business issue (contract renewal May 2nd).<span class="why"> Explicit reference to an existing contract renewal date tied to their current software situation.</span></td>
-        </tr>
-        <tr class="row-past">
-          <td>
-            <a href="https://app.notion.com/p/Discovery-Call-Impossible-Cloud-Rev-io-34fa59b7e7b281f69283de0203003923" target="_blank" class="opp-link">Impossible Cloud</a>
-            <div class="subtext">(Discovery Call) Impossible Cloud &amp; Rev.io</div>
-          </td>
-          <td>Jun 01, 2026</td>
-          <td><span class="badge past-badge">43d past</span></td>
-          <td>Hard deadline by June 1st related to getting setup in time</td>
-          <td>Unclear software/vendor timeline</td>
-          <td><span class="badge low-badge">Maybe</span></td>
-          <td>Needs match<div class="subtext">Manual match needed</div></td>
-        </tr>
-        <tr class="quote-row">
-          <td colspan="7"><strong>Source:</strong> &quot;June 1st is sort of a hard deadline&quot;<span class="why"> This is a clear timing/deadline reference, but it is not explicitly stated as an incumbent vendor contract renewal or expiration.</span></td>
         </tr>
         <tr class="row-urgent">
           <td>
@@ -112,7 +173,7 @@ table { width:100%; border-collapse:collapse; } thead tr { background:rgba(255,2
           <td>renewal timing in August</td>
           <td>incumbent software contract / renewal timing</td>
           <td><span class="badge high-badge">Strong</span></td>
-          <td>Needs match<div class="subtext">Manual match needed</div></td>
+          <td>SF date: 2026-08-01<div class="subtext"><a href="https://rev-io.my.salesforce.com/001PX00000emGrRYAU" target="_blank" class="opp-link">Organ Mountain Cabling and Technology L.L.C.</a></div></td>
         </tr>
         <tr class="quote-row">
           <td colspan="7"><strong>Source:</strong> Asked about renewal timing (August).<span class="why"> Explicit reference to prospect renewal timing for an incumbent system/software relationship.</span></td>
@@ -127,11 +188,87 @@ table { width:100%; border-collapse:collapse; } thead tr { background:rgba(255,2
           <td>Contract renewal timing in August</td>
           <td>Incumbent vendor contract renewal</td>
           <td><span class="badge high-badge">Strong</span></td>
-          <td>Needs match<div class="subtext">Manual match needed</div></td>
+          <td>SF blank<div class="subtext"><a href="https://rev-io.my.salesforce.com/0016O00003V9ng6QAB" target="_blank" class="opp-link">WPS Technology Solutions</a></div></td>
         </tr>
         <tr class="quote-row">
           <td colspan="7"><strong>Source:</strong> Got confirmation on contract renewal timing (August).<span class="why"> Explicit mention of incumbent contract renewal timing, including a month reference.</span></td>
         </tr>
+        <tr class="row-unknown">
+          <td>
+            <a href="https://app.notion.com/p/Discovery-Call-Amazing7-Rev-io-33da59b7e7b281f49fabc50b11cd7c68" target="_blank" class="opp-link">Amazing7</a>
+            <div class="subtext">(Discovery Call) Amazing7 &amp; Rev.io</div>
+          </td>
+          <td>Prospect just renewed incumbent vendor contract</td>
+          <td><span class="badge unknown-badge">Needs date</span></td>
+          <td>Prospect just renewed incumbent vendor contract</td>
+          <td>Syncro</td>
+          <td><span class="badge high-badge">Strong</span></td>
+          <td>SF date: 2027-03-01<div class="subtext"><a href="https://rev-io.my.salesforce.com/001PX000004hV9OYAU" target="_blank" class="opp-link">Amazing7</a></div></td>
+        </tr>
+        <tr class="quote-row">
+          <td colspan="7"><strong>Source:</strong> &quot;the prospect just renewed their Syncro contract&quot;<span class="why"> Directly references a recent renewal of the incumbent software contract, which affects timing.</span></td>
+        </tr></tbody>
+      </table>
+    </div>
+    <div class="owner-section" id="owner-jake-mitchell">
+      <div class="owner-header">
+        <div class="owner-name">Jake Mitchell</div>
+        <div class="owner-meta">
+          <span class="count-badge">1 signal</span>
+          <span class="pill past-pill">1 past</span><span class="pill matched-pill">1 SF matched</span>
+        </div>
+      </div>
+      <table>
+        <thead>
+          <tr>
+            <th>Account / Meeting</th>
+            <th>Contract Date</th>
+            <th>Timing</th>
+            <th>Signal</th>
+            <th>Competitor / Contract</th>
+            <th>Quality</th>
+            <th>Salesforce</th>
+          </tr>
+        </thead>
+        <tbody>
+        <tr class="row-past">
+          <td>
+            <a href="https://app.notion.com/p/Discovery-Call-Impossible-Cloud-Rev-io-34fa59b7e7b281f69283de0203003923" target="_blank" class="opp-link">Impossible Cloud</a>
+            <div class="subtext">(Discovery Call) Impossible Cloud &amp; Rev.io</div>
+          </td>
+          <td>Jun 01, 2026</td>
+          <td><span class="badge past-badge">43d past</span></td>
+          <td>Hard deadline by June 1st related to getting setup in time</td>
+          <td>Unclear software/vendor timeline</td>
+          <td><span class="badge low-badge">Maybe</span></td>
+          <td>SF blank<div class="subtext"><a href="https://rev-io.my.salesforce.com/001PX00000i3xLbYAI" target="_blank" class="opp-link">Impossible Cloud</a></div></td>
+        </tr>
+        <tr class="quote-row">
+          <td colspan="7"><strong>Source:</strong> &quot;June 1st is sort of a hard deadline&quot;<span class="why"> This is a clear timing/deadline reference, but it is not explicitly stated as an incumbent vendor contract renewal or expiration.</span></td>
+        </tr></tbody>
+      </table>
+    </div>
+    <div class="owner-section" id="owner-connor-flynn">
+      <div class="owner-header">
+        <div class="owner-name">Connor Flynn</div>
+        <div class="owner-meta">
+          <span class="count-badge">2 signals</span>
+          <span class="pill matched-pill">2 SF matched</span>
+        </div>
+      </div>
+      <table>
+        <thead>
+          <tr>
+            <th>Account / Meeting</th>
+            <th>Contract Date</th>
+            <th>Timing</th>
+            <th>Signal</th>
+            <th>Competitor / Contract</th>
+            <th>Quality</th>
+            <th>Salesforce</th>
+          </tr>
+        </thead>
+        <tbody>
         <tr class="row-moderate">
           <td>
             <a href="https://app.notion.com/p/Discovery-Call-SelTec-Rev-io-358a59b7e7b281369b43e94a49ec175f" target="_blank" class="opp-link">SelTec</a>
@@ -142,7 +279,7 @@ table { width:100%; border-collapse:collapse; } thead tr { background:rgba(255,2
           <td>Current contract ends in December; evaluation starts in June/July.</td>
           <td>Connectwise</td>
           <td><span class="badge high-badge">Strong</span></td>
-          <td>Needs match<div class="subtext">Manual match needed</div></td>
+          <td>SF date: 2026-12-01<div class="subtext"><a href="https://rev-io.my.salesforce.com/001PX00000PMBT5YAP" target="_blank" class="opp-link">SelTec</a></div></td>
         </tr>
         <tr class="quote-row">
           <td colspan="7"><strong>Source:</strong> &quot;What they did well: Got the \&quot;why now\&quot; (contract ends December, starting evaluation June/July).&quot;<span class="why"> This directly states the incumbent software contract end timing and the prospect&#x27;s evaluation window.</span></td>
@@ -157,56 +294,72 @@ table { width:100%; border-collapse:collapse; } thead tr { background:rgba(255,2
           <td>contract ends December</td>
           <td>Connectwise contract</td>
           <td><span class="badge high-badge">Strong</span></td>
-          <td>Needs match<div class="subtext">Manual match needed</div></td>
+          <td>SF date: 2026-12-01<div class="subtext"><a href="https://rev-io.my.salesforce.com/001PX00000PMBT5YAP" target="_blank" class="opp-link">SelTec</a></div></td>
         </tr>
         <tr class="quote-row">
           <td colspan="7"><strong>Source:</strong> Identified the timeline (contract ends December)<span class="why"> Direct statement of incumbent vendor contract end timing, relevant to renewal/replace window.</span></td>
-        </tr>
-        <tr class="row-future">
-          <td>
-            <a href="https://app.notion.com/p/Discovery-Call-Versatile-VoIP-Rev-io-35ea59b7e7b281a9a531d4ae8ee8f6df" target="_blank" class="opp-link">Versatile VoIP</a>
-            <div class="subtext">(Discovery Call) Versatile VoIP &amp; Rev.io</div>
-          </td>
-          <td>Oct 20, 2027</td>
-          <td><span class="badge future-badge">463d</span></td>
-          <td>Agreement changes status in October 2027; vague contract/agreement timing reference.</td>
-          <td>Agreement with purchaser</td>
-          <td><span class="badge low-badge">Maybe</span></td>
-          <td>Needs match<div class="subtext">Manual match needed</div></td>
-        </tr>
-        <tr class="quote-row">
-          <td colspan="7"><strong>Source:</strong> &quot;The agreement with the purchaser is that all the networking stuff stays on that side and all the voice stuff stays on this side. They will become a referring agent in October of 2027.&quot;<span class="why"> Mentions an agreement and a future date when the relationship changes, which may indicate contract timing, though not clearly an incumbent software/vendor renewal or expiration.</span></td>
-        </tr>
+        </tr></tbody>
+      </table>
+    </div>
+    <div class="owner-section" id="owner-patrick-davies">
+      <div class="owner-header">
+        <div class="owner-name">Patrick Davies</div>
+        <div class="owner-meta">
+          <span class="count-badge">1 signal</span>
+          <span class="pill matched-pill">1 SF matched</span>
+        </div>
+      </div>
+      <table>
+        <thead>
+          <tr>
+            <th>Account / Meeting</th>
+            <th>Contract Date</th>
+            <th>Timing</th>
+            <th>Signal</th>
+            <th>Competitor / Contract</th>
+            <th>Quality</th>
+            <th>Salesforce</th>
+          </tr>
+        </thead>
+        <tbody>
         <tr class="row-unknown">
           <td>
-            <a href="https://app.notion.com/p/Discovery-Call-Amazing7-Rev-io-33da59b7e7b281f49fabc50b11cd7c68" target="_blank" class="opp-link">Amazing7</a>
-            <div class="subtext">(Discovery Call) Amazing7 &amp; Rev.io</div>
+            <a href="https://app.notion.com/p/Discovery-Call-Zakiant-Rev-io-35ea59b7e7b281b9856fc6db7ad96447" target="_blank" class="opp-link">Zakiant &amp; Rev.io</a>
+            <div class="subtext">(Discovery Call) Zakiant &amp; Rev.io</div>
           </td>
-          <td>Prospect just renewed incumbent vendor contract</td>
+          <td>Recently entered a new contract and is locked in for now</td>
           <td><span class="badge unknown-badge">Needs date</span></td>
-          <td>Prospect just renewed incumbent vendor contract</td>
-          <td>Syncro</td>
+          <td>Recently entered a new contract and is locked in for now</td>
+          <td>Current PSA (Kaseya/Autotask)</td>
           <td><span class="badge high-badge">Strong</span></td>
-          <td>Needs match<div class="subtext">Manual match needed</div></td>
+          <td>SF date: 2027-03-01<div class="subtext"><a href="https://rev-io.my.salesforce.com/001PX00000Qm9dAYAR" target="_blank" class="opp-link">Zakiant</a></div></td>
         </tr>
         <tr class="quote-row">
-          <td colspan="7"><strong>Source:</strong> &quot;the prospect just renewed their Syncro contract&quot;<span class="why"> Directly references a recent renewal of the incumbent software contract, which affects timing.</span></td>
-        </tr>
-        <tr class="row-unknown">
-          <td>
-            <a href="https://app.notion.com/p/Discovery-Call-Dioguardi-Consultation-Group-Rev-io-358a59b7e7b281e7b082f9e2dd7c7874" target="_blank" class="opp-link">Dioguardi Consultation Group</a>
-            <div class="subtext">(Discovery Call) Dioguardi Consultation Group &amp; Rev.io</div>
-          </td>
-          <td>contract just auto-renewed; maybe 4-5 months callback timing</td>
-          <td><span class="badge unknown-badge">Needs date</span></td>
-          <td>contract just auto-renewed; maybe 4-5 months callback timing</td>
-          <td>current contract</td>
-          <td><span class="badge high-badge">Strong</span></td>
-          <td>Needs match<div class="subtext">Manual match needed</div></td>
-        </tr>
-        <tr class="quote-row">
-          <td colspan="7"><strong>Source:</strong> When a prospect tells you their contract just auto-renewed, that&#x27;s the moment to lock in a specific callback date with calendar invites, not &quot;maybe 4-5 months.&quot;<span class="why"> References an incumbent contract auto-renewal and a vague follow-up window tied to contract timing.</span></td>
-        </tr>
+          <td colspan="7"><strong>Source:</strong> &quot;So it sounds like the PSA using today is too complicated, but you just entered a new contract with them, so you&#x27;re locked in for now, is that right?&quot;<span class="why"> Explicit reference to an incumbent software/vendor contract and current lock-in timing, even though no exact renewal or end date is given.</span></td>
+        </tr></tbody>
+      </table>
+    </div>
+    <div class="owner-section" id="owner-manual-match-needed">
+      <div class="owner-header">
+        <div class="owner-name">Manual Match Needed</div>
+        <div class="owner-meta">
+          <span class="count-badge">1 signal</span>
+          
+        </div>
+      </div>
+      <table>
+        <thead>
+          <tr>
+            <th>Account / Meeting</th>
+            <th>Contract Date</th>
+            <th>Timing</th>
+            <th>Signal</th>
+            <th>Competitor / Contract</th>
+            <th>Quality</th>
+            <th>Salesforce</th>
+          </tr>
+        </thead>
+        <tbody>
         <tr class="row-unknown">
           <td>
             <a href="https://app.notion.com/p/Overview-of-Revii-AI-Powered-Digital-Workforce-348a59b7e7b281e6bc9eed1baefcf281" target="_blank" class="opp-link">Revii/PSA Overview</a>
@@ -221,21 +374,6 @@ table { width:100%; border-collapse:collapse; } thead tr { background:rgba(255,2
         </tr>
         <tr class="quote-row">
           <td colspan="7"><strong>Source:</strong> missing the &quot;make sick&quot; element that creates urgency for a prospect who&#x27;s 2+ years away from contract flexibility. ... Matt asked about the contract renewal timing (&quot;You guys just renewed a 2 year with Connectwise, is that cor<span class="why"> Direct discussion of incumbent vendor renewal timing and distance from a point where the prospect could switch vendors.</span></td>
-        </tr>
-        <tr class="row-unknown">
-          <td>
-            <a href="https://app.notion.com/p/Discovery-Call-Zakiant-Rev-io-35ea59b7e7b281b9856fc6db7ad96447" target="_blank" class="opp-link">Zakiant &amp; Rev.io</a>
-            <div class="subtext">(Discovery Call) Zakiant &amp; Rev.io</div>
-          </td>
-          <td>Recently entered a new contract and is locked in for now</td>
-          <td><span class="badge unknown-badge">Needs date</span></td>
-          <td>Recently entered a new contract and is locked in for now</td>
-          <td>Current PSA (Kaseya/Autotask)</td>
-          <td><span class="badge high-badge">Strong</span></td>
-          <td>Needs match<div class="subtext">Manual match needed</div></td>
-        </tr>
-        <tr class="quote-row">
-          <td colspan="7"><strong>Source:</strong> &quot;So it sounds like the PSA using today is too complicated, but you just entered a new contract with them, so you&#x27;re locked in for now, is that right?&quot;<span class="why"> Explicit reference to an incumbent software/vendor contract and current lock-in timing, even though no exact renewal or end date is given.</span></td>
         </tr></tbody>
       </table>
     </div>
