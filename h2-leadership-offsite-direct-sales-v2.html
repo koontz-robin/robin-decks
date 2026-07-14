@@ -1,0 +1,481 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>H2 Leadership Offsite · Direct Sales Growth Motion</title>
+<link href="https://fonts.googleapis.com/css2?family=Open+Sans:wght@400;600;700;800&family=Montserrat:wght@700;800;900&display=swap" rel="stylesheet">
+<style>
+* { margin:0; padding:0; box-sizing:border-box; }
+html { min-height:100%; scroll-behavior:smooth; background:#0a1628; }
+body { min-height:100%; overflow-x:hidden; overflow-y:auto; background:#0a1628; color:#fff; font-family:'Open Sans', Arial, sans-serif; }
+#particle-canvas { position:fixed; inset:0; z-index:0; pointer-events:none; }
+.deck { width:100%; position:relative; z-index:1; }
+.slide { position:relative; width:100%; min-height:100vh; display:flex; flex-direction:column; z-index:1; border-bottom:1px solid rgba(0,212,240,.13); scroll-margin-top:0; }
+.slide.active { display:flex; }
+.top-stripe { height:3px; background:linear-gradient(90deg,#00d4f0,#3ddc97); flex-shrink:0; }
+.slide-header { background:rgba(10,22,40,.92); padding:14px 48px; display:flex; align-items:center; justify-content:space-between; flex-shrink:0; border-bottom:1px solid rgba(0,212,240,.12); backdrop-filter:blur(8px); }
+.slide-tag { font-size:10px; font-weight:800; letter-spacing:2px; text-transform:uppercase; color:#00d4f0; margin-bottom:4px; }
+.slide-header h2 { font-family:Montserrat, 'Open Sans', sans-serif; font-size:23px; line-height:1.08; font-weight:900; color:#fff; }
+.slide-header img { height:26px; filter:brightness(0) invert(1); opacity:.86; }
+.header-note { font-size:11px; color:rgba(255,255,255,.42); text-align:right; margin-top:4px; }
+.slide-body { flex:1; padding:26px 48px 48px; overflow:visible; background:transparent; }
+.nav-bar { display:none; position:fixed; bottom:0; left:0; right:0; background:rgba(8,18,36,.95); border-top:1px solid rgba(0,212,240,.15); padding:10px 32px; align-items:center; justify-content:space-between; z-index:9999; backdrop-filter:blur(12px); }
+.nav-title { font-size:11px; font-weight:800; color:rgba(255,255,255,.34); letter-spacing:2px; text-transform:uppercase; }
+.nav-controls { display:flex; align-items:center; gap:12px; }
+.nav-btn { background:rgba(0,212,240,.08); border:1px solid rgba(0,212,240,.25); color:#00d4f0; border-radius:8px; padding:6px 16px; font-size:13px; font-weight:800; cursor:pointer; }
+.nav-btn:disabled { opacity:.22; cursor:default; }
+.nav-counter { font-family:Montserrat, sans-serif; font-size:13px; font-weight:900; color:rgba(255,255,255,.46); min-width:54px; text-align:center; }
+.nav-dots { display:flex; gap:6px; }
+.dot { width:7px; height:7px; border-radius:50%; background:rgba(255,255,255,.16); cursor:pointer; }
+.dot.active { background:#00d4f0; box-shadow:0 0 6px #00d4f0; }
+.nav-logo { height:20px; opacity:.36; filter:brightness(0) invert(1); }
+.section-hdr { display:flex; align-items:center; gap:10px; margin:0 0 14px; }
+.section-lbl { font-size:10px; font-weight:800; letter-spacing:2px; text-transform:uppercase; color:#00d4f0; white-space:nowrap; }
+.section-rule { flex:1; height:1px; background:rgba(255,255,255,.08); }
+.card { background:#0f2339; border:1px solid rgba(255,255,255,.07); border-radius:10px; box-shadow:0 4px 20px rgba(0,0,0,.26); }
+.cover { justify-content:center; align-items:center; text-align:center; }
+.cover-inner { position:relative; z-index:1; width:min(1040px,100%); padding:0 48px; transform:translateY(8px); }
+.cover-logo { height:42px; filter:brightness(0) invert(1); opacity:.9; margin-bottom:18px; }
+.cover-tag { display:inline-block; font-size:11px; font-weight:800; letter-spacing:3px; text-transform:uppercase; color:#00d4f0; border:1px solid rgba(0,212,240,.3); padding:6px 18px; border-radius:20px; background:rgba(0,212,240,.06); margin-bottom:18px; }
+.cover-title { font-family:Montserrat, sans-serif; font-size:66px; font-weight:900; color:#fff; line-height:1.04; margin-bottom:14px; }
+.cover-title span { color:#00d4f0; text-shadow:0 0 40px rgba(0,212,240,.45); }
+.cover-sub { font-size:17px; line-height:1.55; color:rgba(255,255,255,.58); max-width:850px; margin:0 auto 32px; }
+.cover-chips { display:grid; grid-template-columns:repeat(4,minmax(0,1fr)); gap:14px; }
+.cover-chip { background:rgba(255,255,255,.04); border:1px solid rgba(255,255,255,.1); border-radius:10px; padding:16px; min-height:88px; display:flex; flex-direction:column; justify-content:center; backdrop-filter:blur(4px); }
+.chip-val { font-family:Montserrat, sans-serif; font-size:28px; font-weight:900; color:#fff; }
+.chip-val.green { color:#3ddc97; }
+.chip-val.teal { color:#00d4f0; }
+.chip-label { font-size:10px; font-weight:800; letter-spacing:1.4px; text-transform:uppercase; color:rgba(255,255,255,.32); margin-top:5px; }
+.big-claim { padding:28px 32px; border-left:4px solid #3ddc97; margin-bottom:20px; }
+.big-claim h3 { font-family:Montserrat, sans-serif; font-size:36px; line-height:1.15; margin-bottom:10px; color:#fff; }
+.big-claim p { font-size:18px; line-height:1.48; color:rgba(255,255,255,.66); }
+.kpi-row { display:grid; grid-template-columns:repeat(4,1fr); gap:14px; margin-bottom:20px; }
+.kpi { padding:20px 18px; position:relative; overflow:hidden; }
+.kpi::before { content:''; position:absolute; top:0; left:0; right:0; height:3px; background:var(--accent,#00d4f0); box-shadow:0 0 12px var(--accent,#00d4f0); }
+.kpi.green { --accent:#3ddc97; }
+.kpi.orange { --accent:#f5a623; }
+.kpi.red { --accent:#ff5c5c; }
+.kpi-label { font-size:10px; font-weight:800; letter-spacing:1.4px; text-transform:uppercase; color:rgba(255,255,255,.4); margin-bottom:8px; }
+.kpi-val { font-family:Montserrat, sans-serif; font-size:38px; font-weight:900; color:#fff; line-height:1; }
+.kpi-val.green { color:#3ddc97; }
+.kpi-val.teal { color:#00d4f0; }
+.kpi-val.orange { color:#f5a623; }
+.kpi-sub { font-size:12px; color:rgba(255,255,255,.42); margin-top:7px; line-height:1.35; }
+.grid-2 { display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); gap:18px; }
+.grid-3 { display:grid; grid-template-columns:repeat(3,minmax(0,1fr)); gap:16px; }
+.grid-4 { display:grid; grid-template-columns:repeat(4,minmax(0,1fr)); gap:14px; }
+.text-card { padding:22px; }
+.text-card h3 { font-family:Montserrat, sans-serif; font-size:21px; line-height:1.15; color:#fff; margin-bottom:10px; }
+.text-card p { font-size:15px; line-height:1.44; color:rgba(255,255,255,.66); }
+.text-card .tag { font-size:10px; font-weight:800; letter-spacing:1.6px; text-transform:uppercase; color:#00d4f0; margin-bottom:9px; }
+.source-grid { display:grid; grid-template-columns:repeat(3,minmax(0,1fr)); gap:14px; }
+.source-card { padding:18px; min-height:132px; }
+.source-card h3 { font-size:18px; color:#fff; margin-bottom:10px; }
+.source-math { display:flex; align-items:baseline; gap:10px; margin-bottom:9px; }
+.source-math strong { font-family:Montserrat, sans-serif; color:#3ddc97; font-size:34px; line-height:1; }
+.source-math span { color:rgba(255,255,255,.42); font-size:11px; font-weight:800; text-transform:uppercase; letter-spacing:1px; }
+.source-card p { color:rgba(255,255,255,.64); font-size:13px; line-height:1.38; }
+.bar-list { padding:20px; }
+.bar-row { display:grid; grid-template-columns:150px 1fr 70px; gap:12px; align-items:center; margin:12px 0; }
+.bar-label { font-size:13px; color:#fff; font-weight:800; }
+.bar-track { height:12px; background:rgba(255,255,255,.07); border-radius:999px; overflow:hidden; }
+.bar-fill { height:100%; background:linear-gradient(90deg,#00d4f0,#3ddc97); border-radius:999px; }
+.bar-val { text-align:right; font-family:Montserrat, sans-serif; font-weight:900; color:#fff; }
+.timeline { display:grid; grid-template-columns:repeat(5,minmax(0,1fr)); gap:12px; }
+.window { padding:18px; min-height:188px; border-top:3px solid #00d4f0; }
+.window h3 { font-size:17px; color:#fff; margin-bottom:8px; }
+.window .count { font-family:Montserrat, sans-serif; font-size:32px; font-weight:900; color:#3ddc97; margin-bottom:8px; }
+.window p { font-size:12px; line-height:1.36; color:rgba(255,255,255,.62); }
+.commit-grid { display:grid; grid-template-columns:repeat(3,minmax(0,1fr)); gap:18px; height:100%; }
+.commit { padding:24px; border-top:4px solid #00d4f0; }
+.commit.start { border-top-color:#3ddc97; }
+.commit.stop { border-top-color:#ff5c5c; }
+.commit h3 { font-family:Montserrat, sans-serif; font-size:30px; margin-bottom:16px; }
+.commit-item { border-top:1px solid rgba(255,255,255,.08); padding:14px 0; font-size:17px; line-height:1.32; font-weight:800; color:rgba(255,255,255,.88); }
+.commit-item:first-of-type { border-top:0; padding-top:0; }
+.state-layout { display:grid; grid-template-columns:minmax(0,1fr) 360px; gap:16px; height:100%; }
+.state-charts { display:grid; grid-template-rows:1fr 1fr; gap:14px; min-height:0; }
+.chart-card { padding:18px 20px 14px; min-height:0; display:flex; flex-direction:column; }
+.chart-title { display:flex; align-items:baseline; justify-content:space-between; gap:12px; margin-bottom:10px; }
+.chart-title h3 { font-family:Montserrat, sans-serif; font-size:18px; line-height:1.15; color:#fff; }
+.chart-title span { font-size:11px; color:rgba(255,255,255,.44); font-weight:800; letter-spacing:1px; text-transform:uppercase; white-space:nowrap; }
+.stacked-bars { flex:1; display:grid; grid-template-columns:repeat(6,minmax(0,1fr)); gap:12px; align-items:end; min-height:150px; }
+.month-stack { display:flex; flex-direction:column; justify-content:flex-end; gap:6px; min-width:0; height:100%; }
+.stack-total { font-family:Montserrat, sans-serif; color:#fff; font-size:15px; font-weight:900; text-align:center; }
+.stack-bar { height:118px; display:flex; flex-direction:column-reverse; border-radius:7px; overflow:hidden; background:rgba(255,255,255,.06); border:1px solid rgba(255,255,255,.07); }
+.mrr-chart .stack-bar { height:112px; }
+.seg { width:100%; min-height:2px; }
+.seg.psa { background:#00d4f0; }
+.seg.billing { background:#3ddc97; }
+.seg.payments { background:#f5a623; }
+.seg.unknown { background:#6b7280; }
+.seg.cyber { background:#a78bfa; }
+.seg.other { background:#60a5fa; }
+.month-label { text-align:center; color:rgba(255,255,255,.48); font-size:11px; font-weight:800; text-transform:uppercase; letter-spacing:1px; }
+.chart-legend { display:flex; flex-wrap:wrap; gap:7px 12px; margin-top:8px; }
+.legend-item { display:flex; align-items:center; gap:6px; font-size:10px; color:rgba(255,255,255,.48); font-weight:800; text-transform:uppercase; letter-spacing:.8px; }
+.legend-dot { width:8px; height:8px; border-radius:2px; background:var(--c); }
+.rate-panel { padding:16px; display:flex; flex-direction:column; gap:12px; min-height:0; }
+.rate-table-block { min-height:0; }
+.rate-table-block h3 { font-family:Montserrat, sans-serif; font-size:16px; margin-bottom:8px; color:#fff; }
+.rate-table { width:100%; border-collapse:collapse; }
+.rate-table th { padding:8px 7px; font-size:9px; }
+.rate-table td { padding:8px 7px; font-size:12px; }
+.rate-table .rate { color:#3ddc97; font-family:Montserrat, sans-serif; font-weight:900; text-align:right; white-space:nowrap; }
+.rate-table .sample { color:rgba(255,255,255,.42); text-align:right; white-space:nowrap; }
+table { width:100%; border-collapse:collapse; overflow:hidden; border-radius:10px; }
+th { background:rgba(0,212,240,.08); color:#00d4f0; font-size:10px; letter-spacing:1.3px; text-transform:uppercase; padding:10px 12px; text-align:left; }
+td { border-top:1px solid rgba(255,255,255,.06); padding:10px 12px; font-size:13px; line-height:1.34; color:rgba(255,255,255,.74); vertical-align:top; }
+td:first-child { color:#fff; font-weight:800; }
+.num { text-align:right; font-variant-numeric:tabular-nums; }
+@media (max-width:900px) {
+  .slide { min-height:auto; }
+  .slide-header, .slide-body { padding-left:20px; padding-right:20px; }
+  .slide-body { padding-bottom:28px; }
+  .state-layout { grid-template-columns:1fr; }
+  .cover-title { font-size:42px; }
+  .cover-chips, .kpi-row, .grid-2, .grid-3, .grid-4, .source-grid, .timeline, .commit-grid { grid-template-columns:1fr; }
+}
+</style>
+</head>
+<body>
+<canvas id="particle-canvas"></canvas>
+<div class="deck">
+  <section class="slide cover active" id="slide-1">
+    <div class="cover-inner">
+      <img class="cover-logo" src="https://7091219.fs1.hubspotusercontent-na1.net/hubfs/7091219/email-assets/logo-revio-white.png" alt="Rev.io">
+      <div class="cover-tag">H2 Leadership Offsite · Version 2</div>
+      <div class="cover-title">Direct Sales<br><span>Growth Motion</span></div>
+      <p class="cover-sub">A cleaner operating narrative for manufacturing qualified PSA pipeline through trigger timing, referral ecosystems, proof assets, Revii packaging, and product readiness.</p>
+      <div class="cover-chips">
+        <div class="cover-chip"><div class="chip-val teal">Pipeline</div><div class="chip-label">Primary constraint</div></div>
+        <div class="cover-chip"><div class="chip-val green">Triggers</div><div class="chip-label">Contract timing</div></div>
+        <div class="cover-chip"><div class="chip-val">Referrals</div><div class="chip-label">Trust based volume</div></div>
+        <div class="cover-chip"><div class="chip-val teal">Revii</div><div class="chip-label">Packaging lever</div></div>
+      </div>
+    </div>
+  </section>
+
+  <section class="slide" id="slide-2">
+    <div class="top-stripe"></div>
+    <div class="slide-header"><div><div class="slide-tag">Slide 1 · State of the Union</div><h2>Jan-Jun pipeline creation is heavy in PSA, but MRR and win rate tell a broader story</h2></div><div><img src="https://7091219.fs1.hubspotusercontent-na1.net/hubfs/7091219/email-assets/logo-revio-white.png" alt="Rev.io"><div class="header-note">Created opps · Closed-won MRR · Win rate</div></div></div>
+    <div class="slide-body">
+      <div class="state-layout">
+        <div class="state-charts">
+          <div class="chart-card card">
+            <div class="chart-title"><h3>Total opportunities created by product</h3><span>Created date · Jan-Jun 2026</span></div>
+            <div class="stacked-bars">
+              <div class="month-stack"><div class="stack-total">288</div><div class="stack-bar" style="height:116px"><div class="seg psa" style="height:72.2%"></div><div class="seg billing" style="height:13.9%"></div><div class="seg payments" style="height:7.6%"></div><div class="seg unknown" style="height:1.0%"></div><div class="seg cyber" style="height:5.2%"></div></div><div class="month-label">Jan</div></div>
+              <div class="month-stack"><div class="stack-total">225</div><div class="stack-bar" style="height:91px"><div class="seg psa" style="height:67.6%"></div><div class="seg billing" style="height:15.1%"></div><div class="seg payments" style="height:8.9%"></div><div class="seg unknown" style="height:3.6%"></div><div class="seg cyber" style="height:2.7%"></div><div class="seg other" style="height:2.2%"></div></div><div class="month-label">Feb</div></div>
+              <div class="month-stack"><div class="stack-total">219</div><div class="stack-bar" style="height:88px"><div class="seg psa" style="height:60.3%"></div><div class="seg billing" style="height:23.3%"></div><div class="seg payments" style="height:8.2%"></div><div class="seg cyber" style="height:2.3%"></div><div class="seg other" style="height:5.9%"></div></div><div class="month-label">Mar</div></div>
+              <div class="month-stack"><div class="stack-total">200</div><div class="stack-bar" style="height:81px"><div class="seg psa" style="height:64.5%"></div><div class="seg billing" style="height:17.0%"></div><div class="seg payments" style="height:12.5%"></div><div class="seg unknown" style="height:5.0%"></div><div class="seg cyber" style="height:1.0%"></div></div><div class="month-label">Apr</div></div>
+              <div class="month-stack"><div class="stack-total">208</div><div class="stack-bar" style="height:84px"><div class="seg psa" style="height:59.6%"></div><div class="seg billing" style="height:11.1%"></div><div class="seg payments" style="height:9.1%"></div><div class="seg unknown" style="height:17.8%"></div><div class="seg cyber" style="height:1.4%"></div><div class="seg other" style="height:1.0%"></div></div><div class="month-label">May</div></div>
+              <div class="month-stack"><div class="stack-total">188</div><div class="stack-bar" style="height:76px"><div class="seg psa" style="height:51.1%"></div><div class="seg billing" style="height:8.5%"></div><div class="seg payments" style="height:2.1%"></div><div class="seg unknown" style="height:36.7%"></div><div class="seg other" style="height:1.6%"></div></div><div class="month-label">Jun</div></div>
+            </div>
+            <div class="chart-legend"><div class="legend-item"><span class="legend-dot" style="--c:#00d4f0"></span>PSA 2.0</div><div class="legend-item"><span class="legend-dot" style="--c:#3ddc97"></span>Billing</div><div class="legend-item"><span class="legend-dot" style="--c:#f5a623"></span>Payments</div><div class="legend-item"><span class="legend-dot" style="--c:#6b7280"></span>Unknown</div><div class="legend-item"><span class="legend-dot" style="--c:#a78bfa"></span>Cyber</div><div class="legend-item"><span class="legend-dot" style="--c:#60a5fa"></span>Other</div></div>
+          </div>
+
+          <div class="chart-card card mrr-chart">
+            <div class="chart-title"><h3>MRR sold by product</h3><span>Close date · closed-won Jan-Jun 2026</span></div>
+            <div class="stacked-bars">
+              <div class="month-stack"><div class="stack-total">$21.2K</div><div class="stack-bar" style="height:74px"><div class="seg psa" style="height:27.1%"></div><div class="seg billing" style="height:65.6%"></div><div class="seg payments" style="height:7.3%"></div></div><div class="month-label">Jan</div></div>
+              <div class="month-stack"><div class="stack-total">$14.2K</div><div class="stack-bar" style="height:50px"><div class="seg psa" style="height:70.6%"></div><div class="seg billing" style="height:17.7%"></div><div class="seg payments" style="height:10.0%"></div><div class="seg cyber" style="height:1.8%"></div></div><div class="month-label">Feb</div></div>
+              <div class="month-stack"><div class="stack-total">$32.0K</div><div class="stack-bar" style="height:112px"><div class="seg psa" style="height:49.5%"></div><div class="seg billing" style="height:38.3%"></div><div class="seg payments" style="height:11.0%"></div><div class="seg cyber" style="height:1.1%"></div></div><div class="month-label">Mar</div></div>
+              <div class="month-stack"><div class="stack-total">$20.1K</div><div class="stack-bar" style="height:70px"><div class="seg psa" style="height:55.5%"></div><div class="seg billing" style="height:34.4%"></div><div class="seg payments" style="height:10.1%"></div></div><div class="month-label">Apr</div></div>
+              <div class="month-stack"><div class="stack-total">$10.9K</div><div class="stack-bar" style="height:38px"><div class="seg psa" style="height:82.9%"></div><div class="seg billing" style="height:11.1%"></div><div class="seg payments" style="height:6.1%"></div></div><div class="month-label">May</div></div>
+              <div class="month-stack"><div class="stack-total">$5.8K</div><div class="stack-bar" style="height:24px"><div class="seg psa" style="height:47.7%"></div><div class="seg billing" style="height:42.8%"></div><div class="seg payments" style="height:9.5%"></div></div><div class="month-label">Jun</div></div>
+            </div>
+          </div>
+        </div>
+
+        <div class="rate-panel card">
+          <div class="rate-table-block">
+            <h3>Win rate by product</h3>
+            <table class="rate-table">
+              <thead><tr><th>Product</th><th class="num">Won / Resolved</th><th class="num">Rate</th></tr></thead>
+              <tbody>
+                <tr><td>Payments</td><td class="sample">45 / 126</td><td class="rate">35.7%</td></tr>
+                <tr><td>Unknown</td><td class="sample">15 / 43</td><td class="rate">34.9%</td></tr>
+                <tr><td>Odin</td><td class="sample">2 / 6</td><td class="rate">33.3%</td></tr>
+                <tr><td>Billing</td><td class="sample">39 / 196</td><td class="rate">19.9%</td></tr>
+                <tr><td>PSA 2.0</td><td class="sample">71 / 859</td><td class="rate">8.3%</td></tr>
+                <tr><td>Cyber</td><td class="sample">2 / 31</td><td class="rate">6.5%</td></tr>
+              </tbody>
+            </table>
+          </div>
+          <div class="rate-table-block">
+            <h3>Win rate by marketing source</h3>
+            <table class="rate-table">
+              <thead><tr><th>Source</th><th class="num">Won / Resolved</th><th class="num">Rate</th></tr></thead>
+              <tbody>
+                <tr><td>Unknown</td><td class="sample">20 / 32</td><td class="rate">62.5%</td></tr>
+                <tr><td>Rev.io Summit</td><td class="sample">8 / 20</td><td class="rate">40.0%</td></tr>
+                <tr><td>SEO</td><td class="sample">5 / 27</td><td class="rate">18.5%</td></tr>
+                <tr><td>Email</td><td class="sample">5 / 28</td><td class="rate">17.9%</td></tr>
+                <tr><td>Website</td><td class="sample">26 / 176</td><td class="rate">14.8%</td></tr>
+                <tr><td>Tradeshow</td><td class="sample">24 / 165</td><td class="rate">14.5%</td></tr>
+                <tr><td>Sales</td><td class="sample">81 / 740</td><td class="rate">10.9%</td></tr>
+                <tr><td>Paid Media</td><td class="sample">6 / 67</td><td class="rate">9.0%</td></tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="slide" id="slide-3">
+    <div class="top-stripe"></div>
+    <div class="slide-header"><div><div class="slide-tag">PSA MRR Math</div><h2>The $30K/month target has to become operating math</h2></div><div><img src="https://7091219.fs1.hubspotusercontent-na1.net/hubfs/7091219/email-assets/logo-revio-white.png" alt="Rev.io"><div class="header-note">Target model</div></div></div>
+    <div class="slide-body">
+      <div class="kpi-row">
+        <div class="kpi card green"><div class="kpi-label">Monthly PSA MRR target</div><div class="kpi-val green">$30K</div><div class="kpi-sub">New PSA MRR per month</div></div>
+        <div class="kpi card"><div class="kpi-label">Current MRR per PSA win</div><div class="kpi-val">~$808</div><div class="kpi-sub">Observed average</div></div>
+        <div class="kpi card orange"><div class="kpi-label">Wins needed</div><div class="kpi-val orange">37-38</div><div class="kpi-sub">At current ASP</div></div>
+        <div class="kpi card"><div class="kpi-label">June AE/CSA PSA opps</div><div class="kpi-val teal">164</div><div class="kpi-sub">Current creation signal</div></div>
+      </div>
+      <div class="grid-2">
+        <div class="text-card card"><div class="tag">Demo-quality lens</div><h3>~134-138 PSA demos</h3><p>At roughly 27.6% demo-to-deal, June volume can support the target only if created opportunities are genuinely demo-ready.</p></div>
+        <div class="text-card card"><div class="tag">Broad-opportunity lens</div><h3>~371-381 created PSA opps</h3><p>At roughly 10% resolved opportunity win rate, the same goal requires a much larger qualified-creation engine.</p></div>
+      </div>
+    </div>
+  </section>
+
+  <section class="slide" id="slide-4">
+    <div class="top-stripe"></div>
+    <div class="slide-header"><div><div class="slide-tag">Pipeline Levers</div><h2>Fill the +141 monthly PSA opportunity gap by source</h2></div><div><img src="https://7091219.fs1.hubspotusercontent-na1.net/hubfs/7091219/email-assets/logo-revio-white.png" alt="Rev.io"><div class="header-note">Creation model</div></div></div>
+    <div class="slide-body">
+      <div class="kpi-row">
+        <div class="kpi card"><div class="kpi-label">Current avg PSA opps</div><div class="kpi-val">159</div><div class="kpi-sub">Created per month</div></div>
+        <div class="kpi card green"><div class="kpi-label">Needed for target</div><div class="kpi-val green">300+</div><div class="kpi-sub">Monthly PSA opps</div></div>
+        <div class="kpi card orange"><div class="kpi-label">Monthly gap</div><div class="kpi-val orange">+141</div><div class="kpi-sub">Additional opps needed</div></div>
+        <div class="kpi card"><div class="kpi-label">Lift required</div><div class="kpi-val teal">+89%</div><div class="kpi-sub">Versus current average</div></div>
+      </div>
+      <div class="source-grid">
+        <div class="source-card card"><h3>Sales + Unknown</h3><div class="source-math"><strong>+45</strong><span>from 95/mo</span></div><p>Weekly AE/SDR targets, named-account blocks, closed-lost reactivation, and renewal-trigger plays.</p></div>
+        <div class="source-card card"><h3>Website</h3><div class="source-math"><strong>+30</strong><span>from 13/mo</span></div><p>PSA CTAs, faster RAD routing, stronger landing pages, and follow-up SLA before intent cools off.</p></div>
+        <div class="source-card card"><h3>Paid Media</h3><div class="source-math"><strong>+25</strong><span>from 11/mo</span></div><p>Fund MSP and telecom PSA campaigns around contract pain, ticketing chaos, and displacement.</p></div>
+        <div class="source-card card"><h3>Tradeshow</h3><div class="source-math"><strong>+20</strong><span>from 31/mo</span></div><p>Pre-build target lists, book PSA meetings before events, and inspect same-week conversion.</p></div>
+        <div class="source-card card"><h3>Partner / Referral</h3><div class="source-math"><strong>+16</strong><span>from 1/mo</span></div><p>Ask after successful PSA milestones and activate Pax8, NinjaOne, and Acronis ecosystems.</p></div>
+        <div class="source-card card"><h3>Email / SEO / Other</h3><div class="source-math"><strong>+5</strong><span>from 8/mo</span></div><p>Support high-intent PSA themes instead of broad awareness content that does not convert.</p></div>
+      </div>
+    </div>
+  </section>
+
+  <section class="slide" id="slide-5">
+    <div class="top-stripe"></div>
+    <div class="slide-header"><div><div class="slide-tag">Creation Mix</div><h2>Product and source mix show where H2 has to focus</h2></div><div><img src="https://7091219.fs1.hubspotusercontent-na1.net/hubfs/7091219/email-assets/logo-revio-white.png" alt="Rev.io"><div class="header-note">Jan-Jun 2026</div></div></div>
+    <div class="slide-body">
+      <div class="grid-2">
+        <div class="bar-list card">
+          <div class="section-hdr"><div class="section-lbl">Created by Product</div><div class="section-rule"></div></div>
+          <div class="bar-row"><div class="bar-label">PSA 2.0</div><div class="bar-track"><div class="bar-fill" style="width:100%"></div></div><div class="bar-val">845</div></div>
+          <div class="bar-row"><div class="bar-label">Billing / Odin</div><div class="bar-track"><div class="bar-fill" style="width:24%"></div></div><div class="bar-val">206</div></div>
+          <div class="bar-row"><div class="bar-label">Unknown</div><div class="bar-track"><div class="bar-fill" style="width:15%"></div></div><div class="bar-val">127</div></div>
+          <div class="bar-row"><div class="bar-label">Payments AR</div><div class="bar-track"><div class="bar-fill" style="width:13%"></div></div><div class="bar-val">106</div></div>
+          <div class="bar-row"><div class="bar-label">Cyber / Commerce</div><div class="bar-track"><div class="bar-fill" style="width:5%"></div></div><div class="bar-val">42</div></div>
+        </div>
+        <div class="bar-list card">
+          <div class="section-hdr"><div class="section-lbl">Created by Sub-Source</div><div class="section-rule"></div></div>
+          <div class="bar-row"><div class="bar-label">Unknown</div><div class="bar-track"><div class="bar-fill" style="width:100%"></div></div><div class="bar-val">869</div></div>
+          <div class="bar-row"><div class="bar-label">Request Demo</div><div class="bar-track"><div class="bar-fill" style="width:19%"></div></div><div class="bar-val">163</div></div>
+          <div class="bar-row"><div class="bar-label">Facebook Ads</div><div class="bar-track"><div class="bar-fill" style="width:7%"></div></div><div class="bar-val">57</div></div>
+          <div class="bar-row"><div class="bar-label">Events</div><div class="bar-track"><div class="bar-fill" style="width:12%"></div></div><div class="bar-val">105+</div></div>
+          <div class="bar-row"><div class="bar-label">Outbound</div><div class="bar-track"><div class="bar-fill" style="width:4%"></div></div><div class="bar-val">31</div></div>
+        </div>
+      </div>
+      <div class="grid-3" style="margin-top:18px">
+        <div class="text-card card"><div class="tag">Focus</div><h3>PSA carries volume</h3><p>PSA 2.0 is the dominant creation motion and the one that has to be inspected most aggressively for quality and ACV.</p></div>
+        <div class="text-card card"><div class="tag">Expansion</div><h3>Billing is the second engine</h3><p>Billing and Odin create the clearest bridge to suite expansion and proof-backed account growth.</p></div>
+        <div class="text-card card"><div class="tag">Risk</div><h3>Attribution is too weak</h3><p>Unknown sub-source volume hides which motions deserve more budget and which are just noise wearing a nametag.</p></div>
+      </div>
+    </div>
+  </section>
+
+  <section class="slide" id="slide-6">
+    <div class="top-stripe"></div>
+    <div class="slide-header"><div><div class="slide-tag">Role Evolution</div><h2>Direct Sales roles need motion ownership, not just territory ownership</h2></div><div><img src="https://7091219.fs1.hubspotusercontent-na1.net/hubfs/7091219/email-assets/logo-revio-white.png" alt="Rev.io"><div class="header-note">H2 coverage model</div></div></div>
+    <div class="slide-body">
+      <div class="grid-3">
+        <div class="text-card card"><div class="tag">Strategic AE</div><h3>Jamie</h3><p>75+ employees, $250K+ billing scale, highest-complexity partner and executive mapping. Quarterly quota: $20K.</p></div>
+        <div class="text-card card"><div class="tag">Mid-Market AE</div><h3>Andy · Connor</h3><p>25-75 employees, $50K-$250K billing scale, focused displacement and workflow-fit plays. Quarterly quota: $15K.</p></div>
+        <div class="text-card card"><div class="tag">Commercial AE</div><h3>Abbey · Jaylin · Jake · Patrick</h3><p>Under 25 employees, under $50K billing scale, high-velocity creation and qualification. Quarterly quota: $10K.</p></div>
+      </div>
+      <div class="grid-4" style="margin-top:18px">
+        <div class="text-card card"><h3>Tenured AEs</h3><p>Own ecosystems, contract timing, target accounts, and executive relationships.</p></div>
+        <div class="text-card card"><h3>SDRs</h3><p>Operate triggers and signals around renewal windows, tech stack, ICP, and referral paths.</p></div>
+        <div class="text-card card"><h3>Channel</h3><p>Become a measured pipeline source with attribution, account maps, and co-sell plays.</p></div>
+        <div class="text-card card"><h3>GTM</h3><p>Deliver claims, proof, ROI, packaging, and objection handling that actually create demand.</p></div>
+      </div>
+    </div>
+  </section>
+
+  <section class="slide" id="slide-7">
+    <div class="top-stripe"></div>
+    <div class="slide-header"><div><div class="slide-tag">Contract Radar</div><h2>Competitor expirations become the H2 timing engine</h2></div><div><img src="https://7091219.fs1.hubspotusercontent-na1.net/hubfs/7091219/email-assets/logo-revio-white.png" alt="Rev.io"><div class="header-note">43 SF dates · 37 call-review signals</div></div></div>
+    <div class="slide-body">
+      <div class="kpi-row">
+        <div class="kpi card"><div class="kpi-label">Verified SF date accounts</div><div class="kpi-val teal">43</div><div class="kpi-sub">Contract end-date field populated</div></div>
+        <div class="kpi card"><div class="kpi-label">Classified call signals</div><div class="kpi-val">37</div><div class="kpi-sub">Contract timing references</div></div>
+        <div class="kpi card green"><div class="kpi-label">Unique signal accounts</div><div class="kpi-val green">26</div><div class="kpi-sub">From call review</div></div>
+        <div class="kpi card orange"><div class="kpi-label">Strong references</div><div class="kpi-val orange">27</div><div class="kpi-sub">High-confidence timing</div></div>
+      </div>
+      <div class="timeline">
+        <div class="window card"><h3>July 2026</h3><div class="count">2</div><p>Immediate renewal-save or displacement plays. Confirm incumbent and auto-renewal language this week.</p></div>
+        <div class="window card"><h3>Oct-Dec 2026</h3><div class="count">4</div><p>Build account plans now and run 90-day executive outreach before procurement inertia sets in.</p></div>
+        <div class="window card"><h3>Q1 2027</h3><div class="count">14</div><p>Largest visible attack window. Create owner scorecards, weekly next steps, and competitor proof assets.</p></div>
+        <div class="window card"><h3>Q2 2027</h3><div class="count">8</div><p>Nurture with trigger content now, then convert to demos inside the 120-day buying window.</p></div>
+        <div class="window card"><h3>Later Range</h3><div class="count">14</div><p>Keep warm, but do not let long-range contracts distract from near-term H2 and Q1 windows.</p></div>
+      </div>
+    </div>
+  </section>
+
+  <section class="slide" id="slide-8">
+    <div class="top-stripe"></div>
+    <div class="slide-header"><div><div class="slide-tag">Referral System</div><h2>Partner and client referrals need to become an operating motion</h2></div><div><img src="https://7091219.fs1.hubspotusercontent-na1.net/hubfs/7091219/email-assets/logo-revio-white.png" alt="Rev.io"><div class="header-note">Pax8 · NinjaOne · Acronis</div></div></div>
+    <div class="slide-body">
+      <div class="grid-2">
+        <div class="big-claim card"><h3>Relationship warmth is not a strategy unless it produces introductions.</h3><p>H2 needs referral asks, partner org maps, mutual-customer proof, and a pipeline standard for every partner relationship.</p></div>
+        <div class="grid-2">
+          <div class="text-card card"><div class="tag">Client Referrals</div><h3>Ask after value moments</h3><p>Codify when to ask, who asks, and which proof asset supports the ask.</p></div>
+          <div class="text-card card"><div class="tag">Partner Capacity</div><h3>Protect the motion</h3><p>Dedicated focus beats occasional partner check-ins squeezed between other priorities.</p></div>
+          <div class="text-card card"><div class="tag">Tenured Reps</div><h3>Map ecosystems</h3><p>Senior reps own mutual customers, referral paths, and executive-to-executive momentum.</p></div>
+          <div class="text-card card"><div class="tag">Proof</div><h3>Co-branded assets</h3><p>Give partner sellers usable stories, events, collateral, and mutual-customer examples.</p></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="slide" id="slide-9">
+    <div class="top-stripe"></div>
+    <div class="slide-header"><div><div class="slide-tag">Packaging + Product Readiness</div><h2>GTM needs proof that makes the story believable</h2></div><div><img src="https://7091219.fs1.hubspotusercontent-na1.net/hubfs/7091219/email-assets/logo-revio-white.png" alt="Rev.io"><div class="header-note">Revii · integrations · trial</div></div></div>
+    <div class="slide-body">
+      <div class="grid-3">
+        <div class="text-card card"><div class="tag">Revii Monetization</div><h3>Package Revii as a commercial lever</h3><p>Define attach paths: included intelligence layer, premium automation tier, workflow assistant add-on, or usage-based productivity packaging.</p></div>
+        <div class="text-card card"><div class="tag">Integration Proof</div><h3>Buyer control, not plumbing</h3><p>Position configurable integrations as implementation confidence and control around the buyer's stack.</p></div>
+        <div class="text-card card"><div class="tag">Feature Parity</div><h3>Expansion must be credible</h3><p>Billing-to-PSA expansion needs enough parity, clean pricing paths, and demo-ready proof before GTM scales the narrative.</p></div>
+      </div>
+      <div class="big-claim card" style="margin-top:18px"><h3>A real trial changes the motion from "trust our demo" to "prove it in your workflow."</h3><p>For PSA, Billing, Revii, and integration-led expansion, prospects need a guided experience with real configuration, billing automation, and tangible value before they commit.</p></div>
+    </div>
+  </section>
+
+  <section class="slide" id="slide-10">
+    <div class="top-stripe"></div>
+    <div class="slide-header"><div><div class="slide-tag">Leadership Decisions</div><h2>H2 operating commitments</h2></div><div><img src="https://7091219.fs1.hubspotusercontent-na1.net/hubfs/7091219/email-assets/logo-revio-white.png" alt="Rev.io"><div class="header-note">Draft asks</div></div></div>
+    <div class="slide-body">
+      <div class="commit-grid">
+        <div class="commit start card"><h3>Start</h3><div class="commit-item">Monthly competitor-expiration plays by owner and auto-renewal window</div><div class="commit-item">Named partner org maps, onsite meetings, and referral contests</div><div class="commit-item">Trial experience, billing automation proof, Revii packaging tests, and integration proof assets</div></div>
+        <div class="commit stop card"><h3>Stop</h3><div class="commit-item">Counting low-fit opportunity creation as equal to qualified pipeline</div><div class="commit-item">Spending time with partners that do not generate measurable pipeline</div><div class="commit-item">Positioning AI and integrations as generic feature bullets</div></div>
+        <div class="commit card"><h3>Decide</h3><div class="commit-item">Source investment targets for the +141 monthly PSA opportunity gap</div><div class="commit-item">Owner cadence for contract end-date inspection and partner maps</div><div class="commit-item">Packaging and product-readiness owners for Revii, trial, pricing, and proof</div></div>
+      </div>
+    </div>
+  </section>
+</div>
+
+<div class="nav-bar">
+  <div class="nav-title">H2 Leadership Offsite · V2</div>
+  <div class="nav-controls">
+    <button class="nav-btn" id="btn-prev" onclick="goSlide(-1)" disabled>Prev</button>
+    <div class="nav-dots" id="nav-dots"></div>
+    <span class="nav-counter" id="nav-counter">1 / 10</span>
+    <button class="nav-btn" id="btn-next" onclick="goSlide(1)">Next</button>
+  </div>
+  <img src="https://7091219.fs1.hubspotusercontent-na1.net/hubfs/7091219/email-assets/logo-revio-white.png" alt="Rev.io" class="nav-logo">
+</div>
+
+<script>
+const TOTAL = 10;
+let cur = 1;
+const labels = ['Cover','State','Math','Levers','Mix','Roles','Radar','Referrals','Readiness','Decisions'];
+function buildDots() {
+  const wrap = document.getElementById('nav-dots');
+  labels.forEach((label, idx) => {
+    const dot = document.createElement('div');
+    dot.className = 'dot' + (idx === 0 ? ' active' : '');
+    dot.title = label;
+    dot.onclick = () => jumpSlide(idx + 1);
+    dot.id = 'dot-' + (idx + 1);
+    wrap.appendChild(dot);
+  });
+}
+function updateNav() {
+  document.getElementById('nav-counter').textContent = `${cur} / ${TOTAL}`;
+  document.getElementById('btn-prev').disabled = cur === 1;
+  document.getElementById('btn-next').disabled = cur === TOTAL;
+  document.querySelectorAll('.dot').forEach((dot, i) => dot.classList.toggle('active', i + 1 === cur));
+}
+function jumpSlide(n) {
+  document.getElementById(`slide-${cur}`).classList.remove('active');
+  cur = Math.max(1, Math.min(TOTAL, n));
+  document.getElementById(`slide-${cur}`).classList.add('active');
+  updateNav();
+  document.getElementById(`slide-${cur}`).scrollIntoView({ block: 'start' });
+}
+function goSlide(delta) { jumpSlide(cur + delta); }
+document.addEventListener('keydown', e => {
+  if (e.key === 'ArrowRight' || e.key === 'PageDown') goSlide(1);
+  if (e.key === 'ArrowLeft' || e.key === 'PageUp') goSlide(-1);
+});
+buildDots();
+const requestedSlide = Number(new URLSearchParams(window.location.search).get('slide'));
+if (Number.isFinite(requestedSlide) && requestedSlide >= 1 && requestedSlide <= TOTAL) {
+  cur = requestedSlide;
+  updateNav();
+  const target = document.getElementById(`slide-${requestedSlide}`);
+  const scrollToTarget = () => window.scrollTo({ top: target.offsetTop, left: 0, behavior: 'auto' });
+  scrollToTarget();
+  window.addEventListener('load', scrollToTarget);
+  setTimeout(scrollToTarget, 120);
+} else {
+  updateNav();
+}
+
+const canvas = document.getElementById('particle-canvas');
+const ctx = canvas.getContext('2d');
+let particles = [];
+function resizeCanvas() {
+  canvas.width = window.innerWidth;
+  canvas.height = window.innerHeight;
+  particles = Array.from({ length: 50 }, () => ({
+    x: Math.random() * canvas.width,
+    y: Math.random() * canvas.height,
+    vx: (Math.random() - .5) * .35,
+    vy: (Math.random() - .5) * .35,
+    r: Math.random() * 1.7 + .5
+  }));
+}
+function animateParticles() {
+  ctx.clearRect(0, 0, canvas.width, canvas.height);
+  particles.forEach((p, i) => {
+    p.x += p.vx;
+    p.y += p.vy;
+    if (p.x < 0 || p.x > canvas.width) p.vx *= -1;
+    if (p.y < 0 || p.y > canvas.height) p.vy *= -1;
+    ctx.beginPath();
+    ctx.arc(p.x, p.y, p.r, 0, Math.PI * 2);
+    ctx.fillStyle = 'rgba(0,212,240,.24)';
+    ctx.fill();
+    for (let j = i + 1; j < particles.length; j++) {
+      const q = particles[j];
+      const dx = p.x - q.x;
+      const dy = p.y - q.y;
+      const d = Math.sqrt(dx * dx + dy * dy);
+      if (d < 120) {
+        ctx.beginPath();
+        ctx.moveTo(p.x, p.y);
+        ctx.lineTo(q.x, q.y);
+        ctx.strokeStyle = `rgba(0,212,240,${(1 - d / 120) * .08})`;
+        ctx.lineWidth = 1;
+        ctx.stroke();
+      }
+    }
+  });
+  requestAnimationFrame(animateParticles);
+}
+window.addEventListener('resize', resizeCanvas);
+resizeCanvas();
+animateParticles();
+</script>
+</body>
+</html>
