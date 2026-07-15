@@ -122,20 +122,6 @@ tr:last-child td { border-bottom:0; }
 .opp-stage { justify-self:start; color:#334155; background:#eef2ff; border:1px solid #dbe4ff; border-radius:999px; padding:4px 9px; font-size:11px; font-weight:850; }
 .opp-amount { text-align:right; color:var(--green); font-weight:850; }
 .opp-empty { color:var(--muted); font-size:13px; padding:10px 0; border-top:1px solid #edf2f7; }
-.billing-panel { margin:20px 0 22px; background:#f8fbff; border:1px solid #cfe0f3; border-radius:8px; box-shadow:var(--shadow); padding:18px; }
-.billing-title { margin:0 0 14px; }
-.billing-kpis { display:grid; grid-template-columns:repeat(4,minmax(0,1fr)); gap:12px; margin-bottom:14px; }
-.billing-kpi { background:#fff; border:1px solid #dbeafe; border-radius:8px; padding:14px; }
-.billing-kpi span { display:block; color:var(--muted); font-size:11px; font-weight:850; text-transform:uppercase; letter-spacing:.08em; }
-.billing-kpi strong { display:block; margin-top:8px; color:#0f766e; font-size:30px; line-height:1; }
-.billing-kpi em { display:block; margin-top:6px; color:var(--muted); font-size:12px; font-style:normal; font-weight:700; }
-.billing-grid { display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); gap:14px; margin-bottom:14px; }
-.metric-card { background:#fff; border:1px solid var(--line); border-radius:8px; overflow:auto; }
-.metric-card h3 { margin:0; padding:13px 14px; font-size:14px; border-bottom:1px solid var(--line); }
-.metric-table { min-width:0; }
-.metric-table th, .metric-table td { padding:10px 12px; text-align:right; }
-.metric-table th:first-child, .metric-table td:first-child { position:static; text-align:left; background:transparent; }
-.metric-name { color:var(--ink); font-weight:850; }
 @media (max-width:1100px) {
   .shell { padding:18px; }
   .topbar { display:block; }
@@ -143,14 +129,13 @@ tr:last-child td { border-bottom:0; }
   .kpis { grid-template-columns:repeat(2,minmax(0,1fr)); }
   .target-card { grid-column:span 2; }
   .product-goals { grid-template-columns:repeat(2,minmax(0,1fr)); }
-  .billing-kpis, .billing-grid { grid-template-columns:repeat(2,minmax(0,1fr)); }
   .weeks, .details { grid-template-columns:repeat(2,minmax(0,1fr)); }
   .section-title { display:block; }
   .section-totals { text-align:left; margin-top:8px; }
 }
 @media (max-width:640px) {
   h1 { font-size:26px; }
-  .kpis, .product-goals, .billing-kpis, .billing-grid, .weeks, .details { grid-template-columns:1fr; }
+  .kpis, .product-goals, .weeks, .details { grid-template-columns:1fr; }
   .target-card { grid-column:span 1; }
   .opp-detail-row { grid-template-columns:1fr; gap:6px; }
   .opp-amount { text-align:left; }
@@ -166,7 +151,7 @@ tr:last-child td { border-bottom:0; }
       <div class="subtitle">Quantity and MRR by owner, split across all five July calendar weeks. $0 opportunities excluded.</div>
     </div>
     <div class="stamp">
-      Refreshed Jul 15, 2026 4:09 PM ET<br>
+      Refreshed Jul 15, 2026 3:50 PM ET<br>
       Salesforce CreatedDate, Owner, Amount
     </div>
   </header>
@@ -279,173 +264,6 @@ tr:last-child td { border-bottom:0; }
               <div class="week-mrr">$0</div>
               <div class="week-track"><span style="width:0.0%"></span></div>
             </section>
-  </section>
-
-  
-  <section class="billing-panel">
-    <div class="section-title billing-title">
-      <div>
-        <h2>Billing Product Line Activity</h2>
-        <p>Billing/Odin opportunities created in July, plus Salesforce meetings set and calls logged in July against those opportunities or their accounts.</p>
-      </div>
-      <div class="section-totals"><strong>20</strong> opps · <strong>$21,350</strong> MRR</div>
-    </div>
-
-    <div class="billing-kpis">
-      <div class="billing-kpi"><span>Billing/Odin Opps</span><strong>20</strong><em>$21,350 MRR</em></div>
-      <div class="billing-kpi"><span>Meetings Set</span><strong>24</strong><em>non-internal Salesforce Events</em></div>
-      <div class="billing-kpi"><span>Billing Calls</span><strong>49</strong><em>Salesforce call Tasks</em></div>
-      <div class="billing-kpi"><span>SDR-Influenced Billing</span><strong>8</strong><em>$8,250 MRR</em></div>
-    </div>
-
-    <div class="billing-grid">
-      <section class="metric-card">
-        <h3>Billing Opportunities by Account Executive</h3>
-        <table class="metric-table">
-          <thead><tr><th>AE / Owner</th><th>Opps</th><th>MRR</th><th>Meetings</th><th>Calls</th></tr></thead>
-          <tbody>
-            <tr>
-              <td class="metric-name">Jamie Butler</td>
-              <td>6</td>
-              <td>$8,000</td>
-              <td>6</td>
-              <td>9</td>
-            </tr>
-
-            <tr>
-              <td class="metric-name">Connor Flynn</td>
-              <td>6</td>
-              <td>$4,750</td>
-              <td>7</td>
-              <td>8</td>
-            </tr>
-
-            <tr>
-              <td class="metric-name">Patrick Davies</td>
-              <td>4</td>
-              <td>$4,000</td>
-              <td>5</td>
-              <td>5</td>
-            </tr>
-
-            <tr>
-              <td class="metric-name">Andy Whisenant</td>
-              <td>3</td>
-              <td>$4,000</td>
-              <td>3</td>
-              <td>0</td>
-            </tr>
-
-            <tr>
-              <td class="metric-name">Justin Lee</td>
-              <td>1</td>
-              <td>$600</td>
-              <td>2</td>
-              <td>2</td>
-            </tr>
-
-            <tr>
-              <td class="metric-name">Abbey McIntosh</td>
-              <td>0</td>
-              <td>$0</td>
-              <td>0</td>
-              <td>1</td>
-            </tr>
-
-            <tr>
-              <td class="metric-name">Abigail Marchese</td>
-              <td>0</td>
-              <td>$0</td>
-              <td>0</td>
-              <td>16</td>
-            </tr>
-
-            <tr>
-              <td class="metric-name">Blake Boatright</td>
-              <td>0</td>
-              <td>$0</td>
-              <td>0</td>
-              <td>2</td>
-            </tr>
-
-            <tr>
-              <td class="metric-name">Bryan Bettiol</td>
-              <td>0</td>
-              <td>$0</td>
-              <td>1</td>
-              <td>0</td>
-            </tr>
-
-            <tr>
-              <td class="metric-name">Cam Sharpe</td>
-              <td>0</td>
-              <td>$0</td>
-              <td>0</td>
-              <td>3</td>
-            </tr>
-
-            <tr>
-              <td class="metric-name">Emily Petraglia</td>
-              <td>0</td>
-              <td>$0</td>
-              <td>0</td>
-              <td>3</td>
-            </tr></tbody>
-        </table>
-      </section>
-      <section class="metric-card">
-        <h3>Billing Opportunities by SDR</h3>
-        <table class="metric-table">
-          <thead><tr><th>SDR</th><th>Opps</th><th>MRR</th><th>Meetings</th><th>Calls</th></tr></thead>
-          <tbody>
-            <tr>
-              <td class="metric-name">Abigail Marchese</td>
-              <td>4</td>
-              <td>$4,500</td>
-              <td>4</td>
-              <td>24</td>
-            </tr>
-
-            <tr>
-              <td class="metric-name">Emily Petraglia</td>
-              <td>3</td>
-              <td>$3,000</td>
-              <td>3</td>
-              <td>3</td>
-            </tr>
-
-            <tr>
-              <td class="metric-name">Abbey McIntosh</td>
-              <td>1</td>
-              <td>$750</td>
-              <td>1</td>
-              <td>1</td>
-            </tr></tbody>
-        </table>
-      </section>
-    </div>
-
-    <section class="metric-card">
-      <h3>Billing Product Lines</h3>
-      <table class="metric-table">
-        <thead><tr><th>Product Line</th><th>Opps</th><th>MRR</th><th>Meetings</th><th>Calls</th></tr></thead>
-        <tbody>
-            <tr>
-              <td class="metric-name">Billing</td>
-              <td>19</td>
-              <td>$20,750</td>
-              <td>22</td>
-              <td>47</td>
-            </tr>
-            <tr>
-              <td class="metric-name">Billing Add-on</td>
-              <td>1</td>
-              <td>$600</td>
-              <td>2</td>
-              <td>2</td>
-            </tr></tbody>
-      </table>
-    </section>
   </section>
 
   <section class="table-wrap">
