@@ -1,0 +1,77 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Connor Flynn - Competitor Contract End Date Monitor</title>
+<style>
+:root { --bg:#0f1117; --surface:#1a1d27; --surface2:#21263a; --border:#2e3452; --text:#e8eaf6; --muted:#8890b5; --accent:#6c8ef5; --urgent:#ef5350; --soon:#ffa726; --moderate:#66bb6a; --future:#42a5f5; --past:#ff7043; }
+* { box-sizing:border-box; margin:0; padding:0; } body { background:var(--bg); color:var(--text); font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif; font-size:14px; line-height:1.5; }
+.header { background:linear-gradient(135deg,#1a1d27 0%,#1f2440 100%); border-bottom:1px solid var(--border); padding:24px 32px; position:sticky; top:0; z-index:100; box-shadow:0 2px 12px rgba(0,0,0,.4); }
+.header-top { display:flex; align-items:center; justify-content:space-between; gap:16px; flex-wrap:wrap; } .title { font-size:22px; font-weight:700; color:#fff; } .subtitle { font-size:13px; color:var(--muted); margin-top:2px; max-width:900px; }
+.stat-pills { display:flex; gap:10px; flex-wrap:wrap; align-items:center; } .stat-pill { background:var(--surface2); border:1px solid var(--border); border-radius:20px; padding:4px 14px; font-size:12px; font-weight:600; color:var(--muted); } .stat-pill span { color:var(--text); } .stat-pill.hot span { color:var(--urgent); } .stat-pill.warn span { color:var(--soon); }
+.nav-bar { background:var(--surface); border-bottom:1px solid var(--border); padding:10px 32px; display:flex; gap:8px; flex-wrap:wrap; } .nav-link { color:var(--muted); text-decoration:none; padding:4px 12px; border-radius:14px; font-size:12px; font-weight:500; border:1px solid var(--border); white-space:nowrap; } .nav-link:hover { background:var(--accent); color:#fff; border-color:var(--accent); }
+.content { padding:24px 32px; max-width:1500px; } .legend { display:flex; gap:16px; flex-wrap:wrap; margin-bottom:24px; padding:12px 16px; background:var(--surface); border:1px solid var(--border); border-radius:10px; align-items:center; } .legend-title { font-size:12px; font-weight:600; color:var(--muted); margin-right:4px; } .legend-item { display:flex; align-items:center; gap:6px; font-size:12px; color:var(--muted); } .legend-dot { width:10px; height:10px; border-radius:50%; }
+.owner-section { margin-bottom:32px; background:var(--surface); border:1px solid var(--border); border-radius:12px; overflow:hidden; } .owner-header { display:flex; align-items:center; justify-content:space-between; padding:16px 20px; background:var(--surface2); border-bottom:1px solid var(--border); gap:12px; flex-wrap:wrap; } .owner-name { font-size:16px; font-weight:700; color:#fff; } .owner-meta { display:flex; gap:8px; align-items:center; flex-wrap:wrap; }
+.count-badge,.pill { border-radius:12px; padding:2px 10px; font-size:12px; font-weight:600; } .count-badge { background:rgba(108,142,245,.15); color:var(--accent); border:1px solid rgba(108,142,245,.3); } .pill { font-size:11px; } .past-pill { background:rgba(255,112,67,.15); color:#ff8a65; border:1px solid rgba(255,112,67,.3); } .urgent-pill { background:rgba(239,83,80,.15); color:#ef9a9a; border:1px solid rgba(239,83,80,.3); } .soon-pill { background:rgba(255,167,38,.15); color:#ffcc80; border:1px solid rgba(255,167,38,.3); } .matched-pill { background:rgba(102,187,106,.12); color:#81c784; border:1px solid rgba(102,187,106,.28); }
+table { width:100%; border-collapse:collapse; } thead tr { background:rgba(255,255,255,.03); } th { text-align:left; padding:10px 16px; font-size:11px; font-weight:600; color:var(--muted); text-transform:uppercase; letter-spacing:.05em; border-bottom:1px solid var(--border); white-space:nowrap; } td { padding:10px 16px; border-bottom:1px solid rgba(46,52,82,.5); vertical-align:middle; } tbody tr:hover { background:rgba(255,255,255,.03); }
+.row-urgent { border-left:3px solid var(--urgent); } .row-soon { border-left:3px solid var(--soon); } .row-moderate { border-left:3px solid var(--moderate); } .row-future { border-left:3px solid var(--future); } .row-past { border-left:3px solid var(--past); } .row-unknown { border-left:3px solid var(--muted); } .quote-row td { padding-top:0; color:var(--muted); font-size:12px; line-height:1.45; background:rgba(255,255,255,.018); } .quote-row .why { color:#6f789d; margin-left:6px; }
+.opp-link { color:var(--accent); text-decoration:none; font-weight:500; } .opp-link:hover { text-decoration:underline; } .subtext { color:var(--muted); font-size:12px; margin-top:2px; max-width:360px; } .badge { display:inline-block; padding:2px 8px; border-radius:10px; font-size:11px; font-weight:700; white-space:nowrap; } .urgent-badge { background:rgba(239,83,80,.2); color:#ef5350; } .soon-badge { background:rgba(255,167,38,.2); color:#ffa726; } .moderate-badge { background:rgba(102,187,106,.2); color:#66bb6a; } .future-badge { background:rgba(66,165,245,.2); color:#42a5f5; } .past-badge { background:rgba(255,112,67,.2); color:#ff7043; } .unknown-badge { background:rgba(136,144,181,.18); color:#b4b9d2; } .high-badge { background:rgba(102,187,106,.2); color:#66bb6a; } .medium-badge { background:rgba(255,167,38,.2); color:#ffa726; } .low-badge { background:rgba(239,83,80,.18); color:#ef9a9a; }
+@media (max-width:980px) { .content,.header,.nav-bar { padding-left:16px; padding-right:16px; } table { display:block; overflow-x:auto; } .subtitle { max-width:100%; } }
+</style></head><body><main class="shell">
+<header class="header"><div class="header-top"><div><div class="title">Connor Flynn - Competitor Contract End Date Monitor</div><div class="subtitle">Sales Meeting Coaching signals for Connor Flynn&#x27;s Salesforce-owned accounts where competitor renewal, expiration, lock-in, or contract timing was mentioned.</div></div><div class="stat-pills"><div class="stat-pill">Active <span>2</span></div><div class="stat-pill hot">Next 30d <span>0</span></div><div class="stat-pill">Owner matched <span>2</span></div><div class="stat-pill warn">Needs match <span>0</span></div><div class="stat-pill">Generated <span>Jul 15 12:19 UTC</span></div></div></div></header>
+<nav class="nav-bar"><a href="#owner-connor-flynn" class="nav-link">Connor</a></nav>
+<div class="content">
+  <div class="legend"><span class="legend-title">Contract timing:</span><span class="legend-item"><span class="legend-dot" style="background:var(--past)"></span>Past</span><span class="legend-item"><span class="legend-dot" style="background:var(--urgent)"></span>Next 30d</span><span class="legend-item"><span class="legend-dot" style="background:var(--soon)"></span>Next 90d</span><span class="legend-item"><span class="legend-dot" style="background:var(--moderate)"></span>Next 180d</span><span class="legend-item"><span class="legend-dot" style="background:var(--future)"></span>Future</span><span class="legend-item"><span class="legend-dot" style="background:var(--muted)"></span>Needs date</span><span class="legend-title">Source:</span><span class="legend-item">14 reviewed</span><span class="legend-item">1 pruned by exact event match</span><span class="legend-item">2 strong signals</span></div>
+  
+    <div class="owner-section" id="owner-connor-flynn">
+      <div class="owner-header">
+        <div class="owner-name">Connor Flynn</div>
+        <div class="owner-meta">
+          <span class="count-badge">2 signals</span>
+          <span class="pill matched-pill">2 SF matched</span>
+        </div>
+      </div>
+      <table>
+        <thead>
+          <tr>
+            <th>Account / Meeting</th>
+            <th>Contract Date</th>
+            <th>Timing</th>
+            <th>Signal</th>
+            <th>Competitor / Contract</th>
+            <th>Quality</th>
+            <th>Salesforce</th>
+          </tr>
+        </thead>
+        <tbody>
+        <tr class="row-moderate">
+          <td>
+            <a href="https://app.notion.com/p/Discovery-Call-SelTec-Rev-io-358a59b7e7b281369b43e94a49ec175f" target="_blank" class="opp-link">SelTec</a>
+            <div class="subtext">(Discovery Call) SelTec &amp; Rev.io</div>
+          </td>
+          <td>Dec 01, 2026</td>
+          <td><span class="badge moderate-badge">139d</span></td>
+          <td>Current contract ends in December; evaluation starts in June/July.</td>
+          <td>Connectwise</td>
+          <td><span class="badge high-badge">Strong</span></td>
+          <td>SF date: 2026-12-01<div class="subtext"><a href="https://rev-io.my.salesforce.com/001PX00000PMBT5YAP" target="_blank" class="opp-link">SelTec</a></div></td>
+        </tr>
+        <tr class="quote-row">
+          <td colspan="7"><strong>Source:</strong> &quot;What they did well: Got the \&quot;why now\&quot; (contract ends December, starting evaluation June/July).&quot;<span class="why"> This directly states the incumbent software contract end timing and the prospect&#x27;s evaluation window.</span></td>
+        </tr>
+        <tr class="row-moderate">
+          <td>
+            <a href="https://app.notion.com/p/Discovery-Call-SelTec-Rev-io-358a59b7e7b2812fb777f705a74f04d1" target="_blank" class="opp-link">SelTec</a>
+            <div class="subtext">(Discovery Call) SelTec &amp; Rev.io</div>
+          </td>
+          <td>Dec 01, 2026</td>
+          <td><span class="badge moderate-badge">139d</span></td>
+          <td>contract ends December</td>
+          <td>Connectwise contract</td>
+          <td><span class="badge high-badge">Strong</span></td>
+          <td>SF date: 2026-12-01<div class="subtext"><a href="https://rev-io.my.salesforce.com/001PX00000PMBT5YAP" target="_blank" class="opp-link">SelTec</a></div></td>
+        </tr>
+        <tr class="quote-row">
+          <td colspan="7"><strong>Source:</strong> Identified the timeline (contract ends December)<span class="why"> Direct statement of incumbent vendor contract end timing, relevant to renewal/replace window.</span></td>
+        </tr></tbody>
+      </table>
+    </div>
+</div></main></body></html>
