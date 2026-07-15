@@ -82,6 +82,19 @@ body { min-height:100%; overflow-x:hidden; overflow-y:auto; background:#0a1628; 
 .bar-track { height:12px; background:rgba(255,255,255,.07); border-radius:999px; overflow:hidden; }
 .bar-fill { height:100%; background:linear-gradient(90deg,#00d4f0,#3ddc97); border-radius:999px; }
 .bar-val { text-align:right; font-family:Montserrat, sans-serif; font-weight:900; color:#fff; }
+.source-lift-chart { padding:20px 22px; }
+.lift-legend { display:flex; justify-content:flex-end; gap:18px; margin:-4px 0 12px; font-size:11px; font-weight:800; letter-spacing:1px; text-transform:uppercase; color:rgba(255,255,255,.48); }
+.lift-legend span { display:inline-flex; align-items:center; gap:7px; }
+.lift-legend i { width:10px; height:10px; border-radius:2px; display:block; }
+.lift-legend .current i { background:#00d4f0; }
+.lift-legend .increase i { background:#3ddc97; }
+.lift-row { display:grid; grid-template-columns:150px 1fr 132px; gap:12px; align-items:center; margin:12px 0; }
+.lift-label { font-size:13px; font-weight:800; color:#fff; }
+.lift-track { height:22px; display:flex; background:rgba(255,255,255,.07); border:1px solid rgba(255,255,255,.06); border-radius:999px; overflow:hidden; }
+.lift-current { height:100%; background:#00d4f0; }
+.lift-increase { height:100%; background:#3ddc97; }
+.lift-val { text-align:right; font-family:Montserrat, sans-serif; font-size:13px; font-weight:900; color:#fff; }
+.lift-val span { color:#3ddc97; }
 .timeline { display:grid; grid-template-columns:repeat(5,minmax(0,1fr)); gap:12px; }
 .window { padding:18px; min-height:188px; border-top:3px solid #00d4f0; }
 .window h3 { font-size:17px; color:#fff; margin-bottom:8px; }
@@ -467,21 +480,23 @@ body {
 
   <section class="slide" id="slide-4">
     <div class="top-stripe"></div>
-    <div class="slide-header"><div><div class="slide-tag">Pipeline Levers</div><h2>Fill the +91 monthly PSA opportunity gap by source</h2></div><div><img src="https://7091219.fs1.hubspotusercontent-na1.net/hubfs/7091219/email-assets/logo-revio-white.png" alt="Rev.io"><div class="header-note">Creation model</div></div></div>
+    <div class="slide-header"><div><div class="slide-tag">Pipeline Levers</div><h2>Grow PSA creation to 250 monthly opportunities by source</h2></div><div><img src="https://7091219.fs1.hubspotusercontent-na1.net/hubfs/7091219/email-assets/logo-revio-white.png" alt="Rev.io"><div class="header-note">H1 actuals vs target</div></div></div>
     <div class="slide-body">
       <div class="kpi-row">
-        <div class="kpi card"><div class="kpi-label">Current avg PSA opps</div><div class="kpi-val">159</div><div class="kpi-sub">Created per month</div></div>
-        <div class="kpi card green"><div class="kpi-label">Needed for target</div><div class="kpi-val green">250</div><div class="kpi-sub">Monthly PSA opps</div></div>
-        <div class="kpi card orange"><div class="kpi-label">Monthly gap</div><div class="kpi-val orange">+91</div><div class="kpi-sub">Additional opps needed</div></div>
-        <div class="kpi card"><div class="kpi-label">Lift required</div><div class="kpi-val teal">+57%</div><div class="kpi-sub">Versus current average</div></div>
+        <div class="kpi card"><div class="kpi-label">H1 current model</div><div class="kpi-val">159</div><div class="kpi-sub">Opps/mo · 9.4% win · ~$808 ASP</div></div>
+        <div class="kpi card orange"><div class="kpi-label">Current bookings run-rate</div><div class="kpi-val orange">~$12K</div><div class="kpi-sub">159 x 9.4% x ~$808</div></div>
+        <div class="kpi card green"><div class="kpi-label">Target model</div><div class="kpi-val green">250</div><div class="kpi-sub">Opps/mo · 12% win · $1,000 ASP</div></div>
+        <div class="kpi card"><div class="kpi-label">Target bookings</div><div class="kpi-val teal">$30K</div><div class="kpi-sub">250 x 12% x $1,000</div></div>
       </div>
-      <div class="source-grid">
-        <div class="source-card card"><h3>Sales + Unknown</h3><div class="source-math"><strong>+30</strong><span>from 95/mo</span></div><p>Weekly AE/SDR targets, named-account blocks, closed-lost reactivation, and renewal-trigger plays.</p></div>
-        <div class="source-card card"><h3>Website</h3><div class="source-math"><strong>+20</strong><span>from 13/mo</span></div><p>PSA CTAs, faster RAD routing, stronger landing pages, and follow-up SLA before intent cools off.</p></div>
-        <div class="source-card card"><h3>Paid Media</h3><div class="source-math"><strong>+16</strong><span>from 11/mo</span></div><p>Fund MSP and telecom PSA campaigns around contract pain, ticketing chaos, and displacement.</p></div>
-        <div class="source-card card"><h3>Tradeshow</h3><div class="source-math"><strong>+13</strong><span>from 31/mo</span></div><p>Pre-build target lists, book PSA meetings before events, and inspect same-week conversion.</p></div>
-        <div class="source-card card"><h3>Partner / Referral</h3><div class="source-math"><strong>+10</strong><span>from 1/mo</span></div><p>Ask after successful PSA milestones and activate Pax8, NinjaOne, and Acronis ecosystems.</p></div>
-        <div class="source-card card"><h3>Email / SEO / Other</h3><div class="source-math"><strong>+2</strong><span>from 8/mo</span></div><p>Support high-intent PSA themes instead of broad awareness content that does not convert.</p></div>
+      <div class="source-lift-chart card">
+        <div class="section-hdr"><div class="section-lbl">Monthly PSA Opportunity Creation by Source</div><div class="section-rule"></div></div>
+        <div class="lift-legend"><span class="current"><i></i>H1 current avg</span><span class="increase"><i></i>Increase to target</span></div>
+        <div class="lift-row"><div class="lift-label">Sales + Unknown</div><div class="lift-track"><div class="lift-current" style="width:38%"></div><div class="lift-increase" style="width:12%"></div></div><div class="lift-val">95 <span>+30</span> = 125</div></div>
+        <div class="lift-row"><div class="lift-label">Tradeshow</div><div class="lift-track"><div class="lift-current" style="width:12.4%"></div><div class="lift-increase" style="width:5.2%"></div></div><div class="lift-val">31 <span>+13</span> = 44</div></div>
+        <div class="lift-row"><div class="lift-label">Website</div><div class="lift-track"><div class="lift-current" style="width:5.2%"></div><div class="lift-increase" style="width:8%"></div></div><div class="lift-val">13 <span>+20</span> = 33</div></div>
+        <div class="lift-row"><div class="lift-label">Paid Media</div><div class="lift-track"><div class="lift-current" style="width:4.4%"></div><div class="lift-increase" style="width:6.4%"></div></div><div class="lift-val">11 <span>+16</span> = 27</div></div>
+        <div class="lift-row"><div class="lift-label">Partner / Referral</div><div class="lift-track"><div class="lift-current" style="width:.4%"></div><div class="lift-increase" style="width:4%"></div></div><div class="lift-val">1 <span>+10</span> = 11</div></div>
+        <div class="lift-row"><div class="lift-label">Email / SEO / Other</div><div class="lift-track"><div class="lift-current" style="width:3.2%"></div><div class="lift-increase" style="width:.8%"></div></div><div class="lift-val">8 <span>+2</span> = 10</div></div>
       </div>
     </div>
   </section>
