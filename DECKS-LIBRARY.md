@@ -1,6 +1,6 @@
 # DECKS-LIBRARY.md — Robin's Deck & Dashboard Library
 
-Last updated: 2026-06-18
+Last updated: 2026-07-15
 GitHub Pages base: `https://koontz-robin.github.io/robin-decks/`
 Repo: `git@github.com:koontz-robin/robin-decks.git`
 
@@ -18,7 +18,7 @@ Repo: `git@github.com:koontz-robin/robin-decks.git`
 | AE Capacity Dashboard | ae-capacity-dashboard.html | https://koontz-robin.github.io/robin-decks/ae-capacity-dashboard.html | Daily (12pm ET, weekdays) |
 | AE Capacity Slide (EXECUTE theme) | ae-capacity-slide.html | https://koontz-robin.github.io/robin-decks/ae-capacity-slide.html | Manual |
 | Sales Opportunities Created | june-ae-csa-opportunities.html | https://koontz-robin.github.io/robin-decks/june-ae-csa-opportunities.html | Hourly (9am-5pm ET, weekdays) |
-| July Opportunity Created Report | july-ae-csa-opportunities.html | https://koontz-robin.github.io/robin-decks/july-ae-csa-opportunities.html | July copy of Sales Opportunities Created with July calendar weeks |
+| July Opportunity Created Report | july-ae-csa-opportunities.html | https://koontz-robin.github.io/robin-decks/july-ae-csa-opportunities.html | July opportunities created by AE, CSA, and SDR influence; refreshed July 15, 2026 |
 | Sales KPI Results - Q2 2026 | sales-kpi-results-q2-2026.html | https://koontz-robin.github.io/robin-decks/sales-kpi-results-q2-2026.html | Snapshot from Q2 26 workbook tab |
 | CSA Cohorts | csa-cohorts.html | https://koontz-robin.github.io/robin-decks/csa-cohorts.html | Snapshot copy of Sales Opportunities Created |
 | 2026 PSA Team Tracker | 2026-psa-team-tracker.html | https://koontz-robin.github.io/robin-decks/2026-psa-team-tracker.html | Nightly (11pm ET) |
