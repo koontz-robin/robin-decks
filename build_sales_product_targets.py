@@ -12,11 +12,21 @@ from html import escape
 from pathlib import Path
 from zoneinfo import ZoneInfo
 
+import requests
+
 WORKSPACE = Path("/home/openclaw/.openclaw/workspace")
 HTML_FILE = WORKSPACE / "sales-product-targets-july-q3.html"
 JULY_OPPS_FILE = WORKSPACE / "sf_july_opps.json"
 LIBRARY_FILE = WORKSPACE / "DECKS-LIBRARY.md"
 ET = ZoneInfo("America/New_York")
+
+SF_INSTANCE = "https://rev-io.my.salesforce.com"
+SF_CLIENT_ID = "3MVG91ftikjGaMd.NAf5_nx2GISRurI0fIm1aTgGSe.jNIN4bOdlqn95rfrur3RACkqjIZlDG8iCTnKzFRa.N"
+SF_CLIENT_SECRET = "FA7C3F3F72D6A1786F374CF966B505DB9B07AE43D69A6D54F127B2397713716E"
+JULY_START_DATE = "2026-07-01"
+JULY_END_DATE = "2026-07-31"
+JULY_START_UTC = "2026-07-01T04:00:00Z"
+AUGUST_START_UTC = "2026-08-01T04:00:00Z"
 
 PRODUCTS = [
     ("PSA", "PSA", "#50ff8a"),
@@ -60,6 +70,77 @@ def product_key(value):
     return "Other"
 
 
+def sf_quote(value):
+    return "'" + str(value).replace("\\", "\\\\").replace("'", "\\'") + "'"
+
+
+def chunked(values, size=150):
+    values = [value for value in values if value]
+    for index in range(0, len(values), size):
+        yield values[index:index + size]
+
+
+def sf_auth():
+    response = requests.post(
+        f"{SF_INSTANCE}/services/oauth2/token",
+        data={
+            "grant_type": "client_credentials",
+            "client_id": SF_CLIENT_ID,
+            "client_secret": SF_CLIENT_SECRET,
+        },
+        timeout=30,
+    )
+    response.raise_for_status()
+    token = response.json()
+    return token["instance_url"], {"Authorization": f"Bearer {token['access_token']}"}
+
+
+def sf_query(base, headers, query):
+    url = f"{base}/services/data/v59.0/query"
+    params = {"q": query.strip()}
+    records = []
+    while True:
+        response = requests.get(url, headers=headers, params=params, timeout=60)
+        if not response.ok:
+            raise RuntimeError(f"Salesforce query failed: {response.status_code} {response.text[:500]}")
+        payload = response.json()
+        records.extend(payload.get("records", []))
+        if payload.get("done", True):
+            return records
+        url = base + payload["nextRecordsUrl"]
+        params = {}
+
+
+def normalize_name(name):
+    return (name or "").strip()
+
+
+def fetch_july_opportunities(base, headers):
+    query = f"""
+        SELECT Id, Name, StageName, Amount, Product_Type__c, Probability,
+               CloseDate, CreatedDate, Forecast_Status__c, AccountId,
+               Account.Name, Owner.Name, SDR_Influence__c,
+               (SELECT Id, Quantity, UnitPrice, TotalPrice, Product2.Name, Product2.Family
+                FROM OpportunityLineItems)
+        FROM Opportunity
+        WHERE CloseDate >= {JULY_START_DATE}
+          AND CloseDate <= {JULY_END_DATE}
+          AND StageName != 'Closed Lost'
+          AND IsDeleted = false
+        ORDER BY Amount DESC NULLS LAST
+        LIMIT 500
+    """
+    records = sf_query(base, headers, query)
+    for record in records:
+        if isinstance(record.get("Account"), dict):
+            record["Account"] = record["Account"].get("Name") or ""
+        if isinstance(record.get("Owner"), dict):
+            record["Owner"] = normalize_name(record["Owner"].get("Name") or "")
+        record["SDR_Influence__c"] = normalize_name(record.get("SDR_Influence__c") or "")
+    JULY_OPPS_FILE.write_text(json.dumps(records, indent=2), encoding="utf-8")
+    return records
+
+
 def line_product_key(line_item):
     product = line_item.get("Product2") or {}
     return product_key(f"{product.get('Family') or ''} {product.get('Name') or ''}")
@@ -79,8 +160,136 @@ def booking_splits(opp):
     return [(product_key(opp.get("Product_Type__c")), float(opp.get("Amount") or 0))]
 
 
-def load_metrics():
-    opps = json.loads(JULY_OPPS_FILE.read_text(encoding="utf-8"))
+def fetch_billing_activity(base, headers, billing_opps):
+    opp_ids = sorted({opp["Id"] for opp in billing_opps if opp.get("Id")})
+    account_ids = sorted({opp["AccountId"] for opp in billing_opps if opp.get("AccountId")})
+
+    def collect(object_name, fields, extra_where):
+        records_by_id = {}
+        filters = []
+        for field_name, values in (("WhatId", opp_ids), ("AccountId", account_ids)):
+            for batch in chunked(values):
+                filters.append(f"{field_name} IN ({', '.join(sf_quote(value) for value in batch)})")
+        for related_filter in filters:
+            query = f"""
+                SELECT {fields}
+                FROM {object_name}
+                WHERE CreatedDate >= {JULY_START_UTC}
+                  AND CreatedDate < {AUGUST_START_UTC}
+                  AND IsDeleted = false
+                  AND {related_filter}
+                  AND {extra_where}
+                ORDER BY CreatedDate ASC
+            """
+            for record in sf_query(base, headers, query):
+                records_by_id[record["Id"]] = record
+        return list(records_by_id.values())
+
+    meetings = collect(
+        "Event",
+        "Id, Subject, Type, CreatedDate, ActivityDate, StartDateTime, AccountId, WhatId, Owner.Name, "
+        "Canceled_Meeting__c, Meeting_No_show__c",
+        "Type != '10 - Internal Meeting / Training' "
+        "AND (Canceled_Meeting__c = false OR Canceled_Meeting__c = null) "
+        "AND (Meeting_No_show__c = false OR Meeting_No_show__c = null)",
+    )
+    calls = collect(
+        "Task",
+        "Id, Subject, Type, CreatedDate, ActivityDate, AccountId, WhatId, Owner.Name, CallDisposition",
+        "Type = 'Call'",
+    )
+    return {"meetings": meetings, "calls": calls}
+
+
+def activity_owner(record):
+    owner = record.get("Owner") or {}
+    return normalize_name(owner.get("Name") or "Unknown") if isinstance(owner, dict) else "Unknown"
+
+
+def billing_line_for_activity(record, opp_by_id, products_by_account):
+    opp = opp_by_id.get(record.get("WhatId") or "")
+    if opp:
+        return opp.get("Product_Type__c") or "Billing / Odin"
+    products = products_by_account.get(record.get("AccountId") or "")
+    if products:
+        return " / ".join(sorted(products))
+    return "Billing / Odin"
+
+
+def empty_metric():
+    return {"opps": 0, "closed": 0.0, "open": 0.0, "weighted": 0.0, "meetings": 0, "calls": 0}
+
+
+def build_billing_metrics(opps, activity):
+    billing_opps = [opp for opp in opps if product_key(opp.get("Product_Type__c")) == "Billing"]
+    by_ae = defaultdict(empty_metric)
+    by_sdr = defaultdict(empty_metric)
+    by_line = defaultdict(empty_metric)
+    opp_by_id = {opp["Id"]: opp for opp in billing_opps if opp.get("Id")}
+    products_by_account = defaultdict(set)
+    sdrs_by_account = defaultdict(set)
+
+    for opp in billing_opps:
+        amount = float(opp.get("Amount") or 0)
+        is_closed = opp.get("StageName") == "Closed Won"
+        probability = float(opp.get("Probability") or 0) / 100
+        owner = normalize_name(opp.get("Owner") or "Unknown") or "Unknown"
+        sdr = normalize_name(opp.get("SDR_Influence__c") or "")
+        line = opp.get("Product_Type__c") or "Billing / Odin"
+        account_id = opp.get("AccountId") or ""
+
+        for bucket_name, bucket in ((owner, by_ae), (line, by_line)):
+            bucket[bucket_name]["opps"] += 1
+            if is_closed:
+                bucket[bucket_name]["closed"] += amount
+            else:
+                bucket[bucket_name]["open"] += amount
+                bucket[bucket_name]["weighted"] += amount * probability
+
+        if sdr:
+            by_sdr[sdr]["opps"] += 1
+            if is_closed:
+                by_sdr[sdr]["closed"] += amount
+            else:
+                by_sdr[sdr]["open"] += amount
+                by_sdr[sdr]["weighted"] += amount * probability
+            if account_id:
+                sdrs_by_account[account_id].add(sdr)
+
+        if account_id:
+            products_by_account[account_id].add(line)
+
+    for meeting in activity.get("meetings", []):
+        owner = activity_owner(meeting)
+        line = billing_line_for_activity(meeting, opp_by_id, products_by_account)
+        by_ae[owner]["meetings"] += 1
+        by_line[line]["meetings"] += 1
+        for sdr in sorted(sdrs_by_account.get(meeting.get("AccountId") or "", [])):
+            by_sdr[sdr]["meetings"] += 1
+
+    for call in activity.get("calls", []):
+        owner = activity_owner(call)
+        line = billing_line_for_activity(call, opp_by_id, products_by_account)
+        by_ae[owner]["calls"] += 1
+        by_line[line]["calls"] += 1
+        for sdr in sorted(sdrs_by_account.get(call.get("AccountId") or "", [])):
+            by_sdr[sdr]["calls"] += 1
+
+    return {
+        "opps": billing_opps,
+        "activity": activity,
+        "by_ae": by_ae,
+        "by_sdr": by_sdr,
+        "by_line": by_line,
+        "opp_count": len(billing_opps),
+        "closed": sum(float(opp.get("Amount") or 0) for opp in billing_opps if opp.get("StageName") == "Closed Won"),
+        "open": sum(float(opp.get("Amount") or 0) for opp in billing_opps if opp.get("StageName") != "Closed Won"),
+        "meetings": len(activity.get("meetings", [])),
+        "calls": len(activity.get("calls", [])),
+    }
+
+
+def load_metrics(opps):
     metrics = {
         key: {
             "closed": 0.0,
@@ -199,8 +408,67 @@ def closed_rows(rows):
     )
 
 
-def build_html():
-    metrics, rows, opp_count = load_metrics()
+def billing_metric_rows(items, name_label):
+    rows = []
+    for name, values in sorted(
+        items.items(),
+        key=lambda item: (-(item[1]["closed"] + item[1]["open"]), -item[1]["opps"], item[0]),
+    ):
+        rows.append(
+            f"""
+            <tr>
+              <td><strong>{escape(name)}</strong><span>{escape(name_label)}</span></td>
+              <td>{values['opps']}</td>
+              <td>{money(values['closed'])}</td>
+              <td>{money(values['open'])}</td>
+              <td>{money(values['weighted'])}</td>
+              <td>{values['meetings']}</td>
+              <td>{values['calls']}</td>
+            </tr>"""
+        )
+    if not rows:
+        return '<tr><td colspan="7" class="empty">No Billing/Odin activity found.</td></tr>'
+    return "\n".join(rows)
+
+
+def billing_activity_section(billing):
+    return f"""
+  <section class="section-head">
+    <div><h2>Billing Product Line Activity</h2><p>Billing/Odin July opportunities plus July Salesforce meetings set and calls tied to those opportunities or accounts.</p></div>
+  </section>
+  <section class="billing-kpis">
+    <div class="kpi" style="--accent:var(--cyan)"><span>Billing/Odin Opps</span><strong>{billing['opp_count']}</strong><em>{money(billing['closed'])} closed · {money(billing['open'])} open</em></div>
+    <div class="kpi" style="--accent:var(--green)"><span>Meetings Set</span><strong>{billing['meetings']}</strong><em>non-internal, non-canceled Events</em></div>
+    <div class="kpi" style="--accent:var(--violet)"><span>Billing Calls</span><strong>{billing['calls']}</strong><em>Salesforce call Tasks</em></div>
+    <div class="kpi" style="--accent:var(--pink)"><span>Billing Pipeline</span><strong>{money(billing['open'])}</strong><em>{money(sum(v['weighted'] for v in billing['by_line'].values()))} weighted</em></div>
+  </section>
+  <section class="billing-grid">
+    <div class="panel">
+      <div class="mini-head">Billing Opportunities by Account Executive</div>
+      <table class="activity-table">
+        <thead><tr><th>Account Executive</th><th>Opps</th><th>Closed MRR</th><th>Open MRR</th><th>Weighted</th><th>Meetings</th><th>Calls</th></tr></thead>
+        <tbody>{billing_metric_rows(billing['by_ae'], 'Owner / activity owner')}</tbody>
+      </table>
+    </div>
+    <div class="panel">
+      <div class="mini-head">Billing Opportunities by SDR</div>
+      <table class="activity-table">
+        <thead><tr><th>SDR</th><th>Opps</th><th>Closed MRR</th><th>Open MRR</th><th>Weighted</th><th>Meetings</th><th>Calls</th></tr></thead>
+        <tbody>{billing_metric_rows(billing['by_sdr'], 'SDR Influence')}</tbody>
+      </table>
+    </div>
+  </section>
+  <section class="panel">
+    <div class="mini-head">Billing Product Lines</div>
+    <table class="activity-table">
+      <thead><tr><th>Product Line</th><th>Opps</th><th>Closed MRR</th><th>Open MRR</th><th>Weighted</th><th>Meetings</th><th>Calls</th></tr></thead>
+      <tbody>{billing_metric_rows(billing['by_line'], 'Product Type')}</tbody>
+    </table>
+  </section>"""
+
+
+def build_html(opps, billing):
+    metrics, rows, opp_count = load_metrics(opps)
     generated = datetime.now(ET)
     total_july_target = sum(JULY_TARGETS.values())
     total_q3_target = sum(Q3_TARGETS.values())
@@ -257,6 +525,10 @@ h2 {{ margin:5px 0 0; font-size:24px; letter-spacing:0; }}
 .section-head h2 {{ margin:0; font-size:20px; }}
 .section-head p {{ margin:5px 0 0; color:var(--muted); font-size:13px; }}
 .panel {{ overflow:auto; }}
+.billing-kpis {{ display:grid; grid-template-columns:repeat(4,minmax(0,1fr)); gap:12px; margin:0 0 14px; }}
+.billing-grid {{ display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); gap:14px; margin-bottom:14px; }}
+.mini-head {{ padding:13px 14px; border-bottom:1px solid rgba(255,255,255,.07); color:#fff; font-size:13px; font-weight:900; letter-spacing:.8px; text-transform:uppercase; }}
+.activity-table {{ min-width:760px; }}
 table {{ width:100%; border-collapse:collapse; min-width:980px; font-size:12px; }}
 th,td {{ padding:11px 12px; border-bottom:1px solid rgba(255,255,255,.07); border-left:1px solid rgba(255,255,255,.045); text-align:right; white-space:nowrap; }}
 th {{ background:#0c1322; color:#8d97bd; font-size:10px; font-weight:900; text-transform:uppercase; letter-spacing:1.1px; }}
@@ -266,8 +538,8 @@ td strong {{ color:#fff; }}
 td span {{ display:block; margin-top:3px; color:var(--soft); font-size:10px; }}
 .empty {{ color:var(--muted); text-align:center; }}
 .note {{ margin-top:18px; color:var(--soft); font-size:12px; line-height:1.5; }}
-@media(max-width:1100px) {{ .topbar {{ display:block; }} .brand {{ margin-bottom:14px; }} .stamp {{ text-align:left; }} .kpis,.cards {{ grid-template-columns:repeat(2,minmax(0,1fr)); }} }}
-@media(max-width:740px) {{ .shell {{ padding:22px 16px 36px; }} h1 {{ font-size:32px; }} .kpis,.cards,.pipeline {{ grid-template-columns:1fr; }} }}
+@media(max-width:1100px) {{ .topbar {{ display:block; }} .brand {{ margin-bottom:14px; }} .stamp {{ text-align:left; }} .kpis,.cards,.billing-kpis,.billing-grid {{ grid-template-columns:repeat(2,minmax(0,1fr)); }} }}
+@media(max-width:740px) {{ .shell {{ padding:22px 16px 36px; }} h1 {{ font-size:32px; }} .kpis,.cards,.billing-kpis,.billing-grid,.pipeline {{ grid-template-columns:1fr; }} }}
 </style>
 </head>
 <body>
@@ -299,6 +571,7 @@ td span {{ display:block; margin-top:3px; color:var(--soft); font-size:10px; }}
       <tbody>{summary_rows(metrics)}</tbody>
     </table>
   </section>
+  {billing_activity_section(billing)}
   <section class="section-head">
     <div><h2>Closed-Won Detail</h2><p>Closed-won July bookings included in the actuals above.</p></div>
   </section>
@@ -357,7 +630,19 @@ def publish(files):
 
 
 def main():
-    build_html()
+    print("Authenticating to Salesforce...")
+    base, headers = sf_auth()
+    print("Fetching current July opportunities...")
+    opps = fetch_july_opportunities(base, headers)
+    billing_opps = [opp for opp in opps if product_key(opp.get("Product_Type__c")) == "Billing"]
+    print(f"Fetching Billing/Odin meetings and calls for {len(billing_opps)} July opportunities...")
+    billing_activity = fetch_billing_activity(base, headers, billing_opps)
+    print(
+        f"Billing activity: {len(billing_activity['meetings'])} meetings set, "
+        f"{len(billing_activity['calls'])} calls"
+    )
+    billing = build_billing_metrics(opps, billing_activity)
+    build_html(opps, billing)
     update_library()
     if os.environ.get("NO_PUBLISH") == "1":
         print("NO_PUBLISH=1 set; skipping publish.")
