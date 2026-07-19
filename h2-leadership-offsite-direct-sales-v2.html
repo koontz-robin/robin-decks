@@ -109,12 +109,13 @@ body { min-height:100%; overflow-x:hidden; overflow-y:auto; background:#0a1628; 
 .window h3 { font-size:17px; color:#fff; margin-bottom:8px; }
 .window .count { font-family:Montserrat, sans-serif; font-size:32px; font-weight:900; color:#3ddc97; margin-bottom:8px; }
 .window p { font-size:12px; line-height:1.36; color:rgba(255,255,255,.62); }
-.mail-grid { display:grid; grid-template-columns:repeat(5,minmax(0,1fr)); gap:11px; }
-.mail-card { padding:14px; min-height:146px; border-top:3px solid #00d4f0; }
-.mail-card.featured { border-top-color:#3ddc97; background:linear-gradient(180deg,rgba(61,220,151,.12),rgba(15,35,57,.96)); }
-.mail-card h3 { font-family:Montserrat, sans-serif; font-size:15px; line-height:1.15; color:#fff; margin:7px 0; }
-.mail-card p { font-size:11px; line-height:1.34; color:rgba(255,255,255,.64); }
-.mail-card .tag { font-size:9px; letter-spacing:1.6px; }
+.mail-table-wrap { padding:18px 22px; }
+.mail-table { width:100%; border-collapse:collapse; table-layout:fixed; }
+.mail-table th { padding:10px 12px; font-size:10px; font-weight:900; letter-spacing:2px; text-transform:uppercase; color:#15d7f2; background:rgba(21,215,242,.12); text-align:left; }
+.mail-table td { padding:8px 12px; border-top:1px solid rgba(255,255,255,.08); color:#d8e1f0; font-size:13px; line-height:1.24; vertical-align:top; }
+.mail-table td:first-child { width:24%; font-family:Montserrat, sans-serif; font-weight:900; color:#fff; }
+.mail-table td:nth-child(2) { width:38%; color:#aebbd0; }
+.mail-table td:nth-child(3) { width:38%; color:#3ddc97; font-weight:800; }
 .commit-grid { display:grid; grid-template-columns:repeat(3,minmax(0,1fr)); gap:18px; height:100%; }
 .commit { padding:24px; border-top:4px solid #00d4f0; }
 .commit.start { border-top-color:#3ddc97; }
@@ -390,7 +391,9 @@ body {
   .slide-body { padding-bottom:28px; }
   .state-layout { grid-template-columns:1fr; }
   .cover-title { font-size:42px; }
-  .cover-chips, .cover-nav-tiles, .kpi-row, .grid-2, .grid-3, .grid-4, .source-grid, .timeline, .mail-grid, .commit-grid { grid-template-columns:1fr; }
+  .cover-chips, .cover-nav-tiles, .kpi-row, .grid-2, .grid-3, .grid-4, .source-grid, .timeline, .commit-grid { grid-template-columns:1fr; }
+  .mail-table-wrap { overflow-x:auto; }
+  .mail-table { min-width:720px; }
 }
 </style>
 </head>
@@ -561,17 +564,24 @@ body {
     <div class="top-stripe"></div>
     <div class="slide-header"><div><div class="slide-tag">Creative Direct Mail Concepts</div><h2>Make renewal anxiety tangible enough to earn the meeting</h2></div><div><img src="https://7091219.fs1.hubspotusercontent-na1.net/hubfs/7091219/email-assets/logo-revio-white.png" alt="Rev.io"><div class="header-note">Expiration-triggered packages</div></div></div>
     <div class="slide-body">
-      <div class="mail-grid">
-        <div class="mail-card featured card"><div class="tag">Favorite</div><h3>Divorce Papers</h3><p>Confidential manila envelope with faux divorce papers, branded pen, one-page comparison, and the CTA: before another multi-year commitment, make sure you are marrying the right platform.</p></div>
-        <div class="mail-card card"><div class="tag">Break-Up Box</div><h3>It's not you. It's your PSA.</h3><p>Small box with tissues, chocolate, and a migration assessment offer. Inside lid: breaking up is hard; staying in a bad relationship is harder.</p></div>
-        <div class="mail-card card"><div class="tag">Ring Box</div><h3>Don't recommit before you date around.</h3><p>Jewelry box with no ring, only a renewal card asking for 30 minutes before they say "I do" for another three years.</p></div>
-        <div class="mail-card card"><div class="tag">Survival Kit</div><h3>Single Again</h3><p>Breath mints, mini champagne where appropriate, sunglasses, and a "Newly Single" sticker to frame renewal season as a choice.</p></div>
-        <div class="mail-card card"><div class="tag">Escape Plan</div><h3>In case of contract renewal...</h3><p>Emergency-kit style package with tiny flashlight, escape-plan card, and QR code. Message: break glass before auto-renewal.</p></div>
-        <div class="mail-card card"><div class="tag">Wedding Invite</div><h3>You're invited... to your contract renewal.</h3><p>Invitation format that flips from renewal ceremony to "attendance is optional" before renewing with ConnectWise, HaloPSA, or Autotask.</p></div>
-        <div class="mail-card card"><div class="tag">Counseling</div><h3>Relationship Counseling</h3><p>Mock appointment card with reasons checked: poor communication, too expensive, doesn't listen, growing apart. Prescription: get a second opinion.</p></div>
-        <div class="mail-card card"><div class="tag">Status Card</div><h3>Relationship Status: It's Complicated</h3><p>Oversized relationship-status card that turns PSA frustration into a quick pre-renewal conversation starter.</p></div>
-        <div class="mail-card card"><div class="tag">Contract Card</div><h3>Your renewal isn't a life sentence.</h3><p>Monopoly-style "Get Out of Contract Free" card with the CTA: before locking in for another 3-5 years, see what your options are.</p></div>
-        <div class="mail-card card"><div class="tag">Fork in the Road</div><h3>Decisions shape the next few years.</h3><p>Fold-out map contrasting price increases, same frustrations, and another long commitment with a modern platform, faster implementation, and better support.</p></div>
+      <div class="mail-table-wrap card">
+        <table class="mail-table">
+          <thead><tr><th>Theme</th><th>Gift</th><th>Message</th></tr></thead>
+          <tbody>
+            <tr><td>Get Out of Contract Free</td><td>Custom metal Monopoly-style card</td><td>"One free evaluation before renewing."</td></tr>
+            <tr><td>Divorce</td><td>Mini bottle of champagne + "Congratulations on your freedom."</td><td>"Every fresh start deserves a celebration."</td></tr>
+            <tr><td>Escape Plan</td><td>Mini multi-tool or flashlight</td><td>"Always have an exit strategy."</td></tr>
+            <tr><td>Test Drive</td><td>Matchbox/Toy Tesla or Porsche</td><td>"Before you re-sign, take another platform for a spin."</td></tr>
+            <tr><td>Fork in the Road</td><td>Mini compass</td><td>"Choose your next direction wisely."</td></tr>
+            <tr><td>Passport</td><td>Custom passport holder</td><td>"Your next destination starts here."</td></tr>
+            <tr><td>Auto-Renew</td><td>Giant red "CANCEL" desk button</td><td>"Don't hit Auto Renew."</td></tr>
+            <tr><td>Lease Expiring</td><td>Keychain with removable key</td><td>"Time to trade up?"</td></tr>
+            <tr><td>Warranty Inspection</td><td>Tire tread gauge or inspection flashlight</td><td>"Time for a system check."</td></tr>
+            <tr><td>Golden Handcuffs</td><td>Plastic handcuffs with tiny key</td><td>"Unlock your options."</td></tr>
+            <tr><td>Buyer's Remorse</td><td>Return receipt</td><td>"Still within your evaluation window..."</td></tr>
+            <tr><td>Graduation</td><td>Mini diploma</td><td>"Maybe you've outgrown your first PSA."</td></tr>
+          </tbody>
+        </table>
       </div>
     </div>
   </section>
