@@ -387,7 +387,8 @@ html, body { height: 100%; overflow: hidden; background: #0a1628; font-family: '
 <script>
 const TOTAL = 6;
 let cur = 1;
-const LABELS = ['Cover + June Final', 'July Pipeline', 'Efficiency', 'Pipeline Trends', 'Closed Lost', 'PSA Wins'];
+const SLIDE_IDS = ['slide-1', 'slide-2', 'slide-3', 'slide-4', 'slide-6', 'slide-5'];
+const LABELS = ['Cover + June Final', 'July Pipeline', 'Efficiency', 'Pipeline Trends', 'PSA Wins', 'Closed Lost'];
 
 function buildDots() {
   const wrap = document.getElementById('nav-dots');
@@ -401,10 +402,10 @@ function buildDots() {
   }
 }
 function jumpSlide(n) {
-  document.getElementById('slide-' + cur).classList.remove('active');
+  document.getElementById(SLIDE_IDS[cur - 1]).classList.remove('active');
   document.getElementById('dot-' + cur).classList.remove('active');
   cur = n;
-  document.getElementById('slide-' + cur).classList.add('active');
+  document.getElementById(SLIDE_IDS[cur - 1]).classList.add('active');
   document.getElementById('dot-' + cur).classList.add('active');
   document.getElementById('nav-counter').textContent = cur + ' / ' + TOTAL;
   document.getElementById('btn-prev').disabled = (cur === 1);
