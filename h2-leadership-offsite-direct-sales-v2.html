@@ -220,41 +220,46 @@ body { min-height:100%; overflow-x:hidden; overflow-y:auto; background:#0a1628; 
   line-height:1.34;
 }
 #slide-7 {
-  padding-top:58px;
-  padding-bottom:56px;
+  padding-top:46px;
+  padding-bottom:48px;
 }
 #slide-7 .slide-tag {
-  margin-bottom:18px;
+  margin-bottom:14px;
 }
 #slide-7 .slide-header h2 {
-  font-size:clamp(40px, 4vw, 70px);
+  font-size:clamp(36px, 3.5vw, 58px);
   max-width:1160px;
 }
 #slide-7 .slide-body {
-  padding-top:28px;
+  padding-top:20px;
 }
 #slide-7 .grid-4 {
-  gap:14px;
+  gap:10px;
 }
 #slide-7 .text-card {
-  padding:22px 24px;
+  padding:12px 16px;
 }
 #slide-7 .text-card h3 {
-  font-size:24px;
+  font-size:16px;
+  line-height:1.12;
+  margin-bottom:0;
 }
 #slide-7 .text-card p {
-  font-size:15px;
-  line-height:1.38;
+  display:none;
+}
+#slide-7 .text-card .tag {
+  font-size:9px;
+  margin-bottom:8px;
 }
 .timing-table-wrap {
-  padding:18px 24px;
-  margin-bottom:20px;
+  padding:12px 22px;
+  margin-bottom:12px;
 }
 .timing-table th {
   font-size:11px;
 }
 .timing-table td {
-  font-size:20px;
+  font-size:16px;
   vertical-align:middle;
 }
 .timing-table .segment {
@@ -264,13 +269,116 @@ body { min-height:100%; overflow-x:hidden; overflow-y:auto; background:#0a1628; 
 }
 .timing-table .months {
   font-family:Montserrat, sans-serif;
-  font-size:34px;
+  font-size:28px;
   font-weight:900;
   color:#3ddc97;
   white-space:nowrap;
 }
 .timing-table .motion {
   color:#c8d3e7;
+}
+.expiration-graphic {
+  padding:16px 22px;
+  margin-bottom:12px;
+}
+.expiration-head {
+  display:flex;
+  align-items:flex-end;
+  justify-content:space-between;
+  gap:18px;
+  margin-bottom:14px;
+}
+.expiration-title {
+  font-family:Montserrat,sans-serif;
+  font-size:20px;
+  font-weight:900;
+  color:#fff;
+}
+.expiration-sub {
+  font-size:12px;
+  color:rgba(255,255,255,.58);
+  margin-top:4px;
+}
+.expiration-total {
+  text-align:right;
+  font-family:Montserrat,sans-serif;
+  font-size:34px;
+  font-weight:900;
+  color:#3ddc97;
+  line-height:1;
+}
+.expiration-total span {
+  display:block;
+  margin-top:4px;
+  font:700 10px Inter,sans-serif;
+  letter-spacing:1.1px;
+  text-transform:uppercase;
+  color:rgba(255,255,255,.55);
+}
+.expiration-months {
+  display:grid;
+  grid-template-columns:116px repeat(6,1fr) 70px;
+  gap:8px;
+  align-items:center;
+  margin-bottom:8px;
+}
+.expiration-months div {
+  font-size:10px;
+  letter-spacing:1.1px;
+  text-transform:uppercase;
+  color:#00d4f0;
+  font-weight:900;
+  text-align:center;
+}
+.expiration-months div:first-child { text-align:left; }
+.expiration-months div:last-child { text-align:right; }
+.competitor-lane {
+  display:grid;
+  grid-template-columns:116px repeat(6,1fr) 70px;
+  gap:8px;
+  align-items:center;
+  margin-top:8px;
+}
+.competitor-label {
+  font-family:Montserrat,sans-serif;
+  font-size:16px;
+  font-weight:900;
+  color:#fff;
+}
+.month-cell {
+  height:38px;
+  border-radius:8px;
+  background:rgba(255,255,255,.045);
+  border:1px solid rgba(255,255,255,.07);
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  font-family:Montserrat,sans-serif;
+  font-size:18px;
+  font-weight:900;
+  color:rgba(255,255,255,.45);
+}
+.month-cell.has-exp {
+  color:#061116;
+  border-color:transparent;
+}
+.month-cell.cw { background:#00d4f0; }
+.month-cell.at { background:#3ddc97; }
+.month-cell.halo { background:#f5a623; }
+.competitor-total {
+  text-align:right;
+  font-family:Montserrat,sans-serif;
+  font-size:24px;
+  font-weight:900;
+  color:#fff;
+}
+.expiration-note {
+  margin-top:11px;
+  display:flex;
+  justify-content:space-between;
+  gap:12px;
+  font-size:11px;
+  color:rgba(255,255,255,.52);
 }
 table { width:100%; border-collapse:collapse; overflow:hidden; border-radius:10px; }
 th { background:rgba(0,212,240,.08); color:#00d4f0; font-size:10px; letter-spacing:1.3px; text-transform:uppercase; padding:10px 12px; text-align:left; }
@@ -700,6 +808,34 @@ body {
             <tr><td class="segment">Strategic</td><td class="months">8 months</td><td class="motion">Begin executive mapping and build the enterprise sales plan.</td></tr>
           </tbody>
         </table>
+      </div>
+      <div class="expiration-graphic card">
+        <div class="expiration-head">
+          <div>
+            <div class="expiration-title">Upcoming competitor expirations through Dec 2026</div>
+            <div class="expiration-sub">Salesforce account contract end dates for ConnectWise, Autotask, and Halo accounts</div>
+          </div>
+          <div class="expiration-total">38<span>targeted accounts</span></div>
+        </div>
+        <div class="expiration-months">
+          <div>Platform</div><div>Jul</div><div>Aug</div><div>Sep</div><div>Oct</div><div>Nov</div><div>Dec</div><div>Total</div>
+        </div>
+        <div class="competitor-lane">
+          <div class="competitor-label">ConnectWise</div>
+          <div class="month-cell has-exp cw">3</div><div class="month-cell has-exp cw">2</div><div class="month-cell has-exp cw">5</div><div class="month-cell has-exp cw">2</div><div class="month-cell has-exp cw">3</div><div class="month-cell has-exp cw">8</div>
+          <div class="competitor-total">23</div>
+        </div>
+        <div class="competitor-lane">
+          <div class="competitor-label">Autotask</div>
+          <div class="month-cell">0</div><div class="month-cell has-exp at">3</div><div class="month-cell has-exp at">2</div><div class="month-cell has-exp at">1</div><div class="month-cell has-exp at">4</div><div class="month-cell has-exp at">2</div>
+          <div class="competitor-total">12</div>
+        </div>
+        <div class="competitor-lane">
+          <div class="competitor-label">Halo</div>
+          <div class="month-cell has-exp halo">1</div><div class="month-cell">0</div><div class="month-cell has-exp halo">1</div><div class="month-cell">0</div><div class="month-cell">0</div><div class="month-cell has-exp halo">1</div>
+          <div class="competitor-total">3</div>
+        </div>
+        <div class="expiration-note"><span>Window: Jul 21-Dec 31, 2026</span><span>Autotask includes Autotask / Datto / Kaseya PSA platform values</span></div>
       </div>
       <div class="grid-4">
         <div class="text-card card"><div class="tag">Marketing Trigger</div><h3>Make expiration feel personal</h3><p>Partner with marketing on a catchy direct-mail package that references the upcoming expiration, includes a signed letter from Brent, and creates a reason to re-open the decision.</p></div>
