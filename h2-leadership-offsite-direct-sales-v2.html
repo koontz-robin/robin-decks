@@ -234,6 +234,12 @@ body { min-height:100%; overflow-x:hidden; overflow-y:auto; background:#0a1628; 
 .chart-legend { display:flex; flex-wrap:wrap; gap:7px 12px; margin-top:8px; }
 .legend-item { display:flex; align-items:center; gap:6px; font-size:10px; color:rgba(255,255,255,.48); font-weight:800; text-transform:uppercase; letter-spacing:.8px; }
 .legend-dot { width:8px; height:8px; border-radius:2px; background:var(--c); }
+.grouped-mrr-bars { flex:1; display:grid; grid-template-columns:repeat(6,minmax(0,1fr)); gap:12px; align-items:end; min-height:150px; }
+.mrr-month { display:flex; flex-direction:column; justify-content:flex-end; gap:6px; min-width:0; height:100%; }
+.mrr-group { display:grid; grid-template-columns:repeat(3,minmax(0,1fr)); gap:5px; align-items:end; height:116px; }
+.mrr-product-bar { position:relative; border-radius:6px 6px 2px 2px; min-height:4px; background:var(--c); box-shadow:0 0 16px color-mix(in srgb,var(--c) 28%,transparent); }
+.mrr-bar-value { position:absolute; left:50%; bottom:100%; transform:translate(-50%,-4px); font-family:Montserrat,sans-serif; font-size:10px; font-weight:900; color:#fff; white-space:nowrap; }
+.mrr-product-bar.small .mrr-bar-value { display:none; }
 .rate-panel { padding:16px; display:flex; flex-direction:column; gap:12px; min-height:0; }
 .rate-table-block { min-height:0; }
 .rate-table-block h3 { font-family:Montserrat, sans-serif; font-size:16px; margin-bottom:8px; color:#fff; }
@@ -998,14 +1004,15 @@ body {
 
           <div class="chart-card card mrr-chart">
             <div class="chart-title"><h3>MRR sold by product</h3><span>Close date · closed-won Jan-Jun 2026</span></div>
-            <div class="stacked-bars">
-              <div class="month-stack"><div class="stack-total">$21.2K</div><div class="stack-bar" style="height:74px"><div class="seg psa" style="height:27.1%"></div><div class="seg billing" style="height:65.6%"></div><div class="seg payments" style="height:7.3%"></div></div><div class="month-label">Jan</div></div>
-              <div class="month-stack"><div class="stack-total">$14.2K</div><div class="stack-bar" style="height:50px"><div class="seg psa" style="height:70.6%"></div><div class="seg billing" style="height:17.7%"></div><div class="seg payments" style="height:10.0%"></div><div class="seg cyber" style="height:1.8%"></div></div><div class="month-label">Feb</div></div>
-              <div class="month-stack"><div class="stack-total">$32.0K</div><div class="stack-bar" style="height:112px"><div class="seg psa" style="height:49.5%"></div><div class="seg billing" style="height:38.3%"></div><div class="seg payments" style="height:11.0%"></div><div class="seg cyber" style="height:1.1%"></div></div><div class="month-label">Mar</div></div>
-              <div class="month-stack"><div class="stack-total">$20.1K</div><div class="stack-bar" style="height:70px"><div class="seg psa" style="height:55.5%"></div><div class="seg billing" style="height:34.4%"></div><div class="seg payments" style="height:10.1%"></div></div><div class="month-label">Apr</div></div>
-              <div class="month-stack"><div class="stack-total">$10.9K</div><div class="stack-bar" style="height:38px"><div class="seg psa" style="height:82.9%"></div><div class="seg billing" style="height:11.1%"></div><div class="seg payments" style="height:6.1%"></div></div><div class="month-label">May</div></div>
-              <div class="month-stack"><div class="stack-total">$5.8K</div><div class="stack-bar" style="height:24px"><div class="seg psa" style="height:47.7%"></div><div class="seg billing" style="height:42.8%"></div><div class="seg payments" style="height:9.5%"></div></div><div class="month-label">Jun</div></div>
+            <div class="grouped-mrr-bars">
+              <div class="mrr-month"><div class="mrr-group"><div class="mrr-product-bar" style="--c:#00d4f0;height:40px"><span class="mrr-bar-value">$5.7K</span></div><div class="mrr-product-bar" style="--c:#3ddc97;height:97px"><span class="mrr-bar-value">$13.9K</span></div><div class="mrr-product-bar small" style="--c:#f5a623;height:11px"><span class="mrr-bar-value">$1.5K</span></div></div><div class="month-label">Jan</div></div>
+              <div class="mrr-month"><div class="mrr-group"><div class="mrr-product-bar" style="--c:#00d4f0;height:63px"><span class="mrr-bar-value">$10.0K</span></div><div class="mrr-product-bar" style="--c:#3ddc97;height:16px"><span class="mrr-bar-value">$2.5K</span></div><div class="mrr-product-bar small" style="--c:#f5a623;height:9px"><span class="mrr-bar-value">$1.4K</span></div></div><div class="month-label">Feb</div></div>
+              <div class="mrr-month"><div class="mrr-group"><div class="mrr-product-bar" style="--c:#00d4f0;height:111px"><span class="mrr-bar-value">$15.8K</span></div><div class="mrr-product-bar" style="--c:#3ddc97;height:86px"><span class="mrr-bar-value">$12.3K</span></div><div class="mrr-product-bar" style="--c:#f5a623;height:25px"><span class="mrr-bar-value">$3.5K</span></div></div><div class="month-label">Mar</div></div>
+              <div class="mrr-month"><div class="mrr-group"><div class="mrr-product-bar" style="--c:#00d4f0;height:78px"><span class="mrr-bar-value">$11.2K</span></div><div class="mrr-product-bar" style="--c:#3ddc97;height:48px"><span class="mrr-bar-value">$6.9K</span></div><div class="mrr-product-bar small" style="--c:#f5a623;height:14px"><span class="mrr-bar-value">$2.0K</span></div></div><div class="month-label">Apr</div></div>
+              <div class="mrr-month"><div class="mrr-group"><div class="mrr-product-bar" style="--c:#00d4f0;height:63px"><span class="mrr-bar-value">$9.0K</span></div><div class="mrr-product-bar small" style="--c:#3ddc97;height:9px"><span class="mrr-bar-value">$1.2K</span></div><div class="mrr-product-bar small" style="--c:#f5a623;height:5px"><span class="mrr-bar-value">$0.7K</span></div></div><div class="month-label">May</div></div>
+              <div class="mrr-month"><div class="mrr-group"><div class="mrr-product-bar" style="--c:#00d4f0;height:19px"><span class="mrr-bar-value">$2.8K</span></div><div class="mrr-product-bar" style="--c:#3ddc97;height:17px"><span class="mrr-bar-value">$2.5K</span></div><div class="mrr-product-bar small" style="--c:#f5a623;height:4px"><span class="mrr-bar-value">$0.6K</span></div></div><div class="month-label">Jun</div></div>
             </div>
+            <div class="chart-legend"><div class="legend-item"><span class="legend-dot" style="--c:#00d4f0"></span>PSA</div><div class="legend-item"><span class="legend-dot" style="--c:#3ddc97"></span>Billing</div><div class="legend-item"><span class="legend-dot" style="--c:#f5a623"></span>Payments</div></div>
           </div>
         </div>
 
