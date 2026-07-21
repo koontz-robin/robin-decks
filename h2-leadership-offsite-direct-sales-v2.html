@@ -413,6 +413,173 @@ body { min-height:100%; overflow-x:hidden; overflow-y:auto; background:#0a1628; 
   font-size:11px;
   padding-top:4px;
 }
+#slide-9 .partner-referral-panel {
+  padding:18px 22px;
+  display:flex;
+  flex-direction:column;
+  min-height:0;
+}
+.referral-panel-head {
+  display:flex;
+  justify-content:space-between;
+  align-items:flex-start;
+  gap:14px;
+  margin-bottom:12px;
+}
+.referral-panel-head h3 {
+  font-family:Montserrat,sans-serif;
+  font-size:22px;
+  line-height:1.1;
+  color:#fff;
+  margin:0 0 5px;
+}
+.referral-panel-head p {
+  font-size:11px;
+  color:rgba(255,255,255,.52);
+  line-height:1.3;
+  margin:0;
+}
+.referral-totals {
+  display:grid;
+  grid-template-columns:repeat(2,72px);
+  gap:8px;
+  flex:none;
+}
+.referral-total {
+  border:1px solid rgba(255,255,255,.08);
+  border-radius:9px;
+  background:rgba(255,255,255,.04);
+  padding:9px 8px;
+  text-align:center;
+}
+.referral-total strong {
+  display:block;
+  font-family:Montserrat,sans-serif;
+  font-size:25px;
+  line-height:1;
+  color:var(--c);
+}
+.referral-total span {
+  display:block;
+  margin-top:4px;
+  font-size:8px;
+  font-weight:900;
+  letter-spacing:1px;
+  text-transform:uppercase;
+  color:rgba(255,255,255,.46);
+}
+.referral-chart {
+  display:grid;
+  gap:5px;
+  margin-top:4px;
+}
+.referral-row {
+  display:grid;
+  grid-template-columns:142px 1fr 28px 28px;
+  gap:8px;
+  align-items:center;
+}
+.referral-name {
+  font-size:11px;
+  color:#fff;
+  font-weight:800;
+  white-space:nowrap;
+  overflow:hidden;
+  text-overflow:ellipsis;
+}
+.referral-bars {
+  display:grid;
+  gap:3px;
+}
+.refbar-track {
+  height:7px;
+  border-radius:99px;
+  background:rgba(255,255,255,.08);
+  overflow:hidden;
+}
+.refbar {
+  height:100%;
+  width:100%;
+  border-radius:99px;
+  background:var(--c);
+}
+.refnum {
+  font-family:Montserrat,sans-serif;
+  font-size:12px;
+  font-weight:900;
+  text-align:center;
+}
+.refnum.sent { color:#00d4f0; }
+.refnum.received { color:#f5a623; }
+.referral-summary {
+  display:grid;
+  grid-template-columns:repeat(2,minmax(0,1fr));
+  gap:8px;
+  margin-top:11px;
+}
+.referral-summary-card {
+  border:1px solid rgba(255,255,255,.08);
+  border-radius:9px;
+  background:rgba(255,255,255,.035);
+  padding:10px 12px;
+}
+.referral-summary-card strong {
+  display:block;
+  font-family:Montserrat,sans-serif;
+  font-size:21px;
+  line-height:1;
+  color:var(--c);
+}
+.referral-summary-card span {
+  display:block;
+  margin-top:5px;
+  font-size:10px;
+  line-height:1.25;
+  color:rgba(255,255,255,.55);
+}
+#slide-10 .strategy-grid {
+  display:grid;
+  grid-template-columns:repeat(4,minmax(0,1fr));
+  gap:14px;
+}
+#slide-10 {
+  padding-top:56px;
+  padding-bottom:56px;
+}
+#slide-10 .slide-tag {
+  margin-bottom:16px;
+}
+#slide-10 .slide-header h2 {
+  font-size:clamp(40px,4vw,62px);
+  max-width:1180px;
+}
+#slide-10 .slide-body {
+  padding-top:30px;
+}
+#slide-10 .big-claim {
+  padding:26px 30px;
+  margin-bottom:18px;
+}
+#slide-10 .big-claim h3 {
+  font-size:34px;
+  line-height:1.12;
+  margin-bottom:10px;
+}
+#slide-10 .big-claim p {
+  font-size:17px;
+  line-height:1.38;
+}
+#slide-10 .text-card {
+  min-height:158px;
+  padding:20px;
+}
+#slide-10 .text-card h3 {
+  font-size:20px;
+}
+#slide-10 .text-card p {
+  font-size:13px;
+  line-height:1.34;
+}
 .timing-table-wrap {
   padding:12px 22px;
   margin-bottom:12px;
@@ -1061,12 +1228,51 @@ body {
             </div>
           </div>
         </div>
-        <div class="grid-2">
-          <div class="text-card card"><div class="tag">Client Referrals</div><h3>Ask after value moments</h3><p>Codify when to ask, who asks, and which proof asset supports the ask.</p></div>
-          <div class="text-card card"><div class="tag">Partner Capacity</div><h3>Protect the motion</h3><p>Dedicated focus beats occasional partner check-ins squeezed between other priorities.</p></div>
-          <div class="text-card card"><div class="tag">Tenured Reps</div><h3>Map ecosystems</h3><p>Senior reps own mutual customers, referral paths, and executive-to-executive momentum.</p></div>
-          <div class="text-card card"><div class="tag">Proof</div><h3>Co-branded assets</h3><p>Give partner sellers usable stories, events, collateral, and mutual-customer examples.</p></div>
+        <div class="partner-referral-panel card">
+          <div class="referral-panel-head">
+            <div><h3>Referrals sent vs received by partner</h3><p>Salesforce Event subjects/types for Jake-owned partner accounts. Rows below show bidirectional partners.</p></div>
+            <div class="referral-totals">
+              <div class="referral-total" style="--c:#00d4f0"><strong>29</strong><span>sent</span></div>
+              <div class="referral-total" style="--c:#f5a623"><strong>29</strong><span>received</span></div>
+            </div>
+          </div>
+          <div class="referral-chart">
+            <div class="referral-row"><div class="referral-name">Avalara</div><div class="referral-bars"><div class="refbar-track"><div class="refbar" style="--c:#00d4f0"></div></div><div class="refbar-track"><div class="refbar" style="--c:#f5a623"></div></div></div><div class="refnum sent">1</div><div class="refnum received">1</div></div>
+            <div class="referral-row"><div class="referral-name">CLA</div><div class="referral-bars"><div class="refbar-track"><div class="refbar" style="--c:#00d4f0"></div></div><div class="refbar-track"><div class="refbar" style="--c:#f5a623"></div></div></div><div class="refnum sent">1</div><div class="refnum received">1</div></div>
+            <div class="referral-row"><div class="referral-name">CereTax</div><div class="referral-bars"><div class="refbar-track"><div class="refbar" style="--c:#00d4f0"></div></div><div class="refbar-track"><div class="refbar" style="--c:#f5a623"></div></div></div><div class="refnum sent">1</div><div class="refnum received">1</div></div>
+            <div class="referral-row"><div class="referral-name">Compliance Solutions</div><div class="referral-bars"><div class="refbar-track"><div class="refbar" style="--c:#00d4f0"></div></div><div class="refbar-track"><div class="refbar" style="--c:#f5a623"></div></div></div><div class="refnum sent">1</div><div class="refnum received">1</div></div>
+            <div class="referral-row"><div class="referral-name">EisnerAmper</div><div class="referral-bars"><div class="refbar-track"><div class="refbar" style="--c:#00d4f0"></div></div><div class="refbar-track"><div class="refbar" style="--c:#f5a623"></div></div></div><div class="refnum sent">1</div><div class="refnum received">1</div></div>
+            <div class="referral-row"><div class="referral-name">Inteserra/JSI</div><div class="referral-bars"><div class="refbar-track"><div class="refbar" style="--c:#00d4f0"></div></div><div class="refbar-track"><div class="refbar" style="--c:#f5a623"></div></div></div><div class="refnum sent">1</div><div class="refnum received">1</div></div>
+            <div class="referral-row"><div class="referral-name">Kore</div><div class="referral-bars"><div class="refbar-track"><div class="refbar" style="--c:#00d4f0"></div></div><div class="refbar-track"><div class="refbar" style="--c:#f5a623"></div></div></div><div class="refnum sent">1</div><div class="refnum received">1</div></div>
+            <div class="referral-row"><div class="referral-name">Oculum</div><div class="referral-bars"><div class="refbar-track"><div class="refbar" style="--c:#00d4f0"></div></div><div class="refbar-track"><div class="refbar" style="--c:#f5a623"></div></div></div><div class="refnum sent">1</div><div class="refnum received">1</div></div>
+            <div class="referral-row"><div class="referral-name">TaxConnex</div><div class="referral-bars"><div class="refbar-track"><div class="refbar" style="--c:#00d4f0"></div></div><div class="refbar-track"><div class="refbar" style="--c:#f5a623"></div></div></div><div class="refnum sent">1</div><div class="refnum received">1</div></div>
+            <div class="referral-row"><div class="referral-name">Telnyx</div><div class="referral-bars"><div class="refbar-track"><div class="refbar" style="--c:#00d4f0"></div></div><div class="refbar-track"><div class="refbar" style="--c:#f5a623"></div></div></div><div class="refnum sent">1</div><div class="refnum received">1</div></div>
+            <div class="referral-row"><div class="referral-name">The Business Growers</div><div class="referral-bars"><div class="refbar-track"><div class="refbar" style="--c:#00d4f0"></div></div><div class="refbar-track"><div class="refbar" style="--c:#f5a623"></div></div></div><div class="refnum sent">1</div><div class="refnum received">1</div></div>
+            <div class="referral-row"><div class="referral-name">The Compliance Group</div><div class="referral-bars"><div class="refbar-track"><div class="refbar" style="--c:#00d4f0"></div></div><div class="refbar-track"><div class="refbar" style="--c:#f5a623"></div></div></div><div class="refnum sent">1</div><div class="refnum received">1</div></div>
+            <div class="referral-row"><div class="referral-name">Verizon Enterprise</div><div class="referral-bars"><div class="refbar-track"><div class="refbar" style="--c:#00d4f0"></div></div><div class="refbar-track"><div class="refbar" style="--c:#f5a623"></div></div></div><div class="refnum sent">1</div><div class="refnum received">1</div></div>
+            <div class="referral-row"><div class="referral-name">VoIP.ms</div><div class="referral-bars"><div class="refbar-track"><div class="refbar" style="--c:#00d4f0"></div></div><div class="refbar-track"><div class="refbar" style="--c:#f5a623"></div></div></div><div class="refnum sent">1</div><div class="refnum received">1</div></div>
+            <div class="referral-row"><div class="referral-name">Wolters Kluwer</div><div class="referral-bars"><div class="refbar-track"><div class="refbar" style="--c:#00d4f0"></div></div><div class="refbar-track"><div class="refbar" style="--c:#f5a623"></div></div></div><div class="refnum sent">1</div><div class="refnum received">1</div></div>
+            <div class="referral-row"><div class="referral-name">taxTheta</div><div class="referral-bars"><div class="refbar-track"><div class="refbar" style="--c:#00d4f0"></div></div><div class="refbar-track"><div class="refbar" style="--c:#f5a623"></div></div></div><div class="refnum sent">1</div><div class="refnum received">1</div></div>
+          </div>
+          <div class="referral-summary">
+            <div class="referral-summary-card" style="--c:#00d4f0"><strong>13</strong><span>additional partners with sent-only referral activity</span></div>
+            <div class="referral-summary-card" style="--c:#f5a623"><strong>13</strong><span>additional partners with received-only referral activity</span></div>
+          </div>
         </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="slide" id="slide-10">
+    <div class="top-stripe"></div>
+    <div class="slide-header"><div><div class="slide-tag">Partner Strategy Operating Model</div><h2>Turn partner relationships into a repeatable referral motion</h2></div><div><img src="https://7091219.fs1.hubspotusercontent-na1.net/hubfs/7091219/email-assets/logo-revio-white.png" alt="Rev.io"><div class="header-note">Asks · capacity · maps · proof</div></div></div>
+    <div class="slide-body">
+      <div class="big-claim card"><h3>Strategy needs to move from relationship maintenance to measured referral creation.</h3><p>Every priority partner should have a named owner, a mapped relationship path, a clear ask, and a proof asset that makes the introduction easy to send.</p></div>
+      <div class="strategy-grid">
+        <div class="text-card card"><div class="tag">Client Referrals</div><h3>Ask after value moments</h3><p>Codify when to ask, who asks, and which proof asset supports the ask.</p></div>
+        <div class="text-card card"><div class="tag">Partner Capacity</div><h3>Protect the motion</h3><p>Dedicated focus beats occasional partner check-ins squeezed between other priorities.</p></div>
+        <div class="text-card card"><div class="tag">Tenured Reps</div><h3>Map ecosystems</h3><p>Senior reps own mutual customers, referral paths, and executive-to-executive momentum.</p></div>
+        <div class="text-card card"><div class="tag">Proof</div><h3>Co-branded assets</h3><p>Give partner sellers usable stories, events, collateral, and mutual-customer examples.</p></div>
       </div>
     </div>
   </section>
@@ -1078,16 +1284,16 @@ body {
   <div class="nav-controls">
     <button class="nav-btn" id="btn-prev" onclick="goSlide(-1)" disabled>Prev</button>
     <div class="nav-dots" id="nav-dots"></div>
-    <span class="nav-counter" id="nav-counter">1 / 9</span>
+    <span class="nav-counter" id="nav-counter">1 / 10</span>
     <button class="nav-btn" id="btn-next" onclick="goSlide(1)">Next</button>
   </div>
   <img src="https://7091219.fs1.hubspotusercontent-na1.net/hubfs/7091219/email-assets/logo-revio-white.png" alt="Rev.io" class="nav-logo">
 </div>
 
 <script>
-const TOTAL = 9;
+const TOTAL = 10;
 let cur = 1;
-const labels = ['Cover','State','Levers','Mix','Roles','AE Role','Radar','Mail','Referrals'];
+const labels = ['Cover','State','Levers','Mix','Roles','AE Role','Radar','Mail','Referrals','Strategy'];
 function buildDots() {
   const wrap = document.getElementById('nav-dots');
   labels.forEach((label, idx) => {
