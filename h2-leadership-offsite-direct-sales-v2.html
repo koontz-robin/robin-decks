@@ -293,6 +293,29 @@ body { min-height:100%; overflow-x:hidden; overflow-y:auto; background:#0a1628; 
 .ai-tool h3 { font-family:Montserrat, sans-serif; font-size:20px; color:#fff; margin-bottom:8px; }
 .ai-tool p { color:rgba(255,255,255,.65); font-size:14px; line-height:1.4; }
 .ai-tool strong { color:#3ddc97; }
+.tam-funnel-layout { display:grid; grid-template-columns:minmax(0,1.1fr) minmax(360px,.9fr); gap:24px; align-items:center; height:100%; }
+.tam-funnel-card { padding:24px 28px; }
+.tam-funnel-head { display:flex; justify-content:space-between; gap:20px; align-items:flex-start; margin-bottom:20px; }
+.tam-funnel-head h3 { font-family:Montserrat,sans-serif; font-size:30px; line-height:1.08; color:#fff; max-width:560px; }
+.tam-funnel-head p { margin-top:8px; color:rgba(255,255,255,.58); font-size:14px; line-height:1.4; max-width:560px; }
+.tam-final-stat { text-align:right; flex:none; }
+.tam-final-stat strong { display:block; font-family:Montserrat,sans-serif; font-size:54px; line-height:1; color:#3ddc97; }
+.tam-final-stat span { display:block; margin-top:6px; font-size:10px; font-weight:900; letter-spacing:1.5px; text-transform:uppercase; color:rgba(255,255,255,.45); }
+.tam-funnel { display:grid; gap:10px; align-items:center; justify-items:center; padding:4px 0 2px; }
+.tam-step { position:relative; width:var(--w); min-height:70px; border-radius:12px; background:linear-gradient(90deg,var(--c1),var(--c2)); box-shadow:0 16px 34px rgba(0,0,0,.2), 0 0 28px color-mix(in srgb,var(--c2) 26%,transparent); display:grid; grid-template-columns:1fr auto; gap:16px; align-items:center; padding:14px 22px; }
+.tam-step::after { content:''; position:absolute; left:50%; bottom:-13px; transform:translateX(-50%); border-left:13px solid transparent; border-right:13px solid transparent; border-top:13px solid color-mix(in srgb,var(--c2) 78%,#081426); z-index:2; }
+.tam-step:last-child::after { display:none; }
+.tam-step-label { font-family:Montserrat,sans-serif; font-size:17px; font-weight:900; color:#061116; line-height:1.08; }
+.tam-step-filter { margin-top:4px; font-size:11px; font-weight:800; letter-spacing:.7px; text-transform:uppercase; color:rgba(6,17,22,.62); }
+.tam-step-value { font-family:Montserrat,sans-serif; font-size:34px; line-height:1; font-weight:900; color:#061116; white-space:nowrap; }
+.tam-step.final { min-height:84px; }
+.tam-step.final .tam-step-label { font-size:17px; }
+.tam-step.final .tam-step-value { font-size:42px; }
+.tam-insights { display:grid; gap:14px; }
+.tam-insight { padding:18px 20px; border-left:3px solid var(--c,#00d4f0); }
+.tam-insight h3 { font-family:Montserrat,sans-serif; font-size:20px; line-height:1.15; color:#fff; margin-bottom:8px; }
+.tam-insight p { color:rgba(255,255,255,.64); font-size:14px; line-height:1.38; }
+.tam-insight strong { color:#3ddc97; }
 #slide-5 {
   padding-top:58px;
   padding-bottom:56px;
@@ -345,111 +368,125 @@ body { min-height:100%; overflow-x:hidden; overflow-y:auto; background:#0a1628; 
   line-height:1.34;
 }
 #slide-6 {
-  padding-top:46px;
-  padding-bottom:48px;
+  padding-top:44px;
+  padding-bottom:44px;
 }
 #slide-6 .slide-tag {
   margin-bottom:14px;
 }
 #slide-6 .slide-header h2 {
-  font-size:clamp(36px, 3.5vw, 58px);
-  max-width:1160px;
+  font-size:clamp(36px, 3.4vw, 54px);
+  max-width:1040px;
 }
 #slide-6 .slide-body {
   padding-top:20px;
 }
-#slide-6 .grid-4 {
+#slide-7 {
+  padding-top:46px;
+  padding-bottom:48px;
+}
+#slide-7 .slide-tag {
+  margin-bottom:14px;
+}
+#slide-7 .slide-header h2 {
+  font-size:clamp(36px, 3.5vw, 58px);
+  max-width:1160px;
+}
+#slide-7 .slide-body {
+  padding-top:20px;
+}
+#slide-7 .grid-4 {
   gap:10px;
 }
-#slide-6 .text-card {
+#slide-7 .text-card {
   padding:12px 16px;
 }
-#slide-6 .text-card h3 {
+#slide-7 .text-card h3 {
   font-size:16px;
   line-height:1.12;
   margin-bottom:0;
 }
-#slide-6 .text-card p {
+#slide-7 .text-card p {
   display:none;
 }
-#slide-6 .text-card .tag {
+#slide-7 .text-card .tag {
   font-size:9px;
   margin-bottom:8px;
 }
-#slide-8 .big-claim {
+#slide-9 .big-claim {
   padding:18px 24px;
 }
-#slide-8 .big-claim h3 {
+#slide-9 .big-claim h3 {
   font-size:26px;
   line-height:1.12;
   margin-bottom:10px;
 }
-#slide-8 .big-claim p {
+#slide-9 .big-claim p {
   font-size:13px;
   line-height:1.32;
 }
-#slide-8 .partner-strip {
+#slide-9 .partner-strip {
   margin-top:12px;
   gap:8px;
 }
-#slide-8 .partner-logo {
+#slide-9 .partner-logo {
   padding:8px 10px;
 }
-#slide-8 .partner-logo img {
+#slide-9 .partner-logo img {
   width:24px;
   height:24px;
 }
-#slide-8 .partner-logo span {
+#slide-9 .partner-logo span {
   font-size:11px;
 }
-#slide-8 {
+#slide-9 {
   padding-top:54px;
   padding-bottom:54px;
 }
-#slide-8 .slide-tag {
+#slide-9 .slide-tag {
   margin-bottom:16px;
 }
-#slide-8 .slide-header h2 {
+#slide-9 .slide-header h2 {
   font-size:clamp(40px, 4.2vw, 64px);
   max-width:1120px;
 }
-#slide-8 .slide-body {
+#slide-9 .slide-body {
   padding-top:26px;
 }
-#slide-8 .grid-2 {
+#slide-9 .grid-2 {
   gap:18px;
 }
-#slide-8 .grid-2 .grid-2 {
+#slide-9 .grid-2 .grid-2 {
   gap:12px;
 }
-#slide-8 .text-card {
+#slide-9 .text-card {
   padding:20px 22px;
 }
-#slide-8 .text-card h3 {
+#slide-9 .text-card h3 {
   font-size:21px;
 }
-#slide-8 .text-card p {
+#slide-9 .text-card p {
   font-size:14px;
   line-height:1.34;
 }
-#slide-8 .partner-trend {
+#slide-9 .partner-trend {
   margin-top:12px;
   padding-top:12px;
 }
-#slide-8 .partner-trend-head {
+#slide-9 .partner-trend-head {
   margin-bottom:8px;
 }
-#slide-8 .partner-bars {
+#slide-9 .partner-bars {
   height:108px;
 }
-#slide-8 .partner-bar-wrap {
+#slide-9 .partner-bar-wrap {
   height:78px;
 }
-#slide-8 .partner-bar {
+#slide-9 .partner-bar {
   font-size:11px;
   padding-top:4px;
 }
-#slide-8 .partner-referral-panel {
+#slide-9 .partner-referral-panel {
   padding:18px 22px;
   display:flex;
   flex-direction:column;
@@ -573,46 +610,46 @@ body { min-height:100%; overflow-x:hidden; overflow-y:auto; background:#0a1628; 
   line-height:1.25;
   color:rgba(255,255,255,.55);
 }
-#slide-9 .strategy-grid {
+#slide-10 .strategy-grid {
   display:grid;
   grid-template-columns:repeat(4,minmax(0,1fr));
   gap:14px;
 }
-#slide-9 {
+#slide-10 {
   padding-top:56px;
   padding-bottom:56px;
 }
-#slide-9 .slide-tag {
+#slide-10 .slide-tag {
   margin-bottom:16px;
 }
-#slide-9 .slide-header h2 {
+#slide-10 .slide-header h2 {
   font-size:clamp(40px,4vw,62px);
   max-width:1180px;
 }
-#slide-9 .slide-body {
+#slide-10 .slide-body {
   padding-top:30px;
 }
-#slide-9 .big-claim {
+#slide-10 .big-claim {
   padding:26px 30px;
   margin-bottom:18px;
 }
-#slide-9 .big-claim h3 {
+#slide-10 .big-claim h3 {
   font-size:34px;
   line-height:1.12;
   margin-bottom:10px;
 }
-#slide-9 .big-claim p {
+#slide-10 .big-claim p {
   font-size:17px;
   line-height:1.38;
 }
-#slide-9 .text-card {
+#slide-10 .text-card {
   min-height:158px;
   padding:20px;
 }
-#slide-9 .text-card h3 {
+#slide-10 .text-card h3 {
   font-size:20px;
 }
-#slide-9 .text-card p {
+#slide-10 .text-card p {
   font-size:13px;
   line-height:1.34;
 }
@@ -978,10 +1015,13 @@ body {
   .slide-body { padding-bottom:28px; }
   .state-layout { grid-template-columns:1fr; }
   .cover-title { font-size:42px; }
-  .cover-chips, .cover-nav-tiles, .kpi-row, .grid-2, .grid-3, .grid-4, .source-grid, .timeline, .commit-grid, .ae-role-layout { grid-template-columns:1fr; }
+  .cover-chips, .cover-nav-tiles, .kpi-row, .grid-2, .grid-3, .grid-4, .source-grid, .timeline, .commit-grid, .ae-role-layout, .tam-funnel-layout { grid-template-columns:1fr; }
   .kpi-row.transition { gap:14px; padding-top:0; }
   .kpi-row.transition::before, .kpi-row.transition::after, .transition-arrow { display:none; }
   .kpi-row.transition .kpi:nth-of-type(2), .kpi-row.transition .kpi:nth-of-type(4) { margin:0; }
+  .tam-step { width:100%!important; }
+  .tam-funnel-head { flex-direction:column; }
+  .tam-final-stat { text-align:left; }
   .mail-table-wrap { overflow-x:auto; }
   .mail-table { min-width:720px; }
 }
@@ -999,8 +1039,8 @@ body {
       <div class="cover-nav-tiles">
         <a class="cover-nav-tile" href="#slide-3"><strong>Pipeline Gap</strong><span>Source lift</span></a>
         <a class="cover-nav-tile" href="#slide-4"><strong>Team Structure</strong><span>Segment model</span></a>
-        <a class="cover-nav-tile" href="#slide-6"><strong>Expiring Contracts</strong><span>Attack motion</span></a>
-        <a class="cover-nav-tile" href="#slide-8"><strong>Partner Referrals</strong><span>Strategic focus</span></a>
+        <a class="cover-nav-tile" href="#slide-7"><strong>Expiring Contracts</strong><span>Attack motion</span></a>
+        <a class="cover-nav-tile" href="#slide-9"><strong>Partner Referrals</strong><span>Strategic focus</span></a>
       </div>
     </div>
   </section>
@@ -1144,6 +1184,43 @@ body {
 
   <section class="slide" id="slide-6">
     <div class="top-stripe"></div>
+    <div class="slide-header"><div><div class="slide-tag">ICP TAM Funnel</div><h2>PSA ICP narrows from 82K prospects to 1,535 platform-fit accounts</h2></div><div><img src="https://7091219.fs1.hubspotusercontent-na1.net/hubfs/7091219/email-assets/logo-revio-white.png" alt="Rev.io"><div class="header-note">Prospect accounts · MSP · employee band · PSA platform</div></div></div>
+    <div class="slide-body">
+      <div class="tam-funnel-layout">
+        <div class="tam-funnel-card card">
+          <div class="tam-funnel-head">
+            <div>
+              <h3>ICP TAM compression</h3>
+              <p>Start with every qualified prospect account, then narrow to MSPs, right-sized companies, and accounts currently using competitive PSA platforms.</p>
+            </div>
+            <div class="tam-final-stat"><strong>1,535</strong><span>high-fit ICP accounts</span></div>
+          </div>
+          <div class="tam-funnel">
+            <div class="tam-step" style="--w:100%;--c1:#00d4f0;--c2:#3ddc97">
+              <div><div class="tam-step-label">Total Prospect Accounts</div><div class="tam-step-filter">All qualified prospect accounts</div></div><div class="tam-step-value">82,461</div>
+            </div>
+            <div class="tam-step" style="--w:82%;--c1:#10c7ee;--c2:#35d9a0">
+              <div><div class="tam-step-label">MSP Prospects</div><div class="tam-step-filter">Market category filter</div></div><div class="tam-step-value">39,738</div>
+            </div>
+            <div class="tam-step" style="--w:64%;--c1:#28b8f0;--c2:#4bd68a">
+              <div><div class="tam-step-label">Between 10-250 Employees</div><div class="tam-step-filter">Company size filter</div></div><div class="tam-step-value">23,634</div>
+            </div>
+            <div class="tam-step final" style="--w:46%;--c1:#f5a623;--c2:#3ddc97">
+              <div><div class="tam-step-label">Using Halo, ConnectWise, Autotask, Syncro, or SuperOps</div><div class="tam-step-filter">Competitive PSA platform filter</div></div><div class="tam-step-value">1,535</div>
+            </div>
+          </div>
+        </div>
+        <div class="tam-insights">
+          <div class="tam-insight card" style="--c:#00d4f0"><h3>48% are MSP prospects</h3><p><strong>39,738 of 82,461</strong> qualified prospect accounts fall into the MSP prospect universe.</p></div>
+          <div class="tam-insight card" style="--c:#3ddc97"><h3>60% of MSP prospects are in the target size band</h3><p><strong>23,634 accounts</strong> land between 10 and 250 employees, the segment where the motion is broad enough to scale.</p></div>
+          <div class="tam-insight card" style="--c:#f5a623"><h3>The sharpest ICP is platform-qualified</h3><p><strong>1,535 accounts</strong> combine MSP fit, target employee range, and a known PSA platform displacement path.</p></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="slide" id="slide-7">
+    <div class="top-stripe"></div>
     <div class="slide-header"><div><div class="slide-tag">Contract Expiration Attack Motion</div><h2>Expiring contracts become a timed sales campaign, not a note in Salesforce</h2></div><div><img src="https://7091219.fs1.hubspotusercontent-na1.net/hubfs/7091219/email-assets/logo-revio-white.png" alt="Rev.io"><div class="header-note">Segment timing · enterprise process · field discipline</div></div></div>
     <div class="slide-body">
       <div class="timing-table-wrap card">
@@ -1193,7 +1270,7 @@ body {
     </div>
   </section>
 
-  <section class="slide" id="slide-7">
+  <section class="slide" id="slide-8">
     <div class="top-stripe"></div>
     <div class="slide-header"><div><div class="slide-tag">Creative Direct Mail Concepts</div><h2>Make renewal anxiety tangible enough to earn the meeting</h2></div><div><img src="https://7091219.fs1.hubspotusercontent-na1.net/hubfs/7091219/email-assets/logo-revio-white.png" alt="Rev.io"><div class="header-note">Expiration-triggered packages</div></div></div>
     <div class="slide-body">
@@ -1219,7 +1296,7 @@ body {
     </div>
   </section>
 
-  <section class="slide" id="slide-8">
+  <section class="slide" id="slide-9">
     <div class="top-stripe"></div>
     <div class="slide-header"><div><div class="slide-tag">Strategic Partner Focus</div><h2>Narrow the partner motion to the ecosystems most likely to create pipeline</h2></div><div><img src="https://7091219.fs1.hubspotusercontent-na1.net/hubfs/7091219/email-assets/logo-revio-white.png" alt="Rev.io"><div class="header-note">Pax8 · NinjaOne · Acronis · N-able · Guardz</div></div></div>
     <div class="slide-body">
@@ -1278,7 +1355,7 @@ body {
     </div>
   </section>
 
-  <section class="slide" id="slide-9">
+  <section class="slide" id="slide-10">
     <div class="top-stripe"></div>
     <div class="slide-header"><div><div class="slide-tag">Partner Strategy Operating Model</div><h2>Turn partner relationships into a repeatable referral motion</h2></div><div><img src="https://7091219.fs1.hubspotusercontent-na1.net/hubfs/7091219/email-assets/logo-revio-white.png" alt="Rev.io"><div class="header-note">Asks · capacity · maps · proof</div></div></div>
     <div class="slide-body">
@@ -1299,16 +1376,16 @@ body {
   <div class="nav-controls">
     <button class="nav-btn" id="btn-prev" onclick="goSlide(-1)" disabled>Prev</button>
     <div class="nav-dots" id="nav-dots"></div>
-    <span class="nav-counter" id="nav-counter">1 / 9</span>
+    <span class="nav-counter" id="nav-counter">1 / 10</span>
     <button class="nav-btn" id="btn-next" onclick="goSlide(1)">Next</button>
   </div>
   <img src="https://7091219.fs1.hubspotusercontent-na1.net/hubfs/7091219/email-assets/logo-revio-white.png" alt="Rev.io" class="nav-logo">
 </div>
 
 <script>
-const TOTAL = 9;
+const TOTAL = 10;
 let cur = 1;
-const labels = ['Cover','State','Levers','Roles','AE Role','Radar','Mail','Referrals','Strategy'];
+const labels = ['Cover','State','Levers','Roles','AE Role','ICP TAM','Radar','Mail','Referrals','Strategy'];
 function buildDots() {
   const wrap = document.getElementById('nav-dots');
   labels.forEach((label, idx) => {
