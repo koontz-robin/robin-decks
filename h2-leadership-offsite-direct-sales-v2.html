@@ -349,6 +349,11 @@ body { min-height:100%; overflow-x:hidden; overflow-y:auto; background:#0a1628; 
 .tam-platform-note h4 { font-family:Montserrat,sans-serif; font-size:18px; line-height:1.15; color:#fff; margin-bottom:6px; }
 .tam-platform-note p { color:rgba(255,255,255,.68); font-size:13px; line-height:1.4; }
 .tam-platform-note strong { color:#f5a623; }
+.tam-note-grid { display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); gap:12px; margin-top:12px; }
+.tam-note-metric { border-radius:10px; background:rgba(8,20,38,.42); border:1px solid rgba(255,255,255,.08); padding:12px 14px; }
+.tam-note-metric strong { display:block; font-family:Montserrat,sans-serif; font-size:30px; line-height:1; color:#3ddc97; }
+.tam-note-metric span { display:block; margin-top:6px; color:rgba(255,255,255,.66); font-size:11px; line-height:1.35; }
+.tam-note-metric.coverage strong { color:#f5a623; }
 .tam-insights { display:grid; gap:14px; }
 .tam-insight { padding:18px 20px; border-left:3px solid var(--c,#00d4f0); }
 .tam-insight h3 { font-family:Montserrat,sans-serif; font-size:20px; line-height:1.15; color:#fff; margin-bottom:8px; }
@@ -1245,8 +1250,12 @@ body {
             </div>
           </div>
           <div class="tam-platform-note">
-            <h4>Known competitive PSA users: 1,535 accounts</h4>
+            <h4>Known platform users and Q2 coverage</h4>
             <p>We know <strong>1,535</strong> target accounts are using ConnectWise, Halo, Autotask, Syncro, or SuperOps.</p>
+            <div class="tam-note-grid">
+              <div class="tam-note-metric"><strong>1,535</strong><span>known competitive PSA users</span></div>
+              <div class="tam-note-metric coverage"><strong>3,226</strong><span>unique MSP prospects touched in Q2 · 8% TAM coverage</span></div>
+            </div>
           </div>
         </div>
         <div class="tam-insights">
@@ -1511,5 +1520,3 @@ animateParticles();
 </script>
 </body>
 </html>
-
-<!-- publish: tam-platform-note-abfb130 -->
