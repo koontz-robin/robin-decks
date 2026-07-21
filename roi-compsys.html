@@ -3,237 +3,680 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Rev.io ROI Analysis — Compsys</title>
+<title>Compsys x Rev.io Evaluation Deck</title>
 <style>
-  :root { --bg:#0a0f1e; --surface:#111827; --surface2:#0d1525; --border:#1e2d45; --blue:#1667CC; --green:#3DC570; --cyan:#06b6d4; --red:#f87171; --yellow:#f5a623; --text:#e2e8f0; --muted:#64748b; }
-  * { margin:0; padding:0; box-sizing:border-box; }
-  body { background:var(--bg); font-family:'Segoe UI',system-ui,sans-serif; color:var(--text); }
-  .cover { background:linear-gradient(135deg,#0a0f1e,#0d1b35,#0a1628); padding:80px; border-bottom:1px solid var(--border); position:relative; overflow:hidden; }
-  .cover::before { content:''; position:absolute; top:-100px; right:-100px; width:500px; height:500px; background:radial-gradient(circle,rgba(22,103,204,0.08),transparent 70%); }
-  .cover-logo { margin-bottom:48px; }
-  .cover-logo img { height:40px; opacity:0.9; }
-  .cover-tag { font-size:11px; font-weight:700; letter-spacing:3px; text-transform:uppercase; color:var(--cyan); margin-bottom:16px; }
-  .cover h1 { font-size:42px; font-weight:800; color:#fff; line-height:1.15; margin-bottom:8px; }
-  .cover h1 span { color:var(--cyan); }
-  .cover-sub { font-size:16px; color:var(--muted); margin-bottom:48px; }
-  .cover-meta { display:flex; gap:40px; flex-wrap:wrap; }
-  .meta-label { font-size:10px; font-weight:700; letter-spacing:1.5px; text-transform:uppercase; color:var(--muted); margin-bottom:4px; }
-  .meta-val { font-size:14px; color:var(--text); font-weight:600; }
-  .section { padding:64px 80px; border-bottom:1px solid var(--border); }
-  .section:last-child { border-bottom:none; }
-  .section-tag { font-size:10px; font-weight:700; letter-spacing:3px; text-transform:uppercase; color:var(--blue); margin-bottom:12px; }
-  .section h2 { font-size:28px; font-weight:800; color:#fff; margin-bottom:8px; }
-  .section .lead { font-size:15px; color:var(--muted); line-height:1.7; max-width:700px; margin-bottom:40px; }
-  .pain-grid { display:grid; grid-template-columns:repeat(3,1fr); gap:16px; margin-bottom:40px; }
-  .pain-card { background:var(--surface); border:1px solid var(--border); border-top:3px solid var(--red); border-radius:10px; padding:20px; }
-  .pain-card h4 { font-size:13px; font-weight:700; color:#fff; margin-bottom:8px; }
-  .pain-card p { font-size:12px; color:var(--muted); line-height:1.6; }
-  .pain-quote { font-size:11px; color:var(--yellow); font-style:italic; margin-top:10px; border-left:2px solid var(--yellow); padding-left:10px; }
-  .roi-table { width:100%; border-collapse:collapse; margin-bottom:24px; }
-  .roi-table thead th { font-size:10px; font-weight:700; text-transform:uppercase; letter-spacing:1px; color:var(--muted); padding:12px 16px; text-align:left; background:var(--surface2); border-bottom:1px solid var(--border); }
-  .roi-table tbody td { padding:14px 16px; font-size:13px; color:#94a3b8; border-bottom:1px solid #0a0f1e; vertical-align:top; }
-  .roi-table tbody td:first-child { color:var(--text); font-weight:600; }
-  .roi-table .total-row td { background:rgba(61,197,112,0.06); color:var(--green); font-weight:700; font-size:14px; border-top:1px solid rgba(61,197,112,0.2); }
-  .math { font-size:11px; color:var(--muted); font-style:italic; margin-top:4px; }
-  .summary-grid { display:grid; grid-template-columns:repeat(4,1fr); gap:16px; margin:32px 0; }
-  .sum-card { background:var(--surface); border-radius:12px; padding:22px; text-align:center; }
-  .sum-val { font-size:28px; font-weight:800; margin-bottom:4px; }
-  .sum-label { font-size:10px; font-weight:700; letter-spacing:1.5px; text-transform:uppercase; color:var(--muted); }
-  .compare { display:grid; grid-template-columns:1fr auto 1fr; gap:24px; align-items:center; margin:32px 0; }
-  .compare-box { background:var(--surface); border-radius:12px; padding:28px; }
-  .compare-box.today { border-top:3px solid var(--red); }
-  .compare-box.tomorrow { border-top:3px solid var(--green); }
-  .compare-label { font-size:10px; font-weight:700; letter-spacing:2px; text-transform:uppercase; margin-bottom:16px; }
-  .compare-box.today .compare-label { color:var(--red); }
-  .compare-box.tomorrow .compare-label { color:var(--green); }
-  .compare-line { font-size:13px; color:#94a3b8; padding:6px 0; border-bottom:1px solid var(--border); }
-  .compare-line:last-child { border-bottom:none; }
-  .compare-line strong { color:var(--text); }
-  .vs { font-size:24px; font-weight:800; color:var(--muted); text-align:center; }
-  .next-step { display:flex; gap:16px; align-items:flex-start; padding:16px 0; border-bottom:1px solid var(--border); }
-  .next-step:last-child { border-bottom:none; }
-  .step-num { width:32px; height:32px; background:var(--blue); border-radius:50%; display:flex; align-items:center; justify-content:center; font-size:13px; font-weight:800; color:#fff; flex-shrink:0; }
-  .step-content p { font-size:13px; color:var(--muted); }
-  .highlight-box { background:rgba(61,197,112,0.06); border:1px solid rgba(61,197,112,0.2); border-radius:10px; padding:20px 24px; margin-top:8px; }
-  .highlight-label { font-size:10px; font-weight:700; letter-spacing:2px; text-transform:uppercase; color:var(--green); margin-bottom:8px; }
-  .disclaimer { font-size:11px; color:#334155; text-align:center; padding:24px 80px; line-height:1.6; }
+  :root {
+    --rev-blue:#0057ff;
+    --rev-cyan:#00b7ff;
+    --navy:#071426;
+    --ink:#111827;
+    --muted:#5b6678;
+    --soft:#f4f7fb;
+    --line:#dbe4ef;
+    --green:#0c9f5f;
+    --amber:#b7791f;
+    --red:#c2414b;
+  }
+  * { box-sizing:border-box; }
+  html, body { margin:0; min-height:100%; }
+  body {
+    font-family:"Segoe UI", -apple-system, BlinkMacSystemFont, Arial, sans-serif;
+    background:var(--soft);
+    color:var(--ink);
+  }
+  .deck-shell { min-height:100vh; display:grid; grid-template-rows:auto 1fr; }
+  .tabs {
+    position:sticky;
+    top:0;
+    z-index:10;
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    gap:18px;
+    padding:12px 22px;
+    background:rgba(7,20,38,.98);
+    border-bottom:1px solid rgba(255,255,255,.14);
+    box-shadow:0 12px 30px rgba(0,0,0,.22);
+  }
+  .brand { display:flex; align-items:center; gap:12px; min-width:216px; }
+  .brand img {
+    height:34px;
+    width:auto;
+    background:#fff;
+    border-radius:6px;
+    padding:6px 9px;
+  }
+  .brand-title { color:#fff; font-size:13px; font-weight:900; white-space:nowrap; }
+  .brand-sub { color:rgba(255,255,255,.64); font-size:11px; font-weight:750; margin-top:1px; }
+  .tab-list {
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    gap:8px;
+    flex:1;
+    overflow-x:auto;
+    scrollbar-width:thin;
+  }
+  .tab {
+    appearance:none;
+    border:1px solid transparent;
+    border-radius:999px;
+    background:transparent;
+    color:rgba(255,255,255,.70);
+    min-height:38px;
+    padding:0 15px;
+    cursor:pointer;
+    font:inherit;
+    font-size:12px;
+    font-weight:850;
+    white-space:nowrap;
+  }
+  .tab:hover { color:#fff; background:rgba(255,255,255,.08); }
+  .tab.active {
+    color:#fff;
+    background:linear-gradient(135deg,var(--rev-blue),var(--rev-cyan));
+    box-shadow:0 10px 24px rgba(0,87,255,.28);
+  }
+  .meta-note {
+    color:#a9ecff;
+    font-size:12px;
+    font-weight:800;
+    min-width:132px;
+    text-align:right;
+  }
+  main { min-width:0; }
+  .panel { display:none; }
+  .panel.active { display:block; }
+  .hero {
+    min-height:calc(100vh - 64px);
+    display:grid;
+    align-items:center;
+    padding:62px clamp(22px,5vw,78px);
+    color:#fff;
+    background:
+      linear-gradient(135deg,rgba(7,20,38,.94),rgba(0,87,255,.66)),
+      url("https://images.unsplash.com/photo-1551434678-e076c223a692?auto=format&fit=crop&w=1800&q=80") center/cover;
+  }
+  .hero-content { max-width:980px; }
+  .eyebrow {
+    color:#91ecff;
+    font-size:12px;
+    letter-spacing:2.8px;
+    text-transform:uppercase;
+    font-weight:900;
+    margin-bottom:14px;
+  }
+  h1 {
+    margin:0;
+    font-size:clamp(40px,7vw,78px);
+    line-height:.96;
+    letter-spacing:0;
+  }
+  .hero-copy {
+    max-width:760px;
+    margin:24px 0 34px;
+    color:rgba(255,255,255,.78);
+    font-size:clamp(17px,2vw,22px);
+    line-height:1.5;
+  }
+  .hero-grid {
+    display:grid;
+    grid-template-columns:repeat(4,minmax(120px,1fr));
+    gap:12px;
+    max-width:920px;
+  }
+  .hero-metric {
+    border:1px solid rgba(255,255,255,.22);
+    background:rgba(7,20,38,.55);
+    border-radius:8px;
+    padding:16px;
+    min-height:92px;
+  }
+  .metric-label {
+    color:rgba(255,255,255,.58);
+    font-size:10px;
+    text-transform:uppercase;
+    letter-spacing:1.7px;
+    font-weight:850;
+    margin-bottom:8px;
+  }
+  .metric-value { font-size:20px; font-weight:950; line-height:1.18; }
+  .content { width:min(1180px,calc(100% - 44px)); margin:0 auto; padding:38px 0 58px; }
+  .section {
+    padding:34px 0;
+    border-bottom:1px solid var(--line);
+  }
+  .section:last-child { border-bottom:0; }
+  .section-head {
+    display:flex;
+    align-items:flex-end;
+    justify-content:space-between;
+    gap:24px;
+    margin-bottom:20px;
+  }
+  .section-kicker {
+    color:var(--rev-blue);
+    font-size:11px;
+    text-transform:uppercase;
+    letter-spacing:2.4px;
+    font-weight:950;
+    margin-bottom:8px;
+  }
+  h2 {
+    margin:0;
+    font-size:clamp(25px,3.1vw,40px);
+    line-height:1.07;
+    letter-spacing:0;
+  }
+  .lead {
+    max-width:760px;
+    color:var(--muted);
+    font-size:16px;
+    line-height:1.65;
+    margin:12px 0 0;
+  }
+  .grid { display:grid; gap:16px; }
+  .grid.two { grid-template-columns:repeat(2,minmax(0,1fr)); }
+  .grid.three { grid-template-columns:repeat(3,minmax(0,1fr)); }
+  .grid.four { grid-template-columns:repeat(4,minmax(0,1fr)); }
+  .card {
+    background:#fff;
+    border:1px solid var(--line);
+    border-radius:8px;
+    padding:20px;
+    box-shadow:0 14px 32px rgba(15,23,42,.06);
+  }
+  .card h3 {
+    margin:0 0 9px;
+    font-size:17px;
+    line-height:1.25;
+  }
+  .card p, .card li {
+    color:var(--muted);
+    font-size:14px;
+    line-height:1.55;
+  }
+  .card p { margin:0; }
+  .card ul { margin:10px 0 0; padding-left:18px; }
+  .accent-blue { border-top:4px solid var(--rev-blue); }
+  .accent-cyan { border-top:4px solid var(--rev-cyan); }
+  .accent-green { border-top:4px solid var(--green); }
+  .accent-amber { border-top:4px solid var(--amber); }
+  .accent-red { border-top:4px solid var(--red); }
+  .stat {
+    font-size:31px;
+    font-weight:950;
+    margin-bottom:4px;
+    color:var(--rev-blue);
+  }
+  .comparison {
+    display:grid;
+    grid-template-columns:minmax(0,1fr) 46px minmax(0,1fr);
+    gap:16px;
+    align-items:stretch;
+  }
+  .vs {
+    align-self:center;
+    justify-self:center;
+    width:46px;
+    height:46px;
+    border-radius:50%;
+    display:grid;
+    place-items:center;
+    color:#fff;
+    background:var(--navy);
+    font-weight:950;
+  }
+  .list-line {
+    display:flex;
+    gap:10px;
+    padding:10px 0;
+    border-top:1px solid var(--line);
+    color:var(--muted);
+    font-size:14px;
+    line-height:1.45;
+  }
+  .list-line:first-of-type { border-top:0; }
+  .check {
+    width:22px;
+    height:22px;
+    border-radius:50%;
+    display:grid;
+    place-items:center;
+    flex:0 0 auto;
+    background:rgba(12,159,95,.12);
+    color:var(--green);
+    font-weight:950;
+    font-size:13px;
+  }
+  .table-wrap {
+    overflow-x:auto;
+    background:#fff;
+    border:1px solid var(--line);
+    border-radius:8px;
+    box-shadow:0 14px 32px rgba(15,23,42,.06);
+  }
+  table { width:100%; border-collapse:collapse; min-width:760px; }
+  th {
+    text-align:left;
+    padding:13px 16px;
+    background:#eef4fb;
+    color:#334155;
+    font-size:11px;
+    text-transform:uppercase;
+    letter-spacing:1.5px;
+  }
+  td {
+    padding:15px 16px;
+    border-top:1px solid var(--line);
+    color:#475569;
+    font-size:14px;
+    line-height:1.45;
+    vertical-align:top;
+  }
+  td strong { color:#111827; }
+  .money { text-align:right; font-weight:950; color:var(--red); white-space:nowrap; }
+  .total td {
+    background:rgba(12,159,95,.08);
+    color:#0f5132;
+    font-weight:900;
+  }
+  .phase {
+    display:grid;
+    grid-template-columns:64px 1fr;
+    gap:14px;
+    align-items:start;
+  }
+  .phase-num {
+    width:52px;
+    height:52px;
+    border-radius:8px;
+    display:grid;
+    place-items:center;
+    background:linear-gradient(135deg,var(--rev-blue),var(--rev-cyan));
+    color:#fff;
+    font-weight:950;
+    font-size:19px;
+  }
+  .callout {
+    margin-top:18px;
+    padding:18px 20px;
+    border-radius:8px;
+    border:1px solid rgba(0,87,255,.22);
+    background:rgba(0,87,255,.07);
+    color:#26354b;
+    line-height:1.55;
+    font-size:15px;
+  }
+  .footer {
+    padding:22px;
+    text-align:center;
+    color:#728096;
+    font-size:12px;
+    line-height:1.5;
+  }
+  @media (max-width:980px) {
+    .tabs { align-items:stretch; flex-direction:column; gap:10px; }
+    .brand { justify-content:center; min-width:0; }
+    .meta-note { text-align:center; min-width:0; }
+    .tab-list { width:100%; justify-content:flex-start; padding-bottom:2px; }
+    .hero { min-height:auto; padding-top:42px; padding-bottom:46px; }
+    .hero-grid, .grid.two, .grid.three, .grid.four, .comparison { grid-template-columns:1fr; }
+    .vs { transform:rotate(90deg); }
+    .section-head { display:block; }
+  }
 </style>
 </head>
 <body>
-<div id="robin-refresh-btn" style="position:fixed;top:12px;right:16px;z-index:9999;">
-  <button onclick="window.location.reload(true)" title="Refresh dashboard" style="background:#1e293b;color:#f8fafc;border:1px solid #334155;border-radius:8px;padding:7px 14px;font-size:13px;font-family:sans-serif;cursor:pointer;display:flex;align-items:center;gap:6px;box-shadow:0 2px 8px rgba(0,0,0,0.3);transition:background 0.15s;" onmouseover="this.style.background='#334155'" onmouseout="this.style.background='#1e293b'">
-    <span style="font-size:15px;line-height:1">↻</span> Refresh
-  </button>
-</div>
-
-<div class="cover">
-  <div class="cover-logo"><img src="https://koontz-robin.github.io/robin-decks/revio-logo.png" alt="rev.io"></div>
-  <div class="cover-tag">Business Value Assessment</div>
-  <h1>ROI Analysis for<br><span>Compsys</span></h1>
-  <p class="cover-sub">Prepared by Andy Whisenant, Rev.io &nbsp;·&nbsp; April 2026</p>
-  <div class="cover-meta">
-    <div><div class="meta-label">Company</div><div class="meta-val">Compsys</div></div>
-    <div><div class="meta-label">Team Size</div><div class="meta-val">28 employees</div></div>
-    <div><div class="meta-label">Est. Monthly Revenue</div><div class="meta-val">$200,000-$300,000/month</div></div>
-    <div><div class="meta-label">Industry</div><div class="meta-val">MSP/Telecom</div></div>
-    <div><div class="meta-label">Rev.io Solution</div><div class="meta-val">PSA Platform</div></div>
-  </div>
-</div>
-
-<div class="section">
-  <div class="section-tag">Section 1</div>
-  <h2>What We Heard</h2>
-  <p class="lead">These are the specific challenges you shared with us during our discovery conversation. Your words — we've simply organized them.</p>
-  <div class="pain-grid"><div class="pain-card">
-      <h4>Tool sprawl and system fragmentation</h4>
-      <p>Compsys has accumulated too many disconnected tools over time, each added to patch a specific issue rather than solving the root problem. They don't know which system holds the accurate data, and the team wastes time troubleshooting sync issues between platforms.</p>
-      <div class="pain-quote">We kept old methods and plopped new methods on top and we need to kind of go out from the root and restructure.</div>
-    </div><div class="pain-card">
-      <h4>Billing accuracy and manual overhead</h4>
-      <p>The billing department is overwhelmed with manual processes caused by syncing issues between Gradient, Connectwise, and QuickBooks Desktop. Staff time is consumed troubleshooting discrepancies rather than focusing on productive work. They are unable to trust the data in any single system.</p>
-      <div class="pain-quote">keep adding tools to fix one issue</div>
-    </div><div class="pain-card">
-      <h4>Manual commission tracking</h4>
-      <p>Sales commissions (10% on recurring products) are tracked manually via Excel spreadsheets. This is error-prone, time-consuming, and lacks the ability to easily exclude non-commissionable products like hardware or set different percentages by product type.</p>
-      
-    </div><div class="pain-card">
-      <h4>Sales quoting inefficiency</h4>
-      <p>The sales team is currently building a custom quoting system with outside programmer help because existing tools don't provide embedded quoting. This represents both a direct cost and a distraction from selling.</p>
-      
-    </div><div class="pain-card">
-      <h4>Growth constrained by system inefficiencies</h4>
-      <p>Compsys recognizes that their current tech stack and manual processes are actively holding back their ability to scale. They need a fresh start with proper documentation and education on proper workflows before they can pursue rapid growth.</p>
-      <div class="pain-quote">I can't necessarily make that happen, but I can fight for it.</div>
-    </div></div>
-</div>
-
-<div class="section">
-  <div class="section-tag">Section 2</div>
-  <h2>The Cost of Today</h2>
-  <p class="lead">Conservative estimates based on a fully-loaded annual cost of $70,000 per employee ($33.65/hr). We only model what you told us.</p>
-  <table class="roi-table">
-    <thead><tr><th style="width:30%">Pain Point</th><th>Conservative Assumption</th><th style="text-align:right">Annual Cost</th></tr></thead>
-    <tbody><tr>
-      <td>Billing troubleshooting and reconciliation (syncing issues across Gradient, Connectwise, QuickBooks)<div class="math">At least 1 billing/AP person spending significant time troubleshooting data discrepancies across systems. Conservatively modeling 10 hours/week across the billing team.</div></td>
-      <td>At least 1 billing/AP person spending significant time troubleshooting data discrepancies across systems. Conservatively modeling 10 hours/week across the billing team.</td>
-      <td style="text-align:right;color:#f87171;font-weight:700">$17,498</td>
-    </tr><tr>
-      <td>Manual commission tracking via Excel<div class="math">Sales or accounting staff manually calculating 10% recurring commissions, cross-referencing product types, and building spreadsheets. Conservatively 3 hours/week.</div></td>
-      <td>Sales or accounting staff manually calculating 10% recurring commissions, cross-referencing product types, and building spreadsheets. Conservatively 3 hours/week.</td>
-      <td style="text-align:right;color:#f87171;font-weight:700">$5,249</td>
-    </tr><tr>
-      <td>Custom quoting system development and maintenance<div class="math">Sales team and external programmer building and maintaining a custom quoting tool. Modeling 4 hours/week of internal staff time coordinating, testing, and using a workaround system.</div></td>
-      <td>Sales team and external programmer building and maintaining a custom quoting tool. Modeling 4 hours/week of internal staff time coordinating, testing, and using a workaround system.</td>
-      <td style="text-align:right;color:#f87171;font-weight:700">$6,999</td>
-    </tr><tr>
-      <td>Multi-tool context switching and data validation<div class="math">Staff across departments (help desk, sales, billing) spending time switching between 7+ tools and manually verifying which system has correct data. Conservatively 5 hours/week across the team.</div></td>
-      <td>Staff across departments (help desk, sales, billing) spending time switching between 7+ tools and manually verifying which system has correct data. Conservatively 5 hours/week across the team.</td>
-      <td style="text-align:right;color:#f87171;font-weight:700">$8,749</td>
-    </tr><tr>
-      <td>Bill.com payment processing fees (potential savings)<div class="math">Bill.com not used to full potential but still incurring fees. Rev.io payment processing may reduce merchant processing costs. Pending merchant statement review — not modeled as hard dollars yet.</div></td>
-      <td>Bill.com not used to full potential but still incurring fees. Rev.io payment processing may reduce merchant processing costs. Pending merchant statement review — not modeled as hard dollars yet.</td>
-      <td style="text-align:right;color:#f87171;font-weight:700">$0</td>
-    </tr>
-    <tr class="total-row">
-      <td>Total Estimated Annual Cost of Current State</td>
-      <td>Conservative — excludes revenue leakage, data inaccuracy costs, and growth capacity lost to admin</td>
-      <td style="text-align:right">$38,495 / year</td>
-    </tr></tbody>
-  </table>
-</div>
-
-<div class="section">
-  <div class="section-tag">Section 3</div>
-  <h2>What Changes with Rev.io</h2>
-  <p class="lead">One platform replacing the core of your stack. Not another tool on top — a foundation to rebuild from.</p>
-  <div class="compare">
-    <div class="compare-box today">
-      <div class="compare-label">Today — Current State</div>
-      <div class="compare-line"><strong>Connectwise (PSA):</strong> Current tool</div>
-<div class="compare-line"><strong>Cordial (VoIP platform):</strong> Current tool</div>
-<div class="compare-line"><strong>QuickBooks Desktop (on virtual cloud server):</strong> Current tool</div>
-<div class="compare-line"><strong>Bill.com:</strong> Current tool</div>
-<div class="compare-line"><strong>Enable (RMM):</strong> Current tool</div>
-<div class="compare-line"><strong>Screen Connect:</strong> Current tool</div>
-<div class="compare-line"><strong>Gradient (syncing tool - consolidates PAX 8, Enable, licensing → Connectwise → QuickBooks):</strong> Current tool</div>
+<div class="deck-shell">
+  <nav class="tabs" aria-label="Compsys evaluation deck tabs">
+    <div class="brand">
+      <img src="revio-logo.png" alt="Rev.io logo">
+      <div>
+        <div class="brand-title">Compsys x Rev.io</div>
+        <div class="brand-sub">Evaluation deck</div>
+      </div>
     </div>
-    <div class="vs">→</div>
-    <div class="compare-box tomorrow">
-      <div class="compare-label">With Rev.io — Unified Platform</div>
-      <div class="compare-line">One shared database — no syncing required</div>
-      <div class="compare-line">Native billing automation built in</div>
-      <div class="compare-line">Embedded quoting → e-sign → job automatically</div>
-      <div class="compare-line">Commission rules automated by product type</div>
-      <div class="compare-line">Open REST API — connect anything</div>
-      <div class="compare-line">PAX 8, QuickBooks, Enable integrations native</div>
-      <div class="compare-line">Rev.io as payment processor — better rates</div>
+    <div class="tab-list" role="tablist">
+      <button class="tab active" type="button" role="tab" aria-selected="true" data-tab="overview">Overview</button>
+      <button class="tab" type="button" role="tab" aria-selected="false" data-tab="evaluation">Evaluation Summary</button>
+      <button class="tab" type="button" role="tab" aria-selected="false" data-tab="value">Value Planner</button>
+      <button class="tab" type="button" role="tab" aria-selected="false" data-tab="implementation">Implementation Plan</button>
+      <button class="tab" type="button" role="tab" aria-selected="false" data-tab="investment">Investment</button>
+      <button class="tab" type="button" role="tab" aria-selected="false" data-tab="team">Decision Team</button>
     </div>
-  </div>
+    <div class="meta-note">Stage 4 / Proposal Sent</div>
+  </nav>
+
+  <main>
+    <section class="panel active" id="overview">
+      <div class="hero">
+        <div class="hero-content">
+          <div class="eyebrow">Rev.io PSA evaluation</div>
+          <h1>Compsys is ready to move from ConnectWise to Rev.io PSA.</h1>
+          <p class="hero-copy">The business case is not another point solution. It is replacing a fragmented operating model with a PSA foundation that gives sales, service, billing, and leadership one cleaner workflow.</p>
+          <div class="hero-grid">
+            <div class="hero-metric">
+              <div class="metric-label">Current deal</div>
+              <div class="metric-value">PSA proposal open</div>
+            </div>
+            <div class="hero-metric">
+              <div class="metric-label">MRR</div>
+              <div class="metric-value">$2,800</div>
+            </div>
+            <div class="hero-metric">
+              <div class="metric-label">Close date</div>
+              <div class="metric-value">July 31</div>
+            </div>
+            <div class="hero-metric">
+              <div class="metric-label">Implementation</div>
+              <div class="metric-value">$2,500 total</div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="content">
+        <div class="section">
+          <div class="section-head">
+            <div>
+              <div class="section-kicker">Why Rev.io</div>
+              <h2>One operating platform instead of another layer on top of the mess.</h2>
+              <p class="lead">Compsys has been solving individual issues with additional tools. Rev.io PSA gives the team a cleaner core system for quoting, ticketing, projects, commissions, reporting, and the future Billing path.</p>
+            </div>
+          </div>
+          <div class="grid three">
+            <div class="card accent-blue">
+              <h3>Replace ConnectWise friction</h3>
+              <p>Move service and project execution into Rev.io PSA, with quoting and sales handoff tied to the same operational data.</p>
+            </div>
+            <div class="card accent-green">
+              <h3>Create a cleaner data source</h3>
+              <p>Reduce swivel-chair work between ConnectWise, QuickBooks Desktop, Gradient, Bill.com, and custom sales tools.</p>
+            </div>
+            <div class="card accent-cyan">
+              <h3>Stage Billing intentionally</h3>
+              <p>Keep PSA as the active decision while treating Billing as a future phase once Cordial provisioning requirements are resolved.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="panel" id="evaluation">
+      <div class="content">
+        <div class="section">
+          <div class="section-kicker">Account Snapshot</div>
+          <h2>Compsys needs a migration path that feels operational, not theoretical.</h2>
+          <p class="lead">The team wants to move away from ConnectWise and stop stacking point solutions on top of old workflows. The Rev.io recommendation should show exactly how PSA becomes the day-one operating core and how Billing can follow without forcing unresolved Cordial decisions too early.</p>
+          <div class="grid four">
+            <div class="card"><div class="stat">28</div><p>Employee count referenced in discovery.</p></div>
+            <div class="card"><div class="stat">$200K-$300K</div><p>Estimated monthly revenue range.</p></div>
+            <div class="card"><div class="stat">$38,495</div><p>Conservative annual cost of current manual overhead.</p></div>
+            <div class="card"><div class="stat">July 22</div><p>Next onboarding process call at 2 PM ET.</p></div>
+          </div>
+        </div>
+
+        <div class="section">
+          <div class="section-kicker">Pain Points</div>
+          <h2>The current environment is fighting the team.</h2>
+          <div class="grid three">
+            <div class="card accent-red">
+              <h3>Tool sprawl</h3>
+              <p>Disconnected tools make it hard to know which system has the correct data and force staff to troubleshoot sync issues instead of serving clients.</p>
+            </div>
+            <div class="card accent-red">
+              <h3>Billing reconciliation</h3>
+              <p>Gradient, ConnectWise, QuickBooks Desktop, Bill.com, and vendor data create recurring manual review and accuracy concerns.</p>
+            </div>
+            <div class="card accent-red">
+              <h3>Manual commissions</h3>
+              <p>Recurring product commissions are tracked in spreadsheets, making product exclusions and commission logic harder to control.</p>
+            </div>
+            <div class="card accent-amber">
+              <h3>Custom quoting workaround</h3>
+              <p>Building a custom quoting tool with outside programming help is a symptom that the existing stack is not supporting sales well enough.</p>
+            </div>
+            <div class="card accent-amber">
+              <h3>Scaling drag</h3>
+              <p>Growth is constrained by unclear workflows, poor documentation, and the need to validate data across too many systems.</p>
+            </div>
+            <div class="card accent-blue">
+              <h3>Leadership proof</h3>
+              <p>Robert needs a clear financial and operational case, backed by department leaders, before approving the move.</p>
+            </div>
+          </div>
+        </div>
+
+        <div class="section">
+          <div class="section-kicker">Migration Journey</div>
+          <h2>From ConnectWise dependency to Rev.io PSA operating rhythm.</h2>
+          <div class="comparison">
+            <div class="card accent-red">
+              <h3>Current State</h3>
+              <div class="list-line"><span class="check">!</span><span>ConnectWise is the current PSA but does not solve quoting, commissions, workflow clarity, and data trust in one motion.</span></div>
+              <div class="list-line"><span class="check">!</span><span>QuickBooks Desktop, Gradient, Bill.com, Enable, ScreenConnect, Cordial, and custom quoting all sit around the core process.</span></div>
+              <div class="list-line"><span class="check">!</span><span>Teams spend time validating data and building workarounds.</span></div>
+            </div>
+            <div class="vs">to</div>
+            <div class="card accent-green">
+              <h3>With Rev.io PSA</h3>
+              <div class="list-line"><span class="check">+</span><span>Quoting, service workflow, projects, reporting, and handoff operate in one Rev.io PSA environment.</span></div>
+              <div class="list-line"><span class="check">+</span><span>Commission and product workflows can be designed intentionally instead of managed through spreadsheets.</span></div>
+              <div class="list-line"><span class="check">+</span><span>Billing can be sequenced as a later phase after Cordial provisioning fit is validated.</span></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="panel" id="value">
+      <div class="content">
+        <div class="section">
+          <div class="section-kicker">Value Planner</div>
+          <h2>The value case is operational capacity first, hard-dollar savings second.</h2>
+          <p class="lead">The modeled savings only include conservative labor assumptions. The larger payoff is fewer manual processes, cleaner customer handoffs, faster quoting, better executive visibility, and a platform that can scale without adding more administrative drag.</p>
+          <div class="table-wrap">
+            <table>
+              <thead><tr><th>Value Driver</th><th>Conservative Assumption</th><th>Rev.io Impact</th><th>Annual Cost</th></tr></thead>
+              <tbody>
+                <tr><td><strong>Billing reconciliation</strong></td><td>10 hours/week across billing and AP troubleshooting data discrepancies.</td><td>Cleaner operational handoffs and a staged future Billing path.</td><td class="money">$17,498</td></tr>
+                <tr><td><strong>Manual commissions</strong></td><td>3 hours/week calculating recurring commissions and product exclusions.</td><td>Commission logic designed around product and service rules.</td><td class="money">$5,249</td></tr>
+                <tr><td><strong>Custom quoting workaround</strong></td><td>4 hours/week coordinating, testing, and using a workaround quoting motion.</td><td>Quoting tied to Rev.io PSA sales and fulfillment workflow.</td><td class="money">$6,999</td></tr>
+                <tr><td><strong>Context switching</strong></td><td>5 hours/week validating data across multiple systems.</td><td>One PSA operating layer and cleaner executive reporting.</td><td class="money">$8,749</td></tr>
+                <tr class="total"><td><strong>Total current-state drag</strong></td><td colspan="2">Conservative model excluding revenue leakage, customer impact, and growth capacity.</td><td class="money">$38,495/year</td></tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+        <div class="section">
+          <div class="section-kicker">Product Fit</div>
+          <h2>Where Rev.io should anchor the conversation.</h2>
+          <div class="grid three">
+            <div class="card accent-blue">
+              <h3>PSA first</h3>
+              <p>Lead with replacing ConnectWise and improving quoting, tickets, projects, operational reporting, and team process.</p>
+            </div>
+            <div class="card accent-green">
+              <h3>Revenue workflow</h3>
+              <p>Show the full path from quote to signed order to job or service work so leaders see more than a feature checklist.</p>
+            </div>
+            <div class="card accent-amber">
+              <h3>Billing as phase two</h3>
+              <p>Acknowledge Robert's Cordial provisioning concern directly. Do not force Billing into the first-phase decision if the unresolved risk slows PSA approval.</p>
+            </div>
+          </div>
+          <div class="callout"><strong>Recommended positioning:</strong> "Approve Rev.io PSA as the operating-system migration away from ConnectWise now. Keep Billing on the roadmap once Cordial provisioning and data flow requirements have a confirmed implementation path."</div>
+        </div>
+      </div>
+    </section>
+
+    <section class="panel" id="implementation">
+      <div class="content">
+        <div class="section">
+          <div class="section-kicker">Implementation Plan</div>
+          <h2>A practical migration plan from ConnectWise to Rev.io PSA.</h2>
+          <p class="lead">The plan should show Compsys exactly how Rev.io will protect the business during migration: define scope, configure the PSA, migrate priority data, train the team, validate workflows, and run adoption with clear owners.</p>
+          <div class="grid two">
+            <div class="card phase accent-blue">
+              <div class="phase-num">1</div>
+              <div>
+                <h3>Discovery and scope lock</h3>
+                <p>Confirm ConnectWise workflows, quoting needs, service board structure, project templates, commission logic, reporting needs, and integration dependencies.</p>
+              </div>
+            </div>
+            <div class="card phase accent-cyan">
+              <div class="phase-num">2</div>
+              <div>
+                <h3>Configuration and workflow design</h3>
+                <p>Build Rev.io PSA around Compsys roles: sales, service, AP, help desk, leadership, and the champion group supporting Robert's decision.</p>
+              </div>
+            </div>
+            <div class="card phase accent-green">
+              <div class="phase-num">3</div>
+              <div>
+                <h3>Data migration</h3>
+                <p>Prioritize the data that makes go-live successful: accounts, contacts, active work, product/service references, and reporting fields needed for leadership confidence.</p>
+              </div>
+            </div>
+            <div class="card phase accent-amber">
+              <div class="phase-num">4</div>
+              <div>
+                <h3>Training and validation</h3>
+                <p>Run role-based training for sales, service, AP, and help desk. Validate quote-to-workflow handoff, ticket handling, reporting, and adoption readiness before launch.</p>
+              </div>
+            </div>
+            <div class="card phase accent-blue">
+              <div class="phase-num">5</div>
+              <div>
+                <h3>Go-live and stabilization</h3>
+                <p>Launch PSA with a defined issue queue, adoption checkpoints, and executive reporting so Compsys can see progress quickly after cutover.</p>
+              </div>
+            </div>
+            <div class="card phase accent-green">
+              <div class="phase-num">6</div>
+              <div>
+                <h3>Billing roadmap</h3>
+                <p>Keep Cordial provisioning and Rev.io Billing requirements documented as a future-phase decision, with the PSA foundation already in motion.</p>
+              </div>
+            </div>
+          </div>
+          <div class="callout"><strong>Next meeting:</strong> Onboarding process call scheduled for July 22 at 2 PM ET. Use that meeting to confirm project cadence, owners, migration assumptions, and what Compsys needs to feel safe leaving ConnectWise.</div>
+        </div>
+      </div>
+    </section>
+
+    <section class="panel" id="investment">
+      <div class="content">
+        <div class="section">
+          <div class="section-kicker">Investment</div>
+          <h2>The implementation fee is $2,500 total.</h2>
+          <p class="lead">The investment story should be simple and unmissable: $2,800 MRR for Rev.io PSA, plus a total one-time implementation fee of $2,500 split evenly between setup/training and data migration.</p>
+          <div class="grid three">
+            <div class="card accent-blue">
+              <h3>Monthly subscription</h3>
+              <div class="stat">$2,800</div>
+              <p>Current PSA proposal MRR.</p>
+            </div>
+            <div class="card accent-green">
+              <h3>Standard Setup and Training</h3>
+              <div class="stat">$1,250</div>
+              <p>Role-based setup, configuration guidance, and team training.</p>
+            </div>
+            <div class="card accent-cyan">
+              <h3>Data Migration</h3>
+              <div class="stat">$1,250</div>
+              <p>Migration support for the priority data needed for PSA launch.</p>
+            </div>
+          </div>
+          <div class="callout"><strong>Total implementation:</strong> $2,500 across setup, training, and data migration.</div>
+        </div>
+
+        <div class="section">
+          <div class="section-kicker">Payback Logic</div>
+          <h2>Compsys does not need heroic assumptions to justify the move.</h2>
+          <div class="grid three">
+            <div class="card">
+              <h3>Current-state drag</h3>
+              <p>$38,495/year in conservative manual overhead already offsets a meaningful share of the Year 1 PSA investment.</p>
+            </div>
+            <div class="card">
+              <h3>Operational lift</h3>
+              <p>Cleaner quoting, fewer sync problems, and less manual commission work improve the day-to-day operating model.</p>
+            </div>
+            <div class="card">
+              <h3>Strategic timing</h3>
+              <p>Moving away from ConnectWise now lets the team build the future Billing path from a stronger PSA foundation.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="panel" id="team">
+      <div class="content">
+        <div class="section">
+          <div class="section-kicker">Decision Team</div>
+          <h2>The approval path runs through operational consensus.</h2>
+          <p class="lead">The recommendation should arm JD and the department leaders with enough detail to make Robert comfortable approving the PSA migration.</p>
+          <div class="table-wrap">
+            <table>
+              <thead><tr><th>Name</th><th>Role</th><th>What They Need</th></tr></thead>
+              <tbody>
+                <tr><td><strong>Robert Williams</strong></td><td>CEO / President</td><td>Clear ROI, implementation confidence, and a unified recommendation from the operating team. Billing concern centers on Cordial provisioning.</td></tr>
+                <tr><td><strong>JD Sanders</strong></td><td>Champion / Account Manager</td><td>A business case strong enough to fight for internally, plus a clear process map for migrating away from ConnectWise.</td></tr>
+                <tr><td><strong>Tim</strong></td><td>Chief Sales Officer</td><td>Sales efficiency, quoting workflow, commission accuracy, and reporting visibility.</td></tr>
+                <tr><td><strong>Cynthia</strong></td><td>Accounts Payable</td><td>Confidence that billing-adjacent workflows, reconciliation pain, and QuickBooks realities are understood.</td></tr>
+                <tr><td><strong>Jonah</strong></td><td>Help Desk Tech</td><td>Reliable ticketing workflow, practical migration detail, and a system the service team can actually adopt.</td></tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+        <div class="section">
+          <div class="section-kicker">Next Steps</div>
+          <div class="grid three">
+            <div class="card accent-blue">
+              <h3>Confirm implementation plan</h3>
+              <p>Use the July 22 onboarding process call to lock project cadence, data migration assumptions, and role-based training expectations.</p>
+            </div>
+            <div class="card accent-green">
+              <h3>Build Robert's business case</h3>
+              <p>Package ROI, implementation scope, and leadership consensus into a clear approval story for the July 31 close path.</p>
+            </div>
+            <div class="card accent-amber">
+              <h3>Document Billing path</h3>
+              <p>Keep Cordial provisioning requirements visible without letting phase-two Billing complexity slow the PSA decision.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
 </div>
 
-<div class="section">
-  <div class="section-tag">Section 4</div>
-  <h2>The Numbers</h2>
-  <div class="summary-grid">
-    <div class="sum-card" style="border-top:3px solid #f87171">
-      <div class="sum-val" style="color:#f87171">$38,495</div>
-      <div class="sum-label">Annual Cost of Current State</div>
-    </div>
-    <div class="sum-card" style="border-top:3px solid #1667CC">
-      <div class="sum-val" style="color:#1667CC">~$67,920</div>
-      <div class="sum-label">Est. Annual Rev.io Cost<br><span style="font-size:9px;color:#64748b">~$5,660/mo</span></div>
-    </div>
-    <div class="sum-card" style="border-top:3px solid #06b6d4">
-      <div class="sum-val" style="color:#06b6d4">~57%</div>
-      <div class="sum-label">Year 1 Offset<br><span style="font-size:9px;color:#64748b">Savings offset investment</span></div>
-    </div>
-    <div class="sum-card" style="border-top:3px solid #f5a623">
-      <div class="sum-val" style="color:#f5a623">Year 2+</div>
-      <div class="sum-label">ROI accelerates as overhead is eliminated</div>
-    </div>
-  </div>
-  <div class="highlight-box">
-    <div class="highlight-label">The Real Business Case</div>
-    <p style="font-size:14px;color:var(--text);line-height:1.7">The numbers above only capture <strong>direct labor and tool costs</strong>. The bigger value is the ability to scale without adding manual processes. Every hour of admin eliminated and every point of billing accuracy recovered compounds as you grow.</p>
-  </div>
-</div>
+<div class="footer">Prepared by Rev.io Sales for Compsys. Confidential evaluation material. July 2026.</div>
 
-<div class="section">
-  <div class="section-tag">Section 5</div>
-  <h2>Key Stakeholders</h2>
-  <table class="roi-table">
-    <thead><tr><th>Name</th><th>Role</th><th>What Matters to Them</th></tr></thead>
-    <tbody><tr><td>Robert Williams</td><td>CEO/President (Final Decision Maker)</td><td>ROI, business case with hard numbers, unified recommendation from department heads. Described as 'Gladiator thumb up/down' — needs a compelling, consensus-backed pitch.</td></tr><tr><td>Tim</td><td>CSO (Chief Sales Officer)</td><td>Sales efficiency, quoting tools, commission accuracy, pipeline visibility. Previously spoke with Rev.io in October — was a holdup. Needs to be re-engaged and brought on board.</td></tr><tr><td>JD Sanders</td><td>Account Manager/Sales (Champion)</td><td>Consolidation, eliminating tool sprawl, getting a fresh start with proper workflows. Willing to fight internally but needs ammunition — cost savings, time savings, and department head buy-in.</td></tr><tr><td>Cynthia</td><td>Accounts Payable</td><td>Seamless billing, reducing manual reconciliation, QuickBooks Desktop integration, payment processing simplification.</td></tr><tr><td>Jonah</td><td>Help Desk Tech (10+ years tenure)</td><td>System reliability, ticketing workflow, mobile access, knows current systems inside out — key for technical validation and adoption. Institutional knowledge holder.</td></tr></tbody>
-  </table>
-</div>
+<script>
+  const tabs = [...document.querySelectorAll('.tab')];
+  const panels = [...document.querySelectorAll('.panel')];
 
-<div class="section">
-  <div class="section-tag">Section 6</div>
-  <h2>What Happens Next</h2>
-  <div class="next-step">
-      <div class="step-num">1</div>
-      <div class="step-content"><p>Send recap email with recording, Billing + PSA product videos to JD</p></div>
-    </div><div class="next-step">
-      <div class="step-num">2</div>
-      <div class="step-content"><p>Billing demo scheduled Monday Feb 10 at 1:00 PM Central (2:00 PM EST) — invite Cynthia (AP) and Jonah (Help Desk)</p></div>
-    </div><div class="next-step">
-      <div class="step-num">3</div>
-      <div class="step-content"><p>Prepare billing demo focused on: Cordial CDR integration, commission reporting (10% on MRR), QuickBooks Desktop sync, customer portal/payment processing, Gradient replacement strategy</p></div>
-    </div><div class="next-step">
-      <div class="step-num">4</div>
-      <div class="step-content"><p>JD to request last 3 months merchant statements for payment processing cost comparison vs Bill.com</p></div>
-    </div><div class="next-step">
-      <div class="step-num">5</div>
-      <div class="step-content"><p>Research Gradient integration/replacement path for demo discussion</p></div>
-    </div><div class="next-step">
-      <div class="step-num">6</div>
-      <div class="step-content"><p>JD to build internal coalition — get buy-in from Tim (CSO), Jonah (Help Desk), System Admin Manager, and Cynthia (AP) before presenting to Robert (CEO)</p></div>
-    </div>
-</div>
+  function activate(tabName, pushHash = true) {
+    const target = panels.find(panel => panel.id === tabName) ? tabName : 'overview';
+    tabs.forEach(tab => {
+      const active = tab.dataset.tab === target;
+      tab.classList.toggle('active', active);
+      tab.setAttribute('aria-selected', active ? 'true' : 'false');
+    });
+    panels.forEach(panel => panel.classList.toggle('active', panel.id === target));
+    if (pushHash) history.replaceState(null, '', `#${target}`);
+    window.scrollTo({ top: 0, behavior: 'instant' });
+  }
 
-<div class="disclaimer">
-  This analysis is based on information shared during our discovery conversation. All cost estimates use conservative assumptions and a fully-loaded employee cost of $70,000/year ($33.65/hr). Actual savings will vary. Rev.io makes no guarantees of specific financial outcomes.<br><br>
-  Prepared by Rev.io Sales · Confidential · April 2026
-</div>
+  tabs.forEach(tab => tab.addEventListener('click', () => activate(tab.dataset.tab)));
+
+  const initial = location.hash.replace('#', '');
+  if (initial) activate(initial, false);
+</script>
 </body>
 </html>
