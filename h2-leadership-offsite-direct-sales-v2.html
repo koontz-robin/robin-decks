@@ -178,14 +178,50 @@ body { min-height:100%; overflow-x:hidden; overflow-y:auto; background:#0a1628; 
   white-space:nowrap;
 }
 .partner-bars.by-partner {
-  grid-template-columns:repeat(14,minmax(0,1fr));
+  display:flex;
+  flex-direction:column;
   gap:5px;
+  align-items:stretch;
+}
+.partner-bars.by-partner .partner-month {
+  display:grid;
+  grid-template-columns:108px 1fr 20px;
+  gap:7px;
+  align-items:center;
 }
 .partner-bars.by-partner .partner-month label {
-  font-size:7.5px;
+  grid-column:1;
+  grid-row:1;
+  margin:0;
+  min-height:0;
+  font-size:7.8px;
   line-height:1.05;
+  text-align:right;
   white-space:normal;
-  min-height:24px;
+}
+.partner-bars.by-partner .partner-bar-wrap {
+  grid-column:2;
+  grid-row:1;
+  width:100%;
+  height:10px;
+  justify-content:flex-start;
+}
+.partner-bars.by-partner .partner-bar {
+  height:100% !important;
+  min-width:10px;
+  align-items:center;
+  justify-content:flex-end;
+  padding:0 5px 0 0;
+  font-size:7px;
+  line-height:1;
+}
+.partner-bars.by-partner .partner-count {
+  grid-column:3;
+  grid-row:1;
+  font-family:Montserrat, sans-serif;
+  font-size:10px;
+  font-weight:900;
+  color:#fff;
 }
 .source-grid { display:grid; grid-template-columns:repeat(3,minmax(0,1fr)); gap:14px; }
 .source-card { padding:18px; min-height:132px; }
@@ -478,14 +514,14 @@ body { min-height:100%; overflow-x:hidden; overflow-y:auto; background:#0a1628; 
   margin-bottom:8px;
 }
 #slide-9 .partner-bars {
-  height:108px;
+  height:118px;
 }
 #slide-9 .partner-bar-wrap {
-  height:78px;
+  height:10px;
 }
 #slide-9 .partner-bar {
-  font-size:11px;
-  padding-top:4px;
+  font-size:7px;
+  padding-top:0;
 }
 #slide-9 .partner-referral-panel {
   padding:18px 22px;
@@ -1309,20 +1345,13 @@ body {
               <div class="partner-trend-total">27<span>last 12 months</span></div>
             </div>
             <div class="partner-bars by-partner">
-              <div class="partner-month"><div class="partner-bar-wrap"><div class="partner-bar" style="height:96px">6</div></div><label>AIN Group</label></div>
-              <div class="partner-month"><div class="partner-bar-wrap"><div class="partner-bar" style="height:80px">5</div></div><label>Voxtelesys</label></div>
-              <div class="partner-month"><div class="partner-bar-wrap"><div class="partner-bar" style="height:32px">2</div></div><label>AT&amp;T</label></div>
-              <div class="partner-month"><div class="partner-bar-wrap"><div class="partner-bar" style="height:32px">2</div></div><label>Skyswitch</label></div>
-              <div class="partner-month"><div class="partner-bar-wrap"><div class="partner-bar" style="height:32px">2</div></div><label>Inteserra / JSI</label></div>
-              <div class="partner-month"><div class="partner-bar-wrap"><div class="partner-bar" style="height:32px">2</div></div><label>Pax8</label></div>
-              <div class="partner-month"><div class="partner-bar-wrap"><div class="partner-bar" style="height:16px">1</div></div><label>Inteserra</label></div>
-              <div class="partner-month"><div class="partner-bar-wrap"><div class="partner-bar" style="height:16px">1</div></div><label>Oculum</label></div>
-              <div class="partner-month"><div class="partner-bar-wrap"><div class="partner-bar" style="height:16px">1</div></div><label>AT&amp;T PX / Sky</label></div>
-              <div class="partner-month"><div class="partner-bar-wrap"><div class="partner-bar" style="height:16px">1</div></div><label>Atlantech</label></div>
-              <div class="partner-month"><div class="partner-bar-wrap"><div class="partner-bar" style="height:16px">1</div></div><label>Avalara</label></div>
-              <div class="partner-month"><div class="partner-bar-wrap"><div class="partner-bar" style="height:16px">1</div></div><label>Eastern A/DV</label></div>
-              <div class="partner-month"><div class="partner-bar-wrap"><div class="partner-bar" style="height:16px">1</div></div><label>GigTel</label></div>
-              <div class="partner-month"><div class="partner-bar-wrap"><div class="partner-bar" style="height:16px">1</div></div><label>Verizon</label></div>
+              <div class="partner-month"><label>8 other partners</label><div class="partner-bar-wrap"><div class="partner-bar" style="width:100%"></div></div><div class="partner-count">8</div></div>
+              <div class="partner-month"><label>AIN Group</label><div class="partner-bar-wrap"><div class="partner-bar" style="width:75%"></div></div><div class="partner-count">6</div></div>
+              <div class="partner-month"><label>Voxtelesys</label><div class="partner-bar-wrap"><div class="partner-bar" style="width:63%"></div></div><div class="partner-count">5</div></div>
+              <div class="partner-month"><label>AT&amp;T</label><div class="partner-bar-wrap"><div class="partner-bar" style="width:25%"></div></div><div class="partner-count">2</div></div>
+              <div class="partner-month"><label>Skyswitch</label><div class="partner-bar-wrap"><div class="partner-bar" style="width:25%"></div></div><div class="partner-count">2</div></div>
+              <div class="partner-month"><label>Inteserra / JSI</label><div class="partner-bar-wrap"><div class="partner-bar" style="width:25%"></div></div><div class="partner-count">2</div></div>
+              <div class="partner-month"><label>Pax8</label><div class="partner-bar-wrap"><div class="partner-bar" style="width:25%"></div></div><div class="partner-count">2</div></div>
             </div>
           </div>
         </div>
