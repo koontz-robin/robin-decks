@@ -1,0 +1,439 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Spectrotel x Airespring Merge Demo: 2 Hours</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap');
+
+  *, *::before, *::after { box-sizing: border-box; }
+  body {
+    margin: 0;
+    width: 1280px;
+    height: 720px;
+    overflow: hidden;
+    font-family: Inter, Arial, sans-serif;
+    color: #eef7ff;
+    background:
+      linear-gradient(rgba(255,255,255,0.025) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(255,255,255,0.025) 1px, transparent 1px),
+      radial-gradient(circle at 76% 20%, rgba(0,195,227,0.13), transparent 28%),
+      linear-gradient(115deg, #0b1d3d 0%, #17375d 46%, #071730 100%);
+    background-size: 88px 88px, 88px 88px, auto, auto;
+  }
+
+  .page {
+    position: relative;
+    width: 1280px;
+    height: 720px;
+    padding: 24px 40px 18px;
+  }
+
+  .top {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    margin-bottom: 10px;
+  }
+
+  .brand {
+    display: flex;
+    align-items: center;
+    gap: 18px;
+  }
+
+  .revio {
+    width: 148px;
+    height: auto;
+    display: block;
+  }
+
+  .divider {
+    width: 1px;
+    height: 34px;
+    background: rgba(255,255,255,0.28);
+  }
+
+  .company-pills {
+    display: flex;
+    gap: 7px;
+    align-items: center;
+  }
+
+  .company {
+    min-width: 84px;
+    padding: 7px 11px 6px;
+    border-radius: 5px;
+    background: rgba(255,255,255,0.94);
+    color: #0c2545;
+    font-size: 10px;
+    line-height: 1;
+    font-weight: 800;
+    text-align: center;
+    text-transform: uppercase;
+  }
+
+  .company.aire { color: #0c5d95; }
+  .company.kpmg { color: #103a74; }
+
+  .date {
+    padding-top: 2px;
+    text-align: right;
+    text-transform: uppercase;
+  }
+
+  .date strong {
+    display: block;
+    color: #1bd5f4;
+    font-size: 12px;
+    letter-spacing: 2px;
+    margin-bottom: 4px;
+  }
+
+  .date span {
+    display: block;
+    color: rgba(238,247,255,0.58);
+    font-size: 11px;
+    letter-spacing: 1.6px;
+    font-weight: 700;
+  }
+
+  .eyebrow {
+    color: #70f272;
+    font-size: 11px;
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    font-weight: 800;
+    margin: 3px 0 2px;
+  }
+
+  h1 {
+    margin: 0 0 11px;
+    font-size: 26px;
+    line-height: 1.08;
+    font-weight: 800;
+    letter-spacing: 0;
+  }
+
+  .agenda {
+    border: 1px solid rgba(151,193,226,0.19);
+    border-radius: 8px;
+    overflow: hidden;
+    background: rgba(255,255,255,0.022);
+  }
+
+  .row {
+    display: grid;
+    grid-template-columns: 138px 1fr;
+    min-height: 61px;
+    border-bottom: 1px solid rgba(151,193,226,0.12);
+  }
+
+  .row:last-child { border-bottom: 0; }
+  .row.core { min-height: 78px; }
+  .row.ui { min-height: 74px; }
+
+  .time {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    gap: 5px;
+    background: rgba(7,24,50,0.34);
+    border-right: 1px solid rgba(151,193,226,0.11);
+  }
+
+  .time::before {
+    content: "";
+    position: absolute;
+    left: 0;
+    top: 0;
+    bottom: 0;
+    width: 4px;
+    background: var(--accent);
+  }
+
+  .owner {
+    color: rgba(238,247,255,0.82);
+    font-size: 9px;
+    line-height: 1.15;
+    letter-spacing: 0.7px;
+    text-transform: uppercase;
+    font-weight: 800;
+    text-align: center;
+    max-width: 118px;
+  }
+
+  .mins {
+    color: var(--accent);
+    font-weight: 800;
+    font-size: 11px;
+  }
+
+  .phase {
+    color: rgba(238,247,255,0.46);
+    font-size: 9px;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    font-weight: 800;
+  }
+
+  .content {
+    padding: 8px 16px 7px;
+    background: rgba(255,255,255,0.035);
+  }
+
+  .content h2 {
+    margin: 0 0 5px;
+    font-size: 14px;
+    font-weight: 800;
+    color: #fff;
+  }
+
+  .bullets {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 5px 14px;
+    align-items: center;
+  }
+
+  .bullet {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    color: rgba(238,247,255,0.8);
+    font-size: 10.35px;
+    line-height: 1.2;
+    white-space: nowrap;
+  }
+
+  .wide-text { white-space: normal; max-width: 390px; }
+  .medium-text { white-space: normal; max-width: 285px; }
+
+  .dot {
+    width: 5px;
+    height: 5px;
+    border-radius: 50%;
+    background: var(--accent);
+    flex: 0 0 5px;
+  }
+
+  .chip {
+    display: inline-flex;
+    align-items: center;
+    padding: 2px 7px;
+    border-radius: 4px;
+    color: #c9f6ff;
+    background: rgba(0,195,227,0.23);
+    font-size: 9px;
+    font-weight: 800;
+    line-height: 1.1;
+  }
+
+  .row.green { --accent: #72df62; }
+  .row.cyan { --accent: #20c8e8; }
+  .row.orange { --accent: #ff7040; }
+  .row.purple { --accent: #b16be8; }
+  .row.blue { --accent: #41cef2; }
+
+  .row.green .chip { background: rgba(114,223,98,0.22); color: #c9ffbd; }
+  .row.orange .chip { background: rgba(255,112,64,0.23); color: #ffc0a9; }
+  .row.purple .chip { background: rgba(177,107,232,0.25); color: #ead6ff; }
+
+  .footer {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    height: 36px;
+    margin-top: 6px;
+    border: 1px solid rgba(151,193,226,0.13);
+    border-radius: 8px;
+    padding: 0 18px;
+    background: rgba(255,255,255,0.027);
+    color: rgba(238,247,255,0.45);
+    font-size: 8.5px;
+  }
+
+  .team {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    flex-wrap: wrap;
+  }
+
+  .label {
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    font-weight: 800;
+    color: rgba(238,247,255,0.38);
+    margin-right: 6px;
+  }
+
+  .person {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    white-space: nowrap;
+  }
+
+  .person b {
+    padding: 2px 6px;
+    border-radius: 4px;
+    color: #c9f6ff;
+    background: rgba(0,195,227,0.23);
+    font-size: 8px;
+  }
+
+  .person.orange b { background: rgba(255,112,64,0.23); color: #ffc0a9; }
+  .person.green b { background: rgba(114,223,98,0.22); color: #c9ffbd; }
+  .person.purple b { background: rgba(177,107,232,0.25); color: #ead6ff; }
+  .confidential {
+    border: 1px solid rgba(151,193,226,0.16);
+    border-radius: 4px;
+    padding: 4px 9px;
+    text-transform: uppercase;
+    letter-spacing: 1.7px;
+    font-weight: 800;
+    color: rgba(238,247,255,0.3);
+  }
+
+  .progress {
+    position: absolute;
+    left: 459px;
+    bottom: 16px;
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    color: rgba(238,247,255,0.33);
+    font-size: 8px;
+  }
+
+  .seg { height: 4px; border-radius: 99px; }
+  .s1 { width: 23px; background: #41cef2; }
+  .s2 { width: 102px; background: #72df62; }
+  .s3 { width: 45px; background: #ff7040; }
+  .s4 { width: 23px; background: #20c8e8; }
+  .s5 { width: 68px; background: #b16be8; }
+  .s6 { width: 12px; background: #7b5ea7; }
+</style>
+</head>
+<body>
+  <main class="page">
+    <div class="top">
+      <div>
+        <div class="brand">
+          <img class="revio" src="revio-logo-white.png" alt="Rev.io">
+          <div class="divider"></div>
+          <div class="company-pills">
+            <div class="company">Spectrotel</div>
+            <div class="company aire">AireSpring</div>
+            <div class="company kpmg">KPMG</div>
+          </div>
+        </div>
+        <div class="eyebrow">Demo Agenda</div>
+        <h1>Spectrotel x Airespring Merge Demo: 2 Hours</h1>
+      </div>
+      <div class="date">
+        <strong>July 22, 2026</strong>
+        <span>Two-Hour Product Demo</span>
+      </div>
+    </div>
+
+    <section class="agenda" aria-label="Demo agenda">
+      <div class="row blue">
+        <div class="time"><div class="owner">Jamie</div><div class="mins">0 – 10 MIN</div><div class="phase">Kickoff</div></div>
+        <div class="content">
+          <h2>Agenda, Introductions &amp; New Company Planning</h2>
+          <div class="bullets">
+            <div class="bullet"><span class="dot"></span><span>Purpose, agenda, and team introductions</span></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="row green core">
+        <div class="time"><div class="owner">Leslie</div><div class="mins">10 – 55 MIN</div><div class="phase">Core Demo</div></div>
+        <div class="content">
+          <h2>Spectrotel Rev.io Walkthrough</h2>
+          <div class="bullets">
+            <div class="bullet"><span class="dot"></span><span>Customer/account hierarchy</span></div>
+            <div class="bullet"><span class="dot"></span><span>Products, services, packages, and recurring billing setup</span></div>
+            <div class="bullet"><span class="dot"></span><span>Billing cycles and invoice generation</span></div>
+            <div class="bullet"><span class="dot"></span><span>Change Orders / New Orders flow</span></div>
+            <div class="bullet"><span class="dot"></span><span>Adjustments, credits, taxes, payments, and collections touchpoints</span></div>
+            <div class="bullet medium-text"><span class="dot"></span><span>Spectrotel-specific workflows; discuss with head of Spectrotel</span></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="row orange">
+        <div class="time"><div class="owner">Cam / Jamie</div><div class="mins">55 – 75 MIN</div><div class="phase">Expansion</div></div>
+        <div class="content">
+          <h2>AireSpring-Relevant Billing Capabilities</h2>
+          <div class="bullets">
+            <div class="bullet"><span class="dot"></span><span>Higher-volume usage rating, long distance, and mobility</span></div>
+            <div class="bullet"><span class="dot"></span><span>CAD/EUR, currency handling, and internationalization changes</span></div>
+            <div class="bullet"><span class="dot"></span><span>Weekly billing and multiple bill cycle handling</span></div>
+            <div class="bullet"><span class="dot"></span><span>Traditional Analytics</span></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="row cyan">
+        <div class="time"><div class="owner">Matt</div><div class="mins">75 – 85 MIN</div><div class="phase">Scale</div></div>
+        <div class="content">
+          <h2>Bill-Run Performance, Capacity Planning &amp; APIs</h2>
+          <div class="bullets">
+            <div class="bullet"><span class="dot"></span><span>2x day-one load and projected 20% growth</span></div>
+            <div class="bullet"><span class="dot"></span><span>Usage volume, AireSpring network move, and tuck-in acquisition readiness</span></div>
+            <div class="bullet"><span class="dot"></span><span>API documentation and availability, DAX</span></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="row purple ui">
+        <div class="time"><div class="owner">Tony</div><div class="mins">85 – 115 MIN</div><div class="phase">Future State</div></div>
+        <div class="content">
+          <h2>New Rev.io UI &amp; Migration Path</h2>
+          <div class="bullets">
+            <div class="bullet"><span class="dot"></span><span>Same-database migration approach, not a net-new system migration</span></div>
+            <div class="bullet medium-text"><span class="dot"></span><span>No Airespring customer reimporting or double efforts</span></div>
+            <div class="bullet"><span class="dot"></span><span>Navigation, Revii, workflows, usability, architecture direction, and New Analytics</span></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="row purple">
+        <div class="time"><div class="owner">Jamie</div><div class="mins">115 – 120 MIN</div><div class="phase">Wrap-Up</div></div>
+        <div class="content">
+          <h2>Close &amp; Next Steps</h2>
+          <div class="bullets">
+            <div class="bullet"><span class="dot"></span><span>Address open items</span></div>
+            <div class="bullet"><span class="dot"></span><span>DR / backup positioned for a separate SLA discussion</span></div>
+            <div class="bullet"><span class="dot"></span><span>Confirm owners, follow-ups, and next meeting path</span></div>
+            <div class="bullet"><span class="dot"></span><span>10 minutes built in to spare</span></div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <footer class="footer">
+      <div class="team">
+        <span class="label">Team</span>
+        <span class="person"><b>Jamie</b> Sr. Account Exec</span>
+        <span class="person orange"><b>Cam</b> Sales Manager</span>
+        <span class="person green"><b>Leslie</b> VP Product Mgmt</span>
+        <span class="person"><b>Matt</b> VP Engineering</span>
+        <span class="person orange"><b>Daryl</b> Senior Product Manager</span>
+        <span class="person purple"><b>Tony</b> Senior Solutions Engineer</span>
+      </div>
+      <div class="confidential">Confidential</div>
+    </footer>
+
+    <div class="progress">
+      <span>0</span><span class="seg s1"></span><span class="seg s2"></span><span class="seg s3"></span><span class="seg s4"></span><span class="seg s5"></span><span class="seg s6"></span><span>120 min</span>
+    </div>
+  </main>
+</body>
+</html>
