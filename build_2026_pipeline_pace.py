@@ -47,7 +47,6 @@ SOURCES = [
     "Website",
     "Paid Media",
     "Email",
-    "SEO",
     "Rev.io Summit",
     "Referral",
     "Partner / Channel",
@@ -152,14 +151,19 @@ def canonical_source(value):
         return ""
     if "trade" in lower or "show" in lower:
         return "Tradeshow"
-    if "website" in lower or "web" in lower or "request demo" in lower or "contact us" in lower:
+    if (
+        "website" in lower
+        or "web" in lower
+        or "request demo" in lower
+        or "contact us" in lower
+        or "seo" in lower
+        or "organic" in lower
+    ):
         return "Website"
     if "paid" in lower or "ppc" in lower or "media" in lower or "facebook" in lower or "google ads" in lower:
         return "Paid Media"
     if "email" in lower:
         return "Email"
-    if "seo" in lower or "organic" in lower:
-        return "SEO"
     if "summit" in lower:
         return "Rev.io Summit"
     if "referral" in lower:
@@ -183,14 +187,12 @@ def source_bucket(marketing_source, opportunity_source, lead_source, lead_direct
     lead = (lead_direction or "").strip().lower()
     if "trade" in lower or "show" in lower:
         return "Tradeshow"
-    if "website" in lower or "web" in lower:
+    if "website" in lower or "web" in lower or "seo" in lower or "organic" in lower:
         return "Website"
     if "paid" in lower or "ppc" in lower or "media" in lower:
         return "Paid Media"
     if "email" in lower:
         return "Email"
-    if "seo" in lower or "organic" in lower:
-        return "SEO"
     if "summit" in lower:
         return "Rev.io Summit"
     if "partner" in lower or "channel" in lower:
