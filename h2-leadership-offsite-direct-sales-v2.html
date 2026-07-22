@@ -360,6 +360,30 @@ body { min-height:100%; overflow-x:hidden; overflow-y:auto; background:#0a1628; 
 .tam-insight p { color:rgba(255,255,255,.64); font-size:14px; line-height:1.38; }
 .tam-insight strong { color:#3ddc97; }
 .tam-insight.coverage strong { color:#f5a623; }
+.closed-lost-layout { display:grid; grid-template-columns:minmax(0,1fr) minmax(0,1fr); gap:20px; height:100%; }
+.closed-lost-summary { padding:22px 24px; }
+.closed-lost-summary h3 { font-family:Montserrat,sans-serif; font-size:27px; line-height:1.12; color:#fff; margin-bottom:10px; }
+.closed-lost-summary p { color:rgba(255,255,255,.66); font-size:14px; line-height:1.38; }
+.closed-lost-kpis { display:grid; grid-template-columns:repeat(3,minmax(0,1fr)); gap:10px; margin:16px 0; }
+.closed-lost-kpi { border-radius:10px; background:rgba(255,255,255,.045); border:1px solid rgba(255,255,255,.08); padding:13px 14px; }
+.closed-lost-kpi strong { display:block; font-family:Montserrat,sans-serif; font-size:31px; line-height:1; color:var(--c,#00d4f0); }
+.closed-lost-kpi span { display:block; margin-top:5px; font-size:10px; font-weight:900; letter-spacing:1.2px; text-transform:uppercase; color:rgba(255,255,255,.48); }
+.miss-bars { display:grid; gap:9px; margin-top:14px; }
+.miss-row { display:grid; grid-template-columns:160px 1fr 42px; gap:10px; align-items:center; }
+.miss-row label { font-size:12px; font-weight:900; color:#fff; line-height:1.15; }
+.miss-track { height:12px; border-radius:999px; background:rgba(255,255,255,.08); overflow:hidden; }
+.miss-fill { width:var(--w); height:100%; border-radius:999px; background:linear-gradient(90deg,var(--c,#00d4f0),#3ddc97); }
+.miss-row span { font-family:Montserrat,sans-serif; font-size:13px; font-weight:900; color:var(--c,#00d4f0); text-align:right; }
+.miss-grid { display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); gap:12px; }
+.miss-card { padding:16px 18px; border-left:3px solid var(--c,#00d4f0); min-height:142px; }
+.miss-card .tag { font-size:10px; font-weight:900; letter-spacing:1.4px; text-transform:uppercase; color:var(--c,#00d4f0); margin-bottom:8px; }
+.miss-card h3 { font-family:Montserrat,sans-serif; font-size:20px; line-height:1.12; color:#fff; margin-bottom:7px; }
+.miss-card p { color:rgba(255,255,255,.64); font-size:12px; line-height:1.34; }
+.miss-card strong { color:#3ddc97; }
+#slide-13 { padding-top:54px; padding-bottom:54px; }
+#slide-13 .slide-tag { margin-bottom:16px; }
+#slide-13 .slide-header h2 { font-size:clamp(38px,3.8vw,60px); max-width:1180px; }
+#slide-13 .slide-body { padding-top:24px; }
 .strategic-motion-layout { display:grid; grid-template-columns:minmax(0,.9fr) minmax(0,1.1fr); gap:22px; align-items:stretch; height:100%; }
 .strategic-hero { padding:28px 30px; display:flex; flex-direction:column; justify-content:space-between; border-left:4px solid #f5a623; }
 .strategic-hero h3 { font-family:Montserrat,sans-serif; font-size:34px; line-height:1.08; color:#fff; margin-bottom:12px; }
@@ -1790,6 +1814,38 @@ body {
     </div>
   </section>
 
+  <section class="slide" id="slide-13">
+    <div class="top-stripe"></div>
+    <div class="slide-header"><div><div class="slide-tag">Closed-Lost TAM Analysis</div><h2>Where we missed with target-size MSP prospects over the last year</h2></div><div><img src="https://7091219.fs1.hubspotusercontent-na1.net/hubfs/7091219/email-assets/logo-revio-white.png" alt="Rev.io"><div class="header-note">158 closed-lost opps · Jul 2025-Jul 2026</div></div></div>
+    <div class="slide-body">
+      <div class="closed-lost-layout">
+        <div class="closed-lost-summary card">
+          <h3>The miss pattern is split between evaluation discipline, timing capture, and product proof.</h3>
+          <p>These are all closed-lost opportunities inside the defined TAM. The loss data points to a reachable market, but the current motion loses too many prospects before we convert interest into a structured evaluation.</p>
+          <div class="closed-lost-kpis">
+            <div class="closed-lost-kpi" style="--c:#00d4f0"><strong>158</strong><span>closed-lost opps</span></div>
+            <div class="closed-lost-kpi" style="--c:#3ddc97"><strong>143</strong><span>unique accounts</span></div>
+            <div class="closed-lost-kpi" style="--c:#f5a623"><strong>$268K</strong><span>reported amount</span></div>
+          </div>
+          <div class="miss-bars">
+            <div class="miss-row"><label>Discovery no-show</label><div class="miss-track"><div class="miss-fill" style="--w:100%;--c:#00d4f0"></div></div><span>36</span></div>
+            <div class="miss-row"><label>Not the right time</label><div class="miss-track"><div class="miss-fill" style="--w:86%;--c:#f5a623"></div></div><span>31</span></div>
+            <div class="miss-row"><label>Missing capabilities</label><div class="miss-track"><div class="miss-fill" style="--w:81%;--c:#3ddc97"></div></div><span>29</span></div>
+            <div class="miss-row"><label>Existing contract</label><div class="miss-track"><div class="miss-fill" style="--w:56%;--c:#f5a623"></div></div><span>20</span></div>
+            <div class="miss-row"><label>No business issue</label><div class="miss-track"><div class="miss-fill" style="--w:36%;--c:#00d4f0"></div></div><span>13</span></div>
+            <div class="miss-row"><label>No decision / dark</label><div class="miss-track"><div class="miss-fill" style="--w:25%;--c:#00d4f0"></div></div><span>9</span></div>
+          </div>
+        </div>
+        <div class="miss-grid">
+          <div class="miss-card card" style="--c:#00d4f0"><div class="tag">Evaluation Discipline</div><h3>45 opps went no-show or dark</h3><p><strong>36 discovery no-shows</strong> plus <strong>9 non-responsive/no-decision</strong> losses. Source mix shows this is mainly Sales and Tradeshow follow-up, not just inbound noise.</p></div>
+          <div class="miss-card card" style="--c:#f5a623"><div class="tag">Timing Capture</div><h3>51 opps were timing or contract misses</h3><p><strong>31 not-right-time</strong> and <strong>20 in-contract</strong> losses. We need renewal-date capture, timed nurture, and AI-triggered reopen plays.</p></div>
+          <div class="miss-card card" style="--c:#3ddc97"><div class="tag">Product Proof</div><h3>29 opps cited missing capabilities</h3><p>Common themes: QuickBooks, project management, dispatch, inventory, CRM/pipeline, sandbox/GA confidence, and roadmap credibility.</p></div>
+          <div class="miss-card card" style="--c:#00d4f0"><div class="tag">Platform Displacement</div><h3>79 opps had one of the core PSA platforms</h3><p>Known ConnectWise, Autotask/Datto/Kaseya, Halo, Syncro, and SuperOps losses represented <strong>$120K</strong> in reported amount.</p></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
 </div>
 
 <div class="nav-bar">
@@ -1797,16 +1853,16 @@ body {
   <div class="nav-controls">
     <button class="nav-btn" id="btn-prev" onclick="goSlide(-1)" disabled>Prev</button>
     <div class="nav-dots" id="nav-dots"></div>
-    <span class="nav-counter" id="nav-counter">1 / 12</span>
+    <span class="nav-counter" id="nav-counter">1 / 13</span>
     <button class="nav-btn" id="btn-next" onclick="goSlide(1)">Next</button>
   </div>
   <img src="https://7091219.fs1.hubspotusercontent-na1.net/hubfs/7091219/email-assets/logo-revio-white.png" alt="Rev.io" class="nav-logo">
 </div>
 
 <script>
-const TOTAL = 12;
+const TOTAL = 13;
 let cur = 1;
-const labels = ['Cover','State','Levers','Roles','AE Role','ICP TAM','Strategic','Radar','Mail','Referrals','Strategy','Attribution'];
+const labels = ['Cover','State','Levers','Roles','AE Role','ICP TAM','Strategic','Radar','Mail','Referrals','Strategy','Attribution','Lost TAM'];
 function buildDots() {
   const wrap = document.getElementById('nav-dots');
   labels.forEach((label, idx) => {
