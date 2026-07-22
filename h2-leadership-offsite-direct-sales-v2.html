@@ -1033,6 +1033,59 @@ body { min-height:100%; overflow-x:hidden; overflow-y:auto; background:#0a1628; 
 #slide-13 .slide-body {
   padding-top:18px;
 }
+.ssc-layout {
+  display:grid;
+  grid-template-columns:repeat(3,minmax(0,1fr));
+  gap:18px;
+  height:100%;
+  align-items:stretch;
+}
+.ssc-column {
+  padding:24px 24px 26px;
+  border-left:4px solid var(--c,#00d4f0);
+  display:flex;
+  flex-direction:column;
+}
+.ssc-column h3 {
+  font-family:Montserrat,sans-serif;
+  font-size:34px;
+  line-height:1;
+  color:var(--c,#00d4f0);
+  margin-bottom:18px;
+}
+.ssc-list {
+  display:grid;
+  gap:14px;
+}
+.ssc-item {
+  border-radius:10px;
+  background:rgba(255,255,255,.045);
+  border:1px solid rgba(255,255,255,.08);
+  padding:15px 16px;
+  min-height:88px;
+  display:flex;
+  align-items:center;
+}
+.ssc-item p {
+  color:#fff;
+  font-size:17px;
+  line-height:1.24;
+  font-weight:800;
+}
+#slide-14 {
+  padding-top:44px;
+  padding-bottom:58px;
+}
+#slide-14 .slide-tag {
+  margin-bottom:12px;
+}
+#slide-14 .slide-header h2 {
+  font-size:clamp(42px,4.2vw,66px);
+  max-width:1120px;
+}
+#slide-14 .slide-body {
+  padding-top:24px;
+}
 .timing-table-wrap {
   padding:12px 22px;
   margin-bottom:12px;
@@ -1891,6 +1944,39 @@ body {
     </div>
   </section>
 
+  <section class="slide" id="slide-14">
+    <div class="top-stripe"></div>
+    <div class="slide-header"><div><div class="slide-tag">Operating Commitments</div><h2>Start / Stop / Continue</h2></div><div><img src="https://7091219.fs1.hubspotusercontent-na1.net/hubfs/7091219/email-assets/logo-revio-white.png" alt="Rev.io"><div class="header-note">Leadership decisions · H2 focus</div></div></div>
+    <div class="slide-body">
+      <div class="ssc-layout">
+        <div class="ssc-column card" style="--c:#3ddc97">
+          <h3>Start</h3>
+          <div class="ssc-list">
+            <div class="ssc-item"><p>Recruiting new marketing leadership with a proven track record generating website leads.</p></div>
+            <div class="ssc-item"><p>Redesigning all client-facing onboarding materials customized to information gathered in sale.</p></div>
+            <div class="ssc-item"><p>Approval for every AE to have a Claude account under Rev.io enterprise.</p></div>
+          </div>
+        </div>
+        <div class="ssc-column card" style="--c:#f5a623">
+          <h3>Stop</h3>
+          <div class="ssc-list">
+            <div class="ssc-item"><p>Client billing inaccuracies tied to manual billing for new products.</p></div>
+            <div class="ssc-item"><p>Building budget around product revenue where we have not proved client adoption.</p></div>
+            <div class="ssc-item"><p>System slowness and integration data import issues in onboarding.</p></div>
+          </div>
+        </div>
+        <div class="ssc-column card" style="--c:#00d4f0">
+          <h3>Continue</h3>
+          <div class="ssc-list">
+            <div class="ssc-item"><p>Investing in the integrations team.</p></div>
+            <div class="ssc-item"><p>Finding budget for opportunistic events to build brand.</p></div>
+            <div class="ssc-item"><p>SOC compliance project.</p></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
 </div>
 
 <div class="nav-bar">
@@ -1898,16 +1984,16 @@ body {
   <div class="nav-controls">
     <button class="nav-btn" id="btn-prev" onclick="goSlide(-1)" disabled>Prev</button>
     <div class="nav-dots" id="nav-dots"></div>
-    <span class="nav-counter" id="nav-counter">1 / 13</span>
+    <span class="nav-counter" id="nav-counter">1 / 14</span>
     <button class="nav-btn" id="btn-next" onclick="goSlide(1)">Next</button>
   </div>
   <img src="https://7091219.fs1.hubspotusercontent-na1.net/hubfs/7091219/email-assets/logo-revio-white.png" alt="Rev.io" class="nav-logo">
 </div>
 
 <script>
-const TOTAL = 13;
+const TOTAL = 14;
 let cur = 1;
-const labels = ['Cover','State','Levers','Roles','AE Role','ICP TAM','Lost TAM','Strategic','Radar','Mail','Referrals','Strategy','Attribution'];
+const labels = ['Cover','State','Levers','Roles','AE Role','ICP TAM','Lost TAM','Strategic','Radar','Mail','Referrals','Strategy','Attribution','Start Stop Continue'];
 function buildDots() {
   const wrap = document.getElementById('nav-dots');
   labels.forEach((label, idx) => {
