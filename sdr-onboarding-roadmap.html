@@ -520,10 +520,10 @@
     <div class="hero-content">
       <div class="hero-badge">Sales Development Representative New Hire Onboarding</div>
       <h1>12-week SDR onboarding roadmap</h1>
-      <p class="hero-sub">A working tracker for Ptah, Miguel, and Blake to move through Rev.io employee onboarding, sales systems setup, SDR training, weekly activity milestones, and PSA prospecting readiness.</p>
+      <p class="hero-sub">A working tracker for Max to move through Rev.io employee onboarding, sales systems setup, SDR training, weekly activity milestones, and PSA prospecting readiness.</p>
       <div class="hero-stats">
         <div class="hero-stat"><div class="num">12</div><div class="label">Weeks of structured ramp</div></div>
-        <div class="hero-stat"><div class="num">3</div><div class="label">New hires tracked separately</div></div>
+        <div class="hero-stat"><div class="num">1</div><div class="label">New hire tracker for Max</div></div>
         <div class="hero-stat"><div class="num">70</div><div class="label">Daily calls by full ramp</div></div>
         <div class="hero-stat"><div class="num">500</div><div class="label">Weekly activity points target</div></div>
       </div>
@@ -623,10 +623,10 @@
     </div>
   </section>
 </main>
-<footer class="footer">Rev.io SDR Onboarding Roadmap - built from the Ptah / Miguel / Blake onboarding PowerPoint - progress is stored locally in this browser.</footer>
+<footer class="footer">Rev.io SDR Onboarding Roadmap - built for Max from the SDR onboarding PowerPoint - progress is stored locally in this browser.</footer>
 
 <script>
-const hires = ["Ptah", "Miguel", "Blake"];
+const hires = ["Max"];
 const setup = {
   software: ["Microsoft Outlook", "Microsoft Office", "Microsoft Teams", "Google Chrome", "Salesforce", "LinkedIn", "Outreach", "SalesIntel", "Litmos", "Bloom Growth"],
   hardware: ["Key fob", "Computer", "Headset", "Computer charger", "Monitor", "HDMI cable", "Dongle"]
@@ -712,6 +712,10 @@ const weeks = [
 ];
 
 let currentHire = localStorage.getItem("sdrRoadmapCurrentHire") || hires[0];
+if (!hires.includes(currentHire)) {
+  currentHire = hires[0];
+  localStorage.setItem("sdrRoadmapCurrentHire", currentHire);
+}
 let currentView = "all";
 
 function slug(value) {
