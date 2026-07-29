@@ -95,6 +95,7 @@ def fetch_closed_won_psa_web_clients(base, headers):
         SELECT Id, Name, Amount, CloseDate, CreatedDate, Product_Type__c,
                Type, Lead_Direction__c, Opportunity_Source__c, Owner.Name,
                AccountId, Account.Name, Account.Tigerpaw__c,
+               Account.BillingState, Account.ShippingState,
                Account.TigerPaw_Type__c, Account.TigerPaw_Account_Status__c,
                Account.Churn_Reason__c, Account.Churn_Reason_Detail__c
         FROM Opportunity
@@ -119,6 +120,7 @@ def fetch_closed_won_psa_web_clients(base, headers):
             {
                 "account_id": account_id,
                 "account": clean((account or {}).get("Name") or opp.get("Name")),
+                "state": clean((account or {}).get("BillingState")) or clean((account or {}).get("ShippingState")),
                 "account_url": sf_url(account_id),
                 "account_psa_status": clean((account or {}).get("TigerPaw_Account_Status__c")),
                 "account_psa_type": clean((account or {}).get("TigerPaw_Type__c")),
@@ -248,6 +250,7 @@ def build_rows(clients, onboarding_rows):
         rows.append(
             {
                 "client": client["account"],
+                "state": client["state"],
                 "closed_won_mrr": client["closed_won_mrr"],
                 "first_close_date": client["first_close_date"],
                 "last_close_date": client["last_close_date"],
@@ -279,6 +282,7 @@ def build_rows(clients, onboarding_rows):
 def write_csv(rows):
     fieldnames = [
         "client",
+        "state",
         "closed_won_mrr",
         "first_close_date",
         "last_close_date",
@@ -332,6 +336,7 @@ def build_html(rows, total_clients, matched_count, status_counts):
         f"""
         <tr>
           <td><a href="{escape(row['sf_account_url'])}">{escape(row['client'])}</a><span>{escape(row['opportunity_names'])}</span></td>
+          <td>{escape(row['state'] or '—')}</td>
           <td>{money(row['closed_won_mrr'])}</td>
           <td>{escape(row['first_close_date'])}</td>
           <td>{escape(row['owners'])}</td>
@@ -341,7 +346,7 @@ def build_html(rows, total_clients, matched_count, status_counts):
           <td><a href="{escape(row['notion_url'])}">Notion</a></td>
         </tr>"""
         for row in rows
-    ) or '<tr><td colspan="8" class="empty">No failed-onboarding clients matched this filter.</td></tr>'
+    ) or '<tr><td colspan="9" class="empty">No failed-onboarding clients matched this filter.</td></tr>'
 
     html = f"""<!doctype html>
 <html lang="en">
@@ -415,7 +420,7 @@ a {{ color:#8ef7c0; }}
     <div class="panel">
       <h2>Client Detail</h2>
       <table>
-        <thead><tr><th>Client / Opportunity</th><th>Closed-Won MRR</th><th>Close Date</th><th>Owner</th><th>Onboarding Result</th><th>SA</th><th>SF Churn Reason</th><th>Record</th></tr></thead>
+        <thead><tr><th>Client / Opportunity</th><th>State</th><th>Closed-Won MRR</th><th>Close Date</th><th>Owner</th><th>Onboarding Result</th><th>SA</th><th>SF Churn Reason</th><th>Record</th></tr></thead>
         <tbody>{detail_rows}</tbody>
       </table>
     </div>
