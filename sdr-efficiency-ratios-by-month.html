@@ -31,7 +31,7 @@ body {
   width: 1600px;
   height: 900px;
   margin: 0 auto;
-  padding: 42px 52px;
+  padding: 30px 52px;
   background: var(--bg);
 }
 .header {
@@ -39,7 +39,7 @@ body {
   justify-content: space-between;
   align-items: flex-start;
   gap: 28px;
-  margin-bottom: 24px;
+  margin-bottom: 18px;
 }
 .eyebrow {
   color: var(--teal);
@@ -52,7 +52,7 @@ body {
 h1 {
   margin: 0;
   color: var(--navy);
-  font-size: 46px;
+  font-size: 42px;
   line-height: 1.05;
   letter-spacing: 0;
 }
@@ -74,13 +74,13 @@ h1 {
   display: grid;
   grid-template-columns: 1fr 1fr;
   gap: 16px;
-  margin-bottom: 18px;
+  margin-bottom: 14px;
 }
 .quarter {
   background: var(--panel);
   border: 1px solid var(--line);
   border-radius: 8px;
-  padding: 22px 24px;
+  padding: 18px 24px;
 }
 .quarter.q2 {
   border-top: 5px solid var(--teal);
@@ -92,7 +92,7 @@ h1 {
   display: flex;
   justify-content: space-between;
   align-items: baseline;
-  margin-bottom: 18px;
+  margin-bottom: 13px;
 }
 .quarter-title {
   color: var(--navy);
@@ -113,7 +113,7 @@ h1 {
   background: #f8fafc;
   border: 1px solid #e4ebf2;
   border-radius: 8px;
-  padding: 14px 12px;
+  padding: 12px 12px;
 }
 .metric-label {
   color: var(--muted);
@@ -125,7 +125,7 @@ h1 {
 }
 .metric-value {
   color: var(--navy);
-  font-size: 28px;
+  font-size: 26px;
   line-height: 1;
   font-weight: 950;
   margin-top: 8px;
@@ -139,20 +139,20 @@ h1 {
 .main {
   display: grid;
   grid-template-columns: 1.25fr .75fr;
-  gap: 18px;
+  gap: 14px 18px;
 }
 .panel {
   background: var(--panel);
   border: 1px solid var(--line);
   border-radius: 8px;
-  padding: 20px 22px;
+  padding: 17px 22px;
 }
 .panel-head {
   display: flex;
   justify-content: space-between;
   align-items: flex-start;
   gap: 18px;
-  margin-bottom: 14px;
+  margin-bottom: 10px;
 }
 .panel-title {
   color: var(--navy);
@@ -186,7 +186,7 @@ h1 {
   grid-template-columns: 160px 1fr 70px;
   align-items: center;
   gap: 14px;
-  padding: 12px 0;
+  padding: 10px 0;
   border-bottom: 1px solid #eef2f6;
 }
 .bar-row:last-child { border-bottom: 0; }
@@ -241,7 +241,7 @@ h1 {
 .ratio-card {
   border: 1px solid #e1e8f0;
   border-radius: 8px;
-  padding: 15px;
+  padding: 13px 15px;
   background: #fbfcfe;
 }
 .ratio-top {
@@ -268,12 +268,12 @@ h1 {
   display: grid;
   grid-template-columns: 1fr 1fr;
   gap: 8px;
-  margin-top: 10px;
+  margin-top: 8px;
 }
 .mini {
   background: #f4f7fa;
   border-radius: 7px;
-  padding: 9px 10px;
+  padding: 7px 10px;
 }
 .mini span {
   display: block;
@@ -296,20 +296,28 @@ h1 {
   grid-column: 1 / -1;
   padding: 13px 20px 14px;
 }
+.bottom-grid {
+  display: grid;
+  grid-template-columns: .9fr 1.1fr;
+  gap: 18px;
+  align-items: stretch;
+}
+.bottom-block {
+  min-width: 0;
+}
+.bottom-block .panel-head {
+  margin-bottom: 9px;
+}
 .influence-grid {
   display: grid;
   grid-template-columns: repeat(4, 1fr);
-  gap: 12px;
+  gap: 8px;
 }
 .influence-card {
   background: #f8fafc;
   border: 1px solid #e4ebf2;
   border-radius: 8px;
-  padding: 10px 14px;
-  display: grid;
-  grid-template-columns: 1fr auto auto;
-  align-items: center;
-  gap: 14px;
+  padding: 8px 10px;
 }
 .influence-top {
   display: flex;
@@ -326,16 +334,16 @@ h1 {
 }
 .influence-pct {
   color: var(--navy);
-  font-size: 28px;
+  font-size: 22px;
   font-weight: 950;
   line-height: 1;
-  margin-top: 0;
+  margin-top: 5px;
 }
 .influence-count {
   color: var(--muted);
-  font-size: 12px;
+  font-size: 11px;
   font-weight: 750;
-  margin-top: 0;
+  margin-top: 3px;
   white-space: nowrap;
 }
 .influence-bar {
@@ -350,6 +358,65 @@ h1 {
   display: block;
   height: 100%;
   border-radius: 999px;
+}
+.vertical-stack {
+  display: grid;
+  gap: 10px;
+}
+.vertical-row {
+  display: grid;
+  grid-template-columns: 44px 1fr 56px;
+  gap: 10px;
+  align-items: center;
+}
+.vertical-quarter {
+  color: var(--navy);
+  font-size: 17px;
+  font-weight: 950;
+}
+.vertical-total {
+  color: var(--muted);
+  font-size: 12px;
+  font-weight: 850;
+  text-align: right;
+}
+.stacked-bar {
+  display: flex;
+  height: 34px;
+  overflow: hidden;
+  border-radius: 8px;
+  background: #edf2f7;
+  border: 1px solid #e4ebf2;
+}
+.segment {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 20px;
+  color: #ffffff;
+  font-size: 13px;
+  font-weight: 950;
+  white-space: nowrap;
+}
+.segment.msp { background: var(--green); }
+.segment.integrator { background: var(--orange); }
+.segment.blank {
+  background: #a9b4c1;
+  color: var(--navy);
+  font-size: 11px;
+}
+.vertical-legend {
+  display: flex;
+  gap: 14px;
+  margin-left: 54px;
+  color: var(--muted);
+  font-size: 12px;
+  font-weight: 800;
+}
+.vertical-legend span {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
 }
 .takeaway {
   background: var(--panel);
@@ -484,33 +551,65 @@ h1 {
     </aside>
 
     <div class="panel influence-panel">
-      <div class="panel-head">
-        <div class="panel-title">SDR Influence Populated</div>
-      </div>
-      <div class="influence-grid">
-        <div class="influence-card">
-          <div class="influence-top"><div class="influence-label">Billing · Q1</div></div>
-          <div class="influence-pct">28.5%</div>
-          <div class="influence-count">37 / 130</div>
-          <div class="influence-bar"><span style="width:28.5%;background:var(--green)"></span></div>
+      <div class="bottom-grid">
+        <div class="bottom-block">
+          <div class="panel-head">
+            <div class="panel-title">SDR Influence Populated</div>
+          </div>
+          <div class="influence-grid">
+            <div class="influence-card">
+              <div class="influence-top"><div class="influence-label">Billing · Q1</div></div>
+              <div class="influence-pct">28.5%</div>
+              <div class="influence-count">37 / 130</div>
+              <div class="influence-bar"><span style="width:28.5%;background:var(--green)"></span></div>
+            </div>
+            <div class="influence-card">
+              <div class="influence-top"><div class="influence-label">Billing · Q2</div></div>
+              <div class="influence-pct">25.0%</div>
+              <div class="influence-count">21 / 84</div>
+              <div class="influence-bar"><span style="width:25%;background:var(--green)"></span></div>
+            </div>
+            <div class="influence-card">
+              <div class="influence-top"><div class="influence-label">PSA · Q1</div></div>
+              <div class="influence-pct">41.6%</div>
+              <div class="influence-count">209 / 502</div>
+              <div class="influence-bar"><span style="width:41.6%;background:var(--teal)"></span></div>
+            </div>
+            <div class="influence-card">
+              <div class="influence-top"><div class="influence-label">PSA · Q2</div></div>
+              <div class="influence-pct">54.9%</div>
+              <div class="influence-count">231 / 421</div>
+              <div class="influence-bar"><span style="width:54.9%;background:var(--teal)"></span></div>
+            </div>
+          </div>
         </div>
-        <div class="influence-card">
-          <div class="influence-top"><div class="influence-label">Billing · Q2</div></div>
-          <div class="influence-pct">25.0%</div>
-          <div class="influence-count">21 / 84</div>
-          <div class="influence-bar"><span style="width:25%;background:var(--green)"></span></div>
-        </div>
-        <div class="influence-card">
-          <div class="influence-top"><div class="influence-label">PSA · Q1</div></div>
-          <div class="influence-pct">41.6%</div>
-          <div class="influence-count">209 / 502</div>
-          <div class="influence-bar"><span style="width:41.6%;background:var(--teal)"></span></div>
-        </div>
-        <div class="influence-card">
-          <div class="influence-top"><div class="influence-label">PSA · Q2</div></div>
-          <div class="influence-pct">54.9%</div>
-          <div class="influence-count">231 / 421</div>
-          <div class="influence-bar"><span style="width:54.9%;background:var(--teal)"></span></div>
+        <div class="bottom-block">
+          <div class="panel-head">
+            <div class="panel-title">SDR-Sourced Vertical Split</div>
+          </div>
+          <div class="vertical-stack">
+            <div class="vertical-row">
+              <div class="vertical-quarter">Q1</div>
+              <div class="stacked-bar">
+                <div class="segment integrator" style="width:60.9%">Integrator 60.9%</div>
+                <div class="segment msp" style="width:39.1%">MSP 39.1%</div>
+              </div>
+              <div class="vertical-total">248</div>
+            </div>
+            <div class="vertical-row">
+              <div class="vertical-quarter">Q2</div>
+              <div class="stacked-bar">
+                <div class="segment integrator" style="width:69.8%">Integrator 69.8%</div>
+                <div class="segment msp" style="width:29.8%">MSP 29.8%</div>
+              </div>
+              <div class="vertical-total">252</div>
+            </div>
+            <div class="vertical-legend">
+              <span><i class="dot" style="background:var(--orange)"></i>Integrator: Q1 151 · Q2 176</span>
+              <span><i class="dot" style="background:var(--green)"></i>MSP: Q1 97 · Q2 75</span>
+              <span><i class="dot" style="background:#a9b4c1"></i>Blank: Q2 1</span>
+            </div>
+          </div>
         </div>
       </div>
     </div>
