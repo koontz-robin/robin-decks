@@ -3,19 +3,21 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>SDR Efficiency Ratios by Month</title>
+<title>SDR Production | Q1 vs Q2 2026</title>
 <style>
 :root {
   --navy: #14213d;
   --ink: #101827;
-  --muted: #607089;
-  --line: #d9e1ea;
+  --muted: #5f6f86;
+  --line: #d8e1eb;
   --panel: #ffffff;
   --bg: #f4f7fa;
   --teal: #0b9fb3;
   --green: #48a64c;
   --orange: #e47b25;
   --red: #c73d4a;
+  --q1: #7c8da5;
+  --q2: #0b9fb3;
 }
 * { box-sizing: border-box; }
 body {
@@ -29,74 +31,110 @@ body {
   width: 1600px;
   height: 900px;
   margin: 0 auto;
-  padding: 34px 52px;
+  padding: 42px 52px;
   background: var(--bg);
 }
 .header {
   display: flex;
   justify-content: space-between;
   align-items: flex-start;
-  margin-bottom: 14px;
+  gap: 28px;
+  margin-bottom: 24px;
 }
 .eyebrow {
+  color: var(--teal);
   font-size: 13px;
-  font-weight: 800;
+  font-weight: 850;
   letter-spacing: 2px;
   text-transform: uppercase;
-  color: var(--teal);
   margin-bottom: 8px;
 }
 h1 {
   margin: 0;
   color: var(--navy);
-  font-size: 40px;
+  font-size: 46px;
   line-height: 1.05;
   letter-spacing: 0;
 }
 .subtitle {
   margin-top: 10px;
   color: var(--muted);
-  font-size: 16px;
+  font-size: 17px;
   line-height: 1.45;
-  max-width: 820px;
+  max-width: 880px;
 }
 .stamp {
-  text-align: right;
   color: var(--muted);
   font-size: 13px;
   line-height: 1.5;
-  padding-top: 6px;
+  text-align: right;
+  padding-top: 8px;
 }
-.summary {
+.hero-grid {
   display: grid;
-  grid-template-columns: repeat(4, 1fr);
-  gap: 14px;
-  margin-bottom: 16px;
+  grid-template-columns: 1fr 1fr;
+  gap: 16px;
+  margin-bottom: 18px;
 }
-.metric {
+.quarter {
   background: var(--panel);
   border: 1px solid var(--line);
   border-radius: 8px;
-  padding: 14px 20px;
+  padding: 22px 24px;
 }
-.metric .label {
-  font-size: 12px;
-  font-weight: 850;
-  letter-spacing: 1.2px;
-  text-transform: uppercase;
-  color: var(--muted);
+.quarter.q2 {
+  border-top: 5px solid var(--teal);
 }
-.metric .value {
-  margin-top: 8px;
+.quarter.q1 {
+  border-top: 5px solid var(--q1);
+}
+.quarter-head {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  margin-bottom: 18px;
+}
+.quarter-title {
   color: var(--navy);
-  font-size: 30px;
-  font-weight: 900;
-  line-height: 1;
+  font-size: 28px;
+  font-weight: 950;
 }
-.metric .note {
-  margin-top: 6px;
+.quarter-sub {
   color: var(--muted);
   font-size: 13px;
+  font-weight: 750;
+}
+.metric-grid {
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
+  gap: 12px;
+}
+.metric {
+  background: #f8fafc;
+  border: 1px solid #e4ebf2;
+  border-radius: 8px;
+  padding: 14px 12px;
+}
+.metric-label {
+  color: var(--muted);
+  font-size: 11px;
+  font-weight: 850;
+  letter-spacing: .8px;
+  text-transform: uppercase;
+  min-height: 27px;
+}
+.metric-value {
+  color: var(--navy);
+  font-size: 28px;
+  line-height: 1;
+  font-weight: 950;
+  margin-top: 8px;
+  white-space: nowrap;
+}
+.metric-note {
+  color: var(--muted);
+  font-size: 12px;
+  margin-top: 6px;
 }
 .main {
   display: grid;
@@ -107,19 +145,19 @@ h1 {
   background: var(--panel);
   border: 1px solid var(--line);
   border-radius: 8px;
-  padding: 18px 22px;
+  padding: 20px 22px;
 }
 .panel-head {
   display: flex;
   justify-content: space-between;
   align-items: flex-start;
   gap: 18px;
-  margin-bottom: 6px;
+  margin-bottom: 14px;
 }
 .panel-title {
-  font-size: 20px;
   color: var(--navy);
-  font-weight: 900;
+  font-size: 21px;
+  font-weight: 950;
 }
 .panel-note {
   color: var(--muted);
@@ -129,7 +167,6 @@ h1 {
 .legend {
   display: flex;
   gap: 14px;
-  flex-wrap: wrap;
   color: var(--muted);
   font-size: 13px;
 }
@@ -144,47 +181,51 @@ h1 {
   border-radius: 999px;
   display: inline-block;
 }
-.chart {
-  width: 100%;
-  height: 260px;
-  display: block;
-}
-.axis {
-  stroke: #c9d3df;
-  stroke-width: 1;
-}
-.grid {
-  stroke: #edf1f5;
-  stroke-width: 1;
-}
-.series {
-  fill: none;
-  stroke-width: 5;
-  stroke-linecap: round;
-  stroke-linejoin: round;
-}
-.point {
-  stroke: #fff;
-  stroke-width: 3;
-}
-.month-label, .tick-label {
-  fill: var(--muted);
-  font-size: 13px;
-  font-weight: 650;
-}
-.value-label {
-  font-size: 13px;
-  font-weight: 850;
-  fill: var(--navy);
-}
-.cards {
+.bar-row {
   display: grid;
-  gap: 8px;
+  grid-template-columns: 160px 1fr 70px;
+  align-items: center;
+  gap: 14px;
+  padding: 12px 0;
+  border-bottom: 1px solid #eef2f6;
+}
+.bar-row:last-child { border-bottom: 0; }
+.bar-name {
+  color: var(--navy);
+  font-size: 14px;
+  font-weight: 900;
+}
+.bars {
+  display: grid;
+  gap: 7px;
+}
+.bar-track {
+  height: 16px;
+  background: #ecf1f6;
+  border-radius: 999px;
+  overflow: hidden;
+}
+.bar-fill {
+  display: block;
+  height: 100%;
+  border-radius: 999px;
+}
+.q1-fill { background: var(--q1); }
+.q2-fill { background: var(--q2); }
+.delta {
+  text-align: right;
+  color: var(--green);
+  font-size: 17px;
+  font-weight: 950;
+}
+.ratio-grid {
+  display: grid;
+  gap: 10px;
 }
 .ratio-card {
-  border: 1px solid var(--line);
+  border: 1px solid #e1e8f0;
   border-radius: 8px;
-  padding: 12px 14px;
+  padding: 15px;
   background: #fbfcfe;
 }
 .ratio-top {
@@ -196,142 +237,74 @@ h1 {
 .ratio-name {
   color: var(--navy);
   font-size: 15px;
-  font-weight: 900;
-}
-.ratio-now {
-  font-size: 22px;
-  line-height: 1;
   font-weight: 950;
+}
+.ratio-value {
+  color: var(--navy);
+  font-size: 23px;
+  font-weight: 950;
+  white-space: nowrap;
 }
 .ratio-sub {
   color: var(--muted);
-  font-size: 11px;
-  margin-top: 3px;
-}
-.bar {
-  margin-top: 8px;
-  height: 9px;
-  border-radius: 999px;
-  overflow: hidden;
-  background: #e8edf3;
-}
-.bar span {
-  display: block;
-  height: 100%;
-  border-radius: 999px;
-}
-.table-panel {
-  display: none;
-}
-.product-mix {
-  grid-column: 1 / -1;
-  padding: 15px 20px 16px;
-}
-.mix-head {
-  display: flex;
-  justify-content: space-between;
-  align-items: flex-start;
-  gap: 18px;
-  margin-bottom: 10px;
-}
-.mix-title {
-  color: var(--navy);
-  font-size: 18px;
-  font-weight: 900;
-}
-.mix-note {
-  color: var(--muted);
   font-size: 12px;
-  margin-top: 3px;
+  margin-top: 5px;
 }
-.mix-legend {
-  display: flex;
-  gap: 14px;
-  color: var(--muted);
-  font-size: 12px;
-}
-.mix-months {
-  display: grid;
-  grid-template-columns: repeat(7, 1fr);
-  gap: 12px;
-}
-.mix-card {
-  border: 1px solid #e3e9f0;
-  border-radius: 8px;
-  background: #fbfcfe;
-  padding: 9px 11px 10px;
-}
-.mix-month {
-  display: flex;
-  justify-content: space-between;
-  align-items: baseline;
-  color: var(--navy);
-  font-size: 13px;
-  font-weight: 900;
-  margin-bottom: 6px;
-}
-.mix-total {
-  color: var(--muted);
-  font-size: 11px;
-  font-weight: 750;
-}
-.stack {
-  display: flex;
-  height: 14px;
-  overflow: hidden;
-  border-radius: 999px;
-  background: #e8edf3;
-}
-.stack span { display: block; height: 100%; }
-.psa { background: var(--teal); }
-.billing { background: var(--green); }
-.other { background: #c7d1dd; }
-.mix-values {
+.split {
   display: grid;
   grid-template-columns: 1fr 1fr;
-  gap: 6px;
-  margin-top: 7px;
-  font-size: 11px;
+  gap: 8px;
+  margin-top: 10px;
 }
-.mix-values div {
+.mini {
+  background: #f4f7fa;
+  border-radius: 7px;
+  padding: 9px 10px;
+}
+.mini span {
+  display: block;
   color: var(--muted);
-  line-height: 1.25;
+  font-size: 10px;
+  font-weight: 850;
+  letter-spacing: .7px;
+  text-transform: uppercase;
 }
-.mix-values b {
+.mini b {
   display: block;
   color: var(--navy);
-  font-size: 14px;
+  font-size: 18px;
+  margin-top: 3px;
 }
-table {
-  width: 100%;
-  border-collapse: collapse;
-  font-size: 14px;
+.readout {
+  display: none;
 }
-th {
-  background: var(--navy);
-  color: rgba(255,255,255,.78);
-  font-size: 12px;
-  letter-spacing: 1px;
-  text-transform: uppercase;
-  padding: 13px 14px;
-  text-align: right;
+.takeaway {
+  background: var(--panel);
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  padding: 18px 18px;
 }
-th:first-child { text-align: left; }
-td {
-  padding: 12px 14px;
-  border-bottom: 1px solid #edf1f5;
-  text-align: right;
-  font-variant-numeric: tabular-nums;
-}
-td:first-child {
-  text-align: left;
-  color: var(--navy);
+.takeaway-label {
+  color: var(--muted);
+  font-size: 11px;
   font-weight: 850;
+  letter-spacing: .9px;
+  text-transform: uppercase;
 }
-tr:nth-child(even) td { background: #f8fafc; }
-.ratio-row td { font-weight: 850; }
+.takeaway-value {
+  color: var(--navy);
+  font-size: 28px;
+  font-weight: 950;
+  margin-top: 8px;
+}
+.takeaway-copy {
+  color: var(--muted);
+  font-size: 12px;
+  line-height: 1.35;
+  margin-top: 6px;
+}
 .source {
-  margin-top: 14px;
+  margin-top: 13px;
   color: #748299;
   font-size: 12px;
 }
@@ -341,165 +314,133 @@ tr:nth-child(even) td { background: #f8fafc; }
 <main class="canvas">
   <header class="header">
     <div>
-      <div class="eyebrow">SDR Efficiency · Monthly Funnel Ratios</div>
-      <h1>Calls → Contacts → Discovery → Completion</h1>
-      <div class="subtitle">Lower ratios are better: fewer calls per contact, fewer contacts per discovery set, and fewer discovery sets per completed discovery.</div>
+      <div class="eyebrow">SDR Production · Q1 vs Q2 2026</div>
+      <h1>SDRs increased output and converted more discoveries</h1>
+      <div class="subtitle">Quarter-over-quarter comparison using SDR-only production numbers provided by Ryan: calls, contacts, discovery set, discovery complete, and MRR sourced.</div>
     </div>
-    <div class="stamp">Rev.io Sales KPI Tracker<br>Jan-Jul 2026</div>
+    <div class="stamp">Rev.io SDR Production<br>Q1 vs Q2 2026</div>
   </header>
 
-  <section class="summary">
-    <div class="metric"><div class="label">Calls</div><div class="value">63,804</div><div class="note">Jan-Jul activity</div></div>
-    <div class="metric"><div class="label">Contacts</div><div class="value">8,585</div><div class="note">7.43 calls/contact</div></div>
-    <div class="metric"><div class="label">Discovery Set</div><div class="value">733</div><div class="note">11.71 contacts/set</div></div>
-    <div class="metric"><div class="label">Discovery Complete</div><div class="value">611</div><div class="note">1.20 set/complete</div></div>
+  <section class="hero-grid">
+    <div class="quarter q1">
+      <div class="quarter-head"><div class="quarter-title">Q1</div><div class="quarter-sub">Baseline</div></div>
+      <div class="metric-grid">
+        <div class="metric"><div class="metric-label">Calls</div><div class="metric-value">18,320</div></div>
+        <div class="metric"><div class="metric-label">Contacts</div><div class="metric-value">2,640</div></div>
+        <div class="metric"><div class="metric-label">Discovery Set</div><div class="metric-value">235</div></div>
+        <div class="metric"><div class="metric-label">Discovery Complete</div><div class="metric-value">151</div></div>
+        <div class="metric"><div class="metric-label">MRR Sourced</div><div class="metric-value">$11.7K</div></div>
+      </div>
+    </div>
+    <div class="quarter q2">
+      <div class="quarter-head"><div class="quarter-title">Q2</div><div class="quarter-sub">Production lift</div></div>
+      <div class="metric-grid">
+        <div class="metric"><div class="metric-label">Calls</div><div class="metric-value">25,814</div><div class="metric-note">+40.9%</div></div>
+        <div class="metric"><div class="metric-label">Contacts</div><div class="metric-value">3,616</div><div class="metric-note">+37.0%</div></div>
+        <div class="metric"><div class="metric-label">Discovery Set</div><div class="metric-value">251</div><div class="metric-note">+6.8%</div></div>
+        <div class="metric"><div class="metric-label">Discovery Complete</div><div class="metric-value">209</div><div class="metric-note">+38.4%</div></div>
+        <div class="metric"><div class="metric-label">MRR Sourced</div><div class="metric-value">$16.6K</div><div class="metric-note">+41.9%</div></div>
+      </div>
+    </div>
   </section>
 
   <section class="main">
     <div class="panel">
       <div class="panel-head">
         <div>
-          <div class="panel-title">Ratio Trend by Month</div>
-          <div class="panel-note">June reflects partial-month source data in the tracker; July is month-to-date.</div>
+          <div class="panel-title">Production Volume</div>
+          <div class="panel-note">Q2 increased activity at the top and completion at the bottom of the SDR funnel.</div>
         </div>
         <div class="legend">
-          <span><i class="dot" style="background:var(--teal)"></i>Call/contact</span>
-          <span><i class="dot" style="background:var(--orange)"></i>Contact/discovery set</span>
-          <span><i class="dot" style="background:var(--green)"></i>Set/complete</span>
+          <span><i class="dot" style="background:var(--q1)"></i>Q1</span>
+          <span><i class="dot" style="background:var(--q2)"></i>Q2</span>
         </div>
       </div>
-      <svg class="chart" viewBox="0 0 960 410" role="img" aria-label="SDR efficiency ratios by month">
-        <line class="grid" x1="72" y1="48" x2="900" y2="48"></line>
-        <line class="grid" x1="72" y1="126" x2="900" y2="126"></line>
-        <line class="grid" x1="72" y1="204" x2="900" y2="204"></line>
-        <line class="grid" x1="72" y1="282" x2="900" y2="282"></line>
-        <line class="axis" x1="72" y1="48" x2="72" y2="336"></line>
-        <line class="axis" x1="72" y1="336" x2="900" y2="336"></line>
-        <text class="tick-label" x="42" y="340">0</text>
-        <text class="tick-label" x="36" y="286">4</text>
-        <text class="tick-label" x="36" y="208">8</text>
-        <text class="tick-label" x="29" y="130">12</text>
-        <text class="tick-label" x="29" y="52">16</text>
 
-        <polyline class="series" stroke="var(--teal)" points="92,186 222,190 352,191 482,203 612,199 742,197 872,157"></polyline>
-        <polyline class="series" stroke="var(--orange)" points="92,169 222,148 352,83 482,104 612,34 742,37 872,19"></polyline>
-        <polyline class="series" stroke="var(--green)" points="92,303 222,308 352,311 482,313 612,320 742,313 872,330"></polyline>
-
-        <g fill="var(--teal)">
-          <circle class="point" cx="92" cy="186" r="7"></circle><circle class="point" cx="222" cy="190" r="7"></circle><circle class="point" cx="352" cy="191" r="7"></circle><circle class="point" cx="482" cy="203" r="7"></circle><circle class="point" cx="612" cy="199" r="7"></circle><circle class="point" cx="742" cy="197" r="7"></circle><circle class="point" cx="872" cy="157" r="7"></circle>
-        </g>
-        <g fill="var(--orange)">
-          <circle class="point" cx="92" cy="169" r="7"></circle><circle class="point" cx="222" cy="148" r="7"></circle><circle class="point" cx="352" cy="83" r="7"></circle><circle class="point" cx="482" cy="104" r="7"></circle><circle class="point" cx="612" cy="34" r="7"></circle><circle class="point" cx="742" cy="37" r="7"></circle><circle class="point" cx="872" cy="19" r="7"></circle>
-        </g>
-        <g fill="var(--green)">
-          <circle class="point" cx="92" cy="303" r="7"></circle><circle class="point" cx="222" cy="308" r="7"></circle><circle class="point" cx="352" cy="311" r="7"></circle><circle class="point" cx="482" cy="313" r="7"></circle><circle class="point" cx="612" cy="320" r="7"></circle><circle class="point" cx="742" cy="313" r="7"></circle><circle class="point" cx="872" cy="330" r="7"></circle>
-        </g>
-
-        <text class="month-label" x="82" y="370">Jan</text>
-        <text class="month-label" x="212" y="370">Feb</text>
-        <text class="month-label" x="342" y="370">Mar</text>
-        <text class="month-label" x="473" y="370">Apr</text>
-        <text class="month-label" x="602" y="370">May</text>
-        <text class="month-label" x="733" y="370">Jun</text>
-        <text class="month-label" x="865" y="370">Jul</text>
-
-        <text class="value-label" x="850" y="145">10.36</text>
-        <text class="value-label" x="842" y="50" fill="var(--orange)">16.23</text>
-        <text class="value-label" x="850" y="322" fill="var(--green)">0.40</text>
-      </svg>
+      <div class="bar-row">
+        <div class="bar-name">Calls</div>
+        <div class="bars">
+          <div class="bar-track"><span class="bar-fill q1-fill" style="width:71%"></span></div>
+          <div class="bar-track"><span class="bar-fill q2-fill" style="width:100%"></span></div>
+        </div>
+        <div class="delta">+41%</div>
+      </div>
+      <div class="bar-row">
+        <div class="bar-name">Contacts</div>
+        <div class="bars">
+          <div class="bar-track"><span class="bar-fill q1-fill" style="width:73%"></span></div>
+          <div class="bar-track"><span class="bar-fill q2-fill" style="width:100%"></span></div>
+        </div>
+        <div class="delta">+37%</div>
+      </div>
+      <div class="bar-row">
+        <div class="bar-name">Discovery Set</div>
+        <div class="bars">
+          <div class="bar-track"><span class="bar-fill q1-fill" style="width:94%"></span></div>
+          <div class="bar-track"><span class="bar-fill q2-fill" style="width:100%"></span></div>
+        </div>
+        <div class="delta">+7%</div>
+      </div>
+      <div class="bar-row">
+        <div class="bar-name">Discovery Complete</div>
+        <div class="bars">
+          <div class="bar-track"><span class="bar-fill q1-fill" style="width:72%"></span></div>
+          <div class="bar-track"><span class="bar-fill q2-fill" style="width:100%"></span></div>
+        </div>
+        <div class="delta">+38%</div>
+      </div>
+      <div class="bar-row">
+        <div class="bar-name">MRR Sourced</div>
+        <div class="bars">
+          <div class="bar-track"><span class="bar-fill q1-fill" style="width:71%"></span></div>
+          <div class="bar-track"><span class="bar-fill q2-fill" style="width:100%"></span></div>
+        </div>
+        <div class="delta">+42%</div>
+      </div>
     </div>
 
-    <aside class="cards">
+    <aside class="ratio-grid">
       <div class="ratio-card">
-        <div class="ratio-top"><div class="ratio-name">Call to Contact</div><div class="ratio-now" style="color:var(--teal)">7.43</div></div>
-        <div class="ratio-sub">Best month: Apr at 6.80 · July MTD rose to 10.36</div>
-        <div class="bar"><span style="width:72%;background:var(--teal)"></span></div>
+        <div class="ratio-top"><div class="ratio-name">Call to Contact</div><div class="ratio-value">6.94 → 7.14</div></div>
+        <div class="ratio-sub">Roughly flat efficiency while volume grew substantially.</div>
+        <div class="split"><div class="mini"><span>Q1</span><b>6.94</b></div><div class="mini"><span>Q2</span><b>7.14</b></div></div>
       </div>
       <div class="ratio-card">
-        <div class="ratio-top"><div class="ratio-name">Contact to Discovery Set</div><div class="ratio-now" style="color:var(--orange)">11.71</div></div>
-        <div class="ratio-sub">Efficiency weakened from Jan/Feb into May-Jul</div>
-        <div class="bar"><span style="width:56%;background:var(--orange)"></span></div>
+        <div class="ratio-top"><div class="ratio-name">Contact to Discovery Set</div><div class="ratio-value">11.23 → 14.41</div></div>
+        <div class="ratio-sub">More contacts were needed per meeting set in Q2.</div>
+        <div class="split"><div class="mini"><span>Q1</span><b>11.23</b></div><div class="mini"><span>Q2</span><b>14.41</b></div></div>
       </div>
       <div class="ratio-card">
-        <div class="ratio-top"><div class="ratio-name">Discovery Set to Complete</div><div class="ratio-now" style="color:var(--green)">1.20</div></div>
-        <div class="ratio-sub">Completion improved steadily; July MTD has more completes than sets</div>
-        <div class="bar"><span style="width:88%;background:var(--green)"></span></div>
-      </div>
-      <div class="ratio-card">
-        <div class="ratio-top"><div class="ratio-name">Readout</div><div class="ratio-now" style="color:var(--red)">Top Risk</div></div>
-        <div class="ratio-sub">The late-funnel completion ratio is healthy. The drag is earlier: contacts are not converting into discovery sets at the same rate.</div>
+        <div class="ratio-top"><div class="ratio-name">Discovery Set to Complete</div><div class="ratio-value">1.56 → 1.20</div></div>
+        <div class="ratio-sub">Strong improvement: Q2 converted set discoveries into completed discoveries much better.</div>
+        <div class="split"><div class="mini"><span>Q1</span><b>1.56</b></div><div class="mini"><span>Q2</span><b>1.20</b></div></div>
       </div>
     </aside>
 
-    <div class="panel product-mix">
-      <div class="mix-head">
-        <div>
-          <div class="mix-title">Monthly Product Mix</div>
-          <div class="mix-note">Percentage of Salesforce opportunities created by month. Other products are shown only as remainder.</div>
-        </div>
-        <div class="mix-legend">
-          <span><i class="dot" style="background:var(--teal)"></i>PSA</span>
-          <span><i class="dot" style="background:var(--green)"></i>Billing</span>
-          <span><i class="dot" style="background:#c7d1dd"></i>Other</span>
-        </div>
+    <div class="readout">
+      <div class="takeaway">
+        <div class="takeaway-label">Output Lift</div>
+        <div class="takeaway-value">+7,494</div>
+        <div class="takeaway-copy">More SDR calls in Q2 versus Q1.</div>
       </div>
-      <div class="mix-months">
-        <div class="mix-card">
-          <div class="mix-month"><span>Jan</span><span class="mix-total">288 opps</span></div>
-          <div class="stack"><span class="psa" style="width:72.9%"></span><span class="billing" style="width:13.9%"></span><span class="other" style="width:13.2%"></span></div>
-          <div class="mix-values"><div><b>72.9%</b>PSA</div><div><b>13.9%</b>Billing</div></div>
-        </div>
-        <div class="mix-card">
-          <div class="mix-month"><span>Feb</span><span class="mix-total">225 opps</span></div>
-          <div class="stack"><span class="psa" style="width:71.1%"></span><span class="billing" style="width:16.4%"></span><span class="other" style="width:12.4%"></span></div>
-          <div class="mix-values"><div><b>71.1%</b>PSA</div><div><b>16.4%</b>Billing</div></div>
-        </div>
-        <div class="mix-card">
-          <div class="mix-month"><span>Mar</span><span class="mix-total">219 opps</span></div>
-          <div class="stack"><span class="psa" style="width:60.3%"></span><span class="billing" style="width:24.2%"></span><span class="other" style="width:15.5%"></span></div>
-          <div class="mix-values"><div><b>60.3%</b>PSA</div><div><b>24.2%</b>Billing</div></div>
-        </div>
-        <div class="mix-card">
-          <div class="mix-month"><span>Apr</span><span class="mix-total">200 opps</span></div>
-          <div class="stack"><span class="psa" style="width:64.5%"></span><span class="billing" style="width:17.0%"></span><span class="other" style="width:18.5%"></span></div>
-          <div class="mix-values"><div><b>64.5%</b>PSA</div><div><b>17.0%</b>Billing</div></div>
-        </div>
-        <div class="mix-card">
-          <div class="mix-month"><span>May</span><span class="mix-total">208 opps</span></div>
-          <div class="stack"><span class="psa" style="width:60.1%"></span><span class="billing" style="width:11.5%"></span><span class="other" style="width:28.4%"></span></div>
-          <div class="mix-values"><div><b>60.1%</b>PSA</div><div><b>11.5%</b>Billing</div></div>
-        </div>
-        <div class="mix-card">
-          <div class="mix-month"><span>Jun</span><span class="mix-total">286 opps</span></div>
-          <div class="stack"><span class="psa" style="width:58.0%"></span><span class="billing" style="width:9.1%"></span><span class="other" style="width:32.9%"></span></div>
-          <div class="mix-values"><div><b>58.0%</b>PSA</div><div><b>9.1%</b>Billing</div></div>
-        </div>
-        <div class="mix-card">
-          <div class="mix-month"><span>Jul</span><span class="mix-total">200 opps</span></div>
-          <div class="stack"><span class="psa" style="width:52.0%"></span><span class="billing" style="width:15.0%"></span><span class="other" style="width:33.0%"></span></div>
-          <div class="mix-values"><div><b>52.0%</b>PSA</div><div><b>15.0%</b>Billing</div></div>
-        </div>
+      <div class="takeaway">
+        <div class="takeaway-label">Completed Discovery Lift</div>
+        <div class="takeaway-value">+58</div>
+        <div class="takeaway-copy">Discovery completions grew faster than meetings set.</div>
       </div>
-    </div>
-
-    <div class="panel table-panel">
-      <table>
-        <thead>
-          <tr><th>Metric</th><th>Jan</th><th>Feb</th><th>Mar</th><th>Apr</th><th>May</th><th>Jun</th><th>Jul MTD</th><th>Total</th></tr>
-        </thead>
-        <tbody>
-          <tr><td>Calls</td><td>10,872</td><td>9,913</td><td>11,827</td><td>11,229</td><td>10,006</td><td>4,911</td><td>5,046</td><td>63,804</td></tr>
-          <tr><td>Contacts</td><td>1,413</td><td>1,328</td><td>1,594</td><td>1,651</td><td>1,423</td><td>689</td><td>487</td><td>8,585</td></tr>
-          <tr class="ratio-row"><td>Call to Contact Ratio</td><td>7.69</td><td>7.46</td><td>7.42</td><td>6.80</td><td>7.03</td><td>7.13</td><td>10.36</td><td>7.43</td></tr>
-          <tr><td>Discovery Call Set</td><td>166</td><td>138</td><td>123</td><td>139</td><td>92</td><td>45</td><td>30</td><td>733</td></tr>
-          <tr class="ratio-row"><td>Contact to Discovery Set Ratio</td><td>8.51</td><td>9.62</td><td>12.96</td><td>11.88</td><td>15.47</td><td>15.31</td><td>16.23</td><td>11.71</td></tr>
-          <tr><td>Discovery Call Complete</td><td>97</td><td>94</td><td>94</td><td>112</td><td>102</td><td>37</td><td>75</td><td>611</td></tr>
-          <tr class="ratio-row"><td>Discovery Set to Complete Ratio</td><td>1.71</td><td>1.47</td><td>1.31</td><td>1.24</td><td>0.90</td><td>1.22</td><td>0.40</td><td>1.20</td></tr>
-        </tbody>
-      </table>
+      <div class="takeaway">
+        <div class="takeaway-label">MRR Sourced Lift</div>
+        <div class="takeaway-value">+$4,910</div>
+        <div class="takeaway-copy">Q2 sourced MRR was up 41.9% quarter over quarter.</div>
+      </div>
+      <div class="takeaway">
+        <div class="takeaway-label">Core Readout</div>
+        <div class="takeaway-value">Better close-through</div>
+        <div class="takeaway-copy">Top-of-funnel volume scaled; the cleanest efficiency win is discovery set to complete.</div>
+      </div>
     </div>
   </section>
-  <div class="source">Sources: `2026-psa-team-tracker.html` monthly KPI table; Salesforce opportunities by CreatedDate for product mix. Ratio direction: lower is better.</div>
+  <div class="source">Source: SDR-only Q1/Q2 production numbers provided by Ryan on July 29, 2026. Ratios are derived directly from those inputs; lower ratio is better.</div>
 </main>
 </body>
 </html>
