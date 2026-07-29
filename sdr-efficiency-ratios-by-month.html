@@ -292,6 +292,65 @@ h1 {
 .readout {
   display: none;
 }
+.influence-panel {
+  grid-column: 1 / -1;
+  padding: 13px 20px 14px;
+}
+.influence-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 12px;
+}
+.influence-card {
+  background: #f8fafc;
+  border: 1px solid #e4ebf2;
+  border-radius: 8px;
+  padding: 10px 14px;
+  display: grid;
+  grid-template-columns: 1fr auto auto;
+  align-items: center;
+  gap: 14px;
+}
+.influence-top {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  gap: 10px;
+}
+.influence-label {
+  color: var(--muted);
+  font-size: 11px;
+  font-weight: 850;
+  letter-spacing: .8px;
+  text-transform: uppercase;
+}
+.influence-pct {
+  color: var(--navy);
+  font-size: 28px;
+  font-weight: 950;
+  line-height: 1;
+  margin-top: 0;
+}
+.influence-count {
+  color: var(--muted);
+  font-size: 12px;
+  font-weight: 750;
+  margin-top: 0;
+  white-space: nowrap;
+}
+.influence-bar {
+  display: none;
+  height: 7px;
+  border-radius: 999px;
+  background: #e8edf3;
+  overflow: hidden;
+  margin-top: 6px;
+}
+.influence-bar span {
+  display: block;
+  height: 100%;
+  border-radius: 999px;
+}
 .takeaway {
   background: var(--panel);
   border: 1px solid var(--line);
@@ -423,6 +482,38 @@ h1 {
         <div class="split"><div class="mini"><span>Q1</span><b>1.56</b></div><div class="mini"><span>Q2</span><b>1.20</b></div></div>
       </div>
     </aside>
+
+    <div class="panel influence-panel">
+      <div class="panel-head">
+        <div class="panel-title">SDR Influence Populated</div>
+      </div>
+      <div class="influence-grid">
+        <div class="influence-card">
+          <div class="influence-top"><div class="influence-label">Billing · Q1</div></div>
+          <div class="influence-pct">28.5%</div>
+          <div class="influence-count">37 / 130</div>
+          <div class="influence-bar"><span style="width:28.5%;background:var(--green)"></span></div>
+        </div>
+        <div class="influence-card">
+          <div class="influence-top"><div class="influence-label">Billing · Q2</div></div>
+          <div class="influence-pct">25.0%</div>
+          <div class="influence-count">21 / 84</div>
+          <div class="influence-bar"><span style="width:25%;background:var(--green)"></span></div>
+        </div>
+        <div class="influence-card">
+          <div class="influence-top"><div class="influence-label">PSA · Q1</div></div>
+          <div class="influence-pct">41.6%</div>
+          <div class="influence-count">209 / 502</div>
+          <div class="influence-bar"><span style="width:41.6%;background:var(--teal)"></span></div>
+        </div>
+        <div class="influence-card">
+          <div class="influence-top"><div class="influence-label">PSA · Q2</div></div>
+          <div class="influence-pct">54.9%</div>
+          <div class="influence-count">231 / 421</div>
+          <div class="influence-bar"><span style="width:54.9%;background:var(--teal)"></span></div>
+        </div>
+      </div>
+    </div>
 
     <div class="readout">
       <div class="takeaway">
