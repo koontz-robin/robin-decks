@@ -1,0 +1,515 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Q3 2025 PSA Web Failed Onboarding Report</title>
+<style>
+:root { --bg:#06100d; --panel:#0d1714; --panel2:#111f1b; --line:#244137; --text:#f4fff9; --muted:#9ab5a9; --soft:#6f887c; --green:#4ade80; --cyan:#22d3ee; --red:#fb7185; --gold:#fbbf24; }
+* { box-sizing:border-box; }
+body { margin:0; min-height:100vh; background:linear-gradient(135deg,#06100d 0%,#111827 54%,#10251f 100%); color:var(--text); font-family:Inter,Arial,sans-serif; }
+.shell { max-width:1440px; margin:0 auto; padding:28px; }
+.top { display:flex; justify-content:space-between; gap:24px; align-items:flex-start; margin-bottom:22px; }
+.eyebrow { color:var(--green); font-size:11px; font-weight:900; letter-spacing:2px; text-transform:uppercase; }
+h1 { margin:8px 0 10px; font-size:40px; line-height:1.05; letter-spacing:0; }
+.sub { max-width:840px; color:var(--muted); font-size:14px; line-height:1.45; }
+.actions { display:flex; gap:10px; flex-wrap:wrap; justify-content:flex-end; }
+.btn { color:#06100d; background:var(--green); text-decoration:none; font-weight:900; border-radius:8px; padding:10px 12px; font-size:12px; }
+.btn.secondary { background:#dff7eb; }
+.stamp { margin-top:10px; text-align:right; color:var(--soft); font-size:12px; line-height:1.4; }
+.kpis { display:grid; grid-template-columns:repeat(4,minmax(0,1fr)); gap:12px; margin-bottom:16px; }
+.kpi,.panel,.chip { background:linear-gradient(180deg,rgba(17,31,27,.98),rgba(13,23,20,.98)); border:1px solid var(--line); border-radius:10px; box-shadow:0 22px 52px rgba(0,0,0,.28); }
+.kpi { padding:16px; border-top:3px solid var(--accent,var(--green)); }
+.kpi span,.chip span { display:block; color:var(--muted); font-size:10px; font-weight:900; letter-spacing:1.2px; text-transform:uppercase; }
+.kpi strong { display:block; margin-top:8px; font-size:30px; line-height:1; }
+.kpi em,.chip em { display:block; color:var(--soft); font-style:normal; font-size:12px; margin-top:5px; }
+.chips { display:grid; grid-template-columns:repeat(5,minmax(0,1fr)); gap:10px; margin:0 0 16px; }
+.chip { padding:12px; }
+.chip strong { display:block; color:var(--red); font-size:24px; margin-top:5px; }
+.grid { display:grid; grid-template-columns:minmax(0,1fr) 360px; gap:14px; align-items:start; }
+.panel { overflow:auto; }
+.panel h2 { margin:0; padding:14px; font-size:15px; border-bottom:1px solid var(--line); }
+table { width:100%; border-collapse:collapse; min-width:1060px; font-size:12px; }
+.side table { min-width:0; }
+th,td { padding:11px 12px; border-bottom:1px solid rgba(255,255,255,.07); text-align:right; white-space:nowrap; vertical-align:top; }
+th { color:var(--muted); background:#13231f; font-size:10px; letter-spacing:1px; text-transform:uppercase; }
+th:first-child,td:first-child { text-align:left; }
+td:first-child { font-weight:800; color:#fff; }
+td span { display:block; margin-top:3px; color:var(--soft); font-size:10px; font-weight:500; max-width:360px; white-space:normal; line-height:1.3; }
+a { color:#8ef7c0; }
+.empty { text-align:center; color:var(--muted); }
+.note { color:var(--soft); font-size:12px; line-height:1.5; margin-top:14px; }
+@media(max-width:1000px) { .top,.grid { display:block; } .actions { justify-content:flex-start; margin-top:14px; } .stamp { text-align:left; } .kpis,.chips { grid-template-columns:repeat(2,minmax(0,1fr)); } .side { margin-top:14px; } }
+@media(max-width:640px) { .shell { padding:18px; } h1 { font-size:30px; } .kpis,.chips { grid-template-columns:1fr; } }
+</style>
+</head>
+<body>
+<main class="shell">
+  <header class="top">
+    <div>
+      <div class="eyebrow">Rev.io PSA Web</div>
+      <h1>Q3 2025 Closed-Won Clients That Did Not Make It Through Onboarding</h1>
+      <div class="sub">Closed-won Salesforce opportunities from 2025-07-01 through 2025-09-30, limited to PSA-family product types and non-Tigerpaw accounts, matched to PSA onboarding records marked canceled, unable, or ghosted.</div>
+    </div>
+    <div>
+      <div class="actions">
+        <a class="btn" href="psa_web_q3_2025_failed_onboarding.csv">Download CSV</a>
+        <a class="btn secondary" href="psa_web_q3_2025_failed_onboarding.json">Download JSON</a>
+      </div>
+      <div class="stamp">Generated Jul 29, 2026 4:06 PM ET<br>Source: Salesforce + PSA onboarding Notion DB</div>
+    </div>
+  </header>
+  <section class="kpis">
+    <div class="kpi" style="--accent:var(--cyan)"><span>Q3 2025 PSA Web Clients</span><strong>56</strong><em>Closed won, non-Tigerpaw</em></div>
+    <div class="kpi" style="--accent:var(--green)"><span>Matched To Onboarding</span><strong>55</strong><em>Found by account/client name</em></div>
+    <div class="kpi" style="--accent:var(--red)"><span>Failed Onboarding</span><strong>35</strong><em>Canceled / unable / ghosted</em></div>
+    <div class="kpi" style="--accent:var(--gold)"><span>Closed-Won MRR</span><strong>$17,399</strong><em>$17,043 in onboarding MRR fields</em></div>
+  </section>
+  <section class="chips"><div class="chip"><span>Canceled - Functionality</span><strong>20</strong><em>$10,362</em></div>
+<div class="chip"><span>Canceled - Client Business</span><strong>6</strong><em>$2,574</em></div>
+<div class="chip"><span>Canceled - Client Ghosted</span><strong>6</strong><em>$3,086</em></div>
+<div class="chip"><span>Canceled</span><strong>1</strong><em>$550</em></div>
+<div class="chip"><span>Canceled - Client Bandwidth</span><strong>1</strong><em>$427</em></div>
+<div class="chip"><span>Canceled - Sales Unable to KO</span><strong>1</strong><em>$400</em></div></section>
+  <section class="grid">
+    <div class="panel">
+      <h2>Client Detail</h2>
+      <table>
+        <thead><tr><th>Client / Opportunity</th><th>Closed-Won MRR</th><th>Close Date</th><th>Owner</th><th>Onboarding Result</th><th>SA</th><th>SF Churn Reason</th><th>Record</th></tr></thead>
+        <tbody>
+        <tr>
+          <td><a href="https://rev-io.lightning.force.com/lightning/r/Account/001PX00000UeJhsYAF/view">Growth Management Solutions</a><span>Growth Management Solutions</span></td>
+          <td>$400</td>
+          <td>2025-07-03</td>
+          <td>Matt Salin</td>
+          <td>Canceled - Client Business<span>2025-09-04</span></td>
+          <td>Tony Mehner</td>
+          <td>Failed Onboarding<span></span></td>
+          <td><a href="https://www.notion.so/37d6a042ca0f4374935b422dd957c56d">Notion</a></td>
+        </tr>
+
+        <tr>
+          <td><a href="https://rev-io.lightning.force.com/lightning/r/Account/001PX000007iSB5YAM/view">JONROG technology</a><span>JONROG technology</span></td>
+          <td>$400</td>
+          <td>2025-09-09</td>
+          <td>Connor Flynn</td>
+          <td>Canceled - Functionality<span>2025-09-18</span></td>
+          <td>Jeremy Adams</td>
+          <td>—<span></span></td>
+          <td><a href="https://www.notion.so/83ba40d67f614e27b3b5526155e288b0">Notion</a></td>
+        </tr>
+
+        <tr>
+          <td><a href="https://rev-io.lightning.force.com/lightning/r/Account/001PX00000Bw1IMYAZ/view">Alarmtech</a><span>Alarmtech</span></td>
+          <td>$400</td>
+          <td>2025-07-10</td>
+          <td>Joseph Abarno</td>
+          <td>Canceled - Functionality<span>2025-09-25</span></td>
+          <td>Nicole Hills</td>
+          <td>Software Limitations<span>First and most importantly, e-forms, PDF creation, data entry. For each monitored client, they have a contract that links directly to their account number. 
+This information is vital for each customer. I am aware that you have similar fields, however I cannot have multiple sites per single client. I must create new parent/child accounts.
+
+ 
+
+Under the service / contracts tab, I can see the recurring contract. What I cannot see, and this is what is fundamental, what system number that contract is assigned to. Under my customer / service / contract tab, contact 1418 is assigned to me. However, when I open it, I cannot see system number (01-08-7609), zoning (22 active monitored zones with various levels of action patterns), or keyholders (who to call in an emergency).
+
+ 
+
+The backbone of every single alarm company is the recurring services. Each recurring service needs to have the keyholder and zoning information. This is essential for communication with the client, but more importantly, the central station. If there is a life safety device triggered, they need to know who to call, where the call came from, and what zone was triggered. Right now, with the current way REV.IO works, I would have to re-type all that information into a custom PDF to send to my station to build. This would be a major duplication of work that I will not do when my current software is built for that purpose.
+
+ 
+
+With my current software, I can create customized forms that pull data from the customer, site, and system tabs. Every single variable that I can enter under any of those tabs can then be pulled automatically into an e-form that I can download.
+
+ 
+
+Additionally, when a customer needs an insurance certificate to indicate coverage, I should be able to export that same zoning list to a new custom form to automatically email the customer.
+
+E-forms are the easiest way to pull data from any data point on the customer, site, and system and put into one convenient PDF. Right now, I used e-forms for: collecting payment information securely, contracts that are NOT attached with a quote/proposal, contracts for 3rd party monitoring providers, insurance certificates, parts packing list for job boxes, and system updates to the central station. While your system can ask clients to choose their preferred option between a and b, that does not outweigh the additional features we would need.
+
+ 
+
+When invoicing a client, the invoicing parameters are not customisable enough. Each invoice needs my company operating name, legal name, address, and HST (tax) number. For commercial clients, I also need a field for a purchase order number. Right now, you can choose memo OR address of the company. This does not work for me. Taxes cannot be included with surcharges. When you look at charges, even for non-recurring items you have a start and end date. I can say with a high percent of certainty that almost every client will call me asking why.</span></td>
+          <td><a href="https://www.notion.so/27d045c394d94d35b7b36c8764fb0c5e">Notion</a></td>
+        </tr>
+
+        <tr>
+          <td><a href="https://rev-io.lightning.force.com/lightning/r/Account/001PX00000UiErCYAV/view">192 Group</a><span>192 Group</span></td>
+          <td>$400</td>
+          <td>2025-07-08</td>
+          <td>Joseph Abarno</td>
+          <td>Canceled - Client Business<span>2025-10-01</span></td>
+          <td>Tony Mehner</td>
+          <td>—<span></span></td>
+          <td><a href="https://www.notion.so/ecb7e11ad01e4488a9d504602076c632">Notion</a></td>
+        </tr>
+
+        <tr>
+          <td><a href="https://rev-io.lightning.force.com/lightning/r/Account/001PX0000078I9jYAE/view">Trails Country Security</a><span>Trails County Security</span></td>
+          <td>$400</td>
+          <td>2025-07-11</td>
+          <td>Andy Whisenant</td>
+          <td>Canceled - Functionality<span>2025-10-08</span></td>
+          <td>Kegan Ehlers</td>
+          <td>Software Limitations<span>Email acceptance for tickets was not available
+Workflows were not responding back to the creator when a ticket was created
+SMS workflows were not working
+Quickbooks Online was not syncing</span></td>
+          <td><a href="https://www.notion.so/7a1b2f49033046e59581ff6aa3149b81">Notion</a></td>
+        </tr>
+
+        <tr>
+          <td><a href="https://rev-io.lightning.force.com/lightning/r/Account/001PX00000BMB0FYAX/view">Sound Design Inc</a><span>Sound Designs 3</span></td>
+          <td>$599</td>
+          <td>2025-09-29</td>
+          <td>Jake Mitchell</td>
+          <td>Canceled - Client Business<span>2025-10-17</span></td>
+          <td>Nicole Hills</td>
+          <td>Sales Expectations<span>Absolutely psycho. Canceled because we didn’t respond to an email in onboarding within 24 hours. Very clearly looking for a reason to cancel and wouldn’t be honest on the real reason why. Not sure if we would want to do business with her based on how she treats vendors.</span></td>
+          <td><a href="https://www.notion.so/11652b1ad7ec4c44be3bd36caec928fc">Notion</a></td>
+        </tr>
+
+        <tr>
+          <td><a href="https://rev-io.lightning.force.com/lightning/r/Account/001PX00000UiGZGYA3/view">Artistic Sound and Lighting</a><span>Artistic Sound and Lighting 2</span></td>
+          <td>$500</td>
+          <td>2025-07-17</td>
+          <td>Joseph Abarno</td>
+          <td>Canceled - Functionality<span>2025-10-23</span></td>
+          <td>Tony Mehner</td>
+          <td>Failed Onboarding<span>incomplete projects module</span></td>
+          <td><a href="https://www.notion.so/60ce0ceb878447698bad241ca29b029b">Notion</a></td>
+        </tr>
+
+        <tr>
+          <td><a href="https://rev-io.lightning.force.com/lightning/r/Account/0016O00003ee5HrQAI/view">Thumb Alarm Systems Inc</a><span>Thumb Alarm Systems 2</span></td>
+          <td>$1,040</td>
+          <td>2025-08-28</td>
+          <td>Jake Mitchell</td>
+          <td>Canceled - Functionality<span>2025-10-31</span></td>
+          <td>Jeremy Adams</td>
+          <td>—<span></span></td>
+          <td><a href="https://www.notion.so/cc40195691a2414d992626860a04a47e">Notion</a></td>
+        </tr>
+
+        <tr>
+          <td><a href="https://rev-io.lightning.force.com/lightning/r/Account/001PX00000IdiejYAB/view">Audio Video Integrations</a><span>Audio Video Integrations</span></td>
+          <td>$460</td>
+          <td>2025-09-11</td>
+          <td>Patrick Davies</td>
+          <td>Canceled - Client Business<span>2025-11-11</span></td>
+          <td>Jeremy Adams</td>
+          <td>Declining Business<span>Jeremy said they went back to the solution the were using previously which is more manual but works for them at their size. Said if was a combination of QB and some customer email tools. Sounded like it came down to cost and them being too small. I asked if he had any poor experiences working with our team and he said no but was pretty short.</span></td>
+          <td><a href="https://www.notion.so/f6170f37bfae49b98b4a745cd63726cb">Notion</a></td>
+        </tr>
+
+        <tr>
+          <td><a href="https://rev-io.lightning.force.com/lightning/r/Account/0016O00003ee6ViQAI/view">Entrance Technologies</a><span>Entrance Technologies 2</span></td>
+          <td>$400</td>
+          <td>2025-09-30</td>
+          <td>Jake Mitchell</td>
+          <td>Canceled - Sales Unable to KO<span>2025-11-12</span></td>
+          <td>Jeremy Adams</td>
+          <td>Failed Onboarding<span>Spoke on the phone: “Sales process was a slam dunk”
+He had no interest in doing on-hold even though he’s not moving to another platform. Open to taking another swing in the future but wants to cut ties.
+Originally saw Tigerpaw and it had a lot of functionality and liked the updated interface.
+Mentioned that the in onboarding Heidi would say the software would work a certain way and then it didn’t. Felt like he was learning the platform with her.
+&quot;Long story short the onboarding was rough. I felt me time was wasted and that we were figuring the software out together. Even then, I can figure things out on my own fairly quickly and yet some things just weren&#x27;t populating when they should, or where I would expect them to be. Given the struggles early on, I wasn&#x27;t prepared to commit to this solution. Entering credit card information on our end for processing payments (We had a second meeting yesterday. It still was not working but after the team made some background changes it then worked.)Unable to see any invoices that have been created in the Invoice Management section of the software. Is there another area in the software I should be looking to review invoices that have been created and sent?When sending invoices via email I have selected a created billing profile that offers the customer the ability to pay via ACH or CC. When the email arrives there is no link or instructions in the email on how they can navigate to make their payment. This is a must for us to continue with this solution.We also need to be able to create those work flows so that customers receive automated reminders on invoices at the one week mark, one month mark, etc.&quot;</span></td>
+          <td><a href="https://www.notion.so/a5a20bb211cd49dfb968b735499cebdd">Notion</a></td>
+        </tr>
+
+        <tr>
+          <td><a href="https://rev-io.lightning.force.com/lightning/r/Account/001PX00000I0RQsYAN/view">Hames Pro</a><span>Hames Pro</span></td>
+          <td>$462</td>
+          <td>2025-08-25</td>
+          <td>Husam Zalmiyar</td>
+          <td>Canceled - Functionality<span>2025-11-20</span></td>
+          <td>Kegan Ehlers</td>
+          <td>—<span></span></td>
+          <td><a href="https://www.notion.so/4659420c06344d2f9ea89439f1e22f9a">Notion</a></td>
+        </tr>
+
+        <tr>
+          <td><a href="https://rev-io.lightning.force.com/lightning/r/Account/001PX0000078IA1YAM/view">Urban Alarm Services</a><span>Urban Alarm Services Early Access PSA Web</span></td>
+          <td>$430</td>
+          <td>2025-07-14</td>
+          <td>Patrick Davies</td>
+          <td>Canceled - Client Ghosted<span>2025-11-21</span></td>
+          <td>Jeremy Adams</td>
+          <td>—<span></span></td>
+          <td><a href="https://www.notion.so/42c24b067adf4c7797e9fb2293799728">Notion</a></td>
+        </tr>
+
+        <tr>
+          <td><a href="https://rev-io.lightning.force.com/lightning/r/Account/001PX00000QDv9ZYAT/view">Smarthome and Theater Systems</a><span>Smarthome and Theater Systems</span></td>
+          <td>$500</td>
+          <td>2025-09-30</td>
+          <td>Jake Borah</td>
+          <td>Canceled - Functionality<span>2025-12-04</span></td>
+          <td>Kegan Ehlers</td>
+          <td>Software Limitations<span>needed to remain on his quoting platform for proposal functionality and did not want to pay $500/month for something he only used for ticketing</span></td>
+          <td><a href="https://www.notion.so/1619473c4eb240fdb4a94a7bdd012bcf">Notion</a></td>
+        </tr>
+
+        <tr>
+          <td><a href="https://rev-io.lightning.force.com/lightning/r/Account/001PX00000RGwlIYAT/view">Shoreworx Communications</a><span>Shoreworx Communications</span></td>
+          <td>$520</td>
+          <td>2025-09-30</td>
+          <td>Jake Borah</td>
+          <td>Canceled - Functionality<span>2025-12-31</span></td>
+          <td>Kegan Ehlers</td>
+          <td>Software Limitations<span>needed a dedicated mobile app for his technicians. also mentioned self-serve onboarding being a big burden for him and his team</span></td>
+          <td><a href="https://www.notion.so/137d6243b92b426cbdcaa24054efd568">Notion</a></td>
+        </tr>
+
+        <tr>
+          <td><a href="https://rev-io.lightning.force.com/lightning/r/Account/001PX000001rf5pYAA/view">Hawkeye Protection</a><span>Hawkeye Protection</span></td>
+          <td>$315</td>
+          <td>2025-08-19</td>
+          <td>Joseph Abarno</td>
+          <td>Canceled - Functionality<span>2026-01-01</span></td>
+          <td>Halle Taylor</td>
+          <td>Software Limitations<span>Rapid Response integration</span></td>
+          <td><a href="https://www.notion.so/9e13d3f4d7914754abba3371c600fb63">Notion</a></td>
+        </tr>
+
+        <tr>
+          <td><a href="https://rev-io.lightning.force.com/lightning/r/Account/001PX00000H9J3GYAV/view">Fastrack Virtual Guard</a><span>Fasttrack Virtual Guard 2</span></td>
+          <td>$400</td>
+          <td>2025-09-22</td>
+          <td>Joseph Abarno</td>
+          <td>Canceled - Client Ghosted<span>2026-01-05</span></td>
+          <td>Kegan Ehlers</td>
+          <td>—<span></span></td>
+          <td><a href="https://www.notion.so/c4dc6c62622841a9ab02f8b4bad035e3">Notion</a></td>
+        </tr>
+
+        <tr>
+          <td><a href="https://rev-io.lightning.force.com/lightning/r/Account/001PX0000075FNVYA2/view">Alarm24</a><span>Alarm 24</span></td>
+          <td>$520</td>
+          <td>2025-08-19</td>
+          <td>Patrick Davies</td>
+          <td>Canceled - Functionality<span>2026-01-09</span></td>
+          <td>Nicole Hills</td>
+          <td>—<span></span></td>
+          <td><a href="https://www.notion.so/d3450b1be9af4b11b54857ed98fa1735">Notion</a></td>
+        </tr>
+
+        <tr>
+          <td><a href="https://rev-io.lightning.force.com/lightning/r/Account/001PX00000AAZOXYA5/view">Revolve Tech</a><span>Revolve Tech Early Access PSA</span></td>
+          <td>$1,160</td>
+          <td>2025-07-25</td>
+          <td>Joseph Abarno</td>
+          <td>Canceled - Functionality<span>2026-01-12</span></td>
+          <td>Nicole Hills</td>
+          <td>Software Limitations<span>central station integration, timeclock, actual phone app for tech.</span></td>
+          <td><a href="https://www.notion.so/c40b0e76c0024740ae3be53ec725c9b7">Notion</a></td>
+        </tr>
+
+        <tr>
+          <td><a href="https://rev-io.lightning.force.com/lightning/r/Account/0016O00003ebgtYQAQ/view">CyberNetSolutions</a><span>CyberNet Solutions 2.0</span></td>
+          <td>$315</td>
+          <td>2025-07-30</td>
+          <td>Jake Mitchell</td>
+          <td>Canceled - Client Business<span>2026-01-12</span></td>
+          <td>Nicole Hills</td>
+          <td>—<span></span></td>
+          <td><a href="https://www.notion.so/2677d9c0fc7040948b61f5f402776afd">Notion</a></td>
+        </tr>
+
+        <tr>
+          <td><a href="https://rev-io.lightning.force.com/lightning/r/Account/001PX00000RNohNYAT/view">Patriot Cyber</a><span>Patriot Cyber</span></td>
+          <td>$400</td>
+          <td>2025-09-30</td>
+          <td>Connor Flynn</td>
+          <td>Canceled - Functionality<span>2026-01-14</span></td>
+          <td>Jeremy Adams</td>
+          <td>—<span></span></td>
+          <td><a href="https://www.notion.so/b3fbce41967842b487580296cebfe55a">Notion</a></td>
+        </tr>
+
+        <tr>
+          <td><a href="https://rev-io.lightning.force.com/lightning/r/Account/001PX0000078HqkYAE/view">Halt Security Services</a><span>Halt Security Services</span></td>
+          <td>$400</td>
+          <td>2025-07-10</td>
+          <td>Connor Flynn</td>
+          <td>Canceled - Functionality<span>2026-01-26</span></td>
+          <td>Nicole Hills</td>
+          <td>Software Limitations<span>Rapid response inteegration</span></td>
+          <td><a href="https://www.notion.so/8e07023ba6544475a03804e77fe8077f">Notion</a></td>
+        </tr>
+
+        <tr>
+          <td><a href="https://rev-io.lightning.force.com/lightning/r/Account/001PX00000W8icbYAB/view">Legion Technology</a><span>Legion Technology</span></td>
+          <td>$430</td>
+          <td>2025-07-25</td>
+          <td>Husam Zalmiyar</td>
+          <td>Canceled - Functionality<span>2026-02-17</span></td>
+          <td>Nicole Hills</td>
+          <td>—<span></span></td>
+          <td><a href="https://www.notion.so/0e764bfa227349baa0ee83d1a7998aad">Notion</a></td>
+        </tr>
+
+        <tr>
+          <td><a href="https://rev-io.lightning.force.com/lightning/r/Account/001PX00000Z789lYAB/view">CompuCarolina</a><span>CompuCarolina</span></td>
+          <td>$400</td>
+          <td>2025-09-22</td>
+          <td>Connor Flynn</td>
+          <td>Canceled - Client Business<span>2026-02-25</span></td>
+          <td>Jeremy Adams</td>
+          <td>—<span></span></td>
+          <td><a href="https://www.notion.so/2b13fe72a8e94c839e74e433fb341fb7">Notion</a></td>
+        </tr>
+
+        <tr>
+          <td><a href="https://rev-io.lightning.force.com/lightning/r/Account/001PX00000GgBnRYAV/view">Surveillance Technology USA, Inc</a><span>Surveillance Technology USA EARLY ACCESS 2.0</span></td>
+          <td>$335</td>
+          <td>2025-08-28</td>
+          <td>Jake Mitchell</td>
+          <td>Canceled - Functionality<span>2026-03-01</span></td>
+          <td>Nicole Hills</td>
+          <td>Failed Onboarding<span>never went through implementation fully - not ever committed to success and owner just moved on...</span></td>
+          <td><a href="https://www.notion.so/006a595cc64e4ea2bd4b5f1291dbcb84">Notion</a></td>
+        </tr>
+
+        <tr>
+          <td><a href="https://rev-io.lightning.force.com/lightning/r/Account/001PX00000JUCHKYA5/view">Highline Integrated Security</a><span>Highline Int Security Early Access PSA</span></td>
+          <td>$315</td>
+          <td>2025-07-16</td>
+          <td>Joseph Abarno</td>
+          <td>Canceled - Functionality<span>2026-03-12</span></td>
+          <td>Halle Taylor</td>
+          <td>—<span></span></td>
+          <td><a href="https://www.notion.so/df14910895904c36870a4774711c90bf">Notion</a></td>
+        </tr>
+
+        <tr>
+          <td><a href="https://rev-io.lightning.force.com/lightning/r/Account/001PX0000078HwYYAU/view">Morgan Alarm Systems</a><span>Morgan Alarm Systems Early Access PSA</span></td>
+          <td>$427</td>
+          <td>2025-07-31</td>
+          <td>Connor Flynn</td>
+          <td>Canceled - Client Bandwidth<span>2026-03-20</span></td>
+          <td>Nicole Hills</td>
+          <td>—<span></span></td>
+          <td><a href="https://www.notion.so/5757e78b0540497caaacd33368ab25a2">Notion</a></td>
+        </tr>
+
+        <tr>
+          <td><a href="https://rev-io.lightning.force.com/lightning/r/Account/001PX000008mTpVYAU/view">Canitan</a><span>Canitan LLC Early Access PSA</span></td>
+          <td>$345</td>
+          <td>2025-08-20</td>
+          <td>Andy Whisenant</td>
+          <td>Canceled - Functionality<span>2026-04-13</span></td>
+          <td>Jeremy Adams</td>
+          <td>Failed Onboarding<span>early bird - early &#x27;adoptor&#x27;.... never felt it was ready for them and they will take back up in a year to look again.</span></td>
+          <td><a href="https://www.notion.so/cba0e826f2ca43bf8d79ebbb3d9e3aab">Notion</a></td>
+        </tr>
+
+        <tr>
+          <td><a href="https://rev-io.lightning.force.com/lightning/r/Account/0011500001HNQITAA5/view">Semetra</a><span>Semetra</span></td>
+          <td>$762</td>
+          <td>2025-09-23</td>
+          <td>Matt Salin</td>
+          <td>Canceled - Functionality<span>2026-04-16</span></td>
+          <td>Halle Taylor</td>
+          <td>—<span></span></td>
+          <td><a href="https://www.notion.so/e1e70555a4574689b567f4162420d2fb">Notion</a></td>
+        </tr>
+
+        <tr>
+          <td><a href="https://rev-io.lightning.force.com/lightning/r/Account/001PX00000VvjWeYAJ/view">MR PC Office</a><span>MR PC Office</span></td>
+          <td>$400</td>
+          <td>2025-08-25</td>
+          <td>Andy Whisenant</td>
+          <td>Canceled - Client Ghosted<span>2026-04-27</span></td>
+          <td>Nicole Hills</td>
+          <td>Failed Onboarding<span>Mark went on hold due to Quickbooks not syncing, employees were getting kicked out of system, wasn&#x27;t able to do monthly billing, and couldn&#x27;t get clients and items into the system. Haven&#x27;t be able to get ahold of Mark sense then and has ghosted onboarding as well.</span></td>
+          <td><a href="https://www.notion.so/2d4a06ecf54c4887b05b606a1344c59e">Notion</a></td>
+        </tr>
+
+        <tr>
+          <td><a href="https://rev-io.lightning.force.com/lightning/r/Account/0016O00003ebhD5QAI/view">Lavish Automation</a><span>Lavish Automation</span></td>
+          <td>$888</td>
+          <td>2025-07-24</td>
+          <td>Reese Middleton</td>
+          <td>Canceled - Functionality<span>2026-05-01</span></td>
+          <td>Nicole Hills</td>
+          <td>—<span></span></td>
+          <td><a href="https://www.notion.so/f38199e096294a019b83b51c5ca4a576">Notion</a></td>
+        </tr>
+
+        <tr>
+          <td><a href="https://rev-io.lightning.force.com/lightning/r/Account/0016O00003ee5H9QAI/view">Royce Bravo</a><span>Royce Integrated Solutions (AIN) 3</span></td>
+          <td>$906</td>
+          <td>2025-07-27</td>
+          <td>Joseph Abarno</td>
+          <td>Canceled - Client Ghosted<span>2026-05-01</span></td>
+          <td>Kegan Ehlers</td>
+          <td>—<span></span></td>
+          <td><a href="https://www.notion.so/1bd0c49da9cc4f1fab30c738e65ff667">Notion</a></td>
+        </tr>
+
+        <tr>
+          <td><a href="https://rev-io.lightning.force.com/lightning/r/Account/001PX00000WS22rYAD/view">Royce Bravo</a><span>Royce Bravo 2</span></td>
+          <td>$550</td>
+          <td>2025-07-27</td>
+          <td>Joseph Abarno</td>
+          <td>Canceled - Client Ghosted<span>2026-05-01</span></td>
+          <td>Kegan Ehlers</td>
+          <td>—<span></span></td>
+          <td><a href="https://www.notion.so/1bd0c49da9cc4f1fab30c738e65ff667">Notion</a></td>
+        </tr>
+
+        <tr>
+          <td><a href="https://rev-io.lightning.force.com/lightning/r/Account/001PX00000Ui9xbYAB/view">Input Group</a><span>Input Group</span></td>
+          <td>$400</td>
+          <td>2025-07-03</td>
+          <td>Joseph Abarno</td>
+          <td>Canceled - Client Ghosted<span>2026-05-21</span></td>
+          <td>Kegan Ehlers</td>
+          <td>Failed Onboarding<span>Didn&#x27;t put in the effort due to internal issues</span></td>
+          <td><a href="https://www.notion.so/fdb73fd405d74ab0a160d67279f9aca9">Notion</a></td>
+        </tr>
+
+        <tr>
+          <td><a href="https://rev-io.lightning.force.com/lightning/r/Account/001PX00000H1uOFYAZ/view">Intec Security Solutions</a><span>Intec Security Solutions</span></td>
+          <td>$550</td>
+          <td>2025-09-24</td>
+          <td>Andy Whisenant</td>
+          <td>Canceled<span>2026-06-05</span></td>
+          <td>Nicole Hills</td>
+          <td>—<span></span></td>
+          <td><a href="https://www.notion.so/3a30ef692cf1414fa7e1b07eb4d9f47f">Notion</a></td>
+        </tr>
+
+        <tr>
+          <td><a href="https://rev-io.lightning.force.com/lightning/r/Account/001PX00000OHE3zYAH/view">Yeti Networks</a><span>Yeti Networks PSA</span></td>
+          <td>$270</td>
+          <td>2025-09-29</td>
+          <td>Jake Borah</td>
+          <td>Canceled - Functionality<span>2026-07-22</span></td>
+          <td>Jeremy Adams</td>
+          <td>—<span></span></td>
+          <td><a href="https://www.notion.so/039428ddef494b059c8450c4cf6f5c4b">Notion</a></td>
+        </tr></tbody>
+      </table>
+    </div>
+    <div class="panel side">
+      <h2>Closed-Won MRR by Owner</h2>
+      <table>
+        <thead><tr><th>Owner</th><th>Clients</th><th>MRR</th></tr></thead>
+        <tbody><tr><td>Joseph Abarno</td><td>10</td><td>$5,346</td></tr>
+<tr><td>Jake Mitchell</td><td>5</td><td>$2,689</td></tr>
+<tr><td>Connor Flynn</td><td>5</td><td>$2,027</td></tr>
+<tr><td>Andy Whisenant</td><td>4</td><td>$1,695</td></tr>
+<tr><td>Patrick Davies</td><td>3</td><td>$1,410</td></tr>
+<tr><td>Jake Borah</td><td>3</td><td>$1,290</td></tr>
+<tr><td>Matt Salin</td><td>2</td><td>$1,162</td></tr>
+<tr><td>Husam Zalmiyar</td><td>2</td><td>$892</td></tr>
+<tr><td>Reese Middleton</td><td>1</td><td>$888</td></tr></tbody>
+      </table>
+      <p class="note">Full notes, opportunity URLs, Notion URLs, and churn-detail fields are included in the CSV export.</p>
+    </div>
+  </section>
+</main>
+</body>
+</html>
