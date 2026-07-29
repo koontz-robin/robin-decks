@@ -29,7 +29,7 @@ body {
 }
 .canvas {
   width: 1600px;
-  height: 900px;
+  min-height: 1060px;
   margin: 0 auto;
   padding: 30px 52px;
   background: var(--bg);
@@ -292,6 +292,81 @@ h1 {
 .readout {
   display: none;
 }
+.prior-panel {
+  grid-column: 1 / -1;
+  padding: 14px 20px;
+}
+.prior-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 18px;
+}
+.prior-table {
+  display: grid;
+  gap: 6px;
+}
+.prior-row {
+  display: grid;
+  grid-template-columns: 1.25fr repeat(3, 1fr);
+  align-items: center;
+  gap: 8px;
+}
+.prior-cell {
+  background: #f8fafc;
+  border: 1px solid #e4ebf2;
+  border-radius: 8px;
+  padding: 7px 10px;
+  min-height: 44px;
+}
+.prior-head {
+  color: var(--muted);
+  font-size: 10px;
+  font-weight: 850;
+  letter-spacing: .8px;
+  text-transform: uppercase;
+}
+.prior-name {
+  color: var(--navy);
+  font-size: 13px;
+  font-weight: 950;
+}
+.prior-value {
+  color: var(--navy);
+  font-size: 19px;
+  font-weight: 950;
+  margin-top: 2px;
+}
+.lift-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 8px;
+}
+.lift-card {
+  background: #f8fafc;
+  border: 1px solid #e4ebf2;
+  border-radius: 8px;
+  padding: 8px 10px;
+}
+.lift-label {
+  color: var(--muted);
+  font-size: 10px;
+  font-weight: 850;
+  letter-spacing: .7px;
+  text-transform: uppercase;
+}
+.lift-value {
+  color: var(--green);
+  font-size: 22px;
+  font-weight: 950;
+  margin-top: 5px;
+}
+.lift-count {
+  color: var(--muted);
+  font-size: 11px;
+  font-weight: 750;
+  margin-top: 3px;
+  white-space: nowrap;
+}
 .influence-panel {
   grid-column: 1 / -1;
   padding: 13px 20px 14px;
@@ -549,6 +624,75 @@ h1 {
         <div class="split"><div class="mini"><span>Q1</span><b>1.56</b></div><div class="mini"><span>Q2</span><b>1.20</b></div></div>
       </div>
     </aside>
+
+    <div class="panel prior-panel">
+      <div class="prior-grid">
+        <div class="bottom-block">
+          <div class="panel-head">
+            <div class="panel-title">2025 SDR Activity Breakdown</div>
+          </div>
+          <div class="prior-table">
+            <div class="prior-row">
+              <div class="prior-head">Metric</div>
+              <div class="prior-head">Q1 2025</div>
+              <div class="prior-head">Q2 2025</div>
+              <div class="prior-head">H1 2025</div>
+            </div>
+            <div class="prior-row">
+              <div class="prior-name">Calls</div>
+              <div class="prior-cell"><div class="prior-value">12,791</div></div>
+              <div class="prior-cell"><div class="prior-value">13,292</div></div>
+              <div class="prior-cell"><div class="prior-value">26,083</div></div>
+            </div>
+            <div class="prior-row">
+              <div class="prior-name">Contacts</div>
+              <div class="prior-cell"><div class="prior-value">1,330</div></div>
+              <div class="prior-cell"><div class="prior-value">1,101</div></div>
+              <div class="prior-cell"><div class="prior-value">2,431</div></div>
+            </div>
+            <div class="prior-row">
+              <div class="prior-name">Discovery Set</div>
+              <div class="prior-cell"><div class="prior-value">233</div></div>
+              <div class="prior-cell"><div class="prior-value">219</div></div>
+              <div class="prior-cell"><div class="prior-value">452</div></div>
+            </div>
+            <div class="prior-row">
+              <div class="prior-name">Discovery Complete</div>
+              <div class="prior-cell"><div class="prior-value">127</div></div>
+              <div class="prior-cell"><div class="prior-value">118</div></div>
+              <div class="prior-cell"><div class="prior-value">245</div></div>
+            </div>
+          </div>
+        </div>
+        <div class="bottom-block">
+          <div class="panel-head">
+            <div class="panel-title">H1 2026 Lift vs H1 2025</div>
+          </div>
+          <div class="lift-grid">
+            <div class="lift-card">
+              <div class="lift-label">Calls</div>
+              <div class="lift-value">+69.2%</div>
+              <div class="lift-count">44,134 / 26,083</div>
+            </div>
+            <div class="lift-card">
+              <div class="lift-label">Contacts</div>
+              <div class="lift-value">+157.3%</div>
+              <div class="lift-count">6,256 / 2,431</div>
+            </div>
+            <div class="lift-card">
+              <div class="lift-label">Discovery Set</div>
+              <div class="lift-value">+7.5%</div>
+              <div class="lift-count">486 / 452</div>
+            </div>
+            <div class="lift-card">
+              <div class="lift-label">Discovery Complete</div>
+              <div class="lift-value">+46.9%</div>
+              <div class="lift-count">360 / 245</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
 
     <div class="panel influence-panel">
       <div class="bottom-grid">
