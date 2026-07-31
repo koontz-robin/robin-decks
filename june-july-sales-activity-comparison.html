@@ -1,0 +1,333 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>June vs July Sales Activity Comparison</title>
+<style>
+:root {
+  --ink:#17202a;
+  --muted:#667085;
+  --line:#d8dee8;
+  --page:#f4f7fb;
+  --panel:#ffffff;
+  --june:#315f9d;
+  --july:#0f8b7b;
+  --green:#0f766e;
+  --red:#b42318;
+  --amber:#a15c07;
+  --shadow:0 18px 44px rgba(16,24,40,.10);
+}
+* { box-sizing:border-box; }
+body { margin:0; background:var(--page); color:var(--ink); font-family:Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif; }
+.shell { max-width:1180px; margin:0 auto; padding:28px; }
+header { display:grid; grid-template-columns:minmax(0,1fr) auto; gap:24px; align-items:start; padding:28px 0 22px; }
+.eyebrow { text-transform:uppercase; letter-spacing:.08em; font-size:12px; font-weight:800; color:var(--green); }
+h1 { margin:6px 0 8px; font-size:42px; line-height:1.02; letter-spacing:0; }
+.sub { margin:0; max-width:780px; color:var(--muted); font-size:17px; line-height:1.45; }
+.stamp { background:#e9f1f9; border:1px solid var(--line); border-radius:8px; padding:12px 14px; color:#344054; font-size:13px; line-height:1.45; min-width:270px; }
+.hero-grid { display:grid; grid-template-columns:1.1fr .9fr; gap:18px; margin:12px 0 18px; }
+.headline { background:var(--panel); border:1px solid var(--line); border-radius:8px; padding:22px; box-shadow:var(--shadow); }
+.headline h2 { margin:0 0 14px; font-size:24px; }
+.bigline { display:grid; grid-template-columns:1fr 1fr; gap:14px; }
+.big { border-left:5px solid var(--july); background:#f7fbfa; border-radius:8px; padding:16px; }
+.big:first-child { border-left-color:var(--june); background:#f7f9fd; }
+.big span { display:block; color:var(--muted); font-size:13px; font-weight:700; }
+.big b { display:block; margin-top:4px; font-size:34px; }
+.takeaways { display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); gap:12px; }
+.takeaway { background:var(--panel); border:1px solid var(--line); border-radius:8px; padding:14px; }
+.takeaway span { color:var(--muted); font-size:12px; font-weight:800; text-transform:uppercase; letter-spacing:.06em; }
+.takeaway strong { display:block; margin:5px 0; font-size:18px; }
+.takeaway p { margin:0; color:#475467; font-size:13px; line-height:1.4; }
+.takeaway.positive { border-top:4px solid var(--green); }
+.takeaway.warning { border-top:4px solid var(--amber); }
+.takeaway.neutral { border-top:4px solid #667085; }
+.section-head { display:flex; justify-content:space-between; gap:16px; align-items:end; margin:26px 0 10px; }
+.section-head h2 { margin:0; font-size:22px; }
+.legend { display:flex; gap:10px; color:var(--muted); font-size:13px; }
+.legend span::before { content:""; display:inline-block; width:10px; height:10px; border-radius:99px; margin-right:6px; vertical-align:-1px; }
+.legend .jun::before { background:var(--june); }
+.legend .jul::before { background:var(--july); }
+.metrics { display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); gap:14px; }
+.metric { background:var(--panel); border:1px solid var(--line); border-radius:8px; padding:16px; box-shadow:0 8px 24px rgba(16,24,40,.05); }
+.metric-top { display:flex; justify-content:space-between; gap:12px; align-items:start; }
+.metric h3 { margin:0; font-size:16px; }
+.delta { white-space:nowrap; font-weight:850; font-size:13px; padding:5px 8px; border-radius:6px; background:#f2f4f7; }
+.delta.up { color:var(--green); background:#ecfdf3; }
+.delta.down { color:var(--red); background:#fff1f3; }
+.compare { display:grid; gap:12px; margin-top:14px; }
+.month { display:grid; grid-template-columns:64px 96px 1fr; gap:10px; align-items:center; }
+.month span { color:var(--muted); font-size:13px; font-weight:700; }
+.month b { font-size:20px; text-align:right; }
+.month i { display:block; height:13px; border-radius:99px; background:var(--june); min-width:10px; }
+.month.july i { background:var(--july); }
+.source { margin-top:18px; padding:14px 16px; border:1px solid var(--line); border-radius:8px; background:#fff; color:var(--muted); font-size:12px; line-height:1.5; }
+@media (max-width:920px) {
+  .shell { padding:18px; }
+  header, .hero-grid, .metrics, .takeaways { grid-template-columns:1fr; }
+  h1 { font-size:32px; }
+}
+@media (max-width:560px) {
+  .bigline { grid-template-columns:1fr; }
+  .month { grid-template-columns:58px 76px 1fr; }
+  .month b { font-size:17px; }
+}
+</style>
+</head>
+<body>
+<main class="shell">
+  <header>
+    <div>
+      <div class="eyebrow">Rev.io Sales Ops</div>
+      <h1>June vs July Sales Activity</h1>
+      <p class="sub">Graphic comparison of activity, discovery conversion, demo-to-deal efficiency, and opportunity creation across June and July 2026.</p>
+    </div>
+    <div class="stamp">Generated Jul 31, 2026 5:14 PM ET<br>Spreadsheet plus Salesforce tracker sources<br>PSA tracker refreshed 2026-07-31T17:11:59.508641-04:00</div>
+  </header>
+
+  <section class="hero-grid">
+    <div class="headline">
+      <h2>July produced more calls and higher opportunity MRR, with fewer total created opportunities.</h2>
+      <div class="bigline">
+        <div class="big"><span>June AE/CSA opps</span><b>199</b><span>$196,236 MRR</span></div>
+        <div class="big"><span>July AE/CSA opps</span><b>168</b><span>$216,150 MRR</span></div>
+      </div>
+    </div>
+    <div class="takeaways">
+      
+    <div class="takeaway positive">
+      <span>Activity volume</span>
+      <strong>Calls up +18.5%</strong>
+      <p>July produced more outbound call volume than June, even with month-end still in motion at refresh time.</p>
+    </div>
+    <div class="takeaway warning">
+      <span>Top of funnel quality</span>
+      <strong>Contacts down -17.1%</strong>
+      <p>Contacts and discovery calls set both trailed June, so the activity mix shifted toward more calls per meaningful connect.</p>
+    </div>
+    <div class="takeaway positive">
+      <span>Middle funnel</span>
+      <strong>Completed discoveries up +121.6%</strong>
+      <p>July converted far more scheduled discovery work into completed conversations and follow-on demos.</p>
+    </div>
+    <div class="takeaway positive">
+      <span>Deal efficiency</span>
+      <strong>Demo/deal improved -34.4%</strong>
+      <p>Lower is better here: July needed 3.50 demos per deal versus 5.33 in June.</p>
+    </div>
+    <div class="takeaway neutral">
+      <span>Opportunity creation</span>
+      <strong>Opp count -15.6%</strong>
+      <p>July created fewer AE/CSA opportunities than June, but generated more total MRR.</p>
+    </div>
+    <div class="takeaway positive">
+      <span>Opportunity value</span>
+      <strong>MRR up +10.1%</strong>
+      <p>July AE/CSA-created opportunity MRR exceeded June by $19,914.</p>
+    </div>
+    </div>
+  </section>
+
+  <div class="section-head">
+    <h2>Metric Comparison</h2>
+    <div class="legend"><span class="jun">June</span><span class="jul">July</span></div>
+  </div>
+  <section class="metrics">
+    
+    <article class="metric">
+      <div class="metric-top">
+        <h3>Calls</h3>
+        <span class="delta up">+18.5% better</span>
+      </div>
+      <div class="compare">
+        <div class="month">
+          <span>June</span>
+          <b>4,911</b>
+          <i style="width:84.4%"></i>
+        </div>
+        <div class="month july">
+          <span>July</span>
+          <b>5,819</b>
+          <i style="width:100.0%"></i>
+        </div>
+      </div>
+    </article>
+
+    <article class="metric">
+      <div class="metric-top">
+        <h3>Contacts</h3>
+        <span class="delta down">-17.1% softer</span>
+      </div>
+      <div class="compare">
+        <div class="month">
+          <span>June</span>
+          <b>689</b>
+          <i style="width:100.0%"></i>
+        </div>
+        <div class="month july">
+          <span>July</span>
+          <b>571</b>
+          <i style="width:82.9%"></i>
+        </div>
+      </div>
+    </article>
+
+    <article class="metric">
+      <div class="metric-top">
+        <h3>Discovery calls set</h3>
+        <span class="delta down">-20.0% softer</span>
+      </div>
+      <div class="compare">
+        <div class="month">
+          <span>June</span>
+          <b>45</b>
+          <i style="width:100.0%"></i>
+        </div>
+        <div class="month july">
+          <span>July</span>
+          <b>36</b>
+          <i style="width:80.0%"></i>
+        </div>
+      </div>
+    </article>
+
+    <article class="metric">
+      <div class="metric-top">
+        <h3>Discovery calls complete</h3>
+        <span class="delta up">+121.6% better</span>
+      </div>
+      <div class="compare">
+        <div class="month">
+          <span>June</span>
+          <b>37</b>
+          <i style="width:45.1%"></i>
+        </div>
+        <div class="month july">
+          <span>July</span>
+          <b>82</b>
+          <i style="width:100.0%"></i>
+        </div>
+      </div>
+    </article>
+
+    <article class="metric">
+      <div class="metric-top">
+        <h3>Initial demos complete</h3>
+        <span class="delta up">+206.2% better</span>
+      </div>
+      <div class="compare">
+        <div class="month">
+          <span>June</span>
+          <b>16</b>
+          <i style="width:32.7%"></i>
+        </div>
+        <div class="month july">
+          <span>July</span>
+          <b>49</b>
+          <i style="width:100.0%"></i>
+        </div>
+      </div>
+    </article>
+
+    <article class="metric">
+      <div class="metric-top">
+        <h3>Demo to deal ratio</h3>
+        <span class="delta up">-34.4% better</span>
+      </div>
+      <div class="compare">
+        <div class="month">
+          <span>June</span>
+          <b>5.33:1</b>
+          <i style="width:100.0%"></i>
+        </div>
+        <div class="month july">
+          <span>July</span>
+          <b>3.50:1</b>
+          <i style="width:65.6%"></i>
+        </div>
+      </div>
+    </article>
+
+    <article class="metric">
+      <div class="metric-top">
+        <h3>AE/CSA opportunities</h3>
+        <span class="delta down">-15.6% softer</span>
+      </div>
+      <div class="compare">
+        <div class="month">
+          <span>June</span>
+          <b>199</b>
+          <i style="width:100.0%"></i>
+        </div>
+        <div class="month july">
+          <span>July</span>
+          <b>168</b>
+          <i style="width:84.4%"></i>
+        </div>
+      </div>
+    </article>
+
+    <article class="metric">
+      <div class="metric-top">
+        <h3>AE/CSA opportunity MRR</h3>
+        <span class="delta up">+10.1% better</span>
+      </div>
+      <div class="compare">
+        <div class="month">
+          <span>June</span>
+          <b>$196,236</b>
+          <i style="width:90.8%"></i>
+        </div>
+        <div class="month july">
+          <span>July</span>
+          <b>$216,150</b>
+          <i style="width:100.0%"></i>
+        </div>
+      </div>
+    </article>
+
+    <article class="metric">
+      <div class="metric-top">
+        <h3>SDR-influenced opportunities</h3>
+        <span class="delta down">-23.1% softer</span>
+      </div>
+      <div class="compare">
+        <div class="month">
+          <span>June</span>
+          <b>91</b>
+          <i style="width:100.0%"></i>
+        </div>
+        <div class="month july">
+          <span>July</span>
+          <b>70</b>
+          <i style="width:76.9%"></i>
+        </div>
+      </div>
+    </article>
+
+    <article class="metric">
+      <div class="metric-top">
+        <h3>SDR-influenced opportunity MRR</h3>
+        <span class="delta down">-5.5% softer</span>
+      </div>
+      <div class="compare">
+        <div class="month">
+          <span>June</span>
+          <b>$104,590</b>
+          <i style="width:100.0%"></i>
+        </div>
+        <div class="month july">
+          <span>July</span>
+          <b>$98,885</b>
+          <i style="width:94.5%"></i>
+        </div>
+      </div>
+    </article>
+  </section>
+
+  <div class="source">
+    Sources: activity metric labels and workbook context from Sales_Team_Activity_Breakdown---81c9b685-540e-4f8f-a861-a355ec8c8e7b.xlsx; workbook tabs checked: Feb - PSA Rep Metrics , 2026 PSA Team Metrics, 2026 Billing Metrics. Live values from `sf_2026_psa_team_tracker.json`, refreshed from Salesforce at report build time. Opportunity counts and MRR from `sf_june_ae_csa_opps.json` and `sf_july_ae_csa_opps.json`, matching the June and July AE/CSA opportunity dashboards. Demo-to-deal ratio follows the workbook direction: demos per completed deal, so lower is better.
+  </div>
+</main>
+</body>
+</html>
