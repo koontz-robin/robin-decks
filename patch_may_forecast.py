@@ -39,6 +39,7 @@ MONTHLY_QUOTAS = {
     'June': {'PSA':38000,'Billing':17368,'Payments':11040,'Cyber':8700,'CommerceHub':0},
     # July combines CommerceHub and Cyber Protect under one target.
     'July': {'PSA':42000,'Billing':12368,'Payments':11040,'Cyber':9967,'CommerceHub':0},
+    'August': {'PSA':46000,'Billing':13368,'Payments':10540,'Cyber':4500,'CommerceHub':1667},
 }
 DEFAULT_MONTH_QUOTAS = {'PSA':30000,'Billing':13368,'Payments':10540,'Cyber':4500,'CommerceHub':1667}
 TARGET_QUOTAS = MONTHLY_QUOTAS.get(TARGET_MONTH, DEFAULT_MONTH_QUOTAS)
@@ -83,6 +84,7 @@ def product_key_from_line_item(line_item, month_name):
 def closed_booking_splits(o, month_name):
     """Return product booking splits from line items, falling back to the opp product field."""
     line_items = ((o.get('OpportunityLineItems') or {}).get('records') or [])
+    opp_product = prod_key_for_month(o.get('Product_Type__c',''), month_name)
     splits = defaultdict(float)
     for line_item in line_items:
         amount = line_item.get('TotalPrice')
@@ -91,6 +93,10 @@ def closed_booking_splits(o, month_name):
         if not amount:
             continue
         product = product_key_from_line_item(line_item, month_name)
+        product_name = ((line_item.get('Product2') or {}).get('Name') or '').lower()
+        opp_name = (o.get('Name') or '').lower()
+        if opp_product == 'PSA' and product == 'Billing' and 'monthly minimum increase' in f'{opp_name} {product_name}':
+            product = 'PSA'
         splits[product] += amount
     if splits:
         return splits.items()
