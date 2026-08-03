@@ -44,6 +44,10 @@ h1 { margin:6px 0 8px; font-size:42px; line-height:1.02; letter-spacing:0; }
 .legend .jun::before { background:var(--june); }
 .legend .jul::before { background:var(--july); }
 .metrics { display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); gap:14px; }
+.opportunity-hero { display:grid; grid-template-columns:repeat(4,minmax(0,1fr)); gap:12px; margin:10px 0 14px; }
+.opp-kpi { background:#fff; border:1px solid var(--line); border-radius:8px; padding:14px; box-shadow:0 8px 24px rgba(16,24,40,.05); }
+.opp-kpi span { display:block; color:var(--muted); font-size:12px; font-weight:800; text-transform:uppercase; letter-spacing:.04em; }
+.opp-kpi b { display:block; margin-top:5px; font-size:25px; }
 .metric { background:var(--panel); border:1px solid var(--line); border-radius:8px; padding:16px; box-shadow:0 8px 24px rgba(16,24,40,.05); }
 .metric-top { display:flex; justify-content:space-between; gap:12px; align-items:start; }
 .metric h3 { margin:0; font-size:16px; }
@@ -60,7 +64,7 @@ h1 { margin:6px 0 8px; font-size:42px; line-height:1.02; letter-spacing:0; }
 .source { margin-top:18px; padding:14px 16px; border:1px solid var(--line); border-radius:8px; background:#fff; color:var(--muted); font-size:12px; line-height:1.5; }
 @media (max-width:900px) {
   .shell { padding:18px; }
-  header, .hero, .metrics { grid-template-columns:1fr; }
+  header, .hero, .metrics, .opportunity-hero { grid-template-columns:1fr; }
   h1 { font-size:32px; }
 }
 @media (max-width:620px) {
@@ -78,7 +82,7 @@ h1 { margin:6px 0 8px; font-size:42px; line-height:1.02; letter-spacing:0; }
       <h1>June vs July PSA Metrics</h1>
       <p class="sub">Workbook-only comparison from the 2026 PSA Team Metrics tab for calls, contacts, discovery activity, and demo-to-deal ratio.</p>
     </div>
-    <div class="stamp">Generated Aug 3, 2026 7:50 AM ET<br>Workbook: Sales_Team_Activity_Breakdown_1---bd699273-7f85-4426-af8d-cf9c3706ab85.xlsx<br>Tab: 2026 PSA Team Metrics</div>
+    <div class="stamp">Generated Aug 3, 2026 7:55 AM ET<br>Workbook: Sales_Team_Activity_Breakdown_1---bd699273-7f85-4426-af8d-cf9c3706ab85.xlsx<br>Tab: 2026 PSA Team Metrics</div>
   </header>
 
   <section class="hero">
@@ -199,8 +203,97 @@ h1 { margin:6px 0 8px; font-size:42px; line-height:1.02; letter-spacing:0; }
     </article>
   </section>
 
+  <div class="section-head">
+    <h2>Opportunity Comparison</h2>
+    <div class="legend"><span class="jun">June</span><span class="jul">July</span></div>
+  </div>
+  <section class="opportunity-hero">
+    <div class="opp-kpi"><span>June AE/CSA opps</span><b>199</b></div>
+    <div class="opp-kpi"><span>July AE/CSA opps</span><b>168</b></div>
+    <div class="opp-kpi"><span>June AE/CSA MRR</span><b>$196,236</b></div>
+    <div class="opp-kpi"><span>July AE/CSA MRR</span><b>$216,150</b></div>
+  </section>
+  <section class="metrics">
+    
+    <article class="metric">
+      <div class="metric-top">
+        <h3>AE/CSA-created opportunities</h3>
+        <span class="delta down">-15.6% softer</span>
+      </div>
+      <div class="compare">
+        <div class="month">
+          <span>June</span>
+          <b>199</b>
+          <i style="width:100.0%"></i>
+        </div>
+        <div class="month july">
+          <span>July</span>
+          <b>168</b>
+          <i style="width:84.4%"></i>
+        </div>
+      </div>
+    </article>
+
+    <article class="metric">
+      <div class="metric-top">
+        <h3>AE/CSA-created opportunity MRR</h3>
+        <span class="delta up">+10.1% better</span>
+      </div>
+      <div class="compare">
+        <div class="month">
+          <span>June</span>
+          <b>$196,236</b>
+          <i style="width:90.8%"></i>
+        </div>
+        <div class="month july">
+          <span>July</span>
+          <b>$216,150</b>
+          <i style="width:100.0%"></i>
+        </div>
+      </div>
+    </article>
+
+    <article class="metric">
+      <div class="metric-top">
+        <h3>SDR-influenced opportunities</h3>
+        <span class="delta down">-23.1% softer</span>
+      </div>
+      <div class="compare">
+        <div class="month">
+          <span>June</span>
+          <b>91</b>
+          <i style="width:100.0%"></i>
+        </div>
+        <div class="month july">
+          <span>July</span>
+          <b>70</b>
+          <i style="width:76.9%"></i>
+        </div>
+      </div>
+    </article>
+
+    <article class="metric">
+      <div class="metric-top">
+        <h3>SDR-influenced opportunity MRR</h3>
+        <span class="delta down">-5.5% softer</span>
+      </div>
+      <div class="compare">
+        <div class="month">
+          <span>June</span>
+          <b>$104,590</b>
+          <i style="width:100.0%"></i>
+        </div>
+        <div class="month july">
+          <span>July</span>
+          <b>$98,885</b>
+          <i style="width:94.5%"></i>
+        </div>
+      </div>
+    </article>
+  </section>
+
   <div class="source">
-    Source: Sales_Team_Activity_Breakdown_1---bd699273-7f85-4426-af8d-cf9c3706ab85.xlsx, sheet `2026 PSA Team Metrics`. Workbook tabs checked: Feb - PSA Rep Metrics , 2026 PSA Team Metrics, 2026 Billing Metrics. Demo-to-deal ratio follows the workbook convention: demos per completed deal, so lower is better when both months have values.
+    Activity source: Sales_Team_Activity_Breakdown_1---bd699273-7f85-4426-af8d-cf9c3706ab85.xlsx, sheet `2026 PSA Team Metrics`. Workbook tabs checked: Feb - PSA Rep Metrics , 2026 PSA Team Metrics, 2026 Billing Metrics. Opportunity source: `sf_june_ae_csa_opps.json` and `sf_july_ae_csa_opps.json`, the backing data for the June and July opportunity-created reports. Demo-to-deal ratio follows the workbook convention: demos per completed deal, so lower is better.
   </div>
 </main>
 </body>
