@@ -3,12 +3,12 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>June vs July Sales Activity Comparison</title>
+<title>June vs July PSA Metrics</title>
 <style>
 :root {
-  --ink:#17202a;
+  --ink:#182230;
   --muted:#667085;
-  --line:#d8dee8;
+  --line:#d6dde8;
   --page:#f4f7fb;
   --panel:#ffffff;
   --june:#315f9d;
@@ -16,33 +16,28 @@
   --green:#0f766e;
   --red:#b42318;
   --amber:#a15c07;
-  --shadow:0 18px 44px rgba(16,24,40,.10);
+  --shadow:0 16px 38px rgba(16,24,40,.10);
 }
 * { box-sizing:border-box; }
 body { margin:0; background:var(--page); color:var(--ink); font-family:Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif; }
-.shell { max-width:1180px; margin:0 auto; padding:28px; }
+.shell { max-width:1120px; margin:0 auto; padding:28px; }
 header { display:grid; grid-template-columns:minmax(0,1fr) auto; gap:24px; align-items:start; padding:28px 0 22px; }
 .eyebrow { text-transform:uppercase; letter-spacing:.08em; font-size:12px; font-weight:800; color:var(--green); }
 h1 { margin:6px 0 8px; font-size:42px; line-height:1.02; letter-spacing:0; }
-.sub { margin:0; max-width:780px; color:var(--muted); font-size:17px; line-height:1.45; }
-.stamp { background:#e9f1f9; border:1px solid var(--line); border-radius:8px; padding:12px 14px; color:#344054; font-size:13px; line-height:1.45; min-width:270px; }
-.hero-grid { display:grid; grid-template-columns:1.1fr .9fr; gap:18px; margin:12px 0 18px; }
+.sub { margin:0; max-width:760px; color:var(--muted); font-size:17px; line-height:1.45; }
+.stamp { background:#e9f1f9; border:1px solid var(--line); border-radius:8px; padding:12px 14px; color:#344054; font-size:13px; line-height:1.45; min-width:275px; }
+.hero { display:grid; grid-template-columns:1.05fr .95fr; gap:18px; margin:12px 0 22px; }
 .headline { background:var(--panel); border:1px solid var(--line); border-radius:8px; padding:22px; box-shadow:var(--shadow); }
-.headline h2 { margin:0 0 14px; font-size:24px; }
-.bigline { display:grid; grid-template-columns:1fr 1fr; gap:14px; }
-.big { border-left:5px solid var(--july); background:#f7fbfa; border-radius:8px; padding:16px; }
-.big:first-child { border-left-color:var(--june); background:#f7f9fd; }
-.big span { display:block; color:var(--muted); font-size:13px; font-weight:700; }
-.big b { display:block; margin-top:4px; font-size:34px; }
-.takeaways { display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); gap:12px; }
-.takeaway { background:var(--panel); border:1px solid var(--line); border-radius:8px; padding:14px; }
-.takeaway span { color:var(--muted); font-size:12px; font-weight:800; text-transform:uppercase; letter-spacing:.06em; }
-.takeaway strong { display:block; margin:5px 0; font-size:18px; }
-.takeaway p { margin:0; color:#475467; font-size:13px; line-height:1.4; }
-.takeaway.positive { border-top:4px solid var(--green); }
-.takeaway.warning { border-top:4px solid var(--amber); }
-.takeaway.neutral { border-top:4px solid #667085; }
-.section-head { display:flex; justify-content:space-between; gap:16px; align-items:end; margin:26px 0 10px; }
+.headline h2 { margin:0 0 14px; font-size:24px; line-height:1.18; }
+.bigline { display:grid; grid-template-columns:repeat(3,minmax(0,1fr)); gap:12px; }
+.big { border-left:5px solid var(--june); background:#f7f9fd; border-radius:8px; padding:14px; min-width:0; }
+.big span { display:block; color:var(--muted); font-size:12px; font-weight:800; text-transform:uppercase; letter-spacing:.04em; }
+.big b { display:block; margin-top:4px; font-size:30px; white-space:nowrap; }
+.note { background:#fff8eb; border:1px solid #fedf89; border-radius:8px; padding:18px; color:#713b12; }
+.note span { display:block; text-transform:uppercase; letter-spacing:.07em; font-size:12px; font-weight:850; }
+.note strong { display:block; margin:5px 0 6px; font-size:20px; color:#7a3b04; }
+.note p { margin:0; line-height:1.45; }
+.section-head { display:flex; justify-content:space-between; gap:16px; align-items:end; margin:12px 0 10px; }
 .section-head h2 { margin:0; font-size:22px; }
 .legend { display:flex; gap:10px; color:var(--muted); font-size:13px; }
 .legend span::before { content:""; display:inline-block; width:10px; height:10px; border-radius:99px; margin-right:6px; vertical-align:-1px; }
@@ -61,14 +56,14 @@ h1 { margin:6px 0 8px; font-size:42px; line-height:1.02; letter-spacing:0; }
 .month span { color:var(--muted); font-size:13px; font-weight:700; }
 .month b { font-size:20px; text-align:right; }
 .month i { display:block; height:13px; border-radius:99px; background:var(--june); min-width:10px; }
-.month.july i { background:var(--july); }
+.month.july i { background:var(--july); min-width:0; }
 .source { margin-top:18px; padding:14px 16px; border:1px solid var(--line); border-radius:8px; background:#fff; color:var(--muted); font-size:12px; line-height:1.5; }
-@media (max-width:920px) {
+@media (max-width:900px) {
   .shell { padding:18px; }
-  header, .hero-grid, .metrics, .takeaways { grid-template-columns:1fr; }
+  header, .hero, .metrics { grid-template-columns:1fr; }
   h1 { font-size:32px; }
 }
-@media (max-width:560px) {
+@media (max-width:620px) {
   .bigline { grid-template-columns:1fr; }
   .month { grid-template-columns:58px 76px 1fr; }
   .month b { font-size:17px; }
@@ -80,42 +75,25 @@ h1 { margin:6px 0 8px; font-size:42px; line-height:1.02; letter-spacing:0; }
   <header>
     <div>
       <div class="eyebrow">Rev.io Sales Ops</div>
-      <h1>June vs July Sales Activity</h1>
-      <p class="sub">Graphic comparison of activity, discovery conversion, demo-to-deal efficiency, and opportunity creation across June and July 2026.</p>
+      <h1>June vs July PSA Metrics</h1>
+      <p class="sub">Workbook-only comparison from the 2026 PSA Team Metrics tab for calls, contacts, discovery activity, and demo-to-deal ratio.</p>
     </div>
-    <div class="stamp">Generated Aug 3, 2026 5:54 AM ET<br>Spreadsheet plus Salesforce tracker sources<br>PSA tracker refreshed 2026-08-02T23:07:46.308680-04:00</div>
+    <div class="stamp">Generated Aug 3, 2026 7:30 AM ET<br>Workbook: Sales_Team_Activity_Breakdown---81c9b685-540e-4f8f-a861-a355ec8c8e7b.xlsx<br>Tab: 2026 PSA Team Metrics</div>
   </header>
 
-  <section class="hero-grid">
+  <section class="hero">
     <div class="headline">
-      <h2>July opportunity MRR is higher, while workbook activity metrics are blank for July.</h2>
+      <h2>June is populated in the workbook; July is blank for these requested PSA metrics.</h2>
       <div class="bigline">
-        <div class="big"><span>June AE/CSA opps</span><b>199</b><span>$196,236 MRR</span></div>
-        <div class="big"><span>July AE/CSA opps</span><b>168</b><span>$216,150 MRR</span></div>
+        <div class="big"><span>June calls</span><b>4,911</b></div>
+        <div class="big"><span>June contacts</span><b>689</b></div>
+        <div class="big"><span>June demo/deal</span><b>5.33:1</b></div>
       </div>
     </div>
-    <div class="takeaways">
-      
-    <div class="takeaway warning">
-      <span>Activity metrics</span>
-      <strong>July workbook cells are blank</strong>
-      <p>The linked workbook has June filled and July blank for calls, contacts, discovery, demos, and demo-to-deal. Those fields are shown as blank instead of backfilled from Salesforce.</p>
-    </div>
-    <div class="takeaway neutral">
-      <span>June baseline</span>
-      <strong>4,911 calls / 689 contacts</strong>
-      <p>June workbook activity remains available as the comparison baseline.</p>
-    </div>
-    <div class="takeaway neutral">
-      <span>Opportunity creation</span>
-      <strong>Opp count -15.6%</strong>
-      <p>July created fewer AE/CSA opportunities than June, but generated more total MRR.</p>
-    </div>
-    <div class="takeaway positive">
-      <span>Opportunity value</span>
-      <strong>MRR up +10.1%</strong>
-      <p>July AE/CSA-created opportunity MRR exceeded June by $19,914.</p>
-    </div>
+    <div class="note">
+      <span>Source note</span>
+      <strong>July workbook values are not filled in.</strong>
+      <p>The July column on the 2026 PSA Team Metrics page is blank for Calls, Contacts, Discovery Call Set, Discovery Call Complete, and Demo to Deal Ratio. This report leaves July blank so it matches the workbook exactly.</p>
     </div>
   </section>
 
@@ -139,7 +117,7 @@ h1 { margin:6px 0 8px; font-size:42px; line-height:1.02; letter-spacing:0; }
         <div class="month july">
           <span>July</span>
           <b>-</b>
-          <i style="width:2.0%"></i>
+          <i style="width:0%"></i>
         </div>
       </div>
     </article>
@@ -158,14 +136,14 @@ h1 { margin:6px 0 8px; font-size:42px; line-height:1.02; letter-spacing:0; }
         <div class="month july">
           <span>July</span>
           <b>-</b>
-          <i style="width:2.0%"></i>
+          <i style="width:0%"></i>
         </div>
       </div>
     </article>
 
     <article class="metric">
       <div class="metric-top">
-        <h3>Discovery calls set</h3>
+        <h3>Discovery Call Set</h3>
         <span class="delta na">Workbook blank</span>
       </div>
       <div class="compare">
@@ -177,14 +155,14 @@ h1 { margin:6px 0 8px; font-size:42px; line-height:1.02; letter-spacing:0; }
         <div class="month july">
           <span>July</span>
           <b>-</b>
-          <i style="width:2.0%"></i>
+          <i style="width:0%"></i>
         </div>
       </div>
     </article>
 
     <article class="metric">
       <div class="metric-top">
-        <h3>Discovery calls complete</h3>
+        <h3>Discovery Call Complete</h3>
         <span class="delta na">Workbook blank</span>
       </div>
       <div class="compare">
@@ -196,33 +174,14 @@ h1 { margin:6px 0 8px; font-size:42px; line-height:1.02; letter-spacing:0; }
         <div class="month july">
           <span>July</span>
           <b>-</b>
-          <i style="width:2.0%"></i>
+          <i style="width:0%"></i>
         </div>
       </div>
     </article>
 
     <article class="metric">
       <div class="metric-top">
-        <h3>Initial demos complete</h3>
-        <span class="delta na">Workbook blank</span>
-      </div>
-      <div class="compare">
-        <div class="month">
-          <span>June</span>
-          <b>16</b>
-          <i style="width:100.0%"></i>
-        </div>
-        <div class="month july">
-          <span>July</span>
-          <b>-</b>
-          <i style="width:2.0%"></i>
-        </div>
-      </div>
-    </article>
-
-    <article class="metric">
-      <div class="metric-top">
-        <h3>Demo to deal ratio</h3>
+        <h3>Demo to Deal Ratio</h3>
         <span class="delta na">Workbook blank</span>
       </div>
       <div class="compare">
@@ -234,90 +193,14 @@ h1 { margin:6px 0 8px; font-size:42px; line-height:1.02; letter-spacing:0; }
         <div class="month july">
           <span>July</span>
           <b>-</b>
-          <i style="width:2.0%"></i>
-        </div>
-      </div>
-    </article>
-
-    <article class="metric">
-      <div class="metric-top">
-        <h3>AE/CSA opportunities</h3>
-        <span class="delta down">-15.6% softer</span>
-      </div>
-      <div class="compare">
-        <div class="month">
-          <span>June</span>
-          <b>199</b>
-          <i style="width:100.0%"></i>
-        </div>
-        <div class="month july">
-          <span>July</span>
-          <b>168</b>
-          <i style="width:84.4%"></i>
-        </div>
-      </div>
-    </article>
-
-    <article class="metric">
-      <div class="metric-top">
-        <h3>AE/CSA opportunity MRR</h3>
-        <span class="delta up">+10.1% better</span>
-      </div>
-      <div class="compare">
-        <div class="month">
-          <span>June</span>
-          <b>$196,236</b>
-          <i style="width:90.8%"></i>
-        </div>
-        <div class="month july">
-          <span>July</span>
-          <b>$216,150</b>
-          <i style="width:100.0%"></i>
-        </div>
-      </div>
-    </article>
-
-    <article class="metric">
-      <div class="metric-top">
-        <h3>SDR-influenced opportunities</h3>
-        <span class="delta down">-23.1% softer</span>
-      </div>
-      <div class="compare">
-        <div class="month">
-          <span>June</span>
-          <b>91</b>
-          <i style="width:100.0%"></i>
-        </div>
-        <div class="month july">
-          <span>July</span>
-          <b>70</b>
-          <i style="width:76.9%"></i>
-        </div>
-      </div>
-    </article>
-
-    <article class="metric">
-      <div class="metric-top">
-        <h3>SDR-influenced opportunity MRR</h3>
-        <span class="delta down">-5.5% softer</span>
-      </div>
-      <div class="compare">
-        <div class="month">
-          <span>June</span>
-          <b>$104,590</b>
-          <i style="width:100.0%"></i>
-        </div>
-        <div class="month july">
-          <span>July</span>
-          <b>$98,885</b>
-          <i style="width:94.5%"></i>
+          <i style="width:0%"></i>
         </div>
       </div>
     </article>
   </section>
 
   <div class="source">
-    Sources: activity metric labels and filled activity values from Sales_Team_Activity_Breakdown---81c9b685-540e-4f8f-a861-a355ec8c8e7b.xlsx; workbook tabs checked: Feb - PSA Rep Metrics , 2026 PSA Team Metrics, 2026 Billing Metrics. The linked workbook has July activity cells blank, so this report leaves July activity blank instead of backfilling from Salesforce. Opportunity counts and MRR come from `sf_june_ae_csa_opps.json` and `sf_july_ae_csa_opps.json`, matching the June and July AE/CSA opportunity dashboards. Demo-to-deal ratio follows the workbook direction: demos per completed deal, so lower is better.
+    Source: Sales_Team_Activity_Breakdown---81c9b685-540e-4f8f-a861-a355ec8c8e7b.xlsx, sheet `2026 PSA Team Metrics`. Workbook tabs checked: Feb - PSA Rep Metrics , 2026 PSA Team Metrics, 2026 Billing Metrics. Demo-to-deal ratio follows the workbook convention: demos per completed deal, so lower is better when both months have values.
   </div>
 </main>
 </body>
