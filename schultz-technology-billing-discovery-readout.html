@@ -1,0 +1,376 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Schultz Technology Billing Discovery Readout | Rev.io</title>
+  <meta name="description" content="Source-backed billing discovery readout for Schultz Technology and Rev.io.">
+  <style>
+    :root {
+      --schultz: #00abdf;
+      --revio: #6cc04a;
+      --ink: #10233f;
+      --navy: #071827;
+      --panel: #102235;
+      --line: #dce5ee;
+      --paper: #f6f9fc;
+      --muted: #5c6f89;
+      --white: #ffffff;
+      --amber: #f5b64b;
+      --orange: #fc6120;
+    }
+
+    * { box-sizing: border-box; }
+    html { scroll-behavior: smooth; }
+    body {
+      margin: 0;
+      font-family: Aptos, Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      color: var(--ink);
+      background: var(--paper);
+      letter-spacing: 0;
+    }
+
+    .deck { min-height: 100vh; }
+    .slide {
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      position: relative;
+      overflow: hidden;
+      border-bottom: 1px solid rgba(16, 35, 63, 0.08);
+    }
+    .slide.dark {
+      color: var(--white);
+      background:
+        linear-gradient(110deg, rgba(7, 24, 39, 0.96), rgba(7, 24, 39, 0.86)),
+        repeating-linear-gradient(0deg, rgba(255,255,255,0.035) 0 1px, transparent 1px 44px),
+        repeating-linear-gradient(90deg, rgba(255,255,255,0.035) 0 1px, transparent 1px 44px),
+        var(--navy);
+    }
+    .slide.light { background: var(--paper); }
+    .wrap {
+      width: min(1180px, calc(100vw - 48px));
+      margin: 0 auto;
+      padding: 56px 0;
+      position: relative;
+      z-index: 2;
+    }
+    .topline {
+      position: absolute;
+      top: 28px;
+      left: 32px;
+      right: 32px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 20px;
+      z-index: 4;
+      font-size: 12px;
+      font-weight: 800;
+      text-transform: uppercase;
+      color: rgba(255,255,255,0.72);
+      letter-spacing: 1.4px;
+    }
+    .topline.light { color: rgba(16,35,63,0.55); }
+    .logo-row { display: flex; align-items: center; gap: 18px; flex-wrap: wrap; }
+    .schultz-logo { width: 210px; max-height: 78px; object-fit: contain; background: white; padding: 13px 16px; border-radius: 8px; }
+    .revio-logo { height: 28px; width: auto; object-fit: contain; }
+    .kicker {
+      font-size: 12px;
+      font-weight: 900;
+      text-transform: uppercase;
+      color: var(--revio);
+      letter-spacing: 1.8px;
+      margin-bottom: 18px;
+    }
+    .light .kicker { color: #126eb4; }
+    h1, h2, h3, p { margin: 0; }
+    h1 {
+      font-size: clamp(48px, 7vw, 92px);
+      line-height: 0.95;
+      max-width: 920px;
+      letter-spacing: 0;
+    }
+    h2 {
+      font-size: clamp(34px, 4.5vw, 62px);
+      line-height: 1;
+      max-width: 900px;
+      margin-bottom: 24px;
+      letter-spacing: 0;
+    }
+    h3 {
+      font-size: 18px;
+      line-height: 1.16;
+      margin-bottom: 10px;
+      color: inherit;
+    }
+    .lead {
+      max-width: 790px;
+      margin-top: 24px;
+      color: rgba(255,255,255,0.76);
+      font-size: clamp(17px, 2vw, 23px);
+      line-height: 1.36;
+    }
+    .light .lead { color: var(--muted); }
+    .hero-grid {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) 320px;
+      gap: 48px;
+      align-items: end;
+    }
+    .metric-stack { display: grid; gap: 14px; }
+    .metric {
+      background: rgba(255,255,255,0.08);
+      border: 1px solid rgba(255,255,255,0.14);
+      border-radius: 8px;
+      padding: 18px;
+    }
+    .metric strong { display: block; font-size: 34px; line-height: 1; color: var(--schultz); }
+    .metric span { display: block; margin-top: 8px; color: rgba(255,255,255,0.72); font-size: 12px; font-weight: 800; text-transform: uppercase; }
+    .grid-2 { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 18px; }
+    .grid-3 { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 18px; }
+    .card {
+      background: var(--white);
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      padding: 22px;
+      min-height: 166px;
+      box-shadow: 0 18px 45px rgba(16,35,63,0.06);
+      position: relative;
+      overflow: hidden;
+    }
+    .card::before {
+      content: "";
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 5px;
+      background: var(--schultz);
+    }
+    .card.green::before { background: var(--revio); }
+    .card.amber::before { background: var(--amber); }
+    .card.orange::before { background: var(--orange); }
+    .card p, .card li {
+      color: var(--muted);
+      font-size: 15px;
+      line-height: 1.44;
+    }
+    ul { margin: 0; padding-left: 18px; }
+    li + li { margin-top: 8px; }
+    .band {
+      background: var(--navy);
+      color: var(--white);
+      padding: 18px 22px;
+      border-radius: 8px;
+      border-left: 6px solid var(--schultz);
+      margin-top: 24px;
+      font-size: 18px;
+      line-height: 1.4;
+    }
+    .timeline { display: grid; gap: 14px; }
+    .step {
+      display: grid;
+      grid-template-columns: 138px minmax(0, 1fr);
+      gap: 18px;
+      align-items: start;
+      background: var(--white);
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      padding: 18px;
+    }
+    .step .date {
+      color: #126eb4;
+      font-size: 13px;
+      font-weight: 900;
+      text-transform: uppercase;
+    }
+    .step p { color: var(--muted); line-height: 1.45; font-size: 15px; }
+    .talk-track {
+      background: var(--white);
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      padding: 28px;
+      font-size: clamp(22px, 3vw, 34px);
+      line-height: 1.12;
+      color: var(--ink);
+      box-shadow: 0 20px 60px rgba(16,35,63,0.08);
+    }
+    .talk-track strong { color: #126eb4; }
+    .source {
+      position: absolute;
+      bottom: 20px;
+      left: 32px;
+      right: 32px;
+      display: flex;
+      justify-content: space-between;
+      gap: 18px;
+      color: rgba(16,35,63,0.45);
+      font-size: 11px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.9px;
+    }
+    .dark .source { color: rgba(255,255,255,0.42); }
+    a { color: inherit; }
+
+    @media (max-width: 820px) {
+      .slide { min-height: auto; }
+      .wrap { width: min(100vw - 28px, 1180px); padding: 96px 0 72px; }
+      .topline { top: 18px; left: 14px; right: 14px; align-items: flex-start; }
+      .hero-grid, .grid-2, .grid-3 { grid-template-columns: 1fr; }
+      .schultz-logo { width: 180px; }
+      .step { grid-template-columns: 1fr; }
+      .source { position: static; margin: 0 auto; padding: 0 14px 18px; width: min(100vw - 28px, 1180px); flex-direction: column; }
+    }
+  </style>
+</head>
+<body>
+<main class="deck">
+  <section class="slide dark">
+    <div class="topline">
+      <div class="logo-row">
+        <img class="schultz-logo" src="schultz-technology-logo.svg" alt="Schultz Technology logo">
+        <span>Billing Discovery Readout</span>
+      </div>
+      <img class="revio-logo" src="revio-logo-white.png" alt="Rev.io">
+    </div>
+    <div class="wrap hero-grid">
+      <div>
+        <div class="kicker">Schultz Technology x Rev.io</div>
+        <h1>Consolidate billing without losing operational control.</h1>
+        <p class="lead">The discovery call surfaced a clear billing modernization path: replace CoreDial/Cordial invoicing with Rev.io, automate usage and reconciliation, preserve anniversary billing, and separate the PSA conversation for the IT director.</p>
+      </div>
+      <div class="metric-stack">
+        <div class="metric"><strong>60-90</strong><span>day onboarding estimate</span></div>
+        <div class="metric"><strong>4</strong><span>importer sources discussed</span></div>
+        <div class="metric"><strong>Aug 18</strong><span>billing demo target</span></div>
+      </div>
+    </div>
+    <div class="source"><span>Source: Notion discovery page, 2026-08-03</span><span>Brand context: schultztechnology.com</span></div>
+  </section>
+
+  <section class="slide light">
+    <div class="topline light">
+      <span>Executive Readout</span>
+      <img class="revio-logo" src="revio-logo.png" alt="Rev.io">
+    </div>
+    <div class="wrap">
+      <div class="kicker">What matters</div>
+      <h2>The value case is operational simplicity, not a generic platform swap.</h2>
+      <div class="grid-2">
+        <div class="card"><h3>Billing is fragmented around CoreDial/Cordial</h3><p>Schultz is a SkySwitch reseller, but invoices through CoreDial/Cordial. SkySwitch service changes still require separate action, and billing remains centered in Cordial.</p></div>
+        <div class="card green"><h3>SMS usage is the near-term pain</h3><p>Textable is new and growing. The prospect expects monthly audits to become more painful as customer adoption expands.</p></div>
+        <div class="card amber"><h3>Accounting lacks line-item clarity</h3><p>QuickBooks Online receives Authorize.net lump sums without invoice-level breakdown, creating reconciliation drag.</p></div>
+        <div class="card orange"><h3>Compliance work is too manual</h3><p>The prospect manually prepares quarterly and annual 499 filings from Cordial reports and previously had a failed Avalara services experience.</p></div>
+      </div>
+      <div class="band">Demo posture: show Rev.io as the billing control center for CoreDial, SkySwitch, White Label, and Textable data. Keep PSA as a separate, later conversation.</div>
+    </div>
+    <div class="source"><span>Meeting stage: Discovery Scheduled</span><span>Product line: Billing</span></div>
+  </section>
+
+  <section class="slide light">
+    <div class="topline light">
+      <span>Current State</span>
+      <img class="revio-logo" src="revio-logo.png" alt="Rev.io">
+    </div>
+    <div class="wrap">
+      <div class="kicker">Operating environment</div>
+      <h2>Schultz has a service-provider stack that works, but it is held together by manual billing control points.</h2>
+      <div class="grid-3">
+        <div class="card"><h3>Platforms</h3><ul><li>CoreDial/Cordial for invoicing</li><li>SkySwitch as service platform</li><li>White Label carrier for about a dozen clients</li><li>Textable for third-party SMS</li></ul></div>
+        <div class="card"><h3>Back office</h3><ul><li>QuickBooks Online for accounting</li><li>Authorize.net for payment collection</li><li>ConnectWise for CRM and ticketing</li><li>Avalara tax calculations handled through Cordial</li></ul></div>
+        <div class="card"><h3>Billing motion</h3><ul><li>Anniversary-date daily billing</li><li>High-inclusion plans limit voice overage</li><li>SMS overage monitoring is manual</li><li>499 filing prep is handled internally</li></ul></div>
+      </div>
+    </div>
+    <div class="source"><span>Notion discovery notes</span><span>Schultz public site: nationwide IT support and Fetchit veterinary software</span></div>
+  </section>
+
+  <section class="slide dark">
+    <div class="topline">
+      <span>Rev.io Fit</span>
+      <img class="revio-logo" src="revio-logo-white.png" alt="Rev.io">
+    </div>
+    <div class="wrap">
+      <div class="kicker">Positioning</div>
+      <h2>Lead with four concrete outcomes Schultz already asked about.</h2>
+      <div class="grid-2">
+        <div class="card"><h3>One billing system</h3><p>Position Rev.io as the replacement for Cordial invoicing, pulling CoreDial, SkySwitch, White Label, and Textable usage into one billing platform.</p></div>
+        <div class="card green"><h3>Automated usage rating</h3><p>Show Textable SMS allowance and overage handling by customer, with unbillable usage reporting to catch missing setup.</p></div>
+        <div class="card amber"><h3>QBO reconciliation</h3><p>Demonstrate invoice, tax, service, and payment detail flowing into QuickBooks Online instead of lump-sum payment ambiguity.</p></div>
+        <div class="card orange"><h3>Tax and collections control</h3><p>Show 499 reporting outputs, compliance partner handoff options, anniversary billing, automated past-due notices, and internal collection tasks.</p></div>
+      </div>
+    </div>
+    <div class="source"><span>Do not overclaim provisioning: Rev.io does not provide native provisioning integrations.</span><span>Use REST API/Zapier as optional automation path.</span></div>
+  </section>
+
+  <section class="slide light">
+    <div class="topline light">
+      <span>Buyer Map</span>
+      <img class="revio-logo" src="revio-logo.png" alt="Rev.io">
+    </div>
+    <div class="wrap">
+      <div class="kicker">Stakeholders</div>
+      <h2>The billing buyer is engaged but skeptical. The PSA buyer is separate.</h2>
+      <div class="grid-2">
+        <div class="card"><h3>Billing contact</h3><p>The primary contact is trying to understand why Rev.io matters from their current CoreDial/Cordial workflow. They directly asked for the value in bringing in Rev.io and requested pricing next steps.</p></div>
+        <div class="card green"><h3>IT director</h3><p>The IT director needs to be included for any Rev.io PSA or ConnectWise replacement discussion. That conversation should be scheduled separately in early September.</p></div>
+        <div class="card amber"><h3>Unknowns</h3><ul><li>Monthly recurring revenue figure</li><li>Textable account rep</li><li>Payment processing volumes and current rates</li><li>Actual appetite for replacing ConnectWise</li></ul></div>
+        <div class="card orange"><h3>Emotional read</h3><p>The prospect was candid that billing modernization is not exciting to them. Keep the demo practical, concrete, and focused on work removed from their plate.</p></div>
+      </div>
+    </div>
+    <div class="source"><span>Buyer notes from transcript and Notion summary</span><span>Follow-up owner: Jamie Butler</span></div>
+  </section>
+
+  <section class="slide light">
+    <div class="topline light">
+      <span>Demo Plan</span>
+      <img class="revio-logo" src="revio-logo.png" alt="Rev.io">
+    </div>
+    <div class="wrap">
+      <div class="kicker">August 18 billing demo</div>
+      <h2>Use the demo to answer “what gets simpler?” with their exact workflow.</h2>
+      <div class="timeline">
+        <div class="step"><div class="date">Open</div><p>Recap the current state: CoreDial/Cordial billing, SkySwitch service platform, Textable SMS, QBO reconciliation, manual 499 prep, and anniversary billing.</p></div>
+        <div class="step"><div class="date">Show first</div><p>Walk through consolidated customer billing and how CDRs/usages from multiple providers flow into Rev.io for rating and invoicing.</p></div>
+        <div class="step"><div class="date">Go deeper</div><p>Use Textable as the example for included SMS allowances, overage pricing, invoice application, and unbillable usage exception reporting.</p></div>
+        <div class="step"><div class="date">Close</div><p>Show QuickBooks Online sync, payment processing comparison path, collections automation, reporting for 499 prep, and pricing once Schultz provides MRR.</p></div>
+      </div>
+    </div>
+    <div class="source"><span>Demo scheduled for Tuesday, August 18 at 11:00 AM per Notion action item</span><span>PSA demo should wait for IT director availability</span></div>
+  </section>
+
+  <section class="slide light">
+    <div class="topline light">
+      <span>Talk Track</span>
+      <img class="revio-logo" src="revio-logo.png" alt="Rev.io">
+    </div>
+    <div class="wrap">
+      <div class="kicker">Recommended language</div>
+      <div class="talk-track">
+        <strong>“The reason to look at Rev.io is not because CoreDial suddenly stopped working.</strong> It is because Schultz is adding more services and providers, and each new source makes billing, tax, collections, and reconciliation harder to manage manually. Rev.io gives you one billing system for CoreDial, SkySwitch, White Label, and Textable usage, while keeping anniversary billing and giving QuickBooks the detail your accounting process is missing.”</div>
+      <div class="band">Avoid pitching PSA too early. Mention the ConnectWise integration, then park the deeper PSA conversation for the IT director.</div>
+    </div>
+    <div class="source"><span>Prepared for Rev.io sales follow-up</span><span>Public-safe client-facing summary</span></div>
+  </section>
+
+  <section class="slide dark">
+    <div class="topline">
+      <span>Next Steps</span>
+      <img class="revio-logo" src="revio-logo-white.png" alt="Rev.io">
+    </div>
+    <div class="wrap">
+      <div class="kicker">Action plan</div>
+      <h2>Make the next meeting measurable.</h2>
+      <div class="grid-2">
+        <div class="card"><h3>Before demo</h3><ul><li>Send the August 18 calendar invite</li><li>Ask Schultz to bring monthly recurring revenue</li><li>Ask for current Authorize.net rates or statements</li><li>Confirm Textable account contact if available</li></ul></div>
+        <div class="card green"><h3>During demo</h3><ul><li>Map Rev.io to their current billing run</li><li>Show SMS usage automation</li><li>Show QBO line-item sync</li><li>Explain tax report outputs and partner referrals</li></ul></div>
+        <div class="card amber"><h3>After demo</h3><ul><li>Deliver billing platform quote based on MRR</li><li>Deliver payment processing comparison if data is provided</li><li>Confirm onboarding scope and importer count</li></ul></div>
+        <div class="card orange"><h3>Separate track</h3><ul><li>Schedule PSA/ticketing demo in early September</li><li>Include IT director</li><li>Position ConnectWise integration as interim bridge</li></ul></div>
+      </div>
+    </div>
+    <div class="source"><span>Built by Robin for Rev.io</span><span>Code Blue</span></div>
+  </section>
+</main>
+</body>
+</html>
