@@ -1,0 +1,468 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Q2 Prospect TAM Coverage | Rev.io</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800;900&display=swap" rel="stylesheet">
+<style>
+:root {
+  --ink: #152238;
+  --muted: #667085;
+  --line: #d9e2ec;
+  --panel: #ffffff;
+  --paper: #f4f7fb;
+  --blue: #0f6bff;
+  --cyan: #03a9c9;
+  --green: #14a76c;
+  --gold: #d99600;
+  --red: #d04545;
+}
+* { box-sizing: border-box; }
+body {
+  margin: 0;
+  min-height: 100vh;
+  background: var(--paper);
+  color: var(--ink);
+  font-family: Inter, Arial, sans-serif;
+}
+.topbar {
+  min-height: 72px;
+  padding: 18px 34px;
+  background: #0d1b2f;
+  color: #fff;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 24px;
+  border-bottom: 4px solid var(--cyan);
+}
+.brand {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+}
+.brand img {
+  width: 116px;
+  height: auto;
+  filter: brightness(0) invert(1);
+}
+.brand-copy {
+  border-left: 1px solid rgba(255,255,255,.18);
+  padding-left: 14px;
+}
+.eyebrow {
+  font-size: 12px;
+  font-weight: 800;
+  letter-spacing: .12em;
+  text-transform: uppercase;
+  color: #7de2f3;
+}
+h1 {
+  margin: 2px 0 0;
+  font-size: 24px;
+  line-height: 1.1;
+  letter-spacing: 0;
+}
+.stamp {
+  text-align: right;
+  color: rgba(255,255,255,.68);
+  font-size: 12px;
+  line-height: 1.45;
+}
+.wrap {
+  max-width: 1240px;
+  margin: 0 auto;
+  padding: 26px;
+}
+.hero-grid {
+  display: grid;
+  grid-template-columns: 1.1fr .9fr;
+  gap: 18px;
+  align-items: stretch;
+}
+.hero-metric {
+  background: var(--panel);
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  padding: 26px;
+  box-shadow: 0 14px 34px rgba(17, 24, 39, .07);
+}
+.label {
+  color: var(--muted);
+  font-size: 12px;
+  font-weight: 900;
+  letter-spacing: .1em;
+  text-transform: uppercase;
+}
+.tam-value {
+  font-size: clamp(54px, 9vw, 106px);
+  line-height: .95;
+  letter-spacing: 0;
+  font-weight: 900;
+  margin-top: 12px;
+  color: var(--ink);
+}
+.tam-sub {
+  margin-top: 10px;
+  color: var(--muted);
+  font-size: 18px;
+  font-weight: 700;
+}
+.coverage-card {
+  background: #10233c;
+  color: #fff;
+  border-radius: 8px;
+  padding: 26px;
+  position: relative;
+  overflow: hidden;
+  box-shadow: 0 14px 34px rgba(16, 35, 60, .2);
+}
+.coverage-card::before {
+  content: "";
+  position: absolute;
+  inset: 0 0 auto 0;
+  height: 6px;
+  background: linear-gradient(90deg, var(--cyan), var(--green));
+}
+.coverage-main {
+  display: flex;
+  align-items: baseline;
+  gap: 12px;
+  margin-top: 16px;
+}
+.coverage-main strong {
+  font-size: 64px;
+  line-height: 1;
+  font-weight: 900;
+  letter-spacing: 0;
+}
+.coverage-main span {
+  font-size: 22px;
+  font-weight: 800;
+  color: #89e5f2;
+}
+.coverage-card p {
+  margin: 16px 0 0;
+  max-width: 520px;
+  color: rgba(255,255,255,.76);
+  line-height: 1.55;
+}
+.progress {
+  height: 14px;
+  border-radius: 999px;
+  background: rgba(255,255,255,.14);
+  overflow: hidden;
+  margin-top: 28px;
+}
+.progress span {
+  display: block;
+  width: 13%;
+  height: 100%;
+  border-radius: inherit;
+  background: linear-gradient(90deg, var(--cyan), var(--green));
+}
+.section {
+  margin-top: 18px;
+}
+.section-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  margin: 24px 0 10px;
+}
+.section-head h2 {
+  margin: 0;
+  font-size: 18px;
+  letter-spacing: 0;
+}
+.section-head span {
+  color: var(--muted);
+  font-size: 13px;
+  font-weight: 700;
+}
+.cards {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 12px;
+}
+.card {
+  background: var(--panel);
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  padding: 18px;
+  box-shadow: 0 8px 24px rgba(17, 24, 39, .05);
+}
+.card.accent-blue { border-top: 4px solid var(--blue); }
+.card.accent-cyan { border-top: 4px solid var(--cyan); }
+.card.accent-green { border-top: 4px solid var(--green); }
+.card.accent-gold { border-top: 4px solid var(--gold); }
+.card-value {
+  margin-top: 8px;
+  font-size: 34px;
+  line-height: 1;
+  font-weight: 900;
+  letter-spacing: 0;
+}
+.card-sub {
+  margin-top: 8px;
+  color: var(--muted);
+  font-size: 13px;
+  line-height: 1.4;
+}
+.split {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 12px;
+}
+.team-card {
+  display: grid;
+  grid-template-columns: 1fr auto;
+  gap: 18px;
+  align-items: center;
+}
+.team-name {
+  font-size: 15px;
+  font-weight: 900;
+}
+.team-count {
+  font-size: 42px;
+  font-weight: 900;
+  line-height: 1;
+}
+.team-meta {
+  margin-top: 7px;
+  color: var(--muted);
+  font-size: 13px;
+  font-weight: 700;
+}
+.donut {
+  width: 98px;
+  aspect-ratio: 1;
+  border-radius: 50%;
+  background: conic-gradient(var(--accent) var(--slice), #e8eef5 0);
+  display: grid;
+  place-items: center;
+}
+.donut::after {
+  content: attr(data-label);
+  width: 68px;
+  aspect-ratio: 1;
+  border-radius: 50%;
+  background: #fff;
+  display: grid;
+  place-items: center;
+  font-size: 14px;
+  font-weight: 900;
+  color: var(--ink);
+}
+.insight-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+}
+.insight {
+  background: var(--panel);
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  padding: 18px;
+}
+.insight h3 {
+  margin: 0;
+  font-size: 16px;
+}
+.row {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  gap: 12px;
+  align-items: center;
+  padding: 13px 0;
+  border-bottom: 1px solid #edf1f6;
+}
+.row:last-child { border-bottom: 0; }
+.row-title {
+  font-weight: 800;
+}
+.row-note {
+  color: var(--muted);
+  font-size: 12px;
+  margin-top: 3px;
+}
+.row-value {
+  font-size: 22px;
+  font-weight: 900;
+  white-space: nowrap;
+}
+.callout {
+  background: #fff7e8;
+  border: 1px solid #f2d097;
+  border-radius: 8px;
+  padding: 16px 18px;
+  margin-top: 14px;
+  color: #5f4200;
+  font-size: 13px;
+  line-height: 1.5;
+}
+@media (max-width: 920px) {
+  .topbar { display: block; padding: 18px; }
+  .stamp { text-align: left; margin-top: 12px; }
+  .brand { align-items: flex-start; }
+  .hero-grid, .split, .insight-grid { grid-template-columns: 1fr; }
+  .cards { grid-template-columns: repeat(2, 1fr); }
+  .wrap { padding: 16px; }
+}
+@media (max-width: 560px) {
+  .cards { grid-template-columns: 1fr; }
+  .team-card { grid-template-columns: 1fr; }
+  .donut { width: 84px; }
+  .coverage-main strong { font-size: 48px; }
+}
+</style>
+</head>
+<body>
+<header class="topbar">
+  <div class="brand">
+    <img src="https://7091219.fs1.hubspotusercontent-na1.net/hubfs/7091219/email-assets/logo-revio-white.png" alt="Rev.io">
+    <div class="brand-copy">
+      <div class="eyebrow">Prospecting Coverage</div>
+      <h1>Q2 TAM Activity Snapshot</h1>
+    </div>
+  </div>
+  <div class="stamp">Generated August 5, 2026<br>Source: Salesforce counts supplied in #general</div>
+</header>
+
+<main class="wrap">
+  <section class="hero-grid">
+    <div class="hero-metric">
+      <div class="label">Total Addressable Market</div>
+      <div class="tam-value">56,866</div>
+      <div class="tam-sub">8,123 accounts per AE</div>
+    </div>
+    <div class="coverage-card">
+      <div class="label">Q2 TAM Coverage</div>
+      <div class="coverage-main"><strong>13%</strong><span>covered</span></div>
+      <p>7,311 unique in-TAM prospect accounts had a call, email, or meeting logged in Q2.</p>
+      <div class="progress" aria-label="13 percent TAM coverage"><span></span></div>
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="section-head">
+      <h2>Team TAM</h2>
+      <span>Warm + Cold Prospect accounts in target pool</span>
+    </div>
+    <div class="split">
+      <div class="card team-card accent-blue" style="--accent: var(--blue); --slice: 53.5%;">
+        <div>
+          <div class="team-name">MSP Team</div>
+          <div class="team-count">30,414</div>
+          <div class="team-meta">7,603 accounts per AE</div>
+        </div>
+        <div class="donut" data-label="53%"></div>
+      </div>
+      <div class="card team-card accent-cyan" style="--accent: var(--cyan); --slice: 46.5%;">
+        <div>
+          <div class="team-name">Integrator Team</div>
+          <div class="team-count">26,472</div>
+          <div class="team-meta">8,824 accounts per AE</div>
+        </div>
+        <div class="donut" data-label="47%"></div>
+      </div>
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="section-head">
+      <h2>Employee Size</h2>
+      <span>Account size segmentation</span>
+    </div>
+    <div class="cards">
+      <div class="card accent-green">
+        <div class="label">Over 35 Employees</div>
+        <div class="card-value">13,901</div>
+        <div class="card-sub">Larger TAM accounts</div>
+      </div>
+      <div class="card accent-gold">
+        <div class="label">Under 35 Employees</div>
+        <div class="card-value">39,539</div>
+        <div class="card-sub">Smaller TAM accounts</div>
+      </div>
+      <div class="card accent-blue">
+        <div class="label">Q2 Prospect Activity</div>
+        <div class="card-value">10,227</div>
+        <div class="card-sub">Unique prospect accounts with activity logged</div>
+      </div>
+      <div class="card accent-cyan">
+        <div class="label">Inside TAM</div>
+        <div class="card-value">7,311</div>
+        <div class="card-sub">Unique touched accounts inside target pool</div>
+      </div>
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="section-head">
+      <h2>Coverage Quality</h2>
+      <span>What Q2 activity reached</span>
+    </div>
+    <div class="insight-grid">
+      <div class="insight">
+        <h3>Q2 activity reached a meaningful slice of TAM</h3>
+        <div class="row">
+          <div>
+            <div class="row-title">Unique prospect accounts touched</div>
+            <div class="row-note">Calls, emails, or meetings logged in Q2</div>
+          </div>
+          <div class="row-value">10,227</div>
+        </div>
+        <div class="row">
+          <div>
+            <div class="row-title">Touched accounts inside TAM</div>
+            <div class="row-note">Qualified against the target pool</div>
+          </div>
+          <div class="row-value">7,311</div>
+        </div>
+        <div class="row">
+          <div>
+            <div class="row-title">TAM penetration</div>
+            <div class="row-note">7,311 divided by 56,866</div>
+          </div>
+          <div class="row-value">13%</div>
+        </div>
+      </div>
+
+      <div class="insight">
+        <h3>Small-account activity diluted prospecting effort</h3>
+        <div class="row">
+          <div>
+            <div class="row-title">Accounts with 5 or fewer employees</div>
+            <div class="row-note">Within Q2 unique prospect activity</div>
+          </div>
+          <div class="row-value">2,916</div>
+        </div>
+        <div class="row">
+          <div>
+            <div class="row-title">Share of Q2 touched accounts</div>
+            <div class="row-note">2,916 divided by 10,227</div>
+          </div>
+          <div class="row-value">29%</div>
+        </div>
+        <div class="row">
+          <div>
+            <div class="row-title">Touched but outside TAM</div>
+            <div class="row-note">Q2 activity not counted in TAM coverage</div>
+          </div>
+          <div class="row-value">2,916</div>
+        </div>
+      </div>
+    </div>
+    <div class="callout">
+      Note: MSP Team plus Integrator Team subtotals equal 56,886, which is 20 higher than the supplied TAM of 56,866. The page preserves the supplied TAM total and uses 56,866 for coverage math.
+    </div>
+  </section>
+</main>
+</body>
+</html>
