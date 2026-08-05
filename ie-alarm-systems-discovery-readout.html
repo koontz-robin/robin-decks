@@ -1,0 +1,525 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>IE Alarm Systems Discovery Readout | Rev.io</title>
+  <meta name="description" content="Buyer-facing Rev.io discovery readout and business case for IE Alarm Systems.">
+  <style>
+    :root {
+      --ie-red: #c8202f;
+      --ie-gold: #f2bd35;
+      --revio: #6cc04a;
+      --ink: #162033;
+      --charcoal: #10141c;
+      --paper: #f6f7f9;
+      --line: #dde3ea;
+      --muted: #627184;
+      --white: #ffffff;
+      --blue: #256f95;
+    }
+    * { box-sizing: border-box; }
+    html { scroll-behavior: smooth; }
+    body {
+      margin: 0;
+      font-family: Aptos, Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      color: var(--ink);
+      background: var(--paper);
+      letter-spacing: 0;
+      overflow-x: hidden;
+    }
+    .deck { min-height: 100vh; }
+    .slide {
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      position: relative;
+      overflow: hidden;
+      border-bottom: 1px solid rgba(22,32,51,0.08);
+    }
+    .slide.dark {
+      color: var(--white);
+      background:
+        linear-gradient(118deg, rgba(16,20,28,0.98), rgba(63,21,26,0.95)),
+        repeating-linear-gradient(0deg, rgba(255,255,255,0.04) 0 1px, transparent 1px 48px),
+        repeating-linear-gradient(90deg, rgba(255,255,255,0.035) 0 1px, transparent 1px 48px),
+        var(--charcoal);
+    }
+    .slide.light { background: var(--paper); }
+    .slide.white { background: var(--white); }
+    .wrap {
+      width: min(1180px, calc(100vw - 48px));
+      margin: 0 auto;
+      padding: 78px 0 62px;
+      position: relative;
+      z-index: 2;
+    }
+    .topline {
+      position: absolute;
+      top: 28px;
+      left: 32px;
+      right: 32px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 20px;
+      z-index: 4;
+    }
+    .prospect-logo {
+      width: 210px;
+      max-height: 92px;
+      object-fit: contain;
+      background: var(--white);
+      padding: 12px 16px;
+      border-radius: 8px;
+      box-shadow: 0 18px 40px rgba(0,0,0,0.14);
+    }
+    .revio-logo {
+      height: 30px;
+      width: auto;
+      object-fit: contain;
+      display: block;
+    }
+    .topline.light .revio-logo {
+      background: var(--charcoal);
+      height: 40px;
+      padding: 8px 12px;
+      border-radius: 6px;
+    }
+    .kicker {
+      font-size: 12px;
+      font-weight: 900;
+      text-transform: uppercase;
+      color: var(--ie-gold);
+      letter-spacing: 1.8px;
+      margin-bottom: 18px;
+    }
+    .light .kicker, .white .kicker { color: var(--ie-red); }
+    h1, h2, h3, p { margin: 0; }
+    h1 {
+      font-size: clamp(46px, 6.8vw, 84px);
+      line-height: 0.99;
+      max-width: 960px;
+      letter-spacing: 0;
+    }
+    h2 {
+      font-size: clamp(34px, 4.25vw, 58px);
+      line-height: 1.02;
+      max-width: 1040px;
+      margin-bottom: 24px;
+      letter-spacing: 0;
+    }
+    h3 {
+      font-size: 18px;
+      line-height: 1.18;
+      margin-bottom: 10px;
+      color: inherit;
+    }
+    .lead {
+      max-width: 850px;
+      margin-top: 24px;
+      color: rgba(255,255,255,0.78);
+      font-size: clamp(17px, 2vw, 23px);
+      line-height: 1.36;
+    }
+    .light .lead, .white .lead { color: var(--muted); }
+    .hero-grid {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) 330px;
+      gap: 48px;
+      align-items: end;
+    }
+    .metric-stack { display: grid; gap: 14px; }
+    .metric {
+      background: rgba(255,255,255,0.08);
+      border: 1px solid rgba(255,255,255,0.15);
+      border-radius: 8px;
+      padding: 18px;
+    }
+    .metric strong { display: block; font-size: 34px; line-height: 1; color: var(--ie-gold); }
+    .metric span { display: block; margin-top: 8px; color: rgba(255,255,255,0.74); font-size: 12px; font-weight: 850; text-transform: uppercase; }
+    .grid-2 { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 18px; }
+    .grid-3 { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 18px; }
+    .card {
+      background: var(--white);
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      padding: 22px;
+      min-height: 166px;
+      box-shadow: 0 18px 45px rgba(22,32,51,0.06);
+      position: relative;
+      overflow: hidden;
+    }
+    .dark .card { background: var(--white); color: var(--ink); }
+    .card::before {
+      content: "";
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 5px;
+      background: var(--ie-red);
+    }
+    .card.gold::before { background: var(--ie-gold); }
+    .card.green::before { background: var(--revio); }
+    .card.blue::before { background: var(--blue); }
+    .card p, .card li {
+      color: var(--muted);
+      font-size: 15px;
+      line-height: 1.44;
+    }
+    ul { margin: 0; padding-left: 18px; }
+    li + li { margin-top: 8px; }
+    .band {
+      background: var(--charcoal);
+      color: var(--white);
+      padding: 18px 22px;
+      border-radius: 8px;
+      border-left: 6px solid var(--ie-red);
+      margin-top: 24px;
+      font-size: 18px;
+      line-height: 1.4;
+    }
+    .impact-grid {
+      display: grid;
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+      gap: 14px;
+      margin: 24px 0;
+    }
+    .impact {
+      background: var(--charcoal);
+      color: var(--white);
+      border-radius: 8px;
+      padding: 18px;
+      border-top: 5px solid var(--ie-gold);
+    }
+    .impact strong { display: block; font-size: 30px; line-height: 1; color: var(--ie-gold); }
+    .impact span { display: block; margin-top: 9px; font-size: 12px; line-height: 1.3; color: rgba(255,255,255,0.74); text-transform: uppercase; font-weight: 850; }
+    .timeline { display: grid; gap: 14px; }
+    .step {
+      display: grid;
+      grid-template-columns: 156px minmax(0, 1fr);
+      gap: 18px;
+      align-items: start;
+      background: var(--white);
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      padding: 18px;
+    }
+    .step .date {
+      color: var(--ie-red);
+      font-size: 13px;
+      font-weight: 900;
+      text-transform: uppercase;
+    }
+    .step p { color: var(--muted); line-height: 1.45; font-size: 15px; }
+    .source {
+      position: absolute;
+      bottom: 20px;
+      left: 32px;
+      right: 32px;
+      display: flex;
+      justify-content: space-between;
+      gap: 18px;
+      color: rgba(22,32,51,0.45);
+      font-size: 11px;
+      font-weight: 750;
+      text-transform: uppercase;
+      letter-spacing: 0.9px;
+    }
+    .dark .source { color: rgba(255,255,255,0.42); }
+    .quote {
+      font-size: clamp(24px, 3vw, 38px);
+      line-height: 1.12;
+      max-width: 980px;
+      color: var(--white);
+      margin-top: 18px;
+    }
+    .note {
+      margin-top: 18px;
+      color: var(--muted);
+      font-size: 14px;
+      line-height: 1.45;
+    }
+
+    @media (max-width: 920px) {
+      .impact-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+    }
+    @media (max-width: 820px) {
+      .slide { min-height: auto; display: block; }
+      .wrap { width: min(100vw - 28px, 1180px); padding: 104px 0 74px; }
+      .topline { top: 18px; left: 14px; right: 14px; align-items: flex-start; }
+      .hero-grid, .grid-2, .grid-3, .impact-grid { grid-template-columns: 1fr; }
+      .prospect-logo { width: 166px; max-height: 78px; }
+      h1 { font-size: 39px; line-height: 1.04; }
+      h2 { font-size: 33px; line-height: 1.05; }
+      .lead { font-size: 17px; }
+      .metric span, .impact span { font-size: 11px; overflow-wrap: anywhere; }
+      .step { grid-template-columns: 1fr; }
+      .source { position: static; padding: 0 14px 18px; flex-direction: column; }
+    }
+    @media (max-width: 520px) {
+      .wrap { padding-top: 118px; }
+      .prospect-logo { width: 148px; padding: 10px 12px; }
+      .revio-logo { height: 25px; }
+      .topline.light .revio-logo { height: 36px; padding: 7px 10px; }
+      h1 { font-size: 34px; }
+      h2 { font-size: 29px; }
+      .card { padding: 18px; min-height: auto; }
+      .band { font-size: 16px; }
+    }
+  </style>
+</head>
+<body>
+  <main class="deck">
+    <section class="slide dark">
+      <div class="topline">
+        <img class="prospect-logo" src="ie-alarm-systems-logo.png" alt="IE Alarm Systems logo">
+        <img class="revio-logo" src="revio-logo-white.png" alt="Rev.io">
+      </div>
+      <div class="wrap hero-grid">
+        <div>
+          <div class="kicker">Prepared from the July 14 Rev.io demo and discovery notes</div>
+          <h1>IE Alarm can move from Sedona rigidity to a cleaner quote-to-cash operating system.</h1>
+          <p class="lead">The evaluation is not just software replacement. It is a chance to support sales growth, modern field execution, project visibility, inventory control, invoice correction, and a better long-term partner model.</p>
+        </div>
+        <div class="metric-stack">
+          <div class="metric"><strong>40 yrs</strong><span>Operating history cited by IE Alarm</span></div>
+          <div class="metric"><strong>90%</strong><span>Government-heavy work mix shared in notes</span></div>
+          <div class="metric"><strong>2-3</strong><span>Additional salespeople IE Alarm is working to hire</span></div>
+        </div>
+      </div>
+      <div class="source"><span>Sources: IE Alarm website and 2026-07-14 Notion notes</span><span>Rev.io confidential discussion draft</span></div>
+    </section>
+
+    <section class="slide white">
+      <div class="topline light">
+        <img class="prospect-logo" src="ie-alarm-systems-logo.png" alt="IE Alarm Systems logo">
+        <img class="revio-logo" src="revio-logo-white.png" alt="Rev.io">
+      </div>
+      <div class="wrap">
+        <div class="kicker">1. Who is IE Alarm?</div>
+        <h2>A local Inland Empire commercial alarm company with complex job operations and a reputation built on service.</h2>
+        <div class="grid-3">
+          <div class="card">
+            <h3>Commercial security specialist</h3>
+            <p>IE Alarm serves the Inland Empire from Riverside, offering access control, fire and life safety, intercom, intrusion, camera, and related commercial security services.</p>
+          </div>
+          <div class="card gold">
+            <h3>Local expertise and monitoring</h3>
+            <p>The site positions IE Alarm around advanced commercial security technologies, personalized service, and 24/7 UL listed monitoring.</p>
+          </div>
+          <div class="card blue">
+            <h3>Government-heavy project work</h3>
+            <p>Discovery notes describe a security integrator with roughly 90% government work and projects ranging from one-day installs to multi-month engagements.</p>
+          </div>
+        </div>
+        <div class="band">Why this matters: IE Alarm needs a platform that can handle both financial discipline and the operational reality of security projects, service tickets, field work, inventory, and customer-facing proposals.</div>
+      </div>
+      <div class="source"><span>Website: access control, fire, intrusion, cameras, monitoring</span><span>Notion: government-heavy work, job/project operations</span></div>
+    </section>
+
+    <section class="slide dark">
+      <div class="topline">
+        <img class="prospect-logo" src="ie-alarm-systems-logo.png" alt="IE Alarm Systems logo">
+        <img class="revio-logo" src="revio-logo-white.png" alt="Rev.io">
+      </div>
+      <div class="wrap">
+        <div class="kicker">2. Why make the change now?</div>
+        <h2>Sales growth raises the cost of staying inside a rigid back-office system.</h2>
+        <p class="lead">IE Alarm is working to add 2-3 salespeople and shift from a historically word-of-mouth operating model toward more active go-to-market motion. Sedona has been useful, but the evaluation surfaced friction where growth needs flexibility.</p>
+        <div class="grid-3" style="margin-top:28px;">
+          <div class="card">
+            <h3>Sales process modernization</h3>
+            <p>QuoteWorks and DocuSign support the front end today, while Rev.io demonstrated native quoting, proposal templates, e-signature, and quote status tracking inside one workflow.</p>
+          </div>
+          <div class="card gold">
+            <h3>Field experience gap</h3>
+            <p>IE Alarm called out poor experience with Sedona X after an older mobile tool gave way to a new app that did not meet expectations.</p>
+          </div>
+          <div class="card green">
+            <h3>Partner risk after acquisition</h3>
+            <p>Support quality was noted as declining after Sedona's acquisition by the Bolt Group, turning partnership confidence into part of the buying decision.</p>
+          </div>
+        </div>
+        <p class="quote">The strategic shift is clear: IE Alarm is deciding whether its next phase of growth should run on patched-together tools or one connected Rev.io workflow from quote to cash.</p>
+      </div>
+      <div class="source"><span>Notion: sales hiring, Sedona rigidity, Sedona X, support decline</span><span>Assumption: growth increases process pressure</span></div>
+    </section>
+
+    <section class="slide light">
+      <div class="topline light">
+        <img class="prospect-logo" src="ie-alarm-systems-logo.png" alt="IE Alarm Systems logo">
+        <img class="revio-logo" src="revio-logo-white.png" alt="Rev.io">
+      </div>
+      <div class="wrap">
+        <div class="kicker">3. Uncovered problems</div>
+        <h2>The pain is concentrated where mistakes, mobility, and job complexity meet.</h2>
+        <div class="grid-2">
+          <div class="card">
+            <h3>Sedona is unforgiving when work changes</h3>
+            <ul>
+              <li>IE Alarm asked specifically about invoice correction when parts or labor are wrong.</li>
+              <li>Current process can require credits, inventory reversal, change orders, and new invoices.</li>
+              <li>Rev.io needs to validate invoice reversal behavior and downstream ticket/project effects.</li>
+            </ul>
+          </div>
+          <div class="card gold">
+            <h3>Mobile experience is a business issue</h3>
+            <ul>
+              <li>Sedona X was described as a poor rollout and a frustrating field experience.</li>
+              <li>Rev.io's mobile app, offline caching, GPS, time tracking, ticket updates, and field workflow should be demo focal points.</li>
+            </ul>
+          </div>
+          <div class="card blue">
+            <h3>Projects span very different job sizes</h3>
+            <ul>
+              <li>IE Alarm handles one-day installs and projects that can last months or longer.</li>
+              <li>They need jobs, tickets, project phases, tasks, scheduling, job costing, budgeting, and actuals visibility.</li>
+            </ul>
+          </div>
+          <div class="card green">
+            <h3>Tool sprawl around sales documents</h3>
+            <ul>
+              <li>QuoteWorks handles quoting today.</li>
+              <li>DocuSign handles signatures today.</li>
+              <li>Rev.io can consolidate proposal templates, fillable fields, signatures, quote status, approved service activation, and ticket creation.</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+      <div class="source"><span>Notion: Sedona, QuoteWorks, DocuSign, QuickBooks, mobile, invoice correction</span><span>Rev.io validation needed on reversal workflow</span></div>
+    </section>
+
+    <section class="slide white">
+      <div class="topline light">
+        <img class="prospect-logo" src="ie-alarm-systems-logo.png" alt="IE Alarm Systems logo">
+        <img class="revio-logo" src="revio-logo-white.png" alt="Rev.io">
+      </div>
+      <div class="wrap">
+        <div class="kicker">4. Business impact and ROI analysis</div>
+        <h2>Rev.io's case is fewer systems, fewer correction loops, and a stronger operating foundation for growth.</h2>
+        <div class="impact-grid">
+          <div class="impact"><strong>3→1</strong><span>QuoteWorks, DocuSign, and Sedona front-end steps can move into Rev.io workflows</span></div>
+          <div class="impact"><strong>24-72h</strong><span>Assumed annual admin time saved if corrections fall by 2-6 hours per month</span></div>
+          <div class="impact"><strong>2-3 reps</strong><span>Sales hires who need consistent quoting and opportunity controls</span></div>
+          <div class="impact"><strong>1 app</strong><span>Field mobile workflow with tickets, time, GPS, and offline caching to validate</span></div>
+        </div>
+        <div class="grid-2">
+          <div class="card">
+            <h3>Operational efficiency</h3>
+            <p>If invoice corrections, quote handoffs, signature routing, and ticket creation each remove small manual steps, the impact compounds across government projects and service work.</p>
+          </div>
+          <div class="card gold">
+            <h3>Sales ramp control</h3>
+            <p>As IE Alarm hires additional salespeople, standardized quote macros, proposal templates, manager notifications, and pipeline visibility reduce reliance on tribal knowledge.</p>
+          </div>
+          <div class="card blue">
+            <h3>Field productivity</h3>
+            <p>Mobile ticket access, offline caching, time capture, and GPS can reduce field friction, especially when technicians work in areas with unreliable signal or complex site work.</p>
+          </div>
+          <div class="card green">
+            <h3>Lower partner risk</h3>
+            <p>Rev.io's value is partly product capability and partly a relationship reset: US-based support, ongoing product development, and a migration team that understands Sedona displacement is real work.</p>
+          </div>
+        </div>
+        <p class="note">Assumptions to validate: monthly invoice correction volume, correction time per incident, QuoteWorks/DocuSign license costs, number of field technicians, average jobs per month, and current Sedona renewal or server-upgrade timing.</p>
+      </div>
+      <div class="source"><span>Quantified values use discovery notes plus labeled assumptions</span><span>No revenue or employee count invented beyond source notes</span></div>
+    </section>
+
+    <section class="slide light">
+      <div class="topline light">
+        <img class="prospect-logo" src="ie-alarm-systems-logo.png" alt="IE Alarm Systems logo">
+        <img class="revio-logo" src="revio-logo-white.png" alt="Rev.io">
+      </div>
+      <div class="wrap">
+        <div class="kicker">5. Requirements and adjacent systems</div>
+        <h2>The next demo should prove Rev.io across the exact workflows IE Alarm runs today.</h2>
+        <div class="grid-3">
+          <div class="card">
+            <h3>Systems to replace or reduce</h3>
+            <ul>
+              <li>Sedona as the main back-office platform.</li>
+              <li>QuoteWorks for front-end quoting.</li>
+              <li>DocuSign for signatures, if Rev.io e-signature meets requirements.</li>
+            </ul>
+          </div>
+          <div class="card gold">
+            <h3>Systems to integrate or confirm</h3>
+            <ul>
+              <li>QuickBooks accounting remains in scope.</li>
+              <li>Notes conflict on QBO versus on-prem QuickBooks; confirm exact version and data flow.</li>
+              <li>Confirm inventory and financial posting expectations.</li>
+            </ul>
+          </div>
+          <div class="card blue">
+            <h3>Sales and proposal workflow</h3>
+            <ul>
+              <li>Opportunity pipeline and rep/admin visibility.</li>
+              <li>Quote categories or sections by area/address.</li>
+              <li>Quote macros, central price adjustments, proposals, e-signature, and quote status tracking.</li>
+            </ul>
+          </div>
+          <div class="card green">
+            <h3>Project and service execution</h3>
+            <ul>
+              <li>Tickets as the main vehicle for client interactions.</li>
+              <li>Projects for longer installs with budgets, timelines, phases, and tasks.</li>
+              <li>Parts and labor from approved quotes flowing into tickets.</li>
+            </ul>
+          </div>
+          <div class="card">
+            <h3>Inventory and purchasing</h3>
+            <ul>
+              <li>Inventory reservation by job.</li>
+              <li>PO creation from ticket line items.</li>
+              <li>Receiving, serial tracking, specific costing, warehouses, vehicles, and site deployment without sale.</li>
+            </ul>
+          </div>
+          <div class="card gold">
+            <h3>Feature timing to clarify</h3>
+            <ul>
+              <li>Labor units per inventory item is not available yet.</li>
+              <li>Tony to follow up on the development timeline.</li>
+              <li>Current workaround uses separate labor products and time logging.</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+      <div class="source"><span>Notion: Sedona, QuoteWorks, DocuSign, QuickBooks, job/project/inventory workflow</span><span>Feature gap: labor units per inventory item roadmap</span></div>
+    </section>
+
+    <section class="slide dark">
+      <div class="topline">
+        <img class="prospect-logo" src="ie-alarm-systems-logo.png" alt="IE Alarm Systems logo">
+        <img class="revio-logo" src="revio-logo-white.png" alt="Rev.io">
+      </div>
+      <div class="wrap">
+        <div class="kicker">6. Action plan moving forward</div>
+        <h2>Turn the demo into a structured Sedona migration evaluation with Thomas and Richard.</h2>
+        <div class="timeline">
+          <div class="step">
+            <div class="date">Immediate</div>
+            <p>Bryan sends pricing, demo recap, and Rev.io feature overview. Tony confirms the labor-unit-per-inventory-item roadmap and validates invoice reversal behavior after the call.</p>
+          </div>
+          <div class="step">
+            <div class="date">Buyer review</div>
+            <p>Thomas and Richard complete the initial platform evaluation against IE Alarm's core workflows: quoting, projects, service tickets, mobile field work, inventory, purchasing, accounting handoff, and invoice correction.</p>
+          </div>
+          <div class="step">
+            <div class="date">Technical proof</div>
+            <p>Run the follow-up demo with Tony focused on Sedona displacement: quote-to-ticket flow, project budgets, inventory/POs, mobile/offline field workflow, QuickBooks integration, customer relationships, and proposal/e-signature.</p>
+          </div>
+          <div class="step">
+            <div class="date">Decision path</div>
+            <p>If the workflow fit and pricing make sense, define the migration plan from nine years of Sedona data into Rev.io, including what data must move, what can archive, implementation timeline, and buyer-side owners.</p>
+          </div>
+        </div>
+        <div class="band">Open questions: QuickBooks Online vs on-prem version, Sedona contract or server-upgrade timing, current QuoteWorks/DocuSign costs, number of technicians, monthly correction volume, Richard's evaluation criteria, and the labor-unit roadmap date.</div>
+      </div>
+      <div class="source"><span>Next-step owners from Notion: Bryan, Tony, Thomas, Richard</span><span>Migration scope requires buyer validation</span></div>
+    </section>
+  </main>
+</body>
+</html>
