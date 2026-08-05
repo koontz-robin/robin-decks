@@ -29,8 +29,8 @@ with open(f'{WORKSPACE}/q2_reengagement_baseline.json') as f:
     mkt_accounts = {r['account_name'].lower() for r in json.load(f)}
 
 PRODUCTS = ['PSA', 'Billing', 'Payments', 'Cyber', 'CommerceHub']
-PROD_COLORS = {'PSA':'#00ff88','Billing':'#00e5ff','Payments':'#7c3aed','Cyber':'#ff6b35','CommerceHub':'#ffd700'}
-PROD_LABELS = {'PSA':'PSA','Billing':'Billing / Odin','Payments':'Payments','Cyber':'Cyber Protect','CommerceHub':'CommerceHub'}
+PROD_COLORS = {'PSA':'#00ff88','Billing':'#00e5ff','Payments':'#7c3aed','Cyber':'#ff6b35','CommerceHub':'#ffd700','Other':'#94a3b8'}
+PROD_LABELS = {'PSA':'PSA','Billing':'Billing / Odin','Payments':'Payments','Cyber':'Cyber Protect','CommerceHub':'CommerceHub','Other':'Other / Unmapped'}
 QUARTER_LABEL = 'Q3 2026'
 QUARTER_MONTHS = ['July', 'August', 'September']
 QUARTER_QUOTAS = {'PSA':138000,'Billing':42104,'Payments':30740,'Cyber':33702,'CommerceHub':0}
@@ -109,7 +109,7 @@ def closed_booking_splits(o, month_name):
 def prod_label(p):
     if TARGET_MONTH == 'June' and p == 'Cyber':
         return 'CommerceHub / Cyber Protect'
-    return PROD_LABELS[p]
+    return PROD_LABELS.get(p, p or 'Other / Unmapped')
 
 def fmt(n):
     cents = round((float(n or 0) - int(float(n or 0))) * 100)
@@ -118,8 +118,7 @@ def fmt(n):
 def closed_opp_count():
     return sum(1 for o in opps if o.get('StageName') == 'Closed Won')
 
-closed_lost_opps = []
-buckets = defaultdict(lambda: {'opps':[],'closed':0.0,'closed_opps':[]})
+buckets = defaultdict(lambda: {'opps':[],'closed':0.0,'closed_opps':[],'closed_lost_opps':[]})
 for o in opps:
     p = prod_key(o.get('Product_Type__c',''))
     o['_mkt'] = (o.get('Account') or '').lower() in mkt_accounts
@@ -131,7 +130,7 @@ for o in opps:
             closed_row['_booking_product'] = booking_product
             buckets[booking_product]['closed_opps'].append(closed_row)
     elif o.get('StageName') == 'Closed Lost':
-        closed_lost_opps.append(o)
+        buckets[p]['closed_lost_opps'].append(o)
     else:
         buckets[p]['opps'].append(o)
 
@@ -207,35 +206,25 @@ def closed_lost_opp_row(o):
       <td><strong>{loss_reason}</strong><div class="loss-detail">{reason_detail}</div></td>
     </tr>'''
 
-def closed_lost_review():
+def closed_lost_review(product, idx, rows):
     if not HISTORICAL_MONTH:
         return ''
-    rows = sorted(closed_lost_opps, key=lambda o: (o.get('Loss_Reason__c') or 'ZZZ', -(o.get('Amount') or 0), o.get('Account') or o.get('Name') or ''))
+    rows = sorted(rows, key=lambda o: (o.get('Loss_Reason__c') or 'ZZZ', -(o.get('Amount') or 0), o.get('Account') or o.get('Name') or ''))
+    if not rows:
+        return ''
     total = sum(o.get('Amount') or 0 for o in rows)
-    body = ''.join(closed_lost_opp_row(o) for o in rows) or '<tr><td colspan="6" style="color:#5a8a6a">No closed lost opportunities for this locked month.</td></tr>'
+    body = ''.join(closed_lost_opp_row(o) for o in rows)
     return f'''
-<div class="product-section closed-lost-review">
-  <div class="prod-header">
-    <div class="prod-title">
-      <div class="prod-dot" style="background:#ff4444;box-shadow:0 0 8px #ff4444"></div>
-      <h2 style="color:#ff6666;text-shadow:0 0 20px rgba(255,68,68,0.35)">Closed Lost Review</h2>
-    </div>
-    <div class="prod-meta">
-      <span class="meta-chip">Closed Lost: <strong>{len(rows)}</strong></span>
-      <span class="meta-chip">Lost Amount: <strong>{fmt(total)}</strong></span>
-    </div>
-  </div>
-  <div class="opp-toggle" onclick="toggle('{MONTH_ID}-closed-lost')">
-    <span id="toggle-label-{MONTH_ID}-closed-lost">▼ Closed lost opportunities with loss reason</span>
+  <div class="opp-toggle closed-lost-toggle" onclick="toggle('{MONTH_ID}-{idx}-closed-lost')">
+    <span id="toggle-label-{MONTH_ID}-{idx}-closed-lost">▼ Closed lost {prod_label(product)} opportunities with loss reason</span>
     <span class="toggle-amt">{fmt(total)} total</span>
   </div>
-  <div id="opps-{MONTH_ID}-closed-lost" class="opp-list" style="display:block">
+  <div id="opps-{MONTH_ID}-{idx}-closed-lost" class="opp-list closed-lost-review" style="display:block">
     <table class="opp-table">
       <thead><tr><th>Account / Opportunity</th><th>Amount</th><th>Stage</th><th>Owner</th><th>Close Date / Product</th><th>Loss Reason / Detail</th></tr></thead>
       <tbody>{body}</tbody>
     </table>
-  </div>
-</div>'''
+  </div>'''
 
 def build_month_tab():
     display = 'block' if TARGET_MONTH == now.strftime('%B') else 'none'
@@ -265,12 +254,16 @@ def build_month_tab():
       {summary_cards}
     </div>''')
 
-    for idx, p in enumerate(PRODUCTS):
+    month_products = PRODUCTS[:]
+    if HISTORICAL_MONTH and buckets['Other']['closed_lost_opps']:
+        month_products.append('Other')
+    for idx, p in enumerate(month_products):
         b = buckets[p]
         cw    = b['closed']
-        quota  = TARGET_QUOTAS[p]
+        quota  = TARGET_QUOTAS.get(p, 0)
         if HISTORICAL_MONTH:
             opp_list = sorted(b['closed_opps'], key=lambda o: (-(o.get('_booking_amount') or o.get('Amount') or 0), o.get('CloseDate') or ''))
+            lost_list = sorted(b['closed_lost_opps'], key=lambda o: (o.get('Loss_Reason__c') or 'ZZZ', -(o.get('Amount') or 0), o.get('Account') or o.get('Name') or ''))
             pipe = 0
             tagged = []
             mkt_opps = []
@@ -279,10 +272,11 @@ def build_month_tab():
                 ['Worst Case','Most Likely','Best Case',''].index(o.get('Forecast_Status__c','') if o.get('Forecast_Status__c','') in ['Worst Case','Most Likely','Best Case'] else ''),
                 -(o.get('Amount') or 0)
             ))
+            lost_list = []
             pipe = sum(o.get('Amount',0) or 0 for o in opp_list)
             tagged = [o for o in opp_list if o.get('Forecast_Status__c')]
             mkt_opps = [o for o in opp_list if o.get('_mkt')]
-        if quota == 0 and not opp_list and cw == 0:
+        if quota == 0 and not opp_list and cw == 0 and not lost_list:
             continue
         worst  = cw + sum(o.get('Amount',0) or 0 for o in opp_list if o.get('Forecast_Status__c') == 'Worst Case')
         likely = cw + sum(o.get('Amount',0) or 0 for o in opp_list if o.get('Forecast_Status__c') in ('Worst Case','Most Likely'))
@@ -299,6 +293,7 @@ def build_month_tab():
             toggle_label = f'Closed won {actual_closed_count} opportunities' + (' + true-up' if adjustment_count else '')
             meta_html = f'''<span class="meta-chip">Final Sales: <strong>{fmt(cw)}</strong></span>
       <span class="meta-chip">{closed_count_label}</span>
+      <span class="meta-chip" style="border-color:rgba(255,68,68,0.25);color:#ff6666">Closed Lost: <strong>{len(lost_list)}</strong></span>
       <span class="meta-chip quota">Quota: {fmt(quota)}</span>'''
             scenario_html = f'''<div class="scenario closed"><div class="s-label">FINAL SALES</div><div class="s-val">{fmt(cw)}</div><div class="s-sub">locked after month-end</div></div>
     <div class="scenario closed"><div class="s-label">CLOSED WON OPPS</div><div class="s-val">{actual_closed_count}</div></div>
@@ -398,8 +393,8 @@ def build_month_tab():
     {quota_footer}
   </div>
 {opp_toggle}
+{closed_lost_review(p, idx, lost_list)}
 </div>''')
-    lines.append(closed_lost_review())
     lines.append('  </div>\n')
     return '\n'.join(lines)
 
@@ -539,4 +534,5 @@ if HISTORICAL_MONTH:
 else:
     total_pipe = sum(o.get('Amount',0) or 0 for o in opps if o.get('StageName') != 'Closed Won')
     open_count = sum(len(buckets[p]["opps"]) for p in PRODUCTS)
-print(f'{TARGET_MONTH} data patched — CW: {fmt(total_cw)} | Pipeline: {fmt(total_pipe)} | {open_count} open opps | Closed lost: {len(closed_lost_opps)}')
+closed_lost_count = sum(len(bucket['closed_lost_opps']) for bucket in buckets.values())
+print(f'{TARGET_MONTH} data patched — CW: {fmt(total_cw)} | Pipeline: {fmt(total_pipe)} | {open_count} open opps | Closed lost: {closed_lost_count}')
