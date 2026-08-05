@@ -306,11 +306,53 @@ h1 {
   font-size: 13px;
   line-height: 1.5;
 }
+.benchmark-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 12px;
+}
+.benchmark {
+  background: var(--panel);
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  padding: 17px;
+  box-shadow: 0 8px 24px rgba(17, 24, 39, .05);
+}
+.benchmark strong {
+  display: block;
+  margin-top: 8px;
+  font-size: 28px;
+  line-height: 1.05;
+  letter-spacing: 0;
+}
+.benchmark p {
+  margin: 8px 0 0;
+  color: var(--muted);
+  font-size: 13px;
+  line-height: 1.45;
+}
+.source-list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-top: 12px;
+}
+.source-list a {
+  color: #0b5bd3;
+  background: #eaf2ff;
+  border: 1px solid #cfe0ff;
+  border-radius: 999px;
+  padding: 6px 10px;
+  text-decoration: none;
+  font-size: 12px;
+  font-weight: 800;
+}
 @media (max-width: 920px) {
   .topbar { display: block; padding: 18px; }
   .stamp { text-align: left; margin-top: 12px; }
   .brand { align-items: flex-start; }
   .hero-grid, .split, .insight-grid { grid-template-columns: 1fr; }
+  .benchmark-grid { grid-template-columns: 1fr; }
   .cards { grid-template-columns: repeat(2, 1fr); }
   .wrap { padding: 16px; }
 }
@@ -461,6 +503,55 @@ h1 {
     </div>
     <div class="callout">
       Note: MSP Team plus Integrator Team subtotals equal 56,886, which is 20 higher than the supplied TAM of 56,866. The page preserves the supplied TAM total and uses 56,866 for coverage math.
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="section-head">
+      <h2>External Benchmarks</h2>
+      <span>Directional software / B2B outbound comparisons</span>
+    </div>
+    <div class="benchmark-grid">
+      <div class="benchmark">
+        <div class="label">Daily SDR Activity</div>
+        <strong>60-100 touches</strong>
+        <p>Common 2026 outbound guidance points to 40-60 call attempts, 30-50 emails, and 10-20 social touches per SDR per day. The useful comparison here is not raw touches alone; it is whether activity is concentrated on the right accounts.</p>
+      </div>
+      <div class="benchmark">
+        <div class="label">Qualified Meetings</div>
+        <strong>12-15 / SDR / mo.</strong>
+        <p>Outbound SDR teams are often benchmarked around 12-15 qualified meetings per rep per month, with inbound teams higher because lead intent is warmer.</p>
+      </div>
+      <div class="benchmark">
+        <div class="label">Outbound Email Yield</div>
+        <strong>0.5%-2%</strong>
+        <p>Typical B2B email-to-booked-meeting rates are commonly cited in the 0.5%-2% range, with top performers closer to 2%+. This makes targeting quality and sequence hygiene matter more than just adding more names.</p>
+      </div>
+      <div class="benchmark">
+        <div class="label">Win Rate Context</div>
+        <strong>19%-21%</strong>
+        <p>Recent B2B SaaS benchmark roundups put average win rates around the low 20s, with top performers around 30%+. Low-quality TAM coverage usually shows up later as weak conversion or no-decision pipeline.</p>
+      </div>
+      <div class="benchmark">
+        <div class="label">Quota Attainment</div>
+        <strong>70%-80%</strong>
+        <p>SaaStr's rule of thumb is that a healthy SaaS sales org should have roughly 70%-80% of reps hitting quota. If fewer than half are hitting, quota, lead flow, or sales process usually needs scrutiny.</p>
+      </div>
+      <div class="benchmark">
+        <div class="label">Rev.io Q2 TAM Pace</div>
+        <strong>4.3% / mo.</strong>
+        <p>Rev.io touched 13% of TAM over Q2, or about 4.3% of the target account pool per month. The sharper benchmark question is how much of that coverage lands in the right employee bands and segments.</p>
+      </div>
+    </div>
+    <div class="callout">
+      Benchmark note: these are directional public SaaS/B2B sales benchmarks, not a perfect peer cohort for Rev.io. They are useful as guardrails for activity volume, meeting yield, and coverage quality.
+      <div class="source-list">
+        <a href="https://syncgtm.com/blog/how-many-activities-should-sales-development-reps-do-daily" target="_blank" rel="noopener">SyncGTM activity benchmarks</a>
+        <a href="https://tamtotarget.com/sdr-meeting-benchmarks/" target="_blank" rel="noopener">TAM to Target meetings</a>
+        <a href="https://leadhaste.com/blog/outbound-sales-benchmarks-2026" target="_blank" rel="noopener">LeadHaste outbound yield</a>
+        <a href="https://martal.ca/sales-kpis-lb/" target="_blank" rel="noopener">Martal SaaS KPI roundup</a>
+        <a href="https://www.saastr.com/dear-saastr-what-are-good-benchmarks-for-sales-productivity-in-saas/" target="_blank" rel="noopener">SaaStr productivity rules</a>
+      </div>
     </div>
   </section>
 </main>
