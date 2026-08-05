@@ -1,0 +1,531 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>V2 Systems Discovery Readout | Rev.io</title>
+  <meta name="description" content="Buyer-facing Rev.io discovery readout and business case for V2 Systems.">
+  <style>
+    :root {
+      --v2-blue: #005b93;
+      --v2-red: #b00020;
+      --revio: #6cc04a;
+      --ink: #10233f;
+      --navy: #071827;
+      --paper: #f5f8fb;
+      --line: #dce6ef;
+      --muted: #5c7089;
+      --white: #ffffff;
+      --gold: #f2b84b;
+      --cyan: #0da7c8;
+    }
+
+    * { box-sizing: border-box; }
+    html { scroll-behavior: smooth; }
+    body {
+      margin: 0;
+      font-family: Aptos, Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      color: var(--ink);
+      background: var(--paper);
+      letter-spacing: 0;
+      overflow-x: hidden;
+    }
+    .deck { min-height: 100vh; }
+    .slide {
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      position: relative;
+      overflow: hidden;
+      border-bottom: 1px solid rgba(16, 35, 63, 0.08);
+    }
+    .slide.dark {
+      color: var(--white);
+      background:
+        linear-gradient(118deg, rgba(7, 24, 39, 0.98), rgba(8, 45, 68, 0.92)),
+        repeating-linear-gradient(0deg, rgba(255,255,255,0.04) 0 1px, transparent 1px 46px),
+        repeating-linear-gradient(90deg, rgba(255,255,255,0.035) 0 1px, transparent 1px 46px),
+        var(--navy);
+    }
+    .slide.light { background: var(--paper); }
+    .slide.white { background: var(--white); }
+    .wrap {
+      width: min(1180px, calc(100vw - 48px));
+      margin: 0 auto;
+      padding: 78px 0 62px;
+      position: relative;
+      z-index: 2;
+    }
+    .topline {
+      position: absolute;
+      top: 28px;
+      left: 32px;
+      right: 32px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 20px;
+      z-index: 4;
+    }
+    .v2-logo {
+      width: 220px;
+      max-height: 88px;
+      object-fit: contain;
+      background: var(--white);
+      padding: 12px 16px;
+      border-radius: 8px;
+      box-shadow: 0 18px 40px rgba(0,0,0,0.12);
+    }
+    .revio-logo {
+      height: 30px;
+      width: auto;
+      object-fit: contain;
+      display: block;
+    }
+    .topline.light .revio-logo {
+      background: var(--navy);
+      height: 40px;
+      padding: 8px 12px;
+      border-radius: 6px;
+    }
+    .kicker {
+      font-size: 12px;
+      font-weight: 900;
+      text-transform: uppercase;
+      color: var(--revio);
+      letter-spacing: 1.8px;
+      margin-bottom: 18px;
+    }
+    .light .kicker, .white .kicker { color: var(--v2-blue); }
+    h1, h2, h3, p { margin: 0; }
+    h1 {
+      font-size: clamp(48px, 7vw, 86px);
+      line-height: 0.98;
+      max-width: 940px;
+      letter-spacing: 0;
+    }
+    h2 {
+      font-size: clamp(34px, 4.4vw, 58px);
+      line-height: 1;
+      max-width: 1000px;
+      margin-bottom: 24px;
+      letter-spacing: 0;
+    }
+    h3 {
+      font-size: 18px;
+      line-height: 1.18;
+      margin-bottom: 10px;
+      color: inherit;
+    }
+    .lead {
+      max-width: 820px;
+      margin-top: 24px;
+      color: rgba(255,255,255,0.78);
+      font-size: clamp(17px, 2vw, 23px);
+      line-height: 1.36;
+    }
+    .light .lead, .white .lead { color: var(--muted); }
+    .hero-grid {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) 330px;
+      gap: 48px;
+      align-items: end;
+    }
+    .metric-stack { display: grid; gap: 14px; }
+    .metric {
+      background: rgba(255,255,255,0.08);
+      border: 1px solid rgba(255,255,255,0.15);
+      border-radius: 8px;
+      padding: 18px;
+    }
+    .metric strong { display: block; font-size: 34px; line-height: 1; color: var(--cyan); }
+    .metric span { display: block; margin-top: 8px; color: rgba(255,255,255,0.74); font-size: 12px; font-weight: 850; text-transform: uppercase; }
+    .grid-2 { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 18px; }
+    .grid-3 { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 18px; }
+    .card {
+      background: var(--white);
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      padding: 22px;
+      min-height: 166px;
+      box-shadow: 0 18px 45px rgba(16,35,63,0.06);
+      position: relative;
+      overflow: hidden;
+    }
+    .dark .card { background: var(--white); color: var(--ink); }
+    .card::before {
+      content: "";
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 5px;
+      background: var(--v2-blue);
+    }
+    .card.red::before { background: var(--v2-red); }
+    .card.green::before { background: var(--revio); }
+    .card.gold::before { background: var(--gold); }
+    .card p, .card li {
+      color: var(--muted);
+      font-size: 15px;
+      line-height: 1.44;
+    }
+    ul { margin: 0; padding-left: 18px; }
+    li + li { margin-top: 8px; }
+    .band {
+      background: var(--navy);
+      color: var(--white);
+      padding: 18px 22px;
+      border-radius: 8px;
+      border-left: 6px solid var(--v2-red);
+      margin-top: 24px;
+      font-size: 18px;
+      line-height: 1.4;
+    }
+    .impact-grid {
+      display: grid;
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+      gap: 14px;
+      margin: 24px 0;
+    }
+    .impact {
+      background: var(--navy);
+      color: var(--white);
+      border-radius: 8px;
+      padding: 18px;
+      border-top: 5px solid var(--cyan);
+    }
+    .impact strong { display: block; font-size: 30px; line-height: 1; color: var(--cyan); }
+    .impact span { display: block; margin-top: 9px; font-size: 12px; line-height: 1.3; color: rgba(255,255,255,0.74); text-transform: uppercase; font-weight: 850; }
+    .timeline { display: grid; gap: 14px; }
+    .step {
+      display: grid;
+      grid-template-columns: 152px minmax(0, 1fr);
+      gap: 18px;
+      align-items: start;
+      background: var(--white);
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      padding: 18px;
+    }
+    .step .date {
+      color: var(--v2-blue);
+      font-size: 13px;
+      font-weight: 900;
+      text-transform: uppercase;
+    }
+    .step p { color: var(--muted); line-height: 1.45; font-size: 15px; }
+    .source {
+      position: absolute;
+      bottom: 20px;
+      left: 32px;
+      right: 32px;
+      display: flex;
+      justify-content: space-between;
+      gap: 18px;
+      color: rgba(16,35,63,0.45);
+      font-size: 11px;
+      font-weight: 750;
+      text-transform: uppercase;
+      letter-spacing: 0.9px;
+    }
+    .dark .source { color: rgba(255,255,255,0.42); }
+    .quote {
+      font-size: clamp(24px, 3vw, 38px);
+      line-height: 1.12;
+      max-width: 980px;
+      color: var(--white);
+      margin-top: 18px;
+    }
+    .note {
+      margin-top: 18px;
+      color: var(--muted);
+      font-size: 14px;
+      line-height: 1.45;
+    }
+
+    @media (max-width: 920px) {
+      .impact-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+    }
+    @media (max-width: 820px) {
+      .slide { min-height: auto; display: block; }
+      .wrap { width: min(100vw - 28px, 1180px); padding: 104px 0 74px; }
+      .topline { top: 18px; left: 14px; right: 14px; align-items: flex-start; }
+      .hero-grid, .grid-2, .grid-3, .impact-grid { grid-template-columns: 1fr; }
+      .v2-logo { width: 180px; }
+      h1 { font-size: 40px; line-height: 1.03; }
+      h2 { font-size: 34px; line-height: 1.04; }
+      .lead { font-size: 17px; }
+      .metric span, .impact span { font-size: 11px; overflow-wrap: anywhere; }
+      .step { grid-template-columns: 1fr; }
+      .source { position: static; margin: 0 auto; padding: 0 14px 18px; width: min(100vw - 28px, 1180px); flex-direction: column; }
+    }
+  </style>
+</head>
+<body>
+<main class="deck">
+  <section class="slide dark">
+    <div class="topline">
+      <img class="v2-logo" src="v2-systems-logo.jpg" alt="V2 Systems logo">
+      <img class="revio-logo" src="revio-logo-white.png" alt="Rev.io">
+    </div>
+    <div class="wrap hero-grid">
+      <div>
+        <div class="kicker">V2 Systems x Rev.io</div>
+        <h1>Professionalize the back office before growth makes the manual work permanent.</h1>
+        <p class="lead">V2 Systems has already built a $20-25M commercial security integration business. The next step is moving QuickBooks, Excel, Google Calendar, third-party GPS, and manufacturer portals into a cleaner operating motion for service, projects, RMR, and field execution.</p>
+      </div>
+      <div class="metric-stack">
+        <div class="metric"><strong>$20-25M</strong><span>annual business volume shared in discovery</span></div>
+        <div class="metric"><strong>12-15</strong><span>employees today, with room to scale toward 30</span></div>
+        <div class="metric"><strong>2</strong><span>office staff carrying heavy admin burden</span></div>
+      </div>
+    </div>
+    <div class="source"><span>Source: Notion discovery page, 2026-08-03</span><span>Brand context: v2-sys.com</span></div>
+  </section>
+
+  <section class="slide light">
+    <div class="topline light">
+      <img class="v2-logo" src="v2-systems-logo.jpg" alt="V2 Systems logo">
+      <img class="revio-logo" src="revio-logo-white.png" alt="Rev.io">
+    </div>
+    <div class="wrap">
+      <div class="kicker">1. Who is V2 Systems?</div>
+      <h2>A Boston-based commercial security integrator with complex customers and a lean operating team.</h2>
+      <div class="grid-3">
+        <div class="card">
+          <h3>Commercial security focus</h3>
+          <p>V2 designs, installs, and services telecommunications, video surveillance, access control, and integrated technology solutions across New England.</p>
+        </div>
+        <div class="card red">
+          <h3>Enterprise-grade customers</h3>
+          <p>Keith described a customer base spanning global pharmaceutical, finance, commercial real estate, and mixed-use accounts.</p>
+        </div>
+        <div class="card green">
+          <h3>PSA buying group member</h3>
+          <p>V2 is a long-standing PSA buying group member and uses PSA, ADI, Wesco, and ScanSource as important distribution sources.</p>
+        </div>
+      </div>
+      <div class="band">The business model matters because project work, service work, inventory, labor, pricing, and RMR all touch the same margin story. Rev.io should be evaluated as the operating layer that connects those workflows.</div>
+    </div>
+    <div class="source"><span>Sources: V2 website, discovery notes, executive summary</span><span>Prepared for buyer-facing follow-up</span></div>
+  </section>
+
+  <section class="slide dark">
+    <div class="topline">
+      <img class="v2-logo" src="v2-systems-logo.jpg" alt="V2 Systems logo">
+      <img class="revio-logo" src="revio-logo-white.png" alt="Rev.io">
+    </div>
+    <div class="wrap">
+      <div class="kicker">2. Why make the change now?</div>
+      <h2>The company is outgrowing a workflow that depends on heroic manual follow-through.</h2>
+      <p class="quote">Keith said the business is hitting the five-year mark and needs to get more professional. That is the timing signal.</p>
+      <div class="grid-3" style="margin-top:28px">
+        <div class="card">
+          <h3>Scale pressure</h3>
+          <p>V2 is already doing $20-25M with 12-15 employees and may scale toward 30. More volume means more jobs, renewals, field updates, and billing checkpoints.</p>
+        </div>
+        <div class="card red">
+          <h3>Office bottleneck</h3>
+          <p>Only two office staff are supporting manual RMR billing, job costing, field-note cleanup, and invoicing inputs.</p>
+        </div>
+        <div class="card green">
+          <h3>Margin opportunity</h3>
+          <p>V2 believes bringing more RMR billing in-house could improve margin by roughly 20 points while still staying below MSRP.</p>
+        </div>
+      </div>
+    </div>
+    <div class="source"><span>Source: Notion transcript and Value Planner</span><span>Key phrase captured: "paper paper paper"</span></div>
+  </section>
+
+  <section class="slide white">
+    <div class="topline light">
+      <img class="v2-logo" src="v2-systems-logo.jpg" alt="V2 Systems logo">
+      <img class="revio-logo" src="revio-logo-white.png" alt="Rev.io">
+    </div>
+    <div class="wrap">
+      <div class="kicker">3. Uncovered problems</div>
+      <h2>The current stack works because people make it work. That is the risk.</h2>
+      <div class="grid-2">
+        <div class="card">
+          <h3>Field execution</h3>
+          <ul>
+            <li>Excel templates for technician notes, parts used, time on jobs, and job costing.</li>
+            <li>Manual email-back process creates re-entry work for field and office teams.</li>
+            <li>Vehicle GPS is separate and not connected to billing, dispatch, or time tracking.</li>
+          </ul>
+        </div>
+        <div class="card red">
+          <h3>Billing and recurring revenue</h3>
+          <ul>
+            <li>QuickBooks Desktop Enterprise handles invoicing and accounting.</li>
+            <li>Some manufacturer-direct RMR leaves V2 with referral commission instead of full billing margin.</li>
+            <li>Annual support/license agreements require manual portal pulls and billing prep.</li>
+          </ul>
+        </div>
+        <div class="card green">
+          <h3>Quoting and pricing</h3>
+          <ul>
+            <li>Quotes live in Excel because pricing is volatile and customer-specific.</li>
+            <li>Hardware quotes may only hold for about 14 days; other pricing changes at least every six months.</li>
+            <li>ADI/ScanSource account-specific pricing behavior needs validation.</li>
+          </ul>
+        </div>
+        <div class="card gold">
+          <h3>Operational visibility</h3>
+          <ul>
+            <li>Google Calendar is the scheduling source.</li>
+            <li>Inventory is tracked loosely, including items in vehicles.</li>
+            <li>Project profitability is calculated through percentage breakouts and manual job-costing work.</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+    <div class="source"><span>Source: Discovery notes, SE demo brief</span><span>No direct PSA competitor identified</span></div>
+  </section>
+
+  <section class="slide light">
+    <div class="topline light">
+      <img class="v2-logo" src="v2-systems-logo.jpg" alt="V2 Systems logo">
+      <img class="revio-logo" src="revio-logo-white.png" alt="Rev.io">
+    </div>
+    <div class="wrap">
+      <div class="kicker">4. Business impact and ROI analysis</div>
+      <h2>The hard ROI starts with RMR margin. The operating ROI comes from fewer manual touches.</h2>
+      <div class="impact-grid">
+        <div class="impact"><strong>20 pts</strong><span>RMR margin upside Keith estimated from billing directly</span></div>
+        <div class="impact"><strong>24-72 hrs</strong><span>annual office time removed if 2-6 hours/month of RMR prep is automated</span></div>
+        <div class="impact"><strong>1 system</strong><span>service, time, inventory, job costing, billing, and reporting motion</span></div>
+        <div class="impact"><strong>$1,000/mo</strong><span>starter package discussed for 8 back-office users + 4 field app licenses</span></div>
+      </div>
+      <div class="grid-2">
+        <div class="card green">
+          <h3>Margin protection</h3>
+          <p>If V2 moves manufacturer-direct services into V2-owned recurring contracts, each dollar of eligible RMR can carry materially more gross margin. The call-specific estimate was about 20 margin points.</p>
+        </div>
+        <div class="card">
+          <h3>Admin compression</h3>
+          <p>Assumption: if RMR/support agreement prep, field note cleanup, and job-costing updates consume even 4-8 hours/month, Rev.io can remove 48-96 hours/year of low-value admin work.</p>
+        </div>
+        <div class="card red">
+          <h3>Field productivity</h3>
+          <p>Assumption: if each field tech saves 10-15 minutes/day on notes, time, and parts capture, 4 field users can recover about 170-260 hours/year.</p>
+        </div>
+        <div class="card gold">
+          <h3>Data still needed</h3>
+          <p>To firm the ROI: current eligible RMR under manufacturer-direct billing, monthly support agreement count, office hours spent on billing prep, field tech count after growth, and average labor burden rate.</p>
+        </div>
+      </div>
+    </div>
+    <div class="source"><span>Source-backed: 20 margin points, 2 office staff, starter price</span><span>Time savings are labeled assumptions</span></div>
+  </section>
+
+  <section class="slide white">
+    <div class="topline light">
+      <img class="v2-logo" src="v2-systems-logo.jpg" alt="V2 Systems logo">
+      <img class="revio-logo" src="revio-logo-white.png" alt="Rev.io">
+    </div>
+    <div class="wrap">
+      <div class="kicker">5. Requirements and systems alongside Rev.io</div>
+      <h2>The demo should prove Rev.io can connect the work V2 already does.</h2>
+      <div class="grid-3">
+        <div class="card">
+          <h3>Replace or centralize</h3>
+          <ul>
+            <li>Service desk and dispatch workflows.</li>
+            <li>Mobile tech notes, parts, and time capture.</li>
+            <li>Inventory and job costing visibility.</li>
+            <li>Recurring billing and contract end-date tracking.</li>
+          </ul>
+        </div>
+        <div class="card green">
+          <h3>Integrate or coexist</h3>
+          <ul>
+            <li>QuickBooks Desktop through batch sync.</li>
+            <li>ADI and ScanSource pricing integrations, pending account-specific validation.</li>
+            <li>Portal.io for proposal generation and real-time vendor pricing where needed.</li>
+            <li>Manufacturer portals where they remain the source of entitlement/support data.</li>
+          </ul>
+        </div>
+        <div class="card red">
+          <h3>Validate in demo</h3>
+          <ul>
+            <li>GPS/time tracking tied to dispatch and field workflow.</li>
+            <li>RMR billing options: monthly, quarterly, milestone-based, and renewal tracking.</li>
+            <li>Revy AI reporting for labor vs. materials, resource allocation, dashboards, and forecasting.</li>
+            <li>Pricing update process for volatile hardware and customer-specific discounts.</li>
+          </ul>
+        </div>
+      </div>
+      <div class="band">Do not over-position pricing automation until ADI/ScanSource account-specific pricing behavior is confirmed. That is the one technical gap Bryan explicitly owned from discovery.</div>
+    </div>
+    <div class="source"><span>Source: SE Demo Brief, Value Planner, discovery transcript</span><span>QuickBooks Desktop sync is batch-based</span></div>
+  </section>
+
+  <section class="slide light">
+    <div class="topline light">
+      <img class="v2-logo" src="v2-systems-logo.jpg" alt="V2 Systems logo">
+      <img class="revio-logo" src="revio-logo-white.png" alt="Rev.io">
+    </div>
+    <div class="wrap">
+      <div class="kicker">6. Action plan moving forward</div>
+      <h2>Use the Friday demo to turn discovery into workflow proof.</h2>
+      <div class="timeline">
+        <div class="step">
+          <div class="date">Before demo</div>
+          <p>Abbey sends the Friday 10:00 AM ET invite, adds Tony Mehner, and asks Keith whether Shane, Bill, and Rama should join or receive the recording.</p>
+        </div>
+        <div class="step">
+          <div class="date">Bryan owner</div>
+          <p>Confirm whether ADI and ScanSource integrations pull V2 account-specific pricing or generic/catalog pricing, and decide where Portal.io should be positioned.</p>
+        </div>
+        <div class="step">
+          <div class="date">Demo path</div>
+          <p>Run the flow from service intake to dispatch, mobile field update, parts/time capture, inventory, job costing, QuickBooks Desktop sync, and RMR invoicing.</p>
+        </div>
+        <div class="step">
+          <div class="date">Decision data</div>
+          <p>Collect eligible RMR volume, monthly manual billing/admin hours, field tech count, current GPS cost, and support/license agreement count to tighten ROI.</p>
+        </div>
+        <div class="step">
+          <div class="date">Commercial frame</div>
+          <p>Anchor the starter package: $1,000/month, 8 back-office users, 4 field app licenses, $30/month per additional field user, month-to-month, onboarding and migration included.</p>
+        </div>
+      </div>
+    </div>
+    <div class="source"><span>Source: Notion action items and Pricing section</span><span>Demo scheduled for Friday 10:00 AM ET</span></div>
+  </section>
+
+  <section class="slide dark">
+    <div class="topline">
+      <img class="v2-logo" src="v2-systems-logo.jpg" alt="V2 Systems logo">
+      <img class="revio-logo" src="revio-logo-white.png" alt="Rev.io">
+    </div>
+    <div class="wrap">
+      <div class="kicker">Open questions</div>
+      <h2>What to clarify before proposal.</h2>
+      <div class="grid-2">
+        <div class="card">
+          <h3>Commercial inputs</h3>
+          <ul>
+            <li>What monthly RMR volume could V2 realistically bill directly?</li>
+            <li>How many annual support/license agreements are handled manually today?</li>
+            <li>What are the loaded hourly costs for field techs and office/admin staff?</li>
+          </ul>
+        </div>
+        <div class="card green">
+          <h3>Technical inputs</h3>
+          <ul>
+            <li>Can ADI/ScanSource return V2-specific account pricing?</li>
+            <li>Which manufacturer portals must remain part of the process?</li>
+            <li>Who besides Keith needs to approve process, finance, and field workflow changes?</li>
+          </ul>
+        </div>
+      </div>
+      <p class="lead">Recommendation: treat Rev.io as the system that captures the operational facts once, then pushes them through dispatch, job costing, billing, reporting, and recurring revenue management.</p>
+    </div>
+    <div class="source"><span>Prepared from Rev.io discovery source materials</span><span>V2 Systems, August 2026</span></div>
+  </section>
+</main>
+</body>
+</html>

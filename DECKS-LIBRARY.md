@@ -95,6 +95,7 @@ Repo: `git@github.com:koontz-robin/robin-decks.git`
 | ROI — Intermedia | roi-intermedia.html | https://koontz-robin.github.io/robin-decks/roi-intermedia.html | |
 | ROI — LAE Solutions | roi-lae-solutions.html | https://koontz-robin.github.io/robin-decks/roi-lae-solutions.html | PSA Web ROI analysis for security integrator quote-to-cash workflow |
 | ROI — SouthEast Telephone | roi-southeast-telephone.html | https://koontz-robin.github.io/robin-decks/roi-southeast-telephone.html | Billing + PSA ROI analysis from Salesforce activity and public business context |
+| V2 Systems Discovery Readout | v2-systems-billing-discovery-readout.html | https://koontz-robin.github.io/robin-decks/v2-systems-billing-discovery-readout.html | Buyer-facing Rev.io discovery readout for security integrator operational workflow, RMR margin, and PSA demo plan |
 | Revii AI Billing Modernization — Intermedia PPTX | Intermedia_Revii_AI_Billing_Modernization.pptx | https://koontz-robin.github.io/robin-decks/Intermedia_Revii_AI_Billing_Modernization.pptx | Customer-ready PowerPoint |
 | Revii AI Billing Modernization — Intermedia | intermedia-revii-modernization.html | https://koontz-robin.github.io/robin-decks/intermedia-revii-modernization.html | AI-centric phased billing modernization use case |
 | ROI — Scipio | roi-scipio.html | https://koontz-robin.github.io/robin-decks/roi-scipio.html | |
