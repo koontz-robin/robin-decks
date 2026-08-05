@@ -1,0 +1,231 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Expiring Competitor Contracts</title>
+<style>
+:root {
+  --bg:#f6f7fb;
+  --ink:#1d2433;
+  --muted:#657086;
+  --line:#d9deea;
+  --panel:#ffffff;
+  --panel2:#eef2f8;
+  --blue:#2854a3;
+  --cyan:#177e89;
+  --gold:#b7791f;
+  --red:#b42318;
+  --green:#2f7d32;
+}
+* { box-sizing:border-box; }
+body { margin:0; background:var(--bg); color:var(--ink); font-family:Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif; font-size:14px; }
+a { color:var(--blue); }
+.shell { max-width:1480px; margin:0 auto; padding:22px; }
+header { display:grid; grid-template-columns:1.2fr .8fr; gap:18px; align-items:end; padding:22px 0 18px; border-bottom:1px solid var(--line); }
+.eyebrow { color:var(--cyan); text-transform:uppercase; font-size:12px; font-weight:800; letter-spacing:.08em; }
+h1 { margin:4px 0 8px; font-size:34px; line-height:1.06; letter-spacing:0; }
+.lede { max-width:840px; margin:0; color:var(--muted); font-size:15px; line-height:1.45; }
+.meta { text-align:right; color:var(--muted); font-size:12px; line-height:1.5; }
+.kpis { display:grid; grid-template-columns:repeat(5, minmax(0, 1fr)); gap:10px; margin:18px 0; }
+.kpi { background:var(--panel); border:1px solid var(--line); border-radius:8px; padding:14px; }
+.kpi span { display:block; color:var(--muted); font-size:12px; font-weight:700; text-transform:uppercase; }
+.kpi b { display:block; font-size:28px; margin-top:4px; }
+.grid { display:grid; grid-template-columns:340px 1fr; gap:16px; align-items:start; }
+.side { position:sticky; top:12px; display:grid; gap:12px; }
+.panel { background:var(--panel); border:1px solid var(--line); border-radius:8px; padding:14px; }
+.panel h2 { margin:0 0 10px; font-size:15px; }
+.rule-list { display:grid; gap:8px; color:var(--muted); }
+.rule-list b { color:var(--ink); }
+.nav { display:flex; flex-wrap:wrap; gap:6px; }
+.nav a { text-decoration:none; border:1px solid var(--line); background:var(--panel2); color:var(--ink); border-radius:999px; padding:4px 9px; font-size:12px; font-weight:700; }
+.bar-row { position:relative; display:grid; grid-template-columns:1fr auto; gap:8px; padding:7px 0; border-bottom:1px solid #edf0f6; overflow:hidden; }
+.bar-row:last-child { border-bottom:0; }
+.bar-row span,.bar-row b { position:relative; z-index:1; }
+.bar-row i { position:absolute; left:0; bottom:4px; height:6px; border-radius:99px; background:rgba(23,126,137,.18); }
+.main { display:grid; gap:14px; }
+.owner-section { background:var(--panel); border:1px solid var(--line); border-radius:8px; overflow:hidden; }
+.owner-header { display:flex; align-items:center; justify-content:space-between; gap:12px; padding:13px 15px; background:linear-gradient(180deg,#fff,#f7f9fd); border-bottom:1px solid var(--line); }
+.owner-header h2 { margin:0; font-size:18px; }
+.owner-header p { margin:2px 0 0; color:var(--muted); font-size:12px; }
+.owner-pills { display:flex; gap:6px; flex-wrap:wrap; justify-content:flex-end; }
+.owner-pills span { border:1px solid var(--line); border-radius:99px; padding:3px 8px; color:var(--muted); font-size:12px; font-weight:700; background:#fff; }
+.table-wrap { overflow-x:auto; }
+table { width:100%; border-collapse:collapse; min-width:880px; }
+th { text-align:left; font-size:11px; text-transform:uppercase; letter-spacing:.06em; color:var(--muted); padding:9px 12px; border-bottom:1px solid var(--line); white-space:nowrap; }
+td { padding:10px 12px; border-bottom:1px solid #edf0f6; vertical-align:middle; }
+tbody tr:last-child td { border-bottom:0; }
+.account-link { font-weight:800; text-decoration:none; }
+.subtext { color:var(--muted); font-size:12px; margin-top:2px; }
+.segment,.badge { display:inline-block; border-radius:99px; padding:3px 8px; font-size:12px; font-weight:800; white-space:nowrap; }
+.segment { background:#eef2f8; color:#334155; border:1px solid #d7deeb; }
+.small50-employees { background:#e9f7f2; color:#116149; border-color:#b7e4d4; }
+.50plus-employees { background:#e9eefb; color:#24488f; border-color:#c3d0f3; }
+.urgent { background:#fee4e2; color:var(--red); }
+.soon { background:#fef0c7; color:var(--gold); }
+.watch { background:#dcfae6; color:var(--green); }
+.future { background:#e0f2fe; color:#075985; }
+.row-urgent { box-shadow:inset 4px 0 0 var(--red); }
+.row-soon { box-shadow:inset 4px 0 0 var(--gold); }
+.row-watch { box-shadow:inset 4px 0 0 var(--green); }
+.row-future { box-shadow:inset 4px 0 0 #0284c7; }
+footer { color:var(--muted); font-size:12px; padding:18px 0 6px; }
+@media (max-width:980px) {
+  .shell { padding:14px; }
+  header,.grid { grid-template-columns:1fr; }
+  .meta { text-align:left; }
+  .kpis { grid-template-columns:repeat(2, minmax(0, 1fr)); }
+  .side { position:static; }
+}
+</style>
+</head>
+<body>
+<div class="shell">
+  <header>
+    <div>
+      <div class="eyebrow">Salesforce Contract Timing</div>
+      <h1>Expiring Competitor Contracts</h1>
+      <p class="lede">Accounts from Salesforce report 00OPX000009VWxh2AG with competitor contracts inside the pursuit window: below 50 employees gets a 6-month window; 50+ employees gets an 8-month window. Sorted by owner and earliest contract end date.</p>
+    </div>
+    <div class="meta">
+      Generated Aug 5, 2026 1:21 AM UTC<br>
+      As of Aug 5, 2026<br>
+      <a href="https://rev-io.lightning.force.com/lightning/r/Report/00OPX000009VWxh2AG/view">Source Salesforce report</a>
+    </div>
+  </header>
+
+  <section class="kpis">
+    <div class="kpi"><span>Accounts In Window</span><b>4</b></div>
+    <div class="kpi"><span>Next 30 Days</span><b>4</b></div>
+    <div class="kpi"><span>31-90 Days</span><b>0</b></div>
+    <div class="kpi"><span>&lt;50 Employees</span><b>4</b></div>
+    <div class="kpi"><span>50+ Employees</span><b>0</b></div>
+  </section>
+
+  <div class="grid">
+    <aside class="side">
+      <section class="panel">
+        <h2>Rules</h2>
+        <div class="rule-list">
+          <div><b>&lt;50 employees:</b> contract end date from today through Feb 5, 2027</div>
+          <div><b>50+ employees:</b> contract end date from today through Apr 5, 2027</div>
+          <div><b>Unknown employees:</b> included on the 6-month rule and counted separately. Current unknown count: 0</div>
+        </div>
+      </section>
+      <section class="panel">
+        <h2>Top Competitors</h2>
+        <div class="bar-row"><span>CONNECTWISE</span><b>1</b><i style="width:100.0%"></i></div><div class="bar-row"><span>JETBUILT</span><b>1</b><i style="width:100.0%"></i></div><div class="bar-row"><span>AUTOTASK/DATTO/KASEYA</span><b>1</b><i style="width:100.0%"></i></div><div class="bar-row"><span>SIMPRO</span><b>1</b><i style="width:100.0%"></i></div>
+      </section>
+      <section class="panel">
+        <h2>Owners</h2>
+        <div class="nav"><a href="#owner-andy-whisenant">Andy</a> <a href="#owner-abbey-mcintosh">Abbey</a></div>
+      </section>
+    </aside>
+    <main class="main">
+      
+    <section class="owner-section" id="owner-andy-whisenant">
+      <div class="owner-header">
+        <div>
+          <h2>Andy Whisenant</h2>
+          <p>3 accounts · 3 small · 0 50+</p>
+        </div>
+        <div class="owner-pills">
+          <span>3 next 30d</span>
+          <span>0 next 90d</span>
+        </div>
+      </div>
+      <div class="table-wrap">
+        <table>
+          <thead>
+            <tr>
+              <th>Account</th>
+              <th>Competitor</th>
+              <th>Employees</th>
+              <th>Rule</th>
+              <th>Contract End</th>
+              <th>Timing</th>
+            </tr>
+          </thead>
+          <tbody>
+          <tr class="row-urgent">
+            <td>
+              <a class="account-link" href="https://rev-io.my.salesforce.com/001PX000001rbGQYAY" target="_blank">Trigent Technologies, LLC</a>
+              <div class="subtext">Cold Prospect</div>
+            </td>
+            <td>CONNECTWISE</td>
+            <td>10</td>
+            <td><span class="segment small50-employees">&lt;50 employees / 6mo window</span></td>
+            <td>Aug 12, 2026</td>
+            <td><span class="badge urgent">7d</span></td>
+          </tr>
+          <tr class="row-urgent">
+            <td>
+              <a class="account-link" href="https://rev-io.my.salesforce.com/001PX00000qa4YpYAI" target="_blank">Clarity SSU</a>
+              <div class="subtext">Warm Prospect</div>
+            </td>
+            <td>JETBUILT</td>
+            <td>6</td>
+            <td><span class="segment small50-employees">&lt;50 employees / 6mo window</span></td>
+            <td>Aug 14, 2026</td>
+            <td><span class="badge urgent">9d</span></td>
+          </tr>
+          <tr class="row-urgent">
+            <td>
+              <a class="account-link" href="https://rev-io.my.salesforce.com/001PX000001jsfTYAQ" target="_blank">STR Technologies</a>
+              <div class="subtext">Warm Prospect</div>
+            </td>
+            <td>AUTOTASK/DATTO/KASEYA</td>
+            <td>9</td>
+            <td><span class="segment small50-employees">&lt;50 employees / 6mo window</span></td>
+            <td>Aug 17, 2026</td>
+            <td><span class="badge urgent">12d</span></td>
+          </tr></tbody>
+        </table>
+      </div>
+    </section>
+    <section class="owner-section" id="owner-abbey-mcintosh">
+      <div class="owner-header">
+        <div>
+          <h2>Abbey McIntosh</h2>
+          <p>1 accounts · 1 small · 0 50+</p>
+        </div>
+        <div class="owner-pills">
+          <span>1 next 30d</span>
+          <span>0 next 90d</span>
+        </div>
+      </div>
+      <div class="table-wrap">
+        <table>
+          <thead>
+            <tr>
+              <th>Account</th>
+              <th>Competitor</th>
+              <th>Employees</th>
+              <th>Rule</th>
+              <th>Contract End</th>
+              <th>Timing</th>
+            </tr>
+          </thead>
+          <tbody>
+          <tr class="row-urgent">
+            <td>
+              <a class="account-link" href="https://rev-io.my.salesforce.com/0016O00003ee5H8QAI" target="_blank">Integrated Protection Systems</a>
+              <div class="subtext">Cold Prospect</div>
+            </td>
+            <td>SIMPRO</td>
+            <td>11</td>
+            <td><span class="segment small50-employees">&lt;50 employees / 6mo window</span></td>
+            <td>Aug 18, 2026</td>
+            <td><span class="badge urgent">13d</span></td>
+          </tr></tbody>
+        </table>
+      </div>
+    </section>
+    </main>
+  </div>
+  <footer>
+    Source rows: 72. Skipped outside window: 0. Skipped past dates: 68. Skipped missing dates: 0.
+  </footer>
+</div>
+</body>
+</html>
