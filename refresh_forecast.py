@@ -3,8 +3,9 @@ refresh_forecast.py — Daily forecast dashboard refresh
 Fetches current-month opps from Salesforce, rebuilds forecast.html, pushes to GitHub.
 Run by cron daily at 8am ET on weekdays.
 """
-import json, subprocess, sys, os, re
+import json, subprocess, sys, os, re, shutil, tempfile
 from datetime import datetime, timezone
+from pathlib import Path
 import requests
 
 WORKSPACE = '/home/openclaw/.openclaw/workspace'
@@ -43,13 +44,13 @@ print(f"📅 Fetching opps for {month_start} → {month_end}")
 # ── Step 3: Fetch opps from Salesforce ───────────────────────────────────────
 query = f"""
 SELECT Id, Name, StageName, Amount, Product_Type__c, Probability,
-       CloseDate, Forecast_Status__c, Account.Name, Owner.Name,
+       CloseDate, Forecast_Status__c, Loss_Reason__c, Reason_Lost_Detail__c,
+       Account.Name, Owner.Name,
        (SELECT Id, Quantity, UnitPrice, TotalPrice, Product2.Name, Product2.Family
         FROM OpportunityLineItems)
 FROM Opportunity
 WHERE CloseDate >= {month_start}
   AND CloseDate <= {month_end}
-  AND StageName != 'Closed Lost'
 ORDER BY Amount DESC NULLS LAST
 LIMIT 500
 """
@@ -96,18 +97,53 @@ print(f"✅ {result.stdout.strip()}")
 # ── Step 5: Push to GitHub ────────────────────────────────────────────────────
 print("🚀 Pushing to GitHub...")
 commit_msg = f"forecast.html — auto-refresh {now.strftime('%Y-%m-%d')}"
-cmds = [
-    f"cd {WORKSPACE} && git add forecast.html {opp_file_path}",
-    f"cd {WORKSPACE} && git diff --cached --quiet || git commit -m '{commit_msg}'",
-    f"cd {WORKSPACE} && git push robin-decks HEAD:master",
-]
-for cmd in cmds:
-    r = subprocess.run(cmd, shell=True, capture_output=True, text=True)
-    if r.returncode != 0 and 'nothing to commit' not in r.stdout + r.stderr:
-        print(f"❌ Git error: {r.stderr}")
-        sys.exit(1)
-    if r.stdout.strip():
-        print(f"  {r.stdout.strip()}")
+tmp_parent = Path(tempfile.mkdtemp(prefix="forecast-publish."))
+worktree = tmp_parent / "worktree"
+try:
+    cmds = [
+        ["git", "fetch", "robin-decks", "master"],
+        ["git", "worktree", "add", str(worktree), "robin-decks/master"],
+    ]
+    for cmd in cmds:
+        r = subprocess.run(cmd, cwd=WORKSPACE, capture_output=True, text=True)
+        if r.returncode != 0:
+            print(f"❌ Git error: {r.stderr}")
+            sys.exit(1)
+        if r.stdout.strip():
+            print(f"  {r.stdout.strip()}")
+
+    for path in [Path(FORECAST_HTML), Path(opp_file_path)]:
+        shutil.copy2(path, worktree / path.name)
+
+    cmds = [
+        ["git", "config", "user.name", "Robin"],
+        ["git", "config", "user.email", "robin@rev.io"],
+        ["git", "add", Path(FORECAST_HTML).name, Path(opp_file_path).name],
+    ]
+    for cmd in cmds:
+        r = subprocess.run(cmd, cwd=worktree, capture_output=True, text=True)
+        if r.returncode != 0:
+            print(f"❌ Git error: {r.stderr}")
+            sys.exit(1)
+
+    diff = subprocess.run(["git", "diff", "--cached", "--quiet"], cwd=worktree)
+    if diff.returncode == 0:
+        print("  No publish changes")
+    else:
+        cmds = [
+            ["git", "commit", "-m", commit_msg],
+            ["git", "push", "robin-decks", "HEAD:master"],
+        ]
+        for cmd in cmds:
+            r = subprocess.run(cmd, cwd=worktree, capture_output=True, text=True)
+            if r.returncode != 0:
+                print(f"❌ Git error: {r.stderr}")
+                sys.exit(1)
+            if r.stdout.strip():
+                print(f"  {r.stdout.strip()}")
+finally:
+    subprocess.run(["git", "worktree", "remove", "--force", str(worktree)], cwd=WORKSPACE, check=False)
+    shutil.rmtree(tmp_parent, ignore_errors=True)
 
 print("✅ Done — forecast.html pushed to GitHub Pages")
 print(f"🔗 https://koontz-robin.github.io/robin-decks/forecast.html")

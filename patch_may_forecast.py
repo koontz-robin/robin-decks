@@ -2,6 +2,7 @@
 patch_may_forecast.py — Patches the current-month tab + Q2 bar in forecast.html
 with fresh SF data. Keeps all other tabs, formatting, and structure intact.
 """
+import html as html_lib
 import json, os, re
 from collections import defaultdict
 from datetime import datetime, timezone
@@ -62,6 +63,9 @@ FORECAST_COLORS = {
     'Best Case':   ('#00ff88','rgba(0,255,136,0.06)','rgba(0,255,136,0.12)','BEST CASE'),
 }
 
+def esc(value):
+    return html_lib.escape(str(value or ''))
+
 def prod_key_for_month(p, month_name):
     p = (p or '').strip()
     if 'PSA' in p: return 'PSA'
@@ -114,6 +118,7 @@ def fmt(n):
 def closed_opp_count():
     return sum(1 for o in opps if o.get('StageName') == 'Closed Won')
 
+closed_lost_opps = []
 buckets = defaultdict(lambda: {'opps':[],'closed':0.0,'closed_opps':[]})
 for o in opps:
     p = prod_key(o.get('Product_Type__c',''))
@@ -125,6 +130,8 @@ for o in opps:
             closed_row['_booking_amount'] = booking_amount
             closed_row['_booking_product'] = booking_product
             buckets[booking_product]['closed_opps'].append(closed_row)
+    elif o.get('StageName') == 'Closed Lost':
+        closed_lost_opps.append(o)
     else:
         buckets[p]['opps'].append(o)
 
@@ -181,6 +188,54 @@ def closed_opp_row(o):
     if amount is None:
         amount = o.get('Amount') or 0
     return f'<tr><td>{acc}</td><td style="color:var(--cyan);font-weight:700">{fmt(amount)}</td><td><span class="stage-pill won">Closed Won</span></td><td>{owner}</td><td>{close_date}<span class="badge-mkt">{product}</span></td></tr>'
+
+def closed_lost_opp_row(o):
+    acc = esc(o.get('Account') or o.get('Name') or 'Unknown')
+    opp_name = esc(o.get('Name') or '')
+    owner = esc(o.get('Owner') or '')
+    close_date = esc(o.get('CloseDate') or '')
+    product = esc(o.get('Product_Type__c') or '')
+    amount = fmt(o.get('Amount') or 0)
+    loss_reason = esc(o.get('Loss_Reason__c') or 'No loss reason')
+    reason_detail = esc(o.get('Reason_Lost_Detail__c') or 'No reason lost detail')
+    return f'''<tr>
+      <td>{acc}<div class="loss-detail">{opp_name}</div></td>
+      <td style="color:#ff6666;font-weight:700">{amount}</td>
+      <td><span class="stage-pill lost">Closed Lost</span></td>
+      <td>{owner}</td>
+      <td>{close_date}<span class="badge-mkt">{product}</span></td>
+      <td><strong>{loss_reason}</strong><div class="loss-detail">{reason_detail}</div></td>
+    </tr>'''
+
+def closed_lost_review():
+    if not HISTORICAL_MONTH:
+        return ''
+    rows = sorted(closed_lost_opps, key=lambda o: (o.get('Loss_Reason__c') or 'ZZZ', -(o.get('Amount') or 0), o.get('Account') or o.get('Name') or ''))
+    total = sum(o.get('Amount') or 0 for o in rows)
+    body = ''.join(closed_lost_opp_row(o) for o in rows) or '<tr><td colspan="6" style="color:#5a8a6a">No closed lost opportunities for this locked month.</td></tr>'
+    return f'''
+<div class="product-section closed-lost-review">
+  <div class="prod-header">
+    <div class="prod-title">
+      <div class="prod-dot" style="background:#ff4444;box-shadow:0 0 8px #ff4444"></div>
+      <h2 style="color:#ff6666;text-shadow:0 0 20px rgba(255,68,68,0.35)">Closed Lost Review</h2>
+    </div>
+    <div class="prod-meta">
+      <span class="meta-chip">Closed Lost: <strong>{len(rows)}</strong></span>
+      <span class="meta-chip">Lost Amount: <strong>{fmt(total)}</strong></span>
+    </div>
+  </div>
+  <div class="opp-toggle" onclick="toggle('{MONTH_ID}-closed-lost')">
+    <span id="toggle-label-{MONTH_ID}-closed-lost">▼ Closed lost opportunities with loss reason</span>
+    <span class="toggle-amt">{fmt(total)} total</span>
+  </div>
+  <div id="opps-{MONTH_ID}-closed-lost" class="opp-list" style="display:block">
+    <table class="opp-table">
+      <thead><tr><th>Account / Opportunity</th><th>Amount</th><th>Stage</th><th>Owner</th><th>Close Date / Product</th><th>Loss Reason / Detail</th></tr></thead>
+      <tbody>{body}</tbody>
+    </table>
+  </div>
+</div>'''
 
 def build_month_tab():
     display = 'block' if TARGET_MONTH == now.strftime('%B') else 'none'
@@ -344,6 +399,7 @@ def build_month_tab():
   </div>
 {opp_toggle}
 </div>''')
+    lines.append(closed_lost_review())
     lines.append('  </div>\n')
     return '\n'.join(lines)
 
@@ -483,4 +539,4 @@ if HISTORICAL_MONTH:
 else:
     total_pipe = sum(o.get('Amount',0) or 0 for o in opps if o.get('StageName') != 'Closed Won')
     open_count = sum(len(buckets[p]["opps"]) for p in PRODUCTS)
-print(f'{TARGET_MONTH} data patched — CW: {fmt(total_cw)} | Pipeline: {fmt(total_pipe)} | {open_count} open opps')
+print(f'{TARGET_MONTH} data patched — CW: {fmt(total_cw)} | Pipeline: {fmt(total_pipe)} | {open_count} open opps | Closed lost: {len(closed_lost_opps)}')
