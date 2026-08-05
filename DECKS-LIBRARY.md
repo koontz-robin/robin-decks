@@ -31,7 +31,7 @@ Repo: `git@github.com:koontz-robin/robin-decks.git`
 | CBR Dashboard | cbr-dashboard.html | https://koontz-robin.github.io/robin-decks/cbr-dashboard.html | Refreshed 2026-06-18; on demand |
 | Jake Partner Accounts Dashboard | jake-partner-accounts-dashboard.html | https://koontz-robin.github.io/robin-decks/jake-partner-accounts-dashboard.html | Jake Mitchell accounts where Type includes Partner |
 | Competitor Contract End Date Monitor | competitor-contract-enddate-monitor.html | https://koontz-robin.github.io/robin-decks/competitor-contract-enddate-monitor.html | Sales Meeting Coaching Notion contract-timing review |
-| Expiring Competitor Contracts | expiring-competitor-contracts-dashboard.html | https://koontz-robin.github.io/robin-decks/expiring-competitor-contracts-dashboard.html | Monthly Salesforce report refresh; 6/8-month pursuit windows plus Oct-Dec expirations |
+| Expiring Competitor Contracts | expiring-competitor-contracts-dashboard.html | https://koontz-robin.github.io/robin-decks/expiring-competitor-contracts-dashboard.html | Monthly Salesforce report refresh; 6/8-month pursuit windows plus Oct-Dec expirations; excludes accounts with open opportunities |
 | CSA Pipeline Dashboard | csa-pipeline-dashboard.html | https://koontz-robin.github.io/robin-decks/csa-pipeline-dashboard.html | On demand |
 | Monthly Pipeline Dashboard | monthly-pipeline-dashboard.html | https://koontz-robin.github.io/robin-decks/monthly-pipeline-dashboard.html | On demand |
 | 2026 Pipeline Pace | 2026-pipeline-pace.html | https://koontz-robin.github.io/robin-decks/2026-pipeline-pace.html | On demand |
