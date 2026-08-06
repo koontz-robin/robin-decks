@@ -26,13 +26,14 @@
     pointer-events:none; z-index:0;
   }
   .scanline { position:fixed; top:0; left:0; right:0; bottom:0; background:repeating-linear-gradient(0deg, transparent, transparent 2px, rgba(0,0,0,0.03) 2px, rgba(0,0,0,0.03) 4px); pointer-events:none; z-index:0; }
-  .container { max-width:1100px; margin:0 auto; padding:24px 32px; position:relative; z-index:1; }
+  .container { max-width:min(1500px, calc(100vw - 32px)); margin:0 auto; padding:18px 16px 24px; position:relative; z-index:1; }
   .header { border-bottom:1px solid var(--border); padding-bottom:16px; margin-bottom:20px; position:relative; }
-  .header-top { display:flex; align-items:center; justify-content:space-between; margin-bottom:12px; }
+  .header-top { display:flex; align-items:center; justify-content:space-between; margin-bottom:12px; padding-right:154px; }
   .logo { display:flex; align-items:center; gap:10px; }
   .logo-dot { width:10px; height:10px; background:var(--green); border-radius:50%; box-shadow:0 0 12px var(--green); animation:pulse 2s infinite; }
   .logo-text { font-size:11px; font-weight:700; letter-spacing:3px; text-transform:uppercase; color:var(--green); }
   .header-date { font-size:11px; color:var(--muted); letter-spacing:1px; }
+  .revio-header-logo { position:absolute; top:0; right:0; width:132px; height:auto; opacity:0.96; }
   h1 { font-size:36px; font-weight:900; color:#fff; letter-spacing:-1px; margin-bottom:4px; }
   h1 span { color:var(--green); text-shadow:0 0 30px var(--green); }
   .header-sub { font-size:13px; color:var(--muted); }
@@ -133,7 +134,7 @@
 </style>
 </head>
 <body>
-<div id="robin-refresh-btn" style="position:fixed;top:12px;right:16px;z-index:9999;">
+<div id="robin-refresh-btn" style="position:fixed;bottom:12px;right:16px;z-index:9999;">
   <button onclick="window.location.reload(true)" title="Refresh dashboard" style="background:#1e293b;color:#f8fafc;border:1px solid #334155;border-radius:8px;padding:7px 14px;font-size:13px;font-family:sans-serif;cursor:pointer;display:flex;align-items:center;gap:6px;box-shadow:0 2px 8px rgba(0,0,0,0.3);transition:background 0.15s;" onmouseover="this.style.background='#334155'" onmouseout="this.style.background='#1e293b'">
     <span style="font-size:15px;line-height:1">↻</span> Refresh
   </button>
@@ -148,6 +149,7 @@
         <div class="logo-text">Rev.io · Sales Intelligence</div>
       </div>
       <div class="header-date">GENERATED AUGUST 6, 2026 · LIVE SALESFORCE DATA</div>
+      <img class="revio-header-logo" src="revio-logo-white.png" alt="Rev.io">
     </div>
     <h1>Sales <span>Forecast</span></h1>
     <div class="header-sub">Live Salesforce data · Jan–Aug 2026 · Tagged via Forecast_Status__c</div>
@@ -1590,10 +1592,10 @@
   </div>
 
   <div class="opp-toggle closed-lost-toggle" onclick="toggle('july-0-closed-lost')">
-    <span id="toggle-label-july-0-closed-lost">▼ Closed lost PSA opportunities with loss reason</span>
+    <span id="toggle-label-july-0-closed-lost" data-collapsed="Show 112 closed lost PSA opportunities" data-expanded="Hide closed lost PSA opportunities">▶ Show 112 closed lost PSA opportunities</span>
     <span class="toggle-amt">$124,135 total</span>
   </div>
-  <div id="opps-july-0-closed-lost" class="opp-list closed-lost-review" style="display:block">
+  <div id="opps-july-0-closed-lost" class="opp-list closed-lost-review" style="display:none">
     <table class="opp-table">
       <thead><tr><th>Account / Opportunity</th><th>Amount</th><th>Stage</th><th>Owner</th><th>Close Date / Product</th><th>Loss Reason / Detail</th></tr></thead>
       <tbody><tr>
@@ -2436,10 +2438,10 @@ We appreciate all of your time and effort, and we wish you and the Revii team al
   </div>
 
   <div class="opp-toggle closed-lost-toggle" onclick="toggle('july-1-closed-lost')">
-    <span id="toggle-label-july-1-closed-lost">▼ Closed lost Billing / Odin opportunities with loss reason</span>
+    <span id="toggle-label-july-1-closed-lost" data-collapsed="Show 23 closed lost Billing / Odin opportunities" data-expanded="Hide closed lost Billing / Odin opportunities">▶ Show 23 closed lost Billing / Odin opportunities</span>
     <span class="toggle-amt">$29,907 total</span>
   </div>
-  <div id="opps-july-1-closed-lost" class="opp-list closed-lost-review" style="display:block">
+  <div id="opps-july-1-closed-lost" class="opp-list closed-lost-review" style="display:none">
     <table class="opp-table">
       <thead><tr><th>Account / Opportunity</th><th>Amount</th><th>Stage</th><th>Owner</th><th>Close Date / Product</th><th>Loss Reason / Detail</th></tr></thead>
       <tbody><tr>
@@ -2658,10 +2660,10 @@ We appreciate all of your time and effort, and we wish you and the Revii team al
   </div>
 
   <div class="opp-toggle closed-lost-toggle" onclick="toggle('july-2-closed-lost')">
-    <span id="toggle-label-july-2-closed-lost">▼ Closed lost Payments opportunities with loss reason</span>
+    <span id="toggle-label-july-2-closed-lost" data-collapsed="Show 4 closed lost Payments opportunities" data-expanded="Hide closed lost Payments opportunities">▶ Show 4 closed lost Payments opportunities</span>
     <span class="toggle-amt">$888 total</span>
   </div>
-  <div id="opps-july-2-closed-lost" class="opp-list closed-lost-review" style="display:block">
+  <div id="opps-july-2-closed-lost" class="opp-list closed-lost-review" style="display:none">
     <table class="opp-table">
       <thead><tr><th>Account / Opportunity</th><th>Amount</th><th>Stage</th><th>Owner</th><th>Close Date / Product</th><th>Loss Reason / Detail</th></tr></thead>
       <tbody><tr>
@@ -2744,10 +2746,10 @@ We appreciate all of your time and effort, and we wish you and the Revii team al
   </div>
 
   <div class="opp-toggle closed-lost-toggle" onclick="toggle('july-3-closed-lost')">
-    <span id="toggle-label-july-3-closed-lost">▼ Closed lost Cyber Protect opportunities with loss reason</span>
+    <span id="toggle-label-july-3-closed-lost" data-collapsed="Show 2 closed lost Cyber Protect opportunities" data-expanded="Hide closed lost Cyber Protect opportunities">▶ Show 2 closed lost Cyber Protect opportunities</span>
     <span class="toggle-amt">$7,990 total</span>
   </div>
-  <div id="opps-july-3-closed-lost" class="opp-list closed-lost-review" style="display:block">
+  <div id="opps-july-3-closed-lost" class="opp-list closed-lost-review" style="display:none">
     <table class="opp-table">
       <thead><tr><th>Account / Opportunity</th><th>Amount</th><th>Stage</th><th>Owner</th><th>Close Date / Product</th><th>Loss Reason / Detail</th></tr></thead>
       <tbody><tr>
@@ -2816,10 +2818,10 @@ We appreciate all of your time and effort, and we wish you and the Revii team al
   </div>
 
   <div class="opp-toggle closed-lost-toggle" onclick="toggle('july-5-closed-lost')">
-    <span id="toggle-label-july-5-closed-lost">▼ Closed lost Other / Unmapped opportunities with loss reason</span>
+    <span id="toggle-label-july-5-closed-lost" data-collapsed="Show 15 closed lost Other / Unmapped opportunities" data-expanded="Hide closed lost Other / Unmapped opportunities">▶ Show 15 closed lost Other / Unmapped opportunities</span>
     <span class="toggle-amt">$500 total</span>
   </div>
-  <div id="opps-july-5-closed-lost" class="opp-list closed-lost-review" style="display:block">
+  <div id="opps-july-5-closed-lost" class="opp-list closed-lost-review" style="display:none">
     <table class="opp-table">
       <thead><tr><th>Account / Opportunity</th><th>Amount</th><th>Stage</th><th>Owner</th><th>Close Date / Product</th><th>Loss Reason / Detail</th></tr></thead>
       <tbody><tr>
@@ -2953,6 +2955,9 @@ Client requested a deep dive with an expert on reporting in Web, and will also b
   
 
 
+  
+
+
   <div id="tab-August" class="tab-content" style="display:block">
     <div class="summary-bar">
       <div class="sum-item"><div class="sum-label">August Pipeline</div><div class="sum-val">$75,494</div></div>
@@ -2976,6 +2981,7 @@ Client requested a deep dive with an expert on reporting in Web, and will also b
       <span class="meta-chip">64 opps</span>
       <span class="meta-chip">23 tagged</span>
       <span class="meta-chip" style="border-color:rgba(168,85,247,0.3);color:#a855f7">🟣 6 mktg</span>
+      <span class="meta-chip" style="border-color:rgba(255,68,68,0.25);color:#ff6666">Closed Lost: <strong>0</strong></span>
       <span class="meta-chip quota">Quota: $46,000</span>
     </div>
   </div>
@@ -3024,6 +3030,16 @@ Client requested a deep dive with an expert on reporting in Web, and will also b
     </table>
   </div>
 
+  <div class="opp-toggle closed-lost-toggle" onclick="toggle('august-0-closed-lost')">
+    <span id="toggle-label-august-0-closed-lost" data-collapsed="Show 0 closed lost PSA opportunities" data-expanded="Hide closed lost PSA opportunities">▶ Show 0 closed lost PSA opportunities</span>
+    <span class="toggle-amt">$0 total</span>
+  </div>
+  <div id="opps-august-0-closed-lost" class="opp-list closed-lost-review" style="display:none">
+    <table class="opp-table">
+      <thead><tr><th>Account / Opportunity</th><th>Amount</th><th>Stage</th><th>Owner</th><th>Close Date / Product</th><th>Loss Reason / Detail</th></tr></thead>
+      <tbody><tr><td colspan="6" style="color:#5a8a6a">No closed lost opportunities for this product.</td></tr></tbody>
+    </table>
+  </div>
 </div>
 
 <div class="product-section" id="prod-august-1">
@@ -3038,6 +3054,7 @@ Client requested a deep dive with an expert on reporting in Web, and will also b
       <span class="meta-chip">9 opps</span>
       <span class="meta-chip">6 tagged</span>
       
+      <span class="meta-chip" style="border-color:rgba(255,68,68,0.25);color:#ff6666">Closed Lost: <strong>0</strong></span>
       <span class="meta-chip quota">Quota: $12,383</span>
     </div>
   </div>
@@ -3086,6 +3103,16 @@ Client requested a deep dive with an expert on reporting in Web, and will also b
     </table>
   </div>
 
+  <div class="opp-toggle closed-lost-toggle" onclick="toggle('august-1-closed-lost')">
+    <span id="toggle-label-august-1-closed-lost" data-collapsed="Show 0 closed lost Billing / Odin opportunities" data-expanded="Hide closed lost Billing / Odin opportunities">▶ Show 0 closed lost Billing / Odin opportunities</span>
+    <span class="toggle-amt">$0 total</span>
+  </div>
+  <div id="opps-august-1-closed-lost" class="opp-list closed-lost-review" style="display:none">
+    <table class="opp-table">
+      <thead><tr><th>Account / Opportunity</th><th>Amount</th><th>Stage</th><th>Owner</th><th>Close Date / Product</th><th>Loss Reason / Detail</th></tr></thead>
+      <tbody><tr><td colspan="6" style="color:#5a8a6a">No closed lost opportunities for this product.</td></tr></tbody>
+    </table>
+  </div>
 </div>
 
 <div class="product-section" id="prod-august-2">
@@ -3100,6 +3127,7 @@ Client requested a deep dive with an expert on reporting in Web, and will also b
       <span class="meta-chip">18 opps</span>
       <span class="meta-chip">13 tagged</span>
       <span class="meta-chip" style="border-color:rgba(168,85,247,0.3);color:#a855f7">🟣 2 mktg</span>
+      <span class="meta-chip" style="border-color:rgba(255,68,68,0.25);color:#ff6666">Closed Lost: <strong>0</strong></span>
       <span class="meta-chip quota">Quota: $10,540</span>
     </div>
   </div>
@@ -3148,6 +3176,16 @@ Client requested a deep dive with an expert on reporting in Web, and will also b
     </table>
   </div>
 
+  <div class="opp-toggle closed-lost-toggle" onclick="toggle('august-2-closed-lost')">
+    <span id="toggle-label-august-2-closed-lost" data-collapsed="Show 0 closed lost Payments opportunities" data-expanded="Hide closed lost Payments opportunities">▶ Show 0 closed lost Payments opportunities</span>
+    <span class="toggle-amt">$0 total</span>
+  </div>
+  <div id="opps-august-2-closed-lost" class="opp-list closed-lost-review" style="display:none">
+    <table class="opp-table">
+      <thead><tr><th>Account / Opportunity</th><th>Amount</th><th>Stage</th><th>Owner</th><th>Close Date / Product</th><th>Loss Reason / Detail</th></tr></thead>
+      <tbody><tr><td colspan="6" style="color:#5a8a6a">No closed lost opportunities for this product.</td></tr></tbody>
+    </table>
+  </div>
 </div>
 
 <div class="product-section" id="prod-august-3">
@@ -3162,6 +3200,7 @@ Client requested a deep dive with an expert on reporting in Web, and will also b
       <span class="meta-chip">0 opps</span>
       <span class="meta-chip">0 tagged</span>
       
+      <span class="meta-chip" style="border-color:rgba(255,68,68,0.25);color:#ff6666">Closed Lost: <strong>0</strong></span>
       <span class="meta-chip quota">Quota: $4,500</span>
     </div>
   </div>
@@ -3199,6 +3238,16 @@ Client requested a deep dive with an expert on reporting in Web, and will also b
   </div>
 
 
+  <div class="opp-toggle closed-lost-toggle" onclick="toggle('august-3-closed-lost')">
+    <span id="toggle-label-august-3-closed-lost" data-collapsed="Show 0 closed lost Cyber Protect opportunities" data-expanded="Hide closed lost Cyber Protect opportunities">▶ Show 0 closed lost Cyber Protect opportunities</span>
+    <span class="toggle-amt">$0 total</span>
+  </div>
+  <div id="opps-august-3-closed-lost" class="opp-list closed-lost-review" style="display:none">
+    <table class="opp-table">
+      <thead><tr><th>Account / Opportunity</th><th>Amount</th><th>Stage</th><th>Owner</th><th>Close Date / Product</th><th>Loss Reason / Detail</th></tr></thead>
+      <tbody><tr><td colspan="6" style="color:#5a8a6a">No closed lost opportunities for this product.</td></tr></tbody>
+    </table>
+  </div>
 </div>
 
 <div class="product-section" id="prod-august-4">
@@ -3213,6 +3262,7 @@ Client requested a deep dive with an expert on reporting in Web, and will also b
       <span class="meta-chip">0 opps</span>
       <span class="meta-chip">0 tagged</span>
       
+      <span class="meta-chip" style="border-color:rgba(255,68,68,0.25);color:#ff6666">Closed Lost: <strong>0</strong></span>
       <span class="meta-chip quota">Quota: $1,667</span>
     </div>
   </div>
@@ -3250,6 +3300,16 @@ Client requested a deep dive with an expert on reporting in Web, and will also b
   </div>
 
 
+  <div class="opp-toggle closed-lost-toggle" onclick="toggle('august-4-closed-lost')">
+    <span id="toggle-label-august-4-closed-lost" data-collapsed="Show 0 closed lost CommerceHub opportunities" data-expanded="Hide closed lost CommerceHub opportunities">▶ Show 0 closed lost CommerceHub opportunities</span>
+    <span class="toggle-amt">$0 total</span>
+  </div>
+  <div id="opps-august-4-closed-lost" class="opp-list closed-lost-review" style="display:none">
+    <table class="opp-table">
+      <thead><tr><th>Account / Opportunity</th><th>Amount</th><th>Stage</th><th>Owner</th><th>Close Date / Product</th><th>Loss Reason / Detail</th></tr></thead>
+      <tbody><tr><td colspan="6" style="color:#5a8a6a">No closed lost opportunities for this product.</td></tr></tbody>
+    </table>
+  </div>
 </div>
   </div>
 
@@ -3272,10 +3332,10 @@ function toggle(pid) {
   const count = el.querySelectorAll('tbody tr').length;
   if (el.style.display === 'none') {
     el.style.display = 'block';
-    lbl.textContent = '▼ Hide opportunities (' + count + ')';
+    lbl.textContent = lbl.dataset.expanded ? '▼ ' + lbl.dataset.expanded : '▼ Hide opportunities (' + count + ')';
   } else {
     el.style.display = 'none';
-    lbl.textContent = '▶ Show all ' + count + ' opportunities';
+    lbl.textContent = lbl.dataset.collapsed ? '▶ ' + lbl.dataset.collapsed : '▶ Show all ' + count + ' opportunities';
   }
 }
 </script>
