@@ -1,0 +1,387 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Rev.io MSP Cold Call Playbook</title>
+<style>
+  :root {
+    --bg: #07111d;
+    --ink: #e8f0f8;
+    --muted: #8da0b5;
+    --line: #223247;
+    --panel: #0d1828;
+    --panel-2: #101f33;
+    --green: #3dc570;
+    --cyan: #45c7f4;
+    --amber: #f5b84b;
+    --red: #f36b6b;
+    --shadow: rgba(0, 0, 0, 0.28);
+  }
+  * { box-sizing: border-box; }
+  html { scroll-behavior: smooth; }
+  body {
+    margin: 0;
+    background: var(--bg);
+    color: var(--ink);
+    font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+    line-height: 1.48;
+  }
+  a { color: inherit; }
+  .shell { max-width: 1320px; margin: 0 auto; padding: 24px; }
+  .hero {
+    display: grid;
+    grid-template-columns: 1fr auto;
+    gap: 20px;
+    align-items: end;
+    border-bottom: 1px solid var(--line);
+    padding: 18px 0 24px;
+  }
+  h1 { margin: 0; font-size: clamp(30px, 5vw, 56px); line-height: 0.95; letter-spacing: 0; }
+  .sub { max-width: 760px; color: var(--muted); margin: 12px 0 0; font-size: 15px; }
+  .logo { width: 134px; height: auto; display: block; margin-left: auto; }
+  .meta { color: var(--muted); font-size: 12px; text-align: right; margin-top: 12px; }
+  .nav {
+    position: sticky;
+    top: 0;
+    z-index: 10;
+    display: flex;
+    gap: 8px;
+    flex-wrap: wrap;
+    padding: 12px 0;
+    background: rgba(7, 17, 29, 0.94);
+    backdrop-filter: blur(14px);
+    border-bottom: 1px solid rgba(34, 50, 71, 0.8);
+  }
+  .nav a, .chip {
+    border: 1px solid var(--line);
+    background: #0a1523;
+    color: var(--ink);
+    border-radius: 999px;
+    padding: 8px 12px;
+    font-size: 12px;
+    font-weight: 800;
+    text-decoration: none;
+  }
+  .nav a:hover { border-color: var(--green); }
+  .section { padding: 28px 0; border-bottom: 1px solid rgba(34, 50, 71, 0.65); }
+  .section-head {
+    display: flex;
+    justify-content: space-between;
+    gap: 16px;
+    align-items: baseline;
+    margin-bottom: 14px;
+  }
+  h2 { margin: 0; font-size: 24px; letter-spacing: 0; }
+  h3 { margin: 0 0 10px; font-size: 17px; letter-spacing: 0; }
+  .hint { color: var(--muted); font-size: 13px; max-width: 700px; }
+  .grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 14px; }
+  .two { display: grid; grid-template-columns: minmax(0, 0.9fr) minmax(0, 1.1fr); gap: 14px; }
+  .card {
+    background: linear-gradient(180deg, var(--panel-2), var(--panel));
+    border: 1px solid var(--line);
+    border-radius: 8px;
+    padding: 16px;
+    box-shadow: 0 10px 24px var(--shadow);
+  }
+  .card.tight { padding: 14px; }
+  .label {
+    color: var(--green);
+    text-transform: uppercase;
+    letter-spacing: 1.4px;
+    font-size: 10px;
+    font-weight: 900;
+    margin-bottom: 8px;
+  }
+  .script-line {
+    background: #07111d;
+    border: 1px solid rgba(69, 199, 244, 0.2);
+    border-radius: 8px;
+    padding: 14px;
+    color: #dbeafe;
+    font-size: 15px;
+    margin-top: 10px;
+  }
+  .copy {
+    appearance: none;
+    border: 1px solid rgba(61, 197, 112, 0.42);
+    background: rgba(61, 197, 112, 0.12);
+    color: #d7ffe5;
+    border-radius: 6px;
+    padding: 7px 10px;
+    font-weight: 800;
+    font-size: 12px;
+    cursor: pointer;
+    margin-top: 12px;
+  }
+  .copy:hover { background: rgba(61, 197, 112, 0.18); }
+  ul, ol { margin: 10px 0 0; padding-left: 20px; color: var(--muted); }
+  li { margin: 8px 0; }
+  strong { color: var(--ink); }
+  .call-flow {
+    display: grid;
+    grid-template-columns: repeat(6, minmax(150px, 1fr));
+    gap: 10px;
+  }
+  .step {
+    min-height: 150px;
+    border-left: 3px solid var(--green);
+  }
+  .num {
+    display: inline-grid;
+    place-items: center;
+    width: 24px;
+    height: 24px;
+    border-radius: 50%;
+    background: var(--green);
+    color: #06120c;
+    font-weight: 900;
+    font-size: 12px;
+    margin-bottom: 10px;
+  }
+  .tabs { display: flex; gap: 8px; flex-wrap: wrap; margin-bottom: 14px; }
+  .tab {
+    border: 1px solid var(--line);
+    background: #0a1523;
+    color: var(--ink);
+    border-radius: 6px;
+    padding: 9px 12px;
+    font-weight: 800;
+    cursor: pointer;
+  }
+  .tab.active { border-color: var(--green); color: #d7ffe5; background: rgba(61, 197, 112, 0.12); }
+  .competitor { display: none; }
+  .competitor.active { display: block; }
+  .statement { border-left: 3px solid var(--cyan); }
+  .objections-grid {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 16px;
+    align-items: stretch;
+  }
+  .objection {
+    display: grid;
+    grid-template-rows: auto 1fr;
+    gap: 0;
+    overflow: hidden;
+    padding: 0;
+    min-height: 310px;
+  }
+  .objection .heard {
+    background: rgba(243, 107, 107, 0.08);
+    border-bottom: 1px solid var(--line);
+    padding: 16px;
+  }
+  .objection .use {
+    display: flex;
+    flex-direction: column;
+    padding: 16px;
+  }
+  .objection .script-line {
+    flex: 1;
+    min-height: 118px;
+  }
+  .heard .label { color: var(--red); }
+  .use .label { color: var(--amber); }
+  .small { font-size: 12px; color: var(--muted); }
+  @media (max-width: 980px) {
+    .two, .hero { grid-template-columns: 1fr; }
+    .objections-grid { grid-template-columns: 1fr; }
+    .call-flow { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+    .meta { text-align: left; }
+    .logo { margin-left: 0; }
+  }
+  @media (max-width: 620px) {
+    .shell { padding: 18px; }
+    .call-flow { grid-template-columns: 1fr; }
+    .nav { gap: 6px; }
+    .nav a { padding: 7px 10px; }
+  }
+</style>
+</head>
+<body>
+<main class="shell">
+  <header class="hero">
+    <div>
+      <h1>MSP Cold Call Playbook</h1>
+      <p class="sub">A live-call reference for SDRs: opener, discovery flow, Rev.io value statements, competitor talk tracks, and objection pivots that keep the conversation positive and focused on business outcomes.</p>
+    </div>
+    <div>
+      <img class="logo" src="revio-logo-white.png" alt="Rev.io">
+      <div class="meta">Built for SDR cold calls<br>Updated August 7, 2026</div>
+    </div>
+  </header>
+
+  <nav class="nav" aria-label="Page sections">
+    <a href="#flow">Call Flow</a>
+    <a href="#core">Core Scripts</a>
+    <a href="#competitors">Competitors</a>
+    <a href="#objections">Objections</a>
+  </nav>
+
+  <section id="flow" class="section">
+    <div class="section-head">
+      <h2>Cold Call Flow</h2>
+      <div class="hint">Keep this visible during calls. Follow the sequence, personalize the separation, use the MSP value statement, then close for the intro call and cement the meeting.</div>
+    </div>
+    <div class="call-flow">
+      <div class="card step"><div class="num">1</div><h3>Introduce Yourself</h3><p class="small">Start simple and human.</p><div class="script-line">"Hey, this is [Name] with Rev.io. How are you today?"</div></div>
+      <div class="card step"><div class="num">2</div><h3>Reason for the Call</h3><p class="small">Explain what Rev.io does for MSPs.</p><div class="script-line">"I'm calling from Rev.io, and we're a PSA and invoicing platform for MSPs. We do everything from quoting, scheduling, help desk, project management, and invoicing."</div></div>
+      <div class="card step"><div class="num">3</div><h3>Separation</h3><p class="small">Personalize the call before the value statement.</p><ul><li>Services listed on their website</li><li>A specific vendor or partner logo on their website that Rev.io works with</li><li>Past Salesforce opportunities or notes</li></ul></div>
+      <div class="card step"><div class="num">4</div><h3>MSP Value Statement</h3><p class="small">Connect the problem to Rev.io's business outcome.</p><div class="script-line">"Rev.io gives MSPs a single system that leverages native AI and connects every ticket, project, and time entry straight to invoicing, reclaiming 15+ hours per month in manual work, cutting billing errors, and turning service delivery into faster, more profitable recurring revenue."</div></div>
+      <div class="card step"><div class="num">5</div><h3>Close</h3><p class="small">Offer two specific meeting options.</p><div class="script-line">"Do you have [insert time 1] or [insert time 2] for an introduction call?"</div></div>
+      <div class="card step"><div class="num">6</div><h3>Cementing</h3><p class="small">Confirm fit, contact details, and contract timing.</p><ul><li>How many employees do you have? Minimum of 7.</li><li>What platform are you using today?</li><li>Is this your email?</li><li>What's a good cell phone number I can send a text reminder to?</li><li>Are you in a contract with your current provider? Do you know the contract end date?</li></ul></div>
+    </div>
+  </section>
+
+  <section id="core" class="section">
+    <div class="section-head">
+      <h2>Core Scripts</h2>
+      <div class="hint">Copy-ready language for live calls. Use the shortest version that still sounds natural.</div>
+    </div>
+    <div class="objections-grid">
+      <div class="card">
+        <div class="label">Primary Opener</div>
+        <h3>Revenue operations angle</h3>
+        <div class="script-line">"Rev.io gives MSPs a single system that leverages native AI and connects every ticket, project, and time entry straight to invoicing, reclaiming 15+ hours per month in manual work, cutting billing errors, and turning service delivery into faster, more profitable recurring revenue."</div>
+        <button class="copy" data-copy>Copy line</button>
+      </div>
+      <div class="card">
+        <div class="label">Business Issue</div>
+        <h3>Manual handoff angle</h3>
+        <div class="script-line">"A lot of MSPs we speak with are not looking for another ticketing tool. They are trying to remove the manual handoffs between quoting, billing, collections, and customer management so revenue does not leak after the work is done."</div>
+        <button class="copy" data-copy>Copy line</button>
+      </div>
+      <div class="card">
+        <div class="label">Growth Trigger</div>
+        <h3>Multi-service angle</h3>
+        <div class="script-line">"When an MSP starts selling managed IT alongside VoIP, internet, cloud, security, or usage-based services, the back office usually needs more than simple recurring invoices. Rev.io is built for that growth path."</div>
+        <button class="copy" data-copy>Copy line</button>
+      </div>
+    </div>
+  </section>
+
+  <section id="competitors" class="section">
+    <div class="section-head">
+      <h2>Competitor Value Statements</h2>
+      <div class="hint">Positive positioning only: acknowledge the context, then highlight Rev.io's strength.</div>
+    </div>
+    <div class="tabs" role="tablist">
+      <button class="tab active" data-target="connectwise">ConnectWise</button>
+      <button class="tab" data-target="autotask">Autotask</button>
+      <button class="tab" data-target="halo">HaloPSA</button>
+      <button class="tab" data-target="syncro">Syncro</button>
+      <button class="tab" data-target="superops">SuperOps</button>
+    </div>
+
+    <div id="connectwise" class="competitor active">
+      <div class="grid">
+        <div class="card statement"><div class="label">Use When</div><h3>They mention ConnectWise</h3><p>Best angle: unify quote-to-cash and reduce add-on sprawl while supporting multi-service billing.</p></div>
+        <div class="card"><div class="script-line">"Rev.io helps MSPs bring quoting, service delivery, billing, and payments into one connected revenue workflow."</div><button class="copy" data-copy>Copy line</button></div>
+        <div class="card"><div class="script-line">"For teams selling managed IT plus VoIP, internet, cloud, or recurring services, Rev.io is built to handle multi-service billing from day one."</div><button class="copy" data-copy>Copy line</button></div>
+        <div class="card"><div class="script-line">"Rev.io gives MSPs a more unified way to manage customer revenue, reduce manual handoffs, and improve cash collection."</div><button class="copy" data-copy>Copy line</button></div>
+      </div>
+    </div>
+
+    <div id="autotask" class="competitor">
+      <div class="grid">
+        <div class="card statement"><div class="label">Use When</div><h3>They mention Autotask or Kaseya</h3><p>Best angle: service operations plus revenue operations, with flexibility for multiple billing models.</p></div>
+        <div class="card"><div class="script-line">"Rev.io is built for MSPs that want service operations and revenue operations working together in one platform."</div><button class="copy" data-copy>Copy line</button></div>
+        <div class="card"><div class="script-line">"With native complex billing and integrated payments, Rev.io helps teams move from completed work to collected cash faster."</div><button class="copy" data-copy>Copy line</button></div>
+        <div class="card"><div class="script-line">"Rev.io gives growing MSPs flexibility to support multiple service lines, contract types, and billing models without adding extra operational drag."</div><button class="copy" data-copy>Copy line</button></div>
+      </div>
+    </div>
+
+    <div id="halo" class="competitor">
+      <div class="grid">
+        <div class="card statement"><div class="label">Use When</div><h3>They mention HaloPSA</h3><p>Best angle: strong service desk plus Rev.io's revenue depth for bundled and usage-based services.</p></div>
+        <div class="card"><div class="script-line">"Rev.io helps MSPs connect the full customer lifecycle: quote, contract, service, invoice, and payment."</div><button class="copy" data-copy>Copy line</button></div>
+        <div class="card"><div class="script-line">"For MSPs expanding beyond pure managed IT, Rev.io brings the billing depth needed for bundled, recurring, and usage-based services."</div><button class="copy" data-copy>Copy line</button></div>
+        <div class="card"><div class="script-line">"Rev.io gives leadership better visibility into revenue operations, not just service activity, so teams can manage growth more confidently."</div><button class="copy" data-copy>Copy line</button></div>
+      </div>
+    </div>
+
+    <div id="syncro" class="competitor">
+      <div class="grid">
+        <div class="card statement"><div class="label">Use When</div><h3>They mention Syncro</h3><p>Best angle: graduation path for growing MSPs that need deeper contracts, projects, billing, and payments.</p></div>
+        <div class="card"><div class="script-line">"Rev.io is a strong next step for MSPs that are growing and need more depth around contracts, projects, billing, and payments."</div><button class="copy" data-copy>Copy line</button></div>
+        <div class="card"><div class="script-line">"Rev.io supports more complex service bundles, making it easier to sell and bill managed IT, VoIP, cloud, and internet together."</div><button class="copy" data-copy>Copy line</button></div>
+        <div class="card"><div class="script-line">"Rev.io helps MSPs scale their back office with stronger quote-to-cash workflows and less manual billing follow-up."</div><button class="copy" data-copy>Copy line</button></div>
+      </div>
+    </div>
+
+    <div id="superops" class="competitor">
+      <div class="grid">
+        <div class="card statement"><div class="label">Use When</div><h3>They mention SuperOps</h3><p>Best angle: modern MSP operations plus Rev.io's proven billing and payment automation.</p></div>
+        <div class="card"><div class="script-line">"Rev.io helps MSPs turn service delivery into revenue faster with connected quoting, billing, and payment workflows."</div><button class="copy" data-copy>Copy line</button></div>
+        <div class="card"><div class="script-line">"For teams adding telecom, cloud, or other recurring services, Rev.io provides the billing foundation to support that growth."</div><button class="copy" data-copy>Copy line</button></div>
+        <div class="card"><div class="script-line">"Rev.io gives MSPs a proven revenue operations platform built around billing accuracy, payment automation, and multi-service customer management."</div><button class="copy" data-copy>Copy line</button></div>
+      </div>
+    </div>
+  </section>
+
+  <section id="objections" class="section">
+    <div class="section-head">
+      <h2>Objections and Associated Value Statements</h2>
+      <div class="hint">Handle resistance with empathy, ask one useful question, then use the value statement that fits the objection.</div>
+    </div>
+    <div class="grid">
+      <div class="card objection">
+        <div class="heard"><div class="label">Objection</div><h3>"We already have a PSA."</h3><p class="small">Do not argue about their current tool.</p></div>
+        <div class="use"><div class="label">Value Statement</div><div class="script-line">"That makes sense. Most teams we work with already have a PSA. The reason they look at Rev.io is to connect the revenue side: quoting, billing, payments, and customer management as services get more complex."</div><button class="copy" data-copy>Copy line</button></div>
+      </div>
+      <div class="card objection">
+        <div class="heard"><div class="label">Objection</div><h3>"We are happy with our ticketing."</h3><p class="small">Separate ticketing from revenue operations.</p></div>
+        <div class="use"><div class="label">Value Statement</div><div class="script-line">"Good, and ticketing should work. Rev.io is valuable when the bigger opportunity is what happens after service delivery: accurate invoices, automated payments, and cleaner quote-to-cash workflows."</div><button class="copy" data-copy>Copy line</button></div>
+      </div>
+      <div class="card objection">
+        <div class="heard"><div class="label">Objection</div><h3>"We are too busy to look at this."</h3><p class="small">Tie the meeting to time savings.</p></div>
+        <div class="use"><div class="label">Value Statement</div><div class="script-line">"That is exactly why I reached out. Rev.io is built to reduce the manual work around billing, collections, and customer workflows, so the back office gets time back as the MSP grows."</div><button class="copy" data-copy>Copy line</button></div>
+      </div>
+      <div class="card objection">
+        <div class="heard"><div class="label">Objection</div><h3>"Send me information."</h3><p class="small">Do not accept the brush-off without earning one question.</p></div>
+        <div class="use"><div class="label">Value Statement</div><div class="script-line">"I can send something over. So I make it relevant, are you more focused today on service operations, billing accuracy, payment collection, or supporting new recurring services?"</div><button class="copy" data-copy>Copy line</button></div>
+      </div>
+      <div class="card objection">
+        <div class="heard"><div class="label">Objection</div><h3>"We only do managed IT."</h3><p class="small">Qualify growth plans without forcing fit.</p></div>
+        <div class="use"><div class="label">Value Statement</div><div class="script-line">"That may be a good fit for your current setup. Where Rev.io becomes useful is when MSPs add recurring services, bundled offers, usage-based billing, or payment automation and need the revenue process to scale with them."</div><button class="copy" data-copy>Copy line</button></div>
+      </div>
+      <div class="card objection">
+        <div class="heard"><div class="label">Objection</div><h3>"Switching sounds painful."</h3><p class="small">Acknowledge change management.</p></div>
+        <div class="use"><div class="label">Value Statement</div><div class="script-line">"Completely fair. The question is whether the current process is already creating pain through manual billing, disconnected tools, or missed collection opportunities. Rev.io helps teams modernize that path with a guided transition."</div><button class="copy" data-copy>Copy line</button></div>
+      </div>
+      <div class="card objection">
+        <div class="heard"><div class="label">Objection</div><h3>"We have no budget."</h3><p class="small">Move from price to operational cost.</p></div>
+        <div class="use"><div class="label">Value Statement</div><div class="script-line">"I hear you. Most teams justify the conversation by looking at total operating cost: add-on tools, manual reconciliation, delayed collections, and the cost of not being able to bill new services cleanly."</div><button class="copy" data-copy>Copy line</button></div>
+      </div>
+      <div class="card objection">
+        <div class="heard"><div class="label">Objection</div><h3>"We use separate tools for billing and payments."</h3><p class="small">Highlight consolidation and visibility.</p></div>
+        <div class="use"><div class="label">Value Statement</div><div class="script-line">"That is common. Rev.io helps MSPs bring billing, payment collection, and customer revenue visibility closer to the PSA workflow so teams are not reconciling the business across separate systems."</div><button class="copy" data-copy>Copy line</button></div>
+      </div>
+    </div>
+  </section>
+
+</main>
+
+<script>
+  document.querySelectorAll(".tab").forEach((tab) => {
+    tab.addEventListener("click", () => {
+      document.querySelectorAll(".tab").forEach((item) => item.classList.remove("active"));
+      document.querySelectorAll(".competitor").forEach((item) => item.classList.remove("active"));
+      tab.classList.add("active");
+      document.getElementById(tab.dataset.target).classList.add("active");
+    });
+  });
+
+  document.querySelectorAll("[data-copy]").forEach((button) => {
+    button.addEventListener("click", async () => {
+      const text = button.parentElement.querySelector(".script-line").innerText.trim();
+      await navigator.clipboard.writeText(text);
+      const original = button.innerText;
+      button.innerText = "Copied";
+      setTimeout(() => { button.innerText = original; }, 1100);
+    });
+  });
+</script>
+</body>
+</html>
