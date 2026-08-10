@@ -166,7 +166,7 @@ def document_xml() -> str:
       </w:tblPr>
       {tr(tc(image_run(), 7200, shade="071426") + tc(p("Promotional Certificate", size=20, color="E8F3FF", bold=True, align="right", caps=True), 7200, shade="0057FF"), height=1160)}
       {tr(tc(p("Limited-Time Partner Offer", size=20, color="0057FF", bold=True, caps=True, after=160) + p("Up to 7 seats for the price of 5!", size=58, color="071426", bold=True, line=720, after=160) + p("A Rev.io growth package built for teams ready to move faster with Revii and field execution.", size=25, color="5F6D80", bold=True, line=330), 6900) + tc(f"<w:tbl><w:tblPr><w:tblW w:w=\"5120\" w:type=\"dxa\"/><w:tblBorders><w:top w:val=\"single\" w:sz=\"8\" w:color=\"DBE5F2\"/><w:left w:val=\"single\" w:sz=\"8\" w:color=\"DBE5F2\"/><w:bottom w:val=\"single\" w:sz=\"8\" w:color=\"DBE5F2\"/><w:right w:val=\"single\" w:sz=\"8\" w:color=\"DBE5F2\"/><w:insideH w:val=\"single\" w:sz=\"6\" w:color=\"D9E3EF\"/><w:insideV w:val=\"nil\"/></w:tblBorders></w:tblPr>{offers}</w:tbl>", 7500, shade="F4F8FC"), height=5200)}
-      {tr(field("Company Name", 5700) + field("Location", 4350) + field("Owner", 4350), height=1160)}
+      {tr(field("Company Name", 4100) + field("Contact", 3500) + field("Date", 2600) + field("Sales Represenative", 4200), height=1160)}
       {tr(tc(p("Rev.io promotional certificate", size=17, color="78869A", bold=True, caps=True), 11000) + tc(p("SUMMIT\\nPASS\\nINCLUDED", size=15, color="0057FF", bold=True, align="center"), 3400), height=760)}
     </w:tbl>
     <w:sectPr>
