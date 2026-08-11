@@ -1,0 +1,614 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Clarity SSU Evaluation Readout | Rev.io</title>
+  <meta name="description" content="Buyer-facing Rev.io PSA evaluation readout for Clarity SSU.">
+  <style>
+    :root {
+      --clarity-navy: #15213c;
+      --clarity-blue: #4ca4f8;
+      --clarity-cyan: #59c3d7;
+      --clarity-mint: #9eeecb;
+      --revio: #6cc04a;
+      --ink: #132033;
+      --muted: #587086;
+      --paper: #f5f8fb;
+      --line: #dce6ef;
+      --white: #ffffff;
+      --amber: #f2b84b;
+    }
+
+    * { box-sizing: border-box; }
+    html { scroll-behavior: smooth; }
+    body {
+      margin: 0;
+      background: var(--paper);
+      color: var(--ink);
+      font-family: OpenSans, Aptos, Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      letter-spacing: 0;
+    }
+
+    .deck { min-height: 100vh; }
+    .slide {
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      position: relative;
+      overflow: hidden;
+      border-bottom: 1px solid rgba(21, 33, 60, 0.09);
+    }
+
+    .slide.dark {
+      color: var(--white);
+      background:
+        linear-gradient(115deg, rgba(21,33,60,0.99), rgba(30,47,87,0.93)),
+        repeating-linear-gradient(0deg, rgba(255,255,255,0.035) 0 1px, transparent 1px 44px),
+        repeating-linear-gradient(90deg, rgba(255,255,255,0.035) 0 1px, transparent 1px 44px),
+        var(--clarity-navy);
+    }
+
+    .slide.light { background: var(--paper); }
+    .wrap {
+      width: min(1180px, calc(100vw - 48px));
+      margin: 0 auto;
+      padding: 76px 0 58px;
+      position: relative;
+      z-index: 2;
+    }
+
+    .topline {
+      position: absolute;
+      top: 28px;
+      left: 32px;
+      right: 32px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 22px;
+      z-index: 5;
+    }
+
+    .logo-lane {
+      display: flex;
+      align-items: center;
+      min-width: 0;
+      gap: 14px;
+    }
+
+    .clarity-logo {
+      width: 214px;
+      height: 66px;
+      object-fit: contain;
+      background: var(--clarity-navy);
+      border-radius: 8px;
+      padding: 10px 14px;
+      border: 1px solid rgba(255,255,255,0.16);
+    }
+
+    .revio-logo {
+      width: 126px;
+      height: 38px;
+      object-fit: contain;
+      display: block;
+    }
+
+    .light .revio-logo {
+      background: var(--clarity-navy);
+      border-radius: 7px;
+      padding: 8px 10px;
+    }
+
+    .kicker {
+      font-size: 12px;
+      font-weight: 900;
+      text-transform: uppercase;
+      color: var(--clarity-mint);
+      letter-spacing: 1.8px;
+      margin-bottom: 18px;
+    }
+
+    .light .kicker { color: var(--clarity-blue); }
+    h1, h2, h3, p { margin: 0; }
+    h1 {
+      font-size: clamp(46px, 6.7vw, 86px);
+      line-height: 0.97;
+      max-width: 950px;
+      letter-spacing: 0;
+    }
+
+    h2 {
+      font-size: clamp(34px, 4.4vw, 58px);
+      line-height: 1;
+      max-width: 980px;
+      margin-bottom: 24px;
+      letter-spacing: 0;
+    }
+
+    h3 {
+      font-size: 18px;
+      line-height: 1.16;
+      margin-bottom: 10px;
+      color: inherit;
+    }
+
+    .lead {
+      max-width: 840px;
+      margin-top: 24px;
+      color: rgba(255,255,255,0.76);
+      font-size: clamp(17px, 2vw, 23px);
+      line-height: 1.37;
+    }
+
+    .light .lead { color: var(--muted); }
+    .hero-grid {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) 340px;
+      gap: 48px;
+      align-items: end;
+    }
+
+    .metric-stack { display: grid; gap: 14px; }
+    .metric {
+      background: rgba(255,255,255,0.08);
+      border: 1px solid rgba(255,255,255,0.14);
+      border-radius: 8px;
+      padding: 18px;
+    }
+
+    .metric strong {
+      display: block;
+      font-size: 34px;
+      line-height: 1;
+      color: var(--clarity-mint);
+    }
+
+    .metric span {
+      display: block;
+      margin-top: 8px;
+      color: rgba(255,255,255,0.72);
+      font-size: 12px;
+      font-weight: 800;
+      text-transform: uppercase;
+      line-height: 1.35;
+    }
+
+    .grid-2 { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 18px; }
+    .grid-3 { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 18px; }
+
+    .card {
+      background: var(--white);
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      padding: 22px;
+      min-height: 158px;
+      box-shadow: 0 18px 45px rgba(21,33,60,0.06);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .dark .card { color: var(--ink); }
+    .card::before {
+      content: "";
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 5px;
+      background: var(--clarity-cyan);
+    }
+
+    .card.blue::before { background: var(--clarity-blue); }
+    .card.green::before { background: var(--revio); }
+    .card.mint::before { background: var(--clarity-mint); }
+    .card.amber::before { background: var(--amber); }
+    .card p, .card li {
+      color: var(--muted);
+      font-size: 15px;
+      line-height: 1.44;
+    }
+
+    ul { margin: 0; padding-left: 18px; }
+    li + li { margin-top: 8px; }
+
+    .band {
+      background: var(--clarity-navy);
+      color: var(--white);
+      padding: 18px 22px;
+      border-radius: 8px;
+      border-left: 6px solid var(--clarity-mint);
+      margin-top: 24px;
+      font-size: 18px;
+      line-height: 1.4;
+    }
+
+    .impact-grid {
+      display: grid;
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+      gap: 14px;
+      margin: 24px 0;
+    }
+
+    .impact {
+      background: var(--clarity-navy);
+      color: var(--white);
+      border-radius: 8px;
+      padding: 18px;
+      border-top: 5px solid var(--clarity-cyan);
+      min-height: 118px;
+    }
+
+    .impact strong {
+      display: block;
+      font-size: 30px;
+      line-height: 1;
+      color: var(--clarity-mint);
+    }
+
+    .impact span {
+      display: block;
+      margin-top: 9px;
+      font-size: 12px;
+      line-height: 1.3;
+      color: rgba(255,255,255,0.74);
+      text-transform: uppercase;
+      font-weight: 800;
+    }
+
+    .timeline { display: grid; gap: 14px; }
+    .step {
+      display: grid;
+      grid-template-columns: 154px minmax(0, 1fr);
+      gap: 18px;
+      align-items: start;
+      background: var(--white);
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      padding: 18px;
+    }
+
+    .step .date {
+      color: var(--clarity-blue);
+      font-size: 13px;
+      font-weight: 900;
+      text-transform: uppercase;
+    }
+
+    .step p { color: var(--muted); line-height: 1.45; font-size: 15px; }
+    .source {
+      position: absolute;
+      bottom: 20px;
+      left: 32px;
+      right: 32px;
+      display: flex;
+      justify-content: space-between;
+      gap: 18px;
+      color: rgba(21,33,60,0.45);
+      font-size: 11px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.9px;
+    }
+
+    .dark .source { color: rgba(255,255,255,0.42); }
+    .pill-row { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 24px; }
+    .pill {
+      border: 1px solid rgba(255,255,255,0.18);
+      background: rgba(255,255,255,0.08);
+      color: rgba(255,255,255,0.78);
+      border-radius: 999px;
+      padding: 8px 12px;
+      font-size: 12px;
+      font-weight: 800;
+      text-transform: uppercase;
+    }
+
+    .light .pill {
+      color: var(--clarity-navy);
+      border-color: rgba(21,33,60,0.12);
+      background: rgba(89,195,215,0.12);
+    }
+
+    .quote {
+      font-size: clamp(24px, 3.2vw, 40px);
+      line-height: 1.08;
+      max-width: 940px;
+      color: var(--clarity-navy);
+      font-weight: 900;
+      margin: 16px 0 24px;
+    }
+
+    .small-note {
+      color: var(--muted);
+      font-size: 13px;
+      line-height: 1.45;
+      margin-top: 14px;
+    }
+
+    @media (max-width: 860px) {
+      .slide { min-height: auto; flex-direction: column; align-items: stretch; }
+      .wrap { width: min(680px, calc(100vw - 32px)); padding: 96px 0 28px; }
+      .topline { top: 18px; left: 16px; right: 16px; }
+      .clarity-logo { width: 170px; height: 54px; }
+      .revio-logo { width: 104px; height: 34px; }
+      .hero-grid, .grid-2, .grid-3, .impact-grid { grid-template-columns: 1fr; }
+      .metric-stack { margin-top: 10px; }
+      .step { grid-template-columns: 1fr; }
+      .source {
+        position: static;
+        margin: 0 auto 22px;
+        width: min(680px, calc(100vw - 32px));
+        flex-direction: column;
+      }
+    }
+
+    @media (max-width: 520px) {
+      .topline { align-items: flex-start; }
+      .clarity-logo { width: 142px; height: 48px; padding: 8px 10px; }
+      .revio-logo { width: 86px; height: 30px; }
+      h1 { font-size: 42px; }
+      h2 { font-size: 32px; }
+      .card { min-height: auto; }
+    }
+  </style>
+</head>
+<body>
+  <main class="deck">
+    <section class="slide dark">
+      <div class="topline">
+        <div class="logo-lane"><img class="clarity-logo" src="assets/clarity-ssu/clarity-logo.png" alt="Clarity SSU"></div>
+        <img class="revio-logo" src="revio-logo-white.png" alt="Rev.io">
+      </div>
+      <div class="wrap hero-grid">
+        <div>
+          <div class="kicker">Rev.io PSA evaluation readout</div>
+          <h1>One operating platform for Clarity’s next stage of growth.</h1>
+          <p class="lead">Clarity SSU is evaluating Rev.io PSA to replace a fragmented stack across CRM, proposals, projects, service, field execution, inventory, and reporting. The core ask is not another proposal tool. It is a centralized system that can run the business with less handoff risk.</p>
+          <div class="pill-row">
+            <span class="pill">Security</span>
+            <span class="pill">Automation</span>
+            <span class="pill">AV integration</span>
+            <span class="pill">22-24 employees</span>
+          </div>
+        </div>
+        <div class="metric-stack">
+          <div class="metric"><strong>90%</strong><span>target coverage for ERP / PSA / PM / service needs</span></div>
+          <div class="metric"><strong>9-10</strong><span>field technicians whose adoption matters</span></div>
+          <div class="metric"><strong>$1.4K</strong><span>rough monthly software estimate discussed for 10 standard + 10 field users</span></div>
+        </div>
+      </div>
+      <div class="source"><span>Source: Clarity SSU evaluation notes, July 2026</span><span>Prepared for buyer review</span></div>
+    </section>
+
+    <section class="slide light">
+      <div class="topline light">
+        <div class="logo-lane"><img class="clarity-logo" src="assets/clarity-ssu/clarity-logo.png" alt="Clarity SSU"></div>
+        <img class="revio-logo" src="revio-logo-white.png" alt="Rev.io">
+      </div>
+      <div class="wrap">
+        <div class="kicker">1. Who is Clarity SSU?</div>
+        <h2>A project-based integrator looking for a real operating backbone.</h2>
+        <div class="grid-3">
+          <div class="card">
+            <h3>Business profile</h3>
+            <p>Clarity SSU is a security, automation, and AV integration firm with roughly 22-24 employees and a field team of about 9-10 technicians.</p>
+          </div>
+          <div class="card blue">
+            <h3>Operating model</h3>
+            <p>The business sells and executes project-based work where proposal quality, labor planning, inventory readiness, PM visibility, and field execution all have to connect.</p>
+          </div>
+          <div class="card mint">
+            <h3>Evaluation goal</h3>
+            <p>Alex wants one centralized platform that can cover most of the ERP, PSA, project management, service, proposal, and reporting need without heavy custom buildout.</p>
+          </div>
+        </div>
+        <div class="band">The decision is about workflow confidence: can Rev.io connect quote, project, inventory, technician work, and reporting better than the current patchwork of tools?</div>
+      </div>
+      <div class="source"><span>Source: Notion evaluation page and Clarity website branding</span><span>Rev.io + Clarity SSU</span></div>
+    </section>
+
+    <section class="slide dark">
+      <div class="topline">
+        <div class="logo-lane"><img class="clarity-logo" src="assets/clarity-ssu/clarity-logo.png" alt="Clarity SSU"></div>
+        <img class="revio-logo" src="revio-logo-white.png" alt="Rev.io">
+      </div>
+      <div class="wrap">
+        <div class="kicker">2. Why make the change now?</div>
+        <h2>The current stack is creating more friction than leverage.</h2>
+        <div class="grid-2">
+          <div class="card">
+            <h3>Fragmentation is now the bottleneck</h3>
+            <p>Clarity is using Jetbuilt, spreadsheets, Asana, project management tooling, ServiceNow, and QuickBooks Online. The problem is the lack of one connected system of record across sales, projects, service, inventory, and billing.</p>
+          </div>
+          <div class="card green">
+            <h3>Growth raises the cost of handoffs</h3>
+            <p>As more projects and technicians move through the business, disconnected handoffs increase the risk of missed details, slow WIP meetings, unclear ownership, and weak budget-to-actual visibility.</p>
+          </div>
+          <div class="card amber">
+            <h3>Past software disappointment changed the bar</h3>
+            <p>Alex invested hundreds of hours into Jetbuilt before concluding key inventory and PM promises did not land. Any new platform has to prove downstream execution, not just demos.</p>
+          </div>
+          <div class="card blue">
+            <h3>Buying motion is active</h3>
+            <p>Alex requested the demo recording and formal quote for internal review. A focused follow-up in mid-to-late August is the right moment to validate decision-critical workflows.</p>
+          </div>
+        </div>
+      </div>
+      <div class="source"><span>Source: July 9 discovery and July 17 product demo notes</span><span>Rev.io PSA evaluation</span></div>
+    </section>
+
+    <section class="slide light">
+      <div class="topline light">
+        <div class="logo-lane"><img class="clarity-logo" src="assets/clarity-ssu/clarity-logo.png" alt="Clarity SSU"></div>
+        <img class="revio-logo" src="revio-logo-white.png" alt="Rev.io">
+      </div>
+      <div class="wrap">
+        <div class="kicker">3. Uncovered problems</div>
+        <h2>The pain is concentrated around handoffs, visibility, and adoption.</h2>
+        <div class="grid-3">
+          <div class="card">
+            <h3>Disconnected systems</h3>
+            <ul>
+              <li>Duplicate data entry across sales, project, service, and finance tools</li>
+              <li>No unified dashboard for leadership or team synchronization</li>
+              <li>Manual reporting and spreadsheet dependency</li>
+            </ul>
+          </div>
+          <div class="card blue">
+            <h3>Proposal-to-project risk</h3>
+            <ul>
+              <li>Accepted quotes need to become executable work without rework</li>
+              <li>Labor, product catalog, inventory, and project tasks need to stay linked</li>
+              <li>Jetbuilt experience created skepticism about downstream PM capability</li>
+            </ul>
+          </div>
+          <div class="card mint">
+            <h3>WIP visibility</h3>
+            <ul>
+              <li>Biweekly WIP meetings need project dates, progress, PM ownership, schedule risk, and financial health</li>
+              <li>Budgeted vs. actual labor visibility is a major control point</li>
+            </ul>
+          </div>
+          <div class="card green">
+            <h3>Inventory confidence</h3>
+            <ul>
+              <li>Inventory is mostly project-based and moves quickly</li>
+              <li>Clarity needs allocation, storage, pickup, shipment, and job readiness visibility</li>
+              <li>Distributor catalogs must be controlled so staff quote approved products</li>
+            </ul>
+          </div>
+          <div class="card amber">
+            <h3>Field adoption</h3>
+            <ul>
+              <li>Technicians need easy schedule, ticket, note, photo, file, time, and site history access</li>
+              <li>Offline mode and job-based geofencing matter for trust and usability</li>
+            </ul>
+          </div>
+          <div class="card blue">
+            <h3>Implementation risk</h3>
+            <ul>
+              <li>Alex is cautious about spending time on another tool that does not deliver</li>
+              <li>Halo appeared powerful but implementation-heavy and expensive to build out</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+      <div class="source"><span>Source: Clarity SSU evaluation notes</span><span>Uncovered problem summary</span></div>
+    </section>
+
+    <section class="slide light">
+      <div class="topline light">
+        <div class="logo-lane"><img class="clarity-logo" src="assets/clarity-ssu/clarity-logo.png" alt="Clarity SSU"></div>
+        <img class="revio-logo" src="revio-logo-white.png" alt="Rev.io">
+      </div>
+      <div class="wrap">
+        <div class="kicker">4. Business impact and ROI analysis</div>
+        <h2>Even conservative workflow gains can justify the spend.</h2>
+        <div class="impact-grid">
+          <div class="impact"><strong>40 hrs/mo</strong><span>Assumption: 10 users save 2 hours per week from less duplicate entry and WIP prep</span></div>
+          <div class="impact"><strong>$2K/mo</strong><span>Assumption: 40 hours at $50 fully loaded admin / PM cost</span></div>
+          <div class="impact"><strong>$3.75K</strong><span>Protected per large project if 50 labor overrun hours are caught at $75/hour</span></div>
+          <div class="impact"><strong>$2.5K</strong><span>Onboarding fee discussed, materially below heavy third-party implementation models</span></div>
+        </div>
+        <div class="grid-2">
+          <div class="card">
+            <h3>Hard-dollar levers</h3>
+            <ul>
+              <li>Reduced admin coordination and spreadsheet maintenance</li>
+              <li>Faster quote creation through macros, duplication, catalog control, proposal templates, and e-signature</li>
+              <li>Earlier labor overrun detection through budgeted vs. actual project visibility</li>
+              <li>Fewer job delays from missing or misallocated project inventory</li>
+            </ul>
+          </div>
+          <div class="card green">
+            <h3>Strategic levers</h3>
+            <ul>
+              <li>One operating system from CRM to billing and reporting</li>
+              <li>Cleaner WIP meetings and stronger executive visibility</li>
+              <li>Higher field data quality through mobile-first workflows</li>
+              <li>Lower implementation confidence gap versus heavy-build PSA options</li>
+            </ul>
+          </div>
+        </div>
+        <p class="small-note">These are quantified assumptions based on the uncovered pains. Final ROI should be tightened with actual user counts, hourly cost, project volume, average labor hours, current WIP prep time, and rework/delay frequency.</p>
+      </div>
+      <div class="source"><span>Source: Rev.io pricing notes and Clarity workflow pains</span><span>Assumptions clearly labeled</span></div>
+    </section>
+
+    <section class="slide dark">
+      <div class="topline">
+        <div class="logo-lane"><img class="clarity-logo" src="assets/clarity-ssu/clarity-logo.png" alt="Clarity SSU"></div>
+        <img class="revio-logo" src="revio-logo-white.png" alt="Rev.io">
+      </div>
+      <div class="wrap">
+        <div class="kicker">5. Requirements and systems alongside Rev.io</div>
+        <h2>The next proof point is end-to-end execution, not feature name-dropping.</h2>
+        <div class="grid-3">
+          <div class="card">
+            <h3>Current systems to replace or reduce</h3>
+            <ul>
+              <li>Jetbuilt for proposals</li>
+              <li>Excel / spreadsheets for tracking</li>
+              <li>Asana for tasks</li>
+              <li>ProjectManager.com / PM tooling</li>
+              <li>ServiceNow</li>
+            </ul>
+          </div>
+          <div class="card blue">
+            <h3>Systems likely to remain</h3>
+            <ul>
+              <li>QuickBooks Online for accounting</li>
+              <li>Distributor catalogs where needed, with controlled product selection</li>
+              <li>Customer-facing and internal files that need migration or linking decisions</li>
+            </ul>
+          </div>
+          <div class="card green">
+            <h3>Required Rev.io workflows</h3>
+            <ul>
+              <li>CRM / opportunity to quote and proposal</li>
+              <li>Proposal and e-signature to project or ticket</li>
+              <li>Project financials, labor budget, actuals, and WIP reporting</li>
+              <li>Inventory reservation, fulfillment, pickup, and installed asset flow</li>
+              <li>Mobile technician schedule, notes, photos, files, timers, offline mode, and geofencing</li>
+            </ul>
+          </div>
+        </div>
+        <div class="band">Open decision areas: must-have go-live workflows, AIA vs. deposit / milestone billing, required WIP reports, launch user counts, migration scope, distributor priority, and CFO approval criteria.</div>
+      </div>
+      <div class="source"><span>Source: Meeting notes and recommended follow-up agenda</span><span>Requirements for validation</span></div>
+    </section>
+
+    <section class="slide light">
+      <div class="topline light">
+        <div class="logo-lane"><img class="clarity-logo" src="assets/clarity-ssu/clarity-logo.png" alt="Clarity SSU"></div>
+        <img class="revio-logo" src="revio-logo-white.png" alt="Rev.io">
+      </div>
+      <div class="wrap">
+        <div class="kicker">6. Action plan moving forward</div>
+        <h2>Use the next conversation to prove the workflows Alex is worried about.</h2>
+        <div class="timeline">
+          <div class="step">
+            <div class="date">Now</div>
+            <p>Confirm recap email, demo recording, and formal quote are in Alex’s hands for internal review with CFO and senior team members.</p>
+          </div>
+          <div class="step">
+            <div class="date">Mid-to-late Aug</div>
+            <p>Run a targeted 30-minute follow-up around Clarity’s decision-critical workflows: quote to project, project financials, WIP dashboard, inventory fulfillment, and technician mobile experience.</p>
+          </div>
+          <div class="step">
+            <div class="date">Follow-up demo</div>
+            <p>Use a realistic Clarity-style project: multi-location quote, labor and products, proposal signature, conversion to ticket/project, labor actuals, inventory reservation, technician execution, and reporting.</p>
+          </div>
+          <div class="step">
+            <div class="date">Decision checkpoint</div>
+            <p>Confirm go-live must-haves, migration scope, launch user counts, QuickBooks/accounting expectations, product catalog ownership, and what proof the CFO needs to approve spend.</p>
+          </div>
+        </div>
+        <div class="quote">Alex’s positive signal is strong. The close path is proving Rev.io can do what Jetbuilt did not: carry the work after the proposal is accepted.</div>
+      </div>
+      <div class="source"><span>Source: Clarity SSU recommended close positioning</span><span>Rev.io action plan</span></div>
+    </section>
+  </main>
+</body>
+</html>
