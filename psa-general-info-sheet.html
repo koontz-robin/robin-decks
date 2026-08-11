@@ -1,0 +1,488 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Rev.io PSA Overview and Integrations</title>
+  <meta name="description" content="Prospect-facing overview of Rev.io PSA capabilities and integrations.">
+  <style>
+    :root {
+      --navy: #061827;
+      --blue: #1f75fe;
+      --cyan: #1fc7d4;
+      --green: #6cc04a;
+      --ink: #102033;
+      --muted: #5d7086;
+      --paper: #f5f8fb;
+      --line: #dce5ee;
+      --white: #ffffff;
+      --amber: #f5b64b;
+    }
+
+    * { box-sizing: border-box; }
+    html { scroll-behavior: smooth; }
+    body {
+      margin: 0;
+      background: var(--paper);
+      color: var(--ink);
+      font-family: Aptos, Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      letter-spacing: 0;
+    }
+
+    .hero {
+      min-height: 84vh;
+      color: var(--white);
+      background:
+        linear-gradient(118deg, rgba(6,24,39,0.99), rgba(10,45,68,0.94)),
+        repeating-linear-gradient(0deg, rgba(255,255,255,0.035) 0 1px, transparent 1px 42px),
+        repeating-linear-gradient(90deg, rgba(255,255,255,0.03) 0 1px, transparent 1px 42px),
+        var(--navy);
+      position: relative;
+      overflow: hidden;
+      display: flex;
+      align-items: center;
+    }
+
+    .topline {
+      position: absolute;
+      top: 28px;
+      left: 32px;
+      right: 32px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 24px;
+      z-index: 3;
+    }
+
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      min-width: 0;
+    }
+
+    .revio-logo {
+      width: 128px;
+      height: 40px;
+      object-fit: contain;
+      display: block;
+    }
+
+    .label {
+      color: rgba(255,255,255,0.68);
+      text-transform: uppercase;
+      font-size: 12px;
+      font-weight: 900;
+    }
+
+    .wrap {
+      width: min(1180px, calc(100vw - 48px));
+      margin: 0 auto;
+      padding: 92px 0 70px;
+    }
+
+    .hero-grid {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) 360px;
+      gap: 48px;
+      align-items: end;
+    }
+
+    .kicker {
+      color: var(--green);
+      font-size: 12px;
+      font-weight: 900;
+      text-transform: uppercase;
+      letter-spacing: 1.8px;
+      margin-bottom: 18px;
+    }
+
+    h1, h2, h3, p { margin: 0; }
+    h1 {
+      font-size: clamp(46px, 6.6vw, 86px);
+      line-height: 0.98;
+      max-width: 930px;
+    }
+
+    .lead {
+      max-width: 820px;
+      margin-top: 24px;
+      color: rgba(255,255,255,0.78);
+      font-size: clamp(17px, 2vw, 23px);
+      line-height: 1.38;
+    }
+
+    .metric-stack { display: grid; gap: 14px; }
+    .metric {
+      background: rgba(255,255,255,0.08);
+      border: 1px solid rgba(255,255,255,0.14);
+      border-radius: 8px;
+      padding: 18px;
+    }
+
+    .metric strong {
+      display: block;
+      font-size: 31px;
+      line-height: 1;
+      color: var(--cyan);
+    }
+
+    .metric span {
+      display: block;
+      margin-top: 8px;
+      color: rgba(255,255,255,0.72);
+      font-size: 12px;
+      font-weight: 850;
+      text-transform: uppercase;
+      line-height: 1.35;
+    }
+
+    section {
+      padding: 66px 0;
+      border-bottom: 1px solid rgba(16,32,51,0.08);
+    }
+
+    section.dark {
+      background: var(--navy);
+      color: var(--white);
+    }
+
+    h2 {
+      font-size: clamp(31px, 4vw, 54px);
+      line-height: 1.02;
+      max-width: 980px;
+      margin-bottom: 24px;
+    }
+
+    .section-lead {
+      max-width: 880px;
+      color: var(--muted);
+      font-size: 18px;
+      line-height: 1.48;
+      margin-bottom: 24px;
+    }
+
+    .dark .section-lead { color: rgba(255,255,255,0.74); }
+    .grid-2 { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 18px; }
+    .grid-3 { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 18px; }
+
+    .card {
+      background: var(--white);
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      padding: 22px;
+      min-height: 168px;
+      position: relative;
+      overflow: hidden;
+      box-shadow: 0 18px 45px rgba(16,32,51,0.06);
+    }
+
+    .dark .card { color: var(--ink); }
+    .card::before {
+      content: "";
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 5px;
+      background: var(--blue);
+    }
+
+    .card.green::before { background: var(--green); }
+    .card.cyan::before { background: var(--cyan); }
+    .card.amber::before { background: var(--amber); }
+
+    h3 {
+      font-size: 18px;
+      line-height: 1.18;
+      margin-bottom: 10px;
+    }
+
+    .card p, .card li {
+      color: var(--muted);
+      font-size: 15px;
+      line-height: 1.45;
+    }
+
+    ul { margin: 0; padding-left: 18px; }
+    li + li { margin-top: 7px; }
+
+    .pill-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      margin-top: 14px;
+    }
+
+    .pill {
+      border: 1px solid rgba(16,32,51,0.12);
+      background: rgba(31,117,254,0.08);
+      color: var(--ink);
+      border-radius: 999px;
+      padding: 8px 12px;
+      font-size: 12px;
+      font-weight: 850;
+      text-transform: uppercase;
+    }
+
+    .dark .pill {
+      border-color: rgba(255,255,255,0.16);
+      background: rgba(255,255,255,0.08);
+      color: rgba(255,255,255,0.82);
+    }
+
+    .band {
+      margin-top: 24px;
+      background: var(--navy);
+      color: var(--white);
+      border-left: 6px solid var(--green);
+      border-radius: 8px;
+      padding: 18px 22px;
+      font-size: 18px;
+      line-height: 1.42;
+    }
+
+    .dark .band {
+      background: rgba(255,255,255,0.08);
+      border: 1px solid rgba(255,255,255,0.14);
+      border-left: 6px solid var(--green);
+    }
+
+    .integration-list {
+      display: grid;
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+      gap: 12px;
+    }
+
+    .integration {
+      background: var(--white);
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      padding: 15px;
+      min-height: 112px;
+    }
+
+    .integration strong {
+      display: block;
+      font-size: 14px;
+      margin-bottom: 8px;
+    }
+
+    .integration span {
+      display: block;
+      color: var(--muted);
+      font-size: 13px;
+      line-height: 1.4;
+    }
+
+    .source {
+      font-size: 12px;
+      color: var(--muted);
+      line-height: 1.4;
+      margin-top: 18px;
+    }
+
+    .source a { color: var(--blue); font-weight: 800; }
+    .dark .source { color: rgba(255,255,255,0.58); }
+    .dark .source a { color: var(--cyan); }
+
+    @media (max-width: 900px) {
+      .hero { min-height: auto; }
+      .wrap { width: min(680px, calc(100vw - 32px)); padding: 92px 0 44px; }
+      section .wrap { padding: 0; }
+      section { padding: 48px 0; }
+      .topline { top: 18px; left: 16px; right: 16px; }
+      .hero-grid, .grid-2, .grid-3, .integration-list { grid-template-columns: 1fr; }
+      .metric-stack { margin-top: 8px; }
+      .revio-logo { width: 104px; height: 34px; }
+      .label { font-size: 10px; }
+    }
+
+    @media (max-width: 520px) {
+      h1 { font-size: 39px; }
+      h2 { font-size: 30px; }
+      .card { min-height: auto; }
+    }
+  </style>
+</head>
+<body>
+  <header class="hero">
+    <div class="topline">
+      <div class="brand"><img class="revio-logo" src="revio-logo-white.png" alt="Rev.io"></div>
+      <div class="label">Prospect info sheet</div>
+    </div>
+    <div class="wrap hero-grid">
+      <div>
+        <div class="kicker">Rev.io PSA overview</div>
+        <h1>One PSA for service, projects, billing, and growth.</h1>
+        <p class="lead">Rev.io PSA is a professional services automation platform for MSPs, telecom providers, security integrators, and technology service businesses that need service delivery, project work, customer management, inventory, billing, payments, reporting, and integrations to operate from one connected system.</p>
+      </div>
+      <div class="metric-stack">
+        <div class="metric"><strong>PSA + billing</strong><span>Connect service work, time, projects, inventory, invoices, and payments</span></div>
+        <div class="metric"><strong>50+ tools</strong><span>Integration ecosystem plus open REST API and webhooks</span></div>
+        <div class="metric"><strong>AI-native</strong><span>Revii-supported workflows across service, reporting, and operations</span></div>
+      </div>
+    </div>
+  </header>
+
+  <section>
+    <div class="wrap">
+      <div class="kicker">What PSA does</div>
+      <h2>The operating layer for teams delivering recurring service and project work.</h2>
+      <p class="section-lead">A PSA helps a service provider manage the lifecycle from customer request to delivered work to invoice. Rev.io PSA is designed to reduce handoffs between ticketing, dispatch, projects, contracts, assets, inventory, billing, payments, and reporting.</p>
+      <div class="grid-3">
+        <div class="card">
+          <h3>Service desk and ticketing</h3>
+          <ul>
+            <li>Create, route, prioritize, and track tickets</li>
+            <li>Manage SLAs, statuses, escalations, and service workflows</li>
+            <li>Capture technician work, notes, time, and follow-up</li>
+          </ul>
+        </div>
+        <div class="card green">
+          <h3>Dispatch and scheduling</h3>
+          <ul>
+            <li>Assign work to the right technician or team</li>
+            <li>Coordinate calendars, field work, and onsite activity</li>
+            <li>Support technician productivity and service visibility</li>
+          </ul>
+        </div>
+        <div class="card cyan">
+          <h3>Mobile technician workflow</h3>
+          <ul>
+            <li>Access tickets, schedules, customer context, and site history</li>
+            <li>Add notes, photos, files, and time from the field</li>
+            <li>Support faster, cleaner job updates while technicians are onsite</li>
+          </ul>
+        </div>
+        <div class="card amber">
+          <h3>Projects and resource management</h3>
+          <ul>
+            <li>Plan projects, milestones, tasks, resources, and budgets</li>
+            <li>Track budgeted vs. actual time and project performance</li>
+            <li>Connect projects and service work to billing visibility</li>
+          </ul>
+        </div>
+        <div class="card">
+          <h3>Quoting, approvals, and eSignature</h3>
+          <ul>
+            <li>Build quotes and proposals tied to customers and opportunities</li>
+            <li>Use eSignature to move from approval to execution faster</li>
+            <li>Reduce rekeying between sales, projects, and billing</li>
+          </ul>
+        </div>
+        <div class="card green">
+          <h3>Inventory and asset tracking</h3>
+          <ul>
+            <li>Track inventory, locations, customer assets, and job readiness</li>
+            <li>Connect assets and services to billing and support coverage</li>
+            <li>Reduce missed revenue from disconnected inventory workflows</li>
+          </ul>
+        </div>
+      </div>
+      <div class="band">The practical goal: fewer systems to reconcile, fewer missed billable items, better customer visibility, and a cleaner path from work performed to revenue captured.</div>
+    </div>
+  </section>
+
+  <section class="dark">
+    <div class="wrap">
+      <div class="kicker">Why Rev.io is different</div>
+      <h2>Rev.io connects the PSA workflow to revenue operations.</h2>
+      <p class="section-lead">Traditional PSA tools often focus on tickets and projects, then rely on separate tools or manual exports to handle billing, payment, tax, and customer-facing financial workflows. Rev.io is built for service providers that need operations and billing to stay connected.</p>
+      <div class="grid-3">
+        <div class="card">
+          <h3>Ticket-to-billing connection</h3>
+          <p>Time, ticket activity, projects, inventory, recurring services, and billable work can flow into the billing process so revenue is less likely to leak between systems.</p>
+        </div>
+        <div class="card green">
+          <h3>Customer portal and payments</h3>
+          <p>Rev.io can support the customer experience beyond service delivery, including billing visibility, customer portal workflows, payment processing, and receivables operations.</p>
+        </div>
+        <div class="card cyan">
+          <h3>Reporting and Revii AI</h3>
+          <p>Dashboards and Revii-supported workflows help teams see ticket load, project status, revenue, assets, technician work, customer trends, and operational performance.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section>
+    <div class="wrap">
+      <div class="kicker">Integration ecosystem</div>
+      <h2>Rev.io plugs into the stack service providers already use.</h2>
+      <p class="section-lead">Examples below reflect Rev.io's public integrations page as of August 11, 2026. Availability and exact workflow scope can vary by edition, use case, and implementation plan, so the right next step is to confirm the prospect's must-have systems and workflow requirements.</p>
+      <div class="integration-list">
+        <div class="integration"><strong>Accounting and finance</strong><span>QuickBooks Online, NetSuite, Avalara, Wolters Kluwer</span></div>
+        <div class="integration"><strong>CRM and sales</strong><span>HubSpot, Salesforce</span></div>
+        <div class="integration"><strong>RMM, security, documentation</strong><span>Acronis, N-able, NinjaOne, Hudu, Datto, ConnectWise, IT Glue</span></div>
+        <div class="integration"><strong>Collaboration and productivity</strong><span>Google Calendar, Microsoft Outlook, Microsoft Teams, Slack, DocuSign</span></div>
+        <div class="integration"><strong>Telecom and carriers</strong><span>NetSapiens, Cisco, AT&T, Verizon, T-Mobile</span></div>
+        <div class="integration"><strong>Compliance and operations</strong><span>COPs, Compliance Solutions, Rapid Response, CMS</span></div>
+        <div class="integration"><strong>Distribution and purchasing</strong><span>TD Synnex, Ingram Micro, Portal.io, Pax8</span></div>
+        <div class="integration"><strong>Custom systems</strong><span>Open REST API and webhooks for custom integrations</span></div>
+      </div>
+      <p class="source">Source: <a href="https://www.rev.io/integrations">Rev.io integrations</a>.</p>
+    </div>
+  </section>
+
+  <section>
+    <div class="wrap">
+      <div class="kicker">Common prospect use cases</div>
+      <h2>Where Rev.io PSA usually creates the strongest fit.</h2>
+      <div class="grid-2">
+        <div class="card">
+          <h3>Replacing legacy PSA tools</h3>
+          <p>Teams evaluating ConnectWise, Autotask, HaloPSA, Syncro, Tigerpaw, or spreadsheets often want a more modern workflow across ticketing, projects, dispatch, assets, reporting, and billing.</p>
+        </div>
+        <div class="card green">
+          <h3>Unifying PSA and billing</h3>
+          <p>MSPs, telecom providers, UCaaS providers, and integrators often lose time when service delivery, recurring contracts, inventory, tax, and payments live in disconnected systems.</p>
+        </div>
+        <div class="card cyan">
+          <h3>Improving technician and operations visibility</h3>
+          <p>Dispatch, mobile notes, time capture, asset status, project budgets, SLA activity, and customer work history help teams run cleaner daily operations.</p>
+        </div>
+        <div class="card amber">
+          <h3>Scaling with fewer manual handoffs</h3>
+          <p>Workflow automation, integrations, Revii AI, dashboards, and better system alignment help growing teams reduce duplicated entry and protect revenue capture.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="dark">
+    <div class="wrap">
+      <div class="kicker">Questions to ask next</div>
+      <h2>A practical discovery checklist for fit.</h2>
+      <div class="grid-3">
+        <div class="card">
+          <h3>Current workflow</h3>
+          <ul>
+            <li>What PSA, RMM, CRM, accounting, quoting, and billing tools are in place today?</li>
+            <li>Which manual handoffs create the most rework or missed revenue?</li>
+            <li>What is the renewal timeline for current tools?</li>
+          </ul>
+        </div>
+        <div class="card green">
+          <h3>Must-have integrations</h3>
+          <ul>
+            <li>Which integrations are required on day one?</li>
+            <li>Which systems can be phased in after go-live?</li>
+            <li>Is API/webhook work needed for any custom systems?</li>
+          </ul>
+        </div>
+        <div class="card cyan">
+          <h3>Buying criteria</h3>
+          <ul>
+            <li>What workflows must be proven in a demo?</li>
+            <li>Who owns operations, finance, field team adoption, and executive approval?</li>
+            <li>What would make switching worth the effort?</li>
+          </ul>
+        </div>
+      </div>
+      <p class="source">Sources: Rev.io public product pages for PSA service desk, project management, inventory management, and integrations.</p>
+    </div>
+  </section>
+</body>
+</html>
