@@ -1,0 +1,615 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Trigent Technologies Evaluation Readout | Rev.io</title>
+  <meta name="description" content="Buyer-facing Rev.io PSA evaluation readout for Trigent Technologies.">
+  <style>
+    :root {
+      --trigent-red: #d51f1f;
+      --trigent-dark: #171717;
+      --revio: #6cc04a;
+      --ink: #182234;
+      --muted: #617082;
+      --paper: #f6f7f9;
+      --line: #dde3ea;
+      --white: #ffffff;
+      --steel: #253142;
+      --blue: #2e6fbd;
+      --amber: #f2b84b;
+    }
+
+    * { box-sizing: border-box; }
+    html { scroll-behavior: smooth; }
+    body {
+      margin: 0;
+      color: var(--ink);
+      background: var(--paper);
+      font-family: Verdana, Aptos, Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      letter-spacing: 0;
+    }
+
+    .deck { min-height: 100vh; }
+    .slide {
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      position: relative;
+      overflow: hidden;
+      border-bottom: 1px solid rgba(24,34,52,0.08);
+    }
+
+    .slide.dark {
+      color: var(--white);
+      background:
+        linear-gradient(118deg, rgba(18,18,18,0.98), rgba(37,49,66,0.94)),
+        repeating-linear-gradient(0deg, rgba(255,255,255,0.035) 0 1px, transparent 1px 42px),
+        repeating-linear-gradient(90deg, rgba(255,255,255,0.03) 0 1px, transparent 1px 42px),
+        var(--trigent-dark);
+    }
+
+    .slide.light { background: var(--paper); }
+    .wrap {
+      width: min(1180px, calc(100vw - 48px));
+      margin: 0 auto;
+      padding: 76px 0 58px;
+      position: relative;
+      z-index: 2;
+    }
+
+    .topline {
+      position: absolute;
+      top: 28px;
+      left: 32px;
+      right: 32px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 22px;
+      z-index: 5;
+    }
+
+    .logo-lane {
+      display: flex;
+      align-items: center;
+      min-width: 0;
+      gap: 14px;
+    }
+
+    .trigent-logo {
+      width: 230px;
+      height: 82px;
+      object-fit: contain;
+      background: var(--white);
+      border-radius: 8px;
+      padding: 10px 16px;
+      border: 1px solid rgba(255,255,255,0.16);
+    }
+
+    .revio-logo {
+      width: 126px;
+      height: 38px;
+      object-fit: contain;
+      display: block;
+    }
+
+    .light .revio-logo {
+      background: var(--steel);
+      border-radius: 7px;
+      padding: 8px 10px;
+    }
+
+    .kicker {
+      font-size: 12px;
+      font-weight: 900;
+      text-transform: uppercase;
+      color: #ff6a6a;
+      letter-spacing: 1.8px;
+      margin-bottom: 18px;
+    }
+
+    .light .kicker { color: var(--trigent-red); }
+    h1, h2, h3, p { margin: 0; }
+    h1 {
+      font-size: clamp(44px, 6.4vw, 82px);
+      line-height: 0.98;
+      max-width: 960px;
+      letter-spacing: 0;
+    }
+
+    h2 {
+      font-size: clamp(34px, 4.4vw, 58px);
+      line-height: 1;
+      max-width: 1000px;
+      margin-bottom: 24px;
+      letter-spacing: 0;
+    }
+
+    h3 {
+      font-size: 18px;
+      line-height: 1.16;
+      margin-bottom: 10px;
+      color: inherit;
+    }
+
+    .lead {
+      max-width: 850px;
+      margin-top: 24px;
+      color: rgba(255,255,255,0.76);
+      font-size: clamp(17px, 2vw, 23px);
+      line-height: 1.37;
+    }
+
+    .light .lead { color: var(--muted); }
+    .hero-grid {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) 340px;
+      gap: 48px;
+      align-items: end;
+    }
+
+    .metric-stack { display: grid; gap: 14px; }
+    .metric {
+      background: rgba(255,255,255,0.08);
+      border: 1px solid rgba(255,255,255,0.14);
+      border-radius: 8px;
+      padding: 18px;
+    }
+
+    .metric strong {
+      display: block;
+      font-size: 34px;
+      line-height: 1;
+      color: #ff6a6a;
+    }
+
+    .metric span {
+      display: block;
+      margin-top: 8px;
+      color: rgba(255,255,255,0.73);
+      font-size: 12px;
+      font-weight: 800;
+      text-transform: uppercase;
+      line-height: 1.35;
+    }
+
+    .grid-2 { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 18px; }
+    .grid-3 { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 18px; }
+
+    .card {
+      background: var(--white);
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      padding: 22px;
+      min-height: 158px;
+      box-shadow: 0 18px 45px rgba(24,34,52,0.06);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .dark .card { color: var(--ink); }
+    .card::before {
+      content: "";
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 5px;
+      background: var(--trigent-red);
+    }
+
+    .card.blue::before { background: var(--blue); }
+    .card.green::before { background: var(--revio); }
+    .card.amber::before { background: var(--amber); }
+    .card.darkbar::before { background: var(--steel); }
+    .card p, .card li {
+      color: var(--muted);
+      font-size: 15px;
+      line-height: 1.44;
+    }
+
+    ul { margin: 0; padding-left: 18px; }
+    li + li { margin-top: 8px; }
+
+    .band {
+      background: var(--steel);
+      color: var(--white);
+      padding: 18px 22px;
+      border-radius: 8px;
+      border-left: 6px solid var(--trigent-red);
+      margin-top: 24px;
+      font-size: 18px;
+      line-height: 1.4;
+    }
+
+    .impact-grid {
+      display: grid;
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+      gap: 14px;
+      margin: 24px 0;
+    }
+
+    .impact {
+      background: var(--steel);
+      color: var(--white);
+      border-radius: 8px;
+      padding: 18px;
+      border-top: 5px solid var(--trigent-red);
+      min-height: 118px;
+    }
+
+    .impact strong {
+      display: block;
+      font-size: 30px;
+      line-height: 1;
+      color: #ff6a6a;
+    }
+
+    .impact span {
+      display: block;
+      margin-top: 9px;
+      font-size: 12px;
+      line-height: 1.3;
+      color: rgba(255,255,255,0.74);
+      text-transform: uppercase;
+      font-weight: 800;
+    }
+
+    .timeline { display: grid; gap: 14px; }
+    .step {
+      display: grid;
+      grid-template-columns: 154px minmax(0, 1fr);
+      gap: 18px;
+      align-items: start;
+      background: var(--white);
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      padding: 18px;
+    }
+
+    .step .date {
+      color: var(--trigent-red);
+      font-size: 13px;
+      font-weight: 900;
+      text-transform: uppercase;
+    }
+
+    .step p { color: var(--muted); line-height: 1.45; font-size: 15px; }
+    .source {
+      position: absolute;
+      bottom: 20px;
+      left: 32px;
+      right: 32px;
+      display: flex;
+      justify-content: space-between;
+      gap: 18px;
+      color: rgba(24,34,52,0.45);
+      font-size: 11px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.9px;
+    }
+
+    .dark .source { color: rgba(255,255,255,0.42); }
+    .pill-row { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 24px; }
+    .pill {
+      border: 1px solid rgba(255,255,255,0.18);
+      background: rgba(255,255,255,0.08);
+      color: rgba(255,255,255,0.78);
+      border-radius: 999px;
+      padding: 8px 12px;
+      font-size: 12px;
+      font-weight: 800;
+      text-transform: uppercase;
+    }
+
+    .light .pill {
+      color: var(--steel);
+      border-color: rgba(24,34,52,0.12);
+      background: rgba(213,31,31,0.08);
+    }
+
+    .quote {
+      font-size: clamp(24px, 3.1vw, 39px);
+      line-height: 1.1;
+      max-width: 980px;
+      color: var(--steel);
+      font-weight: 900;
+      margin: 18px 0 24px;
+    }
+
+    .small-note {
+      color: var(--muted);
+      font-size: 13px;
+      line-height: 1.45;
+      margin-top: 14px;
+    }
+
+    @media (max-width: 860px) {
+      .slide { min-height: auto; flex-direction: column; align-items: stretch; }
+      .wrap { width: min(680px, calc(100vw - 32px)); padding: 112px 0 28px; }
+      .topline { top: 18px; left: 16px; right: 16px; }
+      .trigent-logo { width: 178px; height: 64px; padding: 8px 12px; }
+      .revio-logo { width: 104px; height: 34px; }
+      .hero-grid, .grid-2, .grid-3, .impact-grid { grid-template-columns: 1fr; }
+      .metric-stack { margin-top: 10px; }
+      .step { grid-template-columns: 1fr; }
+      .source {
+        position: static;
+        margin: 0 auto 22px;
+        width: min(680px, calc(100vw - 32px));
+        flex-direction: column;
+      }
+    }
+
+    @media (max-width: 520px) {
+      .topline { align-items: flex-start; }
+      .trigent-logo { width: 150px; height: 56px; padding: 7px 9px; }
+      .revio-logo { width: 86px; height: 30px; }
+      h1 { font-size: 39px; }
+      h2 { font-size: 31px; }
+      .card { min-height: auto; }
+    }
+  </style>
+</head>
+<body>
+  <main class="deck">
+    <section class="slide dark">
+      <div class="topline">
+        <div class="logo-lane"><img class="trigent-logo" src="assets/trigent-technologies/trigent-logo.png" alt="Trigent Technologies"></div>
+        <img class="revio-logo" src="revio-logo-white.png" alt="Rev.io">
+      </div>
+      <div class="wrap hero-grid">
+        <div>
+          <div class="kicker">Rev.io PSA evaluation readout</div>
+          <h1>A renewal-timed path off ConnectWise.</h1>
+          <p class="lead">Trigent Technologies is a 7-employee MSP in Bartlesville, Oklahoma evaluating Rev.io PSA before a November ConnectWise renewal. The opportunity is a modern PSA reset that pairs cleanly with a likely NinjaOne RMM move while protecting billing continuity.</p>
+          <div class="pill-row">
+            <span class="pill">Managed IT</span>
+            <span class="pill">Bartlesville / Owasso</span>
+            <span class="pill">ConnectWise replacement</span>
+            <span class="pill">NinjaOne alignment</span>
+          </div>
+        </div>
+        <div class="metric-stack">
+          <div class="metric"><strong>7</strong><span>employees touching PSA workflows</span></div>
+          <div class="metric"><strong>Nov</strong><span>ConnectWise renewal creates decision pressure</span></div>
+          <div class="metric"><strong>$1K</strong><span>Rev.io monthly minimum discussed as not a deal-breaker</span></div>
+        </div>
+      </div>
+      <div class="source"><span>Source: Trigent evaluation notes, July 2026</span><span>Prepared for buyer review</span></div>
+    </section>
+
+    <section class="slide light">
+      <div class="topline light">
+        <div class="logo-lane"><img class="trigent-logo" src="assets/trigent-technologies/trigent-logo.png" alt="Trigent Technologies"></div>
+        <img class="revio-logo" src="revio-logo-white.png" alt="Rev.io">
+      </div>
+      <div class="wrap">
+        <div class="kicker">1. Who is Trigent Technologies?</div>
+        <h2>A long-tenured ConnectWise MSP ready to validate a cleaner operating model.</h2>
+        <div class="grid-3">
+          <div class="card">
+            <h3>Company profile</h3>
+            <p>Trigent Technologies is a managed IT services provider serving small businesses around Bartlesville, Owasso, and nearby Oklahoma markets.</p>
+          </div>
+          <div class="card darkbar">
+            <h3>Service model</h3>
+            <p>The website positions Trigent around computer repair, server management, network infrastructure, cloud solutions, and onsite assessments for small-business clients.</p>
+          </div>
+          <div class="card blue">
+            <h3>Decision context</h3>
+            <p>Ed is the owner and decision maker. Jason from operations is a key evaluator, especially because he is pushing strongly for NinjaOne.</p>
+          </div>
+        </div>
+        <div class="band">The core evaluation is not just PSA software. It is whether Trigent can reset PSA + RMM before the November renewal without breaking billing, technician workflows, or operational visibility.</div>
+      </div>
+      <div class="source"><span>Source: Trigent website and Notion evaluation page</span><span>Rev.io + Trigent Technologies</span></div>
+    </section>
+
+    <section class="slide dark">
+      <div class="topline">
+        <div class="logo-lane"><img class="trigent-logo" src="assets/trigent-technologies/trigent-logo.png" alt="Trigent Technologies"></div>
+        <img class="revio-logo" src="revio-logo-white.png" alt="Rev.io">
+      </div>
+      <div class="wrap">
+        <div class="kicker">2. Why make the change now?</div>
+        <h2>The renewal window turns dissatisfaction into a real decision.</h2>
+        <div class="grid-2">
+          <div class="card">
+            <h3>ConnectWise renewal pressure</h3>
+            <p>The November renewal creates a fixed window. A decision by the end of August gives Trigent a realistic implementation runway before another ConnectWise term becomes the default path.</p>
+          </div>
+          <div class="card darkbar">
+            <h3>Ecosystem fatigue</h3>
+            <p>Ed has been on ConnectWise since roughly 2010-2012. He described newer ConnectWise RMM as only “OK,” and noted that promises can only last so long.</p>
+          </div>
+          <div class="card green">
+            <h3>NinjaOne creates a reset moment</h3>
+            <p>If Trigent leaves ConnectWise PSA, it likely leaves ConnectWise RMM too. Rev.io can frame the future model as Rev.io PSA + NinjaOne instead of staying half-inside ConnectWise.</p>
+          </div>
+          <div class="card amber">
+            <h3>Commercial flexibility matters</h3>
+            <p>Rev.io’s month-to-month model and $1,000/month minimum give Ed a lower-risk commercial path than a long renewal commitment.</p>
+          </div>
+        </div>
+      </div>
+      <div class="source"><span>Source: July 31 PSA discovery call</span><span>Renewal-based buying motion</span></div>
+    </section>
+
+    <section class="slide light">
+      <div class="topline light">
+        <div class="logo-lane"><img class="trigent-logo" src="assets/trigent-technologies/trigent-logo.png" alt="Trigent Technologies"></div>
+        <img class="revio-logo" src="revio-logo-white.png" alt="Rev.io">
+      </div>
+      <div class="wrap">
+        <div class="kicker">3. Uncovered problems</div>
+        <h2>The deal will be won or lost on operational confidence.</h2>
+        <div class="grid-3">
+          <div class="card">
+            <h3>Renewal risk</h3>
+            <ul>
+              <li>Compressed timeline before November</li>
+              <li>Implementation plan must be credible by end of August</li>
+              <li>Decision slip risks defaulting into another ConnectWise cycle</li>
+            </ul>
+          </div>
+          <div class="card darkbar">
+            <h3>Cordial billing dependency</h3>
+            <ul>
+              <li>Cordial currently pushes products, taxes, and invoice data into ConnectWise</li>
+              <li>Trigent bills customers from ConnectWise today</li>
+              <li>Exact parity is not available out of the box and needs validation</li>
+            </ul>
+          </div>
+          <div class="card blue">
+            <h3>Asset tracking</h3>
+            <ul>
+              <li>Customer-owned equipment may be active, idle, stored, or redeployed</li>
+              <li>Support contracts should bill active devices only</li>
+              <li>Manual tracking creates billing accuracy and trust risk</li>
+            </ul>
+          </div>
+          <div class="card green">
+            <h3>Jason’s operational buy-in</h3>
+            <ul>
+              <li>Jason needs time to validate after vacation</li>
+              <li>NinjaOne expectations need to be addressed directly</li>
+              <li>Ticketing, RMM alerts, assets, and technician process are likely scrutiny points</li>
+            </ul>
+          </div>
+          <div class="card amber">
+            <h3>Accounting caution</h3>
+            <ul>
+              <li>Trigent uses QuickBooks Desktop</li>
+              <li>The bookkeeper prefers manual entry because prior automations broke workflows</li>
+              <li>Batch export / controlled import should be positioned before real-time sync</li>
+            </ul>
+          </div>
+          <div class="card">
+            <h3>Mobile limitations</h3>
+            <ul>
+              <li>ConnectWise mobile handles basics like tickets and notes</li>
+              <li>Rev.io needs to show a better onsite workflow, not just a longer feature list</li>
+              <li>Geofence/GPS should be job-based rather than always-on tracking</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+      <div class="source"><span>Source: Trigent discovery notes</span><span>Problem summary</span></div>
+    </section>
+
+    <section class="slide light">
+      <div class="topline light">
+        <div class="logo-lane"><img class="trigent-logo" src="assets/trigent-technologies/trigent-logo.png" alt="Trigent Technologies"></div>
+        <img class="revio-logo" src="revio-logo-white.png" alt="Rev.io">
+      </div>
+      <div class="wrap">
+        <div class="kicker">4. Business impact and ROI analysis</div>
+        <h2>Small-team efficiency can cover the PSA minimum quickly.</h2>
+        <div class="impact-grid">
+          <div class="impact"><strong>28 hrs/mo</strong><span>Assumption: 7 users save 1 hour per week across ticketing, reporting, mobile, quoting, and assets</span></div>
+          <div class="impact"><strong>$1.4K/mo</strong><span>Assumption: 28 hours at $50/hour loaded cost, exceeding the monthly minimum</span></div>
+          <div class="impact"><strong>Aug 31</strong><span>Recommended decision target to preserve November renewal runway</span></div>
+          <div class="impact"><strong>$100-$1K</strong><span>Potential monthly payments savings range mentioned for review, dependent on statements</span></div>
+        </div>
+        <div class="grid-2">
+          <div class="card">
+            <h3>Hard-dollar levers</h3>
+            <ul>
+              <li>Avoid another unwanted ConnectWise renewal cycle</li>
+              <li>Reduce daily friction across all 7 users</li>
+              <li>Improve active/inactive asset billing accuracy</li>
+              <li>Reduce manual reporting and management prep</li>
+            </ul>
+          </div>
+          <div class="card green">
+            <h3>Strategic levers</h3>
+            <ul>
+              <li>Reset PSA and RMM roadmap together</li>
+              <li>Move toward Rev.io PSA + NinjaOne as a coherent stack</li>
+              <li>Improve technician workflow and owner visibility</li>
+              <li>Use month-to-month flexibility to reduce switching risk</li>
+            </ul>
+          </div>
+        </div>
+        <p class="small-note">These ROI numbers are assumptions based on the source notes. Final ROI should use actual ticket volume, reporting time, technician workflow time, asset billing corrections, current ConnectWise cost, and merchant statements.</p>
+      </div>
+      <div class="source"><span>Source: Rev.io pricing and Trigent workflow pains</span><span>Assumptions clearly labeled</span></div>
+    </section>
+
+    <section class="slide dark">
+      <div class="topline">
+        <div class="logo-lane"><img class="trigent-logo" src="assets/trigent-technologies/trigent-logo.png" alt="Trigent Technologies"></div>
+        <img class="revio-logo" src="revio-logo-white.png" alt="Rev.io">
+      </div>
+      <div class="wrap">
+        <div class="kicker">5. Requirements and systems alongside Rev.io</div>
+        <h2>The Cordial workflow is the technical landmine to defuse early.</h2>
+        <div class="grid-3">
+          <div class="card">
+            <h3>Rev.io must replace</h3>
+            <ul>
+              <li>ConnectWise PSA ticketing and time tracking</li>
+              <li>Service workflow, scheduling, and technician mobile tasks</li>
+              <li>Reporting, dashboards, quoting, and eSignature</li>
+              <li>Asset status and customer/site visibility</li>
+            </ul>
+          </div>
+          <div class="card green">
+            <h3>Systems alongside Rev.io</h3>
+            <ul>
+              <li>NinjaOne as likely RMM direction</li>
+              <li>Pax8 and Guardz commerce alignment</li>
+              <li>QuickBooks Desktop through controlled export/import</li>
+              <li>Auvik / Augment considerations as needed</li>
+            </ul>
+          </div>
+          <div class="card amber">
+            <h3>Cordial validation</h3>
+            <ul>
+              <li>Document products / SKUs, taxes, invoice lines, customer IDs, CDRs, timing, and frequency</li>
+              <li>Confirm whether Rev.io Billing can become the voice billing system of record</li>
+              <li>Define day-one workaround: CSV, import, custom integration, or phased transition</li>
+            </ul>
+          </div>
+        </div>
+        <div class="band">Do not bury Cordial. Name it, validate it, and bring Ed a clear path: native Rev.io Billing, integration feasibility, manual bridge, or phased coexistence.</div>
+      </div>
+      <div class="source"><span>Source: Technical validation notes</span><span>Cordial gap and integration planning</span></div>
+    </section>
+
+    <section class="slide light">
+      <div class="topline light">
+        <div class="logo-lane"><img class="trigent-logo" src="assets/trigent-technologies/trigent-logo.png" alt="Trigent Technologies"></div>
+        <img class="revio-logo" src="revio-logo-white.png" alt="Rev.io">
+      </div>
+      <div class="wrap">
+        <div class="kicker">6. Action plan moving forward</div>
+        <h2>Use the August 12 demo to win Ed’s timing case and Jason’s workflow confidence.</h2>
+        <div class="timeline">
+          <div class="step">
+            <div class="date">Before demo</div>
+            <p>Prepare a clear Cordial discovery checklist and bring a senior solutions engineer who can separate native Billing, PSA integration, import, and phase-two options.</p>
+          </div>
+          <div class="step">
+            <div class="date">Aug 12 demo</div>
+            <p>Lead with ConnectWise replacement credibility, month-to-month flexibility, and the implementation path before November. Keep Ed anchored to decision timing.</p>
+          </div>
+          <div class="step">
+            <div class="date">Jason workflow</div>
+            <p>Show ticket creation, triage, time tracking, dispatch, mobile technician workflow, NinjaOne alert flow, asset management, and reporting from an operations lens.</p>
+          </div>
+          <div class="step">
+            <div class="date">Decision target</div>
+            <p>Confirm renewal notice deadline, mission-critical ConnectWise modules, must-have reports, Cordial requirements, QuickBooks Desktop process, launch users, and what would cause a ConnectWise renewal despite interest in switching.</p>
+          </div>
+        </div>
+        <div class="quote">Trigent looks like a strong Rev.io fit if the team can answer Cordial clearly and prove Rev.io PSA + NinjaOne is a cleaner path than another ConnectWise cycle.</div>
+      </div>
+      <div class="source"><span>Source: Recommended August 12 demo agenda</span><span>Rev.io action plan</span></div>
+    </section>
+  </main>
+</body>
+</html>
