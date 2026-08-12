@@ -1,0 +1,2262 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Forecast Targets</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800;900&display=swap" rel="stylesheet">
+<style>
+:root { --bg:#f6f8fb; --panel:#ffffff; --panel2:#f0f5f8; --line:#dbe3ee; --text:#172033; --muted:#64748b; --soft:#94a3b8; --cyan:#0891b2; --green:#20b26b; --pink:#e11d48; --violet:#6d5dfc; --gold:#b7791f; --shadow:0 18px 48px rgba(15,23,42,.08); }
+* { box-sizing:border-box; }
+body { margin:0; color:var(--text); font-family:Inter,system-ui,sans-serif; background:linear-gradient(180deg,#eef7f3 0,#f6f8fb 360px,#ffffff 100%); }
+.shell { max-width:1600px; margin:0 auto; padding:28px 30px 44px; }
+.topbar { display:flex; justify-content:space-between; align-items:flex-start; gap:28px; padding-bottom:22px; }
+.brand { width:118px; height:auto; filter:drop-shadow(0 8px 18px rgba(15,23,42,.14)); }
+.eyebrow { color:var(--green); font-size:11px; font-weight:900; letter-spacing:2px; text-transform:uppercase; }
+h1 { margin:8px 0 0; max-width:900px; font-size:44px; line-height:1.02; letter-spacing:0; }
+.subhead { max-width:900px; margin-top:10px; color:var(--muted); line-height:1.45; font-size:14px; }
+.stamp { margin-top:8px; color:var(--muted); font-size:12px; line-height:1.5; text-align:right; }
+.kpis { display:grid; grid-template-columns:repeat(4,minmax(0,1fr)); gap:12px; margin:6px 0 18px; }
+.kpi,.target-card,.panel { background:var(--panel); border:1px solid var(--line); border-radius:8px; box-shadow:var(--shadow); }
+.kpi { padding:17px; border-top:3px solid var(--accent,var(--violet)); }
+.kpi span { display:block; color:var(--muted); font-size:10px; font-weight:900; letter-spacing:1.3px; text-transform:uppercase; }
+.kpi strong { display:block; margin-top:8px; font-size:30px; line-height:1; }
+.kpi em { display:block; margin-top:6px; color:var(--muted); font-size:12px; font-style:normal; }
+.cards { display:grid; grid-template-columns:repeat(5,minmax(0,1fr)); gap:12px; }
+.target-card { padding:16px; border-top:4px solid var(--accent); }
+.card-head { display:flex; justify-content:space-between; gap:10px; align-items:flex-start; }
+h2 { margin:5px 0 0; font-size:20px; letter-spacing:0; }
+.pill { border:1px solid color-mix(in srgb, var(--accent) 38%, transparent); color:var(--accent); background:color-mix(in srgb, var(--accent) 10%, transparent); border-radius:999px; padding:5px 8px; font-size:10px; font-weight:900; white-space:nowrap; }
+.metric-row { display:flex; justify-content:space-between; align-items:baseline; gap:12px; margin:18px 0 13px; padding-bottom:12px; border-bottom:1px solid var(--line); }
+.metric-row span { color:var(--muted); font-size:12px; font-weight:800; }
+.metric-row strong { color:var(--accent); font-size:26px; }
+.bar-wrap { margin-top:14px; }
+.bar-wrap.quarter { opacity:.94; }
+.bar-label,.bar-foot { display:flex; justify-content:space-between; gap:10px; align-items:center; }
+.bar-label span { color:var(--muted); font-size:10px; font-weight:900; letter-spacing:1.2px; text-transform:uppercase; }
+.bar-label b { color:var(--accent); font-size:12px; }
+.bar { height:8px; margin-top:7px; border-radius:999px; overflow:hidden; background:#e5edf3; }
+.bar i { display:block; height:100%; border-radius:999px; background:linear-gradient(90deg,var(--accent),#172033); }
+.bar-foot { margin-top:6px; color:var(--muted); font-size:11px; font-weight:700; }
+.pipeline { display:grid; grid-template-columns:1fr; gap:7px; margin-top:15px; }
+.pipeline div { padding:9px; border:1px solid var(--line); border-radius:8px; background:var(--panel2); }
+.pipeline b { display:block; color:var(--text); font-size:16px; }
+.pipeline span { display:block; margin-top:3px; color:var(--muted); font-size:10px; font-weight:800; line-height:1.25; text-transform:uppercase; letter-spacing:.8px; }
+.section-head { display:flex; justify-content:space-between; align-items:flex-end; gap:16px; margin:24px 0 10px; }
+.section-head h2 { margin:0; font-size:22px; }
+.section-head p { margin:5px 0 0; color:var(--muted); font-size:13px; }
+.panel { overflow:auto; }
+.two { display:grid; grid-template-columns:1fr 1fr; gap:14px; }
+table { width:100%; border-collapse:collapse; min-width:980px; font-size:12px; }
+th,td { padding:11px 12px; border-bottom:1px solid var(--line); text-align:right; white-space:nowrap; }
+th { background:#edf4f0; color:var(--muted); font-size:10px; font-weight:900; text-transform:uppercase; letter-spacing:1.1px; }
+th:first-child,td:first-child { text-align:left; }
+td:first-child,td strong { color:var(--text); }
+td span { display:block; margin-top:3px; color:var(--muted); font-size:10px; }
+.empty { color:var(--muted); text-align:center; }
+.note { margin-top:18px; color:var(--muted); font-size:12px; line-height:1.5; }
+@media(max-width:1300px) { .cards { grid-template-columns:repeat(3,minmax(0,1fr)); } }
+@media(max-width:1000px) { .topbar { display:block; } .brand { margin-bottom:14px; } .stamp { text-align:left; } .kpis,.two { grid-template-columns:repeat(2,minmax(0,1fr)); } }
+@media(max-width:740px) { .shell { padding:22px 16px 36px; } h1 { font-size:34px; } .kpis,.cards,.two { grid-template-columns:1fr; } }
+</style>
+</head>
+<body>
+<main class="shell">
+  <header class="topbar">
+    <div>
+      <img class="brand" src="revio-logo-white.png" alt="Rev.io">
+      <div class="eyebrow">Forecast Targets</div>
+      <h1>Forecast Targets</h1>
+      <p class="subhead">Current month and Q3 2026 target attainment, broken out by product line and team contribution. Actuals are closed-won MRR; pipeline excludes closed-lost opportunities and uses Salesforce probability for weighted forecast.</p>
+    </div>
+    <div class="stamp">Refreshed Aug 12, 2026 12:44 PM ET<br>Source: Salesforce opportunities · 213 Q3 forecast records</div>
+  </header>
+
+  <section class="kpis">
+    <div class="kpi" style="--accent:var(--green)"><span>August Target</span><strong>$75,090</strong><em>All tracked product lines</em></div>
+    <div class="kpi" style="--accent:var(--cyan)"><span>August Closed Won</span><strong>$586</strong><em>0.8% attainment · $92,833 open</em></div>
+    <div class="kpi" style="--accent:var(--violet)"><span>Q3 2026 Target</span><strong>$244,546</strong><em>July through September</em></div>
+    <div class="kpi" style="--accent:var(--pink)"><span>Q3 2026 Closed Won</span><strong>$19,406</strong><em>7.9% attainment · $224,293 open</em></div>
+  </section>
+
+  <section class="cards">
+    <section class="target-card" style="--accent:#50ff8a">
+      <div class="card-head">
+        <div><div class="eyebrow">Product Line</div><h2>PSA</h2></div>
+        <div class="pill">0 won MTD</div>
+      </div>
+      <div class="metric-row"><span>August Closed Won</span><strong>$0</strong></div>
+      <div class="bar-wrap">
+        <div class="bar-label"><span>August Target</span><b>0.0%</b></div>
+        <div class="bar"><i style="width:0.0%"></i></div>
+        <div class="bar-foot"><span>$0 / $46,000</span><span>$46,000 left</span></div>
+      </div>
+      <div class="bar-wrap quarter">
+        <div class="bar-label"><span>Q3 2026 Target</span><b>7.7%</b></div>
+        <div class="bar"><i style="width:7.7%"></i></div>
+        <div class="bar-foot"><span>$10,680 / $138,000</span><span>$127,320 left</span></div>
+      </div>
+      <div class="pipeline">
+        <div><b>$75,973</b><span>Open Month Pipeline</span></div>
+        <div><b>$7,966</b><span>Weighted Month</span></div>
+        <div><b>$89,933</b><span>Open Quarter Pipeline</span></div>
+      </div>
+    </section>
+
+    <section class="target-card" style="--accent:#2ee6be">
+      <div class="card-head">
+        <div><div class="eyebrow">Product Line</div><h2>Billing / Odin</h2></div>
+        <div class="pill">3 won MTD</div>
+      </div>
+      <div class="metric-row"><span>August Closed Won</span><strong>$436</strong></div>
+      <div class="bar-wrap">
+        <div class="bar-label"><span>August Target</span><b>3.5%</b></div>
+        <div class="bar"><i style="width:3.5%"></i></div>
+        <div class="bar-foot"><span>$436 / $12,383</span><span>$11,947 left</span></div>
+      </div>
+      <div class="bar-wrap quarter">
+        <div class="bar-label"><span>Q3 2026 Target</span><b>9.5%</b></div>
+        <div class="bar"><i style="width:9.5%"></i></div>
+        <div class="bar-foot"><span>$4,010 / $42,104</span><span>$38,094 left</span></div>
+      </div>
+      <div class="pipeline">
+        <div><b>$13,419</b><span>Open Month Pipeline</span></div>
+        <div><b>$2,295</b><span>Weighted Month</span></div>
+        <div><b>$130,919</b><span>Open Quarter Pipeline</span></div>
+      </div>
+    </section>
+
+    <section class="target-card" style="--accent:#9b7cff">
+      <div class="card-head">
+        <div><div class="eyebrow">Product Line</div><h2>Payments</h2></div>
+        <div class="pill">3 won MTD</div>
+      </div>
+      <div class="metric-row"><span>August Closed Won</span><strong>$150</strong></div>
+      <div class="bar-wrap">
+        <div class="bar-label"><span>August Target</span><b>1.4%</b></div>
+        <div class="bar"><i style="width:1.4%"></i></div>
+        <div class="bar-foot"><span>$150 / $10,540</span><span>$10,390 left</span></div>
+      </div>
+      <div class="bar-wrap quarter">
+        <div class="bar-label"><span>Q3 2026 Target</span><b>15.3%</b></div>
+        <div class="bar"><i style="width:15.3%"></i></div>
+        <div class="bar-foot"><span>$4,716 / $30,740</span><span>$26,024 left</span></div>
+      </div>
+      <div class="pipeline">
+        <div><b>$3,441</b><span>Open Month Pipeline</span></div>
+        <div><b>$825</b><span>Weighted Month</span></div>
+        <div><b>$3,441</b><span>Open Quarter Pipeline</span></div>
+      </div>
+    </section>
+
+    <section class="target-card" style="--accent:#ff5d74">
+      <div class="card-head">
+        <div><div class="eyebrow">Product Line</div><h2>Cyber Protect</h2></div>
+        <div class="pill">0 won MTD</div>
+      </div>
+      <div class="metric-row"><span>August Closed Won</span><strong>$0</strong></div>
+      <div class="bar-wrap">
+        <div class="bar-label"><span>August Target</span><b>0.0%</b></div>
+        <div class="bar"><i style="width:0.0%"></i></div>
+        <div class="bar-foot"><span>$0 / $4,500</span><span>$4,500 left</span></div>
+      </div>
+      <div class="bar-wrap quarter">
+        <div class="bar-label"><span>Q3 2026 Target</span><b>0.0%</b></div>
+        <div class="bar"><i style="width:0.0%"></i></div>
+        <div class="bar-foot"><span>$0 / $33,702</span><span>$33,702 left</span></div>
+      </div>
+      <div class="pipeline">
+        <div><b>$0</b><span>Open Month Pipeline</span></div>
+        <div><b>$0</b><span>Weighted Month</span></div>
+        <div><b>$0</b><span>Open Quarter Pipeline</span></div>
+      </div>
+    </section>
+
+    <section class="target-card" style="--accent:#eace9b">
+      <div class="card-head">
+        <div><div class="eyebrow">Product Line</div><h2>CommerceHub</h2></div>
+        <div class="pill">0 won MTD</div>
+      </div>
+      <div class="metric-row"><span>August Closed Won</span><strong>$0</strong></div>
+      <div class="bar-wrap">
+        <div class="bar-label"><span>August Target</span><b>0.0%</b></div>
+        <div class="bar"><i style="width:0.0%"></i></div>
+        <div class="bar-foot"><span>$0 / $1,667</span><span>$1,667 left</span></div>
+      </div>
+      <div class="bar-wrap quarter">
+        <div class="bar-label"><span>Q3 2026 Target</span><b>0.0%</b></div>
+        <div class="bar"><i style="width:0.0%"></i></div>
+        <div class="bar-foot"><span>$0 / $0</span><span>$0 left</span></div>
+      </div>
+      <div class="pipeline">
+        <div><b>$0</b><span>Open Month Pipeline</span></div>
+        <div><b>$0</b><span>Weighted Month</span></div>
+        <div><b>$0</b><span>Open Quarter Pipeline</span></div>
+      </div>
+    </section></section>
+
+  <section class="section-head"><div><h2>Product Line Targets</h2><p>Month and quarter target attainment by product line.</p></div></section>
+  <section class="panel">
+    <table>
+      <thead><tr><th>Product</th><th>Month Target</th><th>Month Won</th><th>Month Attain.</th><th>Month Open</th><th>Month Weighted</th><th>Qtr Target</th><th>Qtr Won</th><th>Qtr Attain.</th><th>Qtr Open</th></tr></thead>
+      <tbody>
+            <tr>
+              <td><strong>PSA</strong><span>0 won MTD · 63 open MTD</span></td>
+              <td>$46,000</td>
+              <td>$0</td>
+              <td>0.0%</td>
+              <td>$75,973</td>
+              <td>$7,966</td>
+              <td>$138,000</td>
+              <td>$10,680</td>
+              <td>7.7%</td>
+              <td>$89,933</td>
+            </tr>
+
+            <tr>
+              <td><strong>Billing / Odin</strong><span>3 won MTD · 16 open MTD</span></td>
+              <td>$12,383</td>
+              <td>$436</td>
+              <td>3.5%</td>
+              <td>$13,419</td>
+              <td>$2,295</td>
+              <td>$42,104</td>
+              <td>$4,010</td>
+              <td>9.5%</td>
+              <td>$130,919</td>
+            </tr>
+
+            <tr>
+              <td><strong>Payments</strong><span>3 won MTD · 22 open MTD</span></td>
+              <td>$10,540</td>
+              <td>$150</td>
+              <td>1.4%</td>
+              <td>$3,441</td>
+              <td>$825</td>
+              <td>$30,740</td>
+              <td>$4,716</td>
+              <td>15.3%</td>
+              <td>$3,441</td>
+            </tr>
+
+            <tr>
+              <td><strong>Cyber Protect</strong><span>0 won MTD · 0 open MTD</span></td>
+              <td>$4,500</td>
+              <td>$0</td>
+              <td>0.0%</td>
+              <td>$0</td>
+              <td>$0</td>
+              <td>$33,702</td>
+              <td>$0</td>
+              <td>0.0%</td>
+              <td>$0</td>
+            </tr>
+
+            <tr>
+              <td><strong>CommerceHub</strong><span>0 won MTD · 0 open MTD</span></td>
+              <td>$1,667</td>
+              <td>$0</td>
+              <td>0.0%</td>
+              <td>$0</td>
+              <td>$0</td>
+              <td>$0</td>
+              <td>$0</td>
+              <td>0.0%</td>
+              <td>$0</td>
+            </tr></tbody>
+    </table>
+  </section>
+
+  <section class="section-head"><div><h2>Team Contribution</h2><p>Closed-won and open forecast dollars grouped by Salesforce owner role/team and product line.</p></div></section>
+  <section class="two">
+    <div class="panel">
+      <table>
+        <thead><tr><th>Team</th><th>Product</th><th>Closed Won</th><th>Won Opps</th><th>Open Pipeline</th><th>Weighted</th><th>Open Opps</th></tr></thead>
+        <tbody>
+                <tr>
+                  <td><strong>CSA</strong><span>August</span></td>
+                  <td>PSA</td>
+                  <td>$0</td>
+                  <td>0</td>
+                  <td>$1,178</td>
+                  <td>$118</td>
+                  <td>4</td>
+                </tr>
+
+                <tr>
+                  <td><strong>CSA</strong><span>August</span></td>
+                  <td>Billing / Odin</td>
+                  <td>$436</td>
+                  <td>3</td>
+                  <td>$1,419</td>
+                  <td>$357</td>
+                  <td>7</td>
+                </tr>
+
+                <tr>
+                  <td><strong>CSA</strong><span>August</span></td>
+                  <td>Payments</td>
+                  <td>$150</td>
+                  <td>3</td>
+                  <td>$3,441</td>
+                  <td>$825</td>
+                  <td>22</td>
+                </tr>
+
+                <tr>
+                  <td><strong>Integrator Sales</strong><span>August</span></td>
+                  <td>PSA</td>
+                  <td>$0</td>
+                  <td>0</td>
+                  <td>$45,600</td>
+                  <td>$4,837</td>
+                  <td>34</td>
+                </tr>
+
+                <tr>
+                  <td><strong>MSP Sales</strong><span>August</span></td>
+                  <td>PSA</td>
+                  <td>$0</td>
+                  <td>0</td>
+                  <td>$29,195</td>
+                  <td>$3,011</td>
+                  <td>24</td>
+                </tr>
+
+                <tr>
+                  <td><strong>MSP Sales</strong><span>August</span></td>
+                  <td>Billing / Odin</td>
+                  <td>$0</td>
+                  <td>0</td>
+                  <td>$12,000</td>
+                  <td>$1,938</td>
+                  <td>9</td>
+                </tr>
+
+                <tr>
+                  <td><strong>PSA Team</strong><span>August</span></td>
+                  <td>PSA</td>
+                  <td>$0</td>
+                  <td>0</td>
+                  <td>$0</td>
+                  <td>$0</td>
+                  <td>1</td>
+                </tr></tbody>
+      </table>
+    </div>
+    <div class="panel">
+      <table>
+        <thead><tr><th>Team</th><th>Product</th><th>Closed Won</th><th>Won Opps</th><th>Open Pipeline</th><th>Weighted</th><th>Open Opps</th></tr></thead>
+        <tbody>
+                <tr>
+                  <td><strong>Billing Team</strong><span>Q3 2026</span></td>
+                  <td>Billing / Odin</td>
+                  <td>$0</td>
+                  <td>0</td>
+                  <td>$3,000</td>
+                  <td>$750</td>
+                  <td>1</td>
+                </tr>
+
+                <tr>
+                  <td><strong>CSA</strong><span>Q3 2026</span></td>
+                  <td>PSA</td>
+                  <td>$800</td>
+                  <td>3</td>
+                  <td>$1,178</td>
+                  <td>$118</td>
+                  <td>4</td>
+                </tr>
+
+                <tr>
+                  <td><strong>CSA</strong><span>Q3 2026</span></td>
+                  <td>Billing / Odin</td>
+                  <td>$2,310</td>
+                  <td>12</td>
+                  <td>$1,419</td>
+                  <td>$357</td>
+                  <td>7</td>
+                </tr>
+
+                <tr>
+                  <td><strong>CSA</strong><span>Q3 2026</span></td>
+                  <td>Payments</td>
+                  <td>$4,716</td>
+                  <td>14</td>
+                  <td>$3,441</td>
+                  <td>$825</td>
+                  <td>22</td>
+                </tr>
+
+                <tr>
+                  <td><strong>Integrator Sales</strong><span>Q3 2026</span></td>
+                  <td>PSA</td>
+                  <td>$3,220</td>
+                  <td>3</td>
+                  <td>$47,310</td>
+                  <td>$4,922</td>
+                  <td>35</td>
+                </tr>
+
+                <tr>
+                  <td><strong>MSP Sales</strong><span>Q3 2026</span></td>
+                  <td>PSA</td>
+                  <td>$6,660</td>
+                  <td>6</td>
+                  <td>$41,445</td>
+                  <td>$4,386</td>
+                  <td>32</td>
+                </tr>
+
+                <tr>
+                  <td><strong>MSP Sales</strong><span>Q3 2026</span></td>
+                  <td>Billing / Odin</td>
+                  <td>$1,700</td>
+                  <td>3</td>
+                  <td>$126,500</td>
+                  <td>$30,262</td>
+                  <td>13</td>
+                </tr>
+
+                <tr>
+                  <td><strong>PSA Team</strong><span>Q3 2026</span></td>
+                  <td>PSA</td>
+                  <td>$0</td>
+                  <td>0</td>
+                  <td>$0</td>
+                  <td>$0</td>
+                  <td>1</td>
+                </tr></tbody>
+      </table>
+    </div>
+  </section>
+
+  <section class="section-head"><div><h2>Open Forecast by Status</h2><p>Open Q3 pipeline by product line and Salesforce forecast status.</p></div></section>
+  <section class="panel">
+    <table>
+      <thead><tr><th>Product</th><th>Forecast Status</th><th>Open Opps</th><th>Open Pipeline</th><th>Weighted</th></tr></thead>
+      <tbody>
+                <tr>
+                  <td><strong>PSA</strong></td>
+                  <td>Best Case</td>
+                  <td>6</td>
+                  <td>$6,133</td>
+                  <td>$997</td>
+                </tr>
+
+                <tr>
+                  <td><strong>PSA</strong></td>
+                  <td>Most Likely</td>
+                  <td>8</td>
+                  <td>$8,435</td>
+                  <td>$1,959</td>
+                </tr>
+
+                <tr>
+                  <td><strong>PSA</strong></td>
+                  <td>Unspecified</td>
+                  <td>54</td>
+                  <td>$71,769</td>
+                  <td>$5,498</td>
+                </tr>
+
+                <tr>
+                  <td><strong>PSA</strong></td>
+                  <td>Worst Case</td>
+                  <td>4</td>
+                  <td>$3,596</td>
+                  <td>$972</td>
+                </tr>
+
+                <tr>
+                  <td><strong>Billing / Odin</strong></td>
+                  <td>Best Case</td>
+                  <td>5</td>
+                  <td>$3,416</td>
+                  <td>$279</td>
+                </tr>
+
+                <tr>
+                  <td><strong>Billing / Odin</strong></td>
+                  <td>Most Likely</td>
+                  <td>3</td>
+                  <td>$2,801</td>
+                  <td>$356</td>
+                </tr>
+
+                <tr>
+                  <td><strong>Billing / Odin</strong></td>
+                  <td>Unspecified</td>
+                  <td>9</td>
+                  <td>$119,444</td>
+                  <td>$29,194</td>
+                </tr>
+
+                <tr>
+                  <td><strong>Billing / Odin</strong></td>
+                  <td>Worst Case</td>
+                  <td>4</td>
+                  <td>$5,258</td>
+                  <td>$1,541</td>
+                </tr>
+
+                <tr>
+                  <td><strong>Payments</strong></td>
+                  <td>Best Case</td>
+                  <td>4</td>
+                  <td>$1,680</td>
+                  <td>$420</td>
+                </tr>
+
+                <tr>
+                  <td><strong>Payments</strong></td>
+                  <td>Most Likely</td>
+                  <td>4</td>
+                  <td>$691</td>
+                  <td>$77</td>
+                </tr>
+
+                <tr>
+                  <td><strong>Payments</strong></td>
+                  <td>Unspecified</td>
+                  <td>10</td>
+                  <td>$500</td>
+                  <td>$60</td>
+                </tr>
+
+                <tr>
+                  <td><strong>Payments</strong></td>
+                  <td>Worst Case</td>
+                  <td>4</td>
+                  <td>$570</td>
+                  <td>$268</td>
+                </tr></tbody>
+    </table>
+  </section>
+
+  <section class="section-head"><div><h2>Forecast Detail</h2><p>Q3 opportunities included in this view.</p></div></section>
+  <section class="panel">
+    <table>
+      <thead><tr><th>Scope</th><th>Product</th><th>Account / Opportunity</th><th>MRR</th><th>Stage</th><th>Team</th><th>Owner</th><th>Close Date</th></tr></thead>
+      <tbody>
+            <tr>
+              <td>Quarter</td>
+              <td>Billing</td>
+              <td><strong>B. Moyer Radio Communications LLC</strong><span>Moyer - PSA Monthly Min Increase</span></td>
+              <td>$160</td>
+              <td>Closed Won</td>
+              <td>CSA</td>
+              <td>Ingrid Beard</td>
+              <td>2026-07-01</td>
+            </tr>
+
+            <tr>
+              <td>Quarter</td>
+              <td>PSA</td>
+              <td><strong>Cameras Onsite</strong><span>Camera Onsite - (New Opp from ASAP)</span></td>
+              <td>$800</td>
+              <td>Closed Won</td>
+              <td>CSA</td>
+              <td>Justin Lee</td>
+              <td>2026-07-02</td>
+            </tr>
+
+            <tr>
+              <td>Quarter</td>
+              <td>Billing</td>
+              <td><strong>Veterans Communications Corp</strong><span>Vetcom - PSA Monthly Min Increase</span></td>
+              <td>$217</td>
+              <td>Closed Won</td>
+              <td>CSA</td>
+              <td>Ingrid Beard</td>
+              <td>2026-07-03</td>
+            </tr>
+
+            <tr>
+              <td>Quarter</td>
+              <td>Billing</td>
+              <td><strong>SpectrumVoIP</strong><span>SpectrumVoIP - ConnectWise Integration</span></td>
+              <td>$600</td>
+              <td>Closed Won</td>
+              <td>CSA</td>
+              <td>Justin Lee</td>
+              <td>2026-07-06</td>
+            </tr>
+
+            <tr>
+              <td>Quarter</td>
+              <td>Payments</td>
+              <td><strong>Weaver Systems</strong><span>Weaver - AR Payments</span></td>
+              <td>$229</td>
+              <td>Closed Won</td>
+              <td>CSA</td>
+              <td>Ingrid Beard</td>
+              <td>2026-07-07</td>
+            </tr>
+
+            <tr>
+              <td>Quarter</td>
+              <td>Payments</td>
+              <td><strong>Elite Connect</strong><span>Elite Connect - AR Payments (Portal)</span></td>
+              <td>$50</td>
+              <td>Closed Won</td>
+              <td>CSA</td>
+              <td>Justin Lee</td>
+              <td>2026-07-08</td>
+            </tr>
+
+            <tr>
+              <td>Quarter</td>
+              <td>PSA</td>
+              <td><strong>Planet Secure</strong><span>Planet Secure</span></td>
+              <td>$1,220</td>
+              <td>Closed Won</td>
+              <td>Integrator Sales</td>
+              <td>Jaylin Bender</td>
+              <td>2026-07-09</td>
+            </tr>
+
+            <tr>
+              <td>Quarter</td>
+              <td>PSA</td>
+              <td><strong>PSD Integrations</strong><span>PSD Integrations</span></td>
+              <td>$1,000</td>
+              <td>Closed Won</td>
+              <td>Integrator Sales</td>
+              <td>Jake Borah</td>
+              <td>2026-07-09</td>
+            </tr>
+
+            <tr>
+              <td>Quarter</td>
+              <td>PSA</td>
+              <td><strong>Teleco Wilmington</strong><span>Teleco Wilmington - TP Hosted Migration</span></td>
+              <td>$0</td>
+              <td>Closed Won</td>
+              <td>CSA</td>
+              <td>Katerra Stephenson Greenwood</td>
+              <td>2026-07-10</td>
+            </tr>
+
+            <tr>
+              <td>Quarter</td>
+              <td>Billing</td>
+              <td><strong>Empire Telecom</strong><span>Empire Telecom (Combo - Billing)</span></td>
+              <td>$500</td>
+              <td>Closed Won</td>
+              <td>MSP Sales</td>
+              <td>Connor Flynn</td>
+              <td>2026-07-13</td>
+            </tr>
+
+            <tr>
+              <td>Quarter</td>
+              <td>Billing</td>
+              <td><strong>Telecom Fiji Limited</strong><span>Telecom Fiji - Monthly Minimum Increase</span></td>
+              <td>$294</td>
+              <td>Closed Won</td>
+              <td>CSA</td>
+              <td>Justin Lee</td>
+              <td>2026-07-13</td>
+            </tr>
+
+            <tr>
+              <td>Quarter</td>
+              <td>Billing</td>
+              <td><strong>Telecom Fiji Limited</strong><span>Telecom Fiji - Renewal</span></td>
+              <td>$0</td>
+              <td>Closed Won</td>
+              <td>CSA</td>
+              <td>Justin Lee</td>
+              <td>2026-07-13</td>
+            </tr>
+
+            <tr>
+              <td>Quarter</td>
+              <td>PSA</td>
+              <td><strong>Empire Telecom</strong><span>Empire Telecom (Combo - PSA)</span></td>
+              <td>$500</td>
+              <td>Closed Won</td>
+              <td>MSP Sales</td>
+              <td>Connor Flynn</td>
+              <td>2026-07-13</td>
+            </tr>
+
+            <tr>
+              <td>Quarter</td>
+              <td>Billing</td>
+              <td><strong>Unicom Solutions</strong><span>Unicom Solutions - Billing Renewal</span></td>
+              <td>$0</td>
+              <td>Closed Won</td>
+              <td>CSA</td>
+              <td>Jakob Champion</td>
+              <td>2026-07-15</td>
+            </tr>
+
+            <tr>
+              <td>Quarter</td>
+              <td>Payments</td>
+              <td><strong>Castle Security</strong><span>Castle Security - AR Payments - Portal</span></td>
+              <td>$50</td>
+              <td>Closed Won</td>
+              <td>CSA</td>
+              <td>Ingrid Beard</td>
+              <td>2026-07-16</td>
+            </tr>
+
+            <tr>
+              <td>Quarter</td>
+              <td>PSA</td>
+              <td><strong>Millennium Systems Integration</strong><span>Millennium Systems Integration</span></td>
+              <td>$1,000</td>
+              <td>Closed Won</td>
+              <td>Integrator Sales</td>
+              <td>Jaylin Bender</td>
+              <td>2026-07-17</td>
+            </tr>
+
+            <tr>
+              <td>Quarter</td>
+              <td>Billing</td>
+              <td><strong>ICS Communications</strong><span>ICS Communications - Monthly Minimum Increase</span></td>
+              <td>$103</td>
+              <td>Closed Won</td>
+              <td>CSA</td>
+              <td>Justin Lee</td>
+              <td>2026-07-21</td>
+            </tr>
+
+            <tr>
+              <td>Quarter</td>
+              <td>PSA</td>
+              <td><strong>ICS Communications</strong><span>ICS Communications - Web Migration</span></td>
+              <td>$0</td>
+              <td>Closed Won</td>
+              <td>CSA</td>
+              <td>Justin Lee</td>
+              <td>2026-07-21</td>
+            </tr>
+
+            <tr>
+              <td>Quarter</td>
+              <td>Payments</td>
+              <td><strong>Omidi Enterprises</strong><span>Omidi - AR Payments - Portal</span></td>
+              <td>$50</td>
+              <td>Closed Won</td>
+              <td>CSA</td>
+              <td>Katerra Stephenson Greenwood</td>
+              <td>2026-07-22</td>
+            </tr>
+
+            <tr>
+              <td>Quarter</td>
+              <td>Payments</td>
+              <td><strong>Next Step Communications</strong><span>Next Step - AR Payments</span></td>
+              <td>$986</td>
+              <td>Closed Won</td>
+              <td>CSA</td>
+              <td>Ingrid Beard</td>
+              <td>2026-07-23</td>
+            </tr>
+
+            <tr>
+              <td>Quarter</td>
+              <td>Payments</td>
+              <td><strong>DFW Security</strong><span>DFW Security EID #2 - AR Payments</span></td>
+              <td>$1,864</td>
+              <td>Closed Won</td>
+              <td>CSA</td>
+              <td>Ingrid Beard</td>
+              <td>2026-07-24</td>
+            </tr>
+
+            <tr>
+              <td>Quarter</td>
+              <td>Payments</td>
+              <td><strong>DFW Security</strong><span>DFW Security - AR Payments</span></td>
+              <td>$437</td>
+              <td>Closed Won</td>
+              <td>CSA</td>
+              <td>Ingrid Beard</td>
+              <td>2026-07-24</td>
+            </tr>
+
+            <tr>
+              <td>Quarter</td>
+              <td>Payments</td>
+              <td><strong>Atlantic Companies</strong><span>Atlantic Companies - AR Payments</span></td>
+              <td>$50</td>
+              <td>Closed Won</td>
+              <td>CSA</td>
+              <td>Justin Lee</td>
+              <td>2026-07-24</td>
+            </tr>
+
+            <tr>
+              <td>Quarter</td>
+              <td>Billing</td>
+              <td><strong>Telesupply,LLC</strong><span>Telesupply - Agent Bundle</span></td>
+              <td>$500</td>
+              <td>Closed Won</td>
+              <td>CSA</td>
+              <td>Jakob Champion</td>
+              <td>2026-07-29</td>
+            </tr>
+
+            <tr>
+              <td>Quarter</td>
+              <td>Billing</td>
+              <td><strong>One Stop Telecom</strong><span>One Stop Telecom - Billing Renewal</span></td>
+              <td>$0</td>
+              <td>Closed Won</td>
+              <td>CSA</td>
+              <td>Jakob Champion</td>
+              <td>2026-07-29</td>
+            </tr>
+
+            <tr>
+              <td>Quarter</td>
+              <td>PSA</td>
+              <td><strong>Intec Security Solutions</strong><span>Intec Security Solutions</span></td>
+              <td>$1,000</td>
+              <td>Closed Won</td>
+              <td>MSP Sales</td>
+              <td>Andy Whisenant</td>
+              <td>2026-07-29</td>
+            </tr>
+
+            <tr>
+              <td>Quarter</td>
+              <td>Payments</td>
+              <td><strong>K&amp;L Telecom</strong><span>K &amp; L AR Payments - Portal</span></td>
+              <td>$50</td>
+              <td>Closed Won</td>
+              <td>CSA</td>
+              <td>Ingrid Beard</td>
+              <td>2026-07-29</td>
+            </tr>
+
+            <tr>
+              <td>Quarter</td>
+              <td>PSA</td>
+              <td><strong>R-Options</strong><span>R-Options</span></td>
+              <td>$2,430</td>
+              <td>Closed Won</td>
+              <td>MSP Sales</td>
+              <td>Jamie Butler</td>
+              <td>2026-07-30</td>
+            </tr>
+
+            <tr>
+              <td>Quarter</td>
+              <td>Payments</td>
+              <td><strong>White Label Communications</strong><span>White Label Communications - AR Payments</span></td>
+              <td>$50</td>
+              <td>Closed Won</td>
+              <td>CSA</td>
+              <td>Justin Lee</td>
+              <td>2026-07-30</td>
+            </tr>
+
+            <tr>
+              <td>Quarter</td>
+              <td>Billing</td>
+              <td><strong>ET&amp;T Corporation</strong><span>ET&amp;T (Billing)</span></td>
+              <td>$750</td>
+              <td>Closed Won</td>
+              <td>MSP Sales</td>
+              <td>Jamie Butler</td>
+              <td>2026-07-31</td>
+            </tr>
+
+            <tr>
+              <td>Quarter</td>
+              <td>Billing</td>
+              <td><strong>IMC Jax</strong><span>IMC Jax (combo - Billing)</span></td>
+              <td>$450</td>
+              <td>Closed Won</td>
+              <td>MSP Sales</td>
+              <td>Connor Flynn</td>
+              <td>2026-07-31</td>
+            </tr>
+
+            <tr>
+              <td>Quarter</td>
+              <td>PSA</td>
+              <td><strong>Midwest Security Systems, Inc.</strong><span>Midwest Security Systems</span></td>
+              <td>$1,250</td>
+              <td>Closed Won</td>
+              <td>MSP Sales</td>
+              <td>Patrick Davies</td>
+              <td>2026-07-31</td>
+            </tr>
+
+            <tr>
+              <td>Quarter</td>
+              <td>PSA</td>
+              <td><strong>IMC Jax</strong><span>IMC Jax (combo - PSA)</span></td>
+              <td>$930</td>
+              <td>Closed Won</td>
+              <td>MSP Sales</td>
+              <td>Connor Flynn</td>
+              <td>2026-07-31</td>
+            </tr>
+
+            <tr>
+              <td>Quarter</td>
+              <td>PSA</td>
+              <td><strong>Blue Water Networks</strong><span>USPBX</span></td>
+              <td>$550</td>
+              <td>Closed Won</td>
+              <td>MSP Sales</td>
+              <td>Connor Flynn</td>
+              <td>2026-07-31</td>
+            </tr>
+
+            <tr>
+              <td>Quarter</td>
+              <td>Payments</td>
+              <td><strong>Richmond Security</strong><span>Richmond- Payments</span></td>
+              <td>$750</td>
+              <td>Closed Won</td>
+              <td>CSA</td>
+              <td>Katerra Stephenson Greenwood</td>
+              <td>2026-07-31</td>
+            </tr>
+
+            <tr>
+              <td>Month</td>
+              <td>Billing</td>
+              <td><strong>Integrated Systems</strong><span>Integrated Systems - Monthly Minimum Increase</span></td>
+              <td>$60</td>
+              <td>Closed Won</td>
+              <td>CSA</td>
+              <td>Justin Lee</td>
+              <td>2026-08-04</td>
+            </tr>
+
+            <tr>
+              <td>Month</td>
+              <td>Billing</td>
+              <td><strong>InterGlobe Communications</strong><span>InterGlobe Communications - Agent Bundle (Commission Automation)</span></td>
+              <td>$250</td>
+              <td>Closed Won</td>
+              <td>CSA</td>
+              <td>Jakob Champion</td>
+              <td>2026-08-06</td>
+            </tr>
+
+            <tr>
+              <td>Month</td>
+              <td>Billing</td>
+              <td><strong>Network Datacom Solutions</strong><span>Network Datacom Solutions - Monthly Minimum Increase</span></td>
+              <td>$126</td>
+              <td>Closed Won</td>
+              <td>CSA</td>
+              <td>Jakob Champion</td>
+              <td>2026-08-06</td>
+            </tr>
+
+            <tr>
+              <td>Month</td>
+              <td>Payments</td>
+              <td><strong>Tribe Connect</strong><span>Tribe Connect AR Payments - Portal</span></td>
+              <td>$50</td>
+              <td>Closed Won</td>
+              <td>CSA</td>
+              <td>Ingrid Beard</td>
+              <td>2026-08-11</td>
+            </tr>
+
+            <tr>
+              <td>Month</td>
+              <td>Payments</td>
+              <td><strong>Fountaine Information Systems</strong><span>Fountaine Information Systems - AR Payments</span></td>
+              <td>$50</td>
+              <td>Closed Won</td>
+              <td>CSA</td>
+              <td>Justin Lee</td>
+              <td>2026-08-11</td>
+            </tr>
+
+            <tr>
+              <td>Month</td>
+              <td>Payments</td>
+              <td><strong>AVSS</strong><span>AVSS - AR Payments</span></td>
+              <td>$50</td>
+              <td>Closed Won</td>
+              <td>CSA</td>
+              <td>Justin Lee</td>
+              <td>2026-08-12</td>
+            </tr>
+
+            <tr>
+              <td>Month</td>
+              <td>PSA</td>
+              <td><strong>IE Alarm Systems</strong><span>IE Alarm Systems</span></td>
+              <td>$1,875</td>
+              <td>3 - Initial Product Demo</td>
+              <td>Integrator Sales</td>
+              <td>Jaylin Bender</td>
+              <td>2026-08-14</td>
+            </tr>
+
+            <tr>
+              <td>Month</td>
+              <td>PSA</td>
+              <td><strong>AIC</strong><span>AIC</span></td>
+              <td>$1,000</td>
+              <td>1- Discovery Scheduled</td>
+              <td>Integrator Sales</td>
+              <td>Jaylin Bender</td>
+              <td>2026-08-14</td>
+            </tr>
+
+            <tr>
+              <td>Month</td>
+              <td>PSA</td>
+              <td><strong>MQ2 Security</strong><span>MQ2 Security</span></td>
+              <td>$1,000</td>
+              <td>3 - Initial Product Demo</td>
+              <td>Integrator Sales</td>
+              <td>Jaylin Bender</td>
+              <td>2026-08-14</td>
+            </tr>
+
+            <tr>
+              <td>Month</td>
+              <td>PSA</td>
+              <td><strong>Arkansas Complete Technology &amp; Security</strong><span>Arkansas Complete Technology &amp; Security</span></td>
+              <td>$1,000</td>
+              <td>2 - Discovery Completed</td>
+              <td>Integrator Sales</td>
+              <td>Jaylin Bender</td>
+              <td>2026-08-28</td>
+            </tr>
+
+            <tr>
+              <td>Month</td>
+              <td>Billing</td>
+              <td><strong>SouthEast Telephone</strong><span>SouthEast Telephone (Combo - Billing)</span></td>
+              <td>$3,750</td>
+              <td>3 - Initial Product Demo</td>
+              <td>MSP Sales</td>
+              <td>Connor Flynn</td>
+              <td>2026-08-31</td>
+            </tr>
+
+            <tr>
+              <td>Month</td>
+              <td>Billing</td>
+              <td><strong>Unicom Telecom</strong><span>Unicom Telecom</span></td>
+              <td>$1,250</td>
+              <td>4 - Proposal Sent</td>
+              <td>MSP Sales</td>
+              <td>Jamie Butler</td>
+              <td>2026-08-31</td>
+            </tr>
+
+            <tr>
+              <td>Month</td>
+              <td>Billing</td>
+              <td><strong>Itek Systems</strong><span>Itek Systems</span></td>
+              <td>$1,000</td>
+              <td>2 - Discovery Completed</td>
+              <td>MSP Sales</td>
+              <td>Jamie Butler</td>
+              <td>2026-08-31</td>
+            </tr>
+
+            <tr>
+              <td>Month</td>
+              <td>Billing</td>
+              <td><strong>Alliance Global Networks</strong><span>Alliance Global Networks</span></td>
+              <td>$1,000</td>
+              <td>1- Discovery Scheduled</td>
+              <td>MSP Sales</td>
+              <td>Jamie Butler</td>
+              <td>2026-08-31</td>
+            </tr>
+
+            <tr>
+              <td>Month</td>
+              <td>Billing</td>
+              <td><strong>Hyperion Managed Services</strong><span>Hyperion Managed Services</span></td>
+              <td>$1,000</td>
+              <td>2 - Discovery Completed</td>
+              <td>MSP Sales</td>
+              <td>Jamie Butler</td>
+              <td>2026-08-31</td>
+            </tr>
+
+            <tr>
+              <td>Month</td>
+              <td>Billing</td>
+              <td><strong>Schultz Technology</strong><span>Schultz Technology</span></td>
+              <td>$1,000</td>
+              <td>2 - Discovery Completed</td>
+              <td>MSP Sales</td>
+              <td>Jamie Butler</td>
+              <td>2026-08-31</td>
+            </tr>
+
+            <tr>
+              <td>Month</td>
+              <td>Billing</td>
+              <td><strong>Strong Fiber Systems</strong><span>Strong Fiber Systems</span></td>
+              <td>$1,000</td>
+              <td>1- Discovery Scheduled</td>
+              <td>MSP Sales</td>
+              <td>Patrick Davies</td>
+              <td>2026-08-31</td>
+            </tr>
+
+            <tr>
+              <td>Month</td>
+              <td>Billing</td>
+              <td><strong>Advanced 2000</strong><span>Advanced 2000</span></td>
+              <td>$1,000</td>
+              <td>1- Discovery Scheduled</td>
+              <td>MSP Sales</td>
+              <td>Connor Flynn</td>
+              <td>2026-08-31</td>
+            </tr>
+
+            <tr>
+              <td>Month</td>
+              <td>Billing</td>
+              <td><strong>Constellation Dealership Software</strong><span>Constellation Dealership Software</span></td>
+              <td>$1,000</td>
+              <td>1- Discovery Scheduled</td>
+              <td>MSP Sales</td>
+              <td>Andy Whisenant</td>
+              <td>2026-08-31</td>
+            </tr>
+
+            <tr>
+              <td>Month</td>
+              <td>Billing</td>
+              <td><strong>BTI Communications Group</strong><span>BTI Communications Group - Monthly Minimum Increase</span></td>
+              <td>$444</td>
+              <td>2 - Discovery Completed</td>
+              <td>CSA</td>
+              <td>Justin Lee</td>
+              <td>2026-08-31</td>
+            </tr>
+
+            <tr>
+              <td>Month</td>
+              <td>Billing</td>
+              <td><strong>North American Telecommunications Group</strong><span>NATG Monthly Min Increase</span></td>
+              <td>$301</td>
+              <td>5 - Product / Contract Validated</td>
+              <td>CSA</td>
+              <td>Ingrid Beard</td>
+              <td>2026-08-31</td>
+            </tr>
+
+            <tr>
+              <td>Month</td>
+              <td>Billing</td>
+              <td><strong>Watson Communications Corp.</strong><span>Watson Communications Corp. - Monthly Minimum Increase</span></td>
+              <td>$248</td>
+              <td>1- Discovery Scheduled</td>
+              <td>CSA</td>
+              <td>Justin Lee</td>
+              <td>2026-08-31</td>
+            </tr>
+
+            <tr>
+              <td>Month</td>
+              <td>Billing</td>
+              <td><strong>Carrier SI</strong><span>Carrier SI - Monthly Min Increase</span></td>
+              <td>$210</td>
+              <td>4 - Proposal Sent</td>
+              <td>CSA</td>
+              <td>Ingrid Beard</td>
+              <td>2026-08-31</td>
+            </tr>
+
+            <tr>
+              <td>Month</td>
+              <td>Billing</td>
+              <td><strong>Datapro Solutions</strong><span>Datapro - Monthly Minimum Increase</span></td>
+              <td>$168</td>
+              <td>2 - Discovery Completed</td>
+              <td>CSA</td>
+              <td>Katerra Stephenson Greenwood</td>
+              <td>2026-08-31</td>
+            </tr>
+
+            <tr>
+              <td>Month</td>
+              <td>Billing</td>
+              <td><strong>Communication Service Solutions</strong><span>Communication Service Solutions- TP Monthly Increase</span></td>
+              <td>$48</td>
+              <td>4 - Proposal Sent</td>
+              <td>CSA</td>
+              <td>Katerra Stephenson Greenwood</td>
+              <td>2026-08-31</td>
+            </tr>
+
+            <tr>
+              <td>Month</td>
+              <td>Billing</td>
+              <td><strong>Telcloud</strong><span>Telcloud Renewal</span></td>
+              <td>$0</td>
+              <td>2 - Discovery Completed</td>
+              <td>CSA</td>
+              <td>Ingrid Beard</td>
+              <td>2026-08-31</td>
+            </tr>
+
+            <tr>
+              <td>Month</td>
+              <td>PSA</td>
+              <td><strong>Alliance Systems Integrators Inc</strong><span>Alliance Systems Integrators Inc</span></td>
+              <td>$3,600</td>
+              <td>1- Discovery Scheduled</td>
+              <td>Integrator Sales</td>
+              <td>Abbey McIntosh</td>
+              <td>2026-08-31</td>
+            </tr>
+
+            <tr>
+              <td>Month</td>
+              <td>PSA</td>
+              <td><strong>Integrated Protection Systems</strong><span>Integrated Protection Systems</span></td>
+              <td>$3,375</td>
+              <td>3 - Initial Product Demo</td>
+              <td>Integrator Sales</td>
+              <td>Abbey McIntosh</td>
+              <td>2026-08-31</td>
+            </tr>
+
+            <tr>
+              <td>Month</td>
+              <td>PSA</td>
+              <td><strong>Architechne</strong><span>Architechne</span></td>
+              <td>$2,700</td>
+              <td>2 - Discovery Completed</td>
+              <td>Integrator Sales</td>
+              <td>Abbey McIntosh</td>
+              <td>2026-08-31</td>
+            </tr>
+
+            <tr>
+              <td>Month</td>
+              <td>PSA</td>
+              <td><strong>A Couple of Gurus</strong><span>A Couple of Gurus</span></td>
+              <td>$2,100</td>
+              <td>1- Discovery Scheduled</td>
+              <td>MSP Sales</td>
+              <td>Andy Whisenant</td>
+              <td>2026-08-31</td>
+            </tr>
+
+            <tr>
+              <td>Month</td>
+              <td>PSA</td>
+              <td><strong>HG System Integrators</strong><span>HG System Integrators</span></td>
+              <td>$2,100</td>
+              <td>1- Discovery Scheduled</td>
+              <td>Integrator Sales</td>
+              <td>Jake Borah</td>
+              <td>2026-08-31</td>
+            </tr>
+
+            <tr>
+              <td>Month</td>
+              <td>PSA</td>
+              <td><strong>Pinnacle Communication Services</strong><span>Pinnacle Communication Services</span></td>
+              <td>$2,100</td>
+              <td>2 - Discovery Completed</td>
+              <td>Integrator Sales</td>
+              <td>Jake Borah</td>
+              <td>2026-08-31</td>
+            </tr>
+
+            <tr>
+              <td>Month</td>
+              <td>PSA</td>
+              <td><strong>South Texas Security Systems</strong><span>South Texas Security Systems</span></td>
+              <td>$2,100</td>
+              <td>1- Discovery Scheduled</td>
+              <td>Integrator Sales</td>
+              <td>Jake Borah</td>
+              <td>2026-08-31</td>
+            </tr>
+
+            <tr>
+              <td>Month</td>
+              <td>PSA</td>
+              <td><strong>CTI Communications Tech</strong><span>CTI Communications Tech</span></td>
+              <td>$1,995</td>
+              <td>1- Discovery Scheduled</td>
+              <td>MSP Sales</td>
+              <td>Andy Whisenant</td>
+              <td>2026-08-31</td>
+            </tr>
+
+            <tr>
+              <td>Month</td>
+              <td>PSA</td>
+              <td><strong>Technology West Group</strong><span>Technology West Group</span></td>
+              <td>$1,995</td>
+              <td>2 - Discovery Completed</td>
+              <td>MSP Sales</td>
+              <td>Andy Whisenant</td>
+              <td>2026-08-31</td>
+            </tr>
+
+            <tr>
+              <td>Month</td>
+              <td>PSA</td>
+              <td><strong>Enitech Solutions</strong><span>Enitech Solutions</span></td>
+              <td>$1,890</td>
+              <td>2 - Discovery Completed</td>
+              <td>MSP Sales</td>
+              <td>Connor Flynn</td>
+              <td>2026-08-31</td>
+            </tr>
+
+            <tr>
+              <td>Month</td>
+              <td>PSA</td>
+              <td><strong>STR Technologies</strong><span>STR Technologies</span></td>
+              <td>$1,575</td>
+              <td>2 - Discovery Completed</td>
+              <td>MSP Sales</td>
+              <td>Andy Whisenant</td>
+              <td>2026-08-31</td>
+            </tr>
+
+            <tr>
+              <td>Month</td>
+              <td>PSA</td>
+              <td><strong>Main Line Sound &amp; Video</strong><span>Main Line Sound</span></td>
+              <td>$1,560</td>
+              <td>3 - Initial Product Demo</td>
+              <td>Integrator Sales</td>
+              <td>Abbey McIntosh</td>
+              <td>2026-08-31</td>
+            </tr>
+
+            <tr>
+              <td>Month</td>
+              <td>PSA</td>
+              <td><strong>Clarity SSU</strong><span>Clarity SSU</span></td>
+              <td>$1,560</td>
+              <td>3 - Initial Product Demo</td>
+              <td>MSP Sales</td>
+              <td>Andy Whisenant</td>
+              <td>2026-08-31</td>
+            </tr>
+
+            <tr>
+              <td>Month</td>
+              <td>PSA</td>
+              <td><strong>Sound Advice &amp; Video</strong><span>Sound Advice &amp; Video</span></td>
+              <td>$1,100</td>
+              <td>2 - Discovery Completed</td>
+              <td>Integrator Sales</td>
+              <td>Abbey McIntosh</td>
+              <td>2026-08-31</td>
+            </tr>
+
+            <tr>
+              <td>Month</td>
+              <td>PSA</td>
+              <td><strong>Audio Video Excellence</strong><span>Audio Video Excellence</span></td>
+              <td>$1,090</td>
+              <td>1- Discovery Scheduled</td>
+              <td>Integrator Sales</td>
+              <td>Jaylin Bender</td>
+              <td>2026-08-31</td>
+            </tr>
+
+            <tr>
+              <td>Month</td>
+              <td>PSA</td>
+              <td><strong>SouthEast Telephone</strong><span>SouthEast Telephone (Combo - PSA)</span></td>
+              <td>$1,080</td>
+              <td>3 - Initial Product Demo</td>
+              <td>MSP Sales</td>
+              <td>Connor Flynn</td>
+              <td>2026-08-31</td>
+            </tr>
+
+            <tr>
+              <td>Month</td>
+              <td>PSA</td>
+              <td><strong>F &amp; S Security Electronics</strong><span>F&amp;S Security</span></td>
+              <td>$1,000</td>
+              <td>1- Discovery Scheduled</td>
+              <td>Integrator Sales</td>
+              <td>Abbey McIntosh</td>
+              <td>2026-08-31</td>
+            </tr>
+
+            <tr>
+              <td>Month</td>
+              <td>PSA</td>
+              <td><strong>Data Network Solutions</strong><span>Data Network Solutions</span></td>
+              <td>$1,000</td>
+              <td>3 - Initial Product Demo</td>
+              <td>MSP Sales</td>
+              <td>Jamie Butler</td>
+              <td>2026-08-31</td>
+            </tr>
+
+            <tr>
+              <td>Month</td>
+              <td>PSA</td>
+              <td><strong>Ingenium Technology Solutions</strong><span>Ingenium Technology Solutions</span></td>
+              <td>$1,000</td>
+              <td>1- Discovery Scheduled</td>
+              <td>MSP Sales</td>
+              <td>Andy Whisenant</td>
+              <td>2026-08-31</td>
+            </tr>
+
+            <tr>
+              <td>Month</td>
+              <td>PSA</td>
+              <td><strong>Elevated Audio Video LLC</strong><span>Elevated Audio Video</span></td>
+              <td>$1,000</td>
+              <td>3 - Initial Product Demo</td>
+              <td>Integrator Sales</td>
+              <td>Abbey McIntosh</td>
+              <td>2026-08-31</td>
+            </tr>
+
+            <tr>
+              <td>Month</td>
+              <td>PSA</td>
+              <td><strong>PSN technology</strong><span>PSN Technology</span></td>
+              <td>$1,000</td>
+              <td>2 - Discovery Completed</td>
+              <td>MSP Sales</td>
+              <td>Jamie Butler</td>
+              <td>2026-08-31</td>
+            </tr>
+
+            <tr>
+              <td>Month</td>
+              <td>PSA</td>
+              <td><strong>NAS Wireless</strong><span>NAS Wireless</span></td>
+              <td>$1,000</td>
+              <td>2 - Discovery Completed</td>
+              <td>MSP Sales</td>
+              <td>Patrick Davies</td>
+              <td>2026-08-31</td>
+            </tr>
+
+            <tr>
+              <td>Month</td>
+              <td>PSA</td>
+              <td><strong>SGA</strong><span>SGA</span></td>
+              <td>$1,000</td>
+              <td>1- Discovery Scheduled</td>
+              <td>MSP Sales</td>
+              <td>Connor Flynn</td>
+              <td>2026-08-31</td>
+            </tr>
+
+            <tr>
+              <td>Month</td>
+              <td>PSA</td>
+              <td><strong>V2 Systems</strong><span>V2 Systems</span></td>
+              <td>$1,000</td>
+              <td>2 - Discovery Completed</td>
+              <td>Integrator Sales</td>
+              <td>Abbey McIntosh</td>
+              <td>2026-08-31</td>
+            </tr>
+
+            <tr>
+              <td>Month</td>
+              <td>PSA</td>
+              <td><strong>Trigent Technologies, LLC</strong><span>Trigent Technologies</span></td>
+              <td>$1,000</td>
+              <td>2 - Discovery Completed</td>
+              <td>MSP Sales</td>
+              <td>Andy Whisenant</td>
+              <td>2026-08-31</td>
+            </tr>
+
+            <tr>
+              <td>Month</td>
+              <td>PSA</td>
+              <td><strong>Unique HD Audio Video Designs</strong><span>Unique HD Audio Video Designs</span></td>
+              <td>$1,000</td>
+              <td>1- Discovery Scheduled</td>
+              <td>Integrator Sales</td>
+              <td>Jake Borah</td>
+              <td>2026-08-31</td>
+            </tr>
+
+            <tr>
+              <td>Month</td>
+              <td>PSA</td>
+              <td><strong>Modern Security Systems Corp.</strong><span>Modern Security Systems</span></td>
+              <td>$1,000</td>
+              <td>1- Discovery Scheduled</td>
+              <td>Integrator Sales</td>
+              <td>Jake Borah</td>
+              <td>2026-08-31</td>
+            </tr>
+
+            <tr>
+              <td>Month</td>
+              <td>PSA</td>
+              <td><strong>Academy Security Group</strong><span>Academy Security Group</span></td>
+              <td>$1,000</td>
+              <td>2 - Discovery Completed</td>
+              <td>Integrator Sales</td>
+              <td>Jake Borah</td>
+              <td>2026-08-31</td>
+            </tr>
+
+            <tr>
+              <td>Month</td>
+              <td>PSA</td>
+              <td><strong>Businets</strong><span>Businets</span></td>
+              <td>$1,000</td>
+              <td>1- Discovery Scheduled</td>
+              <td>MSP Sales</td>
+              <td>Connor Flynn</td>
+              <td>2026-08-31</td>
+            </tr>
+
+            <tr>
+              <td>Month</td>
+              <td>PSA</td>
+              <td><strong>Compitav</strong><span>Compitav</span></td>
+              <td>$1,000</td>
+              <td>1- Discovery Scheduled</td>
+              <td>MSP Sales</td>
+              <td>Andy Whisenant</td>
+              <td>2026-08-31</td>
+            </tr>
+
+            <tr>
+              <td>Month</td>
+              <td>PSA</td>
+              <td><strong>Vast Metro Communications</strong><span>Vast Metro Communications</span></td>
+              <td>$1,000</td>
+              <td>1- Discovery Scheduled</td>
+              <td>Integrator Sales</td>
+              <td>Abbey McIntosh</td>
+              <td>2026-08-31</td>
+            </tr>
+
+            <tr>
+              <td>Month</td>
+              <td>PSA</td>
+              <td><strong>Intelligent Technology Group</strong><span>Intelligent Technology Group</span></td>
+              <td>$1,000</td>
+              <td>3 - Initial Product Demo</td>
+              <td>Integrator Sales</td>
+              <td>Abbey McIntosh</td>
+              <td>2026-08-31</td>
+            </tr>
+
+            <tr>
+              <td>Month</td>
+              <td>PSA</td>
+              <td><strong>E Squared Systems</strong><span>E Squared Systems</span></td>
+              <td>$1,000</td>
+              <td>1- Discovery Scheduled</td>
+              <td>Integrator Sales</td>
+              <td>Abbey McIntosh</td>
+              <td>2026-08-31</td>
+            </tr>
+
+            <tr>
+              <td>Month</td>
+              <td>PSA</td>
+              <td><strong>Atlantic Computing Technology</strong><span>Atlantic Computing Technology</span></td>
+              <td>$1,000</td>
+              <td>4 - Proposal Sent</td>
+              <td>MSP Sales</td>
+              <td>Jamie Butler</td>
+              <td>2026-08-31</td>
+            </tr>
+
+            <tr>
+              <td>Month</td>
+              <td>PSA</td>
+              <td><strong>Integrated AV</strong><span>Integrated AV</span></td>
+              <td>$1,000</td>
+              <td>1- Discovery Scheduled</td>
+              <td>Integrator Sales</td>
+              <td>Jake Borah</td>
+              <td>2026-08-31</td>
+            </tr>
+
+            <tr>
+              <td>Month</td>
+              <td>PSA</td>
+              <td><strong>Alltime Security Alarm</strong><span>Alltime Security Alarm</span></td>
+              <td>$1,000</td>
+              <td>1- Discovery Scheduled</td>
+              <td>Integrator Sales</td>
+              <td>Jake Borah</td>
+              <td>2026-08-31</td>
+            </tr>
+
+            <tr>
+              <td>Month</td>
+              <td>PSA</td>
+              <td><strong>Bespoke Home Technology</strong><span>Bespoke Home Technology</span></td>
+              <td>$1,000</td>
+              <td>1- Discovery Scheduled</td>
+              <td>Integrator Sales</td>
+              <td>Jake Borah</td>
+              <td>2026-08-31</td>
+            </tr>
+
+            <tr>
+              <td>Month</td>
+              <td>PSA</td>
+              <td><strong>It Strategies Group,Llc</strong><span>IT Strategies Group</span></td>
+              <td>$1,000</td>
+              <td>2 - Discovery Completed</td>
+              <td>MSP Sales</td>
+              <td>Patrick Davies</td>
+              <td>2026-08-31</td>
+            </tr>
+
+            <tr>
+              <td>Month</td>
+              <td>PSA</td>
+              <td><strong>Netgain Networks Inc</strong><span>Netgain Networks</span></td>
+              <td>$1,000</td>
+              <td>1- Discovery Scheduled</td>
+              <td>MSP Sales</td>
+              <td>Patrick Davies</td>
+              <td>2026-08-31</td>
+            </tr>
+
+            <tr>
+              <td>Month</td>
+              <td>PSA</td>
+              <td><strong>Sage Security Solutions</strong><span>Sage Security Solutions</span></td>
+              <td>$1,000</td>
+              <td>1- Discovery Scheduled</td>
+              <td>Integrator Sales</td>
+              <td>Jaylin Bender</td>
+              <td>2026-08-31</td>
+            </tr>
+
+            <tr>
+              <td>Month</td>
+              <td>PSA</td>
+              <td><strong>3D Automatic Gates &amp; Access Control</strong><span>3D Automatic Gates &amp; Access Control</span></td>
+              <td>$1,000</td>
+              <td>1- Discovery Scheduled</td>
+              <td>Integrator Sales</td>
+              <td>Jaylin Bender</td>
+              <td>2026-08-31</td>
+            </tr>
+
+            <tr>
+              <td>Month</td>
+              <td>PSA</td>
+              <td><strong>RSD Alarms</strong><span>RSD Alarms</span></td>
+              <td>$1,000</td>
+              <td>2 - Discovery Completed</td>
+              <td>Integrator Sales</td>
+              <td>Jake Borah</td>
+              <td>2026-08-31</td>
+            </tr>
+
+            <tr>
+              <td>Month</td>
+              <td>PSA</td>
+              <td><strong>Inovi</strong><span>Inovi</span></td>
+              <td>$1,000</td>
+              <td>2 - Discovery Completed</td>
+              <td>Integrator Sales</td>
+              <td>Jake Borah</td>
+              <td>2026-08-31</td>
+            </tr>
+
+            <tr>
+              <td>Month</td>
+              <td>PSA</td>
+              <td><strong>BSN Security</strong><span>BSN Security</span></td>
+              <td>$1,000</td>
+              <td>1- Discovery Scheduled</td>
+              <td>Integrator Sales</td>
+              <td>Jake Borah</td>
+              <td>2026-08-31</td>
+            </tr>
+
+            <tr>
+              <td>Month</td>
+              <td>PSA</td>
+              <td><strong>Native Smart Properties</strong><span>Native Smart Properties</span></td>
+              <td>$1,000</td>
+              <td>1- Discovery Scheduled</td>
+              <td>Integrator Sales</td>
+              <td>Jake Borah</td>
+              <td>2026-08-31</td>
+            </tr>
+
+            <tr>
+              <td>Month</td>
+              <td>PSA</td>
+              <td><strong>Simplicity VoIP</strong><span>Simplicity VoIP</span></td>
+              <td>$1,000</td>
+              <td>1- Discovery Scheduled</td>
+              <td>MSP Sales</td>
+              <td>Connor Flynn</td>
+              <td>2026-08-31</td>
+            </tr>
+
+            <tr>
+              <td>Month</td>
+              <td>PSA</td>
+              <td><strong>Modern Systems Integration</strong><span>Modern Systems Integration</span></td>
+              <td>$1,000</td>
+              <td>1- Discovery Scheduled</td>
+              <td>Integrator Sales</td>
+              <td>Jaylin Bender</td>
+              <td>2026-08-31</td>
+            </tr>
+
+            <tr>
+              <td>Month</td>
+              <td>PSA</td>
+              <td><strong>trueITpros</strong><span>trueITpros</span></td>
+              <td>$1,000</td>
+              <td>1- Discovery Scheduled</td>
+              <td>MSP Sales</td>
+              <td>Connor Flynn</td>
+              <td>2026-08-31</td>
+            </tr>
+
+            <tr>
+              <td>Month</td>
+              <td>PSA</td>
+              <td><strong>Singular Security</strong><span>Singular Security</span></td>
+              <td>$1,000</td>
+              <td>1- Discovery Scheduled</td>
+              <td>MSP Sales</td>
+              <td>Andy Whisenant</td>
+              <td>2026-08-31</td>
+            </tr>
+
+            <tr>
+              <td>Month</td>
+              <td>PSA</td>
+              <td><strong>Nutmeg Consulting, Inc.</strong><span>Nutmeg Consulting</span></td>
+              <td>$1,000</td>
+              <td>1- Discovery Scheduled</td>
+              <td>MSP Sales</td>
+              <td>Patrick Davies</td>
+              <td>2026-08-31</td>
+            </tr>
+
+            <tr>
+              <td>Month</td>
+              <td>PSA</td>
+              <td><strong>Muskingum Site Services</strong><span>Muskingum Site Services</span></td>
+              <td>$1,000</td>
+              <td>2 - Discovery Completed</td>
+              <td>Integrator Sales</td>
+              <td>Jake Borah</td>
+              <td>2026-08-31</td>
+            </tr>
+
+            <tr>
+              <td>Month</td>
+              <td>PSA</td>
+              <td><strong>Elite Smart Homes LLC</strong><span>Elite Smart Homes</span></td>
+              <td>$1,000</td>
+              <td>1- Discovery Scheduled</td>
+              <td>Integrator Sales</td>
+              <td>Jake Borah</td>
+              <td>2026-08-31</td>
+            </tr>
+
+            <tr>
+              <td>Month</td>
+              <td>PSA</td>
+              <td><strong>Crown Networks Llc</strong><span>Crown Networks</span></td>
+              <td>$1,000</td>
+              <td>1- Discovery Scheduled</td>
+              <td>MSP Sales</td>
+              <td>Andy Whisenant</td>
+              <td>2026-08-31</td>
+            </tr>
+
+            <tr>
+              <td>Month</td>
+              <td>PSA</td>
+              <td><strong>Tecflow Technology</strong><span>Tecflow Technology</span></td>
+              <td>$1,000</td>
+              <td>1- Discovery Scheduled</td>
+              <td>MSP Sales</td>
+              <td>Connor Flynn</td>
+              <td>2026-08-31</td>
+            </tr>
+
+            <tr>
+              <td>Month</td>
+              <td>PSA</td>
+              <td><strong>Xpedient Communications</strong><span>Xpedient - Monthly Min Increase</span></td>
+              <td>$516</td>
+              <td>2 - Discovery Completed</td>
+              <td>CSA</td>
+              <td>Ingrid Beard</td>
+              <td>2026-08-31</td>
+            </tr>
+
+            <tr>
+              <td>Month</td>
+              <td>PSA</td>
+              <td><strong>CRC Communications Limited</strong><span>CRC - Monthly min Increase</span></td>
+              <td>$473</td>
+              <td>2 - Discovery Completed</td>
+              <td>CSA</td>
+              <td>Ingrid Beard</td>
+              <td>2026-08-31</td>
+            </tr>
+
+            <tr>
+              <td>Month</td>
+              <td>PSA</td>
+              <td><strong>Infotel Systems</strong><span>Infotel - Monthly Min Increase</span></td>
+              <td>$189</td>
+              <td>2 - Discovery Completed</td>
+              <td>CSA</td>
+              <td>Ingrid Beard</td>
+              <td>2026-08-31</td>
+            </tr>
+
+            <tr>
+              <td>Month</td>
+              <td>PSA</td>
+              <td><strong>Viirtue</strong><span>PSA Demo</span></td>
+              <td>$0</td>
+              <td>1- Discovery Scheduled</td>
+              <td>PSA Team</td>
+              <td>Rachael Buchtan</td>
+              <td>2026-08-31</td>
+            </tr>
+
+            <tr>
+              <td>Month</td>
+              <td>PSA</td>
+              <td><strong>HyVee, Inc. dba A+ Communications &amp; Security</strong><span>HyVee - Hosted Conversion (Renewal)</span></td>
+              <td>$0</td>
+              <td>4 - Proposal Sent</td>
+              <td>CSA</td>
+              <td>Ingrid Beard</td>
+              <td>2026-08-31</td>
+            </tr>
+
+            <tr>
+              <td>Month</td>
+              <td>Payments</td>
+              <td><strong>Planet Secure</strong><span>Planet Secure AR Payments</span></td>
+              <td>$1,580</td>
+              <td>3 - Initial Product Demo</td>
+              <td>CSA</td>
+              <td>Ingrid Beard</td>
+              <td>2026-08-31</td>
+            </tr>
+
+            <tr>
+              <td>Month</td>
+              <td>Payments</td>
+              <td><strong>B. Moyer Radio Communications LLC</strong><span>B. Moyer AR Payments</span></td>
+              <td>$541</td>
+              <td>2 - Discovery Completed</td>
+              <td>CSA</td>
+              <td>Ingrid Beard</td>
+              <td>2026-08-31</td>
+            </tr>
+
+            <tr>
+              <td>Month</td>
+              <td>Payments</td>
+              <td><strong>Cameras Onsite</strong><span>Cameras Onsite - AR Payments</span></td>
+              <td>$420</td>
+              <td>4 - Proposal Sent</td>
+              <td>CSA</td>
+              <td>Justin Lee</td>
+              <td>2026-08-31</td>
+            </tr>
+
+            <tr>
+              <td>Month</td>
+              <td>Payments</td>
+              <td><strong>ECI-Empire Communications</strong><span>Empire 2nd Database - CA AR Payments</span></td>
+              <td>$50</td>
+              <td>2 - Discovery Completed</td>
+              <td>CSA</td>
+              <td>Ingrid Beard</td>
+              <td>2026-08-31</td>
+            </tr>
+
+            <tr>
+              <td>Month</td>
+              <td>Payments</td>
+              <td><strong>TRM</strong><span>TRM - AR Payments</span></td>
+              <td>$50</td>
+              <td>2 - Discovery Completed</td>
+              <td>CSA</td>
+              <td>Ingrid Beard</td>
+              <td>2026-08-31</td>
+            </tr>
+
+            <tr>
+              <td>Month</td>
+              <td>Payments</td>
+              <td><strong>West Coast Cabling, Inc.</strong><span>Teldata - AR Payments</span></td>
+              <td>$50</td>
+              <td>2 - Discovery Completed</td>
+              <td>CSA</td>
+              <td>Ingrid Beard</td>
+              <td>2026-08-31</td>
+            </tr>
+
+            <tr>
+              <td>Month</td>
+              <td>Payments</td>
+              <td><strong>Southeast Network Specialists</strong><span>Southeast Network - AR Payments</span></td>
+              <td>$50</td>
+              <td>2 - Discovery Completed</td>
+              <td>CSA</td>
+              <td>Ingrid Beard</td>
+              <td>2026-08-31</td>
+            </tr>
+
+            <tr>
+              <td>Month</td>
+              <td>Payments</td>
+              <td><strong>Womack Technologies</strong><span>Womack Technology - Payments</span></td>
+              <td>$50</td>
+              <td>4 - Proposal Sent</td>
+              <td>CSA</td>
+              <td>Jakob Champion</td>
+              <td>2026-08-31</td>
+            </tr>
+
+            <tr>
+              <td>Month</td>
+              <td>Payments</td>
+              <td><strong>North American Telecommunications Group</strong><span>NATG AR Payments</span></td>
+              <td>$50</td>
+              <td>2 - Discovery Completed</td>
+              <td>CSA</td>
+              <td>Ingrid Beard</td>
+              <td>2026-08-31</td>
+            </tr>
+
+            <tr>
+              <td>Month</td>
+              <td>Payments</td>
+              <td><strong>Raytec Systems</strong><span>Raytec Systems - Payments</span></td>
+              <td>$50</td>
+              <td>2 - Discovery Completed</td>
+              <td>CSA</td>
+              <td>Jakob Champion</td>
+              <td>2026-08-31</td>
+            </tr>
+
+            <tr>
+              <td>Month</td>
+              <td>Payments</td>
+              <td><strong>West Virginia Security</strong><span>WV Security - AR Payments</span></td>
+              <td>$50</td>
+              <td>3 - Initial Product Demo</td>
+              <td>CSA</td>
+              <td>Katerra Stephenson Greenwood</td>
+              <td>2026-08-31</td>
+            </tr>
+
+            <tr>
+              <td>Month</td>
+              <td>Payments</td>
+              <td><strong>Copper Clad Systems</strong><span>Copper Clad - AR Payments - Portal</span></td>
+              <td>$50</td>
+              <td>6 - Verbal Commit</td>
+              <td>CSA</td>
+              <td>Ingrid Beard</td>
+              <td>2026-08-31</td>
+            </tr>
+
+            <tr>
+              <td>Month</td>
+              <td>Payments</td>
+              <td><strong>Digital Market POS</strong><span>Digital Market POS - Payments</span></td>
+              <td>$50</td>
+              <td>6 - Verbal Commit</td>
+              <td>CSA</td>
+              <td>Jakob Champion</td>
+              <td>2026-08-31</td>
+            </tr>
+
+            <tr>
+              <td>Month</td>
+              <td>Payments</td>
+              <td><strong>Ringible</strong><span>Ringable - Payments</span></td>
+              <td>$50</td>
+              <td>1- Discovery Scheduled</td>
+              <td>CSA</td>
+              <td>Jakob Champion</td>
+              <td>2026-08-31</td>
+            </tr>
+
+            <tr>
+              <td>Month</td>
+              <td>Payments</td>
+              <td><strong>Devera Technologies</strong><span>Devera Tech AR Payments</span></td>
+              <td>$50</td>
+              <td>2 - Discovery Completed</td>
+              <td>CSA</td>
+              <td>Ingrid Beard</td>
+              <td>2026-08-31</td>
+            </tr>
+
+            <tr>
+              <td>Month</td>
+              <td>Payments</td>
+              <td><strong>CRC Communications Limited</strong><span>CRC (CA) - AR Payments</span></td>
+              <td>$50</td>
+              <td>2 - Discovery Completed</td>
+              <td>CSA</td>
+              <td>Ingrid Beard</td>
+              <td>2026-08-31</td>
+            </tr>
+
+            <tr>
+              <td>Month</td>
+              <td>Payments</td>
+              <td><strong>Millennium Systems Integration</strong><span>Millennium Systems Integration - Payments</span></td>
+              <td>$50</td>
+              <td>4 - Proposal Sent</td>
+              <td>CSA</td>
+              <td>Jakob Champion</td>
+              <td>2026-08-31</td>
+            </tr>
+
+            <tr>
+              <td>Month</td>
+              <td>Payments</td>
+              <td><strong>PSD Integrations</strong><span>PSD Integrations- AR Payments</span></td>
+              <td>$50</td>
+              <td>4 - Proposal Sent</td>
+              <td>CSA</td>
+              <td>Katerra Stephenson Greenwood</td>
+              <td>2026-08-31</td>
+            </tr>
+
+            <tr>
+              <td>Month</td>
+              <td>Payments</td>
+              <td><strong>Dividia</strong><span>Dividia AR Payments</span></td>
+              <td>$50</td>
+              <td>2 - Discovery Completed</td>
+              <td>CSA</td>
+              <td>Ingrid Beard</td>
+              <td>2026-08-31</td>
+            </tr>
+
+            <tr>
+              <td>Month</td>
+              <td>Payments</td>
+              <td><strong>Network Datacom Solutions</strong><span>Network Datacom Solutions - Payments</span></td>
+              <td>$50</td>
+              <td>2 - Discovery Completed</td>
+              <td>CSA</td>
+              <td>Jakob Champion</td>
+              <td>2026-08-31</td>
+            </tr>
+
+            <tr>
+              <td>Month</td>
+              <td>Payments</td>
+              <td><strong>Empire Telecom</strong><span>Empire Telecom - AR Payments</span></td>
+              <td>$50</td>
+              <td>1- Discovery Scheduled</td>
+              <td>CSA</td>
+              <td>Justin Lee</td>
+              <td>2026-08-31</td>
+            </tr>
+
+            <tr>
+              <td>Month</td>
+              <td>Payments</td>
+              <td><strong>Sunrise Solutions</strong><span>Sunrise AR Payments</span></td>
+              <td>$0</td>
+              <td>2 - Discovery Completed</td>
+              <td>CSA</td>
+              <td>Ingrid Beard</td>
+              <td>2026-08-31</td>
+            </tr>
+
+            <tr>
+              <td>Quarter</td>
+              <td>PSA</td>
+              <td><strong>BTV Systems</strong><span>BTV Systems</span></td>
+              <td>$1,710</td>
+              <td>1- Discovery Scheduled</td>
+              <td>Integrator Sales</td>
+              <td>Jaylin Bender</td>
+              <td>2026-09-18</td>
+            </tr>
+
+            <tr>
+              <td>Quarter</td>
+              <td>Billing</td>
+              <td><strong>Intermedia</strong><span>Intermedia</span></td>
+              <td>$70,000</td>
+              <td>3 - Initial Product Demo</td>
+              <td>MSP Sales</td>
+              <td>Jamie Butler</td>
+              <td>2026-09-30</td>
+            </tr>
+
+            <tr>
+              <td>Quarter</td>
+              <td>Billing</td>
+              <td><strong>Spectrotel</strong><span>Airespring Merger</span></td>
+              <td>$40,000</td>
+              <td>3 - Initial Product Demo</td>
+              <td>MSP Sales</td>
+              <td>Jamie Butler</td>
+              <td>2026-09-30</td>
+            </tr>
+
+            <tr>
+              <td>Quarter</td>
+              <td>Billing</td>
+              <td><strong>JAS Communications</strong><span>JAS Communications</span></td>
+              <td>$3,000</td>
+              <td>3 - Initial Product Demo</td>
+              <td>MSP Sales</td>
+              <td>Jamie Butler</td>
+              <td>2026-09-30</td>
+            </tr>
+
+            <tr>
+              <td>Quarter</td>
+              <td>Billing</td>
+              <td><strong>Telimatic</strong><span>Telimatic - Bill on Behalf</span></td>
+              <td>$3,000</td>
+              <td>3 - Initial Product Demo</td>
+              <td>Billing Team</td>
+              <td>Usman Zahoor</td>
+              <td>2026-09-30</td>
+            </tr>
+
+            <tr>
+              <td>Quarter</td>
+              <td>Billing</td>
+              <td><strong>Helient</strong><span>Helient</span></td>
+              <td>$1,500</td>
+              <td>1- Discovery Scheduled</td>
+              <td>MSP Sales</td>
+              <td>Jamie Butler</td>
+              <td>2026-09-30</td>
+            </tr>
+
+            <tr>
+              <td>Quarter</td>
+              <td>PSA</td>
+              <td><strong>Altourage</strong><span>Altourage</span></td>
+              <td>$5,250</td>
+              <td>2 - Discovery Completed</td>
+              <td>MSP Sales</td>
+              <td>Jamie Butler</td>
+              <td>2026-09-30</td>
+            </tr>
+
+            <tr>
+              <td>Quarter</td>
+              <td>PSA</td>
+              <td><strong>Metro MBS</strong><span>Metro MBS</span></td>
+              <td>$1,000</td>
+              <td>2 - Discovery Completed</td>
+              <td>MSP Sales</td>
+              <td>Jamie Butler</td>
+              <td>2026-09-30</td>
+            </tr>
+
+            <tr>
+              <td>Quarter</td>
+              <td>PSA</td>
+              <td><strong>Forward Edge</strong><span>Forward Edge</span></td>
+              <td>$1,000</td>
+              <td>1- Discovery Scheduled</td>
+              <td>MSP Sales</td>
+              <td>Jamie Butler</td>
+              <td>2026-09-30</td>
+            </tr>
+
+            <tr>
+              <td>Quarter</td>
+              <td>PSA</td>
+              <td><strong>Grey Matter Technologies</strong><span>Grey Matter Technologies</span></td>
+              <td>$1,000</td>
+              <td>3 - Initial Product Demo</td>
+              <td>MSP Sales</td>
+              <td>Jamie Butler</td>
+              <td>2026-09-30</td>
+            </tr>
+
+            <tr>
+              <td>Quarter</td>
+              <td>PSA</td>
+              <td><strong>Goodhand Computing</strong><span>Goodhand Computing</span></td>
+              <td>$1,000</td>
+              <td>3 - Initial Product Demo</td>
+              <td>MSP Sales</td>
+              <td>Jamie Butler</td>
+              <td>2026-09-30</td>
+            </tr>
+
+            <tr>
+              <td>Quarter</td>
+              <td>PSA</td>
+              <td><strong>Coeo Solutions</strong><span>Coeo</span></td>
+              <td>$1,000</td>
+              <td>2 - Discovery Completed</td>
+              <td>MSP Sales</td>
+              <td>Patrick Davies</td>
+              <td>2026-09-30</td>
+            </tr>
+
+            <tr>
+              <td>Quarter</td>
+              <td>PSA</td>
+              <td><strong>SeaGlass Technology</strong><span>SeaGlass Technology</span></td>
+              <td>$1,000</td>
+              <td>1- Discovery Scheduled</td>
+              <td>MSP Sales</td>
+              <td>Jamie Butler</td>
+              <td>2026-09-30</td>
+            </tr>
+
+            <tr>
+              <td>Quarter</td>
+              <td>PSA</td>
+              <td><strong>Nucleus</strong><span>Nucleus</span></td>
+              <td>$1,000</td>
+              <td>1- Discovery Scheduled</td>
+              <td>MSP Sales</td>
+              <td>Jamie Butler</td>
+              <td>2026-09-30</td>
+            </tr></tbody>
+    </table>
+  </section>
+  <p class="note">Target source: product-line quota constants used by the live Rev.io forecast dashboard. CommerceHub has an August target and no Q3 target in the current forecast configuration. Closed-won records are split by opportunity line items when available.</p>
+</main>
+</body>
+</html>

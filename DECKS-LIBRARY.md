@@ -1,6 +1,6 @@
 # DECKS-LIBRARY.md — Robin's Deck & Dashboard Library
 
-Last updated: 2026-08-05
+Last updated: 2026-08-10
 GitHub Pages base: `https://koontz-robin.github.io/robin-decks/`
 Repo: `git@github.com:koontz-robin/robin-decks.git`
 
@@ -19,6 +19,7 @@ Repo: `git@github.com:koontz-robin/robin-decks.git`
 | AE Capacity Slide (EXECUTE theme) | ae-capacity-slide.html | https://koontz-robin.github.io/robin-decks/ae-capacity-slide.html | Manual |
 | Sales Opportunities Created | june-ae-csa-opportunities.html | https://koontz-robin.github.io/robin-decks/june-ae-csa-opportunities.html | Hourly (9am-5pm ET, weekdays) |
 | July Opportunity Created Report | july-ae-csa-opportunities.html | https://koontz-robin.github.io/robin-decks/july-ae-csa-opportunities.html | July opportunities created by AE, CSA, and SDR influence; refreshed July 31, 2026 |
+| August Opportunity Created Report | august-ae-csa-opportunities.html | https://koontz-robin.github.io/robin-decks/august-ae-csa-opportunities.html | August opportunities created by AE, CSA, and SDR influence; refreshed August 10, 2026 |
 | Sales KPI Results - Q2 2026 | sales-kpi-results-q2-2026.html | https://koontz-robin.github.io/robin-decks/sales-kpi-results-q2-2026.html | Snapshot from Q2 26 workbook tab |
 | CSA Cohorts | csa-cohorts.html | https://koontz-robin.github.io/robin-decks/csa-cohorts.html | Snapshot copy of Sales Opportunities Created |
 | 2026 PSA Team Tracker | 2026-psa-team-tracker.html | https://koontz-robin.github.io/robin-decks/2026-psa-team-tracker.html | Nightly (11pm ET) |
@@ -95,10 +96,6 @@ Repo: `git@github.com:koontz-robin/robin-decks.git`
 | ROI — Intermedia | roi-intermedia.html | https://koontz-robin.github.io/robin-decks/roi-intermedia.html | |
 | ROI — LAE Solutions | roi-lae-solutions.html | https://koontz-robin.github.io/robin-decks/roi-lae-solutions.html | PSA Web ROI analysis for security integrator quote-to-cash workflow |
 | ROI — SouthEast Telephone | roi-southeast-telephone.html | https://koontz-robin.github.io/robin-decks/roi-southeast-telephone.html | Billing + PSA ROI analysis from Salesforce activity and public business context |
-| V2 Systems Discovery Readout | v2-systems-billing-discovery-readout.html | https://koontz-robin.github.io/robin-decks/v2-systems-billing-discovery-readout.html | Buyer-facing Rev.io discovery readout for security integrator operational workflow, RMR margin, and PSA demo plan |
-| Hyperion Managed Services Discovery Readout | hyperion-managed-services-billing-discovery-readout.html | https://koontz-robin.github.io/robin-decks/hyperion-managed-services-billing-discovery-readout.html | Buyer-facing Rev.io billing discovery readout for MSP telecom billing, SkySwitch/White Label migration path, ConnectWise/QBO fit, and August 12 demo plan |
-| IE Alarm Systems Discovery Readout | ie-alarm-systems-discovery-readout.html | https://koontz-robin.github.io/robin-decks/ie-alarm-systems-discovery-readout.html | Buyer-facing Rev.io discovery readout for security integrator Sedona displacement, sales growth, quote-to-cash, project/job operations, mobile field workflow, and migration evaluation |
-| Clearwater Audio Video Discovery Readout | clearwater-audio-video-discovery-readout.html | https://koontz-robin.github.io/robin-decks/clearwater-audio-video-discovery-readout.html | Buyer-facing Rev.io discovery readout for AV/security integrator Portal/Projects360 workflow, inventory, native mobile, job costing, RMR growth, onboarding, and migration evaluation |
 | Revii AI Billing Modernization — Intermedia PPTX | Intermedia_Revii_AI_Billing_Modernization.pptx | https://koontz-robin.github.io/robin-decks/Intermedia_Revii_AI_Billing_Modernization.pptx | Customer-ready PowerPoint |
 | Revii AI Billing Modernization — Intermedia | intermedia-revii-modernization.html | https://koontz-robin.github.io/robin-decks/intermedia-revii-modernization.html | AI-centric phased billing modernization use case |
 | ROI — Scipio | roi-scipio.html | https://koontz-robin.github.io/robin-decks/roi-scipio.html | |
@@ -161,3 +158,4 @@ When Robin creates a new deck or dashboard:
 4. Note the live URL here
 
 **Do not use** `htmlpreview.github.io` or `raw.githack.com` — these are blocked by enterprise email security (Proofpoint). Always use `https://koontz-robin.github.io/robin-decks/` as the base.
+| Forecast Targets | forecast-targets.html | https://koontz-robin.github.io/robin-decks/forecast-targets.html | On demand |
