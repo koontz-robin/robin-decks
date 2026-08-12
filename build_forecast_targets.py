@@ -253,32 +253,24 @@ def build_metrics(opps):
 
 def card(product, label, color, month, quarter):
     month_target = MONTH_TARGETS.get(product, 0)
-    quarter_target = QUARTER_QUOTAS.get(product, 0)
     month_closed = month[product]["closed"]
-    quarter_closed = quarter[product]["closed"]
     month_remaining = max(month_target - month_closed, 0)
-    quarter_remaining = max(quarter_target - quarter_closed, 0)
     return f"""
     <section class="target-card" style="--accent:{color}">
       <div class="card-head">
         <div><div class="eyebrow">Product Line</div><h2>{escape(label)}</h2></div>
         <div class="pill">{month[product]['closed_count']} won MTD</div>
       </div>
-      <div class="metric-row"><span>{escape(CURRENT_MONTH)} Closed Won</span><strong>{money(month_closed)}</strong></div>
+      <div class="metric-row"><span>{escape(CURRENT_MONTH)} Target</span><strong>{money(month_target)}</strong></div>
       <div class="bar-wrap">
-        <div class="bar-label"><span>{escape(CURRENT_MONTH)} Target</span><b>{pct(month_closed, month_target):.1f}%</b></div>
+        <div class="bar-label"><span>{escape(CURRENT_MONTH)} Closed Won</span><b>{pct(month_closed, month_target):.1f}%</b></div>
         <div class="bar"><i style="width:{min(pct(month_closed, month_target), 100):.1f}%"></i></div>
         <div class="bar-foot"><span>{money(month_closed)} / {money(month_target)}</span><span>{money(month_remaining)} left</span></div>
       </div>
-      <div class="bar-wrap quarter">
-        <div class="bar-label"><span>{escape(QUARTER_LABEL)} Target</span><b>{pct(quarter_closed, quarter_target):.1f}%</b></div>
-        <div class="bar"><i style="width:{min(pct(quarter_closed, quarter_target), 100):.1f}%"></i></div>
-        <div class="bar-foot"><span>{money(quarter_closed)} / {money(quarter_target)}</span><span>{money(quarter_remaining)} left</span></div>
-      </div>
       <div class="pipeline">
+        <div><b>{money(month_closed)}</b><span>Closed Won MTD</span></div>
         <div><b>{money(month[product]['open'])}</b><span>Open Month Pipeline</span></div>
         <div><b>{money(month[product]['weighted'])}</b><span>Weighted Month</span></div>
-        <div><b>{money(quarter[product]['open'])}</b><span>Open Quarter Pipeline</span></div>
       </div>
     </section>"""
 
