@@ -1809,31 +1809,6 @@ body {
       </div>
     </div>
   </section>
-  <section class="slide" id="slide-10">
-    <div class="top-stripe"></div>
-    <div class="slide-header"><div><div class="slide-tag">Creative Direct Mail Concepts</div><h2>Make renewal anxiety tangible enough to earn the meeting</h2></div><div><img src="https://7091219.fs1.hubspotusercontent-na1.net/hubfs/7091219/email-assets/logo-revio-white.png" alt="Rev.io"><div class="header-note">Expiration-triggered packages</div></div></div>
-    <div class="slide-body">
-      <div class="mail-table-wrap card">
-        <table class="mail-table">
-          <thead><tr><th>Theme</th><th>Gift</th><th>Message</th></tr></thead>
-          <tbody>
-            <tr><td>Get Out of Contract Free</td><td>Custom metal Monopoly-style card</td><td>"One free evaluation before renewing."</td></tr>
-            <tr><td>Divorce</td><td>Mini bottle of champagne + "Congratulations on your freedom."</td><td>"Every fresh start deserves a celebration."</td></tr>
-            <tr><td>Escape Plan</td><td>Mini multi-tool or flashlight</td><td>"Always have an exit strategy."</td></tr>
-            <tr><td>Test Drive</td><td>Matchbox/Toy Tesla or Porsche</td><td>"Before you re-sign, take another platform for a spin."</td></tr>
-            <tr><td>Fork in the Road</td><td>Mini compass</td><td>"Choose your next direction wisely."</td></tr>
-            <tr><td>Passport</td><td>Custom passport holder</td><td>"Your next destination starts here."</td></tr>
-            <tr><td>Auto-Renew</td><td>Giant red "CANCEL" desk button</td><td>"Don't hit Auto Renew."</td></tr>
-            <tr><td>Lease Expiring</td><td>Keychain with removable key</td><td>"Time to trade up?"</td></tr>
-            <tr><td>Warranty Inspection</td><td>Tire tread gauge or inspection flashlight</td><td>"Time for a system check."</td></tr>
-            <tr><td>Golden Handcuffs</td><td>Plastic handcuffs with tiny key</td><td>"Unlock your options."</td></tr>
-            <tr><td>Buyer's Remorse</td><td>Return receipt</td><td>"Still within your evaluation window..."</td></tr>
-            <tr><td>Graduation</td><td>Mini diploma</td><td>"Maybe you've outgrown your first PSA."</td></tr>
-          </tbody>
-        </table>
-      </div>
-    </div>
-  </section>
   <section class="slide" id="slide-11">
     <div class="top-stripe"></div>
     <div class="slide-header"><div><div class="slide-tag">Strategic Partner Focus</div><h2>Narrow the partner motion to the ecosystems most likely to create pipeline</h2></div><div><img src="https://7091219.fs1.hubspotusercontent-na1.net/hubfs/7091219/email-assets/logo-revio-white.png" alt="Rev.io"><div class="header-note">Pax8 · NinjaOne · Acronis · N-able · Guardz</div></div></div>
@@ -1983,16 +1958,17 @@ body {
   <div class="nav-controls">
     <button class="nav-btn" id="btn-prev" onclick="goSlide(-1)" disabled>Prev</button>
     <div class="nav-dots" id="nav-dots"></div>
-    <span class="nav-counter" id="nav-counter">1 / 14</span>
+    <span class="nav-counter" id="nav-counter">1 / 13</span>
     <button class="nav-btn" id="btn-next" onclick="goSlide(1)">Next</button>
   </div>
   <img src="https://7091219.fs1.hubspotusercontent-na1.net/hubfs/7091219/email-assets/logo-revio-white.png" alt="Rev.io" class="nav-logo">
 </div>
 
 <script>
-const TOTAL = 14;
+const slides = Array.from(document.querySelectorAll('.slide'));
+const TOTAL = slides.length;
 let cur = 1;
-const labels = ['Cover','State','Levers','Roles','AE Role','ICP TAM','Lost TAM','Strategic','Radar','Mail','Referrals','Strategy','Attribution','Start Stop Continue'];
+const labels = ['Cover','State','Levers','Roles','AE Role','ICP TAM','Lost TAM','Strategic','Radar','Referrals','Strategy','Attribution','Start Stop Continue'];
 function buildDots() {
   const wrap = document.getElementById('nav-dots');
   labels.forEach((label, idx) => {
@@ -2011,11 +1987,11 @@ function updateNav() {
   document.querySelectorAll('.dot').forEach((dot, i) => dot.classList.toggle('active', i + 1 === cur));
 }
 function jumpSlide(n) {
-  document.getElementById(`slide-${cur}`).classList.remove('active');
+  slides[cur - 1].classList.remove('active');
   cur = Math.max(1, Math.min(TOTAL, n));
-  document.getElementById(`slide-${cur}`).classList.add('active');
+  slides[cur - 1].classList.add('active');
   updateNav();
-  document.getElementById(`slide-${cur}`).scrollIntoView({ block: 'start' });
+  slides[cur - 1].scrollIntoView({ block: 'start' });
 }
 function goSlide(delta) { jumpSlide(cur + delta); }
 document.addEventListener('keydown', e => {
@@ -2027,9 +2003,9 @@ const requestedSlide = Number(new URLSearchParams(window.location.search).get('s
 if (Number.isFinite(requestedSlide) && requestedSlide >= 1 && requestedSlide <= TOTAL) {
   cur = requestedSlide;
   document.querySelectorAll('.slide').forEach(slide => slide.classList.remove('active'));
-  document.getElementById(`slide-${cur}`).classList.add('active');
+  slides[cur - 1].classList.add('active');
   updateNav();
-  const target = document.getElementById(`slide-${requestedSlide}`);
+  const target = slides[cur - 1];
   const scrollToTarget = () => window.scrollTo({ top: target.offsetTop, left: 0, behavior: 'auto' });
   scrollToTarget();
   window.addEventListener('load', scrollToTarget);
