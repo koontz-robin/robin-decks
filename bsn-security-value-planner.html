@@ -1,0 +1,606 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>BSN Security Value Planner | Rev.io</title>
+  <meta name="description" content="Buyer-facing Rev.io value planner for BSN Security.">
+  <style>
+    :root {
+      --bsn-red: #c8202f;
+      --bsn-blue: #163f7f;
+      --bsn-dark: #101827;
+      --revio: #6cc04a;
+      --ink: #142033;
+      --muted: #607086;
+      --paper: #f5f7fa;
+      --line: #dce4ee;
+      --white: #ffffff;
+      --teal: #1b8a96;
+      --amber: #f2b84b;
+      --steel: #253142;
+    }
+
+    * { box-sizing: border-box; }
+    html { scroll-behavior: smooth; }
+    body {
+      margin: 0;
+      color: var(--ink);
+      background: var(--paper);
+      font-family: Aptos, Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      letter-spacing: 0;
+    }
+
+    .deck { min-height: 100vh; }
+    .slide {
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      position: relative;
+      overflow: hidden;
+      border-bottom: 1px solid rgba(20,32,51,0.08);
+    }
+
+    .slide.dark {
+      color: var(--white);
+      background:
+        linear-gradient(118deg, rgba(16,24,39,0.98), rgba(22,63,127,0.90)),
+        repeating-linear-gradient(0deg, rgba(255,255,255,0.035) 0 1px, transparent 1px 42px),
+        repeating-linear-gradient(90deg, rgba(255,255,255,0.03) 0 1px, transparent 1px 42px),
+        var(--bsn-dark);
+    }
+
+    .slide.light { background: var(--paper); }
+    .wrap {
+      width: min(1180px, calc(100vw - 48px));
+      margin: 0 auto;
+      padding: 78px 0 58px;
+      position: relative;
+      z-index: 2;
+    }
+
+    .topline {
+      position: absolute;
+      top: 28px;
+      left: 32px;
+      right: 32px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 22px;
+      z-index: 5;
+    }
+
+    .logo-lane {
+      display: flex;
+      align-items: center;
+      min-width: 0;
+      gap: 14px;
+    }
+
+    .bsn-logo {
+      width: 128px;
+      height: 88px;
+      object-fit: contain;
+      background: var(--white);
+      border-radius: 8px;
+      padding: 10px 16px;
+      border: 1px solid rgba(255,255,255,0.16);
+    }
+
+    .revio-logo {
+      width: 126px;
+      height: 38px;
+      object-fit: contain;
+      display: block;
+    }
+
+    .light .revio-logo {
+      background: var(--steel);
+      border-radius: 7px;
+      padding: 8px 10px;
+    }
+
+    .kicker {
+      font-size: 12px;
+      font-weight: 900;
+      text-transform: uppercase;
+      color: #ff6d78;
+      letter-spacing: 1.8px;
+      margin-bottom: 18px;
+    }
+
+    .light .kicker { color: var(--bsn-red); }
+    h1, h2, h3, p { margin: 0; }
+    h1 {
+      font-size: clamp(44px, 6.5vw, 84px);
+      line-height: 0.98;
+      max-width: 960px;
+      letter-spacing: 0;
+    }
+
+    h2 {
+      font-size: clamp(34px, 4.4vw, 58px);
+      line-height: 1;
+      max-width: 1000px;
+      margin-bottom: 24px;
+      letter-spacing: 0;
+    }
+
+    h3 {
+      font-size: 18px;
+      line-height: 1.16;
+      margin-bottom: 10px;
+      color: inherit;
+    }
+
+    .lead {
+      max-width: 850px;
+      margin-top: 24px;
+      color: rgba(255,255,255,0.76);
+      font-size: clamp(17px, 2vw, 23px);
+      line-height: 1.37;
+    }
+
+    .light .lead { color: var(--muted); }
+    .hero-grid {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) 340px;
+      gap: 48px;
+      align-items: end;
+    }
+
+    .metric-stack { display: grid; gap: 14px; }
+    .metric {
+      background: rgba(255,255,255,0.08);
+      border: 1px solid rgba(255,255,255,0.14);
+      border-radius: 8px;
+      padding: 18px;
+    }
+
+    .metric strong {
+      display: block;
+      font-size: 34px;
+      line-height: 1;
+      color: #ff6d78;
+    }
+
+    .metric span {
+      display: block;
+      margin-top: 8px;
+      color: rgba(255,255,255,0.73);
+      font-size: 12px;
+      font-weight: 800;
+      text-transform: uppercase;
+      line-height: 1.35;
+    }
+
+    .image-panel {
+      height: 280px;
+      border-radius: 8px;
+      overflow: hidden;
+      border: 1px solid rgba(255,255,255,0.18);
+      box-shadow: 0 28px 65px rgba(0,0,0,0.22);
+    }
+
+    .image-panel img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      display: block;
+    }
+
+    .grid-2 { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 18px; }
+    .grid-3 { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 18px; }
+
+    .card {
+      background: var(--white);
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      padding: 22px;
+      min-height: 158px;
+      box-shadow: 0 18px 45px rgba(20,32,51,0.06);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .dark .card { color: var(--ink); }
+    .card::before {
+      content: "";
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 5px;
+      background: var(--bsn-red);
+    }
+
+    .card.blue::before { background: var(--bsn-blue); }
+    .card.green::before { background: var(--revio); }
+    .card.amber::before { background: var(--amber); }
+    .card.teal::before { background: var(--teal); }
+    .card p, .card li {
+      color: var(--muted);
+      font-size: 15px;
+      line-height: 1.44;
+    }
+
+    ul { margin: 0; padding-left: 18px; }
+    li + li { margin-top: 8px; }
+
+    .band {
+      background: var(--steel);
+      color: var(--white);
+      padding: 18px 22px;
+      border-radius: 8px;
+      border-left: 6px solid var(--bsn-red);
+      margin-top: 24px;
+      font-size: 18px;
+      line-height: 1.4;
+    }
+
+    .impact-grid {
+      display: grid;
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+      gap: 14px;
+      margin: 24px 0;
+    }
+
+    .impact {
+      background: var(--steel);
+      color: var(--white);
+      border-radius: 8px;
+      padding: 18px;
+      border-top: 5px solid var(--bsn-red);
+    }
+
+    .impact strong {
+      display: block;
+      font-size: 31px;
+      line-height: 1;
+      color: #ff6d78;
+    }
+
+    .impact span {
+      display: block;
+      margin-top: 9px;
+      font-size: 12px;
+      line-height: 1.3;
+      color: rgba(255,255,255,0.74);
+      text-transform: uppercase;
+      font-weight: 800;
+    }
+
+    .timeline { display: grid; gap: 14px; }
+    .step {
+      display: grid;
+      grid-template-columns: 144px minmax(0, 1fr);
+      gap: 18px;
+      align-items: start;
+      background: var(--white);
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      padding: 18px;
+    }
+
+    .step .date {
+      color: var(--bsn-red);
+      font-size: 13px;
+      font-weight: 900;
+      text-transform: uppercase;
+    }
+
+    .step p { color: var(--muted); line-height: 1.45; font-size: 15px; }
+    .source {
+      position: absolute;
+      bottom: 20px;
+      left: 32px;
+      right: 32px;
+      display: flex;
+      justify-content: space-between;
+      gap: 18px;
+      color: rgba(20,32,51,0.45);
+      font-size: 11px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.9px;
+    }
+
+    .dark .source { color: rgba(255,255,255,0.42); }
+    .pill-row { display: flex; gap: 10px; flex-wrap: wrap; margin-top: 20px; }
+    .pill {
+      border: 1px solid rgba(255,255,255,0.18);
+      border-radius: 999px;
+      padding: 8px 12px;
+      color: rgba(255,255,255,0.78);
+      font-size: 12px;
+      font-weight: 800;
+      text-transform: uppercase;
+    }
+
+    .light .pill {
+      color: var(--bsn-blue);
+      border-color: rgba(22,63,127,0.18);
+      background: rgba(255,255,255,0.62);
+    }
+
+    @media (max-width: 900px) {
+      .slide { min-height: auto; display: block; }
+      .wrap { width: min(100% - 32px, 720px); padding: 112px 0 64px; }
+      .topline {
+        top: 18px;
+        left: 16px;
+        right: 16px;
+        align-items: flex-start;
+      }
+      .bsn-logo { width: 94px; height: 68px; padding: 8px 12px; }
+      .revio-logo { width: 108px; height: 34px; }
+      .hero-grid, .grid-2, .grid-3, .impact-grid { grid-template-columns: 1fr; }
+      .hero-grid { gap: 24px; }
+      .image-panel { height: 220px; }
+      .step { grid-template-columns: 1fr; gap: 8px; }
+      .source {
+        position: static;
+        width: min(100% - 32px, 720px);
+        margin: -34px auto 24px;
+        flex-direction: column;
+      }
+    }
+  </style>
+</head>
+<body>
+  <main class="deck">
+    <section class="slide dark">
+      <div class="topline">
+        <div class="logo-lane"><img class="bsn-logo" src="assets/bsn-security/bsn-logo.png" alt="BSN Security logo"></div>
+        <img class="revio-logo" src="revio-logo-white.png" alt="Rev.io logo">
+      </div>
+      <div class="wrap hero-grid">
+        <div>
+          <div class="kicker">Value planner</div>
+          <h1>Premium security selling needs a premium operating system.</h1>
+          <p class="lead">BSN Security is building a more polished commercial sales, installation, and service motion. Rev.io can help turn lease-based offers, recurring service, PM schedules, documentation, and customer history into one repeatable workflow.</p>
+          <div class="pill-row">
+            <span class="pill">Commercial security</span>
+            <span class="pill">Leased bundles</span>
+            <span class="pill">Portal experience</span>
+          </div>
+        </div>
+        <div class="metric-stack">
+          <div class="image-panel"><img src="assets/bsn-security/mobile-surveillance.png" alt="BSN Security mobile surveillance visual"></div>
+          <div class="metric"><strong>2008</strong><span>Serving Greater Phoenix since</span></div>
+          <div class="metric"><strong>60+ yrs</strong><span>Combined team security experience</span></div>
+        </div>
+      </div>
+      <div class="source"><span>Source: BSN website and Rev.io Value Planner Notion page</span><span>Prepared for BSN Security</span></div>
+    </section>
+
+    <section class="slide light">
+      <div class="topline light">
+        <div class="logo-lane"><img class="bsn-logo" src="assets/bsn-security/bsn-logo.png" alt="BSN Security logo"></div>
+        <img class="revio-logo" src="revio-logo-white.png" alt="Rev.io logo">
+      </div>
+      <div class="wrap">
+        <div class="kicker">1. Who is BSN Security?</div>
+        <h2>A local security integrator selling trust, documentation, and response speed.</h2>
+        <div class="grid-3">
+          <div class="card">
+            <h3>Greater Phoenix footprint</h3>
+            <p>BSN serves Scottsdale, Phoenix, Mesa, Tucson, and surrounding Arizona markets with surveillance, gate systems, access control, visitor management, and guard services.</p>
+          </div>
+          <div class="card blue">
+            <h3>Commercial buyer profile</h3>
+            <p>The Value Planner centers on HOAs and property managers: buyers who need a professional proposal, site-level documentation, and confidence that support will not disappear after install.</p>
+          </div>
+          <div class="card green">
+            <h3>Recurring revenue model</h3>
+            <p>BSN wants to protect margin on monitoring and video verification while packaging equipment, service, and ongoing charges into clean monthly lease options.</p>
+          </div>
+        </div>
+        <div class="band">The buying experience is part of the product. If the proposal, portal, PM schedule, and service history feel fragmented, BSN's premium promise gets harder to defend.</div>
+      </div>
+      <div class="source"><span>Website: bsnsecurity.com</span><span>Notion: commercial projects, HOAs/property managers, bundled monthly model</span></div>
+    </section>
+
+    <section class="slide dark">
+      <div class="topline">
+        <div class="logo-lane"><img class="bsn-logo" src="assets/bsn-security/bsn-logo.png" alt="BSN Security logo"></div>
+        <img class="revio-logo" src="revio-logo-white.png" alt="Rev.io logo">
+      </div>
+      <div class="wrap">
+        <div class="kicker">2. Why make the change now?</div>
+        <h2>The sales model is getting more sophisticated than the current tool stack.</h2>
+        <div class="grid-2">
+          <div class="card">
+            <h3>Commercial credibility is on the line</h3>
+            <p>Jobber proposals do not create the premium, storyboard-style experience BSN wants for larger commercial stakeholders. The more complex the site, the more the proposal needs to carry the value story.</p>
+          </div>
+          <div class="card blue">
+            <h3>Leasing adds operational pressure</h3>
+            <p>Purchase vs. lease choices, 36/48/60-month terms, bundled monthly service, and equipment details need structured quoting and contract logic instead of manual management.</p>
+          </div>
+          <div class="card amber">
+            <h3>PM work cannot live in spreadsheets</h3>
+            <p>Preventative maintenance scheduling is currently exposed to missed steps, owner dependency, and manual tracking. That risk compounds as BSN expands recurring service obligations.</p>
+          </div>
+          <div class="card green">
+            <h3>Video verification margin needs control</h3>
+            <p>Inconsistent CMS central-station pricing creates immediate margin risk. BSN needs clearer package tracking, profitability visibility, and operating consistency per camera/site.</p>
+          </div>
+        </div>
+      </div>
+      <div class="source"><span>Source: Rev.io Value Planner Notion page</span><span>Strategic shift: transactional jobs to repeatable recurring commercial operations</span></div>
+    </section>
+
+    <section class="slide light">
+      <div class="topline light">
+        <div class="logo-lane"><img class="bsn-logo" src="assets/bsn-security/bsn-logo.png" alt="BSN Security logo"></div>
+        <img class="revio-logo" src="revio-logo-white.png" alt="Rev.io logo">
+      </div>
+      <div class="wrap">
+        <div class="kicker">3. Uncovered problems</div>
+        <h2>The issues are not isolated. They connect from proposal to billing to service proof.</h2>
+        <div class="grid-3">
+          <div class="card">
+            <h3>Sales presentation</h3>
+            <ul>
+              <li>Proposal output does not feel differentiated enough for commercial deals.</li>
+              <li>Storyboard selling and visual/site sections are difficult to represent cleanly.</li>
+              <li>Purchase vs. lease options require manual workarounds.</li>
+            </ul>
+          </div>
+          <div class="card blue">
+            <h3>Revenue operations</h3>
+            <ul>
+              <li>Lease terms and bundled monthly charges need better contract visibility.</li>
+              <li>Central-station pricing inconsistency pressures monitoring and video verification margins.</li>
+              <li>Catalog items, kits, and repeatable templates are needed to reduce quote variation.</li>
+            </ul>
+          </div>
+          <div class="card teal">
+            <h3>Service delivery</h3>
+            <ul>
+              <li>PM schedules are tracked in spreadsheets.</li>
+              <li>Reports, project photos, videos, and history are emailed and get lost.</li>
+              <li>Customers need a stronger portal experience for ticket and project documentation.</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+      <div class="source"><span>Source: Rev.io Value Planner Notion page</span><span>Categories: sales, recurring revenue, service operations</span></div>
+    </section>
+
+    <section class="slide dark">
+      <div class="topline">
+        <div class="logo-lane"><img class="bsn-logo" src="assets/bsn-security/bsn-logo.png" alt="BSN Security logo"></div>
+        <img class="revio-logo" src="revio-logo-white.png" alt="Rev.io logo">
+      </div>
+      <div class="wrap">
+        <div class="kicker">4. Business impact / ROI</div>
+        <h2>If Rev.io solves this, BSN gets speed, margin discipline, and a better customer experience.</h2>
+        <div class="impact-grid">
+          <div class="impact"><strong>25-40%</strong><span>Assumed quote prep reduction from reusable catalog, kits, sections, and templates</span></div>
+          <div class="impact"><strong>24-72 hrs</strong><span>Annual admin time avoided if PM spreadsheet work is 2-6 hours per month</span></div>
+          <div class="impact"><strong>1-3 pts</strong><span>Assumed margin protection from consistent pricing/package visibility on monitoring bundles</span></div>
+          <div class="impact"><strong>Same day</strong><span>Cleaner access to project history, photos, videos, tickets, and reports through portal workflows</span></div>
+        </div>
+        <div class="grid-2">
+          <div class="card">
+            <h3>Revenue upside</h3>
+            <p>Better proposals can support higher win rates and larger deal sizes because BSN can present security outcomes by site/building, not just line items. Exact lift should be measured against commercial proposal volume and close rates.</p>
+          </div>
+          <div class="card green">
+            <h3>Cost and risk reduction</h3>
+            <p>Standardized leases, recurring charges, PM schedules, and station-cost tracking reduce manual exceptions. The hard ROI requires BSN's monthly quote volume, average lease value, PM count, and central-station cost variance.</p>
+          </div>
+        </div>
+      </div>
+      <div class="source"><span>Assumptions are directional until BSN supplies quote volume, PM count, station pricing, and lease mix</span><span>Source: Rev.io Value Planner Notion page</span></div>
+    </section>
+
+    <section class="slide light">
+      <div class="topline light">
+        <div class="logo-lane"><img class="bsn-logo" src="assets/bsn-security/bsn-logo.png" alt="BSN Security logo"></div>
+        <img class="revio-logo" src="revio-logo-white.png" alt="Rev.io logo">
+      </div>
+      <div class="wrap">
+        <div class="kicker">5. Requirements and systems alongside Rev.io</div>
+        <h2>Show the end-to-end path, with clear expectations on what is live now and what is roadmap.</h2>
+        <div class="grid-2">
+          <div class="card">
+            <h3>Quote and proposal workflow</h3>
+            <ul>
+              <li>Customer-facing proposal templates with visual sections by building, site, or package.</li>
+              <li>Catalog items, kits, assemblies, and repeatable options for camera/access/gate solutions.</li>
+              <li>Purchase vs. lease presentation and back-office contract support for 36/48/60-month terms.</li>
+            </ul>
+          </div>
+          <div class="card blue">
+            <h3>Recurring revenue and billing</h3>
+            <ul>
+              <li>Bundled monthly pricing for equipment, service, monitoring, and video verification.</li>
+              <li>Profitability reporting by customer/site/package as CMS or central-station direction is finalized.</li>
+              <li>Contract visibility so pricing and renewal obligations are not buried in manual notes.</li>
+            </ul>
+          </div>
+          <div class="card teal">
+            <h3>Service operations</h3>
+            <ul>
+              <li>Recurring PM scheduling to replace spreadsheet planning.</li>
+              <li>Asset and ticket history at the site level.</li>
+              <li>Photo, video, project history, and PM report documentation tied to customer records.</li>
+            </ul>
+          </div>
+          <div class="card amber">
+            <h3>Portal and roadmap alignment</h3>
+            <ul>
+              <li>Customer portal experience for service history and project documentation.</li>
+              <li>Clarify Portal.io timing, CMS integration timing, recurring schedules, and portal expansion.</li>
+              <li>Position current Rev.io capabilities separately from near-term roadmap items.</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+      <div class="source"><span>Source: Rev.io Value Planner Notion page</span><span>Existing system explicitly named: Jobber</span></div>
+    </section>
+
+    <section class="slide dark">
+      <div class="topline">
+        <div class="logo-lane"><img class="bsn-logo" src="assets/bsn-security/bsn-logo.png" alt="BSN Security logo"></div>
+        <img class="revio-logo" src="revio-logo-white.png" alt="Rev.io logo">
+      </div>
+      <div class="wrap">
+        <div class="kicker">6. Action plan moving forward</div>
+        <h2>Use the next meeting to prove the workflow, not just demo features.</h2>
+        <div class="timeline">
+          <div class="step">
+            <div class="date">Before demo</div>
+            <p>Confirm follow-up time, attendee list, BSN's preferred lease terms, sample commercial proposal, current PM spreadsheet, and examples of reports/photos/videos they want customers to access.</p>
+          </div>
+          <div class="step">
+            <div class="date">Demo focus</div>
+            <p>Bring Tony to run quote/proposal build, sections and visuals, lease/contract plus bundled monthly billing, recurring PM scheduling, site-level assets/ticket history, and portal experience.</p>
+          </div>
+          <div class="step">
+            <div class="date">Decision alignment</div>
+            <p>Separate current capabilities from roadmap items: Portal.io progress, CMS integration timing, recurring schedules, portal expansion, and any customer-facing proposal limits.</p>
+          </div>
+          <div class="step">
+            <div class="date">ROI lock</div>
+            <p>Quantify commercial quote volume, average deal size, close rate, PM workload, lease mix, station cost variance, and gross margin by monitoring/video verification package.</p>
+          </div>
+        </div>
+        <div class="band">Recommendation: anchor the demo in one real HOA/property manager deal and show the path from storyboard proposal to lease billing to PM documentation and portal history.</div>
+      </div>
+      <div class="source"><span>Source: Rev.io Value Planner Notion page</span><span>Follow-up options in source: March 18 at 3:00 PM ET or March 19 at 2:30 PM ET</span></div>
+    </section>
+
+    <section class="slide light">
+      <div class="topline light">
+        <div class="logo-lane"><img class="bsn-logo" src="assets/bsn-security/bsn-logo.png" alt="BSN Security logo"></div>
+        <img class="revio-logo" src="revio-logo-white.png" alt="Rev.io logo">
+      </div>
+      <div class="wrap">
+        <div class="kicker">Open questions</div>
+        <h2>Data needed to move from directional value to a firm business case.</h2>
+        <div class="grid-3">
+          <div class="card">
+            <h3>Sales metrics</h3>
+            <p>Monthly commercial proposal count, average deal size, win rate, average quote creation time, and lease-vs-purchase mix.</p>
+          </div>
+          <div class="card blue">
+            <h3>Service metrics</h3>
+            <p>Number of PM schedules, monthly admin time spent maintaining spreadsheets, repeat visit frequency, and documentation volume by customer/site.</p>
+          </div>
+          <div class="card green">
+            <h3>Margin metrics</h3>
+            <p>CMS or central-station pricing by camera/package, current video verification margin, and target fixed monthly cost per camera.</p>
+          </div>
+        </div>
+        <div class="band">The cleanest next step is not a generic Rev.io tour. It is a BSN-specific workflow using one real commercial package and the margin assumptions that matter to Brad.</div>
+      </div>
+      <div class="source"><span>Prepared by Rev.io</span><span>BSN Security value planner</span></div>
+    </section>
+  </main>
+</body>
+</html>
