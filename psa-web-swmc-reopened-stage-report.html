@@ -50,11 +50,16 @@
     .bar-row { display: grid; grid-template-columns: 190px minmax(120px, 1fr) 54px; align-items: center; gap: 14px; margin: 13px 0; }
     .bar-label { font-weight: 700; font-size: 14px; }
     .bar-track { height: 16px; background: #e9eef5; border-radius: 999px; overflow: hidden; }
+    .bar-row.compact { grid-template-columns: 170px minmax(120px, 1fr) 44px; }
     .bar-track span { display: block; height: 100%; background: linear-gradient(90deg, var(--teal), #31a6a0); border-radius: inherit; }
+    .bar-track.red span { background: linear-gradient(90deg, var(--red), #e0695f); }
     .bar-value { text-align: right; font-weight: 800; }
     .section-head { display: flex; justify-content: space-between; align-items: end; gap: 18px; margin-bottom: 12px; }
     h2 { margin: 0; font-size: 24px; letter-spacing: 0; }
+    h3 { margin: 0 0 14px; font-size: 17px; letter-spacing: 0; }
     .section-head p { margin: 0; color: var(--muted); }
+    .split { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 16px; }
+    .extra-table { margin-top: 16px; }
     .table-wrap { overflow-x: auto; }
     table { width: 100%; border-collapse: collapse; min-width: 980px; }
     th, td { text-align: left; vertical-align: top; border-bottom: 1px solid var(--line); padding: 12px 14px; font-size: 13px; line-height: 1.45; }
@@ -68,6 +73,7 @@
     @media (max-width: 760px) {
       .summary { grid-template-columns: repeat(2, minmax(0, 1fr)); }
       .section-head { display: block; }
+      .split { grid-template-columns: 1fr; }
       .bar-row { grid-template-columns: 1fr 52px; }
       .bar-track { grid-column: 1 / -1; grid-row: 2; }
     }
@@ -82,7 +88,7 @@
       <div class="meta">
         <span>Source: Salesforce Opportunity</span>
         <span>Products: PSA 2.0 / PSA</span>
-        <span>Generated Aug 13, 2026 6:25 PM</span>
+        <span>Generated Aug 13, 2026 6:39 PM</span>
       </div>
     </div>
   </header>
@@ -132,6 +138,7 @@
             
       </div>
       <nav class="stage-nav" aria-label="Stage sections">
+        <a class="stage-pill" href="#closed-lost-trends"><span>Closed Lost Trends</span><strong>69</strong></a>
         <a class="stage-pill" href="#closed-won"><span>Closed Won</span><strong>11</strong></a>
 <a class="stage-pill" href="#1--discovery-scheduled"><span>Discovery Scheduled</span><strong>7</strong></a>
 <a class="stage-pill" href="#2---discovery-completed"><span>Discovery Completed</span><strong>1</strong></a>
@@ -142,6 +149,228 @@
         <input id="search" type="search" placeholder="Filter accounts, stages, industries, notes">
       </div>
     </section>
+    
+      <section class="band" id="closed-lost-trends">
+        <div class="section-head">
+          <h2>Later Closed Lost Trend</h2>
+          <p>69 later Closed Lost opps across 58 accounts; 11 accounts had a third lost PSA opportunity.</p>
+        </div>
+        <div class="split">
+          <div class="chart">
+            <h3>By close month</h3>
+            
+            <div class="bar-row compact">
+              <div class="bar-label">2025-09</div>
+              <div class="bar-track"><span style="width:23%"></span></div>
+              <div class="bar-value">3</div>
+            </div>
+            
+            <div class="bar-row compact">
+              <div class="bar-label">2025-10</div>
+              <div class="bar-track"><span style="width:8%"></span></div>
+              <div class="bar-value">1</div>
+            </div>
+            
+            <div class="bar-row compact">
+              <div class="bar-label">2025-11</div>
+              <div class="bar-track"><span style="width:15%"></span></div>
+              <div class="bar-value">2</div>
+            </div>
+            
+            <div class="bar-row compact">
+              <div class="bar-label">2025-12</div>
+              <div class="bar-track"><span style="width:23%"></span></div>
+              <div class="bar-value">3</div>
+            </div>
+            
+            <div class="bar-row compact">
+              <div class="bar-label">2026-01</div>
+              <div class="bar-track"><span style="width:38%"></span></div>
+              <div class="bar-value">5</div>
+            </div>
+            
+            <div class="bar-row compact">
+              <div class="bar-label">2026-02</div>
+              <div class="bar-track"><span style="width:46%"></span></div>
+              <div class="bar-value">6</div>
+            </div>
+            
+            <div class="bar-row compact">
+              <div class="bar-label">2026-03</div>
+              <div class="bar-track"><span style="width:92%"></span></div>
+              <div class="bar-value">12</div>
+            </div>
+            
+            <div class="bar-row compact">
+              <div class="bar-label">2026-04</div>
+              <div class="bar-track"><span style="width:62%"></span></div>
+              <div class="bar-value">8</div>
+            </div>
+            
+            <div class="bar-row compact">
+              <div class="bar-label">2026-05</div>
+              <div class="bar-track"><span style="width:46%"></span></div>
+              <div class="bar-value">6</div>
+            </div>
+            
+            <div class="bar-row compact">
+              <div class="bar-label">2026-06</div>
+              <div class="bar-track"><span style="width:100%"></span></div>
+              <div class="bar-value">13</div>
+            </div>
+            
+            <div class="bar-row compact">
+              <div class="bar-label">2026-07</div>
+              <div class="bar-track"><span style="width:77%"></span></div>
+              <div class="bar-value">10</div>
+            </div>
+            
+          </div>
+          <div class="chart">
+            <h3>By second loss reason</h3>
+            
+            <div class="bar-row compact">
+              <div class="bar-label">Software Missing Capabilities</div>
+              <div class="bar-track red"><span style="width:100%"></span></div>
+              <div class="bar-value">26</div>
+            </div>
+            
+            <div class="bar-row compact">
+              <div class="bar-label">Discovery No Show</div>
+              <div class="bar-track red"><span style="width:54%"></span></div>
+              <div class="bar-value">14</div>
+            </div>
+            
+            <div class="bar-row compact">
+              <div class="bar-label">Not the Right Time</div>
+              <div class="bar-track red"><span style="width:46%"></span></div>
+              <div class="bar-value">12</div>
+            </div>
+            
+            <div class="bar-row compact">
+              <div class="bar-label">Lack of Decision Maker Involvement</div>
+              <div class="bar-track red"><span style="width:15%"></span></div>
+              <div class="bar-value">4</div>
+            </div>
+            
+            <div class="bar-row compact">
+              <div class="bar-label">Price</div>
+              <div class="bar-track red"><span style="width:12%"></span></div>
+              <div class="bar-value">3</div>
+            </div>
+            
+            <div class="bar-row compact">
+              <div class="bar-label">Lost to Competitor</div>
+              <div class="bar-track red"><span style="width:12%"></span></div>
+              <div class="bar-value">3</div>
+            </div>
+            
+            <div class="bar-row compact">
+              <div class="bar-label">In existing contract</div>
+              <div class="bar-track red"><span style="width:12%"></span></div>
+              <div class="bar-value">3</div>
+            </div>
+            
+            <div class="bar-row compact">
+              <div class="bar-label">No Business Issue</div>
+              <div class="bar-track red"><span style="width:8%"></span></div>
+              <div class="bar-value">2</div>
+            </div>
+            
+            <div class="bar-row compact">
+              <div class="bar-label">Not Right Customer Type</div>
+              <div class="bar-track red"><span style="width:8%"></span></div>
+              <div class="bar-value">1</div>
+            </div>
+            
+            <div class="bar-row compact">
+              <div class="bar-label">No Decision / Non-Responsive</div>
+              <div class="bar-track red"><span style="width:8%"></span></div>
+              <div class="bar-value">1</div>
+            </div>
+            
+          </div>
+        </div>
+        <div class="table-wrap extra-table">
+          <table>
+            <thead>
+              <tr>
+                <th>Account with 3rd lost PSA opp</th>
+                <th>Later closed-lost count</th>
+                <th>Later closed-lost sequence</th>
+              </tr>
+            </thead>
+            <tbody>
+            <tr>
+              <td><strong><a href="https://rev-io.my.salesforce.com/001PX00000H1XjqYAF" target="_blank" rel="noopener">Acoustic Design Systems</a></strong><div class="mini">Integrator / AV / Home Automation</div></td>
+              <td>2</td>
+              <td>2026-02-05 - Software Missing Capabilities; 2026-06-22 - Not the Right Time</td>
+            </tr>
+            
+            <tr>
+              <td><strong><a href="https://rev-io.my.salesforce.com/001PX000006FhBFYA0" target="_blank" rel="noopener">Clever Tech Pros</a></strong><div class="mini">MSP / UCaaS / Voip</div></td>
+              <td>2</td>
+              <td>2025-09-22 - Software Missing Capabilities; 2026-07-27 - Price</td>
+            </tr>
+            
+            <tr>
+              <td><strong><a href="https://rev-io.my.salesforce.com/001PX000003w1GaYAI" target="_blank" rel="noopener">Forbel Alarms</a></strong><div class="mini">Integrator / Security Integrator</div></td>
+              <td>2</td>
+              <td>2026-05-22 - Discovery No Show; 2026-07-22 - Discovery No Show</td>
+            </tr>
+            
+            <tr>
+              <td><strong><a href="https://rev-io.my.salesforce.com/001PX000002NydRYAS" target="_blank" rel="noopener">Fortified Security Solutions</a></strong><div class="mini">Integrator / Security Integrator</div></td>
+              <td>2</td>
+              <td>2026-01-08 - Not the Right Time; 2026-01-21 - Not the Right Time</td>
+            </tr>
+            
+            <tr>
+              <td><strong><a href="https://rev-io.my.salesforce.com/001PX000004hTgtYAE" target="_blank" rel="noopener">Knight Nets Inc</a></strong><div class="mini">MSP / Legacy Telecom</div></td>
+              <td>2</td>
+              <td>2026-02-02 - Software Missing Capabilities; 2026-06-25 - Software Missing Capabilities</td>
+            </tr>
+            
+            <tr>
+              <td><strong><a href="https://rev-io.my.salesforce.com/001PX000004GUSrYAO" target="_blank" rel="noopener">MGi Systems</a></strong><div class="mini">Integrator / AV / Home Automation</div></td>
+              <td>2</td>
+              <td>2026-04-08 - Software Missing Capabilities; 2026-07-21 - Price</td>
+            </tr>
+            
+            <tr>
+              <td><strong><a href="https://rev-io.my.salesforce.com/001PX00000Y3i96YAB" target="_blank" rel="noopener">NetCentra</a></strong><div class="mini">MSP / MSP - No Voice</div></td>
+              <td>2</td>
+              <td>2025-11-04 - Software Missing Capabilities; 2026-04-22 - Software Missing Capabilities</td>
+            </tr>
+            
+            <tr>
+              <td><strong><a href="https://rev-io.my.salesforce.com/0016O00003ee5nwQAA" target="_blank" rel="noopener">Security Pros</a></strong><div class="mini">Integrator / Security Integrator</div></td>
+              <td>2</td>
+              <td>2025-12-19 - Software Missing Capabilities; 2026-02-06 - Not the Right Time</td>
+            </tr>
+            
+            <tr>
+              <td><strong><a href="https://rev-io.my.salesforce.com/001PX00000GGQGmYAP" target="_blank" rel="noopener">SecurityBud</a></strong><div class="mini">Integrator / Security Integrator</div></td>
+              <td>2</td>
+              <td>2026-01-07 - No Decision / Non-Responsive; 2026-03-18 - Discovery No Show</td>
+            </tr>
+            
+            <tr>
+              <td><strong><a href="https://rev-io.my.salesforce.com/0011500001HNPkYAAX" target="_blank" rel="noopener">SmartChoice</a></strong><div class="mini">MSP / Legacy Telecom</div></td>
+              <td>2</td>
+              <td>2025-09-30 - Software Missing Capabilities; 2026-04-29 - Lack of Decision Maker Involvement</td>
+            </tr>
+            
+            <tr>
+              <td><strong><a href="https://rev-io.my.salesforce.com/0016O00003edXolQAE" target="_blank" rel="noopener">Zuvid Surveillance</a></strong><div class="mini">Integrator / Security Integrator</div></td>
+              <td>2</td>
+              <td>2025-12-17 - Discovery No Show; 2026-06-30 - Discovery No Show</td>
+            </tr>
+            </tbody>
+          </table>
+        </div>
+      </section>
+    
     <div id="stage-sections">
       <section class="band" id="closed-won">
         <div class="section-head">

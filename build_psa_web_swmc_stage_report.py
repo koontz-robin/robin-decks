@@ -183,6 +183,101 @@ def render_stage_table(stage, rows):
     """
 
 
+def render_closed_lost_trends(rows):
+    closed_lost_rows = [row for row in rows if row["Later PSA Stage"] == "Closed Lost"]
+    if not closed_lost_rows:
+        return ""
+
+    month_counts = Counter((row["Later PSA Close Date"] or row["Later PSA Created Date"])[:7] for row in closed_lost_rows)
+    reason_counts = Counter(row["Later PSA Loss Reason"] or "No loss reason captured" for row in closed_lost_rows)
+    by_account = defaultdict(list)
+    for row in closed_lost_rows:
+        by_account[row["Account"]].append(row)
+
+    third_loss_accounts = {
+        account: sorted(account_rows, key=lambda item: (item["Later PSA Close Date"], item["Later PSA Created Date"]))
+        for account, account_rows in by_account.items()
+        if len(account_rows) >= 2
+    }
+    max_month = max(month_counts.values() or [1])
+    max_reason = max(reason_counts.values() or [1])
+
+    month_rows = []
+    for month in sorted(month_counts):
+        count = month_counts[month]
+        width = max(8, round(count / max_month * 100))
+        month_rows.append(
+            f"""
+            <div class="bar-row compact">
+              <div class="bar-label">{escape(month)}</div>
+              <div class="bar-track"><span style="width:{width}%"></span></div>
+              <div class="bar-value">{count}</div>
+            </div>
+            """
+        )
+
+    reason_rows = []
+    for reason, count in reason_counts.most_common():
+        width = max(8, round(count / max_reason * 100))
+        reason_rows.append(
+            f"""
+            <div class="bar-row compact">
+              <div class="bar-label">{escape(reason)}</div>
+              <div class="bar-track red"><span style="width:{width}%"></span></div>
+              <div class="bar-value">{count}</div>
+            </div>
+            """
+        )
+
+    third_rows = []
+    for account, account_rows in sorted(third_loss_accounts.items(), key=lambda item: item[0].lower()):
+        first = account_rows[0]
+        losses = "; ".join(
+            f"{row['Later PSA Close Date']} - {row['Later PSA Loss Reason'] or 'No reason captured'}"
+            for row in account_rows
+        )
+        third_rows.append(
+            f"""
+            <tr>
+              <td><strong>{render_link(first["Account URL"], account)}</strong><div class="mini">{escape(first["Vertical"])} / {escape(first["Industry"])}</div></td>
+              <td>{escape(str(len(account_rows)))}</td>
+              <td>{escape(losses)}</td>
+            </tr>
+            """
+        )
+
+    return f"""
+      <section class="band" id="closed-lost-trends">
+        <div class="section-head">
+          <h2>Later Closed Lost Trend</h2>
+          <p>{len(closed_lost_rows)} later Closed Lost opps across {len(by_account)} accounts; {len(third_loss_accounts)} accounts had a third lost PSA opportunity.</p>
+        </div>
+        <div class="split">
+          <div class="chart">
+            <h3>By close month</h3>
+            {''.join(month_rows)}
+          </div>
+          <div class="chart">
+            <h3>By second loss reason</h3>
+            {''.join(reason_rows)}
+          </div>
+        </div>
+        <div class="table-wrap extra-table">
+          <table>
+            <thead>
+              <tr>
+                <th>Account with 3rd lost PSA opp</th>
+                <th>Later closed-lost count</th>
+                <th>Later closed-lost sequence</th>
+              </tr>
+            </thead>
+            <tbody>{''.join(third_rows)}</tbody>
+          </table>
+        </div>
+      </section>
+    """
+
+
 def main():
     rows = load_rows()
     accounts = account_level(rows)
@@ -193,6 +288,7 @@ def main():
     later_stage_counts = Counter(row["Later PSA Stage"] for row in rows if row["Later PSA Opp ID"])
     unique_accounts = len(accounts)
     later_opps = sum(int(bool(row["Later PSA Opp ID"])) for row in rows)
+    later_closed_lost_opps = sum(1 for row in rows if row["Later PSA Stage"] == "Closed Lost")
     won_accounts = len(stage_groups.get("Closed Won", []))
     active_accounts = sum(len(stage_groups.get(stage, [])) for stage in STAGE_ORDER if stage not in {"Closed Lost", "Closed Won"})
     closed_lost_accounts = len(stage_groups.get("Closed Lost", []))
@@ -216,6 +312,7 @@ def main():
         )
 
     stage_sections = "\n".join(render_stage_table(stage, stage_groups[stage]) for stage in STAGE_ORDER if stage in stage_groups)
+    closed_lost_trends = render_closed_lost_trends(rows)
     html = f"""<!doctype html>
 <html lang="en">
 <head>
@@ -268,11 +365,16 @@ def main():
     .bar-row {{ display: grid; grid-template-columns: 190px minmax(120px, 1fr) 54px; align-items: center; gap: 14px; margin: 13px 0; }}
     .bar-label {{ font-weight: 700; font-size: 14px; }}
     .bar-track {{ height: 16px; background: #e9eef5; border-radius: 999px; overflow: hidden; }}
+    .bar-row.compact {{ grid-template-columns: 170px minmax(120px, 1fr) 44px; }}
     .bar-track span {{ display: block; height: 100%; background: linear-gradient(90deg, var(--teal), #31a6a0); border-radius: inherit; }}
+    .bar-track.red span {{ background: linear-gradient(90deg, var(--red), #e0695f); }}
     .bar-value {{ text-align: right; font-weight: 800; }}
     .section-head {{ display: flex; justify-content: space-between; align-items: end; gap: 18px; margin-bottom: 12px; }}
     h2 {{ margin: 0; font-size: 24px; letter-spacing: 0; }}
+    h3 {{ margin: 0 0 14px; font-size: 17px; letter-spacing: 0; }}
     .section-head p {{ margin: 0; color: var(--muted); }}
+    .split {{ display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 16px; }}
+    .extra-table {{ margin-top: 16px; }}
     .table-wrap {{ overflow-x: auto; }}
     table {{ width: 100%; border-collapse: collapse; min-width: 980px; }}
     th, td {{ text-align: left; vertical-align: top; border-bottom: 1px solid var(--line); padding: 12px 14px; font-size: 13px; line-height: 1.45; }}
@@ -286,6 +388,7 @@ def main():
     @media (max-width: 760px) {{
       .summary {{ grid-template-columns: repeat(2, minmax(0, 1fr)); }}
       .section-head {{ display: block; }}
+      .split {{ grid-template-columns: 1fr; }}
       .bar-row {{ grid-template-columns: 1fr 52px; }}
       .bar-track {{ grid-column: 1 / -1; grid-row: 2; }}
     }}
@@ -320,12 +423,14 @@ def main():
         {''.join(bar_rows)}
       </div>
       <nav class="stage-nav" aria-label="Stage sections">
+        <a class="stage-pill" href="#closed-lost-trends"><span>Closed Lost Trends</span><strong>{later_closed_lost_opps}</strong></a>
         {stage_nav(stage_groups)}
       </nav>
       <div class="toolbar">
         <input id="search" type="search" placeholder="Filter accounts, stages, industries, notes">
       </div>
     </section>
+    {closed_lost_trends}
     <div id="stage-sections">{stage_sections}</div>
   </main>
   <script>
