@@ -1,0 +1,546 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>A Couple of Gurus PSA Evaluation Readout | Rev.io</title>
+  <meta name="description" content="Buyer-facing Rev.io PSA evaluation readout for A Couple of Gurus.">
+  <style>
+    :root {
+      --guru-blue: #126a9f;
+      --guru-sky: #42a9d5;
+      --guru-green: #8fc63d;
+      --revio: #6cc04a;
+      --ink: #142133;
+      --slate: #223246;
+      --muted: #617184;
+      --paper: #f5f8fb;
+      --line: #dce5ee;
+      --white: #ffffff;
+      --amber: #f5b84b;
+      --red: #e15b57;
+    }
+
+    * { box-sizing: border-box; }
+    html { scroll-behavior: smooth; }
+    body {
+      margin: 0;
+      color: var(--ink);
+      background: var(--paper);
+      font-family: Aptos, Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      letter-spacing: 0;
+    }
+
+    .deck { min-height: 100vh; }
+    .slide {
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      position: relative;
+      overflow: hidden;
+      border-bottom: 1px solid rgba(20,33,51,0.08);
+    }
+
+    .slide.dark {
+      color: var(--white);
+      background:
+        linear-gradient(118deg, rgba(18,106,159,0.95), rgba(34,50,70,0.97)),
+        repeating-linear-gradient(0deg, rgba(255,255,255,0.04) 0 1px, transparent 1px 42px),
+        repeating-linear-gradient(90deg, rgba(255,255,255,0.035) 0 1px, transparent 1px 42px),
+        var(--guru-blue);
+    }
+
+    .slide.light { background: var(--paper); }
+    .wrap {
+      width: min(1180px, calc(100vw - 48px));
+      margin: 0 auto;
+      padding: 78px 0 58px;
+      position: relative;
+      z-index: 2;
+    }
+
+    .topline {
+      position: absolute;
+      top: 28px;
+      left: 32px;
+      right: 32px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 22px;
+      z-index: 5;
+    }
+
+    .logo-box {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      width: 278px;
+      height: 72px;
+      padding: 12px 18px;
+      border-radius: 8px;
+      background: var(--white);
+      border: 1px solid rgba(255,255,255,0.24);
+      flex: 0 0 auto;
+    }
+
+    .guru-logo {
+      width: 100%;
+      height: 100%;
+      object-fit: contain;
+      display: block;
+    }
+
+    .revio-logo {
+      width: 126px;
+      height: 38px;
+      object-fit: contain;
+      display: block;
+      flex: 0 0 auto;
+    }
+
+    .light .revio-logo {
+      background: var(--slate);
+      border-radius: 7px;
+      padding: 8px 10px;
+    }
+
+    .kicker {
+      font-size: 12px;
+      font-weight: 900;
+      text-transform: uppercase;
+      color: #b7ec75;
+      letter-spacing: 1.8px;
+      margin-bottom: 18px;
+    }
+
+    .light .kicker { color: var(--guru-blue); }
+    h1, h2, h3, p { margin: 0; }
+    h1 {
+      font-size: clamp(44px, 6.3vw, 82px);
+      line-height: 0.98;
+      max-width: 980px;
+      letter-spacing: 0;
+    }
+
+    h2 {
+      font-size: clamp(34px, 4.35vw, 58px);
+      line-height: 1;
+      max-width: 1000px;
+      margin-bottom: 24px;
+      letter-spacing: 0;
+    }
+
+    h3 {
+      font-size: 18px;
+      line-height: 1.16;
+      margin-bottom: 10px;
+      color: inherit;
+    }
+
+    .lead {
+      max-width: 850px;
+      margin-top: 24px;
+      color: rgba(255,255,255,0.78);
+      font-size: clamp(17px, 2vw, 23px);
+      line-height: 1.37;
+    }
+
+    .light .lead { color: var(--muted); }
+    .hero-grid {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) 340px;
+      gap: 48px;
+      align-items: end;
+    }
+
+    .metric-stack { display: grid; gap: 14px; }
+    .metric {
+      background: rgba(255,255,255,0.09);
+      border: 1px solid rgba(255,255,255,0.15);
+      border-radius: 8px;
+      padding: 18px;
+    }
+
+    .metric strong {
+      display: block;
+      font-size: 34px;
+      line-height: 1;
+      color: #b7ec75;
+    }
+
+    .metric span {
+      display: block;
+      margin-top: 8px;
+      color: rgba(255,255,255,0.74);
+      font-size: 12px;
+      font-weight: 800;
+      text-transform: uppercase;
+      line-height: 1.35;
+    }
+
+    .grid-2 { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 18px; }
+    .grid-3 { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 18px; }
+
+    .card {
+      background: var(--white);
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      padding: 22px;
+      min-height: 158px;
+      box-shadow: 0 18px 45px rgba(20,33,51,0.06);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .dark .card { color: var(--ink); }
+    .card::before {
+      content: "";
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 5px;
+      background: var(--guru-blue);
+    }
+
+    .card.green::before { background: var(--guru-green); }
+    .card.revio::before { background: var(--revio); }
+    .card.sky::before { background: var(--guru-sky); }
+    .card.amber::before { background: var(--amber); }
+    .card.red::before { background: var(--red); }
+    .card p, .card li {
+      color: var(--muted);
+      font-size: 15px;
+      line-height: 1.44;
+    }
+
+    ul { margin: 0; padding-left: 18px; }
+    li + li { margin-top: 8px; }
+
+    .band {
+      background: var(--slate);
+      color: var(--white);
+      padding: 18px 22px;
+      border-radius: 8px;
+      border-left: 6px solid var(--guru-green);
+      margin-top: 24px;
+      font-size: 18px;
+      line-height: 1.4;
+    }
+
+    .impact-grid {
+      display: grid;
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+      gap: 14px;
+      margin: 24px 0;
+    }
+
+    .impact {
+      background: var(--slate);
+      color: var(--white);
+      border-radius: 8px;
+      padding: 18px;
+      border-top: 5px solid var(--guru-green);
+      min-height: 128px;
+    }
+
+    .impact strong { display: block; font-size: 31px; line-height: 1; color: #b7ec75; }
+    .impact span { display: block; margin-top: 9px; font-size: 12px; line-height: 1.3; color: rgba(255,255,255,0.74); text-transform: uppercase; font-weight: 800; }
+
+    .timeline { display: grid; gap: 14px; }
+    .step {
+      display: grid;
+      grid-template-columns: 150px minmax(0, 1fr);
+      gap: 18px;
+      align-items: start;
+      background: var(--white);
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      padding: 18px;
+    }
+
+    .step .date {
+      color: var(--guru-blue);
+      font-size: 13px;
+      font-weight: 900;
+      text-transform: uppercase;
+    }
+
+    .step p { color: var(--muted); line-height: 1.45; font-size: 15px; }
+    .source {
+      position: absolute;
+      bottom: 20px;
+      left: 32px;
+      right: 32px;
+      display: flex;
+      justify-content: space-between;
+      gap: 18px;
+      color: rgba(20,33,51,0.46);
+      font-size: 11px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.9px;
+    }
+
+    .dark .source { color: rgba(255,255,255,0.42); }
+    .tag-row { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 22px; }
+    .tag {
+      display: inline-flex;
+      align-items: center;
+      min-height: 32px;
+      padding: 7px 11px;
+      border-radius: 999px;
+      background: rgba(255,255,255,0.1);
+      border: 1px solid rgba(255,255,255,0.16);
+      color: rgba(255,255,255,0.82);
+      font-size: 12px;
+      font-weight: 800;
+      text-transform: uppercase;
+    }
+
+    .light .tag {
+      color: var(--guru-blue);
+      background: rgba(18,106,159,0.08);
+      border-color: rgba(18,106,159,0.16);
+    }
+
+    @media (max-width: 900px) {
+      .slide { display: block; min-height: 100vh; }
+      .wrap { width: min(100% - 32px, 720px); padding: 118px 0 54px; }
+      .topline { top: 20px; left: 16px; right: 16px; align-items: flex-start; }
+      .logo-box { width: 216px; height: 60px; padding: 10px 13px; }
+      .revio-logo { width: 104px; height: 34px; }
+      .hero-grid, .grid-2, .grid-3, .impact-grid { grid-template-columns: 1fr; }
+      .step { grid-template-columns: 1fr; gap: 8px; }
+      .source { position: static; margin: -32px 16px 20px; flex-direction: column; }
+    }
+
+    @media (max-width: 560px) {
+      .topline { top: 16px; left: 14px; right: 14px; gap: 12px; }
+      .wrap { padding-top: 112px; }
+      .logo-box { width: 176px; height: 54px; padding: 9px 11px; }
+      .revio-logo { width: 92px; height: 31px; }
+      h1 { font-size: 40px; }
+      h2 { font-size: 33px; }
+      .metric strong, .impact strong { font-size: 28px; }
+    }
+  </style>
+</head>
+<body>
+  <main class="deck">
+    <section class="slide dark">
+      <div class="topline">
+        <div class="logo-box"><img class="guru-logo" src="assets/acouple-of-gurus/logo.png" alt="A Couple of Gurus"></div>
+        <img class="revio-logo" src="revio-logo-white.png" alt="Rev.io">
+      </div>
+      <div class="wrap">
+        <div class="hero-grid">
+          <div>
+            <div class="kicker">PSA 2.0 evaluation readout</div>
+            <h1>Modernize the service operation without adding another disconnected system.</h1>
+            <p class="lead">A Couple of Gurus is evaluating Rev.io PSA as a fit for MSP service delivery, customer operations, reporting, and the revenue workflows around tickets, projects, time, and recurring services.</p>
+            <div class="tag-row">
+              <span class="tag">Managed IT</span>
+              <span class="tag">Cybersecurity</span>
+              <span class="tag">Compliance</span>
+              <span class="tag">Cloud</span>
+            </div>
+          </div>
+          <div class="metric-stack">
+            <div class="metric"><strong>$2,100</strong><span>Current Salesforce opportunity amount</span></div>
+            <div class="metric"><strong>20</strong><span>PSA Standard User quantity in scope</span></div>
+            <div class="metric"><strong>8/31</strong><span>Target close date in Salesforce</span></div>
+          </div>
+        </div>
+      </div>
+      <div class="source"><span>Sources: Salesforce opportunity data and public company profile</span><span>Prepared by Rev.io</span></div>
+    </section>
+
+    <section class="slide light">
+      <div class="topline light">
+        <div class="logo-box"><img class="guru-logo" src="assets/acouple-of-gurus/logo.png" alt="A Couple of Gurus"></div>
+        <img class="revio-logo" src="revio-logo-white.png" alt="Rev.io">
+      </div>
+      <div class="wrap">
+        <div class="kicker">1. Who is A Couple of Gurus?</div>
+        <h2>A Minneapolis MSP serving organizations that need secure, dependable IT.</h2>
+        <p class="lead">Public materials describe A Couple of Gurus as a managed IT services provider based in Minneapolis, Minnesota, offering fully managed IT, co-managed IT, managed cybersecurity, regulatory compliance, cloud solutions, and IT consulting.</p>
+        <div class="grid-3" style="margin-top:28px">
+          <div class="card sky">
+            <h3>Managed service model</h3>
+            <p>The business depends on predictable ticket handling, accurate customer context, clear technician workflows, and clean reporting across recurring client relationships.</p>
+          </div>
+          <div class="card green">
+            <h3>Security and compliance pressure</h3>
+            <p>Their market positioning includes cybersecurity and regulatory compliance, which raises the importance of documented service activity and defensible operational process.</p>
+          </div>
+          <div class="card revio">
+            <h3>Rev.io conversation</h3>
+            <p>The active Salesforce opportunity is for Rev.io PSA 2.0 with 20 standard users, owned by Andy Whisenant and currently marked Discovery Completed.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="slide dark">
+      <div class="topline">
+        <div class="logo-box"><img class="guru-logo" src="assets/acouple-of-gurus/logo.png" alt="A Couple of Gurus"></div>
+        <img class="revio-logo" src="revio-logo-white.png" alt="Rev.io">
+      </div>
+      <div class="wrap">
+        <div class="kicker">2. Why make the change now?</div>
+        <h2>Growth in managed services makes the PSA the operating backbone, not just the ticket queue.</h2>
+        <p class="lead">When service delivery, documentation, contracts, billing handoff, and customer visibility live in separate workflows, every new client adds avoidable administrative drag. Rev.io PSA is positioned to bring the operating motion closer to revenue capture.</p>
+        <div class="band">The strategic question: can A Couple of Gurus run service, projects, recurring agreements, reporting, and billing handoff from one cleaner workflow before process complexity scales further?</div>
+        <div class="grid-3" style="margin-top:28px">
+          <div class="card">
+            <h3>More clients, more handoffs</h3>
+            <p>Recurring MSP work creates repeated touchpoints: alerts, tickets, dispatch, time, parts, project work, approvals, invoices, and account reviews.</p>
+          </div>
+          <div class="card amber">
+            <h3>More compliance context</h3>
+            <p>Security and compliance-oriented clients need stronger proof of what was done, when it was completed, and how recurring obligations were handled.</p>
+          </div>
+          <div class="card green">
+            <h3>More revenue leakage risk</h3>
+            <p>Manual handoff from service work to billing can delay invoicing, miss billable time, or make profitability harder to inspect by client and contract.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="slide light">
+      <div class="topline light">
+        <div class="logo-box"><img class="guru-logo" src="assets/acouple-of-gurus/logo.png" alt="A Couple of Gurus"></div>
+        <img class="revio-logo" src="revio-logo-white.png" alt="Rev.io">
+      </div>
+      <div class="wrap">
+        <div class="kicker">3. Uncovered problems</div>
+        <h2>The evaluation should focus on where service work leaks time, context, and margin.</h2>
+        <div class="grid-2">
+          <div class="card red">
+            <h3>Operational friction to confirm</h3>
+            <ul>
+              <li>Where technicians lose time updating tickets, notes, time entries, or project tasks.</li>
+              <li>Where dispatch and service visibility are slower than leadership needs.</li>
+              <li>Which workflows leave the PSA for spreadsheets, emails, accounting tools, or separate portals.</li>
+            </ul>
+          </div>
+          <div class="card amber">
+            <h3>Financial friction to confirm</h3>
+            <ul>
+              <li>Whether billable time, recurring services, add-ons, and project work are captured consistently.</li>
+              <li>How much manual review is needed before invoices are ready.</li>
+              <li>Which clients or agreement types are hardest to inspect for margin.</li>
+            </ul>
+          </div>
+          <div class="card sky">
+            <h3>Technical fit to confirm</h3>
+            <ul>
+              <li>Current PSA/RMM/documentation/accounting stack and required integrations.</li>
+              <li>Data migration requirements for clients, contacts, assets, agreements, tickets, projects, and time history.</li>
+              <li>Reporting and dashboard needs by service manager, technician, owner, and finance user.</li>
+            </ul>
+          </div>
+          <div class="card green">
+            <h3>Customer experience to confirm</h3>
+            <ul>
+              <li>Portal, communication, approval, and status visibility expectations.</li>
+              <li>How client-facing documentation is handled today.</li>
+              <li>Where response, resolution, and follow-up metrics need to improve.</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="slide dark">
+      <div class="topline">
+        <div class="logo-box"><img class="guru-logo" src="assets/acouple-of-gurus/logo.png" alt="A Couple of Gurus"></div>
+        <img class="revio-logo" src="revio-logo-white.png" alt="Rev.io">
+      </div>
+      <div class="wrap">
+        <div class="kicker">4. Business impact and ROI</div>
+        <h2>Even modest workflow cleanup can fund a meaningful portion of the PSA investment.</h2>
+        <p class="lead">The current scoped Rev.io PSA investment is $2,100/month. The impact case should be finalized after confirming ticket volume, technician count, current tool cost, billing review time, and missed billable work.</p>
+        <div class="impact-grid">
+          <div class="impact"><strong>20 users</strong><span>Current standard user scope from Salesforce</span></div>
+          <div class="impact"><strong>25-50 hrs</strong><span>Monthly admin time removed if 20 users save 15-30 minutes/week</span></div>
+          <div class="impact"><strong>$1.5k-$5k</strong><span>Monthly labor value range at $60-$100/hour loaded cost</span></div>
+          <div class="impact"><strong>1-3%</strong><span>Service revenue protection target from cleaner time and billing capture</span></div>
+        </div>
+        <div class="band">Assumption-based ROI: if Rev.io removes 25-50 hours of monthly administrative work and improves capture of billable time, the business case can approach or exceed the $2,100/month subscription before including tool consolidation or faster collections.</div>
+      </div>
+    </section>
+
+    <section class="slide light">
+      <div class="topline light">
+        <div class="logo-box"><img class="guru-logo" src="assets/acouple-of-gurus/logo.png" alt="A Couple of Gurus"></div>
+        <img class="revio-logo" src="revio-logo-white.png" alt="Rev.io">
+      </div>
+      <div class="wrap">
+        <div class="kicker">5. Requirements and systems</div>
+        <h2>Rev.io should be validated against the workflows they run every day.</h2>
+        <div class="grid-3">
+          <div class="card">
+            <h3>Rev.io replaces or anchors</h3>
+            <ul>
+              <li>PSA service desk and ticket management.</li>
+              <li>Dispatch, scheduling, projects, time entry, and service operations.</li>
+              <li>Customer, contact, asset, agreement, reporting, and billing handoff workflows.</li>
+            </ul>
+          </div>
+          <div class="card sky">
+            <h3>Rev.io can connect alongside</h3>
+            <ul>
+              <li>RMM, security, documentation, accounting, quoting, and billing tools where needed.</li>
+              <li>Existing client data and historical records through a scoped migration plan.</li>
+              <li>Rev.io Cyber Protect if endpoint, backup, or EDR consolidation is part of the conversation.</li>
+            </ul>
+          </div>
+          <div class="card amber">
+            <h3>Open questions</h3>
+            <ul>
+              <li>Current PSA and RMM vendor.</li>
+              <li>Accounting system and invoice approval workflow.</li>
+              <li>Required integrations, reporting pack, migration scope, and implementation timeline.</li>
+            </ul>
+          </div>
+        </div>
+        <div class="band">Recommendation: use the next session to walk through live workflows instead of feature lists: ticket intake, dispatch, project work, time capture, billing review, executive reporting, and data migration.</div>
+      </div>
+    </section>
+
+    <section class="slide light">
+      <div class="topline light">
+        <div class="logo-box"><img class="guru-logo" src="assets/acouple-of-gurus/logo.png" alt="A Couple of Gurus"></div>
+        <img class="revio-logo" src="revio-logo-white.png" alt="Rev.io">
+      </div>
+      <div class="wrap">
+        <div class="kicker">6. Action plan</div>
+        <h2>Turn Discovery Completed into a concrete PSA fit decision.</h2>
+        <div class="timeline">
+          <div class="step">
+            <div class="date">Step 1</div>
+            <p><strong>Confirm current-state stack.</strong> Document current PSA, RMM, documentation, accounting, backup/security tools, user count, and contract timing.</p>
+          </div>
+          <div class="step">
+            <div class="date">Step 2</div>
+            <p><strong>Run a workflow demo.</strong> Center the demo on ticket intake, dispatch, projects, time, assets, agreements, reporting, and billing handoff using their real service scenarios.</p>
+          </div>
+          <div class="step">
+            <div class="date">Step 3</div>
+            <p><strong>Build the migration map.</strong> Identify required imports, historical data expectations, integration dependencies, training plan, and launch sequence for the 20-user group.</p>
+          </div>
+          <div class="step">
+            <div class="date">Step 4</div>
+            <p><strong>Finalize the business case by 8/31.</strong> Compare the $2,100/month Rev.io PSA scope against current tool cost, admin time, missed billables, and operational risk reduction.</p>
+          </div>
+        </div>
+      </div>
+      <div class="source"><span>Opportunity: 006PX00000eNGY5YAO</span><span>Owner: Andy Whisenant</span></div>
+    </section>
+  </main>
+</body>
+</html>
