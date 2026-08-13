@@ -88,6 +88,8 @@ def account_level(rows):
                 "latest_amount": latest["Later PSA Amount"],
                 "latest_opp": latest["Later PSA Opp"],
                 "latest_opp_url": latest["Later PSA Opp URL"],
+                "latest_loss_reason": latest["Later PSA Loss Reason"],
+                "latest_loss_detail": latest["Later PSA Detail"],
                 "later_count": len(account_rows),
                 "days_to_latest": days_between(first["First SWMC Close Date"], latest["Later PSA Created Date"]),
                 "later_rows": account_rows,
@@ -121,6 +123,19 @@ def render_stage_table(stage, rows):
         later_note = ""
         if row["later_count"] > 1:
             later_note = f'<div class="mini">{row["later_count"]} later opps total</div>'
+        later_loss = ""
+        if stage == "Closed Lost":
+            loss_reason = escape(row["latest_loss_reason"] or "No loss reason captured")
+            loss_detail_text = row["latest_loss_detail"] or "No second closed-lost detail captured"
+            loss_detail = escape(loss_detail_text[:520])
+            if len(loss_detail_text) > 520:
+                loss_detail += "..."
+            later_loss = f"""
+                <div class="loss-detail">
+                  <strong>Second loss reason:</strong> {loss_reason}
+                  <div>{loss_detail}</div>
+                </div>
+            """
         detail = escape(row["first_detail"][:420])
         if len(row["first_detail"]) > 420:
             detail += "..."
@@ -139,6 +154,7 @@ def render_stage_table(stage, rows):
                 <strong>{render_link(row["latest_opp_url"], row["latest_opp"])}</strong>
                 <div class="mini">{escape(row["latest_created"])} / {money(row["latest_amount"])} / {escape(row["days_to_latest"])} days later</div>
                 {later_note}
+                {later_loss}
               </td>
               <td>{detail}</td>
             </tr>
@@ -263,6 +279,8 @@ def main():
     th {{ background: #f2f6fa; color: #334155; font-size: 12px; text-transform: uppercase; letter-spacing: .05em; }}
     tr:last-child td {{ border-bottom: 0; }}
     .mini {{ color: var(--muted); font-size: 12px; margin-top: 4px; }}
+    .loss-detail {{ margin-top: 8px; padding: 8px 10px; border-left: 3px solid var(--red); background: #fff7f6; color: #5f1d17; border-radius: 4px; }}
+    .loss-detail strong {{ display: block; margin-bottom: 3px; color: var(--red); }}
     .toolbar {{ display: flex; gap: 10px; margin: 16px 0 0; }}
     input {{ width: min(520px, 100%); border: 1px solid var(--line); border-radius: 6px; padding: 10px 12px; font: inherit; }}
     @media (max-width: 760px) {{
