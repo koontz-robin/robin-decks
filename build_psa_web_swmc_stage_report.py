@@ -65,6 +65,16 @@ def within_last_days(value, days):
     return today - timedelta(days=days) <= dt <= today
 
 
+def within_date_range(value, start_date, end_date):
+    if not value:
+        return False
+    try:
+        dt = datetime.fromisoformat(value[:10]).date()
+    except ValueError:
+        return False
+    return start_date <= dt <= end_date
+
+
 def load_rows():
     with SOURCE.open(encoding="utf-8", newline="") as handle:
         return list(csv.DictReader(handle))
@@ -356,11 +366,15 @@ def build_dashboard_view(rows, view_id, label, prefix, active=False):
 
 def main():
     rows = load_rows()
-    recent_rows = [row for row in rows if row["Later PSA Opp ID"] and within_last_days(row["Later PSA Created Date"], 60)]
+    june_aug_start = datetime(2026, 6, 1).date()
+    june_aug_end = datetime(2026, 8, 31).date()
+    june_aug_rows = [
+        row for row in rows
+        if row["Later PSA Opp ID"] and within_date_range(row["Later PSA Created Date"], june_aug_start, june_aug_end)
+    ]
     generated = datetime.now().strftime("%b %-d, %Y %-I:%M %p")
-    recent_cutoff = (datetime.now().date() - timedelta(days=60)).isoformat()
     all_view = build_dashboard_view(rows, "all-time", "All time · reopened after SWMC loss since July 1, 2025", "all-", active=True)
-    recent_view = build_dashboard_view(recent_rows, "last-60", f"Last 60 days · later PSA created since {recent_cutoff}", "last60-")
+    june_aug_view = build_dashboard_view(june_aug_rows, "june-august", "June-August · later PSA created Jun 1-Aug 31, 2026", "junaug-")
     html = f"""<!doctype html>
 <html lang="en">
 <head>
@@ -463,7 +477,7 @@ def main():
   </header>
   <nav class="tabs" aria-label="Date range">
     <button class="tab active" type="button" onclick="showView('all-time', this)">All Time</button>
-    <button class="tab" type="button" onclick="showView('last-60', this)">Last 60 Days</button>
+    <button class="tab" type="button" onclick="showView('june-august', this)">June-August</button>
   </nav>
   <main>
     <section class="band" style="padding-top:18px;padding-bottom:0">
@@ -472,7 +486,7 @@ def main():
       </div>
     </section>
     {all_view}
-    {recent_view}
+    {june_aug_view}
   </main>
   <script>
     const search = document.getElementById('search');
@@ -496,7 +510,7 @@ def main():
     OUTPUT.write_text(html, encoding="utf-8")
     print(f"Wrote {OUTPUT}")
     print(f"All-time accounts reopened: {len(account_level(rows))}")
-    print(f"Last-60 accounts reopened: {len(account_level(recent_rows))}")
+    print(f"June-August accounts reopened: {len(account_level(june_aug_rows))}")
 
 
 if __name__ == "__main__":
