@@ -317,6 +317,8 @@ def build_dashboard_view(rows, view_id, label, prefix, active=False):
     active_accounts = sum(len(stage_groups.get(stage, [])) for stage in STAGE_ORDER if stage not in {"Closed Lost", "Closed Won"})
     closed_lost_accounts = len(stage_groups.get("Closed Lost", []))
     max_stage_count = max(later_stage_counts.values() or [1])
+    month_counts = Counter(row["Later PSA Created Date"][:7] for row in rows if row["Later PSA Opp ID"] and row["Later PSA Created Date"])
+    max_month_count = max(month_counts.values() or [1])
     bar_rows = []
     for stage in STAGE_ORDER:
         count = later_stage_counts.get(stage, 0)
@@ -327,6 +329,20 @@ def build_dashboard_view(rows, view_id, label, prefix, active=False):
             f"""
             <div class="bar-row">
               <div class="bar-label">{escape(label_stage(stage))}</div>
+              <div class="bar-track"><span style="width:{width}%"></span></div>
+              <div class="bar-value">{count}</div>
+            </div>
+            """
+        )
+
+    month_rows = []
+    for month in sorted(month_counts):
+        count = month_counts[month]
+        width = max(8, round(count / max_month_count * 100))
+        month_rows.append(
+            f"""
+            <div class="bar-row compact">
+              <div class="bar-label">{escape(month)}</div>
               <div class="bar-track"><span style="width:{width}%"></span></div>
               <div class="bar-value">{count}</div>
             </div>
@@ -346,12 +362,21 @@ def build_dashboard_view(rows, view_id, label, prefix, active=False):
     </section>
     <section class="band">
       <div class="view-label">{escape(label)}</div>
-      <div class="chart">
-        <div class="section-head">
-          <h2>Later Opportunity Stage Breakdown</h2>
-          <p>{closed_lost_accounts} accounts recycled again to Closed Lost.</p>
+      <div class="split">
+        <div class="chart">
+          <div class="section-head">
+            <h2>Later Opportunity Stage Breakdown</h2>
+            <p>{closed_lost_accounts} accounts recycled again to Closed Lost.</p>
+          </div>
+          {''.join(bar_rows)}
         </div>
-        {''.join(bar_rows)}
+        <div class="chart">
+          <div class="section-head">
+            <h2>Later Opportunity Created Month</h2>
+            <p>{later_opps} later PSA opportunities in this view.</p>
+          </div>
+          {''.join(month_rows)}
+        </div>
       </div>
       <nav class="stage-nav" aria-label="{escape(label)} stage sections">
         <a class="stage-pill" href="#{prefix}closed-lost-trends"><span>Closed Lost Trends</span><strong>{later_closed_lost_opps}</strong></a>
