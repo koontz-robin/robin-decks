@@ -391,15 +391,15 @@ def build_dashboard_view(rows, view_id, label, prefix, active=False):
 
 def main():
     rows = load_rows()
-    june_aug_start = datetime(2026, 6, 1).date()
-    june_aug_end = datetime(2026, 8, 31).date()
-    june_aug_rows = [
+    april_aug_start = datetime(2026, 4, 1).date()
+    april_aug_end = datetime(2026, 8, 31).date()
+    april_aug_rows = [
         row for row in rows
-        if row["Later PSA Opp ID"] and within_date_range(row["Later PSA Created Date"], june_aug_start, june_aug_end)
+        if row["Later PSA Opp ID"] and within_date_range(row["Later PSA Created Date"], april_aug_start, april_aug_end)
     ]
     generated = datetime.now().strftime("%b %-d, %Y %-I:%M %p")
     all_view = build_dashboard_view(rows, "all-time", "All time · reopened after SWMC loss since July 1, 2025", "all-", active=True)
-    june_aug_view = build_dashboard_view(june_aug_rows, "june-august", "June-August · later PSA created Jun 1-Aug 31, 2026", "junaug-")
+    april_aug_view = build_dashboard_view(april_aug_rows, "april-august", "April-August · later PSA created Apr 1-Aug 31, 2026", "apraug-")
     html = f"""<!doctype html>
 <html lang="en">
 <head>
@@ -502,7 +502,7 @@ def main():
   </header>
   <nav class="tabs" aria-label="Date range">
     <button class="tab active" type="button" onclick="showView('all-time', this)">All Time</button>
-    <button class="tab" type="button" onclick="showView('june-august', this)">June-August</button>
+    <button class="tab" type="button" onclick="showView('april-august', this)">April-August</button>
   </nav>
   <main>
     <section class="band" style="padding-top:18px;padding-bottom:0">
@@ -511,7 +511,7 @@ def main():
       </div>
     </section>
     {all_view}
-    {june_aug_view}
+    {april_aug_view}
   </main>
   <script>
     const search = document.getElementById('search');
@@ -535,7 +535,7 @@ def main():
     OUTPUT.write_text(html, encoding="utf-8")
     print(f"Wrote {OUTPUT}")
     print(f"All-time accounts reopened: {len(account_level(rows))}")
-    print(f"June-August accounts reopened: {len(account_level(june_aug_rows))}")
+    print(f"April-August accounts reopened: {len(account_level(april_aug_rows))}")
 
 
 if __name__ == "__main__":
