@@ -1642,6 +1642,420 @@ body {
   .mail-table-wrap { overflow-x:auto; }
   .mail-table { min-width:720px; }
 }
+
+/* Board deep-dive formatting pass */
+:root {
+  --board-bg:#f4f7fb;
+  --board-ink:#172338;
+  --board-muted:#607089;
+  --board-line:#d9e2ee;
+  --board-card:#ffffff;
+  --board-navy:#102a43;
+  --board-teal:#0f766e;
+  --board-green:#18804d;
+  --board-amber:#b7791f;
+  --board-red:#b42318;
+}
+html, body {
+  background:var(--board-bg);
+  color:var(--board-ink);
+  font-family:'Open Sans', Arial, sans-serif;
+}
+#particle-canvas { display:none; }
+.deck { background:var(--board-bg); }
+.slide {
+  min-height:100vh;
+  background:var(--board-bg);
+  color:var(--board-ink);
+  border-bottom:1px solid var(--board-line);
+  overflow:hidden;
+}
+.slide::before {
+  content:"";
+  position:absolute;
+  inset:0 0 auto 0;
+  height:6px;
+  background:linear-gradient(90deg,var(--board-teal),#2cbf99);
+  z-index:0;
+}
+.slide::after {
+  color:rgba(15,118,110,.08);
+  font-family:Montserrat, sans-serif;
+  font-weight:900;
+}
+.top-stripe { display:none; }
+.slide-header {
+  position:relative;
+  z-index:1;
+  background:transparent;
+  border-bottom:1px solid var(--board-line);
+  padding:30px 64px 22px;
+  backdrop-filter:none;
+}
+.slide-header h2 {
+  color:var(--board-ink);
+  font-family:Montserrat, 'Open Sans', sans-serif;
+  font-size:clamp(30px, 2.8vw, 52px);
+  line-height:1.05;
+  letter-spacing:0;
+  max-width:1180px;
+}
+.slide-header img {
+  height:28px;
+  filter:none;
+  opacity:.9;
+}
+.slide-tag,
+.text-card .tag,
+.strategic-play .play-num,
+.breakdown-card .tag {
+  color:var(--board-teal);
+  letter-spacing:2.2px;
+}
+.slide-tag {
+  display:flex;
+  align-items:center;
+  gap:12px;
+  margin-bottom:10px;
+  font-size:11px;
+}
+.slide-tag::before {
+  content:"";
+  width:30px;
+  height:2px;
+  background:var(--board-teal);
+  display:block;
+}
+.header-note {
+  color:var(--board-muted);
+  font-size:11px;
+}
+.slide-body {
+  position:relative;
+  z-index:1;
+  padding:28px 64px 52px;
+}
+.card,
+.cover-chip,
+.cover-nav-tile,
+.kpi,
+.text-card,
+.source-card,
+.window,
+.chart-card,
+.rate-panel,
+.command-panel,
+.tam-funnel-card,
+.tam-insight,
+.closed-lost-summary,
+.breakdown-card,
+.swmc-hero,
+.swmc-card,
+.contract-focus-hero,
+.contract-trend-card,
+.strategic-hero,
+.strategic-play,
+.partner-referral-panel {
+  background:var(--board-card);
+  border:1px solid var(--board-line);
+  border-radius:8px;
+  box-shadow:0 12px 32px rgba(16,42,67,.08);
+  color:var(--board-ink);
+}
+.card *,
+.text-card *,
+.kpi *,
+.chart-card *,
+.rate-panel *,
+.command-panel *,
+.tam-funnel-card *,
+.tam-insight *,
+.closed-lost-summary *,
+.breakdown-card *,
+.swmc-hero *,
+.swmc-card *,
+.contract-focus-hero *,
+.contract-trend-card *,
+.strategic-hero *,
+.strategic-play *,
+.partner-referral-panel * {
+  text-shadow:none;
+}
+.section-rule {
+  background:var(--board-line);
+}
+.section-lbl {
+  color:var(--board-teal);
+}
+.big-claim {
+  border-left:5px solid var(--board-teal);
+}
+.big-claim h3,
+.text-card h3,
+.source-card h3,
+.window h3,
+.chart-title h3,
+.rate-table-block h3,
+.command-panel h3,
+.ai-tool h3,
+.tam-funnel-head h3,
+.tam-platform-note h4,
+.tam-insight h3,
+.closed-lost-summary h3,
+.swmc-hero h3,
+.swmc-card h3,
+.contract-focus-hero h3,
+.contract-trend-card h3,
+.strategic-hero h3,
+.strategic-play h3,
+.referral-panel-head h3 {
+  color:var(--board-ink);
+}
+.big-claim p,
+.text-card p,
+.source-card p,
+.window p,
+.kpi-sub,
+.command-panel p,
+.ai-tool p,
+.tam-funnel-head p,
+.tam-platform-note p,
+.tam-insight p,
+.closed-lost-summary p,
+.swmc-hero p,
+.swmc-card p,
+.contract-focus-hero p,
+.contract-trend-card p,
+.strategic-hero p,
+.strategic-play p,
+.referral-panel-head p,
+td {
+  color:var(--board-muted);
+}
+.kpi::before {
+  display:block;
+  height:4px;
+  box-shadow:none;
+}
+.kpi-val,
+.chip-val,
+.source-math strong,
+.window .count,
+.tam-final-stat strong,
+.closed-lost-kpi strong,
+.swmc-kpi strong,
+.contract-focus-kpi strong,
+.partner-trend-total,
+.referral-total strong,
+.referral-summary-card strong {
+  color:var(--board-teal);
+  font-family:Montserrat, sans-serif;
+}
+.kpi-val.green,
+.chip-val.green,
+.source-math strong,
+.window .count,
+.tam-final-stat strong,
+.closed-lost-kpi strong,
+.swmc-kpi strong,
+.contract-focus-kpi strong {
+  color:var(--board-green);
+}
+.kpi-val.teal,
+.chip-val.teal {
+  color:var(--board-teal);
+}
+.kpi-val.orange {
+  color:var(--board-amber);
+}
+.kpi-label,
+.chip-label,
+.source-math span,
+.month-label,
+.legend-item,
+.chart-title span,
+.tam-final-stat span,
+.closed-lost-kpi span,
+.swmc-kpi span,
+.contract-focus-kpi span,
+.referral-total span {
+  color:var(--board-muted);
+}
+.bar-track,
+.lift-track,
+.stack-bar,
+.miss-track,
+.swmc-track,
+.refbar-track {
+  background:#e8eef6;
+  border-color:#d8e2ee;
+}
+.bar-label,
+.lift-label,
+.stack-total,
+.bar-val,
+.lift-val,
+.month-label,
+.miss-row label,
+.swmc-bar-row label,
+.breakdown-row label,
+.swmc-reason label,
+.referral-name,
+.refnum,
+.partner-trend-title,
+.partner-count {
+  color:var(--board-ink);
+}
+.bar-fill,
+.lift-current,
+.seg.psa,
+.mrr-product-bar,
+.miss-fill,
+.swmc-fill,
+.refbar {
+  box-shadow:none;
+}
+.mrr-bar-value {
+  color:var(--board-ink);
+  text-shadow:none;
+  background:rgba(255,255,255,.88);
+  border:1px solid var(--board-line);
+  border-radius:4px;
+  padding:1px 4px;
+}
+.stack-total,
+.contract-trend-bar strong {
+  color:var(--board-ink);
+}
+.rate-table th,
+.mail-table th {
+  background:#e8f5f2;
+  color:var(--board-teal);
+}
+.rate-table td,
+.mail-table td,
+.role-table td {
+  border-color:var(--board-line);
+  color:var(--board-muted);
+}
+.rate-table td:first-child,
+.mail-table td:first-child,
+.role-table td:first-child {
+  color:var(--board-ink);
+}
+.rate-table .rate,
+.role-table .quota,
+.mail-table td:nth-child(3),
+.ai-tool strong,
+.tam-insight strong,
+.swmc-footer strong {
+  color:var(--board-green);
+}
+.loss-detail,
+.tam-platform-note,
+.swmc-footer,
+.contract-trend-note {
+  background:#f7fbfa;
+  border-color:#cde7df;
+  color:var(--board-muted);
+}
+.cover {
+  background:linear-gradient(135deg,#102a43 0%,#17324d 52%,#0f766e 100%);
+  color:#fff;
+}
+.cover::before {
+  display:none;
+}
+.cover::after {
+  color:rgba(255,255,255,.09);
+}
+.cover-inner {
+  width:min(1280px, 90%);
+}
+.cover-logo {
+  filter:brightness(0) invert(1);
+}
+.cover-tag {
+  color:#9ee2d7;
+}
+.cover-tag::before {
+  background:#9ee2d7;
+}
+.cover-title,
+.cover-title span {
+  color:#fff;
+}
+.cover-sub {
+  color:#d8e7ef;
+}
+.cover-chip,
+.cover-nav-tile {
+  background:rgba(255,255,255,.08);
+  border-color:rgba(255,255,255,.18);
+  box-shadow:none;
+  backdrop-filter:blur(6px);
+}
+.cover-nav-tile strong,
+.cover-chip .chip-val {
+  color:#fff;
+}
+.cover-nav-tile span,
+.cover-chip .chip-label {
+  color:#9ee2d7;
+}
+.partner-logo,
+.closed-lost-kpi,
+.swmc-kpi,
+.contract-focus-kpi,
+.tam-note-metric,
+.detail-theme,
+.signal-item,
+.strategic-proofpoints,
+.referral-total,
+.referral-summary-card {
+  background:#f7fafc;
+  border-color:var(--board-line);
+}
+.partner-logo span,
+.signal-item p,
+.detail-theme span,
+.referral-summary-card span {
+  color:var(--board-muted);
+}
+.proofpoint-logo-card {
+  border-color:var(--board-line);
+}
+.nav-bar {
+  display:flex;
+  background:rgba(255,255,255,.96);
+  border-top:1px solid var(--board-line);
+  box-shadow:0 -10px 28px rgba(16,42,67,.08);
+}
+.nav-title,
+.nav-counter {
+  color:var(--board-muted);
+}
+.nav-btn {
+  background:#eef7f5;
+  border-color:#cde7df;
+  color:var(--board-teal);
+}
+.dot {
+  background:#cbd7e5;
+}
+.dot.active {
+  background:var(--board-teal);
+  box-shadow:none;
+}
+.nav-logo {
+  filter:none;
+  opacity:.72;
+}
+@media (max-width:900px) {
+  .slide-header { padding:24px 20px 18px; }
+  .slide-body { padding:22px 20px 32px; }
+  .nav-bar { display:none; }
+}
 </style>
 </head>
 <body>
