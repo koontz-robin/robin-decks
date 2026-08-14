@@ -3,7 +3,7 @@
 
 import csv
 from collections import Counter, defaultdict
-from datetime import datetime
+from datetime import datetime, timedelta
 from html import escape
 from pathlib import Path
 
@@ -52,6 +52,17 @@ def days_between(start, end):
     except ValueError:
         return ""
     return str((end_dt - start_dt).days)
+
+
+def within_last_days(value, days):
+    if not value:
+        return False
+    try:
+        dt = datetime.fromisoformat(value[:10]).date()
+    except ValueError:
+        return False
+    today = datetime.now().date()
+    return today - timedelta(days=days) <= dt <= today
 
 
 def load_rows():
@@ -105,19 +116,23 @@ def render_link(url, text):
     return f'<a href="{escape(url)}" target="_blank" rel="noopener">{escape(text)}</a>'
 
 
-def stage_nav(stage_groups):
+def stage_slug(stage):
+    return stage.lower().replace(" ", "-").replace("/", "-")
+
+
+def stage_nav(stage_groups, prefix=""):
     parts = []
     for stage in STAGE_ORDER:
         if stage in stage_groups:
             label = label_stage(stage)
             count = len(stage_groups[stage])
-            slug = stage.lower().replace(" ", "-").replace("/", "-")
+            slug = f"{prefix}{stage_slug(stage)}"
             parts.append(f'<a class="stage-pill" href="#{slug}"><span>{escape(label)}</span><strong>{count}</strong></a>')
     return "\n".join(parts)
 
 
-def render_stage_table(stage, rows):
-    slug = stage.lower().replace(" ", "-").replace("/", "-")
+def render_stage_table(stage, rows, prefix=""):
+    slug = f"{prefix}{stage_slug(stage)}"
     body = []
     for row in rows:
         later_note = ""
@@ -183,7 +198,7 @@ def render_stage_table(stage, rows):
     """
 
 
-def render_closed_lost_trends(rows):
+def render_closed_lost_trends(rows, prefix=""):
     closed_lost_rows = [row for row in rows if row["Later PSA Stage"] == "Closed Lost"]
     if not closed_lost_rows:
         return ""
@@ -247,7 +262,7 @@ def render_closed_lost_trends(rows):
         )
 
     return f"""
-      <section class="band" id="closed-lost-trends">
+      <section class="band" id="{prefix}closed-lost-trends">
         <div class="section-head">
           <h2>Later Closed Lost Trend</h2>
           <p>{len(closed_lost_rows)} later Closed Lost opps across {len(by_account)} accounts; {len(third_loss_accounts)} accounts had a third lost PSA opportunity.</p>
@@ -278,8 +293,7 @@ def render_closed_lost_trends(rows):
     """
 
 
-def main():
-    rows = load_rows()
+def build_dashboard_view(rows, view_id, label, prefix, active=False):
     accounts = account_level(rows)
     stage_groups = defaultdict(list)
     for account in accounts:
@@ -293,8 +307,6 @@ def main():
     active_accounts = sum(len(stage_groups.get(stage, [])) for stage in STAGE_ORDER if stage not in {"Closed Lost", "Closed Won"})
     closed_lost_accounts = len(stage_groups.get("Closed Lost", []))
     max_stage_count = max(later_stage_counts.values() or [1])
-    generated = datetime.now().strftime("%b %-d, %Y %-I:%M %p")
-
     bar_rows = []
     for stage in STAGE_ORDER:
         count = later_stage_counts.get(stage, 0)
@@ -311,8 +323,44 @@ def main():
             """
         )
 
-    stage_sections = "\n".join(render_stage_table(stage, stage_groups[stage]) for stage in STAGE_ORDER if stage in stage_groups)
-    closed_lost_trends = render_closed_lost_trends(rows)
+    stage_sections = "\n".join(render_stage_table(stage, stage_groups[stage], prefix) for stage in STAGE_ORDER if stage in stage_groups)
+    closed_lost_trends = render_closed_lost_trends(rows, prefix)
+    active_class = " active" if active else ""
+    return f"""
+  <section id="{view_id}" class="dashboard-view{active_class}">
+    <section class="summary">
+      <div class="metric"><strong>{unique_accounts}</strong><span>accounts reopened</span></div>
+      <div class="metric"><strong>{later_opps}</strong><span>later PSA opportunities</span></div>
+      <div class="metric"><strong>{won_accounts}</strong><span>latest stage Closed Won</span></div>
+      <div class="metric"><strong>{active_accounts}</strong><span>latest stage still active</span></div>
+    </section>
+    <section class="band">
+      <div class="view-label">{escape(label)}</div>
+      <div class="chart">
+        <div class="section-head">
+          <h2>Later Opportunity Stage Breakdown</h2>
+          <p>{closed_lost_accounts} accounts recycled again to Closed Lost.</p>
+        </div>
+        {''.join(bar_rows)}
+      </div>
+      <nav class="stage-nav" aria-label="{escape(label)} stage sections">
+        <a class="stage-pill" href="#{prefix}closed-lost-trends"><span>Closed Lost Trends</span><strong>{later_closed_lost_opps}</strong></a>
+        {stage_nav(stage_groups, prefix)}
+      </nav>
+    </section>
+    {closed_lost_trends}
+    <div id="{prefix}stage-sections">{stage_sections}</div>
+  </section>
+    """
+
+
+def main():
+    rows = load_rows()
+    recent_rows = [row for row in rows if row["Later PSA Opp ID"] and within_last_days(row["Later PSA Created Date"], 60)]
+    generated = datetime.now().strftime("%b %-d, %Y %-I:%M %p")
+    recent_cutoff = (datetime.now().date() - timedelta(days=60)).isoformat()
+    all_view = build_dashboard_view(rows, "all-time", "All time · reopened after SWMC loss since July 1, 2025", "all-", active=True)
+    recent_view = build_dashboard_view(recent_rows, "last-60", f"Last 60 days · later PSA created since {recent_cutoff}", "last60-")
     html = f"""<!doctype html>
 <html lang="en">
 <head>
@@ -357,6 +405,12 @@ def main():
     .metric strong {{ display: block; font-size: 28px; line-height: 1; }}
     .metric span {{ display: block; margin-top: 6px; color: var(--muted); font-size: 13px; }}
     .band {{ padding: 28px clamp(20px, 5vw, 72px); }}
+    .tabs {{ display: flex; gap: 8px; padding: 18px clamp(20px, 5vw, 72px) 0; background: white; border-bottom: 1px solid var(--line); }}
+    .tab {{ appearance: none; border: 1px solid var(--line); border-bottom: 0; background: #f8fafc; color: var(--muted); border-radius: 8px 8px 0 0; padding: 10px 14px; font: inherit; font-size: 13px; font-weight: 800; letter-spacing: .04em; text-transform: uppercase; cursor: pointer; }}
+    .tab.active {{ background: var(--navy); border-color: var(--navy); color: white; }}
+    .dashboard-view {{ display: none; }}
+    .dashboard-view.active {{ display: block; }}
+    .view-label {{ color: var(--muted); font-size: 12px; font-weight: 800; letter-spacing: .08em; text-transform: uppercase; margin-bottom: 14px; }}
     .chart, .stage-nav, .table-wrap {{ background: white; border: 1px solid var(--line); border-radius: 8px; }}
     .chart {{ padding: 18px; }}
     .stage-nav {{ display: flex; flex-wrap: wrap; gap: 10px; padding: 14px; margin-top: 16px; }}
@@ -407,31 +461,18 @@ def main():
       </div>
     </div>
   </header>
-  <section class="summary">
-    <div class="metric"><strong>{unique_accounts}</strong><span>accounts reopened</span></div>
-    <div class="metric"><strong>{later_opps}</strong><span>later PSA opportunities</span></div>
-    <div class="metric"><strong>{won_accounts}</strong><span>latest stage Closed Won</span></div>
-    <div class="metric"><strong>{active_accounts}</strong><span>latest stage still active</span></div>
-  </section>
+  <nav class="tabs" aria-label="Date range">
+    <button class="tab active" type="button" onclick="showView('all-time', this)">All Time</button>
+    <button class="tab" type="button" onclick="showView('last-60', this)">Last 60 Days</button>
+  </nav>
   <main>
-    <section class="band">
-      <div class="chart">
-        <div class="section-head">
-          <h2>Later Opportunity Stage Breakdown</h2>
-          <p>{closed_lost_accounts} accounts recycled again to Closed Lost.</p>
-        </div>
-        {''.join(bar_rows)}
-      </div>
-      <nav class="stage-nav" aria-label="Stage sections">
-        <a class="stage-pill" href="#closed-lost-trends"><span>Closed Lost Trends</span><strong>{later_closed_lost_opps}</strong></a>
-        {stage_nav(stage_groups)}
-      </nav>
+    <section class="band" style="padding-top:18px;padding-bottom:0">
       <div class="toolbar">
         <input id="search" type="search" placeholder="Filter accounts, stages, industries, notes">
       </div>
     </section>
-    {closed_lost_trends}
-    <div id="stage-sections">{stage_sections}</div>
+    {all_view}
+    {recent_view}
   </main>
   <script>
     const search = document.getElementById('search');
@@ -441,15 +482,21 @@ def main():
         row.style.display = !term || row.textContent.toLowerCase().includes(term) ? '' : 'none';
       }});
     }});
+    function showView(id, btn) {{
+      document.querySelectorAll('.dashboard-view').forEach(view => view.classList.toggle('active', view.id === id));
+      document.querySelectorAll('.tab').forEach(tab => tab.classList.remove('active'));
+      btn.classList.add('active');
+      search.value = '';
+      document.querySelectorAll('tbody tr').forEach(row => row.style.display = '');
+    }}
   </script>
 </body>
 </html>
 """
     OUTPUT.write_text(html, encoding="utf-8")
     print(f"Wrote {OUTPUT}")
-    print(f"Accounts reopened: {unique_accounts}")
-    print(f"Later opportunities: {later_opps}")
-    print(f"Stage counts: {dict(later_stage_counts)}")
+    print(f"All-time accounts reopened: {len(account_level(rows))}")
+    print(f"Last-60 accounts reopened: {len(account_level(recent_rows))}")
 
 
 if __name__ == "__main__":
