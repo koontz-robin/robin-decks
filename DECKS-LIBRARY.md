@@ -50,6 +50,7 @@ Repo: `git@github.com:koontz-robin/robin-decks.git`
 | Name | File | URL | Notes |
 |---|---|---|---|
 | AVIT Consolidated Deck | avit-consolidated-deck.html | https://koontz-robin.github.io/robin-decks/avit-consolidated-deck.html | Consolidated tabs for Evaluations Summary, Onsite Meeting Recap, and Implementation Plan |
+| Client Business Review Template | client-business-review-template.html | https://koontz-robin.github.io/robin-decks/client-business-review-template.html | Cleaner GitHub Pages CBR format plus reusable page-generation prompt |
 | Rev.io Sales — May Update (5-slide deck) | may-update-deck.html | https://koontz-robin.github.io/robin-decks/may-update-deck.html | Cover, Forecast, Efficiency, May Pipeline, Q2 Momentum |
 | Rev.io Tech Stack | revio-tech-stack.html | https://koontz-robin.github.io/robin-decks/revio-tech-stack.html | Visual stack deck: HubSpot, Salesforce, Outreach, ZoomInfo, OpenClaw, Clay, Claude, Rox, DocuSign, Notion |
 | H2 Sales Growth Motion | h2-leadership-offsite-direct-sales.html | https://koontz-robin.github.io/robin-decks/h2-leadership-offsite-direct-sales.html | H2 leadership offsite deck for direct sales growth, pipeline creation, source diversification, referrals, partner ecosystems, Revii, and integration proof |

@@ -1,0 +1,734 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Rev.io Client Business Review Template</title>
+<meta name="description" content="Rev.io client business review page template for account teams.">
+<style>
+  :root {
+    --navy: #071827;
+    --ink: #12213a;
+    --muted: #64748b;
+    --line: #d9e4ee;
+    --paper: #f6f9fc;
+    --white: #ffffff;
+    --green: #67be4b;
+    --teal: #0aa6b5;
+    --blue: #1866ad;
+    --amber: #f5b64b;
+    --orange: #f97316;
+    --shadow: 0 18px 50px rgba(18, 33, 58, 0.08);
+  }
+  * { box-sizing: border-box; }
+  html { scroll-behavior: smooth; }
+  body {
+    margin: 0;
+    background: var(--paper);
+    color: var(--ink);
+    font-family: Aptos, Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+    letter-spacing: 0;
+  }
+  a { color: inherit; }
+  button { font: inherit; }
+  .topbar {
+    position: sticky;
+    top: 0;
+    z-index: 20;
+    background: rgba(7, 24, 39, 0.95);
+    color: var(--white);
+    border-bottom: 1px solid rgba(255,255,255,0.1);
+    backdrop-filter: blur(14px);
+  }
+  .topbar-inner {
+    width: min(1320px, calc(100vw - 40px));
+    margin: 0 auto;
+    min-height: 72px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 24px;
+  }
+  .brand {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    min-width: 220px;
+  }
+  .brand img { height: 28px; width: auto; display: block; }
+  .brand-copy strong {
+    display: block;
+    font-size: 12px;
+    text-transform: uppercase;
+    letter-spacing: 1.7px;
+    color: #b7f7c9;
+  }
+  .brand-copy span {
+    display: block;
+    margin-top: 3px;
+    color: rgba(255,255,255,0.58);
+    font-size: 11px;
+    font-weight: 700;
+  }
+  .nav {
+    display: flex;
+    justify-content: flex-end;
+    gap: 7px;
+    flex-wrap: wrap;
+  }
+  .nav a, .nav button {
+    border: 1px solid rgba(255,255,255,0.15);
+    background: rgba(255,255,255,0.06);
+    color: rgba(255,255,255,0.72);
+    border-radius: 999px;
+    padding: 7px 10px;
+    text-decoration: none;
+    font-size: 11px;
+    font-weight: 850;
+    text-transform: uppercase;
+    letter-spacing: 0.8px;
+    cursor: pointer;
+  }
+  .nav a:hover, .nav button:hover {
+    border-color: rgba(103,190,75,0.7);
+    color: var(--white);
+  }
+  .hero {
+    min-height: calc(100vh - 72px);
+    color: var(--white);
+    background:
+      linear-gradient(120deg, rgba(7,24,39,0.96), rgba(7,24,39,0.82) 58%, rgba(7,24,39,0.72)),
+      linear-gradient(90deg, rgba(103,190,75,0.18), rgba(10,166,181,0.16)),
+      var(--navy);
+    position: relative;
+    overflow: hidden;
+    display: grid;
+    align-items: center;
+  }
+  .hero::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background:
+      repeating-linear-gradient(0deg, rgba(255,255,255,0.04) 0 1px, transparent 1px 46px),
+      repeating-linear-gradient(90deg, rgba(255,255,255,0.035) 0 1px, transparent 1px 46px);
+    opacity: 0.9;
+  }
+  .hero-inner {
+    position: relative;
+    z-index: 1;
+    width: min(1320px, calc(100vw - 40px));
+    margin: 0 auto;
+    padding: 58px 0 70px;
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) 430px;
+    gap: 48px;
+    align-items: center;
+  }
+  .eyebrow {
+    color: var(--green);
+    text-transform: uppercase;
+    letter-spacing: 1.8px;
+    font-size: 12px;
+    font-weight: 900;
+    margin-bottom: 18px;
+  }
+  h1, h2, h3, p { margin: 0; }
+  h1 {
+    font-size: clamp(44px, 6.8vw, 88px);
+    line-height: 0.96;
+    max-width: 940px;
+    letter-spacing: 0;
+  }
+  .lead {
+    margin-top: 22px;
+    max-width: 760px;
+    color: rgba(255,255,255,0.76);
+    font-size: clamp(18px, 2vw, 24px);
+    line-height: 1.36;
+  }
+  .meta-strip {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    margin-top: 30px;
+  }
+  .pill {
+    border: 1px solid rgba(255,255,255,0.16);
+    background: rgba(255,255,255,0.08);
+    color: rgba(255,255,255,0.78);
+    border-radius: 999px;
+    padding: 8px 12px;
+    font-size: 12px;
+    font-weight: 800;
+  }
+  .hero-panel {
+    background: rgba(255,255,255,0.08);
+    border: 1px solid rgba(255,255,255,0.16);
+    border-radius: 8px;
+    padding: 20px;
+    box-shadow: 0 24px 80px rgba(0,0,0,0.22);
+  }
+  .hero-panel h2 {
+    font-size: 17px;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    margin-bottom: 14px;
+  }
+  .agenda-list { display: grid; gap: 10px; }
+  .agenda-item {
+    display: grid;
+    grid-template-columns: 38px minmax(0, 1fr);
+    gap: 12px;
+    align-items: start;
+    padding: 13px;
+    background: rgba(255,255,255,0.08);
+    border: 1px solid rgba(255,255,255,0.1);
+    border-radius: 8px;
+  }
+  .agenda-item span {
+    width: 38px;
+    height: 38px;
+    border-radius: 8px;
+    display: grid;
+    place-items: center;
+    background: rgba(103,190,75,0.18);
+    color: #b7f7c9;
+    font-weight: 950;
+  }
+  .agenda-item strong { display: block; font-size: 15px; }
+  .agenda-item small {
+    display: block;
+    margin-top: 4px;
+    color: rgba(255,255,255,0.6);
+    line-height: 1.35;
+  }
+  main { width: min(1320px, calc(100vw - 40px)); margin: 0 auto; padding: 34px 0 70px; }
+  section { scroll-margin-top: 92px; }
+  .section-head {
+    margin: 40px 0 18px;
+    display: flex;
+    justify-content: space-between;
+    gap: 24px;
+    align-items: end;
+    border-top: 1px solid var(--line);
+    padding-top: 28px;
+  }
+  .section-head h2 {
+    font-size: clamp(30px, 4vw, 52px);
+    line-height: 1;
+    letter-spacing: 0;
+  }
+  .section-head p {
+    color: var(--muted);
+    line-height: 1.45;
+    max-width: 560px;
+  }
+  .grid-4 { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 14px; }
+  .grid-3 { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 14px; }
+  .grid-2 { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 14px; }
+  .metric-card, .card {
+    background: var(--white);
+    border: 1px solid var(--line);
+    border-radius: 8px;
+    box-shadow: var(--shadow);
+  }
+  .metric-card { padding: 20px; min-height: 154px; }
+  .metric-card strong {
+    display: block;
+    font-size: clamp(30px, 4vw, 46px);
+    line-height: 1;
+    color: var(--blue);
+    letter-spacing: 0;
+  }
+  .metric-card span {
+    display: block;
+    margin-top: 11px;
+    color: var(--muted);
+    font-size: 12px;
+    font-weight: 900;
+    line-height: 1.25;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+  }
+  .metric-card p {
+    margin-top: 12px;
+    color: var(--ink);
+    font-size: 14px;
+    line-height: 1.42;
+  }
+  .card { padding: 22px; min-height: 190px; }
+  .card h3 {
+    font-size: 19px;
+    line-height: 1.15;
+    margin-bottom: 10px;
+  }
+  .card p, .card li {
+    color: var(--muted);
+    font-size: 15px;
+    line-height: 1.44;
+  }
+  .card ul { margin: 0; padding-left: 18px; }
+  .card li + li { margin-top: 8px; }
+  .status-tag {
+    display: inline-flex;
+    align-items: center;
+    gap: 7px;
+    border-radius: 999px;
+    padding: 6px 9px;
+    margin-bottom: 14px;
+    font-size: 11px;
+    font-weight: 900;
+    text-transform: uppercase;
+    letter-spacing: 0.9px;
+  }
+  .adopted { background: rgba(103,190,75,0.12); color: #2f7d25; border: 1px solid rgba(103,190,75,0.24); }
+  .not-adopted { background: rgba(249,115,22,0.1); color: #a94b0d; border: 1px solid rgba(249,115,22,0.24); }
+  .product-grid {
+    display: grid;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: 12px;
+  }
+  .product {
+    background: var(--white);
+    border: 1px solid var(--line);
+    border-radius: 8px;
+    padding: 16px;
+    min-height: 108px;
+    display: grid;
+    align-content: start;
+    gap: 9px;
+  }
+  .product strong { font-size: 15px; line-height: 1.15; }
+  .product span { color: var(--muted); font-size: 13px; line-height: 1.35; }
+  .product[data-state="adopted"] { border-top: 5px solid var(--green); }
+  .product[data-state="not-adopted"] { border-top: 5px solid var(--orange); }
+  .split {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+    gap: 16px;
+  }
+  .band {
+    margin-top: 16px;
+    border-left: 6px solid var(--green);
+    background: var(--navy);
+    color: var(--white);
+    border-radius: 8px;
+    padding: 20px 22px;
+    font-size: 18px;
+    line-height: 1.42;
+  }
+  .roadmap {
+    display: grid;
+    grid-template-columns: minmax(0, 0.95fr) minmax(0, 1.05fr);
+    gap: 14px;
+  }
+  .roadmap-column {
+    background: var(--white);
+    border: 1px solid var(--line);
+    border-radius: 8px;
+    box-shadow: var(--shadow);
+    overflow: hidden;
+  }
+  .roadmap-title {
+    padding: 16px 18px;
+    background: var(--navy);
+    color: var(--white);
+    display: flex;
+    justify-content: space-between;
+    gap: 12px;
+    align-items: center;
+  }
+  .roadmap-title strong {
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    font-size: 12px;
+  }
+  .roadmap-title span { color: rgba(255,255,255,0.62); font-size: 12px; font-weight: 800; }
+  .roadmap-items { display: grid; gap: 0; }
+  .roadmap-item {
+    padding: 16px 18px;
+    border-top: 1px solid var(--line);
+  }
+  .roadmap-item:first-child { border-top: 0; }
+  .roadmap-item strong { display: block; font-size: 16px; }
+  .roadmap-item p { margin-top: 6px; color: var(--muted); line-height: 1.42; font-size: 14px; }
+  .action-table {
+    background: var(--white);
+    border: 1px solid var(--line);
+    border-radius: 8px;
+    box-shadow: var(--shadow);
+    overflow: hidden;
+  }
+  .action-row {
+    display: grid;
+    grid-template-columns: 1.2fr 0.8fr 0.6fr;
+    gap: 12px;
+    padding: 15px 18px;
+    border-top: 1px solid var(--line);
+    align-items: center;
+  }
+  .action-row:first-child {
+    border-top: 0;
+    background: #eef5fa;
+    color: var(--muted);
+    font-size: 11px;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    font-weight: 900;
+  }
+  .action-row div { min-width: 0; }
+  .action-row strong { display: block; font-size: 15px; }
+  .action-row span { color: var(--muted); font-size: 14px; line-height: 1.35; }
+  .prompt-block {
+    position: relative;
+    background: #08111f;
+    color: #dbeafe;
+    border-radius: 8px;
+    border: 1px solid rgba(255,255,255,0.12);
+    box-shadow: 0 24px 80px rgba(8,17,31,0.18);
+    overflow: hidden;
+  }
+  .prompt-top {
+    display: flex;
+    justify-content: space-between;
+    gap: 16px;
+    align-items: center;
+    padding: 16px 18px;
+    border-bottom: 1px solid rgba(255,255,255,0.1);
+  }
+  .prompt-top strong {
+    font-size: 13px;
+    text-transform: uppercase;
+    letter-spacing: 1.2px;
+    color: #b7f7c9;
+  }
+  .copy-btn {
+    border: 1px solid rgba(255,255,255,0.16);
+    background: rgba(255,255,255,0.08);
+    color: var(--white);
+    border-radius: 8px;
+    padding: 8px 10px;
+    cursor: pointer;
+    font-size: 12px;
+    font-weight: 850;
+  }
+  pre {
+    margin: 0;
+    padding: 20px;
+    white-space: pre-wrap;
+    color: #dbeafe;
+    line-height: 1.48;
+    font-size: 13px;
+    overflow-x: auto;
+  }
+  .footer {
+    color: var(--muted);
+    text-align: center;
+    font-size: 12px;
+    padding: 20px 0 40px;
+  }
+  @media (max-width: 1050px) {
+    .hero-inner, .roadmap, .split { grid-template-columns: 1fr; }
+    .hero { min-height: auto; }
+    .grid-4, .product-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+    .topbar { position: static; }
+    .topbar-inner { padding: 14px 0; align-items: flex-start; flex-direction: column; }
+    .nav { justify-content: flex-start; }
+  }
+  @media (max-width: 680px) {
+    .topbar-inner, .hero-inner, main { width: min(100vw - 28px, 1320px); }
+    .grid-4, .grid-3, .grid-2, .product-grid { grid-template-columns: 1fr; }
+    .section-head { display: block; }
+    .section-head p { margin-top: 10px; }
+    .action-row { grid-template-columns: 1fr; gap: 5px; }
+    .hero-inner { padding: 38px 0 44px; }
+    .hero-panel { padding: 16px; }
+    h1 { font-size: 42px; line-height: 1.02; }
+    .lead { font-size: 19px; line-height: 1.42; }
+  }
+</style>
+</head>
+<body>
+<header class="topbar">
+  <div class="topbar-inner">
+    <div class="brand">
+      <img src="revio-logo-white.png" alt="Rev.io">
+      <div class="brand-copy">
+        <strong>Client Business Review</strong>
+        <span>Reusable GitHub Pages template</span>
+      </div>
+    </div>
+    <nav class="nav" aria-label="Page sections">
+      <a href="#overview">Overview</a>
+      <a href="#usage">Usage</a>
+      <a href="#platform">Platform</a>
+      <a href="#roadmap">Roadmap</a>
+      <a href="#actions">Actions</a>
+      <a href="#prompt">Prompt</a>
+      <button type="button" onclick="window.print()">Print</button>
+    </nav>
+  </div>
+</header>
+
+<section class="hero">
+  <div class="hero-inner">
+    <div>
+      <div class="eyebrow">Presented by Rev.io | Client Business Review</div>
+      <h1>Review performance, align priorities, and turn the next quarter into a shared plan.</h1>
+      <p class="lead">A cleaner CBR format for account teams: one page for the client snapshot, product adoption, operating metrics, roadmap, and post-meeting commitments.</p>
+      <div class="meta-strip">
+        <span class="pill">Client: [Client Name]</span>
+        <span class="pill">Date: [CBR Date]</span>
+        <span class="pill">Owner: [Rev.io Presenter]</span>
+      </div>
+    </div>
+    <aside class="hero-panel" aria-label="Agenda">
+      <h2>Today's agenda</h2>
+      <div class="agenda-list">
+        <div class="agenda-item"><span>1</span><div><strong>Client overview</strong><small>Business context, partnership history, and current Rev.io footprint.</small></div></div>
+        <div class="agenda-item"><span>2</span><div><strong>Performance snapshot</strong><small>Review operating metrics, product usage, trends, and risks.</small></div></div>
+        <div class="agenda-item"><span>3</span><div><strong>Strategic initiatives</strong><small>Map Rev.io support to the client's next critical goals.</small></div></div>
+        <div class="agenda-item"><span>4</span><div><strong>What's new and next</strong><small>Product releases, roadmap items, and follow-up action plan.</small></div></div>
+      </div>
+    </aside>
+  </div>
+</section>
+
+<main>
+  <section id="overview">
+    <div class="section-head">
+      <div>
+        <div class="eyebrow">Partnership details</div>
+        <h2>Start with the account story, not a slide title.</h2>
+      </div>
+      <p>Replace the placeholders with the client's business update, goals, stakeholders, and Rev.io journey. Keep this section specific enough that the client feels seen before you show metrics.</p>
+    </div>
+    <div class="grid-3">
+      <article class="card">
+        <h3>Business update</h3>
+        <p>[Summarize the client's current business conditions, growth priorities, operational changes, acquisitions, risk areas, or market pressure.]</p>
+      </article>
+      <article class="card">
+        <h3>Primary objectives</h3>
+        <ul>
+          <li>[Objective 1 tied to revenue, efficiency, cash flow, customer experience, or scale.]</li>
+          <li>[Objective 2 tied to measurable operational improvement.]</li>
+          <li>[Objective 3 tied to adoption, expansion, or executive priority.]</li>
+        </ul>
+      </article>
+      <article class="card">
+        <h3>Rev.io role</h3>
+        <p>Frame Rev.io as the operating platform helping the client simplify billing, service delivery, payments, reporting, and revenue operations.</p>
+      </article>
+    </div>
+  </section>
+
+  <section id="usage">
+    <div class="section-head">
+      <div>
+        <div class="eyebrow">Current usage</div>
+        <h2>Make adoption obvious.</h2>
+      </div>
+      <p>The original deck lists adopted and not-adopted products. This turns that into an executive scan: what is live, what is whitespace, and where expansion could create value.</p>
+    </div>
+    <div class="product-grid">
+      <div class="product" data-state="adopted"><strong>Agent Bundle</strong><span>Adopted product</span></div>
+      <div class="product" data-state="adopted"><strong>QBO Integration</strong><span>Adopted product</span></div>
+      <div class="product" data-state="adopted"><strong>Rev.io Payments</strong><span>Adopted product</span></div>
+      <div class="product" data-state="adopted"><strong>Enterprise Customer Portal</strong><span>Adopted product</span></div>
+      <div class="product" data-state="adopted"><strong>Cyber Protect</strong><span>Adopted product</span></div>
+      <div class="product" data-state="adopted"><strong>Analytics</strong><span>Adopted product</span></div>
+      <div class="product" data-state="adopted"><strong>Accounts Payable</strong><span>Adopted product</span></div>
+      <div class="product" data-state="not-adopted"><strong>Collections</strong><span>Not yet adopted</span></div>
+    </div>
+  </section>
+
+  <section>
+    <div class="section-head">
+      <div>
+        <div class="eyebrow">Operating snapshot</div>
+        <h2>Put the scorecard above the discussion.</h2>
+      </div>
+      <p>These are sample values from the supplied CBR deck. For client-specific pages, swap in current period, prior period, trend, and commentary.</p>
+    </div>
+    <div class="grid-4">
+      <article class="metric-card">
+        <strong>$846,490</strong>
+        <span>Collections | Current as of CBR date</span>
+        <p>Use this to discuss aging, cash application, payment adoption, and collections process improvements.</p>
+      </article>
+      <article class="metric-card">
+        <strong>22.3M</strong>
+        <span>CDR volume | Last month</span>
+        <p>Use this to validate scale, rating complexity, and telecom billing accuracy needs.</p>
+      </article>
+      <article class="metric-card">
+        <strong>10,515</strong>
+        <span>Invoice volume | Last month</span>
+        <p>Use this to highlight process efficiency, invoice exceptions, and customer self-service impact.</p>
+      </article>
+      <article class="metric-card">
+        <strong>$3.76M</strong>
+        <span>Licensee billing | Last month</span>
+        <p>Use this to frame Rev.io's role in revenue operations and executive visibility.</p>
+      </article>
+    </div>
+  </section>
+
+  <section id="platform">
+    <div class="section-head">
+      <div>
+        <div class="eyebrow">Where everything comes together</div>
+        <h2>Connect product capabilities to outcomes.</h2>
+      </div>
+      <p>This is the cleaner version of the AR/AP slide: fewer bullets, clearer buyer value, and a better bridge into expansion or roadmap discussion.</p>
+    </div>
+    <div class="split">
+      <article class="card">
+        <span class="status-tag adopted">Accounts receivable</span>
+        <h3>Collect faster without making the customer work harder.</h3>
+        <ul>
+          <li>Accept card and ACH payments inside CRM, POS, ERP, and customer workflows.</li>
+          <li>Offer mobile, online, recurring, and text-to-pay options.</li>
+          <li>Automate billing and collections motions where manual follow-up slows cash.</li>
+          <li>Use compliant surcharge and ACH strategies to manage processing costs.</li>
+        </ul>
+      </article>
+      <article class="card">
+        <span class="status-tag adopted">Accounts payable</span>
+        <h3>Turn vendor payments into a controlled, visible process.</h3>
+        <ul>
+          <li>Automate vendor payments through ACH and virtual cards.</li>
+          <li>Reduce manual setup, approval, and payment execution work.</li>
+          <li>Earn cashback where available and avoid unnecessary card fees.</li>
+          <li>Improve spend visibility while protecting payment workflows from fraud.</li>
+        </ul>
+      </article>
+    </div>
+    <div class="band">CBR talk track: "The goal is not to review every feature Rev.io has shipped. The goal is to identify which parts of your revenue operation are creating drag, then decide which Rev.io workflows should absorb that work next."</div>
+  </section>
+
+  <section id="roadmap">
+    <div class="section-head">
+      <div>
+        <div class="eyebrow">Product roadmap</div>
+        <h2>Separate what is useful now from what is coming next.</h2>
+      </div>
+      <p>Keep roadmap language concrete and client-relevant. Each item should connect to an operational use case, not just a release note.</p>
+    </div>
+    <div class="roadmap">
+      <article class="roadmap-column">
+        <div class="roadmap-title"><strong>Now</strong><span>Current / near-term focus</span></div>
+        <div class="roadmap-items">
+          <div class="roadmap-item"><strong>International payments</strong><p>Expanded support for payment in non-USD currency.</p></div>
+          <div class="roadmap-item"><strong>Package-based quantities</strong><p>Select a package quantity on a single line of service.</p></div>
+          <div class="roadmap-item"><strong>International rating</strong><p>Improved usability of rate plans for calls with non-US origination or destination.</p></div>
+          <div class="roadmap-item"><strong>Compliant surcharging</strong><p>Add a surcharge to recover payment processing fees where compliant.</p></div>
+        </div>
+      </article>
+      <article class="roadmap-column">
+        <div class="roadmap-title"><strong>Next</strong><span>Planned improvements</span></div>
+        <div class="roadmap-items">
+          <div class="roadmap-item"><strong>Bill Center mobile optimization</strong><p>Improve the mobile customer experience for billing and payment workflows.</p></div>
+          <div class="roadmap-item"><strong>Large request performance</strong><p>Improve response and usability for higher-volume requests.</p></div>
+          <div class="roadmap-item"><strong>Ask Revii</strong><p>Ask questions about Rev.io data in natural language.</p></div>
+          <div class="roadmap-item"><strong>Ask Revii in Billing Reports</strong><p>Embed AI-assisted data questions directly inside the reporting workflow.</p></div>
+        </div>
+      </article>
+    </div>
+  </section>
+
+  <section id="actions">
+    <div class="section-head">
+      <div>
+        <div class="eyebrow">Post-meeting action plan</div>
+        <h2>End with ownership.</h2>
+      </div>
+      <p>The CBR should create next steps, not just good feelings and a calendar artifact. Fill this out live during the call.</p>
+    </div>
+    <div class="action-table">
+      <div class="action-row"><div>Action</div><div>Owner</div><div>Timing</div></div>
+      <div class="action-row"><div><strong>[Schedule workflow review]</strong><span>Example: payments, collections, reporting, or billing operations.</span></div><div>[Rev.io + Client]</div><div>[Date]</div></div>
+      <div class="action-row"><div><strong>[Validate expansion opportunity]</strong><span>Example: Collections, Ask Revii, AP automation, or portal adoption.</span></div><div>[Account Owner]</div><div>[Date]</div></div>
+      <div class="action-row"><div><strong>[Share product follow-up]</strong><span>Example: roadmap notes, release timing, enablement, or support handoff.</span></div><div>[Rev.io]</div><div>[Date]</div></div>
+    </div>
+  </section>
+
+  <section id="prompt">
+    <div class="section-head">
+      <div>
+        <div class="eyebrow">Reusable prompt</div>
+        <h2>Create the client-specific page from this format.</h2>
+      </div>
+      <p>Use this with a CBR deck, account notes, Salesforce metrics, Gong/meeting notes, and any product adoption context. Replace placeholders before sending externally.</p>
+    </div>
+    <div class="prompt-block">
+      <div class="prompt-top">
+        <strong>Client Business Review page generator</strong>
+        <button class="copy-btn" type="button" data-copy="#cbrPrompt">Copy prompt</button>
+      </div>
+      <pre id="cbrPrompt">Create a polished, client-specific Rev.io Client Business Review GitHub Pages HTML file.
+
+Inputs:
+- Client name:
+- CBR date:
+- Rev.io presenter:
+- Client attendees:
+- Account background / business update:
+- Strategic objectives:
+- Products adopted:
+- Products not adopted:
+- Current metrics:
+  - Collections:
+  - CDR volume:
+  - Invoice volume:
+  - Licensee billing:
+- Relevant product usage notes:
+- Known risks, blockers, or support themes:
+- Expansion opportunities:
+- Roadmap items relevant to this client:
+- Required post-meeting actions:
+
+Build requirements:
+- Produce one self-contained HTML page suitable for GitHub Pages.
+- Use Rev.io branding: dark navy foundation, Rev.io green accents, clean white content sections, restrained executive styling.
+- Make the first viewport a usable CBR cover, not a marketing page.
+- Include sticky navigation for Overview, Usage, Metrics, Platform, Roadmap, Actions.
+- Show the account story before the product pitch.
+- Convert raw metrics into executive scorecards with brief interpretation.
+- Show adopted products and not-yet-adopted products as clear visual tiles.
+- Connect Rev.io capabilities to client business outcomes.
+- Include a post-meeting action plan with owner and timing.
+- Keep content source-grounded. Do not invent client facts. Use placeholders or "TBD" where source data is missing.
+- Avoid markdown tables in the final HTML. Use responsive CSS grids instead.
+- Keep all CSS and JavaScript inline unless the user asks for a multi-file app.
+
+Tone:
+- Executive, concise, useful in a live client meeting.
+- No generic filler. Every section should help the account team run the review or create a follow-up action.</pre>
+    </div>
+  </section>
+</main>
+
+<div class="footer">Rev.io Client Business Review template | Built for GitHub Pages | Source: CBR deck April 2026</div>
+
+<script>
+  document.querySelectorAll("[data-copy]").forEach((button) => {
+    button.addEventListener("click", async () => {
+      const target = document.querySelector(button.getAttribute("data-copy"));
+      if (!target) return;
+      try {
+        await navigator.clipboard.writeText(target.textContent.trim());
+        const original = button.textContent;
+        button.textContent = "Copied";
+        setTimeout(() => { button.textContent = original; }, 1200);
+      } catch (error) {
+        button.textContent = "Copy failed";
+        setTimeout(() => { button.textContent = "Copy prompt"; }, 1200);
+      }
+    });
+  });
+</script>
+</body>
+</html>
