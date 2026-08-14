@@ -48,7 +48,7 @@ body { min-height:100%; overflow-x:hidden; overflow-y:auto; background:#0a1628; 
 .chip-val.green { color:#3ddc97; }
 .chip-val.teal { color:#00d4f0; }
 .chip-label { font-size:10px; font-weight:800; letter-spacing:1.4px; text-transform:uppercase; color:rgba(255,255,255,.32); margin-top:5px; }
-.cover-nav-tiles { display:grid; grid-template-columns:repeat(4,minmax(0,1fr)); gap:14px; margin-top:34px; }
+.cover-nav-tiles { display:grid; grid-template-columns:repeat(3,minmax(0,1fr)); gap:14px; margin-top:34px; }
 .cover-nav-tile { display:flex; flex-direction:column; justify-content:center; min-height:84px; padding:16px 18px; border:1px solid rgba(69,97,136,.55); border-radius:12px; background:rgba(17,35,58,.78); color:#fff; text-decoration:none; }
 .cover-nav-tile strong { font-family:Montserrat, sans-serif; font-size:18px; line-height:1.15; font-weight:900; color:#fff; }
 .cover-nav-tile span { margin-top:6px; font-size:10px; font-weight:800; letter-spacing:1.6px; text-transform:uppercase; color:#15d7f2; }
@@ -268,8 +268,8 @@ body { min-height:100%; overflow-x:hidden; overflow-y:auto; background:#0a1628; 
 .commit h3 { font-family:Montserrat, sans-serif; font-size:30px; margin-bottom:16px; }
 .commit-item { border-top:1px solid rgba(255,255,255,.08); padding:14px 0; font-size:17px; line-height:1.32; font-weight:800; color:rgba(255,255,255,.88); }
 .commit-item:first-of-type { border-top:0; padding-top:0; }
-.state-layout { display:grid; grid-template-columns:minmax(0,1fr) 360px; gap:16px; height:100%; }
-.state-charts { display:grid; grid-template-rows:repeat(3,minmax(0,1fr)); gap:12px; min-height:0; }
+.state-layout { display:grid; grid-template-columns:minmax(0,1fr) 342px; grid-template-rows:minmax(0,1fr) auto; gap:12px 14px; height:100%; }
+.state-charts { display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); grid-template-rows:repeat(2,minmax(0,1fr)); gap:12px; min-height:0; }
 .chart-card { padding:18px 20px 14px; min-height:0; display:flex; flex-direction:column; }
 .chart-title { display:flex; align-items:baseline; justify-content:space-between; gap:12px; margin-bottom:10px; }
 .chart-title h3 { font-family:Montserrat, sans-serif; font-size:18px; line-height:1.15; color:#fff; }
@@ -298,22 +298,34 @@ body { min-height:100%; overflow-x:hidden; overflow-y:auto; background:#0a1628; 
 .mrr-product-bar.small .mrr-bar-value { display:block; bottom:auto; top:100%; transform:translate(-50%,3px); padding:1px 4px; border-radius:4px; background:rgba(8,18,36,.9); border:1px solid rgba(255,255,255,.12); font-size:8.5px; line-height:1.1; }
 .created-chart .mrr-group { grid-template-columns:repeat(4,minmax(0,1fr)); gap:4px; }
 .total-created-chart .mrr-group { grid-template-columns:repeat(2,minmax(0,1fr)); gap:5px; }
-#slide-2 .state-charts { grid-template-rows:repeat(3,minmax(0,1fr)); gap:10px; }
-#slide-2 .chart-card { padding:14px 18px 11px; }
+#slide-2 .state-charts { grid-template-columns:repeat(2,minmax(0,1fr)); grid-template-rows:repeat(2,minmax(0,1fr)); gap:10px; }
+#slide-2 .chart-card { padding:12px 15px 10px; }
 #slide-2 .chart-title { margin-bottom:7px; }
-#slide-2 .grouped-mrr-bars { min-height:102px; }
-#slide-2 .mrr-group { height:94px; }
+#slide-2 .chart-title h3 { font-size:15px; }
+#slide-2 .chart-title span { font-size:9px; }
+#slide-2 .grouped-mrr-bars { min-height:86px; }
+#slide-2 .mrr-group { height:78px; }
 #slide-2 .mrr-month { gap:8px; }
 #slide-2 .mrr-bar-value { font-size:9px; }
 #slide-2 .chart-legend { margin-top:6px; }
-.rate-panel { padding:16px; display:flex; flex-direction:column; gap:12px; min-height:0; }
+.avg-deal-chart .mrr-group { grid-template-columns:1fr; }
+.vertical-chart .mrr-group { grid-template-columns:repeat(4,minmax(0,1fr)); gap:3px; }
+.vertical-chart .mrr-product-bar:nth-child(2),
+.vertical-chart .mrr-product-bar:nth-child(4) { opacity:.72; }
+.rate-panel { padding:14px; display:flex; flex-direction:column; gap:10px; min-height:0; }
 .rate-table-block { min-height:0; }
-.rate-table-block h3 { font-family:Montserrat, sans-serif; font-size:16px; margin-bottom:8px; color:#fff; }
+.rate-table-block h3 { font-family:Montserrat, sans-serif; font-size:15px; margin-bottom:7px; color:#fff; }
 .rate-table { width:100%; border-collapse:collapse; }
-.rate-table th { padding:8px 7px; font-size:9px; }
-.rate-table td { padding:8px 7px; font-size:12px; }
+.rate-table th { padding:6px 6px; font-size:8px; }
+.rate-table td { padding:6px 6px; font-size:11px; }
 .rate-table .rate { color:#3ddc97; font-family:Montserrat, sans-serif; font-weight:900; text-align:right; white-space:nowrap; }
 .rate-table .sample { color:rgba(255,255,255,.42); text-align:right; white-space:nowrap; }
+.slide2-model-strip { grid-column:1 / -1; margin:0; padding-top:12px; }
+#slide-2 .slide2-model-strip .kpi { padding:15px 18px; min-height:108px; }
+#slide-2 .slide2-model-strip .kpi-label { font-size:11px; }
+#slide-2 .slide2-model-strip .kpi-val { font-size:42px; }
+#slide-2 .slide2-model-strip .kpi-sub { font-size:13px; }
+#slide-2 .slide2-model-strip .transition-arrow { width:58px; }
 .role-table-wrap { padding:22px 24px; }
 .role-table th { font-size:10px; }
 .role-table td { font-size:15px; line-height:1.42; }
@@ -432,6 +444,23 @@ body { min-height:100%; overflow-x:hidden; overflow-y:auto; background:#0a1628; 
 #slide-10 .slide-tag { margin-bottom:12px; }
 #slide-10 .slide-header h2 { font-size:clamp(34px,3vw,50px); max-width:1080px; }
 #slide-10 .slide-body { padding-top:14px; }
+.contract-focus-layout { display:grid; grid-template-columns:minmax(0,.9fr) minmax(0,1.1fr); gap:18px; height:100%; }
+.contract-focus-hero { padding:26px 28px; border-left:4px solid #3ddc97; display:flex; flex-direction:column; justify-content:space-between; }
+.contract-focus-hero h3 { font-family:Montserrat,sans-serif; font-size:36px; line-height:1.08; color:#fff; margin-bottom:12px; }
+.contract-focus-hero p { color:rgba(255,255,255,.66); font-size:15px; line-height:1.42; }
+.contract-focus-kpis { display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); gap:10px; margin-top:22px; }
+.contract-focus-kpi { border-radius:10px; background:rgba(255,255,255,.045); border:1px solid rgba(255,255,255,.08); padding:14px 15px; }
+.contract-focus-kpi strong { display:block; font-family:Montserrat,sans-serif; font-size:36px; line-height:1; color:var(--c,#00d4f0); }
+.contract-focus-kpi span { display:block; margin-top:7px; color:rgba(255,255,255,.52); font-size:10px; line-height:1.25; font-weight:900; letter-spacing:1.2px; text-transform:uppercase; }
+.contract-trend-card { padding:22px 24px; }
+.contract-trend-card h3 { font-family:Montserrat,sans-serif; font-size:24px; line-height:1.12; color:#fff; margin-bottom:8px; }
+.contract-trend-card p { color:rgba(255,255,255,.62); font-size:13px; line-height:1.36; margin-bottom:16px; }
+.contract-trend-bars { display:grid; grid-template-columns:repeat(7,minmax(0,1fr)); gap:12px; align-items:end; min-height:210px; padding-top:18px; }
+.contract-trend-month { display:flex; flex-direction:column; justify-content:flex-end; gap:10px; height:100%; min-width:0; }
+.contract-trend-bar { position:relative; height:var(--h); min-height:4px; border-radius:8px 8px 2px 2px; background:linear-gradient(180deg,#3ddc97,#00d4f0); box-shadow:0 0 22px rgba(61,220,151,.28); border:1px solid rgba(255,255,255,.12); }
+.contract-trend-bar.zero { background:rgba(255,255,255,.08); box-shadow:none; border:1px dashed rgba(255,255,255,.14); }
+.contract-trend-bar strong { position:absolute; left:50%; bottom:100%; transform:translate(-50%,-6px); font-family:Montserrat,sans-serif; font-size:16px; line-height:1; color:#fff; }
+.contract-trend-note { margin-top:18px; padding:15px 16px; border-radius:10px; background:rgba(61,220,151,.08); border:1px solid rgba(61,220,151,.2); color:rgba(255,255,255,.72); font-size:13px; line-height:1.38; }
 .strategic-motion-layout { display:grid; grid-template-columns:minmax(0,.9fr) minmax(0,1.1fr); gap:22px; align-items:stretch; height:100%; }
 .strategic-hero { padding:28px 30px; display:flex; flex-direction:column; justify-content:space-between; border-left:4px solid #f5a623; }
 .strategic-hero h3 { font-family:Montserrat,sans-serif; font-size:34px; line-height:1.08; color:#fff; margin-bottom:12px; }
@@ -900,6 +929,116 @@ body { min-height:100%; overflow-x:hidden; overflow-y:auto; background:#0a1628; 
 #slide-12 .text-card p {
   font-size:12px;
   line-height:1.32;
+}
+#slide-2 {
+  padding:42px 64px 46px;
+}
+#slide-2::after {
+  top:26px;
+  right:56px;
+  font-size:64px;
+}
+#slide-2 .slide-header {
+  max-width:100%;
+}
+#slide-2 .slide-tag {
+  margin-bottom:14px;
+  font-size:12px;
+  letter-spacing:4px;
+}
+#slide-2 .slide-tag::before {
+  width:38px;
+}
+#slide-2 .slide-body {
+  padding-top:10px;
+}
+#slide-2 .state-layout {
+  grid-template-columns:minmax(0,1fr) 340px;
+  grid-template-rows:minmax(0,1fr) auto;
+  gap:12px 14px;
+}
+#slide-2 .state-charts {
+  grid-template-columns:repeat(2,minmax(0,1fr));
+  grid-template-rows:minmax(0,.9fr) minmax(0,1fr);
+  gap:10px;
+}
+#slide-2 .vertical-chart {
+  grid-column:1 / -1;
+}
+#slide-2 .chart-card {
+  padding:13px 15px 10px;
+  border-radius:10px;
+}
+#slide-2 .chart-title h3 {
+  font-size:15px;
+  line-height:1.08;
+}
+#slide-2 .chart-title span {
+  font-size:8px;
+  letter-spacing:1px;
+}
+#slide-2 .grouped-mrr-bars {
+  min-height:94px;
+}
+#slide-2 .mrr-group {
+  height:78px;
+}
+#slide-2 .mrr-bar-value {
+  font-size:8px;
+}
+#slide-2 .month-label {
+  font-size:10px;
+}
+#slide-2 .chart-legend {
+  margin-top:4px;
+}
+#slide-2 .legend-item {
+  font-size:9px;
+}
+#slide-2 .rate-panel {
+  padding:18px;
+  border-radius:10px;
+  gap:12px;
+}
+#slide-2 .rate-table-block h3 {
+  font-size:28px;
+  line-height:1;
+  margin-bottom:9px;
+}
+#slide-2 .rate-table th {
+  padding:6px 7px;
+  font-size:8px;
+}
+#slide-2 .rate-table td {
+  padding:6px 7px;
+  font-size:12px;
+}
+#slide-2 .slide2-model-strip {
+  padding-top:8px;
+  gap:16px;
+}
+#slide-2 .slide2-model-strip::before,
+#slide-2 .slide2-model-strip::after {
+  font-size:8px;
+  letter-spacing:1.8px;
+}
+#slide-2 .slide2-model-strip .kpi {
+  min-height:94px;
+  padding:13px 18px;
+  border-radius:10px;
+}
+#slide-2 .slide2-model-strip .kpi-label {
+  font-size:9px;
+  letter-spacing:3px;
+}
+#slide-2 .slide2-model-strip .kpi-val {
+  font-size:38px;
+}
+#slide-2 .slide2-model-strip .kpi-sub {
+  font-size:12px;
+}
+#slide-2 .slide2-model-strip .transition-arrow {
+  width:52px;
 }
 .attribution-layout {
   display:grid;
@@ -1469,7 +1608,6 @@ body {
       <div class="cover-tag">Rev.io Leadership</div>
       <div class="cover-title">Q3 Sales Board<br><span>Deep-dive</span></div>
       <div class="cover-nav-tiles">
-        <a class="cover-nav-tile" href="#slide-3"><strong>Pipeline Gap</strong><span>Source lift</span></a>
         <a class="cover-nav-tile" href="#slide-4"><strong>Team Structure</strong><span>Segment model</span></a>
         <a class="cover-nav-tile" href="#slide-9"><strong>Expiring Contracts</strong><span>Attack motion</span></a>
         <a class="cover-nav-tile" href="#slide-12"><strong>Partner Referrals</strong><span>Strategic focus</span></a>
@@ -1497,32 +1635,32 @@ body {
             <div class="chart-legend"><div class="legend-item"><span class="legend-dot" style="--c:#00d4f0"></span>PSA</div><div class="legend-item"><span class="legend-dot" style="--c:#3ddc97"></span>Billing</div></div>
           </div>
 
-          <div class="chart-card card created-chart">
-            <div class="chart-title"><h3>Sales-generated opportunities created by product</h3><span>Created date · Jan-July 2026</span></div>
+          <div class="chart-card card avg-deal-chart">
+            <div class="chart-title"><h3>PSA Web average deal size</h3><span>Closed-won PSA · Jan-July 2026</span></div>
             <div class="grouped-mrr-bars">
-              <div class="mrr-month"><div class="mrr-group"><div class="mrr-product-bar" style="--c:#00d4f0;height:116px"><span class="mrr-bar-value">142</span></div><div class="mrr-product-bar" style="--c:#3ddc97;height:21px"><span class="mrr-bar-value">26</span></div></div><div class="month-label">Jan</div></div>
-              <div class="mrr-month"><div class="mrr-group"><div class="mrr-product-bar" style="--c:#00d4f0;height:78px"><span class="mrr-bar-value">96</span></div><div class="mrr-product-bar" style="--c:#3ddc97;height:19px"><span class="mrr-bar-value">23</span></div></div><div class="month-label">Feb</div></div>
-              <div class="mrr-month"><div class="mrr-group"><div class="mrr-product-bar" style="--c:#00d4f0;height:65px"><span class="mrr-bar-value">79</span></div><div class="mrr-product-bar" style="--c:#3ddc97;height:29px"><span class="mrr-bar-value">36</span></div></div><div class="month-label">Mar</div></div>
-              <div class="mrr-month"><div class="mrr-group"><div class="mrr-product-bar" style="--c:#00d4f0;height:62px"><span class="mrr-bar-value">76</span></div><div class="mrr-product-bar" style="--c:#3ddc97;height:16px"><span class="mrr-bar-value">19</span></div></div><div class="month-label">Apr</div></div>
-              <div class="mrr-month"><div class="mrr-group"><div class="mrr-product-bar" style="--c:#00d4f0;height:60px"><span class="mrr-bar-value">74</span></div><div class="mrr-product-bar small" style="--c:#3ddc97;height:7px"><span class="mrr-bar-value">9</span></div></div><div class="month-label">May</div></div>
-              <div class="mrr-month"><div class="mrr-group"><div class="mrr-product-bar" style="--c:#00d4f0;height:77px"><span class="mrr-bar-value">94</span></div><div class="mrr-product-bar" style="--c:#3ddc97;height:17px"><span class="mrr-bar-value">21</span></div></div><div class="month-label">Jun</div></div>
-              <div class="mrr-month"><div class="mrr-group"><div class="mrr-product-bar" style="--c:#00d4f0;height:62px"><span class="mrr-bar-value">76</span></div><div class="mrr-product-bar" style="--c:#3ddc97;height:20px"><span class="mrr-bar-value">24</span></div></div><div class="month-label">Jul</div></div>
+              <div class="mrr-month"><div class="mrr-group"><div class="mrr-product-bar" style="--c:#f5a623;height:48px"><span class="mrr-bar-value">$574</span></div></div><div class="month-label">Jan</div></div>
+              <div class="mrr-month"><div class="mrr-group"><div class="mrr-product-bar" style="--c:#f5a623;height:55px"><span class="mrr-bar-value">$669</span></div></div><div class="month-label">Feb</div></div>
+              <div class="mrr-month"><div class="mrr-group"><div class="mrr-product-bar" style="--c:#f5a623;height:94px"><span class="mrr-bar-value">$1,134</span></div></div><div class="month-label">Mar</div></div>
+              <div class="mrr-month"><div class="mrr-group"><div class="mrr-product-bar" style="--c:#f5a623;height:62px"><span class="mrr-bar-value">$742</span></div></div><div class="month-label">Apr</div></div>
+              <div class="mrr-month"><div class="mrr-group"><div class="mrr-product-bar" style="--c:#f5a623;height:57px"><span class="mrr-bar-value">$692</span></div></div><div class="month-label">May</div></div>
+              <div class="mrr-month"><div class="mrr-group"><div class="mrr-product-bar" style="--c:#f5a623;height:71px"><span class="mrr-bar-value">$858</span></div></div><div class="month-label">Jun</div></div>
+              <div class="mrr-month"><div class="mrr-group"><div class="mrr-product-bar" style="--c:#f5a623;height:71px"><span class="mrr-bar-value">$858</span></div></div><div class="month-label">Jul</div></div>
             </div>
-            <div class="chart-legend"><div class="legend-item"><span class="legend-dot" style="--c:#00d4f0"></span>PSA</div><div class="legend-item"><span class="legend-dot" style="--c:#3ddc97"></span>Billing</div></div>
+            <div class="chart-legend"><div class="legend-item"><span class="legend-dot" style="--c:#f5a623"></span>Avg MRR per closed-won PSA deal</div></div>
           </div>
 
-          <div class="chart-card card mrr-chart">
-            <div class="chart-title"><h3>MRR sold by product</h3><span>Close date · closed-won Jan-July 2026</span></div>
+          <div class="chart-card card vertical-chart">
+            <div class="chart-title"><h3>Created and won by account vertical</h3><span>Created date · Jan-July 2026</span></div>
             <div class="grouped-mrr-bars">
-              <div class="mrr-month"><div class="mrr-group"><div class="mrr-product-bar" style="--c:#00d4f0;height:34px"><span class="mrr-bar-value">$5.7K</span></div><div class="mrr-product-bar" style="--c:#3ddc97;height:82px"><span class="mrr-bar-value">$13.9K</span></div></div><div class="month-label">Jan</div></div>
-              <div class="mrr-month"><div class="mrr-group"><div class="mrr-product-bar" style="--c:#00d4f0;height:59px"><span class="mrr-bar-value">$10.0K</span></div><div class="mrr-product-bar" style="--c:#3ddc97;height:15px"><span class="mrr-bar-value">$2.5K</span></div></div><div class="month-label">Feb</div></div>
-              <div class="mrr-month"><div class="mrr-group"><div class="mrr-product-bar" style="--c:#00d4f0;height:93px"><span class="mrr-bar-value">$15.9K</span></div><div class="mrr-product-bar" style="--c:#3ddc97;height:72px"><span class="mrr-bar-value">$12.3K</span></div></div><div class="month-label">Mar</div></div>
-              <div class="mrr-month"><div class="mrr-group"><div class="mrr-product-bar" style="--c:#00d4f0;height:65px"><span class="mrr-bar-value">$11.1K</span></div><div class="mrr-product-bar" style="--c:#3ddc97;height:41px"><span class="mrr-bar-value">$6.9K</span></div></div><div class="month-label">Apr</div></div>
-              <div class="mrr-month"><div class="mrr-group"><div class="mrr-product-bar" style="--c:#00d4f0;height:53px"><span class="mrr-bar-value">$9.0K</span></div><div class="mrr-product-bar small" style="--c:#3ddc97;height:7px"><span class="mrr-bar-value">$1.2K</span></div></div><div class="month-label">May</div></div>
-              <div class="mrr-month"><div class="mrr-group"><div class="mrr-product-bar" style="--c:#00d4f0;height:116px"><span class="mrr-bar-value">$19.7K</span></div><div class="mrr-product-bar" style="--c:#3ddc97;height:24px"><span class="mrr-bar-value">$4.0K</span></div></div><div class="month-label">Jun</div></div>
-              <div class="mrr-month"><div class="mrr-group"><div class="mrr-product-bar" style="--c:#00d4f0;height:66px"><span class="mrr-bar-value">$11.2K</span></div><div class="mrr-product-bar" style="--c:#3ddc97;height:18px"><span class="mrr-bar-value">$3.1K</span></div></div><div class="month-label">Jul</div></div>
+              <div class="mrr-month"><div class="mrr-group"><div class="mrr-product-bar" style="--c:#00d4f0;height:76px"><span class="mrr-bar-value">128</span></div><div class="mrr-product-bar" style="--c:#00d4f0;height:7px"><span class="mrr-bar-value">11</span></div><div class="mrr-product-bar" style="--c:#3ddc97;height:94px"><span class="mrr-bar-value">158</span></div><div class="mrr-product-bar" style="--c:#3ddc97;height:10px"><span class="mrr-bar-value">17</span></div></div><div class="month-label">Jan</div></div>
+              <div class="mrr-month"><div class="mrr-group"><div class="mrr-product-bar" style="--c:#00d4f0;height:65px"><span class="mrr-bar-value">110</span></div><div class="mrr-product-bar" style="--c:#00d4f0;height:10px"><span class="mrr-bar-value">16</span></div><div class="mrr-product-bar" style="--c:#3ddc97;height:63px"><span class="mrr-bar-value">106</span></div><div class="mrr-product-bar" style="--c:#3ddc97;height:5px"><span class="mrr-bar-value">8</span></div></div><div class="month-label">Feb</div></div>
+              <div class="mrr-month"><div class="mrr-group"><div class="mrr-product-bar" style="--c:#00d4f0;height:61px"><span class="mrr-bar-value">102</span></div><div class="mrr-product-bar" style="--c:#00d4f0;height:15px"><span class="mrr-bar-value">26</span></div><div class="mrr-product-bar" style="--c:#3ddc97;height:57px"><span class="mrr-bar-value">96</span></div><div class="mrr-product-bar" style="--c:#3ddc97;height:8px"><span class="mrr-bar-value">14</span></div></div><div class="month-label">Mar</div></div>
+              <div class="mrr-month"><div class="mrr-group"><div class="mrr-product-bar" style="--c:#00d4f0;height:56px"><span class="mrr-bar-value">94</span></div><div class="mrr-product-bar" style="--c:#00d4f0;height:9px"><span class="mrr-bar-value">15</span></div><div class="mrr-product-bar" style="--c:#3ddc97;height:51px"><span class="mrr-bar-value">85</span></div><div class="mrr-product-bar" style="--c:#3ddc97;height:8px"><span class="mrr-bar-value">13</span></div></div><div class="month-label">Apr</div></div>
+              <div class="mrr-month"><div class="mrr-group"><div class="mrr-product-bar" style="--c:#00d4f0;height:39px"><span class="mrr-bar-value">65</span></div><div class="mrr-product-bar" style="--c:#00d4f0;height:7px"><span class="mrr-bar-value">12</span></div><div class="mrr-product-bar" style="--c:#3ddc97;height:53px"><span class="mrr-bar-value">89</span></div><div class="mrr-product-bar" style="--c:#3ddc97;height:7px"><span class="mrr-bar-value">11</span></div></div><div class="month-label">May</div></div>
+              <div class="mrr-month"><div class="mrr-group"><div class="mrr-product-bar" style="--c:#00d4f0;height:59px"><span class="mrr-bar-value">99</span></div><div class="mrr-product-bar" style="--c:#00d4f0;height:10px"><span class="mrr-bar-value">16</span></div><div class="mrr-product-bar" style="--c:#3ddc97;height:59px"><span class="mrr-bar-value">99</span></div><div class="mrr-product-bar" style="--c:#3ddc97;height:11px"><span class="mrr-bar-value">18</span></div></div><div class="month-label">Jun</div></div>
+              <div class="mrr-month"><div class="mrr-group"><div class="mrr-product-bar" style="--c:#00d4f0;height:51px"><span class="mrr-bar-value">86</span></div><div class="mrr-product-bar" style="--c:#00d4f0;height:10px"><span class="mrr-bar-value">16</span></div><div class="mrr-product-bar" style="--c:#3ddc97;height:43px"><span class="mrr-bar-value">72</span></div><div class="mrr-product-bar" style="--c:#3ddc97;height:5px"><span class="mrr-bar-value">8</span></div></div><div class="month-label">Jul</div></div>
             </div>
-            <div class="chart-legend"><div class="legend-item"><span class="legend-dot" style="--c:#00d4f0"></span>PSA</div><div class="legend-item"><span class="legend-dot" style="--c:#3ddc97"></span>Billing</div></div>
+            <div class="chart-legend"><div class="legend-item"><span class="legend-dot" style="--c:#00d4f0"></span>MSP created / won</div><div class="legend-item"><span class="legend-dot" style="--c:#3ddc97"></span>VAR/Integrator created / won</div></div>
           </div>
         </div>
 
@@ -1532,11 +1670,11 @@ body {
             <table class="rate-table">
               <thead><tr><th>Product</th><th class="num">Won / Resolved</th><th class="num">Rate</th></tr></thead>
               <tbody>
-                <tr><td>Payments</td><td class="sample">51 / 136</td><td class="rate">37.5%</td></tr>
-                <tr><td>Billing</td><td class="sample">34 / 204</td><td class="rate">16.7%</td></tr>
-                <tr><td>PSA</td><td class="sample">90 / 900</td><td class="rate">10.0%</td></tr>
-                <tr><td>Cyber</td><td class="sample">2 / 32</td><td class="rate">6.2%</td></tr>
-                <tr><td>Odin</td><td class="sample">0 / 3</td><td class="rate">0.0%</td></tr>
+                <tr><td>Payments</td><td class="sample">58 / 125</td><td class="rate">46.4%</td></tr>
+                <tr><td>Billing</td><td class="sample">36 / 213</td><td class="rate">16.9%</td></tr>
+                <tr><td>PSA</td><td class="sample">106 / 988</td><td class="rate">10.7%</td></tr>
+                <tr><td>Cyber</td><td class="sample">2 / 33</td><td class="rate">6.1%</td></tr>
+                <tr><td>Odin</td><td class="sample">1 / 4</td><td class="rate">25.0%</td></tr>
               </tbody>
             </table>
           </div>
@@ -1545,38 +1683,23 @@ body {
             <table class="rate-table">
               <thead><tr><th>Source</th><th class="num">Won / Pipeline</th><th class="num">Rate</th></tr></thead>
               <tbody>
-                <tr><td>Sales</td><td class="sample">96 / 782</td><td class="rate">12.3%</td></tr>
-                <tr><td>Tradeshow</td><td class="sample">28 / 189</td><td class="rate">14.8%</td></tr>
-                <tr><td>Website + SEO</td><td class="sample">33 / 169</td><td class="rate">19.5%</td></tr>
-                <tr><td>Paid Media</td><td class="sample">6 / 76</td><td class="rate">7.9%</td></tr>
-                <tr><td>Partner/Channel + Referral</td><td class="sample">3 / 12</td><td class="rate">25.0%</td></tr>
-                <tr><td>Inbound phone/email</td><td class="sample">6 / 32</td><td class="rate">18.8%</td></tr>
+                <tr><td>Sales</td><td class="sample">109 / 816</td><td class="rate">13.4%</td></tr>
+                <tr><td>Tradeshow</td><td class="sample">31 / 231</td><td class="rate">13.4%</td></tr>
+                <tr><td>Website + SEO</td><td class="sample">38 / 175</td><td class="rate">21.7%</td></tr>
+                <tr><td>Paid Media</td><td class="sample">6 / 74</td><td class="rate">8.1%</td></tr>
+                <tr><td>Partner/Channel + Referral</td><td class="sample">12 / 32</td><td class="rate">37.5%</td></tr>
+                <tr><td>Inbound phone/email</td><td class="sample">7 / 36</td><td class="rate">19.4%</td></tr>
               </tbody>
             </table>
           </div>
         </div>
-      </div>
-    </div>
-  </section>
-
-  <section class="slide" id="slide-3">
-    <div class="top-stripe"></div>
-    <div class="slide-header"><div><div class="slide-tag">Pipeline Levers</div><h2>Path to $30k+ in monthly PSA bookings</h2></div><div><img src="https://7091219.fs1.hubspotusercontent-na1.net/hubfs/7091219/email-assets/logo-revio-white.png" alt="Rev.io"><div class="header-note">H1 actuals vs target</div></div></div>
-    <div class="slide-body">
-      <div class="kpi-row transition">
-        <div class="kpi card"><div class="kpi-label">H1 current model</div><div class="kpi-val">159</div><div class="kpi-sub">Opps/mo · 9.4% win · ~$808 ASP</div></div>
-        <div class="kpi card orange"><div class="kpi-label">Current bookings run-rate</div><div class="kpi-val orange">~$12K</div><div class="kpi-sub">159 x 9.4% x ~$808</div></div>
-        <div class="transition-arrow" aria-hidden="true"></div>
-        <div class="kpi card green"><div class="kpi-label">Target model</div><div class="kpi-val green">178</div><div class="kpi-sub">Opps/mo · 14% win · $1,200 ASP</div></div>
-        <div class="kpi card"><div class="kpi-label">Target bookings</div><div class="kpi-val teal">$30K</div><div class="kpi-sub">178 x 14% x $1,200</div></div>
-      </div>
-      <div class="source-lift-chart card">
-        <div class="section-hdr"><div class="section-lbl">Monthly PSA Opportunity Creation by Source</div><div class="section-rule"></div></div>
-        <div class="lift-legend"><span class="current"><i></i>H1 current avg</span><span class="increase"><i></i>Increase to target</span></div>
-        <div class="lift-row"><div class="lift-label">Sales</div><div class="lift-track"><div class="lift-current" style="width:53.4%"></div><div class="lift-increase" style="width:0%"></div></div><div class="lift-val">95 <span>+0</span> = 95</div></div>
-        <div class="lift-row"><div class="lift-label">Tradeshow</div><div class="lift-track"><div class="lift-current" style="width:17.4%"></div><div class="lift-increase" style="width:2.8%"></div></div><div class="lift-val">31 <span>+5</span> = 36</div></div>
-        <div class="lift-row"><div class="lift-label">Website + Paid Media</div><div class="lift-track"><div class="lift-current" style="width:18%"></div><div class="lift-increase" style="width:5.1%"></div></div><div class="lift-val">32 <span>+9</span> = 41</div></div>
-        <div class="lift-row"><div class="lift-label">Partner / Referral</div><div class="lift-track"><div class="lift-current" style="width:.6%"></div><div class="lift-increase" style="width:2.8%"></div></div><div class="lift-val">1 <span>+5</span> = 6</div></div>
+        <div class="kpi-row transition slide2-model-strip">
+          <div class="kpi card"><div class="kpi-label">H1 current model</div><div class="kpi-val">159</div><div class="kpi-sub">Opps/mo · 9.4% win · ~$808 ASP</div></div>
+          <div class="kpi card orange"><div class="kpi-label">Current bookings run-rate</div><div class="kpi-val orange">~$12K</div><div class="kpi-sub">159 x 9.4% x ~$808</div></div>
+          <div class="transition-arrow" aria-hidden="true"></div>
+          <div class="kpi card green"><div class="kpi-label">Target model</div><div class="kpi-val green">178</div><div class="kpi-sub">Opps/mo · 14% win · $1,200 ASP</div></div>
+          <div class="kpi card"><div class="kpi-label">Target bookings</div><div class="kpi-val teal">$30K</div><div class="kpi-sub">178 x 14% x $1,200</div></div>
+        </div>
       </div>
     </div>
   </section>
@@ -1732,62 +1855,35 @@ body {
   </section>
   <section class="slide" id="slide-10">
     <div class="top-stripe"></div>
-    <div class="slide-header"><div><div class="slide-tag">PSA Web Re-Engagement</div><h2>Software gaps are creating a measurable recycle pool, but product readiness has to convert the second look</h2></div><div><img src="https://7091219.fs1.hubspotusercontent-na1.net/hubfs/7091219/email-assets/logo-revio-white.png" alt="Rev.io"><div class="header-note">SWMC losses since Jul 1, 2025 · PSA 2.0 / PSA opportunities</div></div></div>
+    <div class="slide-header"><div><div class="slide-tag">Salesforce Field Discipline</div><h2>Contract-end-date capture is finally turning into a visible operating focus</h2></div><div><img src="https://7091219.fs1.hubspotusercontent-na1.net/hubfs/7091219/email-assets/logo-revio-white.png" alt="Rev.io"><div class="header-note">AccountHistory · Jan-July 2026</div></div></div>
     <div class="slide-body">
-      <div class="swmc-layout">
-        <div class="swmc-hero card">
+      <div class="contract-focus-layout">
+        <div class="contract-focus-hero card">
           <div>
-            <h3>Re-opened SWMC accounts prove product gaps are not terminal losses.</h3>
-            <p>Since July 2025, Salesforce shows 264 PSA-family opportunities closed lost for Software Missing Capabilities across 238 accounts. Seventy-eight accounts later opened another PSA opportunity, creating a clear win-back pool when roadmap gaps, timing, or proof assets improve.</p>
+            <h3>The team moved from intent to data capture in June and July.</h3>
+            <p>Salesforce AccountHistory shows the competitor contract end-date field was effectively untouched from January through May, then jumped sharply once the team started focusing on it. That is the discipline needed for timed displacement campaigns.</p>
           </div>
-          <div class="swmc-kpis">
-            <div class="swmc-kpi" style="--c:#00d4f0"><strong>78</strong><span>accounts reopened</span></div>
-            <div class="swmc-kpi" style="--c:#3ddc97"><strong>11</strong><span>later closed won</span></div>
-            <div class="swmc-kpi" style="--c:#f5a623"><strong>13</strong><span>still active</span></div>
-            <div class="swmc-kpi" style="--c:#ff5c5c"><strong>11</strong><span>had a 3rd lost PSA opp</span></div>
+          <div class="contract-focus-kpis">
+            <div class="contract-focus-kpi" style="--c:#3ddc97"><strong>422</strong><span>unique account updates in Jun-Jul</span></div>
+            <div class="contract-focus-kpi" style="--c:#00d4f0"><strong>214</strong><span>accounts updated in July</span></div>
+            <div class="contract-focus-kpi" style="--c:#f5a623"><strong>0</strong><span>updates Jan-May</span></div>
+            <div class="contract-focus-kpi" style="--c:#3ddc97"><strong>2</strong><span>months with sustained focus</span></div>
           </div>
-          <div class="swmc-footer"><strong>Board implication:</strong> treat SWMC as a named nurture segment tied to release proof, not as a static closed-lost bucket.</div>
+          <div class="contract-trend-note"><strong>Board implication:</strong> keep paying attention to this field. Contract timing is the difference between a generic PSA outbound motion and a displacement campaign that knows when to strike.</div>
         </div>
-        <div class="breakdown-grid">
-          <div class="swmc-card card" style="--c:#00d4f0">
-            <h3>Latest stage of re-opened accounts</h3>
-            <div class="swmc-bar-grid">
-              <div class="swmc-bar-row"><label>Closed Lost</label><div class="swmc-track"><div class="swmc-fill" style="--w:100%;--c:#ff5c5c"></div></div><span>54</span></div>
-              <div class="swmc-bar-row"><label>Closed Won</label><div class="swmc-track"><div class="swmc-fill" style="--w:20%;--c:#3ddc97"></div></div><span>11</span></div>
-              <div class="swmc-bar-row"><label>Discovery Scheduled</label><div class="swmc-track"><div class="swmc-fill" style="--w:13%;--c:#f5a623"></div></div><span>7</span></div>
-              <div class="swmc-bar-row"><label>Initial Demo</label><div class="swmc-track"><div class="swmc-fill" style="--w:9%;--c:#f5a623"></div></div><span>5</span></div>
-              <div class="swmc-bar-row"><label>Discovery Done</label><div class="swmc-track"><div class="swmc-fill" style="--w:8%;--c:#00d4f0"></div></div><span>1</span></div>
-            </div>
+        <div class="contract-trend-card card">
+          <h3>Competitor contract end-date field updates by month</h3>
+          <p>Unique Salesforce accounts whose Competitor Contract End Date field was populated or changed, by AccountHistory update month.</p>
+          <div class="contract-trend-bars">
+            <div class="contract-trend-month"><div class="contract-trend-bar zero" style="--h:4px"><strong>0</strong></div><div class="month-label">Jan</div></div>
+            <div class="contract-trend-month"><div class="contract-trend-bar zero" style="--h:4px"><strong>0</strong></div><div class="month-label">Feb</div></div>
+            <div class="contract-trend-month"><div class="contract-trend-bar zero" style="--h:4px"><strong>0</strong></div><div class="month-label">Mar</div></div>
+            <div class="contract-trend-month"><div class="contract-trend-bar zero" style="--h:4px"><strong>0</strong></div><div class="month-label">Apr</div></div>
+            <div class="contract-trend-month"><div class="contract-trend-bar zero" style="--h:4px"><strong>0</strong></div><div class="month-label">May</div></div>
+            <div class="contract-trend-month"><div class="contract-trend-bar" style="--h:182px"><strong>208</strong></div><div class="month-label">Jun</div></div>
+            <div class="contract-trend-month"><div class="contract-trend-bar" style="--h:188px"><strong>214</strong></div><div class="month-label">Jul</div></div>
           </div>
-          <div class="swmc-card card" style="--c:#f5a623">
-            <h3>Second-look losses peaked in Q2/Q3</h3>
-            <p>Later Closed Lost PSA opps by close month.</p>
-            <div class="swmc-bar-grid">
-              <div class="swmc-bar-row"><label>Mar 2026</label><div class="swmc-track"><div class="swmc-fill" style="--w:92%;--c:#f5a623"></div></div><span>12</span></div>
-              <div class="swmc-bar-row"><label>Apr 2026</label><div class="swmc-track"><div class="swmc-fill" style="--w:62%;--c:#f5a623"></div></div><span>8</span></div>
-              <div class="swmc-bar-row"><label>May 2026</label><div class="swmc-track"><div class="swmc-fill" style="--w:46%;--c:#f5a623"></div></div><span>6</span></div>
-              <div class="swmc-bar-row"><label>Jun 2026</label><div class="swmc-track"><div class="swmc-fill" style="--w:100%;--c:#ff5c5c"></div></div><span>13</span></div>
-              <div class="swmc-bar-row"><label>Jul 2026</label><div class="swmc-track"><div class="swmc-fill" style="--w:77%;--c:#ff5c5c"></div></div><span>10</span></div>
-            </div>
-          </div>
-          <div class="swmc-card card" style="--c:#3ddc97">
-            <h3>Second closed-loss reasons</h3>
-            <div class="swmc-reason-list">
-              <div class="swmc-reason"><label>Software Missing Capabilities<small>Same objection repeated</small></label><span>26</span></div>
-              <div class="swmc-reason"><label>Discovery No Show<small>Reopened but did not engage</small></label><span>14</span></div>
-              <div class="swmc-reason"><label>Not the Right Time<small>Timing still not matured</small></label><span>12</span></div>
-              <div class="swmc-reason"><label>Decision-maker / price / competitor<small>Value and consensus gaps</small></label><span>10</span></div>
-            </div>
-          </div>
-          <div class="swmc-card card" style="--c:#00d4f0">
-            <h3>Operating response</h3>
-            <div class="swmc-reason-list">
-              <div class="swmc-reason"><label>Tag the missing capability<small>Project management, inventory, integrations, mobile, portal</small></label><span>1</span></div>
-              <div class="swmc-reason"><label>Map release to account reopen date<small>Turn roadmap into trigger timing</small></label><span>2</span></div>
-              <div class="swmc-reason"><label>Reopen with proof asset<small>Feature demo, customer proof, sandbox path</small></label><span>3</span></div>
-              <div class="swmc-reason"><label>Escalate repeat losses<small>11 accounts lost a third PSA opp</small></label><span>4</span></div>
-            </div>
-          </div>
+          <div class="contract-trend-note">June and July are the first months with real volume. Keep this visible in rep dashboards and forecast reviews so the field stays current instead of becoming a one-time cleanup project.</div>
         </div>
       </div>
     </div>
@@ -1898,7 +1994,7 @@ body {
   <div class="nav-controls">
     <button class="nav-btn" id="btn-prev" onclick="goSlide(-1)" disabled>Prev</button>
     <div class="nav-dots" id="nav-dots"></div>
-    <span class="nav-counter" id="nav-counter">1 / 13</span>
+    <span class="nav-counter" id="nav-counter">1 / 10</span>
     <button class="nav-btn" id="btn-next" onclick="goSlide(1)">Next</button>
   </div>
   <img src="https://7091219.fs1.hubspotusercontent-na1.net/hubfs/7091219/email-assets/logo-revio-white.png" alt="Rev.io" class="nav-logo">
@@ -1908,7 +2004,7 @@ body {
 const slides = Array.from(document.querySelectorAll('.slide'));
 const TOTAL = slides.length;
 let cur = 1;
-const labels = ['Cover','State','Levers','Roles','AE Role','ICP TAM','Lost TAM','Strategic','Radar','Referrals','Strategy','Attribution','Start Stop Continue'];
+const labels = ['Cover','State','Roles','AE Role','ICP TAM','Lost TAM','Field Focus','Strategic','Radar','Referrals'];
 function buildDots() {
   const wrap = document.getElementById('nav-dots');
   labels.forEach((label, idx) => {
