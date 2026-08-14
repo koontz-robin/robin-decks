@@ -1677,6 +1677,32 @@ body {
 @media (max-width:900px) {
   .swmc-unlock-layout, .swmc-unlock-actions, .swmc-month-strip { grid-template-columns:1fr; }
 }
+.swmc-loss-layout { display:grid; grid-template-columns:minmax(0,.72fr) minmax(0,1.28fr); gap:16px; height:100%; }
+.swmc-loss-summary { padding:22px 24px; border-left:4px solid #8b5cf6; display:flex; flex-direction:column; justify-content:space-between; }
+.swmc-loss-summary h3 { font-family:Montserrat,sans-serif; font-size:30px; line-height:1.08; color:#fff; margin-bottom:10px; }
+.swmc-loss-summary p { color:rgba(255,255,255,.66); font-size:14px; line-height:1.38; }
+.swmc-loss-kpis { display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); gap:9px; margin-top:18px; }
+.swmc-loss-kpi { border-radius:10px; background:rgba(255,255,255,.045); border:1px solid rgba(255,255,255,.08); padding:12px 13px; }
+.swmc-loss-kpi strong { display:block; font-family:Montserrat,sans-serif; font-size:31px; line-height:1; color:var(--c,#00d4f0); }
+.swmc-loss-kpi span { display:block; margin-top:6px; color:rgba(255,255,255,.52); font-size:9px; line-height:1.2; font-weight:900; letter-spacing:1.1px; text-transform:uppercase; }
+.swmc-loss-note { margin-top:14px; padding:12px 13px; border-radius:10px; background:rgba(139,92,246,.08); border:1px solid rgba(139,92,246,.24); color:rgba(255,255,255,.68); font-size:12px; line-height:1.34; }
+.swmc-loss-grid { display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); gap:10px; align-content:start; }
+.swmc-loss-card { padding:13px 15px; border-left:3px solid var(--c,#00d4f0); min-height:128px; }
+.swmc-loss-card.compact { min-height:104px; }
+.swmc-loss-card h3 { font-family:Montserrat,sans-serif; font-size:17px; line-height:1.12; color:#fff; margin-bottom:6px; display:flex; justify-content:space-between; gap:10px; }
+.swmc-loss-card h3 span { color:var(--c,#00d4f0); white-space:nowrap; }
+.swmc-loss-card p { color:rgba(255,255,255,.64); font-size:11px; line-height:1.28; margin-bottom:7px; }
+.swmc-loss-examples { display:grid; gap:4px; }
+.swmc-loss-example { display:grid; grid-template-columns:minmax(0,1fr) auto; gap:8px; padding-top:4px; border-top:1px solid rgba(255,255,255,.07); }
+.swmc-loss-example label { color:#fff; font-size:10px; line-height:1.14; font-weight:800; }
+.swmc-loss-example span { font-family:Montserrat,sans-serif; color:var(--c,#00d4f0); font-size:10px; font-weight:900; white-space:nowrap; }
+#slide-13 { padding-top:42px; padding-bottom:46px; }
+#slide-13 .slide-tag { margin-bottom:12px; }
+#slide-13 .slide-header h2 { font-size:clamp(34px, 3.1vw, 50px); max-width:1160px; }
+#slide-13 .slide-body { padding-top:16px; }
+@media (max-width:900px) {
+  .swmc-loss-layout, .swmc-loss-grid { grid-template-columns:1fr; }
+}
 </style>
 </head>
 <body>
@@ -1693,6 +1719,7 @@ body {
         <a class="cover-nav-tile" href="#slide-7"><strong>Closed Lost TAM</strong><span>Miss analysis</span></a>
         <a class="cover-nav-tile" href="#slide-4"><strong>Market Coverage</strong><span>Segment model</span></a>
         <a class="cover-nav-tile" href="#slide-5"><strong>SWMC Pipeline Unlock</strong><span>April-August status</span></a>
+        <a class="cover-nav-tile" href="#slide-13"><strong>SWMC Loss Detail</strong><span>Reasons, no no-shows</span></a>
         <a class="cover-nav-tile" href="#slide-8"><strong>Strategic Sales Motion</strong><span>Enterprise path</span></a>
         <a class="cover-nav-tile" href="#slide-12"><strong>Partner Strategy</strong><span>Operating model</span></a>
         <a class="cover-nav-tile" href="#slide-10"><strong>Salesforce Discipline</strong><span>Field focus</span></a>
@@ -1968,6 +1995,82 @@ body {
     </div>
   </section>
 
+  <section class="slide" id="slide-13">
+    <div class="top-stripe"></div>
+    <div class="slide-header"><div><div class="slide-tag">SWMC Closed-Lost Detail</div><h2>Of 30 re-opened accounts that closed lost again, 24 had actionable loss detail beyond no-shows</h2></div><div><img src="https://7091219.fs1.hubspotusercontent-na1.net/hubfs/7091219/email-assets/logo-revio-white.png" alt="Rev.io"><div class="header-note">April-August reopened SWMC cohort · latest-stage Closed Lost · Discovery No Show excluded</div></div></div>
+    <div class="slide-body">
+      <div class="swmc-loss-layout">
+        <div class="swmc-loss-summary card">
+          <div>
+            <h3>The second-loss story is timing, unresolved product proof, and buyer consensus.</h3>
+            <p>Discovery no-shows are a routing and confirmation issue, so this view excludes them and focuses on closed-lost details where the rep captured why the account still did not move.</p>
+          </div>
+          <div>
+            <div class="swmc-loss-kpis">
+              <div class="swmc-loss-kpi" style="--c:#ff5c5c"><strong>30</strong><span>latest-stage closed lost</span></div>
+              <div class="swmc-loss-kpi" style="--c:#8b5cf6"><strong>6</strong><span>discovery no-shows excluded</span></div>
+              <div class="swmc-loss-kpi" style="--c:#00d4f0"><strong>24</strong><span>analyzed loss-detail accounts</span></div>
+              <div class="swmc-loss-kpi" style="--c:#3ddc97"><strong>$30K</strong><span>MRR in analyzed losses</span></div>
+            </div>
+            <div class="swmc-loss-note">Board implication: the re-open play works, but it needs tighter timing nurture, product-gap proof packages, and a cleaner decision-maker path before the second cycle starts.</div>
+          </div>
+        </div>
+        <div class="swmc-loss-grid">
+          <div class="swmc-loss-card card" style="--c:#8b5cf6">
+            <h3>Not the Right Time <span>7 / $9.8K</span></h3>
+            <p>Timing pushed into Q4 or later, often with unresolved workflow questions still attached.</p>
+            <div class="swmc-loss-examples">
+              <div class="swmc-loss-example"><label>ACE-HTI: busiest summer, Q4 decision window</label><span>$1.5K</span></div>
+              <div class="swmc-loss-example"><label>RingAlfa: managed print dropdown gap, reconvene in October</label><span>$1.0K</span></div>
+              <div class="swmc-loss-example"><label>O-Netrix: tax changes by invoice line still needed</label><span>$1.6K</span></div>
+            </div>
+          </div>
+          <div class="swmc-loss-card card" style="--c:#3ddc97">
+            <h3>Software Missing Capabilities <span>6 / $7.2K</span></h3>
+            <p>Specific product gaps remained blockers after the account re-opened.</p>
+            <div class="swmc-loss-examples">
+              <div class="swmc-loss-example"><label>ASAP: AI work-order ingestion into service tickets</label><span>$875</span></div>
+              <div class="swmc-loss-example"><label>Crescent: proposal sub-sections, quoting, consolidated POs</label><span>$1.5K</span></div>
+              <div class="swmc-loss-example"><label>Qovo: Avalara/Avatax plus rental inventory concern</label><span>$1.9K</span></div>
+            </div>
+          </div>
+          <div class="swmc-loss-card compact card" style="--c:#00d4f0">
+            <h3>Price <span>3 / $3.1K</span></h3>
+            <p>Small teams or near-good-enough stacks could not justify the minimum or migration cost.</p>
+            <div class="swmc-loss-examples">
+              <div class="swmc-loss-example"><label>Clever Tech Pros: $475 budget vs $1,000 minimum</label><span>$1.0K</span></div>
+              <div class="swmc-loss-example"><label>Red Mountain: current stack gets them 90% there</label><span>$950</span></div>
+            </div>
+          </div>
+          <div class="swmc-loss-card compact card" style="--c:#8b5cf6">
+            <h3>Lack of Decision Maker <span>3 / $3.5K</span></h3>
+            <p>Value was not strong enough with the people needed to approve change.</p>
+            <div class="swmc-loss-examples">
+              <div class="swmc-loss-example"><label>Interactive Security: staying with current provider</label><span>$1.4K</span></div>
+              <div class="swmc-loss-example"><label>SmartChoice: new helpdesk manager never pulled team in</label><span>$575</span></div>
+            </div>
+          </div>
+          <div class="swmc-loss-card compact card" style="--c:#ff5c5c">
+            <h3>Lost to Competitor <span>3 / $4.5K</span></h3>
+            <p>Competitors won when buyers wanted a safer or more familiar path.</p>
+            <div class="swmc-loss-examples">
+              <div class="swmc-loss-example"><label>Millennium Sounds: pausing to see if D-Tools can deliver</label><span>$2.2K</span></div>
+              <div class="swmc-loss-example"><label>LAE Solutions: likely moving forward with Zoho</label><span>$1.3K</span></div>
+            </div>
+          </div>
+          <div class="swmc-loss-card compact card" style="--c:#3ddc97">
+            <h3>Contract / Customer Fit <span>2 / $2.0K</span></h3>
+            <p>One account was locked into migration/contract timing; one was outside fit because of custom in-house software.</p>
+            <div class="swmc-loss-examples">
+              <div class="swmc-loss-example"><label>W. O'Donnell: QBO migration plus ConnectWise contract</label><span>$1.0K</span></div>
+              <div class="swmc-loss-example"><label>CMB Systems: custom storefront/install software fit issue</label><span>$990</span></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
   <section class="slide" id="slide-8">
     <div class="top-stripe"></div>
     <div class="slide-header"><div><div class="slide-tag">Strategic Sales Motion</div><h2>$3,000+ MRR opportunities need a structured executive evaluation path</h2></div><div><img src="https://7091219.fs1.hubspotusercontent-na1.net/hubfs/7091219/email-assets/logo-revio-white.png" alt="Rev.io"><div class="header-note">Evaluation planning · onsite workshops · product alignment</div></div></div>
@@ -2101,7 +2204,7 @@ body {
   <div class="nav-controls">
     <button class="nav-btn" id="btn-prev" onclick="goSlide(-1)" disabled>Prev</button>
     <div class="nav-dots" id="nav-dots"></div>
-    <span class="nav-counter" id="nav-counter">1 / 10</span>
+    <span class="nav-counter" id="nav-counter">1 / 11</span>
     <button class="nav-btn" id="btn-next" onclick="goSlide(1)">Next</button>
   </div>
   <img src="https://7091219.fs1.hubspotusercontent-na1.net/hubfs/7091219/email-assets/logo-revio-white.png" alt="Rev.io" class="nav-logo">
@@ -2111,7 +2214,7 @@ body {
 const slides = Array.from(document.querySelectorAll('.slide'));
 const TOTAL = slides.length;
 let cur = 1;
-const labels = ['Cover','State','ICP TAM','Lost TAM','Coverage','SWMC','Strategic','Partner','Field','Contracts'];
+const labels = ['Cover','State','ICP TAM','Lost TAM','Coverage','SWMC','Loss Detail','Strategic','Partner','Field','Contracts'];
 function buildDots() {
   const wrap = document.getElementById('nav-dots');
   labels.forEach((label, idx) => {
