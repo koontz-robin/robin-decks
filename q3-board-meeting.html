@@ -269,7 +269,7 @@ body { min-height:100%; overflow-x:hidden; overflow-y:auto; background:#0a1628; 
 .commit-item { border-top:1px solid rgba(255,255,255,.08); padding:14px 0; font-size:17px; line-height:1.32; font-weight:800; color:rgba(255,255,255,.88); }
 .commit-item:first-of-type { border-top:0; padding-top:0; }
 .state-layout { display:grid; grid-template-columns:minmax(0,1fr) 360px; gap:16px; height:100%; }
-.state-charts { display:grid; grid-template-rows:1fr 1fr; gap:14px; min-height:0; }
+.state-charts { display:grid; grid-template-rows:repeat(3,minmax(0,1fr)); gap:12px; min-height:0; }
 .chart-card { padding:18px 20px 14px; min-height:0; display:flex; flex-direction:column; }
 .chart-title { display:flex; align-items:baseline; justify-content:space-between; gap:12px; margin-bottom:10px; }
 .chart-title h3 { font-family:Montserrat, sans-serif; font-size:18px; line-height:1.15; color:#fff; }
@@ -297,6 +297,15 @@ body { min-height:100%; overflow-x:hidden; overflow-y:auto; background:#0a1628; 
 .mrr-bar-value { position:absolute; left:50%; bottom:100%; transform:translate(-50%,-4px); font-family:Montserrat,sans-serif; font-size:10px; font-weight:900; color:#fff; white-space:nowrap; text-shadow:0 1px 4px rgba(0,0,0,.55); z-index:2; }
 .mrr-product-bar.small .mrr-bar-value { display:block; bottom:auto; top:100%; transform:translate(-50%,3px); padding:1px 4px; border-radius:4px; background:rgba(8,18,36,.9); border:1px solid rgba(255,255,255,.12); font-size:8.5px; line-height:1.1; }
 .created-chart .mrr-group { grid-template-columns:repeat(4,minmax(0,1fr)); gap:4px; }
+.total-created-chart .mrr-group { grid-template-columns:repeat(2,minmax(0,1fr)); gap:5px; }
+#slide-2 .state-charts { grid-template-rows:repeat(3,minmax(0,1fr)); gap:10px; }
+#slide-2 .chart-card { padding:14px 18px 11px; }
+#slide-2 .chart-title { margin-bottom:7px; }
+#slide-2 .grouped-mrr-bars { min-height:102px; }
+#slide-2 .mrr-group { height:94px; }
+#slide-2 .mrr-month { gap:8px; }
+#slide-2 .mrr-bar-value { font-size:9px; }
+#slide-2 .chart-legend { margin-top:6px; }
 .rate-panel { padding:16px; display:flex; flex-direction:column; gap:12px; min-height:0; }
 .rate-table-block { min-height:0; }
 .rate-table-block h3 { font-family:Montserrat, sans-serif; font-size:16px; margin-bottom:8px; color:#fff; }
@@ -1474,6 +1483,20 @@ body {
     <div class="slide-body">
       <div class="state-layout">
         <div class="state-charts">
+          <div class="chart-card card total-created-chart">
+            <div class="chart-title"><h3>Total opportunities created by product</h3><span>Created date · Jan-July 2026 · $0 opps excluded</span></div>
+            <div class="grouped-mrr-bars">
+              <div class="mrr-month"><div class="mrr-group"><div class="mrr-product-bar" style="--c:#00d4f0;height:94px"><span class="mrr-bar-value">210</span></div><div class="mrr-product-bar" style="--c:#3ddc97;height:18px"><span class="mrr-bar-value">40</span></div></div><div class="month-label">Jan</div></div>
+              <div class="mrr-month"><div class="mrr-group"><div class="mrr-product-bar" style="--c:#00d4f0;height:71px"><span class="mrr-bar-value">158</span></div><div class="mrr-product-bar" style="--c:#3ddc97;height:14px"><span class="mrr-bar-value">32</span></div></div><div class="month-label">Feb</div></div>
+              <div class="mrr-month"><div class="mrr-group"><div class="mrr-product-bar" style="--c:#00d4f0;height:58px"><span class="mrr-bar-value">130</span></div><div class="mrr-product-bar" style="--c:#3ddc97;height:20px"><span class="mrr-bar-value">45</span></div></div><div class="month-label">Mar</div></div>
+              <div class="mrr-month"><div class="mrr-group"><div class="mrr-product-bar" style="--c:#00d4f0;height:56px"><span class="mrr-bar-value">124</span></div><div class="mrr-product-bar" style="--c:#3ddc97;height:15px"><span class="mrr-bar-value">33</span></div></div><div class="month-label">Apr</div></div>
+              <div class="mrr-month"><div class="mrr-group"><div class="mrr-product-bar" style="--c:#00d4f0;height:53px"><span class="mrr-bar-value">119</span></div><div class="mrr-product-bar small" style="--c:#3ddc97;height:9px"><span class="mrr-bar-value">20</span></div></div><div class="month-label">May</div></div>
+              <div class="mrr-month"><div class="mrr-group"><div class="mrr-product-bar" style="--c:#00d4f0;height:73px"><span class="mrr-bar-value">163</span></div><div class="mrr-product-bar small" style="--c:#3ddc97;height:10px"><span class="mrr-bar-value">22</span></div></div><div class="month-label">Jun</div></div>
+              <div class="mrr-month"><div class="mrr-group"><div class="mrr-product-bar" style="--c:#00d4f0;height:51px"><span class="mrr-bar-value">115</span></div><div class="mrr-product-bar" style="--c:#3ddc97;height:14px"><span class="mrr-bar-value">31</span></div></div><div class="month-label">Jul</div></div>
+            </div>
+            <div class="chart-legend"><div class="legend-item"><span class="legend-dot" style="--c:#00d4f0"></span>PSA</div><div class="legend-item"><span class="legend-dot" style="--c:#3ddc97"></span>Billing</div></div>
+          </div>
+
           <div class="chart-card card created-chart">
             <div class="chart-title"><h3>Sales-generated opportunities created by product</h3><span>Created date · Jan-July 2026</span></div>
             <div class="grouped-mrr-bars">
