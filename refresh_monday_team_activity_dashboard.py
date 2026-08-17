@@ -341,7 +341,8 @@ def build_payload():
 
     product_rows = dict(sorted(product_mrr.items(), key=lambda kv: (-kv[1]["last"]["mrr"], kv[0])))
     for key in conversion_detail:
-        conversion_detail[key] = sorted(conversion_detail[key], key=lambda x: (-x.get("mrr", 0), x.get("rep", "")))[:12]
+        rows = sorted(conversion_detail[key], key=lambda x: (-x.get("mrr", 0), x.get("rep", "")))
+        conversion_detail[key] = rows if key == "booked" else rows[:12]
 
     return {
         "generated_at_et": now_et.strftime("%b %-d, %Y %-I:%M %p ET"),
@@ -530,6 +531,7 @@ def build_html(payload):
     top_performer_rows = build_performer_rows(payload["metrics"], top=True)
     bottom_performer_rows = build_performer_rows(payload["metrics"], top=False)
     product_rows = build_product_rows(payload["product_mrr"])
+    closed_won_rows = build_detail_rows(payload["conversion_detail"]["booked"], "closed won opportunities")
     return f'''<!doctype html>
 <html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Monday Team Activity Dashboard</title>
 <style>
@@ -546,6 +548,7 @@ body:before{{content:'';position:fixed;inset:-14% -10% 55% -10%;background:radia
 <section class="panel"><div class="panel-head"><h2>Team metric scorecard</h2><div class="panel-note">Team-level view only: last week, prior week, and variance. No rep-by-rep difference pileup.</div></div><table><thead><tr><th>Metric</th><th>Last Week</th><th>Prior Week</th><th>Difference</th></tr></thead><tbody>{team_summary_rows}</tbody></table></section>
 <div class="panel-grid"><section class="panel focus-panel"><div class="panel-head"><h2>Top 3 performers last week</h2><div class="panel-note">Composite score across meetings set, demos ran, sourced/converted opps, and booked MRR.</div></div><table><thead><tr><th>Rep</th><th>Discovery</th><th>CBRs</th><th>Demos</th><th>Opps Created</th><th>Booked</th><th>Score</th></tr></thead><tbody>{top_performer_rows}</tbody></table></section><section class="panel watch-panel"><div class="panel-head"><h2>Bottom 3 performers last week</h2><div class="panel-note">Lowest composite score among reps with tracked motion — coaching queue, not a scarlet letter.</div></div><table><thead><tr><th>Rep</th><th>Discovery</th><th>CBRs</th><th>Demos</th><th>Opps Created</th><th>Booked</th><th>Score</th></tr></thead><tbody>{bottom_performer_rows}</tbody></table></section></div>
 <section class="panel"><div class="panel-head"><h2>MRR booked by product</h2><div class="panel-note">Closed-won Opportunity Amount by CloseDate and Product Type.</div></div><table><thead><tr><th>Product</th><th>Last Week</th><th>Prior Week</th><th>Delta</th></tr></thead><tbody>{product_rows}</tbody></table></section>
+<section class="panel"><div class="panel-head"><h2>All closed won opportunities last week</h2><div class="panel-note">Every opportunity marked Closed Won with a close date in the previous week.</div></div><table><thead><tr><th>Owner</th><th>Account / Opportunity</th><th>Product</th><th>MRR</th></tr></thead><tbody>{closed_won_rows}</tbody></table></section>
 <section class="panel"><div class="panel-head"><h2>Metric definitions</h2><div class="panel-note">So nobody has to decode the Batcomputer during the team meeting.</div></div><div class="definitions">{''.join(f'<div class="def"><strong>{escape(k.replace("_", " ").title())}:</strong> {escape(v)}</div>' for k, v in payload['definitions'].items())}</div></section>
 <div class="footer">SOURCE: SALESFORCE TASKS, EVENTS, AND OPPORTUNITIES · AUTO-REFRESHES SUNDAY NIGHT ET</div></div></body></html>'''
 
