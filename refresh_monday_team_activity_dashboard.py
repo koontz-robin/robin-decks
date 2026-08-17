@@ -447,6 +447,46 @@ def build_team_summary_rows(totals):
     return "\n".join(rows)
 
 
+
+def performer_score(m):
+    return (
+        m["discovery_set"]["last"] * 1.0
+        + m["cbrs_set"]["last"] * 1.0
+        + m["initial_demos_ran"]["last"] * 2.0
+        + m["sdr_sourced_opps"]["last"] * 3.0
+        + m["mqls_converted"]["last"] * 3.0
+        + m["tradeshow_leads_converted"]["last"] * 3.0
+        + m["booked_count"]["last"] * 4.0
+        + (m["booked_mrr"]["last"] / 1000.0)
+    )
+
+
+def has_motion(m):
+    return any(float(m[k]["last"] or 0) for k in [
+        "discovery_set", "cbrs_set", "initial_demos_ran", "sdr_sourced_opps",
+        "mqls_converted", "tradeshow_leads_converted", "booked_count", "booked_mrr"
+    ])
+
+
+def build_performer_rows(metrics, top=True):
+    candidates = [(rep, m, performer_score(m)) for rep, m in metrics.items() if has_motion(m)]
+    candidates.sort(key=lambda x: (-x[2], x[0]) if top else (x[2], x[0]))
+    rows = []
+    for rank, (rep, m, score) in enumerate(candidates[:3], start=1):
+        opp_count = m['sdr_sourced_opps']['last'] + m['mqls_converted']['last'] + m['tradeshow_leads_converted']['last']
+        opp_mrr = m['sdr_sourced_mrr']['last'] + m['mql_converted_mrr']['last'] + m['tradeshow_converted_mrr']['last']
+        rows.append(f'''<tr>
+          <td><strong>{rank}. {escape(rep)}</strong><span>{escape(m['role'])}</span></td>
+          <td>{fmt_int(m['discovery_set']['last'])}</td>
+          <td>{fmt_int(m['cbrs_set']['last'])}</td>
+          <td>{fmt_int(m['initial_demos_ran']['last'])}</td>
+          <td>{fmt_int(opp_count)}<small>{money(opp_mrr)}</small></td>
+          <td>{money(m['booked_mrr']['last'])}<small>{fmt_int(m['booked_count']['last'])} won</small></td>
+          <td>{score:.1f}</td>
+        </tr>''')
+    label = "performers" if top else "watch-list performers"
+    return "\n".join(rows) or f'<tr><td colspan="7" class="empty">No {label} to show.</td></tr>'
+
 def build_product_rows(product_mrr):
     rows = []
     for product, p in product_mrr.items():
@@ -487,6 +527,8 @@ def build_html(payload):
     positive_rows = build_difference_rows(t, positive=True)
     negative_rows = build_difference_rows(t, positive=False)
     team_summary_rows = build_team_summary_rows(t)
+    top_performer_rows = build_performer_rows(payload["metrics"], top=True)
+    bottom_performer_rows = build_performer_rows(payload["metrics"], top=False)
     product_rows = build_product_rows(payload["product_mrr"])
     return f'''<!doctype html>
 <html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Monday Team Activity Dashboard</title>
@@ -502,6 +544,7 @@ body:before{{content:'';position:fixed;inset:-14% -10% 55% -10%;background:radia
 <div class="metric-grid">{cards}</div>
 <div class="panel-grid"><section class="panel focus-panel"><div class="panel-head"><h2>Positive movement</h2><div class="panel-note">Metrics up or flat vs the prior week — easier to scan for what improved.</div></div><table><thead><tr><th>Metric</th><th>Last Week</th><th>Prior Week</th><th>Difference</th></tr></thead><tbody>{positive_rows}</tbody></table></section><section class="panel watch-panel"><div class="panel-head"><h2>Watch list</h2><div class="panel-note">Metrics down vs the prior week — the Monday coaching queue, minus the detective corkboard chaos.</div></div><table><thead><tr><th>Metric</th><th>Last Week</th><th>Prior Week</th><th>Difference</th></tr></thead><tbody>{negative_rows}</tbody></table></section></div>
 <section class="panel"><div class="panel-head"><h2>Team metric scorecard</h2><div class="panel-note">Team-level view only: last week, prior week, and variance. No rep-by-rep difference pileup.</div></div><table><thead><tr><th>Metric</th><th>Last Week</th><th>Prior Week</th><th>Difference</th></tr></thead><tbody>{team_summary_rows}</tbody></table></section>
+<div class="panel-grid"><section class="panel focus-panel"><div class="panel-head"><h2>Top 3 performers last week</h2><div class="panel-note">Composite score across meetings set, demos ran, sourced/converted opps, and booked MRR.</div></div><table><thead><tr><th>Rep</th><th>Discovery</th><th>CBRs</th><th>Demos</th><th>Opps Created</th><th>Booked</th><th>Score</th></tr></thead><tbody>{top_performer_rows}</tbody></table></section><section class="panel watch-panel"><div class="panel-head"><h2>Bottom 3 performers last week</h2><div class="panel-note">Lowest composite score among reps with tracked motion — coaching queue, not a scarlet letter.</div></div><table><thead><tr><th>Rep</th><th>Discovery</th><th>CBRs</th><th>Demos</th><th>Opps Created</th><th>Booked</th><th>Score</th></tr></thead><tbody>{bottom_performer_rows}</tbody></table></section></div>
 <section class="panel"><div class="panel-head"><h2>MRR booked by product</h2><div class="panel-note">Closed-won Opportunity Amount by CloseDate and Product Type.</div></div><table><thead><tr><th>Product</th><th>Last Week</th><th>Prior Week</th><th>Delta</th></tr></thead><tbody>{product_rows}</tbody></table></section>
 <section class="panel"><div class="panel-head"><h2>Metric definitions</h2><div class="panel-note">So nobody has to decode the Batcomputer during the team meeting.</div></div><div class="definitions">{''.join(f'<div class="def"><strong>{escape(k.replace("_", " ").title())}:</strong> {escape(v)}</div>' for k, v in payload['definitions'].items())}</div></section>
 <div class="footer">SOURCE: SALESFORCE TASKS, EVENTS, AND OPPORTUNITIES · AUTO-REFRESHES SUNDAY NIGHT ET</div></div></body></html>'''
