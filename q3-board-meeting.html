@@ -1633,7 +1633,7 @@ body {
   justify-content:center;
   text-align:left;
 }
-.cover::after { content:"00"; }
+.cover::after { content:"01"; }
 .cover-inner {
   width:min(1800px, 92%);
   padding:0;
@@ -1847,10 +1847,12 @@ body {
 
 /* 2026-08-16: deck-wide title + text normalization */
 .slide-header h2 {
-  font-size:22px !important;
-  line-height:1.12 !important;
-  max-width:900px !important;
-  letter-spacing:-.01em;
+  font-size:clamp(50px, 4.8vw, 92px) !important;
+  line-height:1.04 !important;
+  max-width:1200px !important;
+  font-weight:900 !important;
+  color:#fff !important;
+  letter-spacing:-.02em;
 }
 .slide-tag {
   font-size:9px !important;
@@ -2642,7 +2644,7 @@ body {
   <div class="nav-controls">
     <button class="nav-btn" id="btn-prev" onclick="goSlide(-1)" disabled>Prev</button>
     <div class="nav-dots" id="nav-dots"></div>
-    <span class="nav-counter" id="nav-counter">1 / 9</span>
+    <span class="nav-counter" id="nav-counter">01 / 10</span>
     <button class="nav-btn" id="btn-next" onclick="goSlide(1)">Next</button>
   </div>
   <img src="https://7091219.fs1.hubspotusercontent-na1.net/hubfs/7091219/email-assets/logo-revio-white.png" alt="Rev.io" class="nav-logo">
@@ -2652,7 +2654,7 @@ body {
 const slides = Array.from(document.querySelectorAll('.slide'));
 const TOTAL = slides.length;
 let cur = 1;
-const labels = ['Cover','State','ICP TAM','Lost TAM','Coverage','SWMC','Strategic','Partner','Contracts'];
+const labels = ['Cover','Q3 Readout','Sales State','ICP Funnel','Lost Signals','Coverage','SWMC Reopen','Enterprise Path','Partners','Contracts'];
 function buildDots() {
   const wrap = document.getElementById('nav-dots');
   labels.forEach((label, idx) => {
@@ -2665,7 +2667,7 @@ function buildDots() {
   });
 }
 function updateNav() {
-  document.getElementById('nav-counter').textContent = `${cur} / ${TOTAL}`;
+  document.getElementById('nav-counter').textContent = `${String(cur).padStart(2, '0')} / ${String(TOTAL).padStart(2, '0')}`;
   document.getElementById('btn-prev').disabled = cur === 1;
   document.getElementById('btn-next').disabled = cur === TOTAL;
   document.querySelectorAll('.dot').forEach((dot, i) => dot.classList.toggle('active', i + 1 === cur));
