@@ -398,25 +398,53 @@ def metric_card(label, key, totals, money_flag=False, subkey=None):
     </div>'''
 
 
-def build_rep_rows(metrics):
-    score_keys = ["discovery_set", "cbrs_set", "initial_demos_ran", "sdr_sourced_opps", "mqls_converted", "tradeshow_leads_converted", "booked_mrr"]
-    def score(m):
-        return sum(float(m[k]["last"] or 0) for k in score_keys)
+def team_metric_specs(totals):
+    return [
+        ("Discovery Meetings Set", "discovery_set", False, "Top-of-funnel meetings created"),
+        ("CBRs Set", "cbrs_set", False, "Customer business reviews scheduled"),
+        ("Initial Demos Ran", "initial_demos_ran", False, "Demo meetings completed/held"),
+        ("SDR-Sourced Opps", "sdr_sourced_opps", False, f"{money(totals['sdr_sourced_mrr']['last'])} sourced MRR"),
+        ("MQLs Converted", "mqls_converted", False, f"{money(totals['mql_converted_mrr']['last'])} converted MRR"),
+        ("Tradeshow Leads Converted", "tradeshow_leads_converted", False, f"{money(totals['tradeshow_converted_mrr']['last'])} converted MRR"),
+        ("Booked MRR", "booked_mrr", True, f"{fmt_int(totals['booked_count']['last'])} closed-won deals"),
+        ("Booked Deals", "booked_count", False, "Closed-won opportunity count"),
+    ]
+
+
+def build_difference_rows(totals, positive=True):
     rows = []
-    for rep, m in sorted(metrics.items(), key=lambda kv: (-score(kv[1]), kv[0])):
-        if score(m) + sum(float(m[k]["prior"] or 0) for k in score_keys) == 0:
+    for label, key, money_flag, note in team_metric_specs(totals):
+        last = totals[key]["last"]
+        prior = totals[key]["prior"]
+        diff = last - prior
+        if positive and diff < 0:
             continue
+        if not positive and diff >= 0:
+            continue
+        cls = "good" if diff >= 0 else "bad"
         rows.append(f'''<tr>
-          <td><strong>{escape(rep)}</strong><span>{escape(m['role'])}</span></td>
-          <td>{fmt_int(m['discovery_set']['last'])}<small>{signed(m['discovery_set']['last'], m['discovery_set']['prior'])}</small></td>
-          <td>{fmt_int(m['cbrs_set']['last'])}<small>{signed(m['cbrs_set']['last'], m['cbrs_set']['prior'])}</small></td>
-          <td>{fmt_int(m['initial_demos_ran']['last'])}<small>{signed(m['initial_demos_ran']['last'], m['initial_demos_ran']['prior'])}</small></td>
-          <td>{fmt_int(m['sdr_sourced_opps']['last'])}<small>{money(m['sdr_sourced_mrr']['last'])}</small></td>
-          <td>{fmt_int(m['mqls_converted']['last'])}<small>{money(m['mql_converted_mrr']['last'])}</small></td>
-          <td>{fmt_int(m['tradeshow_leads_converted']['last'])}<small>{money(m['tradeshow_converted_mrr']['last'])}</small></td>
-          <td>{money(m['booked_mrr']['last'])}<small>{fmt_int(m['booked_count']['last'])} won</small></td>
+          <td><strong>{escape(label)}</strong><span>{escape(note)}</span></td>
+          <td>{money(last) if money_flag else fmt_int(last)}</td>
+          <td>{money(prior) if money_flag else fmt_int(prior)}</td>
+          <td><span class="{cls}">{escape(signed(last, prior, money_flag))}</span><small>{escape(pct_delta(last, prior))}</small></td>
         </tr>''')
-    return "\n".join(rows) or '<tr><td colspan="8" class="empty">No tracked motion in either week.</td></tr>'
+    tone = "positive movement" if positive else "negative movement"
+    return "\n".join(rows) or f'<tr><td colspan="4" class="empty">No {tone} vs prior week.</td></tr>'
+
+
+def build_team_summary_rows(totals):
+    rows = []
+    for label, key, money_flag, note in team_metric_specs(totals):
+        last = totals[key]["last"]
+        prior = totals[key]["prior"]
+        cls = "good" if last >= prior else "bad"
+        rows.append(f'''<tr>
+          <td><strong>{escape(label)}</strong><span>{escape(note)}</span></td>
+          <td>{money(last) if money_flag else fmt_int(last)}</td>
+          <td>{money(prior) if money_flag else fmt_int(prior)}</td>
+          <td><span class="{cls}">{escape(signed(last, prior, money_flag))}</span><small>{escape(pct_delta(last, prior))}</small></td>
+        </tr>''')
+    return "\n".join(rows)
 
 
 def build_product_rows(product_mrr):
@@ -456,13 +484,10 @@ def build_html(payload):
         metric_card("Booked MRR", "booked_mrr", t, True),
         metric_card("Booked Deals", "booked_count", t),
     ])
-    rep_rows = build_rep_rows(payload["metrics"])
+    positive_rows = build_difference_rows(t, positive=True)
+    negative_rows = build_difference_rows(t, positive=False)
+    team_summary_rows = build_team_summary_rows(t)
     product_rows = build_product_rows(payload["product_mrr"])
-    detail = payload["conversion_detail"]
-    mql_rows = build_detail_rows(detail["mql"], "MQL conversions")
-    tradeshow_rows = build_detail_rows(detail["tradeshow"], "tradeshow conversions")
-    sdr_rows = build_detail_rows(detail["sdr"], "SDR-sourced opportunities")
-    booked_rows = build_detail_rows(detail["booked"], "closed-won deals")
     return f'''<!doctype html>
 <html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Monday Team Activity Dashboard</title>
 <style>
@@ -471,14 +496,13 @@ def build_html(payload):
 body:before{{content:'';position:fixed;inset:-14% -10% 55% -10%;background:radial-gradient(55% 45% at 20% 30%,rgba(79,209,197,.35),transparent 65%),radial-gradient(45% 35% at 78% 22%,rgba(52,189,229,.34),transparent 65%);filter:blur(46px);opacity:.75;pointer-events:none}} .container{{max-width:min(1560px,calc(100vw - 32px));margin:0 auto;padding:18px 16px 28px;position:relative;z-index:1}}
 .header{{border-bottom:1px solid var(--border);padding:20px 0 22px;margin-bottom:22px;position:relative}} .header-top{{display:flex;justify-content:space-between;align-items:center;margin-bottom:12px;padding-right:154px}} .logo{{display:flex;align-items:center;gap:10px}} .logo-dot{{width:9px;height:9px;background:var(--cyan);border-radius:50%;box-shadow:0 0 0 3px rgba(52,189,229,.2),0 0 12px rgba(52,189,229,.85)}} .logo-text{{font-size:11px;font-weight:600;letter-spacing:.22em;text-transform:uppercase;color:var(--cyan-soft)}} .header-date{{font-size:11px;color:var(--muted);letter-spacing:.14em;text-transform:uppercase}} .revio-header-logo{{position:absolute;top:0;right:0;width:132px}} h1{{font-size:clamp(42px,5vw,72px);font-weight:300;color:#fff;letter-spacing:-.03em;line-height:.98;margin:0 0 10px}} h1 span{{color:var(--cyan-soft);font-family:Georgia,serif;font-style:italic;font-weight:500}} .header-sub{{font-size:14px;color:var(--mid);max-width:980px;line-height:1.45}}
 .metric-grid{{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:12px;margin-bottom:18px}} .metric-card{{background:rgba(255,255,255,.035);border:1px solid var(--border);border-radius:16px;padding:16px;box-shadow:0 22px 60px -48px #000;backdrop-filter:blur(12px)}} .metric-label{{font-size:9px;font-weight:800;letter-spacing:.16em;text-transform:uppercase;color:var(--muted);margin-bottom:7px}} .metric-value{{font-size:30px;font-weight:850;line-height:1;color:#fff}} .metric-compare{{margin-top:8px;font-size:12px;color:var(--mid)}} .metric-compare .up,.good{{color:var(--lime)}} .metric-compare .down,.bad{{color:var(--danger)}} .metric-prior{{margin-top:4px;font-size:11px;color:var(--muted)}}
-.panel-grid{{display:grid;grid-template-columns:1fr 1fr;gap:14px}} .panel{{background:var(--surface);border:1px solid var(--border);border-radius:16px;margin-bottom:14px;overflow:hidden;box-shadow:0 22px 60px -48px #000;backdrop-filter:blur(12px)}} .panel-head{{display:flex;align-items:flex-end;justify-content:space-between;gap:16px;padding:16px 18px;border-bottom:1px solid var(--border)}} h2{{margin:0;font-size:20px;font-weight:650;color:#fff}} .panel-note{{font-size:12px;color:var(--muted);max-width:720px;line-height:1.4}} table{{width:100%;border-collapse:collapse}} th{{font-size:9px;font-weight:800;text-transform:uppercase;letter-spacing:.16em;color:var(--muted);padding:10px 14px;text-align:left;background:rgba(6,14,24,.55)}} td{{font-size:13px;padding:10px 14px;border-top:1px solid rgba(255,255,255,.06);color:var(--mid);vertical-align:top}} td:first-child{{color:#fff}} td strong{{display:block;color:#fff}} td span, td small{{display:block;color:var(--muted);font-size:10px;margin-top:3px}} td small{{color:var(--cyan-soft)}} .empty{{text-align:center;color:var(--muted);padding:24px}} .definitions{{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px;padding:14px 18px}} .def{{font-size:12px;color:var(--mid);line-height:1.35;background:rgba(255,255,255,.03);border:1px solid rgba(255,255,255,.08);border-radius:12px;padding:10px}} .def strong{{color:#fff}} .footer{{text-align:center;padding:18px;font-size:10px;color:var(--muted);letter-spacing:.14em;border-top:1px solid var(--border);margin-top:8px}}
+.panel-grid{{display:grid;grid-template-columns:1fr 1fr;gap:14px}} .focus-panel{{border-color:rgba(198,241,120,.22)}} .watch-panel{{border-color:rgba(255,107,107,.24)}} .panel{{background:var(--surface);border:1px solid var(--border);border-radius:16px;margin-bottom:14px;overflow:hidden;box-shadow:0 22px 60px -48px #000;backdrop-filter:blur(12px)}} .panel-head{{display:flex;align-items:flex-end;justify-content:space-between;gap:16px;padding:16px 18px;border-bottom:1px solid var(--border)}} h2{{margin:0;font-size:20px;font-weight:650;color:#fff}} .panel-note{{font-size:12px;color:var(--muted);max-width:720px;line-height:1.4}} table{{width:100%;border-collapse:collapse}} th{{font-size:9px;font-weight:800;text-transform:uppercase;letter-spacing:.16em;color:var(--muted);padding:10px 14px;text-align:left;background:rgba(6,14,24,.55)}} td{{font-size:13px;padding:10px 14px;border-top:1px solid rgba(255,255,255,.06);color:var(--mid);vertical-align:top}} td:first-child{{color:#fff}} td strong{{display:block;color:#fff}} td span, td small{{display:block;color:var(--muted);font-size:10px;margin-top:3px}} td small{{color:var(--cyan-soft)}} .empty{{text-align:center;color:var(--muted);padding:24px}} .definitions{{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px;padding:14px 18px}} .def{{font-size:12px;color:var(--mid);line-height:1.35;background:rgba(255,255,255,.03);border:1px solid rgba(255,255,255,.08);border-radius:12px;padding:10px}} .def strong{{color:#fff}} .footer{{text-align:center;padding:18px;font-size:10px;color:var(--muted);letter-spacing:.14em;border-top:1px solid var(--border);margin-top:8px}}
 @media(max-width:1000px){{.metric-grid,.panel-grid,.definitions{{grid-template-columns:1fr 1fr}}.panel{{overflow-x:auto}}table{{min-width:900px}}.header-top{{padding-right:0;display:block}}.revio-header-logo{{position:relative;width:108px;margin-top:10px}}}} @media(max-width:680px){{.metric-grid,.panel-grid,.definitions{{grid-template-columns:1fr}}}}
 </style></head><body><div class="container"><header class="header"><div class="header-top"><div class="logo"><span class="logo-dot"></span><span class="logo-text">Rev.io Sales Team</span></div><div class="header-date">Generated {escape(payload['generated_at_et'])}</div></div><img class="revio-header-logo" src="https://7091219.fs1.hubspotusercontent-na1.net/hubfs/7091219/email-assets/logo-revio-white.png" alt="Rev.io"><h1>Monday Sales <span>Motion</span></h1><p class="header-sub">Last week ({escape(payload['windows']['last'])}) vs prior week ({escape(payload['windows']['prior'])}) across meeting creation, demos run, sourced/converted opportunities, and booked MRR by product.</p></header>
 <div class="metric-grid">{cards}</div>
-<section class="panel"><div class="panel-head"><h2>Rep/team motion comparison</h2><div class="panel-note">Counts are last week; small text shows either week-over-week delta or MRR beneath opportunity-count metrics.</div></div><table><thead><tr><th>Rep</th><th>Discovery Set</th><th>CBRs Set</th><th>Initial Demos Ran</th><th>SDR Opps</th><th>MQL Converts</th><th>Tradeshow Converts</th><th>Booked MRR</th></tr></thead><tbody>{rep_rows}</tbody></table></section>
+<div class="panel-grid"><section class="panel focus-panel"><div class="panel-head"><h2>Positive movement</h2><div class="panel-note">Metrics up or flat vs the prior week — easier to scan for what improved.</div></div><table><thead><tr><th>Metric</th><th>Last Week</th><th>Prior Week</th><th>Difference</th></tr></thead><tbody>{positive_rows}</tbody></table></section><section class="panel watch-panel"><div class="panel-head"><h2>Watch list</h2><div class="panel-note">Metrics down vs the prior week — the Monday coaching queue, minus the detective corkboard chaos.</div></div><table><thead><tr><th>Metric</th><th>Last Week</th><th>Prior Week</th><th>Difference</th></tr></thead><tbody>{negative_rows}</tbody></table></section></div>
+<section class="panel"><div class="panel-head"><h2>Team metric scorecard</h2><div class="panel-note">Team-level view only: last week, prior week, and variance. No rep-by-rep difference pileup.</div></div><table><thead><tr><th>Metric</th><th>Last Week</th><th>Prior Week</th><th>Difference</th></tr></thead><tbody>{team_summary_rows}</tbody></table></section>
 <section class="panel"><div class="panel-head"><h2>MRR booked by product</h2><div class="panel-note">Closed-won Opportunity Amount by CloseDate and Product Type.</div></div><table><thead><tr><th>Product</th><th>Last Week</th><th>Prior Week</th><th>Delta</th></tr></thead><tbody>{product_rows}</tbody></table></section>
-<div class="panel-grid"><section class="panel"><div class="panel-head"><h2>SDR-sourced opportunities</h2></div><table><thead><tr><th>SDR</th><th>Account / Opp</th><th>Source</th><th>MRR</th></tr></thead><tbody>{sdr_rows}</tbody></table></section><section class="panel"><div class="panel-head"><h2>MQL conversions</h2></div><table><thead><tr><th>Owner</th><th>Account / Opp</th><th>Source</th><th>MRR</th></tr></thead><tbody>{mql_rows}</tbody></table></section></div>
-<div class="panel-grid"><section class="panel"><div class="panel-head"><h2>Tradeshow conversions</h2></div><table><thead><tr><th>Owner</th><th>Account / Opp</th><th>Event/Source</th><th>MRR</th></tr></thead><tbody>{tradeshow_rows}</tbody></table></section><section class="panel"><div class="panel-head"><h2>Booked deal detail</h2></div><table><thead><tr><th>Owner</th><th>Account / Opp</th><th>Product</th><th>MRR</th></tr></thead><tbody>{booked_rows}</tbody></table></section></div>
 <section class="panel"><div class="panel-head"><h2>Metric definitions</h2><div class="panel-note">So nobody has to decode the Batcomputer during the team meeting.</div></div><div class="definitions">{''.join(f'<div class="def"><strong>{escape(k.replace("_", " ").title())}:</strong> {escape(v)}</div>' for k, v in payload['definitions'].items())}</div></section>
 <div class="footer">SOURCE: SALESFORCE TASKS, EVENTS, AND OPPORTUNITIES · AUTO-REFRESHES SUNDAY NIGHT ET</div></div></body></html>'''
 
