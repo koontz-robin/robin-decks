@@ -213,21 +213,24 @@ def build_payload():
     product_mrr = defaultdict(lambda: {"last": {"mrr": 0.0, "count": 0}, "prior": {"mrr": 0.0, "count": 0}})
     conversion_detail = {"mql": [], "tradeshow": [], "sdr": [], "booked": []}
 
-    # Discovery meetings SET: task created during the week.
-    discovery_tasks = sf_query(base, headers, f"""
-        SELECT Id, Subject, CreatedDate, Owner.Name
-        FROM Task
-        WHERE IsDeleted = false
-          AND CreatedDate >= {iso_utc(range_start)}
-          AND CreatedDate < {iso_utc(range_end)}
-          AND (Subject LIKE '%Discovery Meeting%' OR Subject LIKE '%Discovery Call%')
-    """)
-    for task in discovery_tasks:
-        rep = normalize_name((task.get("Owner") or {}).get("Name"))
-        if rep not in metrics:
-            continue
-        period = period_for_dt(parse_sf_datetime(task["CreatedDate"]), windows)
-        if period:
+    # Discovery meetings SET: Salesforce Event records created as Discovery Calls.
+    # This matches Ryan's SF view: Event.Type = '1-Discovery Call', CreatedDate in LAST_WEEK / prior week.
+    discovery_filters = {
+        "last": "CreatedDate = LAST_WEEK",
+        "prior": "CreatedDate = LAST_N_WEEKS:2 AND CreatedDate != LAST_WEEK",
+    }
+    for period, where_clause in discovery_filters.items():
+        discovery_events = sf_query(base, headers, f"""
+            SELECT Id, Subject, Type, CreatedDate, Owner.Name
+            FROM Event
+            WHERE IsDeleted = false
+              AND Type = '1-Discovery Call'
+              AND {where_clause}
+        """)
+        for ev in discovery_events:
+            rep = normalize_name((ev.get("Owner") or {}).get("Name")) or "Unassigned"
+            if rep not in metrics:
+                metrics[rep] = empty_rep("Other")
             add_metric(metrics[rep], "discovery_set", period)
 
     # CBRs SET: CBR events created during the week (not just completed).
