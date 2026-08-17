@@ -1234,6 +1234,30 @@ body { min-height:100%; overflow-x:hidden; overflow-y:auto; background:#0a1628; 
   grid-template-columns:repeat(2,minmax(0,1fr));
   gap:6px;
 }
+
+/* 2026-08-17: slide 3 PSA bookings quarterly chart */
+#slide-2 .psa-bookings-quarter-chart .grouped-mrr-bars {
+  grid-template-columns:repeat(12,minmax(0,1fr));
+  gap:7px;
+  min-height:86px;
+}
+#slide-2 .psa-bookings-quarter-chart .mrr-group {
+  grid-template-columns:1fr;
+  height:78px;
+}
+#slide-2 .psa-bookings-quarter-chart .mrr-product-bar {
+  background:linear-gradient(180deg,#00d4f0 0%,#247cff 100%);
+  box-shadow:0 0 16px rgba(0,212,240,.25);
+}
+#slide-2 .psa-bookings-quarter-chart .month-label {
+  font-size:8px;
+  letter-spacing:.4px;
+  line-height:1.05;
+  text-transform:none;
+}
+#slide-2 .psa-bookings-quarter-chart .mrr-bar-value {
+  font-size:7.5px;
+}
 #slide-2 .rate-panel {
   padding:18px;
   border-radius:10px;
@@ -2465,15 +2489,23 @@ body {
             <div class="chart-legend"><div class="legend-item"><span class="legend-dot" style="--c:#8b5cf6"></span>Avg MRR per closed-won PSA deal</div></div>
           </div>
 
-          <div class="chart-card card vertical-created-chart">
-            <div class="chart-title"><h3>Created by account vertical</h3><span>Created date · Apr-July 2026 · selected creators excluded</span></div>
+          <div class="chart-card card vertical-created-chart psa-bookings-quarter-chart">
+            <div class="chart-title"><h3>PSA bookings by quarter</h3><span>Close date · Q3 2023-Q2 2026 · Q3 2026 excluded</span></div>
             <div class="grouped-mrr-bars">
-              <div class="mrr-month"><div class="mrr-group"><div class="mrr-product-bar" style="--c:#00d4f0;height:82px"><span class="mrr-bar-value">81</span></div><div class="mrr-product-bar" style="--c:#3ddc97;height:74px"><span class="mrr-bar-value">73</span></div></div><div class="month-label">Apr</div></div>
-              <div class="mrr-month"><div class="mrr-group"><div class="mrr-product-bar" style="--c:#00d4f0;height:63px"><span class="mrr-bar-value">62</span></div><div class="mrr-product-bar" style="--c:#3ddc97;height:79px"><span class="mrr-bar-value">78</span></div></div><div class="month-label">May</div></div>
-              <div class="mrr-month"><div class="mrr-group"><div class="mrr-product-bar" style="--c:#00d4f0;height:92px"><span class="mrr-bar-value">91</span></div><div class="mrr-product-bar" style="--c:#3ddc97;height:94px"><span class="mrr-bar-value">93</span></div></div><div class="month-label">Jun</div></div>
-              <div class="mrr-month"><div class="mrr-group"><div class="mrr-product-bar" style="--c:#00d4f0;height:71px"><span class="mrr-bar-value">70</span></div><div class="mrr-product-bar" style="--c:#3ddc97;height:70px"><span class="mrr-bar-value">69</span></div></div><div class="month-label">Jul</div></div>
+              <div class="mrr-month"><div class="mrr-group"><div class="mrr-product-bar" style="--c:#00d4f0;height:21px"><span class="mrr-bar-value">11k</span></div></div><div class="month-label">Q3’23</div></div>
+              <div class="mrr-month"><div class="mrr-group"><div class="mrr-product-bar" style="--c:#00d4f0;height:25px"><span class="mrr-bar-value">13k</span></div></div><div class="month-label">Q4’23</div></div>
+              <div class="mrr-month"><div class="mrr-group"><div class="mrr-product-bar" style="--c:#00d4f0;height:39px"><span class="mrr-bar-value">20k</span></div></div><div class="month-label">Q1’24</div></div>
+              <div class="mrr-month"><div class="mrr-group"><div class="mrr-product-bar" style="--c:#00d4f0;height:43px"><span class="mrr-bar-value">22k</span></div></div><div class="month-label">Q2’24</div></div>
+              <div class="mrr-month"><div class="mrr-group"><div class="mrr-product-bar" style="--c:#00d4f0;height:23px"><span class="mrr-bar-value">12k</span></div></div><div class="month-label">Q3’24</div></div>
+              <div class="mrr-month"><div class="mrr-group"><div class="mrr-product-bar" style="--c:#00d4f0;height:41px"><span class="mrr-bar-value">21k</span></div></div><div class="month-label">Q4’24</div></div>
+              <div class="mrr-month"><div class="mrr-group"><div class="mrr-product-bar" style="--c:#00d4f0;height:27px"><span class="mrr-bar-value">14k</span></div></div><div class="month-label">Q1’25</div></div>
+              <div class="mrr-month"><div class="mrr-group"><div class="mrr-product-bar" style="--c:#00d4f0;height:37px"><span class="mrr-bar-value">19k</span></div></div><div class="month-label">Q2’25</div></div>
+              <div class="mrr-month"><div class="mrr-group"><div class="mrr-product-bar" style="--c:#00d4f0;height:60px"><span class="mrr-bar-value">31k</span></div></div><div class="month-label">Q3’25</div></div>
+              <div class="mrr-month"><div class="mrr-group"><div class="mrr-product-bar" style="--c:#00d4f0;height:70px"><span class="mrr-bar-value">36k</span></div></div><div class="month-label">Q4’25</div></div>
+              <div class="mrr-month"><div class="mrr-group"><div class="mrr-product-bar" style="--c:#00d4f0;height:62px"><span class="mrr-bar-value">32k</span></div></div><div class="month-label">Q1’26</div></div>
+              <div class="mrr-month"><div class="mrr-group"><div class="mrr-product-bar" style="--c:#00d4f0;height:78px"><span class="mrr-bar-value">40k</span></div></div><div class="month-label">Q2’26</div></div>
             </div>
-            <div class="chart-legend"><div class="legend-item"><span class="legend-dot" style="--c:#00d4f0"></span>MSP created</div><div class="legend-item"><span class="legend-dot" style="--c:#3ddc97"></span>VAR/Integrator created</div></div>
+            <div class="chart-legend"><div class="legend-item"><span class="legend-dot" style="--c:#00d4f0"></span>Sum of amount · PSA bookings</div></div>
           </div>
 
           <div class="chart-card card vertical-won-chart">
