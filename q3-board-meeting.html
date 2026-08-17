@@ -2003,6 +2003,40 @@ body {
 
 
 
+#slide-7 .loss-detail-quadrants {
+  grid-template-columns:repeat(2,minmax(0,1fr)) !important;
+  grid-template-rows:repeat(2,minmax(0,1fr)) !important;
+  height:calc(100% - 120px) !important;
+}
+#slide-7 .loss-detail-quadrants .loss-detail-column {
+  min-height:0 !important;
+}
+#slide-7 .loss-detail-quadrants .loss-detail-column-head {
+  padding:10px 13px !important;
+}
+#slide-7 .loss-detail-quadrants .loss-detail-column-head h4 {
+  font-size:clamp(15px,1.2vw,21px) !important;
+}
+#slide-7 .loss-detail-quadrants .loss-detail-list {
+  height:calc(100% - 50px) !important;
+  padding:9px !important;
+  gap:7px !important;
+}
+#slide-7 .loss-detail-quadrants .loss-detail-item {
+  padding:8px 10px !important;
+}
+#slide-7 .loss-detail-quadrants .loss-detail-meta strong {
+  font-size:11.5px !important;
+}
+#slide-7 .loss-detail-quadrants .loss-detail-meta span {
+  font-size:9.5px !important;
+}
+#slide-7 .loss-detail-quadrants .loss-detail-item p {
+  font-size:9.6px !important;
+  line-height:1.22 !important;
+}
+
+
 /* 2026-08-17: remove per-slide eyebrow labels and tighten vertical fit */
 .slide-tag {
   display:none !important;
@@ -2241,9 +2275,9 @@ body {
           <h3>The miss pattern is visible across source quality, timing, product proof, and incumbent PSA displacement.</h3>
           <p>These are closed-lost PSA and PSA 2.0 opportunities from Salesforce where the account vertical is MSP and the sales process advanced beyond accepted-but-unheld meetings. The remaining losses tell a cleaner story about timing, contract status, value proof, decision-maker involvement, and product fit.</p>
           <div class="closed-lost-kpis">
-            <div class="closed-lost-kpi" style="--c:#00d4f0"><strong>31</strong><span>filtered lost opps</span></div>
-            <div class="closed-lost-kpi" style="--c:#3ddc97"><strong>30</strong><span>MSP accounts</span></div>
-            <div class="closed-lost-kpi" style="--c:#8b5cf6"><strong>$55K</strong><span>MRR closed-lost</span></div>
+            <div class="closed-lost-kpi" style="--c:#00d4f0"><strong>30</strong><span>top-four lost opps</span></div>
+            <div class="closed-lost-kpi" style="--c:#3ddc97"><strong>29</strong><span>MSP accounts</span></div>
+            <div class="closed-lost-kpi" style="--c:#8b5cf6"><strong>$53K</strong><span>MRR closed-lost</span></div>
           </div>
           <div class="miss-bars">
             <div class="miss-row"><label>No business issue</label><div class="miss-track"><div class="miss-fill" style="--w:100%;--c:#00d4f0"></div></div><span>22</span></div>
@@ -2292,142 +2326,148 @@ body {
             </div>
           </div>
           <div class="loss-detail-panel card wide" style="--c:#8b5cf6">
-            <div class="tag">Closed Lost PSA · Filtered Source Rows</div>
+            <div class="tag">Closed Lost PSA · Top 4 Reasons</div>
             <div class="loss-detail-head">
-              <div><h3>Closed-lost PSA opportunities since April for MSP accounts above $1K MRR.</h3><p>Filtered to Salesforce opportunities where stage is Closed Lost, product is PSA / PSA 2.0, close date is April 1, 2026 or later, account vertical is MSP, MRR amount is greater than $1,000, with early discovery-hygiene losses removed.</p></div>
-              <div class="loss-detail-total"><strong>31</strong><span>$55K MRR</span></div>
+              <div><h3>Top closed-lost PSA reasons since April, split into four quadrants.</h3><p>Filtered to Closed Lost PSA / PSA 2.0 opportunities for MSP accounts above $1K MRR, with early discovery-hygiene reasons removed. Quadrants show the top four remaining Salesforce loss reasons.</p></div>
+              <div class="loss-detail-total"><strong>30</strong><span>$53K MRR</span></div>
             </div>
-            <div class="loss-detail-columns">
+            <div class="loss-detail-columns loss-detail-quadrants">
               <div class="loss-detail-column" style="--c:#8b5cf6">
-                <div class="loss-detail-column-head"><h4>Contract / Timing / Capability</h4><span>26 opps · $45K</span></div>
+                <div class="loss-detail-column-head"><h4>Existing Contract</h4><span>10 opps · $15K</span></div>
                 <div class="loss-detail-list">
                   <div class="loss-detail-item">
-                    <div class="loss-detail-meta"><strong>Absolute</strong><span>2026-04-03 · $1,300 · In existing contract</span></div>
+                    <div class="loss-detail-meta"><strong>Absolute</strong><span>2026-04-03 · $1,300</span></div>
                     <p>Still in existing contract with Connectwise until January 2027. Want&#x27;s to pick this conversation back up in June when Apollo 3 drops.</p>
                   </div>
                   <div class="loss-detail-item">
-                    <div class="loss-detail-meta"><strong>RWA</strong><span>2026-04-07 · $1,260 · In existing contract</span></div>
+                    <div class="loss-detail-meta"><strong>RWA</strong><span>2026-04-07 · $1,260</span></div>
                     <p>Had pretty good disco with Amy. In existing contract with Kaseya until 2027 she thinks, but will find out to let me know the exact date. They are looking to get off of their platform to something better because their price is about to go up with them at renewal and not the long term solution for them. Will stay in touch to find out renewal date.</p>
                   </div>
                   <div class="loss-detail-item">
-                    <div class="loss-detail-meta"><strong>The Tech Consultants</strong><span>2026-04-08 · $1,615 · In existing contract</span></div>
+                    <div class="loss-detail-meta"><strong>The Tech Consultants</strong><span>2026-04-08 · $1,615</span></div>
                     <p>Really great fit and customer persona. Using all of our ideal vendors, and has a good mix of telecom vs MSP billing. But they are in contract with Kaseya until Q3 of 2027. They wanted more information now, and we are going to stay in touch until early 2027 when they are ready to start making the move.</p>
                   </div>
                   <div class="loss-detail-item">
-                    <div class="loss-detail-meta"><strong>HEDnorth</strong><span>2026-04-08 · $1,035 · Software Missing Capabilities</span></div>
-                    <p>They have a small amount of managed services, but really operate closer to an integrator / construction company. They needed &quot;scalers&quot; on quotes to handle auto price increases based on site distance from office, and also needed AIA billing.</p>
-                  </div>
-                  <div class="loss-detail-item">
-                    <div class="loss-detail-meta"><strong>Business Communication Systems</strong><span>2026-04-22 · $1,575 · Not the Right Time</span></div>
-                    <p>Said it is not a priority until Q3/Q4 of this year</p>
-                  </div>
-                  <div class="loss-detail-item">
-                    <div class="loss-detail-meta"><strong>Kinetix</strong><span>2026-04-27 · $1,785 · In existing contract</span></div>
+                    <div class="loss-detail-meta"><strong>Kinetix</strong><span>2026-04-27 · $1,785</span></div>
                     <p>Contract renewal with Connectwise is June 2026 and did not want to switch before then. Wanted to see the product and reconnect towards the end of fall of 2026 to see if they would like to make a switch before the next renewal June 2027.</p>
                   </div>
                   <div class="loss-detail-item">
-                    <div class="loss-detail-meta"><strong>Qovo Solutions Inc</strong><span>2026-04-29 · $1,875 · Software Missing Capabilities</span></div>
-                    <p>Needing integration with Avatax/Avalara. Not wanting to use SureTax to send over the reports to Avalara to file. Just sales tax but this is what he is hung up on. Also would like rental/leasing inventory but not the big hang up like Avatax</p>
-                  </div>
-                  <div class="loss-detail-item">
-                    <div class="loss-detail-meta"><strong>Diverse CTI</strong><span>2026-05-04 · $1,890 · In existing contract</span></div>
+                    <div class="loss-detail-meta"><strong>Diverse CTI</strong><span>2026-05-04 · $1,890</span></div>
                     <p>In contract with Connectwise until February 2027. Closing opp but will stay in touch.</p>
                   </div>
                   <div class="loss-detail-item">
-                    <div class="loss-detail-meta"><strong>Brightside</strong><span>2026-05-04 · $1,470 · In existing contract</span></div>
+                    <div class="loss-detail-meta"><strong>Brightside</strong><span>2026-05-04 · $1,470</span></div>
                     <p>In existing contract with Connectwise and never could get ahold of him to find out when the renewal is. Closing for now and staying in touch.</p>
                   </div>
                   <div class="loss-detail-item">
-                    <div class="loss-detail-meta"><strong>Scipio Technologies (Peace Communications)</strong><span>2026-05-06 · $3,500 · Software Missing Capabilities</span></div>
-                    <p>Scipio was really dragging their feet on this evaluation because Terry didn&#x27;t view us as an equal platform to ConnectWise. They needed a ScreenConnect integration, they needed a ConnectWise RMM integration, they needed an IT Glue integration, they needed a Sentinel One integration, and they needed Co-Managed Services to give their clients ticketing access.</p>
-                  </div>
-                  <div class="loss-detail-item">
-                    <div class="loss-detail-meta"><strong>SIP Oasis</strong><span>2026-05-13 · $1,170 · In existing contract</span></div>
+                    <div class="loss-detail-meta"><strong>SIP Oasis</strong><span>2026-05-13 · $1,170</span></div>
                     <p>Ron and John both really liked PSA, but does not make sense until closer to their contract end with CW in December. Wants us to follow up end of July</p>
                   </div>
                   <div class="loss-detail-item">
-                    <div class="loss-detail-meta"><strong>Techmedics</strong><span>2026-05-27 · $1,360 · Software Missing Capabilities</span></div>
-                    <p>Going with Kaseya or Halo because they have all the quoting functionality they need. Most of their pain driving the switch off CW was around quoting. They needed pics in the product catalog, descriptions on quotes, automatic PO generation when a quote is completed, and distributor integrations</p>
-                  </div>
-                  <div class="loss-detail-item">
-                    <div class="loss-detail-meta"><strong>Allied Technology Group</strong><span>2026-05-29 · $1,155 · Not the Right Time</span></div>
-                    <p>Abel went on medical leave - checking back in with him on 6/8</p>
-                  </div>
-                  <div class="loss-detail-item">
-                    <div class="loss-detail-meta"><strong>Frontier Computer Corp</strong><span>2026-06-02 · $1,700 · Not the Right Time</span></div>
-                    <p>Due to his travel schedule, he wants to wait to pick this up until the third week of June. Since that means it likely won&#x27;t close on the quarter I&#x27;m closing out so we can reset timer on this one. Will reopen third week of June when we can revisit.</p>
-                  </div>
-                  <div class="loss-detail-item">
-                    <div class="loss-detail-meta"><strong>Business Network Team</strong><span>2026-06-03 · $1,750 · In existing contract</span></div>
+                    <div class="loss-detail-meta"><strong>Business Network Team</strong><span>2026-06-03 · $1,750</span></div>
                     <p>Ghosted post disco, but on the disco it was fairly clear that they had just invested a lot of time into Zoho to handle their servicing requirements and were most interested in quoting. But since we wouldn&#x27;t integrate into Zoho there wasn&#x27;t a ton of value there for them without using our ticketing.</p>
                   </div>
                   <div class="loss-detail-item">
-                    <div class="loss-detail-meta"><strong>OneITz</strong><span>2026-06-04 · $1,575 · Software Missing Capabilities</span></div>
-                    <p>Combo of SWMC and in an existing contract. They invested a lot of time and money into onboarding Halo, so need to feel really strongly about leaving. Selected project management because they need project billing and progressive billing. They also needed project templates and want to make Revii customer-facing. They have a chatbot integration with Halo.</p>
-                  </div>
-                  <div class="loss-detail-item">
-                    <div class="loss-detail-meta"><strong>Silent Partner Communications</strong><span>2026-06-10 · $1,575 · In existing contract</span></div>
+                    <div class="loss-detail-meta"><strong>Silent Partner Communications</strong><span>2026-06-10 · $1,575</span></div>
                     <p>Closing for now until we get demo back on the calendar. In existing contract at this time until later this year.</p>
                   </div>
                   <div class="loss-detail-item">
-                    <div class="loss-detail-meta"><strong>BalsamWest Fibernet</strong><span>2026-06-17 · $3,630 · Not the Right Time</span></div>
-                    <p>Said they are not able to make this switch until Q3. Will reach back out then</p>
-                  </div>
-                  <div class="loss-detail-item">
-                    <div class="loss-detail-meta"><strong>O-Netrix Solutions</strong><span>2026-06-24 · $1,575 · Not the Right Time</span></div>
-                    <p>Needing the ability to change the taxes on invoices per each line item. Do not have that today and looking to see if we can add that to the roadmap.</p>
-                  </div>
-                  <div class="loss-detail-item">
-                    <div class="loss-detail-meta"><strong>Lyra Communications Group</strong><span>2026-06-29 · $1,100 · Not the Right Time</span></div>
-                    <p>Their ConnectWise contract ends in September, but requires notice in July. Which doesn&#x27;t give us enough time for them to comfortably make the move again. But they all think the platform is ready for them, and we will pick this back up in about 6 months.</p>
-                  </div>
-                  <div class="loss-detail-item">
-                    <div class="loss-detail-meta"><strong>ET&amp;T Corporation</strong><span>2026-07-01 · $1,260 · Software Missing Capabilities</span></div>
-                    <p>Fusun said she felt like we were still a half baked solution compared to both ConnectWise, and their former use of Tigerpaw. Said she wanted to reconnect when we had more features, but wasn&#x27;t able to provide me with exactly what those features were. But these are some of the items they called out during our demo needing.</p>
-                  </div>
-                  <div class="loss-detail-item">
-                    <div class="loss-detail-meta"><strong>MHC Datacomm</strong><span>2026-07-08 · $1,400 · Not the Right Time</span></div>
-                    <p>Currently onboarding QBO and wanting me to reach out at the end of the month. Closing for now.</p>
-                  </div>
-                  <div class="loss-detail-item">
-                    <div class="loss-detail-meta"><strong>Integritek</strong><span>2026-07-14 · $2,240 · Not the Right Time</span></div>
-                    <p>Great guy and great demo for another Lyra company. William knows Brook well. Wants to pick this back up Q1 / early Q2 of next year, as that is when they intend to make a decision on new platforms vs Connectwise.</p>
-                  </div>
-                  <div class="loss-detail-item">
-                    <div class="loss-detail-meta"><strong>AvTek Solutions, Inc</strong><span>2026-07-17 · $1,100 · In existing contract</span></div>
+                    <div class="loss-detail-meta"><strong>AvTek Solutions, Inc</strong><span>2026-07-17 · $1,100</span></div>
                     <p>They ended up extending their contract with Autotask and didn&#x27;t let us know. There could still be an opportunity to get their sales team on PSA, but closing this out for now to restart the clock.</p>
-                  </div>
-                  <div class="loss-detail-item">
-                    <div class="loss-detail-meta"><strong>M.I.T. Consulting</strong><span>2026-07-24 · $1,900 · Software Missing Capabilities</span></div>
-                    <p>Other features that we were missing to replace CW - Cost visibility / tracking in the quoting process, ability to ask for a deposit payment / make a payment for the quote to be approved, customer authentication with SMS, File Repository on projects, project templates, and block time / agreement functionality</p>
-                  </div>
-                  <div class="loss-detail-item">
-                    <div class="loss-detail-meta"><strong>Compsys</strong><span>2026-07-31 · $2,800 · Software Missing Capabilities</span></div>
-                    <p>Some of their employees don&#x27;t want them to sign up until there is a live Gradient integration. Closing for now.</p>
                   </div>
                 </div>
               </div>
               <div class="loss-detail-column" style="--c:#3ddc97">
-                <div class="loss-detail-column-head"><h4>Decision Maker / Fit</h4><span>5 opps · $10K</span></div>
+                <div class="loss-detail-column-head"><h4>Software Missing Capabilities</h4><span>8 opps · $15K</span></div>
                 <div class="loss-detail-list">
                   <div class="loss-detail-item">
-                    <div class="loss-detail-meta"><strong>Pathwayz Communications</strong><span>2026-04-20 · $1,680 · Lack of Decision Maker Involvement</span></div>
+                    <div class="loss-detail-meta"><strong>HEDnorth</strong><span>2026-04-08 · $1,035</span></div>
+                    <p>They have a small amount of managed services, but really operate closer to an integrator / construction company. They needed &quot;scalers&quot; on quotes to handle auto price increases based on site distance from office, and also needed AIA billing.</p>
+                  </div>
+                  <div class="loss-detail-item">
+                    <div class="loss-detail-meta"><strong>Qovo Solutions Inc</strong><span>2026-04-29 · $1,875</span></div>
+                    <p>Needing integration with Avatax/Avalara. Not wanting to use SureTax to send over the reports to Avalara to file. Just sales tax but this is what he is hung up on. Also would like rental/leasing inventory but not the big hang up like Avatax</p>
+                  </div>
+                  <div class="loss-detail-item">
+                    <div class="loss-detail-meta"><strong>Scipio Technologies (Peace Communications)</strong><span>2026-05-06 · $3,500</span></div>
+                    <p>Scipio was really dragging their feet on this evaluation because Terry didn&#x27;t view us as an equal platform to ConnectWise. They needed a ScreenConnect integration, they needed a ConnectWise RMM integration, they needed an IT Glue integration, they needed a Sentinel One integration, and they needed Co-Managed Services to give their clients ticketing access.</p>
+                  </div>
+                  <div class="loss-detail-item">
+                    <div class="loss-detail-meta"><strong>Techmedics</strong><span>2026-05-27 · $1,360</span></div>
+                    <p>Going with Kaseya or Halo because they have all the quoting functionality they need. Most of their pain driving the switch off CW was around quoting. They needed pics in the product catalog, descriptions on quotes, automatic PO generation when a quote is completed, and distributor integrations</p>
+                  </div>
+                  <div class="loss-detail-item">
+                    <div class="loss-detail-meta"><strong>OneITz</strong><span>2026-06-04 · $1,575</span></div>
+                    <p>Combo of SWMC and in an existing contract. They invested a lot of time and money into onboarding Halo, so need to feel really strongly about leaving. Selected project management because they need project billing and progressive billing. They also needed project templates and want to make Revii customer-facing. They have a chatbot integration with Halo.</p>
+                  </div>
+                  <div class="loss-detail-item">
+                    <div class="loss-detail-meta"><strong>ET&amp;T Corporation</strong><span>2026-07-01 · $1,260</span></div>
+                    <p>Fusun said she felt like we were still a half baked solution compared to both ConnectWise, and their former use of Tigerpaw. Said she wanted to reconnect when we had more features, but wasn&#x27;t able to provide me with exactly what those features were. But these are some of the items they called out during our demo needing.</p>
+                  </div>
+                  <div class="loss-detail-item">
+                    <div class="loss-detail-meta"><strong>M.I.T. Consulting</strong><span>2026-07-24 · $1,900</span></div>
+                    <p>Other features that we were missing to replace CW - Cost visibility / tracking in the quoting process, ability to ask for a deposit payment / make a payment for the quote to be approved, customer authentication with SMS, File Repository on projects, project templates, and block time / agreement functionality</p>
+                  </div>
+                  <div class="loss-detail-item">
+                    <div class="loss-detail-meta"><strong>Compsys</strong><span>2026-07-31 · $2,800</span></div>
+                    <p>Some of their employees don&#x27;t want them to sign up until there is a live Gradient integration. Closing for now.</p>
+                  </div>
+                </div>
+              </div>
+              <div class="loss-detail-column" style="--c:#00d4f0">
+                <div class="loss-detail-column-head"><h4>Not the Right Time</h4><span>8 opps · $14K</span></div>
+                <div class="loss-detail-list">
+                  <div class="loss-detail-item">
+                    <div class="loss-detail-meta"><strong>Business Communication Systems</strong><span>2026-04-22 · $1,575</span></div>
+                    <p>Said it is not a priority until Q3/Q4 of this year</p>
+                  </div>
+                  <div class="loss-detail-item">
+                    <div class="loss-detail-meta"><strong>Allied Technology Group</strong><span>2026-05-29 · $1,155</span></div>
+                    <p>Abel went on medical leave - checking back in with him on 6/8</p>
+                  </div>
+                  <div class="loss-detail-item">
+                    <div class="loss-detail-meta"><strong>Frontier Computer Corp</strong><span>2026-06-02 · $1,700</span></div>
+                    <p>Due to his travel schedule, he wants to wait to pick this up until the third week of June. Since that means it likely won&#x27;t close on the quarter I&#x27;m closing out so we can reset timer on this one. Will reopen third week of June when we can revisit.</p>
+                  </div>
+                  <div class="loss-detail-item">
+                    <div class="loss-detail-meta"><strong>BalsamWest Fibernet</strong><span>2026-06-17 · $3,630</span></div>
+                    <p>Said they are not able to make this switch until Q3. Will reach back out then</p>
+                  </div>
+                  <div class="loss-detail-item">
+                    <div class="loss-detail-meta"><strong>O-Netrix Solutions</strong><span>2026-06-24 · $1,575</span></div>
+                    <p>Needing the ability to change the taxes on invoices per each line item. Do not have that today and looking to see if we can add that to the roadmap.</p>
+                  </div>
+                  <div class="loss-detail-item">
+                    <div class="loss-detail-meta"><strong>Lyra Communications Group</strong><span>2026-06-29 · $1,100</span></div>
+                    <p>Their ConnectWise contract ends in September, but requires notice in July. Which doesn&#x27;t give us enough time for them to comfortably make the move again. But they all think the platform is ready for them, and we will pick this back up in about 6 months.</p>
+                  </div>
+                  <div class="loss-detail-item">
+                    <div class="loss-detail-meta"><strong>MHC Datacomm</strong><span>2026-07-08 · $1,400</span></div>
+                    <p>Currently onboarding QBO and wanting me to reach out at the end of the month. Closing for now.</p>
+                  </div>
+                  <div class="loss-detail-item">
+                    <div class="loss-detail-meta"><strong>Integritek</strong><span>2026-07-14 · $2,240</span></div>
+                    <p>Great guy and great demo for another Lyra company. William knows Brook well. Wants to pick this back up Q1 / early Q2 of next year, as that is when they intend to make a decision on new platforms vs Connectwise.</p>
+                  </div>
+                </div>
+              </div>
+              <div class="loss-detail-column" style="--c:#ffb020">
+                <div class="loss-detail-column-head"><h4>Decision Maker Gap</h4><span>4 opps · $9K</span></div>
+                <div class="loss-detail-list">
+                  <div class="loss-detail-item">
+                    <div class="loss-detail-meta"><strong>Pathwayz Communications</strong><span>2026-04-20 · $1,680</span></div>
                     <p>Kevin spoke with Paul and Billing/PSA is on their radar, but they are trying to figure out some internal resources first before taking on a migration. Will stay in touch.</p>
                   </div>
                   <div class="loss-detail-item">
-                    <div class="loss-detail-meta"><strong>Xchange Telecom / Skywire Networks</strong><span>2026-04-27 · $1,575 · Lack of Decision Maker Involvement</span></div>
+                    <div class="loss-detail-meta"><strong>Xchange Telecom / Skywire Networks</strong><span>2026-04-27 · $1,575</span></div>
                     <p>Necha scheduled this with us, and then Derek reached out saying they needed to figure out their billing strategy with us before looking at add-on products. Passed over to AM / CS.</p>
                   </div>
                   <div class="loss-detail-item">
-                    <div class="loss-detail-meta"><strong>Compsys</strong><span>2026-05-04 · $2,800 · Lack of Decision Maker Involvement</span></div>
+                    <div class="loss-detail-meta"><strong>Compsys</strong><span>2026-05-04 · $2,800</span></div>
                     <p>Closing out for now to restart the clock. Will stay and touch and will open back up opp once we can get Robert and Rebecca involved.</p>
                   </div>
                   <div class="loss-detail-item">
-                    <div class="loss-detail-meta"><strong>Securus Technologies</strong><span>2026-06-16 · $1,260 · Not Right Customer Type</span></div>
-                    <p>Looking for leased circuit management. We showed them a demo of PSA and they didn&#x27;t want to &quot;shoehorn&quot; an asset system into a circuit management workflow, and concluded it wasn&#x27;t the right fit at this time.</p>
-                  </div>
-                  <div class="loss-detail-item">
-                    <div class="loss-detail-meta"><strong>The Maynard Group</strong><span>2026-06-24 · $2,800 · Lack of Decision Maker Involvement</span></div>
+                    <div class="loss-detail-meta"><strong>The Maynard Group</strong><span>2026-06-24 · $2,800</span></div>
                     <p>Said he feels like he&#x27;s at a point where he doesn&#x27;t need to see any more demos of Rev.io, and he&#x27;s looking at other platforms. Told him I would send him release notes and new features, and he said he would let me know once he&#x27;s done looking at other platforms. He still thinks they are going to make a change this year, but declined anymore calls with us. Either he didn&#x27;t like the platform, or he didn&#x27;t like us. I don&#x27;t think he&#x27;s the DM he has claimed to be.</p>
                   </div>
                 </div>
