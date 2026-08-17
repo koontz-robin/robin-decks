@@ -1189,8 +1189,8 @@ body { min-height:100%; overflow-x:hidden; overflow-y:auto; background:#0a1628; 
 }
 #slide-2 .state-charts {
   grid-template-columns:repeat(2,minmax(0,1fr));
-  grid-template-rows:repeat(2,minmax(0,1fr));
-  gap:12px;
+  grid-template-rows:repeat(2,minmax(0,1fr)) minmax(0,.92fr);
+  gap:10px 12px;
 }
 #slide-2 .chart-card {
   padding:13px 15px 10px;
@@ -1269,6 +1269,30 @@ body { min-height:100%; overflow-x:hidden; overflow-y:auto; background:#0a1628; 
 }
 #slide-2 .legend-dot.series-secondary {
   background:#60a5fa;
+}
+
+/* 2026-08-17: combined SDR activity + bookings graph */
+#slide-2 .sdr-combined-chart {
+  grid-column:1 / -1;
+}
+#slide-2 .sdr-combined-chart .grouped-mrr-bars {
+  grid-template-columns:repeat(7,minmax(0,1fr));
+  min-height:74px;
+  gap:10px;
+}
+#slide-2 .sdr-combined-chart .mrr-group {
+  grid-template-columns:repeat(2,minmax(0,1fr));
+  height:60px;
+  gap:7px;
+}
+#slide-2 .sdr-combined-chart .mrr-month {
+  gap:6px;
+}
+#slide-2 .sdr-combined-chart .mrr-bar-value {
+  font-size:7.5px;
+}
+#slide-2 .sdr-combined-chart .month-label {
+  font-size:9px;
 }
 #slide-2 .rate-panel {
   padding:18px;
@@ -2539,6 +2563,20 @@ body {
               <div class="mrr-month"><div class="mrr-group"><div class="mrr-product-bar" style="--c:#00d4f0;height:61px"><span class="mrr-bar-value">11</span></div><div class="mrr-product-bar series-secondary" style="--c:#60a5fa;height:50px"><span class="mrr-bar-value">9</span></div></div><div class="month-label">Jul</div></div>
             </div>
             <div class="chart-legend"><div class="legend-item"><span class="legend-dot" style="--c:#00d4f0"></span>MSP won</div><div class="legend-item"><span class="legend-dot series-secondary" style="--c:#60a5fa"></span>VAR/Integrator won</div></div>
+          </div>
+
+          <div class="chart-card card sdr-combined-chart">
+            <div class="chart-title"><h3>SDR opportunities created vs bookings</h3><span>Jan-July 2026 · created count + closed-won amount</span></div>
+            <div class="grouped-mrr-bars">
+              <div class="mrr-month"><div class="mrr-group"><div class="mrr-product-bar" style="--c:#00d4f0;height:58px"><span class="mrr-bar-value">70</span></div><div class="mrr-product-bar series-secondary" style="--c:#60a5fa;height:7px"><span class="mrr-bar-value">$0.5k</span></div></div><div class="month-label">Jan</div></div>
+              <div class="mrr-month"><div class="mrr-group"><div class="mrr-product-bar" style="--c:#00d4f0;height:42px"><span class="mrr-bar-value">51</span></div><div class="mrr-product-bar series-secondary" style="--c:#60a5fa;height:41px"><span class="mrr-bar-value">$3k</span></div></div><div class="month-label">Feb</div></div>
+              <div class="mrr-month"><div class="mrr-group"><div class="mrr-product-bar" style="--c:#00d4f0;height:52px"><span class="mrr-bar-value">63</span></div><div class="mrr-product-bar series-secondary" style="--c:#60a5fa;height:19px"><span class="mrr-bar-value">$1.4k</span></div></div><div class="month-label">Mar</div></div>
+              <div class="mrr-month"><div class="mrr-group"><div class="mrr-product-bar" style="--c:#00d4f0;height:52px"><span class="mrr-bar-value">62</span></div><div class="mrr-product-bar series-secondary" style="--c:#60a5fa;height:60px"><span class="mrr-bar-value">$4.4k</span></div></div><div class="month-label">Apr</div></div>
+              <div class="mrr-month"><div class="mrr-group"><div class="mrr-product-bar" style="--c:#00d4f0;height:49px"><span class="mrr-bar-value">59</span></div><div class="mrr-product-bar series-secondary" style="--c:#60a5fa;height:18px"><span class="mrr-bar-value">$1.3k</span></div></div><div class="month-label">May</div></div>
+              <div class="mrr-month"><div class="mrr-group"><div class="mrr-product-bar" style="--c:#00d4f0;height:60px"><span class="mrr-bar-value">72</span></div><div class="mrr-product-bar series-secondary" style="--c:#60a5fa;height:46px"><span class="mrr-bar-value">$3.4k</span></div></div><div class="month-label">Jun</div></div>
+              <div class="mrr-month"><div class="mrr-group"><div class="mrr-product-bar" style="--c:#00d4f0;height:49px"><span class="mrr-bar-value">59</span></div><div class="mrr-product-bar series-secondary" style="--c:#60a5fa;height:34px"><span class="mrr-bar-value">$2.5k</span></div></div><div class="month-label">Jul</div></div>
+            </div>
+            <div class="chart-legend"><div class="legend-item"><span class="legend-dot" style="--c:#00d4f0"></span>SDR opps created</div><div class="legend-item"><span class="legend-dot series-secondary" style="--c:#60a5fa"></span>SDR bookings amount</div></div>
           </div>
         </div>
 
