@@ -37,7 +37,7 @@ ROLE_GROUPS = {"SDRs": "SDR", "MSP Sales": "AE", "Integrator Sales": "AE", "CSA"
 KNOWN_AES = {"Andy Whisenant", "Connor Flynn", "Husam Zalmiyar", "Jake Borah", "Jamie Butler", "Jaylin Bender", "Patrick Davies"}
 KNOWN_CSAS = {"Ingrid Beard", "Justin Lee"}
 CBR_TYPES = ["Client Business Review"]
-DEMO_TYPES = ["Initial Demo"]
+DEMO_TYPES = ["2-Initial DEMO"]
 MQL_EXCLUDED_SOURCES = {"", "none", "sales", "sdr", "outbound", "partner", "partner/channel", "channel", "referral", "customer referral", "tradeshow"}
 
 
@@ -250,14 +250,14 @@ def build_payload():
         if period:
             add_metric(metrics[rep], "cbrs_set", period)
 
-    # Initial demos RAN: Events with Type = Initial Demo and ActivityDate during the week.
+    # Initial demos RAN: Events with Type = 2-Initial DEMO and ActivityDate during the week.
     demo_events = sf_query(base, headers, f"""
         SELECT Id, Subject, Type, ActivityDate, Appointment_Status__c, Owner.Name, What.Name
         FROM Event
         WHERE IsDeleted = false
           AND ActivityDate >= {sf_date(range_start)}
           AND ActivityDate < {sf_date(range_end)}
-          AND Type = 'Initial Demo'
+          AND Type = '2-Initial DEMO'
     """)
     for ev in demo_events:
         rep = normalize_name((ev.get("Owner") or {}).get("Name"))
@@ -353,7 +353,7 @@ def build_payload():
         "definitions": {
             "discovery_set": "Tasks created with Discovery Meeting/Call in the subject.",
             "cbrs_set": "Events with Type = Client Business Review created during the week.",
-            "initial_demos_ran": "Events with Type = Initial Demo and ActivityDate in-week, completed/held when appointment status is present.",
+            "initial_demos_ran": "Events with Type = 2-Initial DEMO and ActivityDate in-week, completed/held when appointment status is present.",
             "sdr_sourced_opps": "Opportunities created with SDR_Influence__c populated and not None.",
             "mqls_converted": "Marketing-sourced opportunities created, excluding tradeshow, sales/outbound, partner/channel, and referral sources.",
             "tradeshow_leads_converted": "Opportunities created with Marketing_Source__c = Tradeshow.",
