@@ -36,8 +36,8 @@ EXCLUDED_REPS = {
 ROLE_GROUPS = {"SDRs": "SDR", "MSP Sales": "AE", "Integrator Sales": "AE", "CSA": "CSA"}
 KNOWN_AES = {"Andy Whisenant", "Connor Flynn", "Husam Zalmiyar", "Jake Borah", "Jamie Butler", "Jaylin Bender", "Patrick Davies"}
 KNOWN_CSAS = {"Ingrid Beard", "Justin Lee"}
-CBR_TYPES = ["Client Business Review", "(CSA) Client Business Review", "AM - Client Business Review", "PSA AM - Client Business Review"]
-DEMO_TYPES = ["Initial Product Demo", "Product Demo", "Demo"]
+CBR_TYPES = ["Client Business Review"]
+DEMO_TYPES = ["Initial Demo"]
 MQL_EXCLUDED_SOURCES = {"", "none", "sales", "sdr", "outbound", "partner", "partner/channel", "channel", "referral", "customer referral", "tradeshow"}
 
 
@@ -233,14 +233,14 @@ def build_payload():
                 metrics[rep] = empty_rep("Other")
             add_metric(metrics[rep], "discovery_set", period)
 
-    # CBRs SET: CBR events created during the week (not just completed).
+    # CBRs SET: Events with Type = Client Business Review created during the week.
     cbr_events = sf_query(base, headers, f"""
         SELECT Id, Subject, Type, CreatedDate, ActivityDate, Owner.Name, What.Name
         FROM Event
         WHERE IsDeleted = false
           AND CreatedDate >= {iso_utc(range_start)}
           AND CreatedDate < {iso_utc(range_end)}
-          AND Type IN ({soql_list(CBR_TYPES)})
+          AND Type = 'Client Business Review'
     """)
     for ev in cbr_events:
         rep = normalize_name((ev.get("Owner") or {}).get("Name"))
@@ -250,14 +250,14 @@ def build_payload():
         if period:
             add_metric(metrics[rep], "cbrs_set", period)
 
-    # Initial demos RAN: demo events with ActivityDate during the week and completed when status exists.
+    # Initial demos RAN: Events with Type = Initial Demo and ActivityDate during the week.
     demo_events = sf_query(base, headers, f"""
         SELECT Id, Subject, Type, ActivityDate, Appointment_Status__c, Owner.Name, What.Name
         FROM Event
         WHERE IsDeleted = false
           AND ActivityDate >= {sf_date(range_start)}
           AND ActivityDate < {sf_date(range_end)}
-          AND (Type IN ({soql_list(DEMO_TYPES)}) OR Subject LIKE '%Initial%Demo%' OR Subject LIKE '%Product Demo%')
+          AND Type = 'Initial Demo'
     """)
     for ev in demo_events:
         rep = normalize_name((ev.get("Owner") or {}).get("Name"))
@@ -352,8 +352,8 @@ def build_payload():
         "windows": {k: format_window(v[0], v[1]) for k, v in windows.items()},
         "definitions": {
             "discovery_set": "Tasks created with Discovery Meeting/Call in the subject.",
-            "cbrs_set": "CBR-type Events created during the week.",
-            "initial_demos_ran": "Demo Events with ActivityDate in-week, completed/held when appointment status is present.",
+            "cbrs_set": "Events with Type = Client Business Review created during the week.",
+            "initial_demos_ran": "Events with Type = Initial Demo and ActivityDate in-week, completed/held when appointment status is present.",
             "sdr_sourced_opps": "Opportunities created with SDR_Influence__c populated and not None.",
             "mqls_converted": "Marketing-sourced opportunities created, excluding tradeshow, sales/outbound, partner/channel, and referral sources.",
             "tradeshow_leads_converted": "Opportunities created with Marketing_Source__c = Tradeshow.",
