@@ -1,8 +1,8 @@
 #!/usr/bin/env python3
 """Refresh Monday team activity dashboard.
 
-Compares last full Monday-Sunday week to the prior Monday-Sunday week using
-Salesforce Tasks, Events, Opportunities, and stage-history movement.
+Focused Monday-morning scorecard: last completed Monday-Sunday week vs the
+prior Monday-Sunday week across the sales motion Ryan asked to inspect.
 """
 from __future__ import annotations
 
@@ -36,16 +36,9 @@ EXCLUDED_REPS = {
 ROLE_GROUPS = {"SDRs": "SDR", "MSP Sales": "AE", "Integrator Sales": "AE", "CSA": "CSA"}
 KNOWN_AES = {"Andy Whisenant", "Connor Flynn", "Husam Zalmiyar", "Jake Borah", "Jamie Butler", "Jaylin Bender", "Patrick Davies"}
 KNOWN_CSAS = {"Ingrid Beard", "Justin Lee"}
-STAGE_ORDER = {
-    "Closed Lost": 0,
-    "1- Discovery Scheduled": 1,
-    "2 - Discovery Completed": 2,
-    "3 - Initial Product Demo": 3,
-    "4 - Proposal Sent": 4,
-    "5 - Product / Contract Validated": 5,
-    "6 - Verbal Commit": 6,
-    "Closed Won": 7,
-}
+CBR_TYPES = ["Client Business Review", "(CSA) Client Business Review", "AM - Client Business Review", "PSA AM - Client Business Review"]
+DEMO_TYPES = ["Initial Product Demo", "Product Demo", "Demo"]
+MQL_EXCLUDED_SOURCES = {"", "none", "sales", "sdr", "outbound", "partner", "partner/channel", "channel", "referral", "customer referral", "tradeshow"}
 
 
 def normalize_name(name: str | None) -> str:
@@ -71,7 +64,7 @@ def sf_query(base, headers, query):
     while True:
         r = requests.get(url, headers=headers, params=params, timeout=60)
         if not r.ok:
-            raise RuntimeError(f"Salesforce query failed: {r.status_code} {r.text[:1000]}")
+            raise RuntimeError(f"Salesforce query failed: {r.status_code} {r.text[:1000]}\nSOQL:\n{query}")
         data = r.json()
         records.extend(data.get("records", []))
         if data.get("done", True):
@@ -84,7 +77,7 @@ def week_windows(now_et: datetime):
     today = now_et.date()
     this_monday = today - timedelta(days=today.weekday())
     # Sunday-night refresh should include the week that just ended Sunday.
-    # Monday and later should use the previous completed Monday-Sunday week.
+    # Monday and later use the previous completed Monday-Sunday week.
     if today.weekday() == 6:
         last_start = this_monday
         last_end = this_monday + timedelta(days=7)
@@ -107,6 +100,10 @@ def sf_date(dt: datetime) -> str:
     return dt.date().isoformat()
 
 
+def parse_sf_datetime(value: str) -> datetime:
+    return datetime.strptime(value, "%Y-%m-%dT%H:%M:%S.%f%z").astimezone(ET)
+
+
 def period_for_dt(dt: datetime, windows):
     for key, (start, end) in windows.items():
         if start <= dt < end:
@@ -114,12 +111,26 @@ def period_for_dt(dt: datetime, windows):
     return None
 
 
+def format_window(start, end):
+    return f"{start.strftime('%b %-d')} - {(end - timedelta(days=1)).strftime('%b %-d, %Y')}"
+
+
+def soql_list(values):
+    return ", ".join("'" + str(v).replace("'", "\\'") + "'" for v in values)
+
+
+def amount(rec):
+    try:
+        return float(rec.get("Amount") or 0)
+    except Exception:
+        return 0.0
+
+
 def get_team_members(base, headers):
-    role_list = ", ".join(f"'{role}'" for role in ROLE_GROUPS)
     users = sf_query(base, headers, f"""
         SELECT Name, UserRole.Name
         FROM User
-        WHERE IsActive = true AND UserRole.Name IN ({role_list})
+        WHERE IsActive = true AND UserRole.Name IN ({soql_list(ROLE_GROUPS)})
         ORDER BY Name
     """)
     reps = {}
@@ -137,48 +148,59 @@ def get_team_members(base, headers):
     return reps
 
 
-def classify_task(task):
-    subtype = (task.get("TaskSubtype") or "").lower()
-    subject = (task.get("Subject") or "").lower()
-    typ = (task.get("Type") or "").lower()
-    hay = " ".join([subtype, subject, typ])
-    if "call" in hay:
-        return "calls"
-    if "email" in hay:
-        return "emails"
-    return "tasks"
+def empty_periods(value=0):
+    return {"last": value, "prior": value}
 
 
 def empty_rep(role=""):
     return {
         "role": role,
-        "activities": {"last": 0, "prior": 0},
-        "calls": {"last": 0, "prior": 0},
-        "emails": {"last": 0, "prior": 0},
-        "tasks": {"last": 0, "prior": 0},
-        "meetings": {"last": 0, "prior": 0},
-        "opps_created": {"last": 0, "prior": 0},
-        "opps_created_mrr": {"last": 0.0, "prior": 0.0},
-        "stage_advances": {"last": 0, "prior": 0},
-        "stage_steps": {"last": 0, "prior": 0},
-        "closed_won": {"last": 0, "prior": 0},
-        "closed_won_mrr": {"last": 0.0, "prior": 0.0},
+        "discovery_set": empty_periods(),
+        "cbrs_set": empty_periods(),
+        "initial_demos_ran": empty_periods(),
+        "sdr_sourced_opps": empty_periods(),
+        "sdr_sourced_mrr": empty_periods(0.0),
+        "mqls_converted": empty_periods(),
+        "mql_converted_mrr": empty_periods(0.0),
+        "tradeshow_leads_converted": empty_periods(),
+        "tradeshow_converted_mrr": empty_periods(0.0),
+        "booked_mrr": empty_periods(0.0),
+        "booked_count": empty_periods(),
     }
 
 
-def amount(rec):
-    try:
-        return float(rec.get("Amount") or 0)
-    except Exception:
-        return 0.0
+def add_metric(bucket, key, period, count=1, mrr_key=None, mrr=0.0):
+    bucket[key][period] += count
+    if mrr_key:
+        bucket[mrr_key][period] += mrr
 
 
-def stage_delta(old, new):
-    oi = STAGE_ORDER.get(str(old or ""))
-    ni = STAGE_ORDER.get(str(new or ""))
-    if oi is None or ni is None:
-        return 1
-    return max(0, ni - oi)
+def source_norm(value):
+    return (value or "").strip().lower()
+
+
+def is_mql_source(value):
+    return source_norm(value) not in MQL_EXCLUDED_SOURCES
+
+
+def is_tradeshow_source(value):
+    return source_norm(value) == "tradeshow"
+
+
+def product_label(value):
+    raw = (value or "Unspecified").strip() or "Unspecified"
+    low = raw.lower()
+    if "psa" in low:
+        return "PSA"
+    if "billing" in low or "odin" in low:
+        return "Billing / Odin"
+    if "payment" in low or "ar" in low:
+        return "Payments AR"
+    if "cyber" in low:
+        return "Cyber Protect"
+    if "commerce" in low:
+        return "CommerceHub"
+    return raw
 
 
 def build_payload():
@@ -188,67 +210,106 @@ def build_payload():
     base, headers = sf_auth()
     reps = get_team_members(base, headers)
     metrics = {rep: empty_rep(role) for rep, role in reps.items()}
+    product_mrr = defaultdict(lambda: {"last": {"mrr": 0.0, "count": 0}, "prior": {"mrr": 0.0, "count": 0}})
+    conversion_detail = {"mql": [], "tradeshow": [], "sdr": [], "booked": []}
 
-    tasks = sf_query(base, headers, f"""
-        SELECT Id, Subject, Type, TaskSubtype, CreatedDate, Owner.Name
+    # Discovery meetings SET: task created during the week.
+    discovery_tasks = sf_query(base, headers, f"""
+        SELECT Id, Subject, CreatedDate, Owner.Name
         FROM Task
         WHERE IsDeleted = false
           AND CreatedDate >= {iso_utc(range_start)}
           AND CreatedDate < {iso_utc(range_end)}
+          AND (Subject LIKE '%Discovery Meeting%' OR Subject LIKE '%Discovery Call%')
     """)
-    for task in tasks:
+    for task in discovery_tasks:
         rep = normalize_name((task.get("Owner") or {}).get("Name"))
         if rep not in metrics:
             continue
-        dt = datetime.strptime(task["CreatedDate"], "%Y-%m-%dT%H:%M:%S.%f%z").astimezone(ET)
-        period = period_for_dt(dt, windows)
-        if not period:
-            continue
-        kind = classify_task(task)
-        metrics[rep]["activities"][period] += 1
-        metrics[rep][kind][period] += 1
+        period = period_for_dt(parse_sf_datetime(task["CreatedDate"]), windows)
+        if period:
+            add_metric(metrics[rep], "discovery_set", period)
 
-    events = sf_query(base, headers, f"""
-        SELECT Id, Subject, ActivityDate, StartDateTime, IsDeleted, Owner.Name
+    # CBRs SET: CBR events created during the week (not just completed).
+    cbr_events = sf_query(base, headers, f"""
+        SELECT Id, Subject, Type, CreatedDate, ActivityDate, Owner.Name, What.Name
+        FROM Event
+        WHERE IsDeleted = false
+          AND CreatedDate >= {iso_utc(range_start)}
+          AND CreatedDate < {iso_utc(range_end)}
+          AND Type IN ({soql_list(CBR_TYPES)})
+    """)
+    for ev in cbr_events:
+        rep = normalize_name((ev.get("Owner") or {}).get("Name"))
+        if rep not in metrics:
+            continue
+        period = period_for_dt(parse_sf_datetime(ev["CreatedDate"]), windows)
+        if period:
+            add_metric(metrics[rep], "cbrs_set", period)
+
+    # Initial demos RAN: demo events with ActivityDate during the week and completed when status exists.
+    demo_events = sf_query(base, headers, f"""
+        SELECT Id, Subject, Type, ActivityDate, Appointment_Status__c, Owner.Name, What.Name
         FROM Event
         WHERE IsDeleted = false
           AND ActivityDate >= {sf_date(range_start)}
           AND ActivityDate < {sf_date(range_end)}
+          AND (Type IN ({soql_list(DEMO_TYPES)}) OR Subject LIKE '%Initial%Demo%' OR Subject LIKE '%Product Demo%')
     """)
-    for ev in events:
+    for ev in demo_events:
         rep = normalize_name((ev.get("Owner") or {}).get("Name"))
         if rep not in metrics:
             continue
-        subj = (ev.get("Subject") or "").lower()
-        if "cancel" in subj or "internal" in subj:
+        status = (ev.get("Appointment_Status__c") or "").strip().lower()
+        subject = (ev.get("Subject") or "").lower()
+        if "cancel" in subject or "internal" in subject:
+            continue
+        if status and status not in {"completed", "complete", "held", "ran"}:
             continue
         dt = datetime.fromisoformat(ev["ActivityDate"]).replace(tzinfo=ET)
         period = period_for_dt(dt, windows)
-        if not period:
-            continue
-        metrics[rep]["activities"][period] += 1
-        metrics[rep]["meetings"][period] += 1
+        if period:
+            add_metric(metrics[rep], "initial_demos_ran", period)
 
+    # Opportunity-created conversions: SDR sourced, MQL converted, Tradeshow converted.
     opps_created = sf_query(base, headers, f"""
-        SELECT Id, Name, Amount, CreatedDate, StageName, Product_Type__c, Owner.Name
+        SELECT Id, Name, Amount, CreatedDate, StageName, Product_Type__c, Marketing_Source__c,
+               Marketing_Sub_source__c, SDR_Influence__c, Owner.Name, Account.Name
         FROM Opportunity
         WHERE IsDeleted = false
           AND CreatedDate >= {iso_utc(range_start)}
           AND CreatedDate < {iso_utc(range_end)}
     """)
     for opp in opps_created:
-        rep = normalize_name((opp.get("Owner") or {}).get("Name"))
-        if rep not in metrics:
-            continue
-        dt = datetime.strptime(opp["CreatedDate"], "%Y-%m-%dT%H:%M:%S.%f%z").astimezone(ET)
-        period = period_for_dt(dt, windows)
+        created_dt = parse_sf_datetime(opp["CreatedDate"])
+        period = period_for_dt(created_dt, windows)
         if not period:
             continue
-        metrics[rep]["opps_created"][period] += 1
-        metrics[rep]["opps_created_mrr"][period] += amount(opp)
+        mrr = amount(opp)
+        owner = normalize_name((opp.get("Owner") or {}).get("Name"))
+        opp_name = opp.get("Name") or "Opportunity"
+        account_name = (opp.get("Account") or {}).get("Name") or ""
+        source = opp.get("Marketing_Source__c") or ""
+        subsource = opp.get("Marketing_Sub_source__c") or ""
+        sdr = normalize_name(opp.get("SDR_Influence__c"))
+        if sdr and sdr.lower() != "none":
+            if sdr not in metrics:
+                metrics[sdr] = empty_rep("SDR")
+            add_metric(metrics[sdr], "sdr_sourced_opps", period, mrr_key="sdr_sourced_mrr", mrr=mrr)
+            if period == "last":
+                conversion_detail["sdr"].append({"rep": sdr, "opp": opp_name, "account": account_name, "mrr": mrr, "date": created_dt.strftime("%a %-m/%-d")})
+        if owner in metrics and is_tradeshow_source(source):
+            add_metric(metrics[owner], "tradeshow_leads_converted", period, mrr_key="tradeshow_converted_mrr", mrr=mrr)
+            if period == "last":
+                conversion_detail["tradeshow"].append({"rep": owner, "opp": opp_name, "account": account_name, "source": subsource or source, "mrr": mrr, "date": created_dt.strftime("%a %-m/%-d")})
+        elif owner in metrics and is_mql_source(source):
+            add_metric(metrics[owner], "mqls_converted", period, mrr_key="mql_converted_mrr", mrr=mrr)
+            if period == "last":
+                conversion_detail["mql"].append({"rep": owner, "opp": opp_name, "account": account_name, "source": subsource or source, "mrr": mrr, "date": created_dt.strftime("%a %-m/%-d")})
 
+    # Booked MRR by product: closed-won opps by close date.
     opps_closed = sf_query(base, headers, f"""
-        SELECT Id, Name, Amount, CloseDate, StageName, Owner.Name
+        SELECT Id, Name, Amount, CloseDate, Product_Type__c, Owner.Name, Account.Name
         FROM Opportunity
         WHERE IsDeleted = false
           AND StageName = 'Closed Won'
@@ -256,47 +317,19 @@ def build_payload():
           AND CloseDate < {sf_date(range_end)}
     """)
     for opp in opps_closed:
-        rep = normalize_name((opp.get("Owner") or {}).get("Name"))
-        if rep not in metrics:
-            continue
         dt = datetime.fromisoformat(opp["CloseDate"]).replace(tzinfo=ET)
         period = period_for_dt(dt, windows)
         if not period:
             continue
-        metrics[rep]["closed_won"][period] += 1
-        metrics[rep]["closed_won_mrr"][period] += amount(opp)
-
-    history = sf_query(base, headers, f"""
-        SELECT Id, OpportunityId, OldValue, NewValue, CreatedDate,
-               Opportunity.Name, Opportunity.Owner.Name
-        FROM OpportunityFieldHistory
-        WHERE Field = 'StageName'
-          AND CreatedDate >= {iso_utc(range_start)}
-          AND CreatedDate < {iso_utc(range_end)}
-    """)
-    recent_moves = []
-    for h in history:
-        rep = normalize_name(((h.get("Opportunity") or {}).get("Owner") or {}).get("Name"))
-        if rep not in metrics:
-            continue
-        dt = datetime.strptime(h["CreatedDate"], "%Y-%m-%dT%H:%M:%S.%f%z").astimezone(ET)
-        period = period_for_dt(dt, windows)
-        if not period:
-            continue
-        delta = stage_delta(h.get("OldValue"), h.get("NewValue"))
-        if delta <= 0:
-            continue
-        metrics[rep]["stage_advances"][period] += 1
-        metrics[rep]["stage_steps"][period] += delta
+        mrr = amount(opp)
+        owner = normalize_name((opp.get("Owner") or {}).get("Name"))
+        product = product_label(opp.get("Product_Type__c"))
+        product_mrr[product][period]["mrr"] += mrr
+        product_mrr[product][period]["count"] += 1
+        if owner in metrics:
+            add_metric(metrics[owner], "booked_count", period, mrr_key="booked_mrr", mrr=mrr)
         if period == "last":
-            recent_moves.append({
-                "rep": rep,
-                "opp": (h.get("Opportunity") or {}).get("Name") or "Opportunity",
-                "from": str(h.get("OldValue") or ""),
-                "to": str(h.get("NewValue") or ""),
-                "steps": delta,
-                "date": dt.strftime("%a %-m/%-d %-I:%M %p"),
-            })
+            conversion_detail["booked"].append({"rep": owner, "opp": opp.get("Name") or "Opportunity", "account": (opp.get("Account") or {}).get("Name") or "", "product": product, "mrr": mrr, "date": dt.strftime("%a %-m/%-d")})
 
     totals = empty_rep("Total")
     for repdata in metrics.values():
@@ -306,18 +339,27 @@ def build_payload():
             for period in ("last", "prior"):
                 totals[key][period] += val[period]
 
-    payload = {
+    product_rows = dict(sorted(product_mrr.items(), key=lambda kv: (-kv[1]["last"]["mrr"], kv[0])))
+    for key in conversion_detail:
+        conversion_detail[key] = sorted(conversion_detail[key], key=lambda x: (-x.get("mrr", 0), x.get("rep", "")))[:12]
+
+    return {
         "generated_at_et": now_et.strftime("%b %-d, %Y %-I:%M %p ET"),
         "windows": {k: format_window(v[0], v[1]) for k, v in windows.items()},
+        "definitions": {
+            "discovery_set": "Tasks created with Discovery Meeting/Call in the subject.",
+            "cbrs_set": "CBR-type Events created during the week.",
+            "initial_demos_ran": "Demo Events with ActivityDate in-week, completed/held when appointment status is present.",
+            "sdr_sourced_opps": "Opportunities created with SDR_Influence__c populated and not None.",
+            "mqls_converted": "Marketing-sourced opportunities created, excluding tradeshow, sales/outbound, partner/channel, and referral sources.",
+            "tradeshow_leads_converted": "Opportunities created with Marketing_Source__c = Tradeshow.",
+            "booked_mrr": "Closed-won Opportunity Amount by CloseDate, grouped by Product_Type__c.",
+        },
         "metrics": metrics,
         "totals": totals,
-        "recent_moves": sorted(recent_moves, key=lambda x: x["date"], reverse=True)[:18],
+        "product_mrr": product_rows,
+        "conversion_detail": conversion_detail,
     }
-    return payload
-
-
-def format_window(start, end):
-    return f"{start.strftime('%b %-d')} - {(end - timedelta(days=1)).strftime('%b %-d, %Y')}"
 
 
 def fmt_int(v):
@@ -341,9 +383,10 @@ def signed(last, prior, money_flag=False):
     return ("+" if diff >= 0 else "") + fmt_int(diff)
 
 
-def metric_card(label, key, totals, money_flag=False):
-    last = totals[key]["last"]
-    prior = totals[key]["prior"]
+def metric_card(label, key, totals, money_flag=False, subkey=None):
+    source = totals[key] if subkey is None else totals[subkey]
+    last = source["last"]
+    prior = source["prior"]
     main = money(last) if money_flag else fmt_int(last)
     prior_txt = money(prior) if money_flag else fmt_int(prior)
     cls = "up" if last >= prior else "down"
@@ -356,60 +399,88 @@ def metric_card(label, key, totals, money_flag=False):
 
 
 def build_rep_rows(metrics):
+    score_keys = ["discovery_set", "cbrs_set", "initial_demos_ran", "sdr_sourced_opps", "mqls_converted", "tradeshow_leads_converted", "booked_mrr"]
+    def score(m):
+        return sum(float(m[k]["last"] or 0) for k in score_keys)
     rows = []
-    ordered = sorted(metrics.items(), key=lambda kv: (-(kv[1]["activities"]["last"] + kv[1]["opps_created"]["last"]*5 + kv[1]["stage_steps"]["last"]*2), kv[0]))
-    for rep, m in ordered:
-        if m["activities"]["last"] + m["activities"]["prior"] + m["opps_created"]["last"] + m["opps_created"]["prior"] + m["stage_steps"]["last"] + m["stage_steps"]["prior"] == 0:
+    for rep, m in sorted(metrics.items(), key=lambda kv: (-score(kv[1]), kv[0])):
+        if score(m) + sum(float(m[k]["prior"] or 0) for k in score_keys) == 0:
             continue
         rows.append(f'''<tr>
           <td><strong>{escape(rep)}</strong><span>{escape(m['role'])}</span></td>
-          <td>{fmt_int(m['activities']['last'])}<small>{signed(m['activities']['last'], m['activities']['prior'])}</small></td>
-          <td>{fmt_int(m['calls']['last'])}<small>{signed(m['calls']['last'], m['calls']['prior'])}</small></td>
-          <td>{fmt_int(m['emails']['last'])}<small>{signed(m['emails']['last'], m['emails']['prior'])}</small></td>
-          <td>{fmt_int(m['meetings']['last'])}<small>{signed(m['meetings']['last'], m['meetings']['prior'])}</small></td>
-          <td>{fmt_int(m['opps_created']['last'])}<small>{money(m['opps_created_mrr']['last'])}</small></td>
-          <td>{fmt_int(m['stage_steps']['last'])}<small>{signed(m['stage_steps']['last'], m['stage_steps']['prior'])}</small></td>
-          <td>{fmt_int(m['closed_won']['last'])}<small>{money(m['closed_won_mrr']['last'])}</small></td>
+          <td>{fmt_int(m['discovery_set']['last'])}<small>{signed(m['discovery_set']['last'], m['discovery_set']['prior'])}</small></td>
+          <td>{fmt_int(m['cbrs_set']['last'])}<small>{signed(m['cbrs_set']['last'], m['cbrs_set']['prior'])}</small></td>
+          <td>{fmt_int(m['initial_demos_ran']['last'])}<small>{signed(m['initial_demos_ran']['last'], m['initial_demos_ran']['prior'])}</small></td>
+          <td>{fmt_int(m['sdr_sourced_opps']['last'])}<small>{money(m['sdr_sourced_mrr']['last'])}</small></td>
+          <td>{fmt_int(m['mqls_converted']['last'])}<small>{money(m['mql_converted_mrr']['last'])}</small></td>
+          <td>{fmt_int(m['tradeshow_leads_converted']['last'])}<small>{money(m['tradeshow_converted_mrr']['last'])}</small></td>
+          <td>{money(m['booked_mrr']['last'])}<small>{fmt_int(m['booked_count']['last'])} won</small></td>
         </tr>''')
-    return "\n".join(rows) or '<tr><td colspan="8" class="empty">No tracked activity in either week.</td></tr>'
+    return "\n".join(rows) or '<tr><td colspan="8" class="empty">No tracked motion in either week.</td></tr>'
 
 
-def build_recent_rows(moves):
-    rows=[]
-    for mv in moves[:12]:
-        rows.append(f"<tr><td>{escape(mv['rep'])}<span>{escape(mv['date'])}</span></td><td>{escape(mv['opp'])}</td><td>{escape(mv['from'])} → {escape(mv['to'])}</td><td>{fmt_int(mv['steps'])}</td></tr>")
-    return "\n".join(rows) or '<tr><td colspan="4" class="empty">No forward stage movement last week.</td></tr>'
+def build_product_rows(product_mrr):
+    rows = []
+    for product, p in product_mrr.items():
+        rows.append(f'''<tr>
+          <td><strong>{escape(product)}</strong></td>
+          <td>{money(p['last']['mrr'])}<small>{fmt_int(p['last']['count'])} deals</small></td>
+          <td>{money(p['prior']['mrr'])}<small>{fmt_int(p['prior']['count'])} deals</small></td>
+          <td><span class="{'good' if p['last']['mrr'] >= p['prior']['mrr'] else 'bad'}">{escape(signed(p['last']['mrr'], p['prior']['mrr'], True))}</span></td>
+        </tr>''')
+    return "\n".join(rows) or '<tr><td colspan="4" class="empty">No booked MRR in either week.</td></tr>'
+
+
+def build_detail_rows(items, kind):
+    rows = []
+    for item in items:
+        meta = item.get("product") or item.get("source") or ""
+        rows.append(f'''<tr>
+          <td><strong>{escape(item.get('rep') or '')}</strong><span>{escape(item.get('date') or '')}</span></td>
+          <td>{escape(item.get('account') or '')}<span>{escape(item.get('opp') or '')}</span></td>
+          <td>{escape(meta)}</td>
+          <td>{money(item.get('mrr') or 0)}</td>
+        </tr>''')
+    return "\n".join(rows) or f'<tr><td colspan="4" class="empty">No {escape(kind)} last week.</td></tr>'
 
 
 def build_html(payload):
     t = payload["totals"]
     cards = "\n".join([
-        metric_card("Total Activities", "activities", t),
-        metric_card("Calls", "calls", t),
-        metric_card("Emails", "emails", t),
-        metric_card("Meetings", "meetings", t),
-        metric_card("New Opps", "opps_created", t),
-        metric_card("New Opp MRR", "opps_created_mrr", t, True),
-        metric_card("Stage Steps", "stage_steps", t),
-        metric_card("Closed Won MRR", "closed_won_mrr", t, True),
+        metric_card("Discovery Meetings Set", "discovery_set", t),
+        metric_card("CBRs Set", "cbrs_set", t),
+        metric_card("Initial Demos Ran", "initial_demos_ran", t),
+        metric_card("SDR-Sourced Opps", "sdr_sourced_opps", t),
+        metric_card("MQLs Converted", "mqls_converted", t),
+        metric_card("Tradeshow Leads Converted", "tradeshow_leads_converted", t),
+        metric_card("Booked MRR", "booked_mrr", t, True),
+        metric_card("Booked Deals", "booked_count", t),
     ])
     rep_rows = build_rep_rows(payload["metrics"])
-    recent_rows = build_recent_rows(payload["recent_moves"])
+    product_rows = build_product_rows(payload["product_mrr"])
+    detail = payload["conversion_detail"]
+    mql_rows = build_detail_rows(detail["mql"], "MQL conversions")
+    tradeshow_rows = build_detail_rows(detail["tradeshow"], "tradeshow conversions")
+    sdr_rows = build_detail_rows(detail["sdr"], "SDR-sourced opportunities")
+    booked_rows = build_detail_rows(detail["booked"], "closed-won deals")
     return f'''<!doctype html>
 <html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Monday Team Activity Dashboard</title>
 <style>
 :root {{ --cyan:#34bde5; --cyan-soft:#7fd9ef; --teal:#4fd1c5; --lime:#c6f178; --gold:#eace9b; --danger:#ff6b6b; --bg:#0a141f; --bg-deep:#060e18; --surface:rgba(15,27,42,.78); --border:rgba(255,255,255,.12); --text:#f5f9ff; --muted:#8ea3b9; --mid:#b9c7d6; }}
 *{{box-sizing:border-box}} body{{margin:0;font-family:Roboto,Segoe UI,system-ui,sans-serif;background:radial-gradient(900px 420px at 18% -8%,rgba(79,209,197,.30),transparent 64%),radial-gradient(760px 420px at 82% 0%,rgba(52,189,229,.24),transparent 62%),linear-gradient(180deg,#0a141f 0%,#08111b 46%,#060e18 100%);color:var(--text)}}
-body:before{{content:'';position:fixed;inset:-14% -10% 55% -10%;background:radial-gradient(55% 45% at 20% 30%,rgba(79,209,197,.35),transparent 65%),radial-gradient(45% 35% at 78% 22%,rgba(52,189,229,.34),transparent 65%);filter:blur(46px);opacity:.75;pointer-events:none}} .container{{max-width:min(1500px,calc(100vw - 32px));margin:0 auto;padding:18px 16px 28px;position:relative;z-index:1}}
-.header{{border-bottom:1px solid var(--border);padding:20px 0 22px;margin-bottom:22px;position:relative}} .header-top{{display:flex;justify-content:space-between;align-items:center;margin-bottom:12px;padding-right:154px}} .logo{{display:flex;align-items:center;gap:10px}} .logo-dot{{width:9px;height:9px;background:var(--cyan);border-radius:50%;box-shadow:0 0 0 3px rgba(52,189,229,.2),0 0 12px rgba(52,189,229,.85)}} .logo-text{{font-size:11px;font-weight:600;letter-spacing:.22em;text-transform:uppercase;color:var(--cyan-soft)}} .header-date{{font-size:11px;color:var(--muted);letter-spacing:.14em;text-transform:uppercase}} .revio-header-logo{{position:absolute;top:0;right:0;width:132px}} h1{{font-size:clamp(42px,5vw,72px);font-weight:300;color:#fff;letter-spacing:-.03em;line-height:.98;margin:0 0 10px}} h1 span{{color:var(--cyan-soft);font-family:Georgia,serif;font-style:italic;font-weight:500}} .header-sub{{font-size:14px;color:var(--mid)}}
-.metric-grid{{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:12px;margin-bottom:18px}} .metric-card{{background:rgba(255,255,255,.035);border:1px solid var(--border);border-radius:16px;padding:16px;box-shadow:0 22px 60px -48px #000;backdrop-filter:blur(12px)}} .metric-label{{font-size:9px;font-weight:700;letter-spacing:.16em;text-transform:uppercase;color:var(--muted);margin-bottom:7px}} .metric-value{{font-size:30px;font-weight:850;line-height:1;color:#fff}} .metric-compare{{margin-top:8px;font-size:12px;color:var(--mid)}} .metric-compare .up{{color:var(--lime)}} .metric-compare .down{{color:var(--danger)}} .metric-prior{{margin-top:4px;font-size:11px;color:var(--muted)}}
-.panel{{background:var(--surface);border:1px solid var(--border);border-radius:16px;margin-bottom:14px;overflow:hidden;box-shadow:0 22px 60px -48px #000;backdrop-filter:blur(12px)}} .panel-head{{display:flex;align-items:flex-end;justify-content:space-between;gap:16px;padding:16px 18px;border-bottom:1px solid var(--border)}} h2{{margin:0;font-size:20px;font-weight:500}} .panel-note{{font-size:12px;color:var(--muted);max-width:620px;line-height:1.4}} table{{width:100%;border-collapse:collapse}} th{{font-size:9px;font-weight:700;text-transform:uppercase;letter-spacing:.16em;color:var(--muted);padding:10px 14px;text-align:left;background:rgba(6,14,24,.55)}} td{{font-size:13px;padding:10px 14px;border-top:1px solid rgba(255,255,255,.06);color:var(--mid);vertical-align:top}} td:first-child{{color:#fff}} td strong{{display:block;color:#fff}} td span, td small{{display:block;color:var(--muted);font-size:10px;margin-top:3px}} td small{{color:var(--cyan-soft)}} .empty{{text-align:center;color:var(--muted);padding:24px}} .footer{{text-align:center;padding:18px;font-size:10px;color:var(--muted);letter-spacing:.14em;border-top:1px solid var(--border);margin-top:8px}}
-@media(max-width:900px){{.metric-grid{{grid-template-columns:1fr 1fr}}.panel{{overflow-x:auto}}table{{min-width:980px}}.header-top{{padding-right:0;display:block}}.revio-header-logo{{position:relative;width:108px;margin-top:10px}}}}
-</style></head><body><div class="container"><header class="header"><div class="header-top"><div class="logo"><span class="logo-dot"></span><span class="logo-text">Rev.io Sales Activity</span></div><div class="header-date">Generated {escape(payload['generated_at_et'])}</div></div><img class="revio-header-logo" src="https://7091219.fs1.hubspotusercontent-na1.net/hubfs/7091219/email-assets/logo-revio-white.png" alt="Rev.io"><h1>Monday Team <span>Activity</span></h1><p class="header-sub">Last week ({escape(payload['windows']['last'])}) vs prior week ({escape(payload['windows']['prior'])}). Built for Monday morning sales-team review.</p></header>
+body:before{{content:'';position:fixed;inset:-14% -10% 55% -10%;background:radial-gradient(55% 45% at 20% 30%,rgba(79,209,197,.35),transparent 65%),radial-gradient(45% 35% at 78% 22%,rgba(52,189,229,.34),transparent 65%);filter:blur(46px);opacity:.75;pointer-events:none}} .container{{max-width:min(1560px,calc(100vw - 32px));margin:0 auto;padding:18px 16px 28px;position:relative;z-index:1}}
+.header{{border-bottom:1px solid var(--border);padding:20px 0 22px;margin-bottom:22px;position:relative}} .header-top{{display:flex;justify-content:space-between;align-items:center;margin-bottom:12px;padding-right:154px}} .logo{{display:flex;align-items:center;gap:10px}} .logo-dot{{width:9px;height:9px;background:var(--cyan);border-radius:50%;box-shadow:0 0 0 3px rgba(52,189,229,.2),0 0 12px rgba(52,189,229,.85)}} .logo-text{{font-size:11px;font-weight:600;letter-spacing:.22em;text-transform:uppercase;color:var(--cyan-soft)}} .header-date{{font-size:11px;color:var(--muted);letter-spacing:.14em;text-transform:uppercase}} .revio-header-logo{{position:absolute;top:0;right:0;width:132px}} h1{{font-size:clamp(42px,5vw,72px);font-weight:300;color:#fff;letter-spacing:-.03em;line-height:.98;margin:0 0 10px}} h1 span{{color:var(--cyan-soft);font-family:Georgia,serif;font-style:italic;font-weight:500}} .header-sub{{font-size:14px;color:var(--mid);max-width:980px;line-height:1.45}}
+.metric-grid{{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:12px;margin-bottom:18px}} .metric-card{{background:rgba(255,255,255,.035);border:1px solid var(--border);border-radius:16px;padding:16px;box-shadow:0 22px 60px -48px #000;backdrop-filter:blur(12px)}} .metric-label{{font-size:9px;font-weight:800;letter-spacing:.16em;text-transform:uppercase;color:var(--muted);margin-bottom:7px}} .metric-value{{font-size:30px;font-weight:850;line-height:1;color:#fff}} .metric-compare{{margin-top:8px;font-size:12px;color:var(--mid)}} .metric-compare .up,.good{{color:var(--lime)}} .metric-compare .down,.bad{{color:var(--danger)}} .metric-prior{{margin-top:4px;font-size:11px;color:var(--muted)}}
+.panel-grid{{display:grid;grid-template-columns:1fr 1fr;gap:14px}} .panel{{background:var(--surface);border:1px solid var(--border);border-radius:16px;margin-bottom:14px;overflow:hidden;box-shadow:0 22px 60px -48px #000;backdrop-filter:blur(12px)}} .panel-head{{display:flex;align-items:flex-end;justify-content:space-between;gap:16px;padding:16px 18px;border-bottom:1px solid var(--border)}} h2{{margin:0;font-size:20px;font-weight:650;color:#fff}} .panel-note{{font-size:12px;color:var(--muted);max-width:720px;line-height:1.4}} table{{width:100%;border-collapse:collapse}} th{{font-size:9px;font-weight:800;text-transform:uppercase;letter-spacing:.16em;color:var(--muted);padding:10px 14px;text-align:left;background:rgba(6,14,24,.55)}} td{{font-size:13px;padding:10px 14px;border-top:1px solid rgba(255,255,255,.06);color:var(--mid);vertical-align:top}} td:first-child{{color:#fff}} td strong{{display:block;color:#fff}} td span, td small{{display:block;color:var(--muted);font-size:10px;margin-top:3px}} td small{{color:var(--cyan-soft)}} .empty{{text-align:center;color:var(--muted);padding:24px}} .definitions{{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px;padding:14px 18px}} .def{{font-size:12px;color:var(--mid);line-height:1.35;background:rgba(255,255,255,.03);border:1px solid rgba(255,255,255,.08);border-radius:12px;padding:10px}} .def strong{{color:#fff}} .footer{{text-align:center;padding:18px;font-size:10px;color:var(--muted);letter-spacing:.14em;border-top:1px solid var(--border);margin-top:8px}}
+@media(max-width:1000px){{.metric-grid,.panel-grid,.definitions{{grid-template-columns:1fr 1fr}}.panel{{overflow-x:auto}}table{{min-width:900px}}.header-top{{padding-right:0;display:block}}.revio-header-logo{{position:relative;width:108px;margin-top:10px}}}} @media(max-width:680px){{.metric-grid,.panel-grid,.definitions{{grid-template-columns:1fr}}}}
+</style></head><body><div class="container"><header class="header"><div class="header-top"><div class="logo"><span class="logo-dot"></span><span class="logo-text">Rev.io Sales Team</span></div><div class="header-date">Generated {escape(payload['generated_at_et'])}</div></div><img class="revio-header-logo" src="https://7091219.fs1.hubspotusercontent-na1.net/hubfs/7091219/email-assets/logo-revio-white.png" alt="Rev.io"><h1>Monday Sales <span>Motion</span></h1><p class="header-sub">Last week ({escape(payload['windows']['last'])}) vs prior week ({escape(payload['windows']['prior'])}) across meeting creation, demos run, sourced/converted opportunities, and booked MRR by product.</p></header>
 <div class="metric-grid">{cards}</div>
-<section class="panel"><div class="panel-head"><h2>Rep activity comparison</h2><div class="panel-note">Tasks/events are credited to activity owner. New opps, stage movement, and closed-won MRR are credited to opportunity owner.</div></div><table><thead><tr><th>Rep</th><th>Activities</th><th>Calls</th><th>Emails</th><th>Meetings</th><th>New Opps</th><th>Stage Steps</th><th>Closed Won</th></tr></thead><tbody>{rep_rows}</tbody></table></section>
-<section class="panel"><div class="panel-head"><h2>Forward stage movement last week</h2><div class="panel-note">Most recent positive StageName moves, useful for deal inspection and manager coaching.</div></div><table><thead><tr><th>Rep</th><th>Opportunity</th><th>Move</th><th>Steps</th></tr></thead><tbody>{recent_rows}</tbody></table></section>
-<div class="footer">SOURCE: SALESFORCE TASKS, EVENTS, OPPORTUNITIES, AND OPPORTUNITY FIELD HISTORY · AUTO-REFRESHES SUNDAY NIGHT ET</div></div></body></html>'''
+<section class="panel"><div class="panel-head"><h2>Rep/team motion comparison</h2><div class="panel-note">Counts are last week; small text shows either week-over-week delta or MRR beneath opportunity-count metrics.</div></div><table><thead><tr><th>Rep</th><th>Discovery Set</th><th>CBRs Set</th><th>Initial Demos Ran</th><th>SDR Opps</th><th>MQL Converts</th><th>Tradeshow Converts</th><th>Booked MRR</th></tr></thead><tbody>{rep_rows}</tbody></table></section>
+<section class="panel"><div class="panel-head"><h2>MRR booked by product</h2><div class="panel-note">Closed-won Opportunity Amount by CloseDate and Product Type.</div></div><table><thead><tr><th>Product</th><th>Last Week</th><th>Prior Week</th><th>Delta</th></tr></thead><tbody>{product_rows}</tbody></table></section>
+<div class="panel-grid"><section class="panel"><div class="panel-head"><h2>SDR-sourced opportunities</h2></div><table><thead><tr><th>SDR</th><th>Account / Opp</th><th>Source</th><th>MRR</th></tr></thead><tbody>{sdr_rows}</tbody></table></section><section class="panel"><div class="panel-head"><h2>MQL conversions</h2></div><table><thead><tr><th>Owner</th><th>Account / Opp</th><th>Source</th><th>MRR</th></tr></thead><tbody>{mql_rows}</tbody></table></section></div>
+<div class="panel-grid"><section class="panel"><div class="panel-head"><h2>Tradeshow conversions</h2></div><table><thead><tr><th>Owner</th><th>Account / Opp</th><th>Event/Source</th><th>MRR</th></tr></thead><tbody>{tradeshow_rows}</tbody></table></section><section class="panel"><div class="panel-head"><h2>Booked deal detail</h2></div><table><thead><tr><th>Owner</th><th>Account / Opp</th><th>Product</th><th>MRR</th></tr></thead><tbody>{booked_rows}</tbody></table></section></div>
+<section class="panel"><div class="panel-head"><h2>Metric definitions</h2><div class="panel-note">So nobody has to decode the Batcomputer during the team meeting.</div></div><div class="definitions">{''.join(f'<div class="def"><strong>{escape(k.replace("_", " ").title())}:</strong> {escape(v)}</div>' for k, v in payload['definitions'].items())}</div></section>
+<div class="footer">SOURCE: SALESFORCE TASKS, EVENTS, AND OPPORTUNITIES · AUTO-REFRESHES SUNDAY NIGHT ET</div></div></body></html>'''
 
 
 def publish(paths):
@@ -417,17 +488,19 @@ def publish(paths):
     worktree = tmp_parent / "repo"
     env = os.environ.copy()
     env["GIT_SSH_COMMAND"] = "ssh -i /home/openclaw/.openclaw/ssh/id_ed25519 -o StrictHostKeyChecking=no"
-    subprocess.run(["git", "clone", "git@github.com:koontz-robin/robin-decks.git", str(worktree)], check=True, env=env)
-    subprocess.run(["git", "config", "user.name", "Robin"], cwd=worktree, check=True, env=env)
-    subprocess.run(["git", "config", "user.email", "robin.bot@rev.io"], cwd=worktree, check=True, env=env)
-    for path in paths:
-        shutil.copy2(path, worktree / Path(path).name)
-    subprocess.run(["git", "add"] + [Path(p).name for p in paths], cwd=worktree, check=True, env=env)
-    status = subprocess.run(["git", "status", "--short"], cwd=worktree, text=True, capture_output=True, check=True, env=env).stdout.strip()
-    if status:
-        subprocess.run(["git", "commit", "-m", "Refresh Monday team activity dashboard"], cwd=worktree, check=True, env=env)
-        subprocess.run(["git", "push", "origin", "master"], cwd=worktree, check=True, env=env)
-    shutil.rmtree(tmp_parent, ignore_errors=True)
+    try:
+        subprocess.run(["git", "clone", "git@github.com:koontz-robin/robin-decks.git", str(worktree)], check=True, env=env)
+        subprocess.run(["git", "config", "user.name", "Robin"], cwd=worktree, check=True, env=env)
+        subprocess.run(["git", "config", "user.email", "robin.bot@rev.io"], cwd=worktree, check=True, env=env)
+        for path in paths:
+            shutil.copy2(path, worktree / Path(path).name)
+        subprocess.run(["git", "add"] + [Path(p).name for p in paths], cwd=worktree, check=True, env=env)
+        status = subprocess.run(["git", "status", "--short"], cwd=worktree, text=True, capture_output=True, check=True, env=env).stdout.strip()
+        if status:
+            subprocess.run(["git", "commit", "-m", "Focus Monday dashboard on team meeting metrics"], cwd=worktree, check=True, env=env)
+            subprocess.run(["git", "push", "origin", "master"], cwd=worktree, check=True, env=env)
+    finally:
+        shutil.rmtree(tmp_parent, ignore_errors=True)
 
 
 def main():
@@ -435,7 +508,7 @@ def main():
     DATA_FILE.write_text(json.dumps(payload, indent=2), encoding="utf-8")
     HTML_FILE.write_text(build_html(payload), encoding="utf-8")
     if os.environ.get("NO_PUBLISH") != "1":
-        publish([HTML_FILE, DATA_FILE])
+        publish([HTML_FILE, DATA_FILE, Path(__file__).resolve()])
     print(f"Built {HTML_FILE}")
     print(f"URL: https://koontz-robin.github.io/robin-decks/{HTML_FILE.name}")
 

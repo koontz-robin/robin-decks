@@ -3,240 +3,447 @@
 <style>
 :root { --cyan:#34bde5; --cyan-soft:#7fd9ef; --teal:#4fd1c5; --lime:#c6f178; --gold:#eace9b; --danger:#ff6b6b; --bg:#0a141f; --bg-deep:#060e18; --surface:rgba(15,27,42,.78); --border:rgba(255,255,255,.12); --text:#f5f9ff; --muted:#8ea3b9; --mid:#b9c7d6; }
 *{box-sizing:border-box} body{margin:0;font-family:Roboto,Segoe UI,system-ui,sans-serif;background:radial-gradient(900px 420px at 18% -8%,rgba(79,209,197,.30),transparent 64%),radial-gradient(760px 420px at 82% 0%,rgba(52,189,229,.24),transparent 62%),linear-gradient(180deg,#0a141f 0%,#08111b 46%,#060e18 100%);color:var(--text)}
-body:before{content:'';position:fixed;inset:-14% -10% 55% -10%;background:radial-gradient(55% 45% at 20% 30%,rgba(79,209,197,.35),transparent 65%),radial-gradient(45% 35% at 78% 22%,rgba(52,189,229,.34),transparent 65%);filter:blur(46px);opacity:.75;pointer-events:none} .container{max-width:min(1500px,calc(100vw - 32px));margin:0 auto;padding:18px 16px 28px;position:relative;z-index:1}
-.header{border-bottom:1px solid var(--border);padding:20px 0 22px;margin-bottom:22px;position:relative} .header-top{display:flex;justify-content:space-between;align-items:center;margin-bottom:12px;padding-right:154px} .logo{display:flex;align-items:center;gap:10px} .logo-dot{width:9px;height:9px;background:var(--cyan);border-radius:50%;box-shadow:0 0 0 3px rgba(52,189,229,.2),0 0 12px rgba(52,189,229,.85)} .logo-text{font-size:11px;font-weight:600;letter-spacing:.22em;text-transform:uppercase;color:var(--cyan-soft)} .header-date{font-size:11px;color:var(--muted);letter-spacing:.14em;text-transform:uppercase} .revio-header-logo{position:absolute;top:0;right:0;width:132px} h1{font-size:clamp(42px,5vw,72px);font-weight:300;color:#fff;letter-spacing:-.03em;line-height:.98;margin:0 0 10px} h1 span{color:var(--cyan-soft);font-family:Georgia,serif;font-style:italic;font-weight:500} .header-sub{font-size:14px;color:var(--mid)}
-.metric-grid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:12px;margin-bottom:18px} .metric-card{background:rgba(255,255,255,.035);border:1px solid var(--border);border-radius:16px;padding:16px;box-shadow:0 22px 60px -48px #000;backdrop-filter:blur(12px)} .metric-label{font-size:9px;font-weight:700;letter-spacing:.16em;text-transform:uppercase;color:var(--muted);margin-bottom:7px} .metric-value{font-size:30px;font-weight:850;line-height:1;color:#fff} .metric-compare{margin-top:8px;font-size:12px;color:var(--mid)} .metric-compare .up{color:var(--lime)} .metric-compare .down{color:var(--danger)} .metric-prior{margin-top:4px;font-size:11px;color:var(--muted)}
-.panel{background:var(--surface);border:1px solid var(--border);border-radius:16px;margin-bottom:14px;overflow:hidden;box-shadow:0 22px 60px -48px #000;backdrop-filter:blur(12px)} .panel-head{display:flex;align-items:flex-end;justify-content:space-between;gap:16px;padding:16px 18px;border-bottom:1px solid var(--border)} h2{margin:0;font-size:20px;font-weight:500} .panel-note{font-size:12px;color:var(--muted);max-width:620px;line-height:1.4} table{width:100%;border-collapse:collapse} th{font-size:9px;font-weight:700;text-transform:uppercase;letter-spacing:.16em;color:var(--muted);padding:10px 14px;text-align:left;background:rgba(6,14,24,.55)} td{font-size:13px;padding:10px 14px;border-top:1px solid rgba(255,255,255,.06);color:var(--mid);vertical-align:top} td:first-child{color:#fff} td strong{display:block;color:#fff} td span, td small{display:block;color:var(--muted);font-size:10px;margin-top:3px} td small{color:var(--cyan-soft)} .empty{text-align:center;color:var(--muted);padding:24px} .footer{text-align:center;padding:18px;font-size:10px;color:var(--muted);letter-spacing:.14em;border-top:1px solid var(--border);margin-top:8px}
-@media(max-width:900px){.metric-grid{grid-template-columns:1fr 1fr}.panel{overflow-x:auto}table{min-width:980px}.header-top{padding-right:0;display:block}.revio-header-logo{position:relative;width:108px;margin-top:10px}}
-</style></head><body><div class="container"><header class="header"><div class="header-top"><div class="logo"><span class="logo-dot"></span><span class="logo-text">Rev.io Sales Activity</span></div><div class="header-date">Generated Aug 16, 2026 10:09 PM ET</div></div><img class="revio-header-logo" src="https://7091219.fs1.hubspotusercontent-na1.net/hubfs/7091219/email-assets/logo-revio-white.png" alt="Rev.io"><h1>Monday Team <span>Activity</span></h1><p class="header-sub">Last week (Aug 10 - Aug 16, 2026) vs prior week (Aug 3 - Aug 9, 2026). Built for Monday morning sales-team review.</p></header>
+body:before{content:'';position:fixed;inset:-14% -10% 55% -10%;background:radial-gradient(55% 45% at 20% 30%,rgba(79,209,197,.35),transparent 65%),radial-gradient(45% 35% at 78% 22%,rgba(52,189,229,.34),transparent 65%);filter:blur(46px);opacity:.75;pointer-events:none} .container{max-width:min(1560px,calc(100vw - 32px));margin:0 auto;padding:18px 16px 28px;position:relative;z-index:1}
+.header{border-bottom:1px solid var(--border);padding:20px 0 22px;margin-bottom:22px;position:relative} .header-top{display:flex;justify-content:space-between;align-items:center;margin-bottom:12px;padding-right:154px} .logo{display:flex;align-items:center;gap:10px} .logo-dot{width:9px;height:9px;background:var(--cyan);border-radius:50%;box-shadow:0 0 0 3px rgba(52,189,229,.2),0 0 12px rgba(52,189,229,.85)} .logo-text{font-size:11px;font-weight:600;letter-spacing:.22em;text-transform:uppercase;color:var(--cyan-soft)} .header-date{font-size:11px;color:var(--muted);letter-spacing:.14em;text-transform:uppercase} .revio-header-logo{position:absolute;top:0;right:0;width:132px} h1{font-size:clamp(42px,5vw,72px);font-weight:300;color:#fff;letter-spacing:-.03em;line-height:.98;margin:0 0 10px} h1 span{color:var(--cyan-soft);font-family:Georgia,serif;font-style:italic;font-weight:500} .header-sub{font-size:14px;color:var(--mid);max-width:980px;line-height:1.45}
+.metric-grid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:12px;margin-bottom:18px} .metric-card{background:rgba(255,255,255,.035);border:1px solid var(--border);border-radius:16px;padding:16px;box-shadow:0 22px 60px -48px #000;backdrop-filter:blur(12px)} .metric-label{font-size:9px;font-weight:800;letter-spacing:.16em;text-transform:uppercase;color:var(--muted);margin-bottom:7px} .metric-value{font-size:30px;font-weight:850;line-height:1;color:#fff} .metric-compare{margin-top:8px;font-size:12px;color:var(--mid)} .metric-compare .up,.good{color:var(--lime)} .metric-compare .down,.bad{color:var(--danger)} .metric-prior{margin-top:4px;font-size:11px;color:var(--muted)}
+.panel-grid{display:grid;grid-template-columns:1fr 1fr;gap:14px} .panel{background:var(--surface);border:1px solid var(--border);border-radius:16px;margin-bottom:14px;overflow:hidden;box-shadow:0 22px 60px -48px #000;backdrop-filter:blur(12px)} .panel-head{display:flex;align-items:flex-end;justify-content:space-between;gap:16px;padding:16px 18px;border-bottom:1px solid var(--border)} h2{margin:0;font-size:20px;font-weight:650;color:#fff} .panel-note{font-size:12px;color:var(--muted);max-width:720px;line-height:1.4} table{width:100%;border-collapse:collapse} th{font-size:9px;font-weight:800;text-transform:uppercase;letter-spacing:.16em;color:var(--muted);padding:10px 14px;text-align:left;background:rgba(6,14,24,.55)} td{font-size:13px;padding:10px 14px;border-top:1px solid rgba(255,255,255,.06);color:var(--mid);vertical-align:top} td:first-child{color:#fff} td strong{display:block;color:#fff} td span, td small{display:block;color:var(--muted);font-size:10px;margin-top:3px} td small{color:var(--cyan-soft)} .empty{text-align:center;color:var(--muted);padding:24px} .definitions{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px;padding:14px 18px} .def{font-size:12px;color:var(--mid);line-height:1.35;background:rgba(255,255,255,.03);border:1px solid rgba(255,255,255,.08);border-radius:12px;padding:10px} .def strong{color:#fff} .footer{text-align:center;padding:18px;font-size:10px;color:var(--muted);letter-spacing:.14em;border-top:1px solid var(--border);margin-top:8px}
+@media(max-width:1000px){.metric-grid,.panel-grid,.definitions{grid-template-columns:1fr 1fr}.panel{overflow-x:auto}table{min-width:900px}.header-top{padding-right:0;display:block}.revio-header-logo{position:relative;width:108px;margin-top:10px}} @media(max-width:680px){.metric-grid,.panel-grid,.definitions{grid-template-columns:1fr}}
+</style></head><body><div class="container"><header class="header"><div class="header-top"><div class="logo"><span class="logo-dot"></span><span class="logo-text">Rev.io Sales Team</span></div><div class="header-date">Generated Aug 16, 2026 10:15 PM ET</div></div><img class="revio-header-logo" src="https://7091219.fs1.hubspotusercontent-na1.net/hubfs/7091219/email-assets/logo-revio-white.png" alt="Rev.io"><h1>Monday Sales <span>Motion</span></h1><p class="header-sub">Last week (Aug 10 - Aug 16, 2026) vs prior week (Aug 3 - Aug 9, 2026) across meeting creation, demos run, sourced/converted opportunities, and booked MRR by product.</p></header>
 <div class="metric-grid"><div class="metric-card">
-      <div class="metric-label">Total Activities</div>
-      <div class="metric-value">8,620</div>
-      <div class="metric-compare"><span class="up">+468</span> vs prior · +6%</div>
-      <div class="metric-prior">Prior week: 8,152</div>
+      <div class="metric-label">Discovery Meetings Set</div>
+      <div class="metric-value">54</div>
+      <div class="metric-compare"><span class="up">+12</span> vs prior · +29%</div>
+      <div class="metric-prior">Prior week: 42</div>
     </div>
 <div class="metric-card">
-      <div class="metric-label">Calls</div>
-      <div class="metric-value">3,345</div>
-      <div class="metric-compare"><span class="down">-131</span> vs prior · -4%</div>
-      <div class="metric-prior">Prior week: 3,476</div>
+      <div class="metric-label">CBRs Set</div>
+      <div class="metric-value">29</div>
+      <div class="metric-compare"><span class="up">+15</span> vs prior · +107%</div>
+      <div class="metric-prior">Prior week: 14</div>
     </div>
 <div class="metric-card">
-      <div class="metric-label">Emails</div>
-      <div class="metric-value">4,694</div>
-      <div class="metric-compare"><span class="up">+594</span> vs prior · +14%</div>
-      <div class="metric-prior">Prior week: 4,100</div>
+      <div class="metric-label">Initial Demos Ran</div>
+      <div class="metric-value">11</div>
+      <div class="metric-compare"><span class="up">+3</span> vs prior · +38%</div>
+      <div class="metric-prior">Prior week: 8</div>
     </div>
 <div class="metric-card">
-      <div class="metric-label">Meetings</div>
-      <div class="metric-value">97</div>
-      <div class="metric-compare"><span class="up">+5</span> vs prior · +5%</div>
-      <div class="metric-prior">Prior week: 92</div>
+      <div class="metric-label">SDR-Sourced Opps</div>
+      <div class="metric-value">10</div>
+      <div class="metric-compare"><span class="down">-3</span> vs prior · -23%</div>
+      <div class="metric-prior">Prior week: 13</div>
     </div>
 <div class="metric-card">
-      <div class="metric-label">New Opps</div>
-      <div class="metric-value">36</div>
-      <div class="metric-compare"><span class="down">-12</span> vs prior · -25%</div>
-      <div class="metric-prior">Prior week: 48</div>
+      <div class="metric-label">MQLs Converted</div>
+      <div class="metric-value">9</div>
+      <div class="metric-compare"><span class="up">+1</span> vs prior · +12%</div>
+      <div class="metric-prior">Prior week: 8</div>
     </div>
 <div class="metric-card">
-      <div class="metric-label">New Opp MRR</div>
-      <div class="metric-value">$34,350</div>
-      <div class="metric-compare"><span class="down">$-5,238</span> vs prior · -13%</div>
-      <div class="metric-prior">Prior week: $39,588</div>
+      <div class="metric-label">Tradeshow Leads Converted</div>
+      <div class="metric-value">7</div>
+      <div class="metric-compare"><span class="up">+0</span> vs prior · +0%</div>
+      <div class="metric-prior">Prior week: 7</div>
     </div>
 <div class="metric-card">
-      <div class="metric-label">Stage Steps</div>
-      <div class="metric-value">87</div>
-      <div class="metric-compare"><span class="up">+19</span> vs prior · +28%</div>
-      <div class="metric-prior">Prior week: 68</div>
-    </div>
-<div class="metric-card">
-      <div class="metric-label">Closed Won MRR</div>
+      <div class="metric-label">Booked MRR</div>
       <div class="metric-value">$1,150</div>
       <div class="metric-compare"><span class="up">+$714</span> vs prior · +164%</div>
       <div class="metric-prior">Prior week: $436</div>
+    </div>
+<div class="metric-card">
+      <div class="metric-label">Booked Deals</div>
+      <div class="metric-value">4</div>
+      <div class="metric-compare"><span class="down">-3</span> vs prior · -43%</div>
+      <div class="metric-prior">Prior week: 7</div>
     </div></div>
-<section class="panel"><div class="panel-head"><h2>Rep activity comparison</h2><div class="panel-note">Tasks/events are credited to activity owner. New opps, stage movement, and closed-won MRR are credited to opportunity owner.</div></div><table><thead><tr><th>Rep</th><th>Activities</th><th>Calls</th><th>Emails</th><th>Meetings</th><th>New Opps</th><th>Stage Steps</th><th>Closed Won</th></tr></thead><tbody><tr>
-          <td><strong>Connor Flynn</strong><span>AE</span></td>
-          <td>1,037<small>+118</small></td>
-          <td>235<small>-15</small></td>
-          <td>714<small>+127</small></td>
-          <td>6<small>+4</small></td>
-          <td>5<small>$5,000</small></td>
-          <td>3<small>+3</small></td>
-          <td>0<small>$0</small></td>
-        </tr>
-<tr>
+<section class="panel"><div class="panel-head"><h2>Rep/team motion comparison</h2><div class="panel-note">Counts are last week; small text shows either week-over-week delta or MRR beneath opportunity-count metrics.</div></div><table><thead><tr><th>Rep</th><th>Discovery Set</th><th>CBRs Set</th><th>Initial Demos Ran</th><th>SDR Opps</th><th>MQL Converts</th><th>Tradeshow Converts</th><th>Booked MRR</th></tr></thead><tbody><tr>
           <td><strong>Patrick Davies</strong><span>AE</span></td>
-          <td>897<small>-96</small></td>
-          <td>108<small>-118</small></td>
-          <td>747<small>+99</small></td>
-          <td>10<small>+7</small></td>
-          <td>9<small>$9,240</small></td>
-          <td>14<small>+9</small></td>
+          <td>11<small>+8</small></td>
+          <td>0<small>+0</small></td>
+          <td>3<small>+1</small></td>
+          <td>0<small>$0</small></td>
+          <td>3<small>$3,240</small></td>
           <td>1<small>$1,000</small></td>
-        </tr>
-<tr>
-          <td><strong>Andy Whisenant</strong><span>AE</span></td>
-          <td>905<small>+334</small></td>
-          <td>210<small>+205</small></td>
-          <td>629<small>+65</small></td>
-          <td>6<small>+4</small></td>
-          <td>5<small>$5,000</small></td>
-          <td>6<small>+6</small></td>
-          <td>0<small>$0</small></td>
-        </tr>
-<tr>
-          <td><strong>Jamie Butler</strong><span>AE</span></td>
-          <td>612<small>-5</small></td>
-          <td>24<small>-16</small></td>
-          <td>572<small>+12</small></td>
-          <td>15<small>+2</small></td>
-          <td>4<small>$7,200</small></td>
-          <td>6<small>+1</small></td>
-          <td>0<small>$0</small></td>
-        </tr>
-<tr>
-          <td><strong>Miguel Ocampo</strong><span>SDR</span></td>
-          <td>627<small>-22</small></td>
-          <td>375<small>+0</small></td>
-          <td>173<small>-23</small></td>
-          <td>0<small>+0</small></td>
-          <td>0<small>$0</small></td>
-          <td>0<small>+0</small></td>
-          <td>0<small>$0</small></td>
+          <td>$1,000<small>1 won</small></td>
         </tr>
 <tr>
           <td><strong>Justin Lee</strong><span>CSA</span></td>
-          <td>486<small>+100</small></td>
-          <td>219<small>+9</small></td>
-          <td>262<small>+101</small></td>
-          <td>3<small>-8</small></td>
-          <td>1<small>$0</small></td>
-          <td>4<small>-6</small></td>
-          <td>2<small>$100</small></td>
-        </tr>
-<tr>
-          <td><strong>Abigail Marchese</strong><span>SDR</span></td>
-          <td>460<small>-24</small></td>
-          <td>356<small>-25</small></td>
-          <td>103<small>+1</small></td>
+          <td>0<small>+0</small></td>
+          <td>6<small>+2</small></td>
           <td>0<small>+0</small></td>
           <td>0<small>$0</small></td>
-          <td>0<small>+0</small></td>
           <td>0<small>$0</small></td>
-        </tr>
-<tr>
-          <td><strong>Blake Boatright</strong><span>SDR</span></td>
-          <td>452<small>-46</small></td>
-          <td>304<small>-73</small></td>
-          <td>109<small>+13</small></td>
-          <td>0<small>+0</small></td>
           <td>0<small>$0</small></td>
-          <td>0<small>+0</small></td>
-          <td>0<small>$0</small></td>
+          <td>$100<small>2 won</small></td>
         </tr>
 <tr>
           <td><strong>Ingrid Beard</strong><span>CSA</span></td>
-          <td>400<small>+12</small></td>
-          <td>122<small>-7</small></td>
-          <td>257<small>+24</small></td>
-          <td>14<small>-1</small></td>
-          <td>1<small>$50</small></td>
-          <td>23<small>+9</small></td>
-          <td>1<small>$50</small></td>
+          <td>0<small>+0</small></td>
+          <td>4<small>+1</small></td>
+          <td>0<small>+0</small></td>
+          <td>0<small>$0</small></td>
+          <td>0<small>$0</small></td>
+          <td>0<small>$0</small></td>
+          <td>$50<small>1 won</small></td>
         </tr>
 <tr>
-          <td><strong>Ptah Robinson</strong><span>SDR</span></td>
-          <td>446<small>-92</small></td>
-          <td>291<small>-86</small></td>
-          <td>104<small>-21</small></td>
+          <td><strong>Jamie Butler</strong><span>AE</span></td>
+          <td>4<small>+3</small></td>
           <td>0<small>+0</small></td>
+          <td>4<small>+3</small></td>
           <td>0<small>$0</small></td>
-          <td>0<small>+0</small></td>
-          <td>0<small>$0</small></td>
-        </tr>
-<tr>
-          <td><strong>Max Coopman</strong><span>SDR</span></td>
-          <td>429<small>+335</small></td>
-          <td>156<small>+101</small></td>
-          <td>213<small>+174</small></td>
-          <td>0<small>+0</small></td>
-          <td>0<small>$0</small></td>
-          <td>0<small>+0</small></td>
-          <td>0<small>$0</small></td>
+          <td>1<small>$1,000</small></td>
+          <td>2<small>$5,200</small></td>
+          <td>$0<small>0 won</small></td>
         </tr>
 <tr>
           <td><strong>Katerra Stephenson Greenwood</strong><span>CSA</span></td>
-          <td>408<small>+166</small></td>
-          <td>105<small>-2</small></td>
-          <td>293<small>+168</small></td>
-          <td>10<small>+1</small></td>
-          <td>1<small>$50</small></td>
-          <td>7<small>+2</small></td>
+          <td>1<small>-3</small></td>
+          <td>10<small>+7</small></td>
+          <td>0<small>-1</small></td>
           <td>0<small>$0</small></td>
+          <td>0<small>$0</small></td>
+          <td>0<small>$0</small></td>
+          <td>$0<small>0 won</small></td>
+        </tr>
+<tr>
+          <td><strong>Andy Whisenant</strong><span>AE</span></td>
+          <td>4<small>+4</small></td>
+          <td>0<small>+0</small></td>
+          <td>2<small>+1</small></td>
+          <td>0<small>$0</small></td>
+          <td>3<small>$3,000</small></td>
+          <td>1<small>$1,000</small></td>
+          <td>$0<small>0 won</small></td>
+        </tr>
+<tr>
+          <td><strong>Connor Flynn</strong><span>AE</span></td>
+          <td>8<small>+8</small></td>
+          <td>0<small>+0</small></td>
+          <td>0<small>+0</small></td>
+          <td>0<small>$0</small></td>
+          <td>1<small>$1,000</small></td>
+          <td>1<small>$1,000</small></td>
+          <td>$0<small>0 won</small></td>
         </tr>
 <tr>
           <td><strong>Jake Borah</strong><span>AE</span></td>
-          <td>332<small>-135</small></td>
-          <td>172<small>-7</small></td>
-          <td>124<small>-42</small></td>
-          <td>12<small>-1</small></td>
-          <td>2<small>$2,000</small></td>
-          <td>5<small>+3</small></td>
-          <td>0<small>$0</small></td>
-        </tr>
-<tr>
-          <td><strong>Jaylin Bender</strong><span>AE</span></td>
-          <td>308<small>-38</small></td>
-          <td>197<small>-7</small></td>
-          <td>65<small>-64</small></td>
-          <td>6<small>+3</small></td>
-          <td>4<small>$4,710</small></td>
-          <td>6<small>+6</small></td>
-          <td>0<small>$0</small></td>
-        </tr>
-<tr>
-          <td><strong>Emily Petraglia</strong><span>SDR</span></td>
-          <td>313<small>-91</small></td>
-          <td>218<small>-67</small></td>
-          <td>90<small>-20</small></td>
+          <td>7<small>-3</small></td>
           <td>0<small>+0</small></td>
+          <td>1<small>+0</small></td>
           <td>0<small>$0</small></td>
-          <td>0<small>+0</small></td>
-          <td>0<small>$0</small></td>
-        </tr>
-<tr>
-          <td><strong>Abbey McIntosh</strong><span>AE</span></td>
-          <td>276<small>-66</small></td>
-          <td>144<small>-26</small></td>
-          <td>125<small>-39</small></td>
-          <td>7<small>-1</small></td>
           <td>1<small>$1,000</small></td>
-          <td>3<small>-2</small></td>
-          <td>0<small>$0</small></td>
+          <td>1<small>$1,000</small></td>
+          <td>$0<small>0 won</small></td>
         </tr>
 <tr>
           <td><strong>Jakob Champion</strong><span>CSA</span></td>
-          <td>232<small>+18</small></td>
-          <td>109<small>+3</small></td>
-          <td>114<small>+19</small></td>
-          <td>8<small>-5</small></td>
-          <td>3<small>$100</small></td>
-          <td>10<small>-12</small></td>
+          <td>0<small>+0</small></td>
+          <td>9<small>+5</small></td>
+          <td>0<small>+0</small></td>
           <td>0<small>$0</small></td>
+          <td>0<small>$0</small></td>
+          <td>0<small>$0</small></td>
+          <td>$0<small>0 won</small></td>
+        </tr>
+<tr>
+          <td><strong>Emily Petraglia</strong><span>SDR</span></td>
+          <td>4<small>+1</small></td>
+          <td>0<small>+0</small></td>
+          <td>0<small>+0</small></td>
+          <td>4<small>$4,000</small></td>
+          <td>0<small>$0</small></td>
+          <td>0<small>$0</small></td>
+          <td>$0<small>0 won</small></td>
+        </tr>
+<tr>
+          <td><strong>Abbey McIntosh</strong><span>AE</span></td>
+          <td>2<small>+0</small></td>
+          <td>0<small>+0</small></td>
+          <td>1<small>-1</small></td>
+          <td>0<small>$0</small></td>
+          <td>0<small>$0</small></td>
+          <td>1<small>$1,000</small></td>
+          <td>$0<small>0 won</small></td>
+        </tr>
+<tr>
+          <td><strong>Abigail Marchese</strong><span>SDR</span></td>
+          <td>2<small>+2</small></td>
+          <td>0<small>+0</small></td>
+          <td>0<small>+0</small></td>
+          <td>2<small>$2,000</small></td>
+          <td>0<small>$0</small></td>
+          <td>0<small>$0</small></td>
+          <td>$0<small>0 won</small></td>
+        </tr>
+<tr>
+          <td><strong>Blake Boatright</strong><span>SDR</span></td>
+          <td>3<small>-5</small></td>
+          <td>0<small>+0</small></td>
+          <td>0<small>+0</small></td>
+          <td>1<small>$1,000</small></td>
+          <td>0<small>$0</small></td>
+          <td>0<small>$0</small></td>
+          <td>$0<small>0 won</small></td>
+        </tr>
+<tr>
+          <td><strong>Ptah Robinson</strong><span>SDR</span></td>
+          <td>2<small>-4</small></td>
+          <td>0<small>+0</small></td>
+          <td>0<small>+0</small></td>
+          <td>2<small>$2,710</small></td>
+          <td>0<small>$0</small></td>
+          <td>0<small>$0</small></td>
+          <td>$0<small>0 won</small></td>
+        </tr>
+<tr>
+          <td><strong>Jaylin Bender</strong><span>AE</span></td>
+          <td>3<small>+1</small></td>
+          <td>0<small>+0</small></td>
+          <td>0<small>+0</small></td>
+          <td>0<small>$0</small></td>
+          <td>0<small>$0</small></td>
+          <td>0<small>$0</small></td>
+          <td>$0<small>0 won</small></td>
+        </tr>
+<tr>
+          <td><strong>Max Coopman</strong><span>SDR</span></td>
+          <td>1<small>+1</small></td>
+          <td>0<small>+0</small></td>
+          <td>0<small>+0</small></td>
+          <td>1<small>$1,000</small></td>
+          <td>0<small>$0</small></td>
+          <td>0<small>$0</small></td>
+          <td>$0<small>0 won</small></td>
+        </tr>
+<tr>
+          <td><strong>Miguel Ocampo</strong><span>SDR</span></td>
+          <td>2<small>-1</small></td>
+          <td>0<small>+0</small></td>
+          <td>0<small>+0</small></td>
+          <td>0<small>$0</small></td>
+          <td>0<small>$0</small></td>
+          <td>0<small>$0</small></td>
+          <td>$0<small>0 won</small></td>
+        </tr>
+<tr>
+          <td><strong>Rox</strong><span>SDR</span></td>
+          <td>0<small>+0</small></td>
+          <td>0<small>+0</small></td>
+          <td>0<small>+0</small></td>
+          <td>0<small>$0</small></td>
+          <td>0<small>$0</small></td>
+          <td>0<small>$0</small></td>
+          <td>$0<small>0 won</small></td>
         </tr></tbody></table></section>
-<section class="panel"><div class="panel-head"><h2>Forward stage movement last week</h2><div class="panel-note">Most recent positive StageName moves, useful for deal inspection and manager coaching.</div></div><table><thead><tr><th>Rep</th><th>Opportunity</th><th>Move</th><th>Steps</th></tr></thead><tbody><tr><td>Patrick Davies<span>Wed 8/12 5:39 PM</span></td><td>Strong Fiber Systems</td><td>1- Discovery Scheduled → 2 - Discovery Completed</td><td>1</td></tr>
-<tr><td>Ingrid Beard<span>Wed 8/12 4:30 PM</span></td><td>Planet Secure AR Payments</td><td>3 - Initial Product Demo → 4 - Proposal Sent</td><td>1</td></tr>
-<tr><td>Andy Whisenant<span>Wed 8/12 4:18 PM</span></td><td>Trigent Technologies</td><td>2 - Discovery Completed → 3 - Initial Product Demo</td><td>1</td></tr>
-<tr><td>Jake Borah<span>Wed 8/12 4:10 PM</span></td><td>BSN Security</td><td>1- Discovery Scheduled → 4 - Proposal Sent</td><td>3</td></tr>
-<tr><td>Jaylin Bender<span>Wed 8/12 3:57 PM</span></td><td>MQ2 Security</td><td>Closed Lost → 2 - Discovery Completed</td><td>2</td></tr>
-<tr><td>Jaylin Bender<span>Wed 8/12 3:57 PM</span></td><td>MQ2 Security</td><td>2 - Discovery Completed → 3 - Initial Product Demo</td><td>1</td></tr>
-<tr><td>Jamie Butler<span>Wed 8/12 3:48 PM</span></td><td>Helient</td><td>1- Discovery Scheduled → 2 - Discovery Completed</td><td>1</td></tr>
-<tr><td>Patrick Davies<span>Wed 8/12 2:59 PM</span></td><td>VoxConnectUC</td><td>Closed Lost → 3 - Initial Product Demo</td><td>3</td></tr>
-<tr><td>Andy Whisenant<span>Wed 8/12 2:11 PM</span></td><td>A Couple of Gurus</td><td>1- Discovery Scheduled → 2 - Discovery Completed</td><td>1</td></tr>
-<tr><td>Andy Whisenant<span>Wed 8/12 2:07 PM</span></td><td>Technology West Group</td><td>2 - Discovery Completed → 3 - Initial Product Demo</td><td>1</td></tr>
-<tr><td>Andy Whisenant<span>Wed 8/12 2:03 PM</span></td><td>CTI Communications Tech</td><td>1- Discovery Scheduled → 3 - Initial Product Demo</td><td>2</td></tr>
-<tr><td>Jakob Champion<span>Wed 8/12 1:37 PM</span></td><td>Ringable - Payments</td><td>1- Discovery Scheduled → 4 - Proposal Sent</td><td>3</td></tr></tbody></table></section>
-<div class="footer">SOURCE: SALESFORCE TASKS, EVENTS, OPPORTUNITIES, AND OPPORTUNITY FIELD HISTORY · AUTO-REFRESHES SUNDAY NIGHT ET</div></div></body></html>
+<section class="panel"><div class="panel-head"><h2>MRR booked by product</h2><div class="panel-note">Closed-won Opportunity Amount by CloseDate and Product Type.</div></div><table><thead><tr><th>Product</th><th>Last Week</th><th>Prior Week</th><th>Delta</th></tr></thead><tbody><tr>
+          <td><strong>PSA</strong></td>
+          <td>$1,000<small>1 deals</small></td>
+          <td>$186<small>2 deals</small></td>
+          <td><span class="good">+$814</span></td>
+        </tr>
+<tr>
+          <td><strong>Payments AR</strong></td>
+          <td>$150<small>3 deals</small></td>
+          <td>$0<small>0 deals</small></td>
+          <td><span class="good">+$150</span></td>
+        </tr>
+<tr>
+          <td><strong>Billing / Odin</strong></td>
+          <td>$0<small>0 deals</small></td>
+          <td>$250<small>1 deals</small></td>
+          <td><span class="bad">$-250</span></td>
+        </tr>
+<tr>
+          <td><strong>Unspecified</strong></td>
+          <td>$0<small>1 deals</small></td>
+          <td>$0<small>5 deals</small></td>
+          <td><span class="good">+$0</span></td>
+        </tr></tbody></table></section>
+<div class="panel-grid"><section class="panel"><div class="panel-head"><h2>SDR-sourced opportunities</h2></div><table><thead><tr><th>SDR</th><th>Account / Opp</th><th>Source</th><th>MRR</th></tr></thead><tbody><tr>
+          <td><strong>Ptah Robinson</strong><span>Wed 8/12</span></td>
+          <td>BTV Systems<span>BTV Systems</span></td>
+          <td></td>
+          <td>$1,710</td>
+        </tr>
+<tr>
+          <td><strong>Abigail Marchese</strong><span>Mon 8/10</span></td>
+          <td>trueITpros<span>trueITpros</span></td>
+          <td></td>
+          <td>$1,000</td>
+        </tr>
+<tr>
+          <td><strong>Abigail Marchese</strong><span>Fri 8/14</span></td>
+          <td>Speros<span>Speros</span></td>
+          <td></td>
+          <td>$1,000</td>
+        </tr>
+<tr>
+          <td><strong>Blake Boatright</strong><span>Mon 8/10</span></td>
+          <td>Elite Smart Homes LLC<span>Elite Smart Homes</span></td>
+          <td></td>
+          <td>$1,000</td>
+        </tr>
+<tr>
+          <td><strong>Emily Petraglia</strong><span>Thu 8/13</span></td>
+          <td>Patriot Consulting Technology Group<span>Patriot Consulting Technology Group</span></td>
+          <td></td>
+          <td>$1,000</td>
+        </tr>
+<tr>
+          <td><strong>Emily Petraglia</strong><span>Fri 8/14</span></td>
+          <td>Advanced Tech Inc<span>Advanced Tech</span></td>
+          <td></td>
+          <td>$1,000</td>
+        </tr>
+<tr>
+          <td><strong>Emily Petraglia</strong><span>Fri 8/14</span></td>
+          <td>GNSIT<span>GNSIT</span></td>
+          <td></td>
+          <td>$1,000</td>
+        </tr>
+<tr>
+          <td><strong>Emily Petraglia</strong><span>Fri 8/14</span></td>
+          <td>ARRC Technology<span>ARRC Technology / CharTec</span></td>
+          <td></td>
+          <td>$1,000</td>
+        </tr>
+<tr>
+          <td><strong>Max Coopman</strong><span>Fri 8/14</span></td>
+          <td>Advanced Business Systems Inc.<span>Advanced Business Systems</span></td>
+          <td></td>
+          <td>$1,000</td>
+        </tr>
+<tr>
+          <td><strong>Ptah Robinson</strong><span>Tue 8/11</span></td>
+          <td>AIC<span>AIC</span></td>
+          <td></td>
+          <td>$1,000</td>
+        </tr></tbody></table></section><section class="panel"><div class="panel-head"><h2>MQL conversions</h2></div><table><thead><tr><th>Owner</th><th>Account / Opp</th><th>Source</th><th>MRR</th></tr></thead><tbody><tr>
+          <td><strong>Patrick Davies</strong><span>Fri 8/14</span></td>
+          <td>ITR-Systems<span>ITR Systems</span></td>
+          <td>Request Demo</td>
+          <td>$1,240</td>
+        </tr>
+<tr>
+          <td><strong>Andy Whisenant</strong><span>Mon 8/10</span></td>
+          <td>Netcuras, Inc<span>Netcuras</span></td>
+          <td>Request Demo</td>
+          <td>$1,000</td>
+        </tr>
+<tr>
+          <td><strong>Andy Whisenant</strong><span>Tue 8/11</span></td>
+          <td>Constellation Dealership Software<span>Constellation Dealership Software</span></td>
+          <td>Request Demo</td>
+          <td>$1,000</td>
+        </tr>
+<tr>
+          <td><strong>Andy Whisenant</strong><span>Fri 8/14</span></td>
+          <td>Canitan<span>Canitan</span></td>
+          <td>Request Demo</td>
+          <td>$1,000</td>
+        </tr>
+<tr>
+          <td><strong>Connor Flynn</strong><span>Wed 8/12</span></td>
+          <td>Tecflow Technology<span>Tecflow Technology</span></td>
+          <td>Request Demo</td>
+          <td>$1,000</td>
+        </tr>
+<tr>
+          <td><strong>Jake Borah</strong><span>Mon 8/10</span></td>
+          <td>Muskingum Site Services<span>Muskingum Site Services</span></td>
+          <td>Google Ads</td>
+          <td>$1,000</td>
+        </tr>
+<tr>
+          <td><strong>Jamie Butler</strong><span>Fri 8/14</span></td>
+          <td>GNSIT<span>GNSIT</span></td>
+          <td>Facebook Ads</td>
+          <td>$1,000</td>
+        </tr>
+<tr>
+          <td><strong>Patrick Davies</strong><span>Thu 8/13</span></td>
+          <td>Patriot Consulting Technology Group<span>Patriot Consulting Technology Group</span></td>
+          <td>Request Demo</td>
+          <td>$1,000</td>
+        </tr>
+<tr>
+          <td><strong>Patrick Davies</strong><span>Fri 8/14</span></td>
+          <td>Advanced Tech Inc<span>Advanced Tech</span></td>
+          <td>Request Demo</td>
+          <td>$1,000</td>
+        </tr></tbody></table></section></div>
+<div class="panel-grid"><section class="panel"><div class="panel-head"><h2>Tradeshow conversions</h2></div><table><thead><tr><th>Owner</th><th>Account / Opp</th><th>Event/Source</th><th>MRR</th></tr></thead><tbody><tr>
+          <td><strong>Jamie Butler</strong><span>Thu 8/13</span></td>
+          <td>Prime Secured<span>Prime Secured</span></td>
+          <td>Xchange DC 26</td>
+          <td>$4,200</td>
+        </tr>
+<tr>
+          <td><strong>Abbey McIntosh</strong><span>Fri 8/14</span></td>
+          <td>Restrepo Innovations<span>Restrepo Innovations</span></td>
+          <td>Cedia 25</td>
+          <td>$1,000</td>
+        </tr>
+<tr>
+          <td><strong>Andy Whisenant</strong><span>Mon 8/10</span></td>
+          <td>Singular Security<span>Singular Security</span></td>
+          <td>ChannelCon 26</td>
+          <td>$1,000</td>
+        </tr>
+<tr>
+          <td><strong>Connor Flynn</strong><span>Mon 8/10</span></td>
+          <td>Advanced 2000<span>Advanced 2000</span></td>
+          <td>ASCII DC 26</td>
+          <td>$1,000</td>
+        </tr>
+<tr>
+          <td><strong>Jake Borah</strong><span>Mon 8/10</span></td>
+          <td>Elite Smart Homes LLC<span>Elite Smart Homes</span></td>
+          <td>Cedia 25</td>
+          <td>$1,000</td>
+        </tr>
+<tr>
+          <td><strong>Jamie Butler</strong><span>Tue 8/11</span></td>
+          <td>Nucleus<span>Nucleus</span></td>
+          <td>ChannelCon 26</td>
+          <td>$1,000</td>
+        </tr>
+<tr>
+          <td><strong>Patrick Davies</strong><span>Mon 8/10</span></td>
+          <td>Nutmeg Consulting, Inc.<span>Nutmeg Consulting</span></td>
+          <td>ChannelCon 26</td>
+          <td>$1,000</td>
+        </tr></tbody></table></section><section class="panel"><div class="panel-head"><h2>Booked deal detail</h2></div><table><thead><tr><th>Owner</th><th>Account / Opp</th><th>Product</th><th>MRR</th></tr></thead><tbody><tr>
+          <td><strong>Patrick Davies</strong><span>Thu 8/13</span></td>
+          <td>NAS Wireless<span>NAS Wireless</span></td>
+          <td>PSA</td>
+          <td>$1,000</td>
+        </tr>
+<tr>
+          <td><strong>Ingrid Beard</strong><span>Tue 8/11</span></td>
+          <td>Tribe Connect<span>Tribe Connect AR Payments - Portal</span></td>
+          <td>Payments AR</td>
+          <td>$50</td>
+        </tr>
+<tr>
+          <td><strong>Justin Lee</strong><span>Tue 8/11</span></td>
+          <td>Fountaine Information Systems<span>Fountaine Information Systems - AR Payments</span></td>
+          <td>Payments AR</td>
+          <td>$50</td>
+        </tr>
+<tr>
+          <td><strong>Justin Lee</strong><span>Wed 8/12</span></td>
+          <td>AVSS<span>AVSS - AR Payments</span></td>
+          <td>Payments AR</td>
+          <td>$50</td>
+        </tr>
+<tr>
+          <td><strong>Ryan Koontz</strong><span>Tue 8/11</span></td>
+          <td>Crexendo Business Solutions<span>Crexendo Summit Sponsorship 2026</span></td>
+          <td>Unspecified</td>
+          <td>$0</td>
+        </tr></tbody></table></section></div>
+<section class="panel"><div class="panel-head"><h2>Metric definitions</h2><div class="panel-note">So nobody has to decode the Batcomputer during the team meeting.</div></div><div class="definitions"><div class="def"><strong>Discovery Set:</strong> Tasks created with Discovery Meeting/Call in the subject.</div><div class="def"><strong>Cbrs Set:</strong> CBR-type Events created during the week.</div><div class="def"><strong>Initial Demos Ran:</strong> Demo Events with ActivityDate in-week, completed/held when appointment status is present.</div><div class="def"><strong>Sdr Sourced Opps:</strong> Opportunities created with SDR_Influence__c populated and not None.</div><div class="def"><strong>Mqls Converted:</strong> Marketing-sourced opportunities created, excluding tradeshow, sales/outbound, partner/channel, and referral sources.</div><div class="def"><strong>Tradeshow Leads Converted:</strong> Opportunities created with Marketing_Source__c = Tradeshow.</div><div class="def"><strong>Booked Mrr:</strong> Closed-won Opportunity Amount by CloseDate, grouped by Product_Type__c.</div></div></section>
+<div class="footer">SOURCE: SALESFORCE TASKS, EVENTS, AND OPPORTUNITIES · AUTO-REFRESHES SUNDAY NIGHT ET</div></div></body></html>
