@@ -1,6 +1,6 @@
 # DECKS-LIBRARY.md — Robin's Deck & Dashboard Library
 
-Last updated: 2026-08-10
+Last updated: 2026-08-18
 GitHub Pages base: `https://koontz-robin.github.io/robin-decks/`
 Repo: `git@github.com:koontz-robin/robin-decks.git`
 
@@ -50,6 +50,7 @@ Repo: `git@github.com:koontz-robin/robin-decks.git`
 | Name | File | URL | Notes |
 |---|---|---|---|
 | AVIT Consolidated Deck | avit-consolidated-deck.html | https://koontz-robin.github.io/robin-decks/avit-consolidated-deck.html | Consolidated tabs for Evaluations Summary, Onsite Meeting Recap, and Implementation Plan |
+| Altourage PSA Evaluation Readout | altourage-psa-evaluation-readout.html | https://koontz-robin.github.io/robin-decks/altourage-psa-evaluation-readout.html | Buyer-facing Execute readout for Altourage PSA evaluation: ConnectWise replacement, Halo comparison, Lyra context, requirements, ROI assumptions, and action plan |
 | Client Business Review Template | client-business-review-template.html | https://koontz-robin.github.io/robin-decks/client-business-review-template.html | Cleaner GitHub Pages CBR format plus reusable page-generation prompt |
 | Rev.io Sales — May Update (5-slide deck) | may-update-deck.html | https://koontz-robin.github.io/robin-decks/may-update-deck.html | Cover, Forecast, Efficiency, May Pipeline, Q2 Momentum |
 | Rev.io Tech Stack | revio-tech-stack.html | https://koontz-robin.github.io/robin-decks/revio-tech-stack.html | Visual stack deck: HubSpot, Salesforce, Outreach, ZoomInfo, OpenClaw, Clay, Claude, Rox, DocuSign, Notion |
