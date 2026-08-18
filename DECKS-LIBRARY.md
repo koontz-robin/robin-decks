@@ -123,7 +123,7 @@ Repo: `git@github.com:koontz-robin/robin-decks.git`
 | Tradeshow MQL | tradeshow-mql.html | https://koontz-robin.github.io/robin-decks/tradeshow-mql.html | |
 | Motorola 2026 Addendum (Consolidated) | motorola_2026_addendum_consolidated.html | https://koontz-robin.github.io/robin-decks/motorola_2026_addendum_consolidated.html | 5-location consolidated addendum — 253 licenses, $53,638.08/yr |
 | Monday Sales Meeting | monday-team-activity-dashboard.html | https://koontz-robin.github.io/robin-decks/monday-team-activity-dashboard.html | Weekly Monday sales meeting dashboard comparing last full week vs prior week across team activity, role performers, closed-won opps, and MRR by product; auto-refreshes Sunday night ET |
-| DTS Technology CBR | dts-technology-cbr.html | https://koontz-robin.github.io/robin-decks/dts-technology-cbr.html | Client Business Review page with account snapshot, closed-won history, CBR priorities, ROI lens, and action plan |
+| DTS Technology CBR | dts-technology-cbr.html | https://koontz-robin.github.io/robin-decks/dts-technology-cbr.html | Customer-facing Client Business Review page for DTS Technology with agenda, relationship overview, review themes, platform fit, roadmap topics, and action plan |
 
 ---
 
