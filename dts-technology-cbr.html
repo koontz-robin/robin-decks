@@ -1,0 +1,190 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>DTS Technology Client Business Review | Rev.io</title>
+  <meta name="description" content="Client Business Review page for DTS Technology and Rev.io.">
+  <style>
+    :root {
+      --dts:#2c8ed6;
+      --dts-dark:#155a92;
+      --revio:#6cc04a;
+      --navy:#071827;
+      --ink:#10233f;
+      --muted:#607089;
+      --paper:#f5f8fc;
+      --line:#d9e5f1;
+      --white:#fff;
+      --amber:#f7b955;
+      --red:#ef5b5b;
+    }
+    *{box-sizing:border-box}
+    html{scroll-behavior:smooth}
+    body{margin:0;font-family:Aptos,Inter,ui-sans-serif,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;color:var(--ink);background:var(--paper)}
+    .slide{min-height:100vh;position:relative;display:flex;align-items:center;overflow:hidden;border-bottom:1px solid rgba(16,35,63,.08)}
+    .dark{color:var(--white);background:linear-gradient(115deg,rgba(7,24,39,.98),rgba(12,43,71,.93)),radial-gradient(circle at 82% 18%,rgba(44,142,214,.35),transparent 35%),repeating-linear-gradient(0deg,rgba(255,255,255,.035) 0 1px,transparent 1px 44px),var(--navy)}
+    .light{background:var(--paper)}
+    .wrap{width:min(1180px,calc(100vw - 48px));margin:0 auto;padding:78px 0 58px;position:relative;z-index:2}
+    .topline{position:absolute;top:28px;left:32px;right:32px;display:flex;justify-content:space-between;align-items:center;gap:24px;z-index:5}
+    .brand-left{display:flex;align-items:center;gap:16px;min-width:0}
+    .dts-logo{width:178px;height:76px;object-fit:contain;background:white;border-radius:10px;padding:10px 14px;box-shadow:0 18px 45px rgba(0,0,0,.12)}
+    .revio-logo{height:30px;width:auto;object-fit:contain;display:block}
+    .light .revio-logo{background:var(--navy);height:40px;padding:8px 12px;border-radius:7px}
+    .eyebrow{font-size:12px;font-weight:900;letter-spacing:1.8px;text-transform:uppercase;color:var(--revio);margin-bottom:18px}
+    .light .eyebrow{color:var(--dts-dark)}
+    h1,h2,h3,p{margin:0}
+    h1{font-size:clamp(46px,7vw,86px);line-height:.96;max-width:950px;letter-spacing:-2px}
+    h2{font-size:clamp(34px,4.8vw,60px);line-height:1;max-width:980px;letter-spacing:-1px;margin-bottom:24px}
+    h3{font-size:18px;line-height:1.18;margin-bottom:10px}
+    .lead{max-width:840px;margin-top:24px;color:rgba(255,255,255,.78);font-size:clamp(17px,2vw,23px);line-height:1.38}
+    .light .lead{color:var(--muted)}
+    .hero-grid{display:grid;grid-template-columns:minmax(0,1fr) 330px;gap:46px;align-items:end}
+    .metric-stack{display:grid;gap:14px}
+    .metric{background:rgba(255,255,255,.085);border:1px solid rgba(255,255,255,.16);border-radius:12px;padding:18px}
+    .metric strong{display:block;font-size:34px;line-height:1;color:#7dc7ff}
+    .metric span{display:block;margin-top:8px;color:rgba(255,255,255,.72);font-size:12px;font-weight:800;text-transform:uppercase;letter-spacing:.9px}
+    .grid-2{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:18px}
+    .grid-3{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:18px}
+    .card{background:var(--white);border:1px solid var(--line);border-radius:12px;padding:22px;min-height:158px;box-shadow:0 18px 45px rgba(16,35,63,.06)}
+    .dark .card{background:rgba(255,255,255,.075);border-color:rgba(255,255,255,.15);box-shadow:none}
+    .card p,.bullet li{color:var(--muted);font-size:15px;line-height:1.48}
+    .dark .card p,.dark .bullet li{color:rgba(255,255,255,.74)}
+    .tag{display:inline-flex;align-items:center;border-radius:999px;padding:6px 10px;background:#e8f2fb;color:var(--dts-dark);font-size:12px;font-weight:900;margin:0 8px 8px 0}
+    .dark .tag{background:rgba(44,142,214,.18);color:#b9e1ff;border:1px solid rgba(185,225,255,.18)}
+    .big-number{font-size:40px;font-weight:900;color:var(--dts-dark);line-height:1}
+    .sub{font-size:12px;text-transform:uppercase;letter-spacing:1px;color:var(--muted);font-weight:900;margin-top:8px}
+    .alert{border-left:5px solid var(--amber)}
+    .risk{border-left:5px solid var(--red)}
+    .ok{border-left:5px solid var(--revio)}
+    .bullet{padding-left:18px;margin:0;display:grid;gap:10px}
+    .timeline{display:grid;gap:12px}
+    .trow{display:grid;grid-template-columns:120px 1fr;gap:16px;align-items:start;padding:16px;border-radius:12px;background:white;border:1px solid var(--line)}
+    .tdate{font-size:12px;font-weight:900;color:var(--dts-dark);text-transform:uppercase}
+    .tcopy strong{display:block;margin-bottom:4px}
+    .tcopy span{color:var(--muted);font-size:14px;line-height:1.45}
+    .footer{position:absolute;bottom:22px;left:32px;right:32px;display:flex;justify-content:space-between;color:rgba(255,255,255,.45);font-size:12px;z-index:3}
+    .light .footer{color:rgba(16,35,63,.42)}
+    a{color:inherit}
+    @media(max-width:850px){.hero-grid,.grid-2,.grid-3{grid-template-columns:1fr}.topline{position:relative;top:auto;left:auto;right:auto;padding:18px 18px 0}.slide{display:block}.wrap{width:min(100% - 32px,1180px);padding:38px 0 58px}.dts-logo{width:150px;height:64px}h1{font-size:44px}.trow{grid-template-columns:1fr}}
+  </style>
+</head>
+<body>
+  <main class="deck">
+    <section class="slide dark">
+      <div class="topline"><div class="brand-left"><img class="dts-logo" src="dts-technology-logo.png" alt="DTS Technology logo"></div><img class="revio-logo" src="revio-logo-white.png" alt="Rev.io"></div>
+      <div class="wrap hero-grid">
+        <div>
+          <div class="eyebrow">Client Business Review · August 18, 2026</div>
+          <h1>DTS Technology + Rev.io account review</h1>
+          <p class="lead">A focused CBR page for DTS Technology: current relationship snapshot, product history, observed operating model, review priorities, and next-step agenda for keeping the account healthy.</p>
+          <div style="margin-top:28px">
+            <span class="tag">Billing client</span><span class="tag">Payments enabled</span><span class="tag">OneBill noted in Salesforce</span><span class="tag">Owner: Jakob Champion</span>
+          </div>
+        </div>
+        <div class="metric-stack">
+          <div class="metric"><strong>$2,352</strong><span>Average MRR on CBR tracker</span></div>
+          <div class="metric"><strong>$3.1K</strong><span>Closed-won product history</span></div>
+          <div class="metric"><strong>1187 days</strong><span>Since last completed CBR on record</span></div>
+        </div>
+      </div>
+      <div class="footer"><span>Source: Salesforce + DTS public site</span><span>DTS Technology CBR</span></div>
+    </section>
+
+    <section class="slide light">
+      <div class="topline light"><div class="brand-left"><img class="dts-logo" src="dts-technology-logo.png" alt="DTS Technology logo"></div><img class="revio-logo" src="revio-logo-white.png" alt="Rev.io"></div>
+      <div class="wrap">
+        <div class="eyebrow">1 · Who is DTS Technology?</div>
+        <h2>A technology provider selling support, devices, wireless connectivity, and communications services.</h2>
+        <p class="lead">DTS positions around “Real Support. Real People.” and gives customers/reps a path to buy, support, and manage technology services across devices, carrier plans, business internet, VoiceLinQ, and a-la-carte service bundles.</p>
+        <div class="grid-3" style="margin-top:30px">
+          <div class="card"><h3>Customer-facing support model</h3><p>Public support paths exist for IT services, wireless devices, VoiceLinQ, and third-party PBX/Verizon One Talk requests.</p></div>
+          <div class="card"><h3>Connectivity + device commerce</h3><p>DTS guides buyers to stand-alone devices, wireless-plan bundles, business internet, routers, add-ons, and rep-assisted ordering.</p></div>
+          <div class="card"><h3>VoiceLinQ communications</h3><p>Their proprietary UC/contact-center offer includes hunt groups, recording, virtual attendant, CRM integrations, Teams-connected video, queues, and analytics.</p></div>
+        </div>
+      </div>
+      <div class="footer light"><span>dtstechnology.com</span><span>Client context</span></div>
+    </section>
+
+    <section class="slide dark">
+      <div class="topline"><div class="brand-left"><img class="dts-logo" src="dts-technology-logo.png" alt="DTS Technology logo"></div><img class="revio-logo" src="revio-logo-white.png" alt="Rev.io"></div>
+      <div class="wrap">
+        <div class="eyebrow">2 · Why review now?</div>
+        <h2>The account has new activity, partner motion, and a long CBR gap. That is exactly when Batman checks the roofline.</h2>
+        <div class="grid-2" style="margin-top:30px">
+          <div class="card risk"><h3>CBR hygiene needs reset</h3><p>Salesforce shows the last completed AM Client Business Review on May 19, 2023. A new CBR is scheduled for August 18, 2026, making this the right moment to refresh account health and open items.</p></div>
+          <div class="card alert"><h3>Recent activity is warming up</h3><p>DTS had recent touchpoints in July/August 2026 plus several 2026 potential channel partner meetings tied to Kyle Krake and Steve Zhekov.</p></div>
+          <div class="card ok"><h3>Expansion relationship already exists</h3><p>Closed-won history includes core Billing, Payments AR, QuickBooks integration, and Bill-on-Behalf.</p></div>
+          <div class="card"><h3>Business model creates billing complexity</h3><p>Devices, wireless plans, support subscriptions, installation services, router management, and UC seats all create recurring, usage, and one-time billing moments to keep clean.</p></div>
+        </div>
+      </div>
+      <div class="footer"><span>Review trigger</span><span>CBR priorities</span></div>
+    </section>
+
+    <section class="slide light">
+      <div class="topline light"><div class="brand-left"><img class="dts-logo" src="dts-technology-logo.png" alt="DTS Technology logo"></div><img class="revio-logo" src="revio-logo-white.png" alt="Rev.io"></div>
+      <div class="wrap">
+        <div class="eyebrow">3 · Account snapshot</div>
+        <h2>What Rev.io already knows about the DTS relationship.</h2>
+        <div class="grid-3" style="margin-top:28px">
+          <div class="card"><div class="big-number">1495</div><div class="sub">Rev.io customer ID</div></div>
+          <div class="card"><div class="big-number">$2,352</div><div class="sub">Average MRR</div></div>
+          <div class="card"><div class="big-number">✅</div><div class="sub">Payments enabled</div></div>
+        </div>
+        <div class="timeline" style="margin-top:24px">
+          <div class="trow"><div class="tdate">Oct 2022</div><div class="tcopy"><strong>DTS Technology — Billing</strong><span>Closed won: $1,880 · owner Bryan Bettiol.</span></div></div>
+          <div class="trow"><div class="tdate">Apr 2023</div><div class="tcopy"><strong>QuickBooks integration</strong><span>Closed won: $200 · owner Reid Doster.</span></div></div>
+          <div class="trow"><div class="tdate">May 2023</div><div class="tcopy"><strong>Payments AR</strong><span>Closed won: $513.41 · owner Reid Doster. Same day as last completed CBR on record.</span></div></div>
+          <div class="trow"><div class="tdate">Dec 2025</div><div class="tcopy"><strong>Bill-on-Behalf</strong><span>Closed won: $500 · owner Andy Whisenant, following discovery/demo/contract review activity.</span></div></div>
+        </div>
+      </div>
+      <div class="footer light"><span>Salesforce account + opportunity history</span><span>Relationship timeline</span></div>
+    </section>
+
+    <section class="slide light">
+      <div class="topline light"><div class="brand-left"><img class="dts-logo" src="dts-technology-logo.png" alt="DTS Technology logo"></div><img class="revio-logo" src="revio-logo-white.png" alt="Rev.io"></div>
+      <div class="wrap">
+        <div class="eyebrow">4 · CBR discussion areas</div>
+        <h2>Use the review to validate outcomes, surface friction, and find expansion fit.</h2>
+        <div class="grid-2" style="margin-top:28px">
+          <div class="card"><h3>Billing + BoB health</h3><ul class="bullet"><li>Confirm Bill-on-Behalf workflow adoption and remaining carrier/customer billing gaps.</li><li>Review whether OneBill is still used alongside Rev.io, and for what workflows.</li><li>Validate invoice accuracy across devices, plans, UC seats, support, and service add-ons.</li></ul></div>
+          <div class="card"><h3>Payments + AR</h3><ul class="bullet"><li>Confirm Payments AR performance, adoption, failed payments, and reconciliation experience.</li><li>Identify whether collections follow-up can be made more systematic.</li><li>Look for autopay, card-on-file, and portal usage opportunities.</li></ul></div>
+          <div class="card"><h3>Commerce + support operations</h3><ul class="bullet"><li>DTS has public ordering/support paths; confirm where order data enters billing today.</li><li>Map handoffs between sales, support, provisioning, and finance.</li><li>Document where manual re-entry still exists.</li></ul></div>
+          <div class="card"><h3>Partner/channel motion</h3><ul class="bullet"><li>Recent potential partner meetings suggest a broader relationship discussion.</li><li>Clarify exclusivity/BoB expectations from prior partner conversations.</li><li>Identify executive sponsor, commercial owner, and next decision checkpoint.</li></ul></div>
+        </div>
+      </div>
+      <div class="footer light"><span>Recommended CBR focus</span><span>Actionable discovery</span></div>
+    </section>
+
+    <section class="slide dark">
+      <div class="topline"><div class="brand-left"><img class="dts-logo" src="dts-technology-logo.png" alt="DTS Technology logo"></div><img class="revio-logo" src="revio-logo-white.png" alt="Rev.io"></div>
+      <div class="wrap">
+        <div class="eyebrow">5 · Business impact lens</div>
+        <h2>Frame Rev.io value around fewer manual billing touches, cleaner cash collection, and scalable product expansion.</h2>
+        <div class="grid-3" style="margin-top:30px">
+          <div class="card"><h3>Manual work reduction</h3><p>Assumption to validate: if DTS removes 3–5 manual billing/reconciliation hours per month, that is 36–60 hours annually returned to finance/support.</p></div>
+          <div class="card"><h3>Revenue protection</h3><p>For a mixed catalog of devices, plans, UC seats, router services, installs, and support, clean recurring + one-time charge capture reduces leakage risk.</p></div>
+          <div class="card"><h3>Cash acceleration</h3><p>Payments AR and autopay adoption can reduce collection friction; review failed-payment trends and days-to-collect to quantify the upside.</p></div>
+        </div>
+        <p class="lead">Data needed to tighten ROI: invoice volume, payment method mix, AR aging, manual adjustment count, active BoB customers, and monthly support/order volume.</p>
+      </div>
+      <div class="footer"><span>ROI assumptions clearly labeled</span><span>Business impact</span></div>
+    </section>
+
+    <section class="slide light">
+      <div class="topline light"><div class="brand-left"><img class="dts-logo" src="dts-technology-logo.png" alt="DTS Technology logo"></div><img class="revio-logo" src="revio-logo-white.png" alt="Rev.io"></div>
+      <div class="wrap">
+        <div class="eyebrow">6 · Action plan</div>
+        <h2>Run the CBR like a working session, not a victory lap in a cape.</h2>
+        <div class="grid-2" style="margin-top:28px">
+          <div class="card ok"><h3>During the CBR</h3><ul class="bullet"><li>Confirm current billing stack and OneBill/Rev.io workflow split.</li><li>Review Billing, Payments AR, QBO integration, and BoB adoption.</li><li>Capture top 3 friction points and assign Rev.io/DTS owners.</li></ul></div>
+          <div class="card alert"><h3>Within 5 business days</h3><ul class="bullet"><li>Send follow-up summary with open items, owners, and dates.</li><li>Document any product/support asks in Salesforce.</li><li>Quantify ROI using invoice volume, AR, and manual-work data.</li></ul></div>
+          <div class="card"><h3>30-day checkpoint</h3><ul class="bullet"><li>Confirm remediation progress and adoption metrics.</li><li>Decide whether partner/channel motion needs a separate executive thread.</li><li>Schedule next CBR cadence before the account drifts again.</li></ul></div>
+          <div class="card"><h3>Open questions</h3><ul class="bullet"><li>Is OneBill still active or historical?</li><li>How many BoB customers are live?</li><li>What are the current DTS priorities: billing optimization, payments, partner expansion, or support process cleanup?</li></ul></div>
+        </div>
+      </div>
+      <div class="footer light"><span>Prepared for Jakob Champion</span><span>Rev.io × DTS Technology</span></div>
+    </section>
+  </main>
+</body>
+</html>
