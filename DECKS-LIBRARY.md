@@ -1,6 +1,6 @@
 # DECKS-LIBRARY.md — Robin's Deck & Dashboard Library
 
-Last updated: 2026-08-18
+Last updated: 2026-08-19
 GitHub Pages base: `https://koontz-robin.github.io/robin-decks/`
 Repo: `git@github.com:koontz-robin/robin-decks.git`
 
@@ -53,6 +53,7 @@ Repo: `git@github.com:koontz-robin/robin-decks.git`
 | Altourage PSA Evaluation Readout | altourage-psa-evaluation-readout.html | https://koontz-robin.github.io/robin-decks/altourage-psa-evaluation-readout.html | Buyer-facing Execute readout for Altourage PSA evaluation: ConnectWise replacement, Halo comparison, Lyra context, requirements, ROI assumptions, and action plan |
 | Client Business Review Template | client-business-review-template.html | https://koontz-robin.github.io/robin-decks/client-business-review-template.html | Cleaner GitHub Pages CBR format plus reusable page-generation prompt |
 | Rev.io Sales — May Update (5-slide deck) | may-update-deck.html | https://koontz-robin.github.io/robin-decks/may-update-deck.html | Cover, Forecast, Efficiency, May Pipeline, Q2 Momentum |
+| Rev.io Sales — August Update (6-slide deck) | august-update-deck.html | https://koontz-robin.github.io/robin-decks/august-update-deck.html | Cloned from June update deck and refreshed with Salesforce live data through Aug 19, 2026: July final, August MTD, pipeline trends, closed-lost analysis, PSA win profile, and efficiency snapshot |
 | Rev.io Tech Stack | revio-tech-stack.html | https://koontz-robin.github.io/robin-decks/revio-tech-stack.html | Visual stack deck: HubSpot, Salesforce, Outreach, ZoomInfo, OpenClaw, Clay, Claude, Rox, DocuSign, Notion |
 | H2 Sales Growth Motion | h2-leadership-offsite-direct-sales.html | https://koontz-robin.github.io/robin-decks/h2-leadership-offsite-direct-sales.html | H2 leadership offsite deck for direct sales growth, pipeline creation, source diversification, referrals, partner ecosystems, Revii, and integration proof |
 | H2 Leadership Offsite - Direct Sales Growth Motion v2 | h2-leadership-offsite-direct-sales-v2.html | https://koontz-robin.github.io/robin-decks/h2-leadership-offsite-direct-sales-v2.html?v=b33c8f0 | Version 2 leadership offsite deck covering trigger timing, referral ecosystems, proof assets, Revii packaging, product readiness, and H2 PSA growth motion |
