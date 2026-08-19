@@ -42,6 +42,7 @@ Repo: `git@github.com:koontz-robin/robin-decks.git`
 | Q2 Re-engagement Tracker | q2-reengagement-tracker.html | https://koontz-robin.github.io/robin-decks/q2-reengagement-tracker.html | On demand |
 | PSA SMC Re-engagement Tracker | smc-reengagement-tracker.html | https://koontz-robin.github.io/robin-decks/smc-reengagement-tracker.html | On demand; SMC since Jul 2025 |
 | PSA Web SWMC Reopened Stage Report | psa-web-swmc-reopened-stage-report.html | https://koontz-robin.github.io/robin-decks/psa-web-swmc-reopened-stage-report.html | PSA Web Software Missing Capabilities re-open analysis by later opportunity stage, second loss reason, and third lost-opportunity trend |
+| Jamie PSA Platform 35+ Employee Accounts | jamie-psa-platform-35plus-accounts.html | https://koontz-robin.github.io/robin-decks/jamie-psa-platform-35plus-accounts.html | On demand; Jamie-owned Salesforce accounts with Employees > 35 and PSA Platform populated |
 | Apollo 3 Re-engagement Command Center | External | https://tony-kaylee.github.io/apollo3-reengagement-dashboard/ | On demand; external Apollo 1-3 win-back dashboard |
 
 ---
