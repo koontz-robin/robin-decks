@@ -45,6 +45,7 @@ Repo: `git@github.com:koontz-robin/robin-decks.git`
 | Jamie PSA Platform 35+ Employee Accounts | jamie-psa-platform-35plus-accounts.html | https://koontz-robin.github.io/robin-decks/jamie-psa-platform-35plus-accounts.html | On demand; Jamie-owned Salesforce accounts with Employees > 35 and PSA Platform populated |
 | Connor PSA Platform 35+ Employee Accounts | connor-psa-platform-35plus-accounts.html | https://koontz-robin.github.io/robin-decks/connor-psa-platform-35plus-accounts.html | On demand; Connor-owned Salesforce accounts with Employees > 35 and PSA Platform populated |
 | Andy PSA Platform 35+ Employee Accounts | andy-psa-platform-35plus-accounts.html | https://koontz-robin.github.io/robin-decks/andy-psa-platform-35plus-accounts.html | On demand; Andy-owned Salesforce accounts with Employees > 35 and PSA Platform populated |
+| Jamie Billing Platform Stale Outreach | jamie-billing-platform-stale-outreach.html | https://koontz-robin.github.io/robin-decks/jamie-billing-platform-stale-outreach.html | On demand; Jamie-owned Salesforce accounts with Billing Platform populated and Last Activity blank or older than one year |
 | Apollo 3 Re-engagement Command Center | External | https://tony-kaylee.github.io/apollo3-reengagement-dashboard/ | On demand; external Apollo 1-3 win-back dashboard |
 
 ---
