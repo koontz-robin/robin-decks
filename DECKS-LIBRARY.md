@@ -1,6 +1,6 @@
 # DECKS-LIBRARY.md — Robin's Deck & Dashboard Library
 
-Last updated: 2026-08-19
+Last updated: 2026-08-20
 GitHub Pages base: `https://koontz-robin.github.io/robin-decks/`
 Repo: `git@github.com:koontz-robin/robin-decks.git`
 
@@ -56,6 +56,7 @@ Repo: `git@github.com:koontz-robin/robin-decks.git`
 |---|---|---|---|
 | AVIT Consolidated Deck | avit-consolidated-deck.html | https://koontz-robin.github.io/robin-decks/avit-consolidated-deck.html | Consolidated tabs for Evaluations Summary, Onsite Meeting Recap, and Implementation Plan |
 | Altourage PSA Evaluation Readout | altourage-psa-evaluation-readout.html | https://koontz-robin.github.io/robin-decks/altourage-psa-evaluation-readout.html | Buyer-facing Execute readout for Altourage PSA evaluation: ConnectWise replacement, Halo comparison, Lyra context, requirements, ROI assumptions, and action plan |
+| Forward Edge PSA Evaluation Readout | forward-edge-psa-evaluation-readout.html | https://koontz-robin.github.io/robin-decks/forward-edge-psa-evaluation-readout.html | Buyer-facing Execute readout for Forward Edge ConnectWise replacement: software sprawl, reporting/finance pain, multi-brand Bill Profiles, MSP/VAR workflows, requirements, ROI assumptions, and action plan |
 | Client Business Review Template | client-business-review-template.html | https://koontz-robin.github.io/robin-decks/client-business-review-template.html | Cleaner GitHub Pages CBR format plus reusable page-generation prompt |
 | Rev.io Sales — May Update (5-slide deck) | may-update-deck.html | https://koontz-robin.github.io/robin-decks/may-update-deck.html | Cover, Forecast, Efficiency, May Pipeline, Q2 Momentum |
 | Rev.io Sales — August Update (6-slide deck) | august-update-deck.html | https://koontz-robin.github.io/robin-decks/august-update-deck.html | Cloned from June update deck and refreshed with Salesforce live data through Aug 19, 2026: July final, August MTD, pipeline trends, closed-lost analysis, PSA win profile, and efficiency snapshot |
