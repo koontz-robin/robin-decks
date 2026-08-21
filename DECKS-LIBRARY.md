@@ -1,6 +1,6 @@
 # DECKS-LIBRARY.md — Robin's Deck & Dashboard Library
 
-Last updated: 2026-08-20
+Last updated: 2026-08-21
 GitHub Pages base: `https://koontz-robin.github.io/robin-decks/`
 Repo: `git@github.com:koontz-robin/robin-decks.git`
 
@@ -55,6 +55,7 @@ Repo: `git@github.com:koontz-robin/robin-decks.git`
 | Name | File | URL | Notes |
 |---|---|---|---|
 | AVIT Consolidated Deck | avit-consolidated-deck.html | https://koontz-robin.github.io/robin-decks/avit-consolidated-deck.html | Consolidated tabs for Evaluations Summary, Onsite Meeting Recap, and Implementation Plan |
+| Spectrotel September 15 On-Site Agenda | spectrotel-sept15-agenda.html | https://koontz-robin.github.io/robin-decks/spectrotel-sept15-agenda.html | AVIT-style tabbed agenda site for Spectrotel + AirSpring / NuCo operating model, support escalation, platform strategy, SSO, payments, bankruptcy workflow, and roadmap cadence |
 | Altourage PSA Evaluation Readout | altourage-psa-evaluation-readout.html | https://koontz-robin.github.io/robin-decks/altourage-psa-evaluation-readout.html | Buyer-facing Execute readout for Altourage PSA evaluation: ConnectWise replacement, Halo comparison, Lyra context, requirements, ROI assumptions, and action plan |
 | Forward Edge PSA Evaluation Readout | forward-edge-psa-evaluation-readout.html | https://koontz-robin.github.io/robin-decks/forward-edge-psa-evaluation-readout.html | Buyer-facing Execute readout for Forward Edge ConnectWise replacement: software sprawl, reporting/finance pain, multi-brand Bill Profiles, MSP/VAR workflows, requirements, ROI assumptions, and action plan |
 | Canitan PSA Evaluation Readout | canitan-psa-evaluation-readout.html | https://koontz-robin.github.io/robin-decks/canitan-psa-evaluation-readout.html | Buyer-facing Execute readout for Canitan PSA evaluation: Field Motion 2.0 comparison, workflow mapping, QuickBooks confidence, mobile/inventory/assets requirements, ROI assumptions, and action plan |

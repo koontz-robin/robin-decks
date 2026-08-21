@@ -1,0 +1,224 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Spectrotel × Rev.io September 15 Agenda</title>
+<style>
+  :root {
+    --rev-blue:#0057ff;
+    --rev-cyan:#00c2ff;
+    --navy:#071426;
+    --navy-2:#0b1d34;
+    --ink:#122033;
+    --muted:rgba(255,255,255,.68);
+    --line:rgba(255,255,255,.14);
+    --card:#ffffff;
+    --soft:#eef6ff;
+    --cyan:#00a8e8;
+  }
+  * { box-sizing:border-box; }
+  html, body { margin:0; min-height:100%; }
+  body {
+    font-family:"Segoe UI", -apple-system, BlinkMacSystemFont, Arial, sans-serif;
+    background:linear-gradient(135deg,#f4f8fc 0%,#eef4fa 48%,#e8f7ff 100%);
+    color:var(--ink);
+  }
+  .shell { min-height:100vh; display:grid; grid-template-rows:66px 1fr; }
+  .tabs {
+    position:sticky; top:0; z-index:10;
+    display:flex; align-items:center; justify-content:space-between; gap:18px;
+    padding:0 22px;
+    background:rgba(7,20,38,.98);
+    border-bottom:1px solid var(--line);
+    box-shadow:0 12px 30px rgba(0,0,0,.22);
+  }
+  .brand { display:flex; align-items:center; gap:12px; min-width:230px; color:#fff; }
+  .brand-mark {
+    width:42px; height:34px; border-radius:8px; background:#fff;
+    display:grid; place-items:center; color:var(--rev-blue); font-weight:950; letter-spacing:-1px;
+    box-shadow:0 10px 24px rgba(0,0,0,.18);
+  }
+  .brand-title { font-size:13px; font-weight:900; letter-spacing:.2px; white-space:nowrap; }
+  .brand-sub { color:var(--muted); font-size:11px; font-weight:700; }
+  .tab-list { display:flex; align-items:center; justify-content:center; gap:8px; flex:1; overflow-x:auto; }
+  .tab {
+    appearance:none; border:1px solid transparent; border-radius:999px; background:transparent;
+    color:rgba(255,255,255,.68); min-height:38px; padding:0 16px; cursor:pointer;
+    font:inherit; font-size:13px; font-weight:850; white-space:nowrap;
+  }
+  .tab:hover { color:#fff; background:rgba(255,255,255,.08); }
+  .tab.active { color:#fff; background:linear-gradient(135deg,var(--rev-blue),var(--rev-cyan)); box-shadow:0 10px 24px rgba(0,87,255,.28); }
+  .open-link { color:#a9ecff; text-decoration:none; font-size:12px; font-weight:800; min-width:112px; text-align:right; }
+  .open-link:hover { color:#fff; }
+  .hero {
+    position:relative; overflow:hidden; color:#fff; background:
+      radial-gradient(circle at 82% 12%, rgba(0,194,255,.34), transparent 30%),
+      radial-gradient(circle at 8% 18%, rgba(0,87,255,.34), transparent 28%),
+      linear-gradient(135deg,var(--navy) 0%, var(--navy-2) 100%);
+    padding:44px 44px 36px; border-bottom:1px solid rgba(255,255,255,.13);
+  }
+  .hero::after { content:""; position:absolute; inset:auto -8% -40% -8%; height:180px; background:linear-gradient(90deg,transparent,rgba(0,194,255,.18),transparent); transform:rotate(-3deg); }
+  .hero-inner { position:relative; max-width:1180px; margin:0 auto; display:grid; grid-template-columns:1.2fr .8fr; gap:26px; align-items:end; }
+  .eyebrow { display:inline-flex; width:max-content; gap:8px; align-items:center; border:1px solid rgba(255,255,255,.22); border-radius:999px; padding:7px 12px; color:#c7f4ff; font-size:12px; font-weight:850; letter-spacing:.08em; text-transform:uppercase; }
+  h1 { margin:16px 0 10px; font-size:52px; line-height:.98; letter-spacing:-1.8px; }
+  .lead { margin:0; max-width:780px; color:rgba(255,255,255,.78); font-size:18px; line-height:1.45; }
+  .hero-card { background:rgba(255,255,255,.08); border:1px solid rgba(255,255,255,.16); border-radius:22px; padding:20px; box-shadow:0 28px 70px rgba(0,0,0,.24); backdrop-filter:blur(8px); }
+  .hero-card h2 { margin:0 0 12px; font-size:17px; }
+  .criteria { margin:0; padding:0; list-style:none; display:grid; gap:9px; color:rgba(255,255,255,.8); font-size:13px; line-height:1.3; }
+  .criteria li { display:flex; gap:8px; }
+  .criteria li::before { content:"✓"; color:#7be7ff; font-weight:900; }
+  .content { max-width:1180px; margin:0 auto; padding:30px 26px 54px; }
+  .panel { display:none; animation:fade .18s ease-out; }
+  .panel.active { display:block; }
+  @keyframes fade { from { opacity:.55; transform:translateY(4px); } to { opacity:1; transform:none; } }
+  .grid { display:grid; grid-template-columns:repeat(12,1fr); gap:18px; }
+  .card { background:var(--card); border:1px solid rgba(16,55,92,.12); border-radius:20px; padding:22px; box-shadow:0 20px 50px rgba(15,44,78,.08); }
+  .span-4 { grid-column:span 4; } .span-5 { grid-column:span 5; } .span-6 { grid-column:span 6; } .span-7 { grid-column:span 7; } .span-8 { grid-column:span 8; } .span-12 { grid-column:span 12; }
+  .label { color:var(--rev-blue); font-weight:950; font-size:12px; text-transform:uppercase; letter-spacing:.08em; }
+  h3 { margin:8px 0 12px; font-size:25px; line-height:1.12; color:#11395f; letter-spacing:-.5px; }
+  h4 { margin:16px 0 8px; font-size:15px; color:#143d63; }
+  p { margin:0 0 10px; color:#40566c; line-height:1.45; }
+  ul { margin:8px 0 0; padding-left:18px; color:#40566c; line-height:1.45; }
+  li { margin:5px 0; }
+  .pill-row { display:flex; flex-wrap:wrap; gap:8px; margin-top:12px; }
+  .pill { border:1px solid rgba(0,87,255,.18); background:#f5faff; color:#17476f; border-radius:999px; padding:7px 10px; font-size:12px; font-weight:800; }
+  .timeline { display:grid; gap:12px; }
+  .item { display:grid; grid-template-columns:90px 1fr; gap:14px; padding:14px; border:1px solid rgba(17,57,95,.1); border-radius:16px; background:linear-gradient(135deg,#fff,#f7fbff); }
+  .num { width:44px; height:44px; border-radius:14px; display:grid; place-items:center; background:linear-gradient(135deg,var(--rev-blue),var(--rev-cyan)); color:#fff; font-weight:950; box-shadow:0 12px 26px rgba(0,87,255,.22); }
+  .duration { font-size:12px; font-weight:900; color:#6d8195; margin-top:3px; }
+  .item-title { font-size:17px; font-weight:950; color:#11395f; margin-bottom:5px; }
+  .owner { color:#52687c; font-size:13px; font-weight:800; margin-bottom:5px; }
+  .two-col { columns:2; column-gap:28px; }
+  .output { border-left:4px solid var(--cyan); padding-left:14px; background:#f7fcff; border-radius:10px; padding-top:10px; padding-bottom:10px; }
+  .matrix { display:grid; grid-template-columns:1fr 1fr; gap:14px; margin-top:10px; }
+  .matrix-box { background:#f7fbff; border:1px solid rgba(0,87,255,.12); border-radius:16px; padding:16px; }
+  .matrix-box strong { color:#11395f; display:block; margin-bottom:8px; }
+  .footer { max-width:1180px; margin:0 auto 28px; padding:0 26px; color:#62778a; font-size:12px; }
+  @media (max-width:920px) {
+    .shell { grid-template-rows:auto 1fr; }
+    .tabs { align-items:stretch; flex-direction:column; padding:12px; gap:10px; }
+    .brand, .open-link { min-width:0; justify-content:center; text-align:center; }
+    .tab-list { width:100%; justify-content:flex-start; padding-bottom:2px; }
+    .hero { padding:30px 22px; }
+    .hero-inner { grid-template-columns:1fr; }
+    h1 { font-size:38px; }
+    .span-4,.span-5,.span-6,.span-7,.span-8,.span-12 { grid-column:span 12; }
+    .two-col { columns:1; }
+    .matrix { grid-template-columns:1fr; }
+  }
+</style>
+</head>
+<body>
+<main class="shell">
+  <nav class="tabs" aria-label="Spectrotel agenda tabs">
+    <div class="brand">
+      <div class="brand-mark">rev</div>
+      <div>
+        <div class="brand-title">Spectrotel × Rev.io</div>
+        <div class="brand-sub">September 15 onsite agenda</div>
+      </div>
+    </div>
+    <div class="tab-list" role="tablist">
+      <button class="tab active" type="button" data-tab="overview">Overview</button>
+      <button class="tab" type="button" data-tab="support">Pain + Support</button>
+      <button class="tab" type="button" data-tab="platform">Platform Strategy</button>
+      <button class="tab" type="button" data-tab="sso-payments">SSO + Payments</button>
+      <button class="tab" type="button" data-tab="workflow">Workflow + Cadence</button>
+    </div>
+    <a class="open-link" href="#overview" id="openCurrent">Open current tab</a>
+  </nav>
+
+  <section>
+    <header class="hero">
+      <div class="hero-inner">
+        <div>
+          <div class="eyebrow">On-site visit agenda</div>
+          <h1>Spectrotel + AirSpring / NuCo operating model alignment</h1>
+          <p class="lead">A working session to turn candid partnership feedback into a clear support model, integration path, future-state architecture, and named next actions.</p>
+        </div>
+        <aside class="hero-card">
+          <h2>Success criteria for the day</h2>
+          <ul class="criteria">
+            <li>Near-term support and escalation improvements agreed</li>
+            <li>Payment portal integration next steps aligned</li>
+            <li>SSO path and pilot/design-partner fit clarified</li>
+            <li>Initial future-state architecture map drafted</li>
+            <li>Decision framework for legacy Rev.io vs. New Rev.io</li>
+            <li>Named owners and dates for next actions</li>
+          </ul>
+        </aside>
+      </div>
+    </header>
+
+    <div class="content">
+      <section class="panel active" id="overview">
+        <div class="grid">
+          <article class="card span-12">
+            <div class="label">Working agenda</div>
+            <h3>September 15 discussion flow</h3>
+            <div class="timeline">
+              <div class="item"><div><div class="num">1</div></div><div><div class="item-title">Executive alignment and goals</div><p>Confirm the shared goal: determine the best long-term operating model for Spectrotel + AirSpring / NuCo on Rev.io. Acknowledge Sanjay’s feedback that Rev.io remains strategically important, while some friction comes from pushing Rev.io beyond original intended use cases.</p></div></div>
+              <div class="item"><div><div class="num">2</div></div><div><div class="item-title">Current-state pain points and partnership feedback</div><div class="owner">Owner: Sanjay / Spectrotel team</div><p>Give Spectrotel room to fully outline what is working, what is not, and what needs to change across support, communication, roadmap visibility, API completeness, Azure SQL backup changes, platform surprises, customizations, and package quantities.</p></div></div>
+              <div class="item"><div><div class="num">3</div><div class="duration">60 min</div></div><div><div class="item-title">Support model and escalation redesign</div><div class="owner">Owner: Rev.io Client Success / Support leadership + Brent</div><p>Reset expectations around severity standards, cloud/database/engineering escalation, P1 and near-P1 definitions, urgent vs. standard routing, named technical ownership, and support performance review.</p></div></div>
+              <div class="item"><div><div class="num">4</div><div class="duration">90 min</div></div><div><div class="item-title">Future-state platform strategy</div><div class="owner">Owner: Brent + Leslie + Spectrotel engineering / operations</div><p>Whiteboard what belongs in Rev.io, what belongs in Spectrotel systems, and where interoperability must be formalized for the combined business.</p></div></div>
+              <div class="item"><div><div class="num">5</div></div><div><div class="item-title">New Rev.io platform alignment</div><p>Clarify what becomes easier in New Rev.io, what is ready today, what is still maturing, and what Spectrotel would need to adopt new capabilities safely.</p></div></div>
+              <div class="item"><div><div class="num">6</div></div><div><div class="item-title">Order management deep dive</div><p>Map Sanjay’s desire to move order management out of current Rev.io against current Spectrotel process, New Rev.io order capabilities, API needs, and future-state supportability.</p></div></div>
+              <div class="item"><div><div class="num">7</div></div><div><div class="item-title">SSO and authentication roadmap</div><p>Treat SSO as a baseline security requirement: SAML/OIDC, provisioning, role mapping, customer portal implications, internal access, timeline, dependencies, and design-partner / pilot potential.</p></div></div>
+              <div class="item"><div><div class="num">8</div></div><div><div class="item-title">Payment portal / iframe / deep-link integration</div><p>Define how Spectrotel customers can pay through Rev.io from inside the Spectrotel portal without a second login, including iframe vs. deep link vs. embedded component, tokenization, provider transition, Nuvei cancellation, and compliance.</p></div></div>
+              <div class="item"><div><div class="num">9</div></div><div><div class="item-title">Bankruptcy handling workflow</div><p>Determine whether the bankruptcy process is configuration, reporting, product gap, or custom workflow — with a short-term workaround and long-term recommendation.</p></div></div>
+              <div class="item"><div><div class="num">10</div><div class="duration">45 min</div></div><div><div class="item-title">Roadmap and communication cadence</div><div class="owner">Owner: Brent + Leslie + Client Success</div><p>Fix the communication gap with proactive roadmap, QBR, product, and change-impact rhythms tied to owners and calendar cadence.</p></div></div>
+            </div>
+          </article>
+        </div>
+      </section>
+
+      <section class="panel" id="support">
+        <div class="grid">
+          <article class="card span-6"><div class="label">Spectrotel voice first</div><h3>Current-state pain points</h3><ul><li>Support response time and escalation delays</li><li>Near-P1 / urgent ticket handling expectations</li><li>Why copying Will currently works, but is not scalable</li><li>Communication gaps around roadmap, API completeness, product releases, and Azure SQL backup changes</li><li>Areas where Spectrotel feels surprised by Rev.io capabilities they were not aware of</li><li>Areas where Spectrotel customizations or usage patterns may be creating platform strain</li><li>Package quantities</li></ul></article>
+          <article class="card span-6"><div class="label">Redesigned support model</div><h3>Escalation process decisions</h3><ul><li>Expected response / resolution standards by severity</li><li>Escalation path for cloud, database, and engineering issues</li><li>Definition of P1 / near-P1 for Spectrotel</li><li>Routing rules for urgent vs. standard requests</li><li>Named technical account owner or enhanced escalation path</li><li>Support performance review cadence and scorecard</li></ul><div class="output"><strong>Output:</strong> practical routing model that removes “copy Will” as the unofficial bat-signal.</div></article>
+        </div>
+      </section>
+
+      <section class="panel" id="platform">
+        <div class="grid">
+          <article class="card span-7"><div class="label">Future-state architecture</div><h3>Spectrotel-owned vs. Rev.io-owned</h3><p>Whiteboard the combined Spectrotel + AirSpring / NuCo operating model, including current Rev.io use, combined future use, custom workflows around Rev.io, and where interoperability is required.</p><div class="matrix"><div class="matrix-box"><strong>Spectrotel systems likely to own</strong><ul><li>Customer portal</li><li>Network Intelligence Center / NIC</li><li>Data warehouse and analytics</li><li>Custom order management, if applicable</li></ul></div><div class="matrix-box"><strong>Rev.io should own</strong><ul><li>Billing, rating, tax</li><li>Collections and payments</li><li>Customer/account data</li><li>Product/service catalog</li><li>Future order management capabilities</li></ul></div></div></article>
+          <article class="card span-5"><div class="label">New Rev.io alignment</div><h3>What changes in the new platform</h3><ul><li>New Rev.io uses the same backend database</li><li>What becomes easier in the new UI / platform model</li><li>Order management maturity and roadmap</li><li>Modern workflow capabilities</li><li>Role of AI / Revii, if relevant</li><li>Ready today vs. still maturing</li><li>Safe adoption requirements for Spectrotel</li></ul></article>
+          <article class="card span-12"><div class="label">Order management</div><h3>Deep-dive questions</h3><ul class="two-col"><li>Sanjay’s desired future state for order management</li><li>Current Spectrotel order workflow</li><li>New Rev.io order management capabilities</li><li>API and integration requirements</li><li>Whether Rev.io can support Spectrotel’s preferred future-state process</li><li>Decision framework for legacy Rev.io vs. New Rev.io capabilities</li></ul></article>
+        </div>
+      </section>
+
+      <section class="panel" id="sso-payments">
+        <div class="grid">
+          <article class="card span-6"><div class="label">Authentication roadmap</div><h3>SSO as baseline security</h3><p>Address Sanjay’s view that SSO should not be treated as an expensive custom add-on, including why the prior $25K quote was rejected.</p><ul><li>Spectrotel SSO requirements</li><li>Rev.io’s new authentication platform work</li><li>SAML / OIDC expectations</li><li>User provisioning</li><li>Role and permission mapping</li><li>Customer portal implications</li><li>Internal user access</li><li>Timeline and dependencies</li><li>Early design partner or pilot candidacy</li></ul></article>
+          <article class="card span-6"><div class="label">Payment experience</div><h3>Portal pay path</h3><p>Preserve Spectrotel’s customer portal while letting customers pay through Rev.io without a second login.</p><ul><li>Customer signs into Spectrotel portal</li><li>Customer clicks “Pay”</li><li>Customer lands directly in Rev.io payment section</li><li>No second login or re-authentication</li><li>Iframe vs. deep link vs. embedded payment component</li><li>Tokenization and provider implications</li><li>Upcoming provider transition, likely PayPal</li><li>Nuvei cancellation / token migration timing</li><li>Security and compliance constraints</li></ul></article>
+        </div>
+      </section>
+
+      <section class="panel" id="workflow">
+        <div class="grid">
+          <article class="card span-6"><div class="label">Bankruptcy handling</div><h3>Configuration, product gap, or workflow?</h3><h4>Current issue</h4><ul><li>Closing and reopening accounts creates duplicate account numbers</li><li>Reporting becomes messy</li><li>Pre- and post-bankruptcy balances need separation</li></ul><h4>Desired future state</h4><ul><li>Single account</li><li>Bankruptcy flag / status demarcation</li><li>Separate pre- and post-bankruptcy balance handling</li><li>Clear reporting</li><li>Collections treatment differences</li></ul><div class="pill-row"><span class="pill">Account-level flag</span><span class="pill">Balance bucket</span><span class="pill">Custom field + reporting</span><span class="pill">Billing status</span><span class="pill">Collections template</span><span class="pill">Product enhancement</span></div><div class="output"><strong>Output:</strong> requirements summary, short-term workaround, and long-term product recommendation.</div></article>
+          <article class="card span-6"><div class="label">Executive partnership rhythm</div><h3>Roadmap and communication cadence</h3><ul><li>Roadmap updates pushed directly, not discovered passively</li><li>API completeness miscommunication</li><li>Power BI dashboard surprise</li><li>SQL backup format change notice concern</li><li>QBR expectations and required attendees</li><li>Monthly or quarterly product updates for Sanjay</li><li>Direct notice for changes affecting custom integrations or backend processes</li></ul><h4>Proposed cadence</h4><ul><li>Monthly tactical check-in: Jamie / Client Success / Spectrotel operators</li><li>Quarterly executive roadmap review: Brent or executive sponsor + Sanjay + Laura / IMO</li><li>Product roadmap review: Leslie + Spectrotel product/engineering stakeholders</li><li>Change-impact alerts: direct email thread for backend/API/data format changes</li></ul><div class="output"><strong>Output:</strong> communication plan with owners and calendar cadence.</div></article>
+        </div>
+      </section>
+    </div>
+    <div class="footer">Spectrotel On-Site Visit Agenda • Tuesday, September 15, 2026 • Rev.io</div>
+  </section>
+</main>
+<script>
+  const tabs = [...document.querySelectorAll('.tab')];
+  const panels = [...document.querySelectorAll('.panel')];
+  const openCurrent = document.getElementById('openCurrent');
+  function activate(tabName, pushHash = true) {
+    const id = panels.some(p => p.id === tabName) ? tabName : 'overview';
+    tabs.forEach(tab => tab.classList.toggle('active', tab.dataset.tab === id));
+    panels.forEach(panel => panel.classList.toggle('active', panel.id === id));
+    openCurrent.href = `#${id}`;
+    if (pushHash) history.replaceState(null, '', `#${id}`);
+  }
+  tabs.forEach(tab => tab.addEventListener('click', () => activate(tab.dataset.tab)));
+  const initial = location.hash.replace('#','');
+  if (initial) activate(initial, false);
+</script>
+</body>
+</html>
