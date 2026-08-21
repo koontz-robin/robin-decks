@@ -1,0 +1,705 @@
+PAGE_ID: 3c0a59b7-e7b2-8033-ab0d-fea0082b148d
+URL: https://app.notion.com/p/Netcom-3c0a59b7e7b28033ab0dfea0082b148d
+PROPERTIES:
+- Stage: 3 - Initial Product Demo
+- Product Line: Billing, PSA Web
+- Last Meeting Summary: Discussed integration challenges, pricing, and next steps for Netcom demo.
+- Created By : {'object': 'user', 'id': '2aed872b-594c-8122-843b-00026718f719', 'name': 'Connor Flynn', 'avatar_url': None, 'type': 'person', 'person': {'email': 'connor.flynn@rev.io', 'email_verified': True}}
+- Series Start Date: 2026-08-18T19:59:00.000Z
+- SF Match Confidence (auto): None
+- Last updated time: 2026-08-21T19:47:00.000Z
+- Meeting Series: Netcom
+
+CONTENT:
+### 2026-08-21
+      ### Action Items
+      - [ ] Connor Flynn and Cameron Sharpe to check with the Rev.io product team on whether invoice data can be synced back to Zoho (needed for sales commission/gross profit tracking) 
+      - [ ] Connor Flynn to send a warm email introduction to a tax remittance partner 
+      - [ ] Connor Flynn to send a follow-up recap with all information from today's meeting 
+      - [ ] Schedule follow-up call for next Wednesday at 1 PM Mountain Time (tentative placeholder) 
+      - [ ] Andrew to evaluate the Zoho + Avalara path for usage-based billing before committing to Rev.io 
+      ### Meeting Context
+      - Prospect (Andrew) operates a telecom reseller business using SkySwitch, Zoho (CRM, ticketing, quoting), and QuickBooks 
+      - Current billing is fragmented across SkySwitch/Rev.io and Zoho; invoices also sync to QuickBooks  
+      - Growing product lines include Starlink resale and POTS replacement via Mixed Networks, requiring scalable usage-based billing  
+      - Primary goal: sales team continues working entirely in Zoho, while Rev.io operates as the billing backend invisibly 
+      ### Current Pain Points
+      - SkySwitch-hosted Rev.io instance limits custom product/service creation; adding non-SkySwitch items is cumbersome  
+      - No automated way to track and bill for data consumption overages (especially Starlink) 
+      - Avalara (AvaTax) was recently removed due to high API call costs (~$2,000/month for only 3 states); tax remittance is currently manual 
+      - Zoho's recurring billing module exists but is considered immature  
+      ### Usage-Based Billing (Rating Engine)
+      - Rev.io has a rating engine that ingests raw usage data (CDRs) via FTP, API, or manual upload  
+      - SkySwitch and Mixed Networks already have importers; a Starlink importer would need to be built  
+      - Starlink usage data is currently limited; a direct SpaceX partnership is potentially in progress which could improve data access  
+      - Rev.io supports allowances: included data for a flat monthly fee, with overage billed automatically via configurable usage plans  
+      - Worst-case scenario is a manual monthly CSV upload; fully automated ingestion is the more likely outcome for known partners 
+      ### Zoho <> Rev.io Integration
+      - A Zoho integration exists in Rev.io's new interface, syncing accounts, contacts, and opportunities when a deal is marked "Closed Won" in Zoho  
+      - The integration handles both recurring and one-time (e.g., hardware) opportunities 
+      - Gap identified: invoice data does not currently sync back to Zoho; this is critical for the prospect because gross profit and sales commission are calculated at the invoice level in Zoho  
+      - Rev.io team believes a bidirectional invoice sync is technically feasible via API and will verify with the product team 
+      - QuickBooks integration is also available; the intended flow would be Zoho → Rev.io → QuickBooks 
+      ### Onboarding & Implementation
+      - Dedicated onboarding consultants assigned; typical cadence is 1–2 hours/week 
+      - Estimated timeline: 30–60 days, leaning toward the lower end given the prospect's simple existing Rev.io footprint (~$4,000/month in current billables, few outside accounts)  
+      - Prospect can begin billing new customers out of the dedicated Rev.io instance immediately, before the Zoho integration and full data migration are complete  
+      - Priority order stated by Andrew: (1) Zoho-to-Rev.io integration first, (2) data migration second 
+      - Existing SkySwitch data is already on Rev.io and can be copied over without a formal migration 
+      ### Tax Handling
+      - Rev.io includes a SureTax license in the monthly fee for telecom tax calculation  
+      - Rev.io can introduce remittance partners who handle both upfront tax code mapping and ongoing filing  
+      - Prospect currently handles remittance manually through their CPA; acknowledged this is not scalable 
+      ### Pricing Discussed
+      - Standard pricing (12-month term): $1,000/month flat or 3% of recurring billing, whichever is greater; threshold is $33,333/month in recurring revenue 
+      - One-time (hardware/installation) billing does not count toward the 3% calculation  
+      - Onboarding fee: $5,000 one-time (50% at signature, 50% at 90 days) 
+      - Pricing tiers as billing scales (negotiable at renewal): ~2% at $100K/month, ~1.5% at $250K/month, ~1% at $666K+/month 
+      - August promotion: $750/month (instead of $1,000), no onboarding fee, for the full 12-month term  
+      ### Competitive Situation
+      - Andrew is actively evaluating a Zoho + Avalara path, estimated at ~$550/month up to $500K in billing  
+      - Main concern with Zoho/Avalara: inability to automate usage-based billing and overages at scale  
+      - Andrew acknowledged Rev.io's usage engine is the key differentiator but wants to confirm the Zoho path cannot solve for it before committing   
+      - Starlink growth is expected to push billing well past the $33,333 threshold quickly, making the percentage structure a key concern  
+      ### Other Notes
+      - Ryan (Rev.io Sales Lead) joined briefly and offered to engage before end of day if a decision is needed  
+      - Rev.io is building a new platform interface with the Zoho integration already included; full feature parity with usage rating is expected within a few months  
+      - Rev.io annual Summit is in Atlanta near the Braves Stadium; prospect was invited with short notice  
+      Yeah, we have Sky Switch and that's You know, it's kind of complicated in how we use that, but it's incremental reoccurring revenue. But because of us having that right, I kind of started thinking about using it for other things like Starlink and POTS replacement, all these different reoccurring services that we're offering. And the challenge has been is because that lives in the Sky Switch platform, We have fragmentation in the systems and the operations So I really want everything to live out of Zoho. but But the complication comes into play where...
+      Zoho is not really built for it to do recurring billing the way we want to. And then we also have this component with telecom taxes and fees. So, So somehow I want everything to be centralized and function out of Zoho. and I need some sort of reoccurring clean billing platform to help us. And then the last piece is Paul mentioned that you guys chatted about being able to track usage And Bill accordingly.
+      That's the part I really want to understand.
+      Okay.
+      That's okay.
+      Yeah, sounds good. Sounds like we're on the same page. We can definitely talk about that. What we were talking about before you joined very briefly is that for the Zoho integration, as you may know, we have the public-facing API documentation. So the integration is definitely available. It's not something that we can provide for you guys out of the box day one.
+      Yeah.
+      Um, Okay. I'm curious to hear, in a perfect world, how would you like to use Rev.io billing along with Zoho? What's the best parts of Zoho you want to keep?
+      Yeah, let me show you. So what I want to be able to do is my sales team, right, still live and breathe and function solely out of Zoho.
+      So I want them to be able to, let me just see if I can get into something. I want them to be able to quote here Um, I just pull up a quote so we can.
+      picture this properly.
+      I want them to be able to come in here, right, build a quote, And potentially have you on the back end, right? That's just facilitating the billing. But My sales team, doesn't even know that. Don't need to know it, it's irrelevant to them. That's just between us and our end customer and automating the billing process. but i want them to be able to quote and function out of zoho if that makes sense Um, Now, Zoho has There's Zoho.
+      billing module.
+      Okay.
+      Mm-hmm.
+      that I've yet to fully understand, right? Um, Well, I guess this is just taking me to books, but they have a reoccurring billing solution, Um, But I think there could be some limitations that you guys could solve for.
+      And I think the key piece would be is if you could somehow tie into our systems and monitor usage and build that accordingly, but I'm having trouble picturing that part. Yeah, we can talk about the usage piece, but Are you using Zoho for all of your service customer support?
+      inventory, Um...
+      We're using Zoho in a pretty big way, but we still have a lot of fragmentation. We don't have inventory set up yet. Um, That's that. So the end goal is everything. lives and functions out of Zoho right now. Zoho is primarily used for our ticketing system. are quoting Um. And really it's our CRM, right? So I mean, it's, All our customers are in here. The only piece that we were using Rev.io for is these reoccurring services, but it was all like in Sky Switch and for a while.
+      That made sense early on, but now we have more reoccurring products and services. Yeah. that are more subscription-based that we need to be able to do in a cleaner way Um, But I'm a little stuck right now, I think, just with the limitations of Zoho.
+      Yeah, well, we felt And countless sky switch retailers at this point move from the limited version of Revio to their own dedicated instance for the the reasons you just described, right? More services that they want to build to their customers, With the version of Rev.io that you're using today, you guys can't create your own products, You can't create your own services. You're kind of limited to them. Yeah. what they allow you to do.
+      If you guys had your own instance of Rev.io, you guys could build out bill for any types of services, recurring, usage-based, one-time. There's really no limitation there. So I think that's a huge added benefit that supports what you guys are trying to do.
+      Just to set the record straight, we can do that. I can add items in here that are not Sky Switch related. But I think to your point, it's a little messy. Like I have to go to Sky Switch. Yeah. you know, have them kind of approve it and do it. And then it doesn't work sometimes. Um, So yeah, anyways, you're right. Like we need to get out of how we're doing this.
+      Especially 'cause it sounds like you guys are doing Potslant replacement. There's some other, Starlink I think you mentioned.
+      And the Starlink one is really important. Um, Because what scares me about that is I don't know how familiar you are with it, but Starlink is new, it's kind of the wild, wild west. You got customers on a 50 gig plan, they use 500 gigs. So, We haven't gotten full throttle with that yet, but it's going to be a huge thing is what I'm anticipating. And I don't want to have to be manually worrying about how much data a customer is using.
+      So we could automatically bill based on usage, That's really big for us, but I'm just having trouble picturing how that portion works. Let me explain it to you because I know that's pretty important.
+      Yeah, let's start there. So we have a rating engine. where every client's unique environment, we set up usage importers too. So like SkySwitch would be an example of one importer. Starlink sounds like they could be another importer. Who are you guys doing POS line replacement through? Is it like UMA? Mixed Networks. Mixed Networks. Okay. I know that team really well. Great guys over there. So that would potentially be another.
+      You guys do the same thing with SkySwitch that you do with Mix, right?
+      Yeah, yeah, we do. Yeah. So the great thing about our rating engine is that really, we don't require clients to manipulate the data and put it into a specific format. As long as you can get us an output of the raw usage details, whether that's data, minutes, It could be text messages. we can feed that into this rating platform and you build these rating rules inside there that says, when you see this column, use this usage plan, create these charges.
+      So we can customize that based on what you guys can give us. So I don't have a lot of experience with Starlink. But if there's a way that they can get an export of all of the data across your customers to us, either dropping that in FTP site or through an API call, or even if your team has to manually upload a report once a month. Just one big bulk. Yeah, we run through and we recognize there's like a customer identifier in the data record usually.
+      You're signing a usage plan out to these customers and it's creating charges where appropriate. That's kind of a very simplistic way of describing it. It's obviously a lot more complex.
+      That makes sense. And I think I agree with you one way or the other. I mean, let's say worst case, we have to export a CSV file from mixed networks and SpaceX and whatever else we're doing, Sky Switch. and dump that somewhere and then you guys can automate the rest. That would be okay.
+      For Scott Switch and Mix, it will absolutely be automated. We have other clients using that. I think we have other clients that are reselling Starlink too. I just... I don't know the specifics around that usage record because like you said, Starlink's kind of the new hot thing. Um, But it's very rare clients have to manually upload those files once a month. That's truly worst case scenario. More likely than not, your team won't have to do anything and we're automatically receiving the file.
+      And we're creating those usage charges for you guys every month.
+      Yeah. And Andrew, talk to me about how you guys are, how are you billing for the Starlink services today? Is it like a flat recurring charge and depending on the usage consumed, do you bill extra? Yeah, and just to fill you in there, Let me see if I can explain this dynamic today. We had this program through a company called Peplink called an ASP program. So that billing was living in this Peplink portal.
+      And I hate it. It's a mess. some drama has occurred there, but Ironically this morning, I have some traction that feels really positive that we're gonna have a direct partnership with SpaceX. So... that whole thing will change and be different. And I think much easier if we can have that. um, So. I mean, it's almost like more to come there. I just I'm having trouble picturing that because I don't have that direct partnership yet.
+      Right. I mean, I just keep going back to worst case. we just have to manually get you the data. I'm sure we could do it even better than that. I'm okay with that versus us having to pull up each of our customers and make these determinations of usage and then manually update it. If it could be semi-automated, that would be big enough on its own.
+      Yeah, because typically when our clients do have that manual upload process, it is manual, but it's a, you know, I'm giving you a record. I am usually, right, my team is going to be manipulating our importer based on that record format. We're looking for like five major columns, right? Like device identifiers, like the type of usage, the actual quantity or consumption. I feel like Rev.io, especially through our partners, we get kind of siloed into like voice usage ingestion.
+      But it's really, we do this for voice. text messaging, mobile data consumption. And mobile data consumption is obviously very similar to the satellite internet side. So it's really about device identifier, whether it be a SIM or an actual physical device number, how much data was used. And then we have the concept of our platform called allowances. Where, kind of what you're describing, right? For X dollars a month, a client can have X amount of included data for that price point.
+      And if they go over that allotment of data, it defaults back to a usage plan that you build in our system to rebuild that consumption overage.
+      Yeah.
+      I'm guessing we can get the minimum info over there from our Starlink portal. I think the question is how much detail can we get, Andrew? We don't know that yet, but we can definitely get the device identifier, overall usage, price plans they're on, all that stuff we have in our portal today. We could just connect over API and feed that. And then I don't know if we need more detailed billing usage later.
+      But I don't think we know what Starlink's going to provide there in the midterm. Right now it's pretty limited.
+      Yeah, I mean, from what you're describing, It sounds like that capability is going to be there and we could probably connect all those dots. a little bit later, But I just wanted to be able to picture that. And I think, I think that makes sense to me. Yeah.
+      And I also want to let you guys know that, It's an interesting time at Rev.io because we've been building a brand new interface to this billing platform that we've been showing you.
+      And it doesn't, It's not quite yet at the point where we have full feature parity with what you guys have been using with SkySwitch with all the usage rating. But the new platform that we've built does have the Zoho integration for account, opportunity sync. I think exactly what you guys are looking for there. Once it gets to a point where you guys are ready to use it, you'll have the full flow that I think you're envisioning in your head.
+      It puts us in a bad spot from a sales perspective because we know it's there.
+      You guys would absolutely need to onboard the billing platform that we've been showing you so far. But behind the scenes, there's some really cool stuff that's getting cooked up that you guys are going to be able to take advantage of within the next...
+      few months.
+      But yeah, I think that's the piece that I really need to picture because it's like we have all these, like, let's just take this quote right here. This is just hardware, right? So we don't have recurring data.
+      Billing on this, but there's going to be times where we have a quote that's just subscription based.
+      And then we'll have other times where it's hardware upfront costs, And also the subscription based services.
+      So, So how do we, like I'm trying to picture how we dictate When we move that bill.
+      Into Rev.io and how that that conversion happens, In one way, I understand it.
+      Well, the integration is already built. We built it for another client already. Then they're using it. I'm just reading the documentation right now. It says it syncs automatically so your team never has to re-enter deal information by hand. It basically takes a deal in Zoho when it reaches a certain stage, which you can choose, like for example, close the one. And then once you mark the opportunity closed one, It brings over all that deal information to Rev.io. It'll create the customer.
+      It creates the contact. It creates the opportunity because we also have opportunities in this new platform. And if it's an existing customer, it'll match that stuff up.
+      So Yeah, but what about... You guys built it needed to do that. What do you mean?
+      Well, I mean, there's going to be times where there's just not subscription-basedWhich you guys still build, do you guys create an opportunity for a hardware transaction like this or no, you just build the quote?
+      Yeah, no, no, no, we absolutely do.
+      Yeah, so it's not, it doesn't have to be recurring. So like you guys could create a hardware opportunity and you market closed one, It brings it into Rev.io and you would build those charges at Rev.io. because the product catalogs are matched up. Okay. Okay, yeah. That's what the documentation says here.
+      Yeah, instead of the invoices, because like how it is. today, right? Like, We go from a quote and then it moves to a sales order and then it moves to an invoice.
+      Um, If you guys are going to work with us, we probably, we would need to take over all the invoicing. That's what we do best. Right. Zoho is a great CRM. Yeah, that's what I was talking to Paul about earlier this week is like, hey, if it is really purpose driven around getting a tax database in the Zoho platform, that's not really where we shine. So I do think leveraging us as the full AR system for everything.
+      We have some changes in our pricing schedule to talk through that, but that's typically where we fit the best for our customers today.
+      But invoices can also be here, right, in Zoho? like they're just going to go, they're going to move over to you. And then from there they can go out to the customer, but The reason why I say that is all the invoices right now are here, right? And they also need to go back to QuickBooks, which we have an integration from here to QuickBooks.
+      We integrate with QuickBooks. So if you use DOS, they would go from us to QuickBooks. So is there value in having invoices visible in Zoho? Like, does your sales team need to see invoices?
+      Yes, actually they have invoices have to at least be here and here's why. Because all of our sales people get paid on gross profit. And we don't calculate that. anywhere else but at the invoice level, And because of our internal processes, We have to calculate it there. Because basically we go in to a sales order verify the gross profit, And then we invoice it. And once it's invoiced, then that gross profit reflects to the to the sales teams attainment to quota. Cut.
+      It does sound pretty important. I don't think the integration today is thinking back any invoice information, but Connor, Cam, you guys should take that down and let's get with the product team and see what that would say. I don't know.
+      I mean, correct me if I'm wrong, but they can almost live in both places, right?
+      Yeah, I think we're doing this with other integrations. I just don't see invoices specifically called out, but that shouldn't be hard. I mean, it's just an API. Yeah, it's almost like you take my estimate. double check with our product team just to make sure that we're not over or under simplifying anything.
+      Yeah, I think that's just a key piece of it. I mean, the way I'm picturing it is we have a deal. Um, you know, it gets marked close to one, it goes to you, right? But that doesn't stop anything else. Doesn't stop our, our process today and how it flows in Zoho.
+      Yeah. You just gotta make sure that like, I guess the customer balance would start to build up if you're creating invoices and it's not getting paid out in Zoho anymore.
+      Well, we, Yeah, and maybe we'd have some duplicate... stuff there that we could try to automate. But I mean, our single source of truth from a financial perspective is really QuickBooks. But for the sake of having all the systems marry up, yeah, we would want to show it paid in all three. systems basically, but that's not the end of the world.
+      Yeah, I'm confident we're going to be able to make this work. But in the short term, you know, giving you guys the ability to build for all these different services that you've Started to bundle together, making sure you guys stay tax compliant, that you can build based off of usage and consumption. That's something I feel like we can help with immediately.
+      Yeah, let's talk about that. So basically SureTax will kind of just sit in the background of all this and handle Well, it's sales tax and Um, Telecom tax.
+      Yeah, handles all taxes. The licensure tax comes included in our monthly minimum. I was going to say real quick, I was going to say, because I know, are you guys leveraging... I believe you guys were introduced to us by Avalara, right? Are you leveraging Avalara as your compliance partner? How does that work today for the actual remittance process?
+      The remittance process is actually manual today. Okay. We had Avalara plugged in into Zoho. just on the sales tax side. So that's their Ava tax. The Ava tax, yeah. Yeah, I'm familiar with it. Because of our processes, they were kind of billing us on API calls and we're only trying to calculate sales tax in three states. It's relatively minimal. And we were paying them like, $2,000 a month plus. So we ended up nixing that just this week because we can just calculate the sales tax inherently and then remit separately to the states, to those three states.
+      Are you guys using SureTax with SkySwitch today? We are. Okay. I do feel bad now that I know that. I completely forgot, but yeah, Avalare was the one that told you.
+      Yes.
+      No, you're okay. We're cutting them out of the equation. No, we had already cut them out of the equation.
+      As long as you guys tell them that, if they come back and ask you about it. Like, Rev. Io did not explicitly tell you not to go with Avalare.
+      Yeah, no, no, no. We made that call on our own. And the fact that you have the sure tax kind of inherently in the, yeah, I really liked that idea. Yeah.
+      That's one of the differences. The integration works the same way. We just don't have the same wholesale partnership with Avalara for the tax database side. So yeah, we can provide that sure tax license and our pricing. And then we've got some good options for remittance partners as well. Typically, they help our clients in two fashions. They do the upfront mapping to ensure that everything is going in with the proper tax code.
+      When you're billing people, you're not over or under taxing. And they also help with the remittance piece. internally for now, but if that ever were to change, we've got a lot of great partners in that space we can introduce you to.
+      Yeah, I think we'll, I mean, we've been able to make do kind of just having, you know, our CPA independently do it, but it's not sustainable or scalable. So, I think we take you up on that as well.
+      Okay. Yeah, we can, I've got a partner in mind that I can actually send you just a warm email introduction too, if you don't mind it. Yeah, and guys, I had to drop. I just wanted to be on the first 30 minutes here. I'm sure you guys are gonna keep going, but we're excited about the partnership. I lead the sales organization here. So if there's anything we can do, especially if you're trying to make a decision today.
+      Like him and Connor collect that information and I'll make sure I regroup with them before the end of the day.
+      Sounds good, Ryan. Yeah, thanks for your time. Nice to meet you guys. Yeah, you too. Good job. So yeah, guys, just so you know, What I was kind of in between on I met with Avalara earlier. is Do we just do everything out of Zoho have them use their billing tool that Apparently they have some new features on that that kind of helped us. But It's still a little... immature and then just have that Avalara plug in to handle the like on taxes, but The limitation I see there is the usage component.
+      That scares me. in our ability to scale and maybe not collect everything that we're owed and not bill properly.
+      So I think that's reconciliation, right? Cause you know, you know, I'm not sure. I'm not sure whose role it is to like review CDRs to make sure that all your customers are in plan, like who's doing the actual billing, but that's, There are two things that make a very specific telecom billing platform. It's usage ingestion and rebilling to make sure when you're getting charged extra by your vendors that you're able to pass that through to a customer without having to manually dig into a 10,000 line of self-document to go through CDRs.
+      And the other side is taxes, right? So that makes total sense. That's why we have been positioned in the industry so long because we do those two things plus the recurring billing very well. Yeah.
+      Yeah.
+      And I think the big piece of this is like this, this all sounds good. I just want to be able to picture it all. That's where I've kind of gotten stuck on making decisions is, If I can picture it somehow and then understand that implementation process, I mean, do you guys, will you guys offer us some assistance in getting this all provision and set up and implemented.
+      Yeah, yeah.
+      Definitely yeah, I'll let Connor talk through that, but that I'll say this is I'll probably steal a line that I gave everyone, but we definitely don't just spin you up an environment and say. let us know when you need help. Best of luck. So yeah, talk more about implementation and just how the migration goes. Because you guys are at an interesting space where there's probably going to be data in other systems plus what you already just have natively in your Rev.io environment through Sky Switch.
+      Yeah.
+      onboarding team here at Rev.io all in the States.
+      So it's an interesting project plan. So I'll let you dig into that a bit more, Connor.
+      And we'll assign you, you know, a couple of onboarding consultants who will meet with you on some sort of recurring basis to get the platform set up with all your data correctly and get it configured the way you want it to. So typically it's, you know, one to two hours a week commitment for those recurring calls. Of course, if you know, if you need to have some flexibility on that, that's definitely something we're willing to work with.
+      We don't give you like a set amount of hours or anything like that. For a company of your size, I would say that process typically takes two two to three months, just depending on how you can juggle all the other priorities you have in your business. But short answer to what I just said there is that it is a very structured and guided process for you guys. So you're not just flying dark.
+      What's the fastest timeline?
+      Like if it's a major priority for us to get it done? I mean, I've seen people do it in 30 days, right? Like that, that what they did, they funny enough, like the I'm referencing one person that they were a sky switch reseller using Rev.io. They wanted to build their own integration from HubSpot into the Rev.io billing system. And that was one of their main drivers of making this decision. They kept basically all their configurations the same that they had existing in their current billing setup with us.
+      Because what we do for the SkySwitch environment, we pretty much just copy and paste that data over, right? Like we're not having to do a formal data migration process. It's already on Rev.io. So... I would say, depending on the level of complexity from the other customer information that you want to bring into Rev.io that's not currently in your Sky Switch environment, that's a long pole in the tent.
+      The other long poles in the tent would be around us building out usage importers. So that's just something that my team takes time to do to build out like the Starlink hooks, right? Or just your POTS line replacement with next or mixed networks. Just combine both of those words with mixed networks. But those are two like the longer things that just take time for my team to do. We have seen some clients that would say, hey, like we'll continue to build out the usage importer, but we'll have recurring billing going right now.
+      that concerned about the usage consumption overage to end customers. So I think 30 would be possible. I think the thing that scares me about committing to 30 days for you guys is the unknown on the data that's not in Rev.io currently today. But...
+      I don't know. There's not. There's not a lot there. Um, I mean, look, this is... This is our Rev.io today. Okay.
+      Oh yeah, no, I was looking at your instance and I saw there were like four, around 4,000 a month in billables each month. So it's, Yeah, that's it's this stuff is because it's literally just a copy and paste like normally for anything that you'd want us to bring in from Zoho, we would maybe get API credentials to migrate that via API. But we know for this, it's pretty much like a week of work, maybe by my data engineering team just to move everything in here into a new instance of Rev.io.
+      Well, yeah. And then, I mean, the Starlink thing is, is like nothing right now. I mean, because of That's like at a perfect time to do it. I mean, that's going to be the biggest piece. It's going to be a ton here in about six months. And then mixed networks is the same thing. It's a new partnership. There's not a lot there. There's like four customers. to look at. Mm-hmm. Yeah. And then the Zoho stuff. I don't think you need to migrate anything.
+      I think it's just more like, from this point forward, We fill everything out of Rev.io.
+      Yeah, we want to bring over the customer account, maybe like the starting account balances of those customers. But yeah, that's typically how it works. There's normally a line in the sand date where we do a comparative process where after we get all your data in the system, we have like a 21-day period for any changes to be made to that data. That's normally when an additional day load comes into play to true up anything.
+      Because we know business goes on.
+      If you guys have other customer notes and need to hit the Rev.io platform in the implementation process, we do that reconciliation update essentially, and then you guys are live in the system.
+      So that's good. I mean, that's, you know, those are the two levers that you can typically pull just to make the project duration get shrunk a good bit, but I'll be clear to it. We give like we, We're a big under promise over deliver type of firm. I think 60 is like super, super ultra conservative, but it's a pretty straightforward use case. There's not many existing customer accounts in general. And the fact that there are very few outside of Rev.io, it leads me to believe that 60 is going to be overkill as a timeline duration.
+      I really think so, man. I mean...
+      That... I hear what you're saying on Zoho, but I don't really think you have to do that. Although, I mean, it's just invoices that are one-time invoices.
+      we've already invoiced.
+      Yeah. Okay. Yeah. In that case, it would really just be about like, okay, if you want that record of account in the system and like bringing over any starting account balances, then you're right to that point. It's just great. Anytime there's a new invoice that needs to go out, it comes from Rev.io rather than Zopo. Right.
+      Yeah, yeah. And then you'll, as those are created, right, with the integration, you'll build the customer experience. database and all that stuff, but the only Lyft is really this.
+      And a couple with Starlink and a couple with mixed networks.
+      Um, Yeah, I think I think we could get all that done.
+      Are we able to start doing new billing out of Rev.io while we build the integration? I was about to ask that too, yeah.
+      Yeah, yeah. So if you want to just leverage our API for you guys to build the integration yourselves, yeah, definitely. I guess, yeah, because, yeah, if we, you know, say tomorrow I want to add another customer with a recurring service, we'd rather bill out of Rev.io to the direct Rev.io route today while we're figuring out the integration and data dump and copying over of, you know, the existing records because, you know, we have that need.
+      And rather than keep putting it in the old way, we'd rather just do it the new way while we're setting this up, however long that takes. Yeah, definitely. That can absolutely happen. Normally, it's... Because typically we don't tie in like any custom integrations into when you can start using the system, right? We're not going to hold you guys back from going live and saying, hey, like we understand there are going to be some manual processes between Zoho right now, but we want to make sure that we can start billing our customers from the new environment.
+      And then in the back end, you can do all the work that you want to from a Zoho integration standpoint.
+      I think that's the more important piece. To me, we have two steps, the migration of the existing data, Yeah. And then But the most important thing is to be able to quote out of Zoho And have. Zoho talk to Rev.io like that's That's the piece I'm most concerned with. Like, I would almost want to do that first. migrating everything over from a billing perspective. That's a secondary priority. I mean, I want that to happen, but. all of it's happening today.
+      My limitation and the thing that's hurt me is to not be able to do everything I want to do out of Zillow. Yeah. Yeah. Okay. So the timeline on that really, the more I think about it is the most important piece. As soon as we can get Zoho talking to rep.io, the better.
+      We're eliminating duplicate entry at that point. So yeah, that's huge. Yeah.
+      Yeah.
+      And then Let's talk about pricing. I do need to understand That looks like. Yeah, for sure.
+      Yeah.
+      Connie, you wanna pull that up?
+      Hold on a second.
+      Yeah.
+      All right. You guys can see that. All right. A few different things I want to talk through here. So first off, this is a 12 month term. up here and we have you guys at our starter pack. So for the monthly license fees, It is $1,000 a month. or 3% of the revenue that you're billing out of the platform, whichever is greater. The way that this works out is that it is a flat rate of $1,000. Until you exceed billing $33,333.
+      out of the system. So I know that would give you guys some wiggle room to grow. And it would just be a flat thousand dollar rate per month for you guys. And what this is just for recurring product types. Any non-recurring product types you're billing out of the system does not factor into this number right here. That makes sense.
+      Okay.
+      So that those are just included in the thousand.
+      That's right.
+      Correct.
+      Yeah.
+      Yeah, anything. You guys have seen the product catalog, even though you can't directly impact it yourselves. So anything that has a one-time product type is not, you know, because you guys have something you're doing large hardware deals as well, right? Or large one-time installations. So in making this like service operations platform, we're seeing a lot of businesses do the same thing. So we removed anything that was like a one-time product from being calculated in that percentage.
+      One time is completely free and let's say, you know You're close to your percentage overage, you're at like 32,000 if you build five grand in one time services. that wouldn't put you guys over to the 3% overage period. Okay.
+      Okay, and to keep moving here.
+      That's something to think about.
+      Moving here for the options, as you can see, we have a bunch of different options. that you can add or remove at any time. And then the CDR storage and formats. So we have a six month production cost at a fraction of the penny. and that just covers the recurring monthly fee to cover the storage of the usage records rated from the prior month. All of these usage records are processed through our engine and it's stored indefinitely in our data centers.
+      So that's what that charge is coming from. And then CDR formats, that's the different type of CDRs you would be importing to the system. Have you at two right now? And then as we've already discussed, the share tax tax database comes included as a part of this $1,000 a month.
+      Got it.
+      Okay.
+      Any questions on... Okay. And lastly, I guess we already just talked about this, but...
+      As I was saying, we provide a ton of resources to help this platform grow. get stood up as quickly as possible and for the migration to be as smooth as possible. All those resources I explained comes out to a one-time fee of $5,000. Half is due at Signature and the other half is due 90 days later.
+      Okay.
+      I guess start off. Any thoughts, concerns, questions about how the pricing works?
+      Yeah, a little bit.
+      I mean, I think the big thing that I have to figure out is what I mean, going the inherent. Zoho/Avalara path is definitely more cost effective and probably cleaner. The only piece I'm hung up on on that side is how to Automate the usage. Um, because the $33,000 a month will blow right past that. So then what does it move to?
+      Yeah, we typically don't have like standard percentage breaks or decrements. That is the way our pricing works, though, to be totally transparent. So like if you guys came to us with like $200,000 in existing recurring billing, we would have a higher monthly minimum commitment, but a lower overall percentage. So yeah, we don't have that. I'd say we don't lock people into that percentage overage. When you guys do blow past this, we typically have ideas where we can talk about One, renewals with lower percentage, maybe higher monthly minimum commitment, but I I was going to ask that because I know a lot of these are new business lines.
+      Do you have any forecasts in place of what you think the recurring billing would be with all your product types?
+      Do I repeat that question?
+      Yeah, you're good. Did you have like an idea about, because I know you're billing today in Sky Switch was lower, but I assume like the lion's share of billing was in Zoho today. Do you know exactly what you're currently billing from a monthly recurring perspective?
+      The monthly recurring perspective is basically what you see in Sky Switch plus a little bit more. The problem is Once this Starlink thing gets going, That adds up real fast. Like we'll have accounts. spending that much. Got it. per month. So that's my only concern is is that really impacts the margin. Um, But I mean, this is what I needed. I have some things to sort through here. with Zoho and trying to figure out What the best path is the big thing I'm assuming attracted to is to be able to automate the usage.
+      Yeah.
+      And I think that's one of the things that there are very few providers out there that do that. I know I don't want you guys to have to try to build out logic and rating engines on your own. It's a big reason of why the commercial software like us exists, but I totally know the cost is a big factor here. I know you're trying to make it, you know, go ahead, Connor.
+      That was me.
+      -
+      That might have been me clearing my thoughts. Oh, sorry, Paul. Sorry to put you on the spot, Connor, when you had nothing going on. I think you were saying that you don't have published tiers of lower rates as you go up in quantity. But then I think you said you do in some situations for larger customers increase the minimum, but decrease the rate. I think we need to understand that because this is, like you said, the $33,000 is...
+      We're going to blow past that quickly. We're holding back right now until we get this into place to really unleashing the services that we're going to be putting on here. And the thing about Starlink as well, specifically, I mean, that's, as you know, from inventory levels, it's going crazy. You can hardly find them. And it's only going to continue to accelerate. And so I think we need to understand if we're going to be billing hundreds and hundreds of thousands in this, Or more, does that rate, do we have to wait, what is it, 12 months on the term before we can renegotiate the 3% rate? That makes me uncomfortable.
+      We haven't talked about post-onboarding supports. We have a full client solution advisor team. as well as an account management team. And they meet with our customers at least quarterly. And normally, like... We're proactive. We see any clients that are well over their allotted billing quantity. We're proactive about getting those renewals in place. I think to be totally transparent, right, if you guys are looking to make a quick decision by the end of this month, and I know, Andrew, you mentioned that you're trying to have some decisions made today, I think we could be open to adding in some planned decrementations of when you hit a certain amount of monthly billing, maybe your percentage goes lower and the minimum is increased. I think those are things that we're open to talking about.
+      on like our out of the box quotes. But that being said, I want you guys to know that all this is negotiable and the way that the rates decrement, it typically goes towards a, once you get closer to $100,000 in billing, that's when we go towards 2%. $250,000 in monthly billing is typically when we're getting to 1.5%. And then normally towards that $666,000, like two-thirds of a million to a million dollars in monthly billing is when we're going down to 1%, sub 1% for customers that are billing a million a month over.
+      Yeah, because Starlink's more of a quantity play.
+      They're tough on their pricing, so the margins aren't great. So yeah, the more this eats into it, it costs us big time.
+      Yeah, I mean, to put into perspective, I was just doing some ads. I have just one customer. that will bill 50 grand a month. Just right away, like kind of chomping at the bit to move forward. Um, I mean, it's going to take probably another month or two before that moves over, but that's just One. customer before we even have like this whole go-to-market strategy i could see this being hundreds and hundreds of thousands really fast once we get the Starlink thing up and going. Okay.
+      Okay. Good to know. What are the things that you've seen here?
+      I mean, I'll give you just kind of where I'm at and based on what I got from Avalara and Zoho recently. That's probably the cleanest thing for us to do. The thing I have to figure out is what are those limitations and then you know, that helps your, value proposition, but if we're able to accomplish some of those missing pieces, it's, you know, like 550 bucks or I'm sorry, 550 bucks a month up to $500,000.
+      Because all we really need at that point is Avalare to to facilitate the tax portion in the Zoho Recurring billing is already there. We're already paying for it. Okay. So it's it's it's it's it's a pretty steep jump. Um, in cost, unless it's just simply not doable, you know, then we have to come back to you. Okay.
+      That's understandable. I think I know Connor, we had some promotions in play today. I'm putting together some ideas around here. That's helpful to understand. I did want to ask, but the reason why I asked about forecasting is like, if you had a customer to your point, you do right. We're immediately that one customer is going to put you past that percentage overage. Right. I don't want to start off things and like where you guys are immediately in variable expense. Right.
+      I want to make sure that we can forecast a fixed expense for you. So I think we, Because you mentioned that it's around 550 bucks for like the 500,000. Is that like, is the Avalara database pulling like a like 1% on telecom taxes? Or is that just like additional scope work that you've kind of phased out to, to review on building that with Zoho?
+      Yeah, I mean, that's just Al Valera, right? So, but... you know, with Zoho's, If what they're saying comes true that they're going to have these new features to accomplish everything we want to inherently just already included in the license that we're paying for. Um, It's just hard to it's hard for you to compete with it because you're not you're not doing just the taxes, you're doing much more than that.
+      But if we're able to do that in Zoho, it just, it limits this fragmentation and worrying about APIs and three different systems to be thinking about. TheThe only piece, I'm really attracted to here is usage. Yeah. Yeah. Yeah, but I have some ideas around how to solve for that so that that's what i have to explore uh between now and the next time we talk Okay.
+      And I was curious, because it sounds like, I mean, again, you know, you shared that you're leaning that direction. I think that makes sense from a cost perspective. Was there, because I do know, I think the big risk in that process is the usage, ingestion and rebuilding and ensuring that it's not going to take too much time to pass through overcharges to clients. Yeah.
+      was there a price point that you had in mind that, If we're here, the Rev.io upgrade, I guess, per se, makes perfect sense. I was curious, just if you had a certain budget in mind. I wasn't sure if it was matching the $500 that you got through.
+      Yeah, it was probably somewhere more like that. But I think what's hard for me on what I'm looking at here is it's not $1,000 a month. It's going to be much, much more than that.
+      Um, So I really think just transparently, The other path is ideal for us.
+      unless it's not possible. So I have to go back there first before I can really give you any concrete answers.
+      um, If we just can't do exactly what we need to do through the Zoho Avalero combo, then we have to come back to the table.
+      But if we can, then there's just no...
+      there's no business justification there because the drawback here in addition to the price is Now I have to have another integration in place between, you know, and I have Zoho talking to QuickBooks and Zoho talking to you. I mean, it...
+      I'm trying to stay away from that. But I do see the value. I just...
+      I just got to do some more research before I can start making decisions.
+      Yeah, totally understand. I think that it will be there are some difficulties in like. figuring out the usage component. I think we figured it out, right? So it's not impossible, obviously, but I think there's typically time spent on maintaining systems or just processes in that manner. So I definitely want you to like further discover that. I do think though, like, again, if you're, if you're looking to, cause we do have, we had some, we were prepared to talk through some promotions that we have for just month end.
+      We're, you know, candidly we're a month, month end closed sales business. So we're, we do base things on the month. Some ideas around pricing that we could do one around tiers. Cause I think that's, you made that pretty clear, right? Hey, like with Starling specifically, that is going to push you very deep into the overage very fast. So I had some ideas about possibly building in some like stair steps essentially.
+      Yeah, let's not do that. Do that yet.
+      Yeah, I want to make sure that's what I was saying. I want to let you know, hey, this is where I'm leading towards right now. Yeah, yeah. I know you got to do some due diligence on your end. So right.
+      Yeah. Let me get all the variables to the equation and then we can we can come back to you and have that conversation and see if we can get creative.
+      That's fair. I think Connor, do you want to share just what our like August promotion is just so you have that information? We'll obviously send this to you in a follow-up so you have it. And do you think by maybe this point next week, it may make sense to catch back up just to see what's occurred. Okay. You got two minutes just so you know. Yeah, I'm checking the time.
+      Yeah.
+      That's why I was shutting up and letting Connor talk through the promo.
+      So, I mean, it's pretty straightforward here, right? It's 200, it would be 750 a month instead of a thousand for the, for the full term of the contract, 12 months, right? There would be no onboarding fees for all the resources we'd give to you. This is a part of our new interface right here. This would not apply to you guys, but if you were to move... To our new interface within the duration of the contract, I guess it would apply to you. And we do have our summit coming up.
+      I know we just met within two weeks of it. It's here in Atlanta. If there is some sort of chance to have you guys come down here, we'd love it, but I definitely know it's short notice and far away. Um, So yeah, that's our promotion. Yeah.
+      No, yeah, if possible, love to have you guys down.
+      We we we hosted every year for clients and partners were in Atlanta and it's close to the the Braves Stadium. So one of our networking events networking events is actually in the stadium so. But yeah, I think like I said, I've got some ideas specifically around. I know the concerns around the percentage itself. that I want to talk to if the opportunity presents itself. And then obviously we have that promotion rolling all August. And that credit's not really tied to anything.
+      That's just like a standard credit to your monthly recurring fee. So it'll be 250 bucks a month off No matter what your billing is, we'll just provide that credit for each individual month for the 12 months.
+      Okay, yeah, no, that's good to have. Let's circle back. I'm not interested at all. I am interested.
+      Okay.
+      I just got to get all the pieces to the puzzle together and then I will come back to you.
+      Could we get, and I'll follow up with you beforehand, check in, but could we get time on the calendar to Next Wednesday at 1 p.m.
+      Yeah, Connor, what's our calendars look like next week? I know we're right at time.
+      Put it on as a placeholder.
+      Mountain Time.
+      We'll let you know if we got it adjusted, but we can use it as a placeholder. Perfect. Okay.
+      Perfect.
+      Okay. Sounds good. I'll be sure to send over all the info from today's meeting as well. Yep. Nice meeting you, Andrew. All of a good one.
+      Thanks guys.
+      Thanks everybody. Good to meet you all. Good to meet you, Georgia. Good to meet you, Andrew. Bye.
+      Wait.
+      Hello? Oh, it just cut out. That was weird. Sorry, I think... That must have been my AirPods.
+      Everybody's coming over around like four o'clock tomorrow. Really just hang out and drink, really? Celebrate Spencer's birthday? That's a good question. I don't know. What are you doing?
+      Oh, nice. How are they? Cool. That's good. Where'd you go to do that? Oh, nice. Well, that was a nice view. I'm sure that was fun. Yeah. Yeah, of course. Apparently the Uber honked the horn at him. I don't know. I'm sure it was just like a polite beep letting him know that. Hey, this car's an Uber, you know. Yeah, that's what I was saying. What are you doing? You chilling the rest of the day? Awesome.
+      Um, it's good. I just got off my one and only meeting of the day. So it's a good time for you to call. Looking at a big old pile of dry clean clothes I need to take. Yeah, that's part of it.
+  ### Agenda
+  ### Follow-up Tasks
+### 2026-08-18
+      ### Action Items
+      - [ ] Connor to send recap email outlining planned demo agenda for review 
+      - [ ] Paul to discuss recap with Andrew and reply confirming or adjusting demo topics  
+      - [ ] Paul to send Dylan's contact info for demo invite 
+      - [ ] Schedule demo with Connor, Cameron, Paul, Andrew, and Dylan 
+      - [ ] Clarify Netcom's SkySwitch contract terms and any exit implications 
+      - [ ] Discuss Avalara vs. SureTax database options ahead of demo 
+      ### Participants
+      - Connor Flynn (Rev.io) — account executive, recorder
+      - Cameron Sharpe ("Cam") (Rev.io) — sales manager, joined late 
+      - Paul (Netcom) — chief strategy officer, recently hired full-time after prior consulting engagement ; former 20-year Verizon veteran 
+      - Andrew (Netcom CEO) — unable to attend due to a customer meeting  
+      ### Netcom Background & Current Situation
+      - Netcom is a fast-growing company that has outgrown its systems; currently pausing growth to streamline operations before resuming  
+      - Services span a wide range: PBX/UCaaS (via SkySwitch), Verizon One Talk/LTE desk phones, POTS replacement, satellite internet (Starlink), hardware, managed IT, e-fax, and more   
+      - Currently uses Zoho for CRM, inventory, invoicing, order entry, and ticketing (~90% of operations)  
+      - Uses Avalara for telecom tax compliance; Andrew was meeting with Avalara the same day  
+      - Accesses Rev.io today through SkySwitch's white-label/reseller environment 
+      ### Key Pain Points
+      - Duplicate entry: Sales reps must enter orders in both Zoho and SkySwitch/Rev.io, even for non-SkySwitch services  
+      - Multiple quotes/invoices to customers: Customers receive two or three separate quotes due to disconnected systems  
+      - No API access through SkySwitch: The white-label environment does not expose Rev.io's API, making automation impossible  
+      - Tax data across multiple systems: Telecom taxes are not automatically flowing into Zoho 
+      - Usage visibility gap: Starlink and other data services involve manual or unautomated billing for overages  
+      - Inventory management has been a pain point as the company has scaled rapidly  
+      ### Rev.io Direct vs. SkySwitch Reseller
+      - SkySwitch white-label Rev.io has no API flexibility; this is a multi-tenancy constraint, not a deliberate restriction  
+      - Rev.io Direct offers: fully open, publicly documented API; unlimited bill profiles (vs. one in SkySwitch); custom reporting; usage ingestion and rebilling for non-SkySwitch upstream carriers  
+      - Rev.io works with ~200 upstream carrier partners to digest CDR/usage data and enable rebilling to end users 
+      - Rev.io can automate Starlink/satellite data overage calculations and billing 
+      - When customers migrate from SkySwitch reseller to Rev.io Direct, Rev.io works with SkySwitch and commissions them for the transition 
+      ### Rev.io Platform Overview
+      - Telecom billing: Taxation, usage rating, CDR ingestion, quote-to-cash 
+      - Tax database: Included in pricing (SureTax license); Avalara Communications database available if Netcom prefers to keep Avalara for both compliance and calculation 
+      - PSA (rebuilt TigerPaw platform, launched ~September): Sales management, ticketing, projects, inventory, purchasing, multi-location, asset tracking — shared real-time database with billing platform, not a separate integration   
+      - Payment processing: Credit card and ACH; Rev.io aims to at least match existing rates 
+      - ERP integration: Webhook-driven integration (e.g., QuickBooks Online); similar integration with Zoho Books could be built   
+      - Pricing model for Direct: higher monthly minimum than SkySwitch, percentage-based but excludes flat recurring billing that doesn't generate telecom tax (e.g., managed services) 
+      ### Zoho & Integration Strategy
+      - Near-term priority for Netcom is pulling telecom tax data directly into Zoho without going through SkySwitch 
+      - Rev.io Direct open API would enable a Zoho integration (e.g., closed-won deal triggers customer account creation in Rev.io)  
+      - PSA capabilities noted as a longer-term opportunity, but billing consolidation is the immediate priority  
+      - Netcom uses Zoho Books for accounting; a webhook-driven sync from Rev.io to Zoho Books is feasible 
+      ### Planned Demo Scope
+      - CDR ingestion from non-SkySwitch upstream carriers 
+      - Managing diverse service types within a single customer account 
+      - Quote-to-cash process and tax automation 
+      - Connor to send recap for Paul and Andrew to review/adjust before demo 
+      - Demo attendees: Connor, Cameron, Paul, Andrew, and Dylan (ops) 
+      ### Timeline & Decision Process
+      - Decision-makers: Paul and Andrew (CEO); Dylan will weigh in on operational/integration implications   
+      - End of August considered aggressive; end of September is a realistic target for moving forward 
+      - Netcom is motivated to move quickly given their current systems-consolidation window 
+      - No strong attachment to existing tools; Andrew "moves fast" if a solution makes sense 
+      I'm doing good.
+      Okay.
+      I'll be on video here in about five minutes. I'm still in route. I thought I'd be at my landing spot by now, but... Yeah, doing good. I was on a camping trip this morning actually, so traveling home from that.
+      you It's all good. Oh yeah? Are you guys out in Colorado?
+      Yeah.
+      Okay, nice.
+      So it's based in Colorado and Andrew's in Colorado. I'm up in Washington State, Spokane, Washington.
+      So...
+      Yeah, out in the Northwest. We did.
+      If I had to take a guess, you went on some crazy nice hiking trails with some nice views. Yeah, that's awesome. I've always wanted to go out there. So my buddies are planning on going to Banff.
+      Yes. Yeah. Yeah.
+      I might have butchered that pronunciation there.
+      Yeah, you did it. No, I was right. Yeah. Thank you. It's gorgeous.
+      Okay, yeah, yeah. It just, it looks amazing.
+      Yeah, it's gorgeous in the summers. Ow.
+      Yeah I'm located in Atlanta. That's where we're headquartered. So I don't get much of that down here. Yeah.
+      Okay.
+      Yeah, Atlanta's beautiful, though, too, and in a different way. Yeah, that's right. So Andrew's actually not going to be able to join us today.
+      Yeah, it's got the Chattahoochee. Yeah.
+      Okay.
+      He had to travel for a customer meeting. So I'm going to jump in here for him.
+      And just to introduce myself, I started with NetCon a couple of weeks ago, two weeks ago. But I've been doing work for them as a consultant before that. I'm their chief strategy officer. I come from the wireless industry, though.
+      I was at Verizon for 20 years.
+      Then over B2B sales, technical sales, and then...
+      Took some time off to go learn AI and consulting, and that's how I ended up with Netcom.
+      Yeah.
+      Yeah, yeah, we'll definitely talk about that.
+      So yeah, I'm excited to work with them. And I'm doing a lot of things with automation and AI in their business. And we've been just looking at all their systems and trying to figure out if everything's running efficiently and trying to understand what's going on.
+      That's kind of what this call is for, just to make sure it's actually a good fit.
+      Bye.
+      Just because today at NetCon, there's some duplicate entry that they're doing in different systems, and I'm trying to figure out ways to streamline that.
+      For, you know, make you spin your wheels on a demo or anything like that. My agenda, I guess we could wait for some of the more important things until you get to, you know, when you're not in the car. But I just had a very short PowerPoint to go over, just give you a better understanding of like where Rev.io kind of inserts themselves in a business like yours.
+      So I thought, I'm not sure what the agenda exactly was for today, but that's something I'd love to talk about is just kind of what that looks like. But yeah.
+      And then from there, see exactly what you're looking for, like getting rid of duplicate entry is a great start.
+      Yeah, perfect. I'm just just pulling up here. But just to kind of lean into a little bit more about like what my women had understood
+      And then from there, of course, we'll see if a demo makes sense. Palsy. Yeah.
+      I'm using a platform called Zoho to do a lot of their CRM and inventory and invoicing. They have a lot of modules. It's a pretty flexible platform. But when it comes to doing sales tax and different kinds of taxes, it... It has seemed limited to them, and so they've used different platforms for that. And my understanding is that they're using Sky Switch as a way white-labeled solution to kind of enhance their PBX offerings today that they have. And then through that, they're connected into Rev.io, which is helping out with telecom taxes and that kind of thing.
+      But the challenge I'm hearing from the sales teams is that they're having to go put an order into Zoho, and then even if they're not using any of the SkySwitch products, they are still having to go through that to get the Rev.io taxes applied to the monthly recurring. And so I'm trying to figure out if there is like an API that even though it's going through Skyswitch that we could get direct access to to be able to automate that entry.
+      So it's not sales reps entering twice in two different systems.
+      Yeah.
+      So that's kind of primarily what I was trying to learn or if there's any other ideas there.
+      Yeah. So first off, so the white label version of RevIO doesn't really have any flexibility on the API. It's really one of the bigger reasons that we see people come to the full RevIO billing environment. Because within there, there's a completely open API. It's publicly documented. I could send it to you if you want. Um, and... But you saw it in the past.
+      I saw that and that is an option for us.
+      I just didn't know with the sky switch piece if that was even possible.
+      No, not with the SkyScoops, please. I would say, I'm curious versus Zoho, you said sales, inventory and invoicing.
+      I didn't think so, though. Okay.
+      What about for like service, like tickets, projects Yeah.
+      Yep, yep, yep. Yes, they do tickets. and I'm still learning, but they use it for probably 90% of what they do, order entry.
+      Okay, cool.
+      And they're willing, you know, really would like to go as much in one system as we can and do some consolidation. But, you know, telecom taxes, I know that's a tricky one being in the industry. And that's not something that a lot of people specialize in. So, yeah, I think, you know, we talked about going direct if that opens up doors and, you know, we're flexible at this point. Just trying to get that.
+      Yeah, so there's a couple things I want to go over with you in that case.
+      I'm just trying to log in here. Uh...
+      Yeah, if you need to take a second, you're good. No problem.
+      All right, let me just dial right back in from my other computer here. Perfect, thanks.
+      Yeah.
+      All right. Perfect.
+      There we are.
+      All right, all good to go. Great, great.
+      Good to go!
+      Cool.
+      Okay, there's a couple things that I want to talk to you about, but I want to kind of give you the full scale before we do.
+      So I'm going to share my screen here. Oh, also, I'm assuming if we do go to a demo, it would just be you and Andrew. Is there anyone else who would need me on that call? Cool.
+      Yeah, probably one other Dylan, which I can shoot you over his name and email address.
+      And then who typically makes a decision on something like software for your company?
+      Nice. Yeah, no, of course.
+      Well, I mean, you know, Andrew kind of puts full trust in me to make decisions, so. You know, it's something I can move forward with, but I'd want to make sure that I understood all the other implications. So, you know, I'd run it by Andrew. But yeah, either one of us would make the call on it. I understand decision makers matter.
+      Yeah, no, I know we still have quite a ways to go before we get to that point.
+      Yeah.
+      I just like to ask before we get too deep. Yeah. Also, I do have my sales manager, Cam, joining us. He has a A lot of experience in the telecom industry, just in case anything too specific comes up.
+      Okay.
+      So quick background on Rev.io.
+      You've been an industry leader in telecom billing services for over 10 years now. We have 180 employees. Every single one of them besides one is US based. We have one in Vancouver. Most of them are here out of Atlanta. I'm going to get into it here in a second, but I would say one of the biggest... I guess, undertakings Rev.io has had in the recent years is we acquired a legacy PSA platform and completely rebuilt it from the ground up.
+      So that way our clients have both the telecom billing as well as PSA functionality all in one database. And that's why I asked you about Zoho ticketing. I'm going to talk about that here more in a second. Oh yeah. I feel like it's preparing for rapid growth and just consolidation, but we know switching billing platforms isn't a flip of the switch. It's a process. I guess, are any of these relevant to Netcom today outside of these two as to why you're looking into this?
+      Awesome.
+      I mean, I would say rapid growth.
+      The company is exploding and it's almost outgrown its systems in a lot of ways, which is why I'm here to help make sure that it's set up. We're kind of slowing down the growth a little bit to make sure we have the right systems and tools and processes in place. Because it's going like a rocket ship right now and the way it's set up is not ideal for the future.
+      Yeah.
+      Yeah. Yeah, that's interesting.
+      I just... Set up a very similar business case to who was using SkySwitch before and moved to Rev.io Direct and Rev.io PSA because they had like three employees coming on in between now and the end of the year so they need something in place. As far as what the billing side of RevIO actually does.
+      Nice.
+      So everything you see here is what it does. We have some people who just use it for the like the meat and potatoes, like the telecom taxation usage rating billing. And we have some companies who use it for everything you see here. My point is, it's very flexible as to how you incorporate it in your tech stack. And just thinking about No, it's everything you see here you have access to.
+      So it's kind of module based or is it everything comes and you just use what you want to use?
+      because you pay for each product and service.
+      Okay.
+      Of course, it's up to you, like what you actually utilize and maybe not utilize as much.
+      And as far as the differences between RevIO Sky Switch and RevIO Direct, I would just say it's much more customization, right? For starters, you have full API control. You have full API documentation at your fingertips. Things like the bill profile, like a set of rules as to how you bill your customers. I don't know if you've gotten that deep into Rev.io yet. You can only have one with Sky Switch. With us, you can have as many as you want.
+      You can set up all sorts of custom reports. as opposed to having to go to the Sky Switch team and asking for it. Do you guys bill for usage at all for any of your customers? Okay.
+      Um, not that I know of.
+      I could be missing something, but I don't believe so. Not any of the current, nothing related to this. Yeah. No good?
+      Getting a call, sorry. There we go.
+      All right. But yeah, these are the main pieces of the billing side.
+      It really sounds like the important part will be is how it all connects to like sales and Zoho potentially. but No, that's not.
+      Yeah, because we're also, to my understanding, giving two quotes to a customer, which is not ideal. It's like we need to get it all combined and streamlined from that standpoint, too.
+      Assuming just one out of Zoho, one out of Skyswitch.
+      Well, yeah, I mean, so I'm even so even when we're not I'm using Sky Switch solutions.
+      We're still using Rev.io in cases. And so in those cases, I want to just give a single quote. If they have Sky Switch as well, I'm not sure what that would look like. I'm guessing we can get to one quote there. I don't know that part, but I'm thinking beyond Skyswitch, kind of everything else. And the offerings are expanding too at Netcom. So I'm thinking future as well. I want to make sure that no matter... I can, yeah.
+      Yeah.
+      I'm sorry, can you hear that?
+      Someone is... Yeah, I have my work phone connected to the computer. Someone's lighting me up.
+      Is that coming through the computer? That's funny. You're good.
+      I'm sorry. But keep going, my friend. Yeah.
+      Yeah, no, just, yeah, I mean, we're on the same page, I think.
+      Just, it's all about streamlining. So, you know, I think, you know, the more access we have to like the APIs and direct reporting and all that, the better.
+      Well, yeah.
+      Yeah.
+      I'd say Do you know what upstream carriers Netcom is working with today? I guess it would just be SkySwitch right now. at this Yeah.
+      I mean, from that standpoint, yes. But we sell everything in the network stack and we work with the telco carriers as well and, you know, selling side by side with them. But then also, you know, they become our customers essentially and we have other services that we sell to them. It's going to be multiple different carriers.
+      Yeah.
+      Forms or is that all manual? Okay, that's all good. Yeah, yeah.
+      I don't know the answer to that.
+      I can't imagine it's manual, but yeah, I don't know the answer to that.
+      And lastly, before I move on, the tax database piece is that Our pricing includes a tax database on the back end. Looks like from the initial email I got introducing you guys back in like May that you guys are using Avalara for your text database. Is that still the case? Okay. Yeah.
+      Yeah, yeah, that's the case.
+      Yeah, I think he's actually meeting with them today on something else. But yeah, again, we're open to figuring out the best way to do this. It's the time to pause. assess the systems as they are before we grow further and have, you know, it's a bigger impact to make changes later.
+      Okay. Okay, okay. Because I mean, we work with multiple tax database partners on the backend, But the point I was trying to get at is that that's a part of our system, right? It's So that means it automatically calculates all telecom taxes and sales taxes. Excuse me, automatically as you build out quotes and invoices, It just takes the zip code of the customer of whoever you're billing, and then it will get the most recent tax rates for that zip code and apply it accordingly.
+      Hmm.
+      Nice.
+      And that can be set up to be like an automatic process. It's not like it's something you have to do every time you bill a customer.
+      Okay, that's good to know.
+      Last slide, and I want to talk about how the Zoho functionality connects to all of this.
+      is that we also have a payment processing system Just going back to getting all of your customer data on one pane of glass. This top part here does a credit card processing and ACH payments. Our goal is to always at the very least match whatever rates you're paying today on percentages, but I don't think we've ever seen a case where we can at the very least match those percentages. Typically we handle this later on in the evaluation, but still just like to show you everything Rev.io can do before we get too deep into anything else.
+      Okay.
+      That's great. Thank you. Yeah.
+      And it looks like Cam joined here as I mentioned. What's up, Cam?
+      Yeah. Sorry about that, Connor. Good to meet you, Paul. I apologize for my tardiness. It's got a, looped into a call that was supposed to end at 4.15, but naturally, you know, you got to get the greetings out towards the end.
+      I was a disaster at the beginning of this, too. I was in the car and trying to transfer it over. And so, yeah, no, we got a late start. We're all good.
+      So that's everything that the billing platform includes.
+      Hey, hey, all good. We're both good. So...
+      Tiger now.
+      And so where we really stick out is that We actually, we acquired a platform called TigerPaw a few years ago.
+      Have you ever heard of that one? Tiger Paul.
+      Oh, Tiger. Okay. you Okay.
+      Yeah.
+      It was a great platform functionality wise, but definitely looked like something out of 95 Windows. We spent the past three years completely building it from the ground up. It came out this past September, about to be a year, so it's been a super exciting time here. But again, what makes us stick out is that There's a shared database between this platform and the telecom billing platform. So everything you do in one platform, it's not like it's some sort of integration, it's a real-time sync. as you do it in one platform and vice versa.
+      I'm telling you this because you mentioned Zoho for sales ticketing inventory. We could get all of that on one pane of glass. Between the billing, the telecom billing and the Zoho, the things you use Zoho for today, excuse me. Um...
+      So yeah, sorry I lost my train of thought there.
+      But my point is that we have full sales management.
+      You can handle all your service in this platform, whether it's like longer projects or just tickets.
+      We have great inventory tracking in here.
+      We can manage purchasing, we manage multi-location, and we can even manage assets you have on customer sites.
+      And then of course, with our background in telecom billing, we made billing on that platform super flexible.
+      Okay.
+      I would say people who offer some sort of mix of telecom services directly to their customers, And something that requires something like this or Zoho is who's seeing the most benefit out of our platform right now.
+      Makes sense.
+      Yeah, I mean, you know, I'm looking at right now kind of incremental steps, but.
+      Because again, it's all in one platform. All the data is all the same from Again, the telecom services or any other services you may want to offer in here.
+      Bye.
+      Um... I mean, I guess I didn't know you guys did all of this, you know, as part of your business.
+      Yeah.
+      So I know you talked about bringing it all in one. Is this kind of along the lines of what you were looking for?
+      What do you think?
+      So that's something to think about. I think, you know, the, the, most pressing thing for me is figuring out how to pull in the telecom tax data directly into Zoho. without having to go through Sky Switch and do these separate quotes and things to customers. It's just really clunky. That was my main goal here, was to figure out how we can connect in. We started talking going, yeah, probably isn't going to be possible through SkySwitch. So maybe we need to go direct Rev.io.
+      And this is kind of the initial discovery on that. But this is something I'd love to take back and talk to the team about.
+      Yeah.
+      Yeah.
+      to to see what pieces would make sense to pull in as well. Yeah.
+      Yeah, when you first mentioned sales and inventory, I definitely sat up in my seat a little bit. We typically handle it like billing. Telecom billing is a first priority to figure out. And then once all of that is ironed out is when people typically take on the the PSA side of things, but of course it varies based on what's more important to you.
+      Yeah, I mean inventory is interesting too.
+      All these things are interesting, but I'd say inventory has been a bit of a pain point. as well as multiple providers, multiple systems because we sell so many different solutions. So it's kind of been duct taped together a little bit as because the company was growing so fast. There wasn't time to slow down and Make sure it was being done the most efficient way.
+      Yeah, yeah. You get that. So you're not going to stop sales velocity to work on non-revenue generating activities. and some, you know, especially in a period of growth. Right. So, yeah, that makes sense.
+      And I know because we were, they did hire me in fairness to do that. There you go.
+      My recommendation was to slow down a little bit as I assessed.
+      I was, I was telling him I was consulting netcom before I came on board. I've only been on board a few weeks, but I was doing consulting and I saw what was going on and it's like, Hey, we got to, let's figure out the systems, make sure we have the right, Stress. structure in place before we keep growing at this rate or it's just all going to break. So he was, he took the advice and that's what we're doing right now is just Figuring out, we've got so many systems right now. And then taxes are through multiple systems. And sales reps are doing double or triple entry. Customers are getting two or three quotes and invoices.
+      And so all things that it's going to happen, but we're going to try to get that as streamlined as we can in the next couple of months and then get back to the growth mode.
+      No, that makes total sense. Okay, that's that's all I appreciate that. Because I know we were kind of engaged from Avalara and Connor, I apologize if I came in late and asked some of the same questions you spent the last 20 minutes asking. But I know it was mostly about the diversified service offering, right? Because we know and I'm I'm not sure if you've gotten to interact a lot in the Rev.io platform that Tom leverages through Sky Switch. That's typically like... Okay, okay.
+      So it's usually like a purpose... There's a purpose for that system. It's typically directly tied to monetizing SkySwitch's offering, right? So they engage with our team, Gosh, 12 years ago now to build out this wholesale environment. Right. So right now they are providing Rev.io to a slew of their resellers to account for the hard parts of telecom. Right. The taxation integrations into sure tax and then the usage ingestion and refilling. Right.
+      For telecom. for Sky Switch specific services. So, 'cause I thought when I was looking at your service offering and like the notes that we got from the team at Avalara, It was really just due to the fact that you guys do have a very diverse offering, right? I see like the satellite internet services. So I know that there's some Starlink usage. Probably being either not billed for accurately or it's being rated manually, right?
+      We're looking at terabytes of data consumption and having to figure out what to bill it in client.
+      Yeah, it's very new. That's very new. But yeah, we're trying to figure all that out right now. overages and all those pieces with that. But yeah, it's like I SkySwitch yet because we, you know, we work with a lot with Verizon and Verizon has their solution one talk. And so they engage us in a lot of those opportunities. And but then if a customer wants additional services, e-fax things, those other pieces that Verizon can offer, then yeah, it's through SkySwitch.
+      But it's my understanding there are other solutions as well that we sell that are not part of SkySwitch that need the telecom billing as well. or we're just ramping up. I don't know all the details on that, but I know it's in Andrew's mind, our CEO, there's more outside of SkySwitch that we need Rev.io for.
+      I'd imagine that's true. And I'll tell you why I'm saying I imagine and not I know. So what Rabbi O'Connor and I are both very dangerous when it comes to understanding and navigating the rules and the waters of telecom tax. We both have a job because the FCC made it nearly impossible for an entrepreneur to figure this out.
+      Yeah.
+      I wouldn't let you get that far, Cam.
+      So don't love it. I say that because, hey, I'm thankful I have an employment, but they made it hard for no reason.
+      I was telling Connor I was 20 years at Verizon. You're good.
+      What are we talking about here? It's complicated. I don't need to explain to this guy.
+      Yeah, you got outsources. You can't own this. It's too complicated.
+      Okay, cool. But no, that's like, because what we were able to do, because I had imagined like based on some of like the Verizon, they're likely, and what are the services through Verizon? Is it like POTS, StyleTone, Mobility? What does that look like? If a customer is going, if you're purchasing the service through Verizon directly? Yeah.
+      *Chuckle* Yeah.
+      So their solution is mostly like LTE desk phones and mobile apps, right? So that's kind of where they stop. And then that's kind of difficult for a customer that's using other services today on landline. So POTS replacement and all those other things, that's where Netcom is going to offer those directly once Verizon engages us. Because usually if Verizon engages us to a B2B deal, we help them win the deal.
+      And then implement it and support the customer. But through that process, we're qualifying for other services that Netcom sells.
+      Naturally, as like a VAR, essentially. Absolutely. Netcom is not going to bill the customer directly for the Verizon services. Verizon handles that. You probably get a cut from Verizon. Again, I know they've changed the name of like the VPP a couple times over the years, but we're pretty key to those days.
+      Yeah, it's still a partner program.
+      Yes, nice. Okay. And then it's essentially, okay, great. And then any other time there's an availability for you guys to instill some recurring services with the Verizon deal, in addition to the actual deployment installation where you're likely billing for your time and just hardware that you purchase. So, okay. Yeah, you got it. So, yeah, I mean, that's the beautiful thing about this industry. Do you guys know if you work with SkySwitch? They typically recommend a couple of people to work with.
+      I imagine, though, is Avalara doing your actual compliance and remittance for telco taxes? I know Connor's shaking his head yes, so I assume.
+      I imagine they are. I know, yeah, Andrew, the CEO, is actually meeting with them today. But, yeah, they do a lot. Yeah. But, again, we're still trying to analyze everything right now. consolidate. So whatever that looks like, we don't, we don't have an answer yet.
+      No, I think one of the biggest reasons why, like, so we'll talk about because like you can buy Revire through SkySwitch, right? Why would you come to us directly? And I'll kind of talk, well, Connor's probably mentioned it. So I'll talk through a couple of reasons why people come direct. For your specific offering, like the one that's kind of like screaming at me right now is one usage ingestion and rebilling for other upstream carriers.
+      So with the relationship with SkySwitch, typically they are only allowing the customers to rate and bill for Sky Switch services. You could bill for additional MRCs in there, but for the Starlink specific things or like any other things that require data capture, that would be an automated process. So a lot of customers that, maybe as an example, they start off with Sky Switch and then they grow to a certain point and they want to buy a crescendo that's APN Switch directly, right?
+      Instead of buying it through a white label reseller. That would be a reason for them to work with us directly because we work with probably, 200 different upstream carrier partners to digest usage information that they provide and allow our customers to rebuild that to an end user. So most of our clients are working with like a, you know, they do have SkySwitch offering right on the UCAS side, but maybe they also have another white label partner and bandwidth that they rate CDRs for.
+      Then maybe they have an LTE solution that they actually white label and bill for. So we're tracking, you know, Apex or Verizon BDRs. to handle that usage billing. Then there was Starlink, right? Starlink, I was validating this with another opportunity about a year ago. They were with Starlink and then there was another B2B one, I believe it was called Viasat, that they were rebuilding. They were like an upstream wholesale satellite internet service provider.
+      Yeah. It's a CDR at the end of the day, right? And I imagine, I'll make an assumption, you probably have deals with your customers where you're saying, hey, for X amount of dollars each month, have access to X amount of data. If you go over that data, we're going to bill you extra for it. Right. So, and our system can help fully automate those calculations and then understand, Hey, as of right now, this customer has used 0.87 terabytes in their one terabyte plan. So they're good. They've paid for it. We already build it. We already collected it. And cause it's pretty standard in the space.
+      You're going to bill a month in advance for recurring services and a month in arrears for usage. Right. So that's kind of where I see it.
+      Visibility into usage is a bit of a gap right now.
+      And so, yeah, I think that would be beneficial. And what really started this conversation, I was asking Andrew about the APIs for Rev.io because I'm doing a lot of just integration on their side. I was researching. I'm like, hey, they have amazing APIs for everything I'm seeing. How do we get to those? And we can't do that through SkySquare.
+      Just directly is the answer, I guess. That's another bullet point that I had in my reasons to come direct. And that's not by design. The idea is not pay to play. The reason why we have to deprecate API capabilities in the reseller environment is because it's multi-tenant. What SkySwitch is doing is they are partitioning hundreds of different resellers in a single environment of Rev.io. And we have this concept called a bill profile.
+      that walls off a user's access into what customer information they can see. So, because we couldn't wall off the API in a global setting to that manner, we had to fully deprecate access. So we didn't want, you know, reseller A to build a really great Zoho integration that digests closed one sales information and creates the customer account RevIO. And then for whatever reason, when reseller A does that, reseller B sees a new customer that they didn't sell.
+      They have no recollection of that. So that's why we had to deprecate the access there. Got it. But yeah, it's more of a technological aspect, unfortunately.
+      Because you kind of mentioned like, hey, what's the best... Your goal was to say... All right. We've got a pretty good platform in Zoho. How do we get the taxes the Rev.io puts on invoices into Zoho? Yep. Do you use Zoho books for accounting? Is that why? Yeah. Okay. Got it. So I would still recommend, like I know we kind of threw the PSA in there as a fun little additive because we, candidly, you guys do look a lot like businesses that we envision working with when building the PSA as like that true converged service provider and really classify themselves as a legacy SELEC or a, you know, a bar. They do a ton of things, right?
+      Like you have that, you have the bar component, you've likely have some MSA or managed IT components. And then you also, telephony wing of your business. So that is where I kind of see us playing in this space. Um, At the end of the day, right, we do have an open API working with us directly, so if you did want to leverage our platform entirely, use the Avalara tax engine on the backend to handle all things tax calculation. An integration from our system to Zoho Books could definitely be built, right?
+      But if we were talking PSA though, there could be some enhancements that could be brought, but I don't want to overcomplicate a situation when it's a pretty clear cut use case of why you want to work with us.
+      Yeah, so I mean, to start it's definitely a lot less complicated than someone not coming from Sky Switch.
+      So yeah, Yeah.
+      What does that kind of a migration look like away from a sky switch to direct?
+      But we have a full like built out onboarding process. It's not at all like you sign up for the software, we hand you some training videos and say good luck. You'll meet with, we have a full onboarding team here, and you'll meet with a team of onboarding consultants who meet with you on some sort of recurring basis to help configure the platform. And then for tech, there's a lot of there's bill runs that takes place with an onboarding.
+      Want to make sure there's no variability between the new bill run and Rev.io versus what you're doing today. Long answer just to say that we have a whole team making sure that the configuration goes as smooth as possible and you have as much help as you need. A company your size, I'd say two to three months is the typical duration for that.
+      Cool.
+      Okay. Yeah, it's stuff outside of Rev.io that is going to be trickier, right? So where is... I mean, theoretically, right? I'm not sure we haven't talked too much about pricing, I imagine. But one of the differences in our pricing with the PSA platform is that we are normally excluding, because I think in SkySwitch today, you pay a percentage on everything billed through the system. minus taxes. I imagine.
+      I don't know. Okay.
+      Yeah, for us directly, we actually exclude flat, like just recurring billing that doesn't yield telco tax. So think just like managed services, right? Like it'd be maybe sales and use and that's it. So we actually exclude that type of billing from the percentage working with us. Nice. Because we typically have a higher monthly minimum, right? Because there's more features, there's more control over the system, and there are more options. But we normally match the percentage that you're getting with Skyhooks today. And again, we remove anything that wouldn't generate telco tax to factor into that overall percentage.
+      So there could be an argument to have Rev.io be the main centralized billing platform platform and like the main source of accounts receivable. Right. So all the billing would come from the Rev.io platform. We provide the end user portal, right? Customer can submit, you know, make a new payment, enroll in auto pay, review all their historical information. And then it's not out of the box, but it can be built, right? So we have a very similar integration with QuickBooks Online where it's real time, webhook driven.
+      So anytime an invoice or a payment occurs in the Rev.io platform, it just goes into the ERP system for full on financial reporting. So we want to be your main source of accounts receivable, but we know that our data is typically going into another third-party system for a full-on financial month-end close.
+      Thank you.
+      Makes sense. Okay.
+      I would love to get a demo scheduled.
+      Yeah.
+      Oh, there's more than that.
+      I just have a few more questions. You brought up the duplicate entry a few times. Is that just between Zoho and Skyswitch today or is there anything specific you need fixed outside of that?
+      Yeah, there's just because.
+      Yeah.
+      Yeah.
+      Yeah.
+      You know, I mean, we sell every kind of network solution you can imagine. I mean, Andrew never says no to an opportunity. So, you know, he continues to expand the partnerships, hardware, so both the one-time charges and monthly recurring. And, you know, we want to just continue to expand that. And so today, yes, there's multiple places where we're doing double quotes and double invoices to customers that we want to consolidate. I couldn't give you that comprehensive list myself.
+      I mean, Andrew, Dylan who's kind of been running ops, um, could give that answer and we can, we can pull them into the next call.
+      Yeah, no, you hit the nail on the head.
+      Typically, we have a full demo after this, a full hour dedicated to walking through the platform, spend the last few minutes, talk about pricing, and then we can get any follow-ups on the books if needed.
+      I'm just so... Yeah, I'm just making sure I'm going through my notes, making sure there's nothing.
+      Um, but you know, I wanted to just give Andrew kind of the high level. Yeah, this is what they can do. And, um, And, you know, I think we'll need a follow-up call to go, you know, a little more prescriptive on it and then set up a demo and figure out the next steps from there. Sweet.
+      Okay. Yeah, I think I got it. I just want to quickly summarize everything here and make sure...
+      Yeah.
+      I'm on the same page as you for the demo. Make sure we're showing you an intro, everything you want to see. So I think I know you reached out because Zoho and Rev.io Sky Switch don't integrate, but as you reach out, it seemed like there are a bit more pieces of the business of full Rev.io Direct platform to be able to help with.
+      Now, to starters, taxes are coming out of multiple different systems. So we talked about how our system comes with a tax database so you won't have to be hopping through a bunch of different loops to get things done. So we just talk about it. There's a ton of manual entry because all these systems aren't connected. And it gets to the point where quotes are being sent out, you know, duplicate forms.
+      And that's really just due to the variety of services you guys offer. Seems like a huge value point Rev.io can bring is being able to manage all of your services all on one platform. Ummm... So my plan for the demo, I'm going to talk about how we can bring in CDRs from the upstream carriers you're working with that are not SkySwitch. Talk about how we can manage all the different services within a customer account.
+      I think that was it.
+      And then I'll take you through the quote to cash process show you how the tax automation works.
+      Was there anything big I missed there that we need to show you and Andrew on demo?
+      Yeah.
+      What might be good is if you could just send out a recap with those things and then we could chat and reply back and say, hey, you can skip this or you can add this to the demo.
+      That'd be great.
+      I'll chat with Andrew next today or tomorrow and let him know what we'll be covering.
+      Okay, great.
+      Then that email we'll kind of use is just, we'll be able to reply to that and confirm that's what we want to see. Yeah.
+      AndWe could.
+      We go ahead and... Book a time for a demo? Just so we have something blocked off for all four of us?
+      Yep. We're quick at responding.
+      Yeah. Yeah.
+      I can't speak for Andrew. I want him to be able to be on CEO. So let's just put that in the email. We'll, we'll get back quickly. You know, we're not gonna, we're not dragging our feet on this. We need answers. So we got, we got to make some moves on our end. So yeah, we'll, I know. I appreciate you wanting to lock that down. We'll get a lockdown.
+      Okay.
+      Yeah.
+      You know, man, it sounds like we can panic somewhat early if we don't hear from you about like early next week. So we'll take it.
+      I love the ask, man. I've been a B2B for a long time. So I love the initiative. I appreciate why you asked that question.
+      We know how it goes. *laughs* Awesome.
+      Love that. Love that. We love someone that loves the process. You mentioned something important too that I wanted to key on. If we do show you and Andrew, all right, cool, we're going to solve all these problems. We can get the internal understanding that, all right, this is a solution that'd be a fit. pricing makes sense. When would you guys wanna get into the onboarding process, get moved over? I'm not sure, I know you're pretty new to the organization.
+      On the direct side, you've been consulting there for some time, but I wasn't sure if a time might have been established of like, hey, when we find... solution A, right, when we want to have that fully implemented into the stack.
+      Well, I mean, it...
+      It needs to happen. Sooner rather than later, what I was mentioning to Connor is, and maybe I said this to you as well, but they're slowing down a little bit right now for a period of time, a few months to get things kind of automated and figured out, but then we got to just run fast again. So this is kind of a moment in time. We got to make decisions quickly and we're a small enough company we can do that right now.
+      I think the only other piece is just understanding any contracts I don't know about and then what the other implications are of making this change for products I may not be aware of. But it sounds like it's pretty cut and dry. And Andrew's... moves fast. So he, if it makes sense and it's not going to disrupt things too much, then we'll just move. And, um, you know, he's not married to anything right now.
+      It's been pretty deep in Zoho because it like, you know, that touches a little bit of everything, but, um, if it's one more efficient way to do it, then, um, We'll move forward. I don't know what SkySwitch, what their contract looks like, if they have any. It was just an add-on.
+      Yeah, on the billing side, it's an add-on. They're a client, a partner of ours. Normally, when customers do move directly from the SkySwitch reseller version of Rev.io to the direct platform, we work with them to facilitate that change. They get commissioned for it. I want you guys to think, screw them up. We have the relationship cover on the back end there. The only thing that you'd want to cover is, because I'm pretty sure that you're likely using the SureTax database.
+      which is the tax engine in the SkySwitch platform. I know you guys came from Avalara, so if they're doing your compliance, you would have to purchase the Avalara communications tax database from Avalara. Okay. But again, we have other options, right? SureTax is one that we actually do cover and we include a license that database in our pricing and contracting. Okay. But if Avalara is doing your compliance, right?
+      I think putting myself in your shoes, I'd want them to have the actual tax database as well. Yeah. So we could talk about those options, but I was curious because obviously like... you know, there's an opportunity to earn your business here. End of August is aggressive with 13 days, but if this is something you utilize, we're looking to move on quickly. Right. We want to make sure to put our best foot forward for pricing, but it has to be there first.
+      Right. So I think that's, that's the biggest.
+      Yeah. I'd say end of August is probably a little aggressive, but I mean, I wouldn't say end of September is out of the question. And so, yeah, just, we just amount matter of kind of lining up schedules on our, on our side to make sure we get the thumbs up. It's really just Andrew and I, and then, but Dylan, operationally, how everything talks. He's set a lot of that up. So he'll be able to weigh in there and then, yeah, if it makes sense, we'll move forward.
+      Right on.
+      Well, I'll get that recap to email to you.
+      Cool. Thank you. Yeah.
+      So it's nice meeting you, Paul. Hope you have a good rest of your day. Be in touch. You too.
+      Yeah, it was great meeting both of you.
+      Connor, Cam, have a good day. Yeah, you too, man. Good to meet you. Take care. Bye.
+  ### Agenda
+  ### Follow-up Tasks
+Post-Discovery Prompt
+
+[CLIENT NAME] = (insert client name)
+I just completed a [Discovery Call] with [CLIENT NAME]. Please help me with the following:
+1. Update/Create Value Planner for [CLIENT NAME] in my Value Planners database:
+  - Review the meeting notes and update or create entries for: Business Issue, Problems, Value, Power, Plan, and Risk/Mitigation Plan
+  - Keep each section to 1200 characters or less
+  - Set status to [Draft/In Review/Approved as appropriate]
+  - Add today's date
+1. Add Value Planner Sub-Page to the [CLIENT NAME] meeting series page:
+  - Create or update a sub-page titled "Value Planner - [CLIENT NAME]"
+  - Copy the full value planner content (all sections) to this sub-page for easy reference
+  - Format it clearly with section headings
+1. Add Executive Summary Sub-Page to the [CLIENT NAME] meeting series page:
+  - Create a sub-page titled "Executive Summary - [CLIENT NAME]"
+  - Include a concise summary for leadership with:
+    - Company overview and size
+    - Current pain points and business drivers
+    - Deal size and timeline
+    - Key decision makers
+    - Competition and risks
+    - Next steps and what we need to win
+1. Add Next Meeting Section to the [CLIENT NAME] meeting series page:
+  - Create a new toggle section on the company page (not a new database entry)
+  - Format: ▶### [MEETING TYPE] @[DATE]
+  - Include AI Meeting Notes block
+  - Add Agenda section with items based on action items and next steps
+  - Add Follow-up Tasks section
+1. Update Action Items & Todos:
+  - Add new action items from today's meeting to my Action Items database
+  - Mark any completed items as done
+  - Set due dates and priorities
+1. Tony SE Handoff (if needed):
+  - If Tony needs to join the demo, create a sub-page on the [CLIENT NAME] meeting series page titled "SE Demo Brief - [Date]"
+  - Tag @Tony at the top of the page
+  - Include a copy-and-pastable summary with:
+    - Discovery call key points
+    - Technical requirements and pain points
+    - Demo agenda and focus areas
+    - Any specific features to highlight
+1. Draft Follow-Up Email:
+  - Thank them for their time
+  - Recap key discussion points and decisions
+  - List next steps and action items (who owns what)
+  - Confirm next meeting details (mention Tony if he's joining)
+  - Professional but friendly tone
+Tony needed: [Yes/No]
+Meeting notes: [PASTE YOUR MEETING NOTES HERE]
+[child_page: Executive Summary - Netcom]
+  Discovery completed 2026-08-18 | Follow-up discovery call 2026-08-21 | Sales Rep: Connor Flynn
+  ## Company Overview
+  Netcom is a fast-growing telecom reseller (SkySwitch-based) that has outgrown its current systems and is pausing growth to streamline operations before resuming. Services span PBX/UCaaS, Verizon One Talk/LTE desk phones, POTS replacement (via Mixed Networks), satellite internet (Starlink resale), hardware, managed IT, e-fax, and more. Netcom runs sales, CRM, ticketing, and quoting entirely in Zoho, with QuickBooks for accounting, and accesses Rev.io today only through SkySwitch's white-label reseller environment. Current billables through the existing Rev.io footprint are modest (roughly $4,000/month), but Starlink growth is expected to push billing well past six figures quickly.
+  ---
+  ## Current Pain Points & Business Drivers
+  - Duplicate entry: sales reps enter orders in both Zoho and SkySwitch/Rev.io, even for non-SkySwitch services, and the SkySwitch-hosted instance limits custom product/service creation.
+  - Multiple quotes/invoices to customers due to disconnected systems.
+  - No API access through SkySwitch: the white-label environment does not expose Rev.io's API, blocking automation. This is a multi-tenancy constraint of the reseller environment, not a deliberate restriction.
+  - No automated usage-based billing: no way to track and bill for data consumption overages, especially Starlink; a Starlink usage importer does not yet exist (SkySwitch and Mixed Networks importers already do).
+  - Tax remittance is manual: Netcom removed Avalara (AvaTax) due to high API costs (about $2,000/month for only 3 states) and now handles remittance manually through their CPA, which they acknowledge is not scalable.
+  - Zoho's native recurring billing module is immature and not considered a real solution on its own.
+  - Inventory management has been a pain point as the company has scaled rapidly.
+  - Primary goal is for the sales team to keep working entirely in Zoho while Rev.io operates as the billing backend invisibly behind it.
+  ---
+  ## Deal Size and Timeline
+  - Product line: Billing and PSA Web.
+  - Standard pricing (12-month term): $1,000/month flat or 3% of recurring billing, whichever is greater, with the 3% threshold at $33,333/month in recurring revenue. One-time hardware/installation billing does not count toward the 3% calculation.
+  - Onboarding fee: $5,000 one-time, 50% at signature and 50% at 90 days.
+  - August promotion: $750/month instead of $1,000, no onboarding fee, for the full 12-month term.
+  - Scaling tiers (negotiable at renewal): roughly 2% at $100K/month, 1.5% at $250K/month, 1% at $666K+/month.
+  - Implementation: dedicated onboarding consultants, 1-2 hours/week cadence, estimated 30-60 days (leaning toward the lower end given Netcom's simple existing Rev.io footprint). Netcom can begin billing new customers out of a dedicated Rev.io instance immediately, before the Zoho integration and full data migration are complete. Andrew's stated priority order is the Zoho-to-Rev.io integration first, data migration second.
+  - Timeline: end of August considered aggressive; end of September is a realistic target for moving forward. Netcom remains motivated to move quickly given their systems-consolidation window, though Andrew wants to evaluate the Zoho + Avalara alternative before committing.
+  ---
+  ## Key Decision Makers
+  - Andrew — CEO; final decision-maker. Described as moving fast once a solution makes sense, with no strong attachment to existing tools. Joined the August 21 call directly.
+  - Paul — Chief Strategy Officer, recently hired full-time after a prior consulting engagement; 20-year Verizon veteran; primary point of contact throughout.
+  - Dylan — Ops; will weigh in on operational and integration implications.
+  - Ryan (Rev.io Sales Lead) joined briefly on the 8/21 call and offered to engage further if a decision is needed.
+  ---
+  ## Competition and Risks
+  - Zoho + Avalara alternative: Andrew is actively evaluating this path, estimated at roughly $550/month up to $500K in billing. His main open question is whether it can handle usage-based billing and overages at scale, since he has acknowledged Rev.io's usage/rating engine is the key differentiator if the Zoho path can't solve for it.
+  - Invoice sync gap: invoice data does not currently sync back to Zoho from Rev.io, which is important to Netcom because gross profit and sales commission are calculated at the invoice level in Zoho. The Rev.io team believes bidirectional invoice sync is technically feasible via API and is confirming with the product team.
+  - SkySwitch contract terms and exit implications still need to be clarified.
+  - Starlink data access: usage data is currently limited; a direct SpaceX partnership is potentially in progress that could improve access, and a Starlink importer would need to be built regardless.
+  - No strong incumbent attachment: low switching-cost risk from Netcom's side, but also means they could pursue the lower-cost Zoho + Avalara path if it meets their needs.
+  ---
+  ## Next Steps and What We Need to Win
+  1. Confirm with the Rev.io product team whether invoice data can sync back to Zoho, and report back to Andrew and Paul, since this is tied to their commission tracking.
+  1. Send a warm introduction to a tax remittance partner to address Netcom's manual CPA-based remittance process.
+  1. Send a full recap of the 8/21 call covering pricing, integration scope, and open items.
+  1. Schedule and hold the tentative follow-up call next Wednesday at 1 PM Mountain Time.
+  1. Support Andrew through his Zoho + Avalara evaluation so the usage-based billing gap in that path is clear before he decides.
+  1. Clarify SkySwitch contract exit terms.
+  ---
+  ## Win Probability
+  Moderate-to-good, trending positive. Andrew engaged directly on the 8/21 call, pricing has been laid out in detail including an active August promotion, and Netcom's own analysis confirms Zoho/Avalara cannot match Rev.io's usage-based billing automation, which is their core need given Starlink growth. The main open risks are the invoice-sync gap back to Zoho (commission-critical for Netcom) and whether Andrew ultimately decides the lower-cost Zoho + Avalara path is "good enough" despite the automation gap. Confirming invoice sync feasibility and closing out the SkySwitch exit terms are the two items most likely to move this to a clear win.
