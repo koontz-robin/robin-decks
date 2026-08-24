@@ -650,7 +650,7 @@ def build_html(rows, summary):
 <head>
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
-<title>Q3 ICP Pipeline Analysis</title>
+<title>Q3 2026 New Rev.io ICP Pipeline</title>
 <style>
 :root {{ --bg:#061522; --panel:#0d2234; --panel2:#102b42; --text:#f5fbff; --muted:#9fb5c5; --line:#1d4059; --green:#50ff8a; --teal:#2ee6be; --blue:#55b8ff; --purple:#9b7cff; --red:#ff5d74; --gold:#eace9b; }}
 * {{ box-sizing:border-box; }}
@@ -717,9 +717,7 @@ th {{ position:sticky; top:0; background:#0c263a; color:#b9d2e0; z-index:2; text
 <div class="wrapper">
   <section class="hero">
     <div>
-      <div class="eyebrow">Rev.io Sales • Q3 2026 ICP Pipeline</div>
-      <h1>ICP pipeline is thin, heavily early-stage, and loss-heavy.</h1>
-      <div class="lede">Detailed analysis of the Salesforce “ICP Pipeline” report: New Deal PSA / PSA Web opportunities, MSP/Integrator vertical filter, MSP UCaaS/VoIP + MSP No Voice industries, and accounts with 10+ employees. Built straight from report <a href="{REPORT_URL}" target="_blank">{REPORT_ID}</a>.</div>
+      <h1>Q3 2026 New Rev.io ICP Pipeline</h1>
     </div>
     <div class="source">
       Generated {escape(summary['generated_at_et'])}<br>
