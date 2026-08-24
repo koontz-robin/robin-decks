@@ -266,11 +266,12 @@ def classify(text, sf_status=''):
     ]
     if any(re.search(p, t) for p in want_patterns):
         return 'want to migrate / timeline unknown', 'migration interest or demo language; no firm urgent timeline'
-    # SF status direct if present in text/status
+    # SF status direct if present in text/status. Check negatives before "want to migrate"
+    # because statuses like "Do not want to migrate" contain that substring. Tiny goblin, sharp teeth.
     s=(sf_status or '').lower()
+    if 'do not' in s or 'not want' in s: return 'do not want to migrate', 'Salesforce web migration status'
     if 'asap' in s: return 'want to migrate asap', 'Salesforce web migration status'
     if 'want to migrate' in s: return 'want to migrate / timeline unknown', 'Salesforce web migration status'
-    if 'do not' in s or 'not want' in s: return 'do not want to migrate', 'Salesforce web migration status'
     return 'unknown / needs review', 'no clear migration-intent signal found'
 
 
@@ -285,7 +286,7 @@ def excerpt_for(text):
     return (('…' if start else '') + t[start:end] + ('…' if end < len(t) else ''))[:360]
 
 
-def get_sf_web_status():
+def get_sf_account_data():
     import sys
     sys.path.insert(0, str(ROOT))
     from build_forecast_targets import sf_auth, sf_query
@@ -293,10 +294,37 @@ def get_sf_web_status():
     mapping={}
     for i in range(0,len(ACCOUNT_NAMES),80):
         vals=','.join("'"+n.replace("'","\\'")+"'" for n in ACCOUNT_NAMES[i:i+80])
-        q=f"SELECT Name, Web_Migration__c, Web_Migration_Status_Details__c FROM Account WHERE Name IN ({vals})"
+        q=f"SELECT Name, TigerPaw_Account_Status__c, Web_Migration__c, Web_Migration_Status_Details__c FROM Account WHERE Name IN ({vals})"
         for r in sf_query(base,h,q):
-            mapping[r['Name']]={'web_migration':r.get('Web_Migration__c') or '', 'web_details':r.get('Web_Migration_Status_Details__c') or ''}
+            mapping[r['Name']]={
+                'psa_account_status':r.get('TigerPaw_Account_Status__c') or '',
+                'web_migration':r.get('Web_Migration__c') or '',
+                'web_details':r.get('Web_Migration_Status_Details__c') or ''
+            }
     return mapping
+
+
+def infer_tigerpaw_status(text, sf_psa_status=''):
+    """Infer Tigerpaw hosting/on-prem status from Notion text; use SF PSA Account Status as fallback."""
+    t = re.sub(r'\s+', ' ', (text or '')).lower()
+    one_patterns = [
+        r'\btigerpaw one\b', r'\btp one\b', r'\bon[- ]?prem(?:ise|ises)?\b',
+        r'\bon prem\b', r'\bself[- ]?hosted\b', r'\blocal server\b', r'\bserver[- ]based\b'
+    ]
+    unleashed_patterns = [
+        r'\bunleashed\b', r'\bhosted version\b', r'\bhosted tigerpaw\b',
+        r'\btigerpaw hosted\b', r'\bcloud hosted\b', r'\bcloud version\b'
+    ]
+    one = any(re.search(p, t) for p in one_patterns)
+    unleashed = any(re.search(p, t) for p in unleashed_patterns)
+    if one and not unleashed:
+        return 'Active - Tigerpaw One', 'Notion notes indicate on-prem / Tigerpaw One'
+    if unleashed and not one:
+        return 'Active - Unleashed', 'Notion notes indicate hosted / Unleashed'
+    s = sf_psa_status or ''
+    if s in ('Active - Tigerpaw One', 'Active - Unleashed'):
+        return s, 'Salesforce PSA Account Status fallback'
+    return s or 'Unknown', 'No clear hosting signal in latest Notion notes'
 
 
 def main():
@@ -311,7 +339,7 @@ def main():
         product=prop_text(props.get('Product Line'))
         date=prop_text(props.get('Series Start Date')) or p.get('created_time','')
         meta.append({'id':p['id'],'url':p.get('url',''),'title':title,'stage':stage,'owner':owner,'summary':summary,'product':product,'date':date,'last_edited':p.get('last_edited_time','')})
-    sf_web=get_sf_web_status()
+    sf_web=get_sf_account_data()
     rows=[]
     body_cache={}
     for acct in ACCOUNT_NAMES:
@@ -322,11 +350,21 @@ def main():
         candidates.sort(key=lambda m: parse_dt(m['date']) or parse_dt(m['last_edited']) or datetime.min, reverse=True)
         chosen=candidates[0] if candidates else None
         full=''
+        interest_text=''
         if chosen:
-            full='\n'.join([chosen.get('title',''), chosen.get('summary',''), chosen.get('product','')])
+            page_body = body_cache.get(chosen['id'])
+            if page_body is None:
+                page_body = fetch_block_children(chosen['id'])
+                body_cache[chosen['id']] = page_body
+            # Use concise Notion metadata for migration intent. Full page bodies often include reusable
+            # agenda/prompt templates that mention migration/demo generically and create false positives.
+            interest_text='\n'.join([chosen.get('title',''), chosen.get('summary',''), chosen.get('product','')])
+            # Use full body only for deployment/hosting inference, where on-prem/Unleashed mentions may live in notes.
+            full='\n'.join([interest_text, page_body])
         sf=sf_web.get(acct,{})
         # add sf migration status as fallback/context only, notion text dominates if any signal.
-        status, reason=classify(full, sf.get('web_migration',''))
+        status, reason=classify(interest_text, sf.get('web_migration',''))
+        inferred_psa_status, inferred_psa_reason = infer_tigerpaw_status(full, sf.get('psa_account_status',''))
         rows.append({
             'account': acct,
             'migration_interest': status,
@@ -337,6 +375,9 @@ def main():
             'owner': (chosen or {}).get('owner',''),
             'notion_url': (chosen or {}).get('url',''),
             'evidence': excerpt_for(full) if full else '',
+            'psa_account_status': sf.get('psa_account_status',''),
+            'notion_inferred_tigerpaw_status': inferred_psa_status,
+            'notion_inferred_tigerpaw_reason': inferred_psa_reason,
             'sf_web_migration_status': sf.get('web_migration',''),
             'sf_web_migration_details': sf.get('web_details',''),
             'matched_records': len(matches),
@@ -352,13 +393,13 @@ def main():
     generated=datetime.now().strftime('%Y-%m-%d %H:%M')
     def esc(x): return html.escape(str(x or ''))
     table=''.join(
-        f"<tr class='{esc(r['migration_interest'].split()[0])}'><td>{esc(r['account'])}</td><td><strong>{esc(r['migration_interest'])}</strong></td><td>{esc(r['latest_notion_record'])}</td><td>{esc(r['record_date'][:10])}</td><td>{esc(r['notion_stage'])}</td><td>{esc(r['owner'])}</td><td>{esc(r['evidence'])}</td><td>{('<a href='+esc(r['notion_url'])+' target=_blank>Open</a>') if r['notion_url'] else '—'}</td><td>{esc(r['sf_web_migration_status'])}</td></tr>"
+        f"<tr class='{esc(r['migration_interest'].split()[0])}'><td>{esc(r['account'])}</td><td><strong>{esc(r['migration_interest'])}</strong></td><td>{esc(r['latest_notion_record'])}</td><td>{esc(r['record_date'][:10])}</td><td>{esc(r['notion_stage'])}</td><td>{esc(r['owner'])}</td><td>{esc(r['psa_account_status'])}</td><td>{esc(r['notion_inferred_tigerpaw_status'])}<br><small>{esc(r['notion_inferred_tigerpaw_reason'])}</small></td><td>{esc(r['evidence'])}</td><td>{('<a href='+esc(r['notion_url'])+' target=_blank>Open</a>') if r['notion_url'] else '—'}</td><td>{esc(r['sf_web_migration_status'])}</td></tr>"
         for r in rows
     )
     cards=''.join(f"<div class='card'><div>{esc(k)}</div><b>{v}</b></div>" for k,v in sorted(counts.items()))
     OUT_HTML.write_text(f"""<!doctype html><html><head><meta charset='utf-8'><meta name='viewport' content='width=device-width,initial-scale=1'><title>Tigerpaw Migration Interest</title><style>
     body{{margin:0;font-family:Inter,Arial,sans-serif;background:#071322;color:#eaf4ff}} .wrap{{padding:28px;max-width:1600px;margin:auto}} h1{{margin:0 0 8px;font-size:30px}} .sub{{color:#9fb4c8;margin-bottom:20px}} .cards{{display:flex;gap:12px;flex-wrap:wrap;margin:18px 0}} .card{{background:#0d2036;border:1px solid #1e3c5d;border-radius:14px;padding:14px 18px;min-width:190px;color:#9fb4c8}} .card b{{display:block;color:#50ff8a;font-size:28px;margin-top:6px}} table{{border-collapse:separate;border-spacing:0;width:100%;background:#081a2c;border:1px solid #1e3c5d;border-radius:16px;overflow:hidden}} th,td{{padding:10px 12px;border-bottom:1px solid #17324f;text-align:left;vertical-align:top;font-size:13px}} th{{position:sticky;top:0;background:#102640;color:#bfe6ff;z-index:1}} tr:hover{{background:#0e2540}} a{{color:#50ff8a}} strong{{color:#fff}} .note{{background:#102640;border-left:4px solid #50ff8a;padding:12px 14px;border-radius:8px;margin:14px 0;color:#cbd8e6}} .unknown strong{{color:#fbbf24}}
-    </style></head><body><div class='wrap'><h1>Tigerpaw → Rev.io PSA Migration Interest</h1><div class='sub'>Generated {generated}. Source: 94 Salesforce accounts with non-blank PSA Account Status, cross-referenced to Notion Sales Meetings by customer name. CBR records preferred when present; otherwise latest matched meeting record used.</div><div class='cards'>{cards}</div><div class='note'>Classification buckets requested: want to migrate asap, want to migrate / timeline unknown, do not want to migrate. “Unknown / needs review” means I found the account but the latest Notion text did not clearly say one of those three things.</div><table><thead><tr><th>Account</th><th>Migration interest</th><th>Latest Notion record used</th><th>Date</th><th>Stage</th><th>Owner</th><th>Evidence</th><th>Notion</th><th>SF Web Migration Status</th></tr></thead><tbody>{table}</tbody></table></div></body></html>""", encoding='utf-8')
+    </style></head><body><div class='wrap'><h1>Tigerpaw → Rev.io PSA Migration Interest</h1><div class='sub'>Generated {generated}. Source: 94 Salesforce accounts with non-blank PSA Account Status, cross-referenced to Notion Sales Meetings by customer name. CBR records preferred when present; otherwise latest matched meeting record used.</div><div class='cards'>{cards}</div><div class='note'>Classification buckets requested: want to migrate asap, want to migrate / timeline unknown, do not want to migrate. “Unknown / needs review” means I found the account but the latest Notion text did not clearly say one of those three things.</div><table><thead><tr><th>Account</th><th>Migration interest</th><th>Latest Notion record used</th><th>Date</th><th>Stage</th><th>Owner</th><th>PSA Account Status</th><th>Inferred Tigerpaw Status</th><th>Evidence</th><th>Notion</th><th>SF Web Migration Status</th></tr></thead><tbody>{table}</tbody></table></div></body></html>""", encoding='utf-8')
     print(json.dumps({'rows':len(rows),'counts':dict(counts),'html':str(OUT_HTML),'csv':str(OUT_CSV)}, indent=2))
 
 if __name__ == '__main__':
