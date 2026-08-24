@@ -136,6 +136,7 @@ def enrich_from_opportunities(base, headers, rows):
     quoted = ",".join(f"'{i}'" for i in ids)
     query = f"""
         SELECT Id, StageName, Loss_Reason__c, Reason_Lost_Detail__c, Missing_Features__c, NextStep,
+               Business_Issue__c, Business_Issue_Details__c, Business_Issues__c, Problems__c,
                AccountId, Account.Name, Account.Website
         FROM Opportunity
         WHERE Id IN ({quoted})
@@ -153,6 +154,9 @@ def enrich_from_opportunities(base, headers, rows):
         row['loss_reason'] = clean_label(rec.get('Loss_Reason__c')) or row.get('loss_reason') or ''
         row['reason_lost_detail'] = clean_label(rec.get('Reason_Lost_Detail__c')) or row.get('reason_lost_detail') or ''
         row['next_step'] = clean_label(rec.get('NextStep')) or row.get('next_step') or ''
+        row['business_issue'] = clean_label(rec.get('Business_Issue__c')) or clean_label(rec.get('Business_Issues__c')) or row.get('business_issue') or ''
+        row['business_issue_details'] = clean_label(rec.get('Business_Issue_Details__c')) or row.get('business_issue_details') or ''
+        row['problems_identified'] = clean_label(rec.get('Problems__c')) or row.get('problems_identified') or ''
         features = clean_label(rec.get('Missing_Features__c'))
         if features:
             row['missing_features'] = [x.strip() for x in features.replace(';', ',').split(',') if x.strip()]
@@ -408,6 +412,16 @@ def summarize(rows, report):
     for r in rows:
         for service in r.get('advertised_services') or []:
             service_counts[service] += 1
+    issue_counts = Counter()
+    populated_issues = 0
+    populated_problems = 0
+    for r in rows:
+        issue = r.get('business_issue') or 'Not captured'
+        issue_counts[issue] += 1
+        if r.get('business_issue') or r.get('business_issue_details'):
+            populated_issues += 1
+        if r.get('problems_identified'):
+            populated_problems += 1
 
     summary = {
         'generated_at_et': datetime.now(ET).strftime('%Y-%m-%d %H:%M %Z'),
@@ -440,6 +454,8 @@ def summarize(rows, report):
         'stage_detail': [],
         'closed_lost_detail': [],
         'advertised_services': [{'label': k, 'count': v} for k, v in service_counts.most_common()],
+        'business_issue_capture': {'issues_populated': populated_issues, 'problems_populated': populated_problems},
+        'business_issues': [{'label': k, 'count': v} for k, v in issue_counts.most_common()],
         'missing_features': [{'label': k, 'count': v} for k, v in features.most_common()],
     }
     theme = defaultdict(lambda: {'count': 0, 'amount': 0.0})
@@ -510,6 +526,16 @@ def render_table(rows):
         opp_url = f"https://rev-io.lightning.force.com/lightning/r/Opportunity/{r['opportunity_id']}/view" if r.get('opportunity_id', '').startswith('006') else '#'
         features = ', '.join(r.get('missing_features') or [])
         services = ', '.join(r.get('advertised_services') or [])
+        business_issue = r.get('business_issue') or ''
+        business_details = r.get('business_issue_details') or ''
+        problems = r.get('problems_identified') or ''
+        issue_cell = '<div class="muted">—</div>'
+        if business_issue or business_details or problems:
+            issue_cell = (
+                f'<div class="issue-cell"><b>{escape(business_issue or "Business issue")}</b>'
+                f'{f"<div>{escape(business_details)}</div>" if business_details else ""}'
+                f'{f"<div><span>Problems:</span> {escape(problems)}</div>" if problems else ""}</div>'
+            )
         next_step = r.get('next_step') or r.get('reason_lost_detail') or ''
         trs.append(f'''
         <tr data-stage="{escape(r['stage'])}" data-owner="{escape(r.get('owner',''))}" data-platform="{escape(r.get('psa_platform',''))}">
@@ -518,6 +544,7 @@ def render_table(rows):
           <td>{escape(r.get('owner') or '')}</td>
           <td>{escape(r.get('psa_platform') or '—')}</td>
           <td>{escape(services or r.get('services_status') or '—')}<div class="subtle">{escape((r.get('website_final_url') or r.get('website') or '')[:80])}</div></td>
+          <td>{issue_cell}</td>
           <td>{int(r.get('employees') or 0):,}</td>
           <td>{money(r.get('amount'))}</td>
           <td>{escape(r.get('close_date') or '')}</td>
@@ -647,6 +674,9 @@ th {{ position:sticky; top:0; background:#0c263a; color:#b9d2e0; z-index:2; text
 .lost-meta {{ color:var(--muted); font-size:12px; margin-top:4px; }}
 .lost-reason {{ color:#ffe2e7; font-size:13px; margin-top:9px; }}
 .lost-detail {{ color:#dcebf3; font-size:13px; line-height:1.45; margin-top:7px; }}
+.issue-cell {{ color:#dcebf3; line-height:1.35; max-width:320px; }}
+.issue-cell b {{ color:#f5fbff; display:block; margin-bottom:4px; }}
+.issue-cell span {{ color:var(--green); font-weight:800; }}
 @media (max-width:1100px) {{ .metrics {{ grid-template-columns:repeat(2,1fr); }} .grid,.grid.two {{ grid-template-columns:1fr; }} .hero {{ flex-direction:column; }} .source {{ text-align:left; }} .funnel {{ grid-template-columns:1fr; }} }}
 </style>
 </head>
@@ -719,6 +749,17 @@ th {{ position:sticky; top:0; background:#0c263a; color:#b9d2e0; z-index:2; text
   </section>
 
   <section class="grid two">
+    <div class="card">
+      <h2>Business issue capture</h2>
+      <div class="callout"><b>{summary['business_issue_capture']['issues_populated']}</b> of {summary['total_count']} opportunities have a business issue/details captured. <b>{summary['business_issue_capture']['problems_populated']}</b> have Problems populated.</div>
+    </div>
+    <div class="card">
+      <h2>Listed business issue</h2>
+      {css_bar(summary['business_issues'], amount_key='count')}
+    </div>
+  </section>
+
+  <section class="grid two">
     <div class="card"><h2>Closed-lost reasons</h2>{css_bar(summary['loss_reason'])}</div>
     <div class="card"><h2>Closed-lost themes</h2>{css_bar(summary['loss_theme'])}</div>
   </section>
@@ -742,7 +783,7 @@ th {{ position:sticky; top:0; background:#0c263a; color:#b9d2e0; z-index:2; text
   <section class="card" style="margin-top:18px;">
     <h2>Opportunity detail</h2>
     <div class="table-wrap"><table>
-      <thead><tr><th>Stage</th><th>Opportunity / Account</th><th>Owner</th><th>PSA</th><th>Advertised services</th><th>Emp.</th><th>Amount</th><th>Close</th><th>Age</th><th>Next Step / Loss Detail</th><th>Features / Loss Reason</th></tr></thead>
+      <thead><tr><th>Stage</th><th>Opportunity / Account</th><th>Owner</th><th>PSA</th><th>Advertised services</th><th>Business issue / problems identified</th><th>Emp.</th><th>Amount</th><th>Close</th><th>Age</th><th>Next Step / Loss Detail</th><th>Features / Loss Reason</th></tr></thead>
       <tbody>{render_table(rows)}</tbody>
     </table></div>
   </section>
