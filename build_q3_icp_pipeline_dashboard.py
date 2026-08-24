@@ -7,9 +7,12 @@ import shutil
 import statistics
 import subprocess
 import tempfile
+import re
 from collections import Counter, defaultdict
 from datetime import datetime
+from html.parser import HTMLParser
 from html import escape
+from urllib.parse import urljoin, urlparse
 from pathlib import Path
 from zoneinfo import ZoneInfo
 
@@ -21,6 +24,7 @@ REPORT_ID = '00OPX00000A6Bkb2AF'
 REPORT_URL = f'https://rev-io.lightning.force.com/lightning/r/Report/{REPORT_ID}/view'
 HTML_FILE = WORKSPACE / 'q3-icp-pipeline-analysis.html'
 DATA_FILE = WORKSPACE / 'q3_icp_pipeline_analysis.json'
+SERVICES_CACHE_FILE = WORKSPACE / 'q3_icp_website_services_cache.json'
 LIBRARY_FILE = WORKSPACE / 'DECKS-LIBRARY.md'
 ET = ZoneInfo('America/New_York')
 
@@ -54,6 +58,23 @@ DETAIL_KEYS = {
     'Opportunity.Reason_Lost_Detail__c': 'reason_lost_detail',
     'Opportunity.Missing_Features__c': 'missing_features',
 }
+
+SERVICE_KEYWORDS = [
+    ('Managed IT / MSP', [r'\bmanaged it\b', r'\bit support\b', r'\bit services\b', r'\bmanaged services\b', r'\bmsp\b']),
+    ('Cybersecurity', [r'\bcybersecurity\b', r'\bsecurity\b', r'\bsoc\b', r'\bsiem\b', r'\bendpoint protection\b', r'\bmanaged detection\b', r'\bmdr\b']),
+    ('Cloud services', [r'\bcloud\b', r'\bazure\b', r'\baws\b', r'\bmicrosoft 365\b', r'\boffice 365\b']),
+    ('Backup / disaster recovery', [r'\bbackup\b', r'\bdisaster recovery\b', r'\bbcdr\b', r'\bbusiness continuity\b']),
+    ('VoIP / UCaaS', [r'\bvoip\b', r'\bucaas\b', r'\bunified communications\b', r'\bhosted phone\b', r'\bphone system\b']),
+    ('Networking', [r'\bnetworking\b', r'\bnetwork infrastructure\b', r'\bwi-?fi\b', r'\bwireless\b', r'\bsd-?wan\b']),
+    ('Help desk / support', [r'\bhelp desk\b', r'\bservice desk\b', r'\btechnical support\b', r'\bremote support\b']),
+    ('Consulting / projects', [r'\bconsulting\b', r'\bproject services\b', r'\bit strategy\b', r'\bvirtual cio\b', r'\bvcio\b']),
+    ('Compliance', [r'\bcompliance\b', r'\bhipaa\b', r'\bcmmc\b', r'\bpci\b', r'\bsoc 2\b']),
+    ('Data center / colocation', [r'\bdata center\b', r'\bdatacenter\b', r'\bcolocation\b', r'\bcolo\b']),
+    ('Hardware / procurement', [r'\bhardware\b', r'\bprocurement\b', r'\blicensing\b', r'\bvendor management\b']),
+    ('Low voltage / cabling', [r'\bcabling\b', r'\blow voltage\b', r'\bfiber\b', r'\bstructured cabling\b']),
+    ('Print / copier', [r'\bmanaged print\b', r'\bprinter\b', r'\bcopier\b', r'\bprint services\b']),
+    ('Software development', [r'\bsoftware development\b', r'\bapplication development\b', r'\bweb development\b']),
+]
 
 
 def money(value):
@@ -114,7 +135,8 @@ def enrich_from_opportunities(base, headers, rows):
         return rows
     quoted = ",".join(f"'{i}'" for i in ids)
     query = f"""
-        SELECT Id, StageName, Loss_Reason__c, Reason_Lost_Detail__c, Missing_Features__c, NextStep
+        SELECT Id, StageName, Loss_Reason__c, Reason_Lost_Detail__c, Missing_Features__c, NextStep,
+               AccountId, Account.Name, Account.Website
         FROM Opportunity
         WHERE Id IN ({quoted})
     """
@@ -124,12 +146,156 @@ def enrich_from_opportunities(base, headers, rows):
         if not rec:
             continue
         row['stage'] = rec.get('StageName') or row.get('stage') or ''
+        account = rec.get('Account') or {}
+        row['account_id'] = rec.get('AccountId') or row.get('account_id') or ''
+        row['account'] = account.get('Name') or row.get('account') or ''
+        row['website'] = clean_website(account.get('Website')) or row.get('website') or ''
         row['loss_reason'] = clean_label(rec.get('Loss_Reason__c')) or row.get('loss_reason') or ''
         row['reason_lost_detail'] = clean_label(rec.get('Reason_Lost_Detail__c')) or row.get('reason_lost_detail') or ''
         row['next_step'] = clean_label(rec.get('NextStep')) or row.get('next_step') or ''
         features = clean_label(rec.get('Missing_Features__c'))
         if features:
             row['missing_features'] = [x.strip() for x in features.replace(';', ',').split(',') if x.strip()]
+    return rows
+
+
+def clean_website(value):
+    value = clean_label(value)
+    if not value:
+        return ''
+    if not re.match(r'^https?://', value, flags=re.I):
+        value = 'https://' + value
+    return value
+
+
+class TextExtractor(HTMLParser):
+    def __init__(self):
+        super().__init__()
+        self.skip = 0
+        self.parts = []
+        self.links = []
+        self.meta = []
+
+    def handle_starttag(self, tag, attrs):
+        attrs = dict(attrs)
+        if tag in {'script', 'style', 'noscript', 'svg'}:
+            self.skip += 1
+        if tag == 'a' and attrs.get('href'):
+            self.links.append((attrs.get('href'), attrs.get('title') or ''))
+        if tag == 'meta' and (attrs.get('name') in {'description', 'keywords'} or attrs.get('property') == 'og:description'):
+            if attrs.get('content'):
+                self.meta.append(attrs['content'])
+
+    def handle_endtag(self, tag):
+        if tag in {'script', 'style', 'noscript', 'svg'} and self.skip:
+            self.skip -= 1
+
+    def handle_data(self, data):
+        if not self.skip and data and data.strip():
+            self.parts.append(data.strip())
+
+    def text(self):
+        text = ' '.join(self.meta + self.parts)
+        return re.sub(r'\s+', ' ', text)
+
+
+def fetch_url(url):
+    headers = {'User-Agent': 'Mozilla/5.0 RobinRevioDashboard/1.0'}
+    try:
+        r = requests.get(url, headers=headers, timeout=12, allow_redirects=True)
+        if r.ok and 'text/html' in (r.headers.get('content-type') or ''):
+            return r.url, r.text[:500000]
+    except requests.RequestException:
+        pass
+    parsed = urlparse(url)
+    if parsed.scheme == 'https':
+        try:
+            http_url = url.replace('https://', 'http://', 1)
+            r = requests.get(http_url, headers=headers, timeout=12, allow_redirects=True)
+            if r.ok and 'text/html' in (r.headers.get('content-type') or ''):
+                return r.url, r.text[:500000]
+        except requests.RequestException:
+            pass
+    return url, ''
+
+
+def infer_services(text):
+    found = []
+    lowered = text.lower()
+    for label, patterns in SERVICE_KEYWORDS:
+        if any(re.search(p, lowered) for p in patterns):
+            found.append(label)
+    return found[:8]
+
+
+def scrape_services_for_site(website):
+    if not website:
+        return {'website': '', 'services': [], 'source_pages': [], 'status': 'No website in SF'}
+    final_url, html = fetch_url(website)
+    if not html:
+        return {'website': website, 'services': [], 'source_pages': [], 'status': 'Website fetch failed'}
+    parser = TextExtractor()
+    try:
+        parser.feed(html)
+    except Exception:
+        pass
+    pages = [(final_url, parser.text())]
+    base_host = urlparse(final_url).netloc.replace('www.', '')
+    candidate_links = []
+    for href, title in parser.links:
+        full = urljoin(final_url, href)
+        parsed = urlparse(full)
+        if parsed.scheme not in {'http', 'https'} or parsed.netloc.replace('www.', '') != base_host:
+            continue
+        marker = f"{parsed.path} {title}".lower()
+        if any(x in marker for x in ['service', 'solution', 'managed', 'cyber', 'cloud', 'voice', 'support', 'security']):
+            candidate_links.append(full.split('#')[0])
+    seen = {final_url}
+    for link in candidate_links[:3]:
+        if link in seen:
+            continue
+        seen.add(link)
+        fetched_url, page_html = fetch_url(link)
+        if page_html:
+            p = TextExtractor()
+            try:
+                p.feed(page_html)
+            except Exception:
+                pass
+            pages.append((fetched_url, p.text()))
+    services = []
+    for _, text in pages:
+        for service in infer_services(text):
+            if service not in services:
+                services.append(service)
+    return {
+        'website': final_url,
+        'services': services,
+        'source_pages': [p[0] for p in pages[:4]],
+        'status': 'OK' if services else 'Fetched; no service keywords matched',
+    }
+
+
+def enrich_with_website_services(rows, refresh=False):
+    cache = {}
+    if SERVICES_CACHE_FILE.exists() and not refresh:
+        try:
+            cache = json.loads(SERVICES_CACHE_FILE.read_text(encoding='utf-8'))
+        except json.JSONDecodeError:
+            cache = {}
+    by_site = sorted({r.get('website') for r in rows if r.get('website')})
+    for site in by_site:
+        if site not in cache or refresh:
+            print(f'  Scraping services: {site}')
+            cache[site] = scrape_services_for_site(site)
+    SERVICES_CACHE_FILE.write_text(json.dumps(cache, indent=2), encoding='utf-8')
+    for row in rows:
+        site = row.get('website') or ''
+        info = cache.get(site) or {'services': [], 'status': 'No website in SF'}
+        row['advertised_services'] = info.get('services') or []
+        row['services_status'] = info.get('status') or ''
+        row['service_source_pages'] = info.get('source_pages') or []
+        row['website_final_url'] = info.get('website') or site
     return rows
 
 
@@ -238,6 +404,10 @@ def summarize(rows, report):
         for r in rows:
             for f in r.get('missing_features') or []:
                 features[f] += 1
+    service_counts = Counter()
+    for r in rows:
+        for service in r.get('advertised_services') or []:
+            service_counts[service] += 1
 
     summary = {
         'generated_at_et': datetime.now(ET).strftime('%Y-%m-%d %H:%M %Z'),
@@ -269,6 +439,7 @@ def summarize(rows, report):
         'loss_theme': [],
         'stage_detail': [],
         'closed_lost_detail': [],
+        'advertised_services': [{'label': k, 'count': v} for k, v in service_counts.most_common()],
         'missing_features': [{'label': k, 'count': v} for k, v in features.most_common()],
     }
     theme = defaultdict(lambda: {'count': 0, 'amount': 0.0})
@@ -338,6 +509,7 @@ def render_table(rows):
     for r in ordered:
         opp_url = f"https://rev-io.lightning.force.com/lightning/r/Opportunity/{r['opportunity_id']}/view" if r.get('opportunity_id', '').startswith('006') else '#'
         features = ', '.join(r.get('missing_features') or [])
+        services = ', '.join(r.get('advertised_services') or [])
         next_step = r.get('next_step') or r.get('reason_lost_detail') or ''
         trs.append(f'''
         <tr data-stage="{escape(r['stage'])}" data-owner="{escape(r.get('owner',''))}" data-platform="{escape(r.get('psa_platform',''))}">
@@ -345,6 +517,7 @@ def render_table(rows):
           <td><a href="{opp_url}" target="_blank">{escape(r.get('opportunity') or '')}</a><div class="subtle">{escape(r.get('account') or '')}</div></td>
           <td>{escape(r.get('owner') or '')}</td>
           <td>{escape(r.get('psa_platform') or '—')}</td>
+          <td>{escape(services or r.get('services_status') or '—')}<div class="subtle">{escape((r.get('website_final_url') or r.get('website') or '')[:80])}</div></td>
           <td>{int(r.get('employees') or 0):,}</td>
           <td>{money(r.get('amount'))}</td>
           <td>{escape(r.get('close_date') or '')}</td>
@@ -455,7 +628,7 @@ h1 {{ font-size:44px; line-height:1; margin:10px 0 10px; letter-spacing:-.045em;
 .filters {{ display:flex; flex-wrap:wrap; gap:8px; margin-top:12px; }}
 .filters span {{ background:#071c2c; border:1px solid var(--line); color:#bdd0dc; border-radius:999px; padding:7px 10px; font-size:11px; }}
 .table-wrap {{ overflow:auto; border:1px solid var(--line); border-radius:18px; max-height:760px; }}
-table {{ border-collapse:collapse; width:100%; min-width:1300px; background:#071a29; }}
+table {{ border-collapse:collapse; width:100%; min-width:1450px; background:#071a29; }}
 th,td {{ padding:11px 12px; border-bottom:1px solid #14364f; text-align:left; vertical-align:top; font-size:12px; }}
 th {{ position:sticky; top:0; background:#0c263a; color:#b9d2e0; z-index:2; text-transform:uppercase; letter-spacing:.06em; font-size:11px; }}
 .subtle {{ color:var(--muted); font-size:11px; margin-top:3px; }}
@@ -539,6 +712,12 @@ th {{ position:sticky; top:0; background:#0c263a; color:#b9d2e0; z-index:2; text
     <div class="card"><h2>Employee-size bands</h2>{css_bar(summary['employee_bucket'])}</div>
   </section>
 
+  <section class="card" style="margin-top:18px;">
+    <h2>Advertised services from prospect websites</h2>
+    <div class="callout">Scraped each Salesforce account website and service/solution pages, then tagged advertised service categories by keyword. This is directional website positioning, not a perfect taxonomy — still better than vibes and a cape.</div>
+    <div class="feature-list">{''.join(f'<span>{escape(x["label"])} × {x["count"]}</span>' for x in summary['advertised_services']) or '<span>No advertised services detected</span>'}</div>
+  </section>
+
   <section class="grid two">
     <div class="card"><h2>Closed-lost reasons</h2>{css_bar(summary['loss_reason'])}</div>
     <div class="card"><h2>Closed-lost themes</h2>{css_bar(summary['loss_theme'])}</div>
@@ -563,7 +742,7 @@ th {{ position:sticky; top:0; background:#0c263a; color:#b9d2e0; z-index:2; text
   <section class="card" style="margin-top:18px;">
     <h2>Opportunity detail</h2>
     <div class="table-wrap"><table>
-      <thead><tr><th>Stage</th><th>Opportunity / Account</th><th>Owner</th><th>PSA</th><th>Emp.</th><th>Amount</th><th>Close</th><th>Age</th><th>Next Step / Loss Detail</th><th>Features / Loss Reason</th></tr></thead>
+      <thead><tr><th>Stage</th><th>Opportunity / Account</th><th>Owner</th><th>PSA</th><th>Advertised services</th><th>Emp.</th><th>Amount</th><th>Close</th><th>Age</th><th>Next Step / Loss Detail</th><th>Features / Loss Reason</th></tr></thead>
       <tbody>{render_table(rows)}</tbody>
     </table></div>
   </section>
@@ -615,6 +794,8 @@ def main():
     report = fetch_report(base, headers)
     rows, detail_columns, column_info = parse_report(report)
     rows = enrich_from_opportunities(base, headers, rows)
+    print('Scraping account websites for advertised services...')
+    rows = enrich_with_website_services(rows, refresh=os.environ.get('REFRESH_WEBSITE_SERVICES') == '1')
     summary = summarize(rows, report)
     payload = {'summary': summary, 'rows': rows, 'detail_columns': detail_columns, 'column_info': column_info}
     DATA_FILE.write_text(json.dumps(payload, indent=2), encoding='utf-8')
@@ -624,7 +805,7 @@ def main():
     if os.environ.get('NO_PUBLISH') == '1':
         print('NO_PUBLISH=1; skipping publish')
     else:
-        publish([HTML_FILE, DATA_FILE, LIBRARY_FILE, Path(__file__)])
+        publish([HTML_FILE, DATA_FILE, SERVICES_CACHE_FILE, LIBRARY_FILE, Path(__file__)])
         print(f'Published https://koontz-robin.github.io/robin-decks/{HTML_FILE.name}')
 
 
