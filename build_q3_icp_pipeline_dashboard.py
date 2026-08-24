@@ -777,6 +777,7 @@ h1 {{ font-size:44px; line-height:1; margin:10px 0 10px; letter-spacing:-.045em;
 .filters span {{ background:#071c2c; border:1px solid var(--line); color:#bdd0dc; border-radius:999px; padding:7px 10px; font-size:11px; }}
 .table-wrap {{ overflow:auto; border:1px solid var(--line); border-radius:18px; max-height:760px; }}
 .source-conversion-wrap {{ max-height:none; }}
+.platform-mix-scroll {{ max-height:420px; overflow:auto; padding-right:4px; }}
 table {{ border-collapse:collapse; width:100%; min-width:1780px; background:#071a29; }}
 th,td {{ padding:11px 12px; border-bottom:1px solid #14364f; text-align:left; vertical-align:top; font-size:12px; }}
 th {{ position:sticky; top:0; background:#0c263a; color:#b9d2e0; z-index:2; text-transform:uppercase; letter-spacing:.06em; font-size:11px; }}
@@ -869,7 +870,7 @@ th {{ position:sticky; top:0; background:#0c263a; color:#b9d2e0; z-index:2; text
       <h2>PSA platform mix</h2>
       <div class="callout">Top platform by total amount: <b>{escape(biggest_platform['label'])}</b> with <b>{money(biggest_platform['amount'])}</b> across <b>{biggest_platform['count']}</b> opps.</div>
       <h3>All rows by platform</h3>
-      {css_bar(summary['platform'])}
+      <div class="platform-mix-scroll">{css_bar(summary['platform'])}</div>
     </div>
   </section>
 
