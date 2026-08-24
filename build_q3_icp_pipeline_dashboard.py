@@ -137,6 +137,7 @@ def enrich_from_opportunities(base, headers, rows):
     query = f"""
         SELECT Id, StageName, Loss_Reason__c, Reason_Lost_Detail__c, Missing_Features__c, NextStep,
                Business_Issue__c, Business_Issue_Details__c, Business_Issues__c, Problems__c,
+               Marketing_Source__c, Marketing_Sub_source__c, LeadSource,
                AccountId, Account.Name, Account.Website
         FROM Opportunity
         WHERE Id IN ({quoted})
@@ -157,6 +158,8 @@ def enrich_from_opportunities(base, headers, rows):
         row['business_issue'] = clean_label(rec.get('Business_Issue__c')) or clean_label(rec.get('Business_Issues__c')) or row.get('business_issue') or ''
         row['business_issue_details'] = clean_label(rec.get('Business_Issue_Details__c')) or row.get('business_issue_details') or ''
         row['problems_identified'] = clean_label(rec.get('Problems__c')) or row.get('problems_identified') or ''
+        row['marketing_source'] = clean_label(rec.get('Marketing_Source__c')) or clean_label(rec.get('LeadSource')) or 'Unspecified'
+        row['marketing_subsource'] = clean_label(rec.get('Marketing_Sub_source__c')) or ''
         features = clean_label(rec.get('Missing_Features__c'))
         if features:
             row['missing_features'] = [x.strip() for x in features.replace(';', ',').split(',') if x.strip()]
@@ -408,6 +411,12 @@ def opportunity_status(row):
     return 'Active'
 
 
+def marketing_source_label(row):
+    source = row.get('marketing_source') or 'Unspecified'
+    subsource = row.get('marketing_subsource') or ''
+    return f'{source} / {subsource}' if subsource else source
+
+
 def summarize(rows, report, total_psa_pipeline=None):
     open_rows = [r for r in rows if r['stage'] not in {CLOSED_WON, CLOSED_LOST}]
     won_rows = [r for r in rows if r['stage'] == CLOSED_WON]
@@ -420,6 +429,7 @@ def summarize(rows, report, total_psa_pipeline=None):
     ages = [r['age'] for r in rows if r.get('age')]
     for r in rows:
         r['opportunity_status'] = opportunity_status(r)
+        r['marketing_source_label'] = marketing_source_label(r)
 
     def rollup(key, source=None):
         source = source or rows
@@ -452,6 +462,32 @@ def summarize(rows, report, total_psa_pipeline=None):
             populated_issues += 1
         if r.get('problems_identified'):
             populated_problems += 1
+    source_rollup = defaultdict(lambda: {
+        'count': 0, 'amount': 0.0,
+        'active_count': 0, 'active_amount': 0.0,
+        'won_count': 0, 'won_amount': 0.0,
+        'lost_count': 0, 'lost_amount': 0.0,
+    })
+    for r in rows:
+        source = r.get('marketing_source_label') or 'Unspecified'
+        bucket = source_rollup[source]
+        bucket['count'] += 1
+        bucket['amount'] += r['amount']
+        status = opportunity_status(r).lower()
+        bucket[f'{status}_count'] += 1
+        bucket[f'{status}_amount'] += r['amount']
+    source_impact = []
+    for source, values in source_rollup.items():
+        closed_count = values['won_count'] + values['lost_count']
+        closed_amount = values['won_amount'] + values['lost_amount']
+        source_impact.append({
+            'label': source,
+            **values,
+            'active_pct_amount': pct(values['active_amount'], values['amount']),
+            'win_rate_count': pct(values['won_count'], closed_count),
+            'win_rate_amount': pct(values['won_amount'], closed_amount),
+        })
+    source_impact.sort(key=lambda x: (-x['active_amount'], -x['amount'], x['label']))
 
     summary = {
         'generated_at_et': datetime.now(ET).strftime('%Y-%m-%d %H:%M %Z'),
@@ -489,6 +525,8 @@ def summarize(rows, report, total_psa_pipeline=None):
         'advertised_services': [{'label': k, 'count': v} for k, v in service_counts.most_common()],
         'business_issue_capture': {'issues_populated': populated_issues, 'problems_populated': populated_problems},
         'business_issues': [{'label': k, 'count': v} for k, v in issue_counts.most_common()],
+        'marketing_sources': rollup('marketing_source_label'),
+        'marketing_source_impact': source_impact,
         'missing_features': [{'label': k, 'count': v} for k, v in features.most_common()],
     }
     theme = defaultdict(lambda: {'count': 0, 'amount': 0.0})
@@ -562,6 +600,7 @@ def render_table(rows, sort_mode='default'):
         opp_url = f"https://rev-io.lightning.force.com/lightning/r/Opportunity/{r['opportunity_id']}/view" if r.get('opportunity_id', '').startswith('006') else '#'
         features = ', '.join(r.get('missing_features') or [])
         services = ', '.join(r.get('advertised_services') or [])
+        source = r.get('marketing_source_label') or 'Unspecified'
         business_issue = r.get('business_issue') or ''
         business_details = r.get('business_issue_details') or ''
         problems = r.get('problems_identified') or ''
@@ -579,6 +618,7 @@ def render_table(rows, sort_mode='default'):
           <td><a href="{opp_url}" target="_blank">{escape(r.get('opportunity') or '')}</a><div class="subtle">{escape(r.get('account') or '')}</div></td>
           <td>{escape(r.get('owner') or '')}</td>
           <td>{escape(r.get('psa_platform') or '—')}</td>
+          <td>{escape(source)}</td>
           <td>{escape(services or r.get('services_status') or '—')}<div class="subtle">{escape((r.get('website_final_url') or r.get('website') or '')[:80])}</div></td>
           <td>{issue_cell}</td>
           <td>{int(r.get('employees') or 0):,}</td>
@@ -607,6 +647,23 @@ def render_stage_breakdown(summary):
           <td>{item['avg_age']:.0f}d</td>
         </tr>''')
     return '\n'.join(rows)
+
+
+def render_marketing_source_impact(summary):
+    rows = []
+    for item in summary['marketing_source_impact']:
+        rows.append(f'''
+        <tr>
+          <td><strong>{escape(item['label'])}</strong></td>
+          <td>{item['count']}</td>
+          <td>{money(item['amount'])}</td>
+          <td>{item['active_count']} / {money(item['active_amount'])}</td>
+          <td>{item['won_count']} / {money(item['won_amount'])}</td>
+          <td>{item['lost_count']} / {money(item['lost_amount'])}</td>
+          <td>{item['active_pct_amount']:.0f}%</td>
+          <td>{item['win_rate_count']:.0f}%</td>
+        </tr>''')
+    return '\n'.join(rows) or '<tr><td colspan="8" class="muted">No marketing source data captured.</td></tr>'
 
 
 def render_closed_lost_deep_dive(summary):
@@ -659,7 +716,7 @@ def render_status_sections(rows, statuses=None):
         <section class="card status-section" style="margin-top:18px;">
           <h2>{escape(label)} opportunities <span class="section-count">{len(items)} opps • {money(amount)}</span></h2>
           <div class="table-wrap"><table>
-            <thead><tr><th>Stage</th><th>Opportunity / Account</th><th>Owner</th><th>PSA</th><th>Advertised services</th><th>Business issue / problems identified</th><th>Emp.</th><th>Amount</th><th>Close</th><th>Age</th><th>Next Step / Loss Detail</th><th>Features / Loss Reason</th></tr></thead>
+            <thead><tr><th>Stage</th><th>Opportunity / Account</th><th>Owner</th><th>PSA</th><th>Marketing source</th><th>Advertised services</th><th>Business issue / problems identified</th><th>Emp.</th><th>Amount</th><th>Close</th><th>Age</th><th>Next Step / Loss Detail</th><th>Features / Loss Reason</th></tr></thead>
             <tbody>{render_table(items, sort_mode='employees_desc' if label == 'Active' else 'default')}</tbody>
           </table></div>
         </section>''')
@@ -670,6 +727,12 @@ def build_html(rows, summary):
     open_gap = summary['open_amount']
     closed_decision_amount = summary['won_amount'] + summary['lost_amount']
     biggest_platform = summary['platform'][0] if summary['platform'] else {'label':'—','amount':0,'count':0}
+    top_active_source = summary['marketing_source_impact'][0] if summary['marketing_source_impact'] else {'label':'—','active_amount':0,'active_count':0,'lost_amount':0}
+    best_closed_source = max(
+        [x for x in summary['marketing_source_impact'] if (x['won_count'] + x['lost_count']) > 0],
+        key=lambda x: (x['win_rate_count'], x['won_amount']),
+        default={'label':'—','win_rate_count':0,'won_count':0,'lost_count':0},
+    )
     filters_html = render_filters(summary)
     html = f'''<!doctype html>
 <html lang="en">
@@ -713,7 +776,7 @@ h1 {{ font-size:44px; line-height:1; margin:10px 0 10px; letter-spacing:-.045em;
 .filters {{ display:flex; flex-wrap:wrap; gap:8px; margin-top:12px; }}
 .filters span {{ background:#071c2c; border:1px solid var(--line); color:#bdd0dc; border-radius:999px; padding:7px 10px; font-size:11px; }}
 .table-wrap {{ overflow:auto; border:1px solid var(--line); border-radius:18px; max-height:760px; }}
-table {{ border-collapse:collapse; width:100%; min-width:1650px; background:#071a29; }}
+table {{ border-collapse:collapse; width:100%; min-width:1780px; background:#071a29; }}
 th,td {{ padding:11px 12px; border-bottom:1px solid #14364f; text-align:left; vertical-align:top; font-size:12px; }}
 th {{ position:sticky; top:0; background:#0c263a; color:#b9d2e0; z-index:2; text-transform:uppercase; letter-spacing:.06em; font-size:11px; }}
 .subtle {{ color:var(--muted); font-size:11px; margin-top:3px; }}
@@ -764,6 +827,24 @@ th {{ position:sticky; top:0; background:#0c263a; color:#b9d2e0; z-index:2; text
   <section class="card" style="margin-top:18px;">
     <h2>Active vs. Won vs. Lost</h2>
     {css_bar(summary['status'])}
+  </section>
+
+  <section class="grid two">
+    <div class="card">
+      <h2>Marketing source impact</h2>
+      <div class="callout">
+        Biggest active ICP source: <b>{escape(top_active_source['label'])}</b> with <b>{money(top_active_source['active_amount'])}</b> across <b>{top_active_source['active_count']}</b> active opps. Best closed-source win rate: <b>{escape(best_closed_source['label'])}</b> at <b>{best_closed_source['win_rate_count']:.0f}%</b> by count across <b>{best_closed_source['won_count'] + best_closed_source['lost_count']}</b> closed decisions.
+      </div>
+      <h3>All source mix by total ICP amount</h3>
+      {css_bar(summary['marketing_sources'])}
+    </div>
+    <div class="card">
+      <h2>Source conversion table</h2>
+      <div class="table-wrap" style="max-height:420px;"><table style="min-width:980px;">
+        <thead><tr><th>Marketing source</th><th>Total</th><th>Total $</th><th>Active</th><th>Won</th><th>Lost</th><th>Active $ %</th><th>Win rate</th></tr></thead>
+        <tbody>{render_marketing_source_impact(summary)}</tbody>
+      </table></div>
+    </div>
   </section>
 
   <section class="grid">
