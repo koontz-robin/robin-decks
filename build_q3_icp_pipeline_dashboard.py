@@ -776,6 +776,7 @@ h1 {{ font-size:44px; line-height:1; margin:10px 0 10px; letter-spacing:-.045em;
 .filters {{ display:flex; flex-wrap:wrap; gap:8px; margin-top:12px; }}
 .filters span {{ background:#071c2c; border:1px solid var(--line); color:#bdd0dc; border-radius:999px; padding:7px 10px; font-size:11px; }}
 .table-wrap {{ overflow:auto; border:1px solid var(--line); border-radius:18px; max-height:760px; }}
+.source-conversion-wrap {{ max-height:none; }}
 table {{ border-collapse:collapse; width:100%; min-width:1780px; background:#071a29; }}
 th,td {{ padding:11px 12px; border-bottom:1px solid #14364f; text-align:left; vertical-align:top; font-size:12px; }}
 th {{ position:sticky; top:0; background:#0c263a; color:#b9d2e0; z-index:2; text-transform:uppercase; letter-spacing:.06em; font-size:11px; }}
@@ -840,7 +841,7 @@ th {{ position:sticky; top:0; background:#0c263a; color:#b9d2e0; z-index:2; text
     </div>
     <div class="card">
       <h2>Source conversion table</h2>
-      <div class="table-wrap" style="max-height:420px;"><table style="min-width:980px;">
+      <div class="table-wrap source-conversion-wrap"><table style="min-width:980px;">
         <thead><tr><th>Marketing source</th><th>Total</th><th>Total $</th><th>Active</th><th>Won</th><th>Lost</th><th>Active $ %</th><th>Win rate</th></tr></thead>
         <tbody>{render_marketing_source_impact(summary)}</tbody>
       </table></div>
