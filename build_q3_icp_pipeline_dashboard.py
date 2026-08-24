@@ -619,13 +619,16 @@ def render_lost_card(r):
     </div>'''
 
 
-def render_status_sections(rows):
+def render_status_sections(rows, statuses=None):
     sections = []
     config = [
         ('Active', [r for r in rows if opportunity_status(r) == 'Active']),
         ('Won', [r for r in rows if opportunity_status(r) == 'Won']),
         ('Lost', [r for r in rows if opportunity_status(r) == 'Lost']),
     ]
+    if statuses:
+        wanted = set(statuses)
+        config = [(label, items) for label, items in config if label in wanted]
     for label, items in config:
         amount = sum(r.get('amount') or 0 for r in items)
         sections.append(f'''
@@ -795,6 +798,8 @@ th {{ position:sticky; top:0; background:#0c263a; color:#b9d2e0; z-index:2; text
     </div>
   </section>
 
+  {render_status_sections(rows, statuses=['Active'])}
+
   <section class="grid two">
     <div class="card"><h2>Closed-lost reasons</h2>{css_bar(summary['loss_reason'])}</div>
     <div class="card"><h2>Closed-lost themes</h2>{css_bar(summary['loss_theme'])}</div>
@@ -816,7 +821,7 @@ th {{ position:sticky; top:0; background:#0c263a; color:#b9d2e0; z-index:2; text
     <div class="filters">{filters_html}</div>
   </section>
 
-  {render_status_sections(rows)}
+  {render_status_sections(rows, statuses=['Won', 'Lost'])}
 </div>
 </body>
 </html>'''
