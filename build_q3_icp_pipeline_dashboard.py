@@ -303,6 +303,25 @@ def enrich_with_website_services(rows, refresh=False):
     return rows
 
 
+def fetch_total_psa_pipeline(base, headers):
+    query = """
+        SELECT Id, Amount, StageName
+        FROM Opportunity
+        WHERE CloseDate >= 2026-07-01
+          AND CloseDate <= 2026-09-30
+          AND Product_Type__c LIKE '%PSA%'
+          AND Type = 'New Opportunity'
+          AND StageName NOT IN ('Closed Lost','Closed Won')
+          AND Probability > 0
+          AND IsDeleted = false
+    """
+    records = sf_query(base, headers, query)
+    return {
+        'count': len(records),
+        'amount': sum(float(r.get('Amount') or 0) for r in records),
+    }
+
+
 def parse_report(report):
     detail_columns = report['reportMetadata']['detailColumns']
     groupings = report.get('groupingsDown', {}).get('groupings', [])
@@ -389,7 +408,7 @@ def opportunity_status(row):
     return 'Active'
 
 
-def summarize(rows, report):
+def summarize(rows, report, total_psa_pipeline=None):
     open_rows = [r for r in rows if r['stage'] not in {CLOSED_WON, CLOSED_LOST}]
     won_rows = [r for r in rows if r['stage'] == CLOSED_WON]
     lost_rows = [r for r in rows if r['stage'] == CLOSED_LOST]
@@ -445,6 +464,8 @@ def summarize(rows, report):
         'total_amount': total_amount,
         'open_count': len(open_rows),
         'open_amount': open_amount,
+        'total_psa_pipeline': total_psa_pipeline or {'count': 0, 'amount': 0},
+        'icp_pct_total_psa_pipeline': pct(open_amount, (total_psa_pipeline or {}).get('amount')),
         'won_count': len(won_rows),
         'won_amount': won_amount,
         'lost_count': len(lost_rows),
@@ -645,7 +666,6 @@ def render_status_sections(rows, statuses=None):
 def build_html(rows, summary):
     open_gap = summary['open_amount']
     closed_decision_amount = summary['won_amount'] + summary['lost_amount']
-    biggest_open_owner = summary['open_owner'][0] if summary['open_owner'] else {'label':'—','amount':0,'count':0}
     biggest_platform = summary['platform'][0] if summary['platform'] else {'label':'—','amount':0,'count':0}
     filters_html = render_filters(summary)
     html = f'''<!doctype html>
@@ -735,7 +755,7 @@ th {{ position:sticky; top:0; background:#0c263a; color:#b9d2e0; z-index:2; text
     {metric('Closed won', money(summary['won_amount']), f"{summary['won_count']} won • {summary['win_rate_count']:.0f}% count win rate")}
     {metric('Closed lost', money(summary['lost_amount']), f"{summary['lost_count']} lost • {summary['win_rate_amount']:.0f}% amount win rate")}
     {metric('Avg / median age', f"{summary['avg_age']:.0f} / {summary['median_age']:.0f}d", 'All report rows')}
-    {metric('Largest open owner', escape(biggest_open_owner['label']), f"{money(biggest_open_owner['amount'])} • {biggest_open_owner['count']} opps")}
+    {metric('ICP % of PSA pipeline', f"{summary['icp_pct_total_psa_pipeline']:.1f}%", f"{money(summary['open_amount'])} ICP / {money(summary['total_psa_pipeline']['amount'])} total PSA")}
   </section>
 
   <section class="card" style="margin-top:18px;">
@@ -872,7 +892,9 @@ def main():
     rows = enrich_from_opportunities(base, headers, rows)
     print('Scraping account websites for advertised services...')
     rows = enrich_with_website_services(rows, refresh=os.environ.get('REFRESH_WEBSITE_SERVICES') == '1')
-    summary = summarize(rows, report)
+    print('Fetching total Q3 PSA pipeline denominator...')
+    total_psa_pipeline = fetch_total_psa_pipeline(base, headers)
+    summary = summarize(rows, report, total_psa_pipeline=total_psa_pipeline)
     payload = {'summary': summary, 'rows': rows, 'detail_columns': detail_columns, 'column_info': column_info}
     DATA_FILE.write_text(json.dumps(payload, indent=2), encoding='utf-8')
     build_html(rows, summary)
