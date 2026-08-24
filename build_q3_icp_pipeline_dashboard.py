@@ -380,6 +380,15 @@ def loss_theme(row):
     return row.get('loss_reason') or 'Unspecified'
 
 
+def opportunity_status(row):
+    stage = row.get('stage') or ''
+    if stage == CLOSED_WON:
+        return 'Won'
+    if stage == CLOSED_LOST:
+        return 'Lost'
+    return 'Active'
+
+
 def summarize(rows, report):
     open_rows = [r for r in rows if r['stage'] not in {CLOSED_WON, CLOSED_LOST}]
     won_rows = [r for r in rows if r['stage'] == CLOSED_WON]
@@ -390,6 +399,8 @@ def summarize(rows, report):
     won_amount = sum(r['amount'] for r in won_rows)
     lost_amount = sum(r['amount'] for r in lost_rows)
     ages = [r['age'] for r in rows if r.get('age')]
+    for r in rows:
+        r['opportunity_status'] = opportunity_status(r)
 
     def rollup(key, source=None):
         source = source or rows
@@ -442,6 +453,7 @@ def summarize(rows, report):
         'win_rate_amount': pct(won_amount, won_amount + lost_amount),
         'avg_age': statistics.mean(ages) if ages else 0,
         'median_age': statistics.median(ages) if ages else 0,
+        'status': rollup('opportunity_status'),
         'stage': rollup('stage'),
         'open_stage': rollup('stage', open_rows),
         'owner': rollup('owner'),
@@ -607,6 +619,26 @@ def render_lost_card(r):
     </div>'''
 
 
+def render_status_sections(rows):
+    sections = []
+    config = [
+        ('Active', [r for r in rows if opportunity_status(r) == 'Active']),
+        ('Won', [r for r in rows if opportunity_status(r) == 'Won']),
+        ('Lost', [r for r in rows if opportunity_status(r) == 'Lost']),
+    ]
+    for label, items in config:
+        amount = sum(r.get('amount') or 0 for r in items)
+        sections.append(f'''
+        <section class="card status-section" style="margin-top:18px;">
+          <h2>{escape(label)} opportunities <span class="section-count">{len(items)} opps • {money(amount)}</span></h2>
+          <div class="table-wrap"><table>
+            <thead><tr><th>Stage</th><th>Opportunity / Account</th><th>Owner</th><th>PSA</th><th>Advertised services</th><th>Business issue / problems identified</th><th>Emp.</th><th>Amount</th><th>Close</th><th>Age</th><th>Next Step / Loss Detail</th><th>Features / Loss Reason</th></tr></thead>
+            <tbody>{render_table(items)}</tbody>
+          </table></div>
+        </section>''')
+    return '\n'.join(sections)
+
+
 def build_html(rows, summary):
     open_gap = summary['open_amount']
     closed_decision_amount = summary['won_amount'] + summary['lost_amount']
@@ -677,6 +709,7 @@ th {{ position:sticky; top:0; background:#0c263a; color:#b9d2e0; z-index:2; text
 .issue-cell {{ color:#dcebf3; line-height:1.35; max-width:320px; }}
 .issue-cell b {{ color:#f5fbff; display:block; margin-bottom:4px; }}
 .issue-cell span {{ color:var(--green); font-weight:800; }}
+.section-count {{ color:var(--muted); font-size:13px; font-weight:700; margin-left:8px; }}
 @media (max-width:1100px) {{ .metrics {{ grid-template-columns:repeat(2,1fr); }} .grid,.grid.two {{ grid-template-columns:1fr; }} .hero {{ flex-direction:column; }} .source {{ text-align:left; }} .funnel {{ grid-template-columns:1fr; }} }}
 </style>
 </head>
@@ -702,6 +735,11 @@ th {{ position:sticky; top:0; background:#0c263a; color:#b9d2e0; z-index:2; text
     {metric('Closed lost', money(summary['lost_amount']), f"{summary['lost_count']} lost • {summary['win_rate_amount']:.0f}% amount win rate")}
     {metric('Avg / median age', f"{summary['avg_age']:.0f} / {summary['median_age']:.0f}d", 'All report rows')}
     {metric('Largest open owner', escape(biggest_open_owner['label']), f"{money(biggest_open_owner['amount'])} • {biggest_open_owner['count']} opps")}
+  </section>
+
+  <section class="card" style="margin-top:18px;">
+    <h2>Active vs. Won vs. Lost</h2>
+    {css_bar(summary['status'])}
   </section>
 
   <section class="grid">
@@ -780,13 +818,7 @@ th {{ position:sticky; top:0; background:#0c263a; color:#b9d2e0; z-index:2; text
     <div class="filters">{filters_html}</div>
   </section>
 
-  <section class="card" style="margin-top:18px;">
-    <h2>Opportunity detail</h2>
-    <div class="table-wrap"><table>
-      <thead><tr><th>Stage</th><th>Opportunity / Account</th><th>Owner</th><th>PSA</th><th>Advertised services</th><th>Business issue / problems identified</th><th>Emp.</th><th>Amount</th><th>Close</th><th>Age</th><th>Next Step / Loss Detail</th><th>Features / Loss Reason</th></tr></thead>
-      <tbody>{render_table(rows)}</tbody>
-    </table></div>
-  </section>
+  {render_status_sections(rows)}
 </div>
 </body>
 </html>'''
