@@ -157,6 +157,7 @@ def empty_rep(role=""):
     return {
         "role": role,
         "discovery_set": empty_periods(),
+        "discovery_complete_influenced": empty_periods(),
         "cbrs_set": empty_periods(),
         "initial_demos_ran": empty_periods(),
         "sdr_sourced_opps": empty_periods(),
@@ -235,6 +236,34 @@ def build_payload():
             if rep not in metrics:
                 metrics[rep] = empty_rep("Other")
             add_metric(metrics[rep], "discovery_set", period)
+
+    # Discovery meetings COMPLETED with SDR influence: completed Discovery Call events credited
+    # by Event.SDR_Influence__c instead of event owner. This is the SDR quality signal Ryan
+    # wants used for top/bottom SDR views alongside SDR-sourced opps.
+    discovery_complete_events = sf_query(base, headers, f"""
+        SELECT Id, Subject, Type, ActivityDate, Appointment_Status__c, SDR_Influence__c
+        FROM Event
+        WHERE IsDeleted = false
+          AND ActivityDate >= {sf_date(range_start)}
+          AND ActivityDate < {sf_date(range_end)}
+          AND Type = '1-Discovery Call'
+          AND SDR_Influence__c != null
+          AND SDR_Influence__c != 'None'
+    """)
+    for ev in discovery_complete_events:
+        status = (ev.get("Appointment_Status__c") or "").strip().lower()
+        subject = (ev.get("Subject") or "").lower()
+        if "cancel" in subject or "internal" in subject:
+            continue
+        if status and status not in {"completed", "complete", "held", "ran"}:
+            continue
+        dt = datetime.fromisoformat(ev["ActivityDate"]).replace(tzinfo=ET)
+        period = period_for_dt(dt, windows)
+        sdr = normalize_name(ev.get("SDR_Influence__c"))
+        if period and sdr and sdr not in EXCLUDED_REPS:
+            if sdr not in metrics:
+                metrics[sdr] = empty_rep("SDR")
+            add_metric(metrics[sdr], "discovery_complete_influenced", period)
 
     # CBRs SET: Events with Type = Client Business Review created during the week.
     cbr_events = sf_query(base, headers, f"""
@@ -354,7 +383,8 @@ def build_payload():
         "generated_at_et": now_et.strftime("%b %-d, %Y %-I:%M %p ET"),
         "windows": {k: format_window(v[0], v[1]) for k, v in windows.items()},
         "definitions": {
-            "discovery_set": "Tasks created with Discovery Meeting/Call in the subject.",
+            "discovery_set": "Events with Type = 1-Discovery Call created during the week.",
+            "discovery_complete_influenced": "Completed/Held/Ran Discovery Call events credited by Event SDR_Influence__c.",
             "cbrs_set": "Events with Type = Client Business Review created during the week.",
             "initial_demos_ran": "Events with Type = 2-Initial DEMO and ActivityDate in-week, completed/held when appointment status is present.",
             "sdr_sourced_opps": "Opportunities created with SDR_Influence__c populated and not None.",
@@ -472,10 +502,10 @@ def performer_score(m):
             + (m["booked_mrr"]["last"] / 1000.0)
         )
     if role == "SDR":
-        # SDRs: set discovery meetings; sourced opps are a secondary quality signal.
+        # SDRs: prioritize opps sourced, with completed influenced discovery meetings as the quality/activity tie-breaker.
         return (
-            m["discovery_set"]["last"] * 2.0
-            + m["sdr_sourced_opps"]["last"] * 1.0
+            m["sdr_sourced_opps"]["last"] * 3.0
+            + m["discovery_complete_influenced"]["last"] * 1.0
         )
     return 0.0
 
@@ -487,7 +517,7 @@ def role_metric_summary(m):
     if role == "CSA":
         return f"{fmt_int(m['cbrs_set']['last'])} CBRs · {money(m['booked_mrr']['last'])} upsell/booked"
     if role == "SDR":
-        return f"{fmt_int(m['discovery_set']['last'])} discovery set · {fmt_int(m['sdr_sourced_opps']['last'])} SDR opps"
+        return f"{fmt_int(m['sdr_sourced_opps']['last'])} SDR opps · {fmt_int(m['discovery_complete_influenced']['last'])} influenced discos complete"
     return "—"
 
 
@@ -568,7 +598,7 @@ body:before{{content:'';position:fixed;inset:-14% -10% 55% -10%;background:radia
 <div class="metric-grid">{cards}</div>
 <div class="panel-grid"><section class="panel focus-panel"><div class="panel-head"><h2>Positive movement</h2><div class="panel-note">Metrics up or flat vs the prior week — easier to scan for what improved.</div></div><table><thead><tr><th>Metric</th><th>Last Week</th><th>Prior Week</th><th>Difference</th></tr></thead><tbody>{positive_rows}</tbody></table></section><section class="panel watch-panel"><div class="panel-head"><h2>Watch list</h2><div class="panel-note">Metrics down vs the prior week — the Monday coaching queue, minus the detective corkboard chaos.</div></div><table><thead><tr><th>Metric</th><th>Last Week</th><th>Prior Week</th><th>Difference</th></tr></thead><tbody>{negative_rows}</tbody></table></section></div>
 <section class="panel"><div class="panel-head"><h2>Team metric scorecard</h2><div class="panel-note">Team-level view only: last week, prior week, and variance. No rep-by-rep difference pileup.</div></div><table><thead><tr><th>Metric</th><th>Last Week</th><th>Prior Week</th><th>Difference</th></tr></thead><tbody>{team_summary_rows}</tbody></table></section>
-<div class="panel-grid"><section class="panel focus-panel"><div class="panel-head"><h2>Top performer by role last week</h2><div class="panel-note">One AE, one CSA, and one SDR using the metrics each role owns.</div></div><table><thead><tr><th>Role</th><th>Person</th><th>Role-Owned Metrics</th><th>Score</th></tr></thead><tbody>{top_performer_rows}</tbody></table></section><section class="panel watch-panel"><div class="panel-head"><h2>Bottom performer by role last week</h2><div class="panel-note">One AE, one CSA, and one SDR for coaching focus — apples to apples, finally.</div></div><table><thead><tr><th>Role</th><th>Person</th><th>Role-Owned Metrics</th><th>Score</th></tr></thead><tbody>{bottom_performer_rows}</tbody></table></section></div>
+<div class="panel-grid"><section class="panel focus-panel"><div class="panel-head"><h2>Top performer by role last week</h2><div class="panel-note">One AE, one CSA, and one SDR using the metrics each role owns. SDR ranking = sourced opps first, influenced completed discovery meetings second.</div></div><table><thead><tr><th>Role</th><th>Person</th><th>Role-Owned Metrics</th><th>Score</th></tr></thead><tbody>{top_performer_rows}</tbody></table></section><section class="panel watch-panel"><div class="panel-head"><h2>Bottom performer by role last week</h2><div class="panel-note">One AE, one CSA, and one SDR for coaching focus. SDR ranking uses opps sourced plus completed discovery meetings credited by SDR influence.</div></div><table><thead><tr><th>Role</th><th>Person</th><th>Role-Owned Metrics</th><th>Score</th></tr></thead><tbody>{bottom_performer_rows}</tbody></table></section></div>
 <section class="panel"><div class="panel-head"><h2>MRR booked by product</h2><div class="panel-note">Closed-won Opportunity Amount by CloseDate and Product Type.</div></div><table><thead><tr><th>Product</th><th>Last Week</th><th>Prior Week</th><th>Delta</th></tr></thead><tbody>{product_rows}</tbody></table></section>
 <section class="panel"><div class="panel-head"><h2>All closed won opportunities last week</h2><div class="panel-note">Every opportunity marked Closed Won with a close date in the previous week.</div></div><table><thead><tr><th>Owner</th><th>Account / Opportunity</th><th>Product</th><th>MRR</th></tr></thead><tbody>{closed_won_rows}</tbody></table></section>
 <section class="panel"><div class="panel-head"><h2>Metric definitions</h2><div class="panel-note">So nobody has to decode the Batcomputer during the team meeting.</div></div><div class="definitions">{''.join(f'<div class="def"><strong>{escape(k.replace("_", " ").title())}:</strong> {escape(v)}</div>' for k, v in payload['definitions'].items())}</div></section>
