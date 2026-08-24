@@ -181,3 +181,8 @@ When Robin creates a new deck or dashboard:
 - [Crown Networks PSA Evaluation Readout](https://koontz-robin.github.io/robin-decks/crown-networks-psa-evaluation-readout.html) — Buyer-facing Execute readout for Crown Networks, focused on replacing ConnectWise project/work-order/subcontractor/payment friction with Rev.io PSA.
 
 - Q3 ICP Pipeline Analysis — detailed Salesforce ICP pipeline dashboard: stage funnel, owner/platform/industry splits, size bands, closed-lost analysis, and opportunity detail. URL: https://koontz-robin.github.io/robin-decks/q3-icp-pipeline-analysis.html
+
+### Tigerpaw Migration Interest Dashboard
+- URL: https://koontz-robin.github.io/robin-decks/tigerpaw-migration-interest-dashboard.html
+- Source: Salesforce PSA Account Status accounts + Notion Sales Meetings/CBR snippets
+- Created: 2026-08-24
