@@ -820,7 +820,7 @@ th {{ position:sticky; top:0; background:#0c263a; color:#b9d2e0; z-index:2; text
     {metric('Open ICP pipeline', money(summary['open_amount']), f"{summary['open_count']} active opps")}
     {metric('Closed won', money(summary['won_amount']), f"{summary['won_count']} won • {summary['win_rate_count']:.0f}% count win rate")}
     {metric('Closed lost', money(summary['lost_amount']), f"{summary['lost_count']} lost • {summary['win_rate_amount']:.0f}% amount win rate")}
-    {metric('Avg / median age', f"{summary['avg_age']:.0f} / {summary['median_age']:.0f}d", 'All report rows')}
+    {metric('Win rate', f"{summary['win_rate_count']:.0f}%", f"{summary['won_count']} won / {summary['won_count'] + summary['lost_count']} closed decisions")}
     {metric('ICP % of PSA pipeline', f"{summary['icp_pct_total_psa_pipeline']:.1f}%", f"{money(summary['open_amount'])} ICP / {money(summary['total_psa_pipeline']['amount'])} total PSA")}
   </section>
 
