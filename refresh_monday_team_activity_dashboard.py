@@ -32,9 +32,10 @@ NAME_ALIASES = {"Andrew Whisenant": "Andy Whisenant"}
 EXCLUDED_REPS = {
     "Ardit Berdyna", "Blaine Villafuerte", "Cam Sharpe", "Davis Herndon",
     "Jake Mitchell", "Matt Salin", "Olivia Sandefur", "Reid Doster", "Usman Zahoor",
+    "Husam Zalmiyar",
 }
 ROLE_GROUPS = {"SDRs": "SDR", "MSP Sales": "AE", "Integrator Sales": "AE", "CSA": "CSA"}
-KNOWN_AES = {"Andy Whisenant", "Connor Flynn", "Husam Zalmiyar", "Jake Borah", "Jamie Butler", "Jaylin Bender", "Patrick Davies"}
+KNOWN_AES = {"Andy Whisenant", "Connor Flynn", "Jake Borah", "Jamie Butler", "Jaylin Bender", "Patrick Davies"}
 KNOWN_CSAS = {"Ingrid Beard", "Justin Lee"}
 CBR_TYPES = ["Client Business Review"]
 DEMO_TYPES = ["2-Initial DEMO"]
@@ -229,6 +230,8 @@ def build_payload():
         """)
         for ev in discovery_events:
             rep = normalize_name((ev.get("Owner") or {}).get("Name")) or "Unassigned"
+            if rep in EXCLUDED_REPS:
+                continue
             if rep not in metrics:
                 metrics[rep] = empty_rep("Other")
             add_metric(metrics[rep], "discovery_set", period)
@@ -295,7 +298,7 @@ def build_payload():
         source = opp.get("Marketing_Source__c") or ""
         subsource = opp.get("Marketing_Sub_source__c") or ""
         sdr = normalize_name(opp.get("SDR_Influence__c"))
-        if sdr and sdr.lower() != "none":
+        if sdr and sdr.lower() != "none" and sdr not in EXCLUDED_REPS:
             if sdr not in metrics:
                 metrics[sdr] = empty_rep("SDR")
             add_metric(metrics[sdr], "sdr_sourced_opps", period, mrr_key="sdr_sourced_mrr", mrr=mrr)
@@ -331,7 +334,7 @@ def build_payload():
         product_mrr[product][period]["count"] += 1
         if owner in metrics:
             add_metric(metrics[owner], "booked_count", period, mrr_key="booked_mrr", mrr=mrr)
-        if period == "last":
+        if period == "last" and owner not in EXCLUDED_REPS:
             conversion_detail["booked"].append({"rep": owner, "opp": opp.get("Name") or "Opportunity", "account": (opp.get("Account") or {}).get("Name") or "", "product": product, "mrr": mrr, "date": dt.strftime("%a %-m/%-d")})
 
     totals = empty_rep("Total")
