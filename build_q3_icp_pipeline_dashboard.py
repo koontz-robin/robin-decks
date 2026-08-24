@@ -87,6 +87,52 @@ def fetch_report(base, headers):
     return response.json()
 
 
+def sf_query(base, headers, query):
+    url = f'{base}/services/data/v59.0/query'
+    params = {'q': query.strip()}
+    records = []
+    while True:
+        response = requests.get(url, headers=headers, params=params, timeout=60)
+        if not response.ok:
+            raise RuntimeError(f'Salesforce query failed: {response.status_code} {response.text[:500]}')
+        payload = response.json()
+        records.extend(payload.get('records') or [])
+        if payload.get('done', True):
+            return records
+        url = base + payload['nextRecordsUrl']
+        params = {}
+
+
+def enrich_from_opportunities(base, headers, rows):
+    """Pull full text fields from Opportunity records.
+
+    The Analytics API report detail rows can truncate long textarea values, so use
+    the report for row scope and then hydrate the loss fields directly from SF.
+    """
+    ids = sorted({r.get('opportunity_id') for r in rows if str(r.get('opportunity_id', '')).startswith('006')})
+    if not ids:
+        return rows
+    quoted = ",".join(f"'{i}'" for i in ids)
+    query = f"""
+        SELECT Id, StageName, Loss_Reason__c, Reason_Lost_Detail__c, Missing_Features__c, NextStep
+        FROM Opportunity
+        WHERE Id IN ({quoted})
+    """
+    by_id = {r['Id']: r for r in sf_query(base, headers, query)}
+    for row in rows:
+        rec = by_id.get(row.get('opportunity_id'))
+        if not rec:
+            continue
+        row['stage'] = rec.get('StageName') or row.get('stage') or ''
+        row['loss_reason'] = clean_label(rec.get('Loss_Reason__c')) or row.get('loss_reason') or ''
+        row['reason_lost_detail'] = clean_label(rec.get('Reason_Lost_Detail__c')) or row.get('reason_lost_detail') or ''
+        row['next_step'] = clean_label(rec.get('NextStep')) or row.get('next_step') or ''
+        features = clean_label(rec.get('Missing_Features__c'))
+        if features:
+            row['missing_features'] = [x.strip() for x in features.replace(';', ',').split(',') if x.strip()]
+    return rows
+
+
 def parse_report(report):
     detail_columns = report['reportMetadata']['detailColumns']
     groupings = report.get('groupingsDown', {}).get('groupings', [])
@@ -142,6 +188,26 @@ def bucket_employee_count(n):
     if n < 100: return '50–99'
     if n < 250: return '100–249'
     return '250+'
+
+
+def loss_theme(row):
+    reason = (row.get('loss_reason') or '').lower()
+    detail = (row.get('reason_lost_detail') or '').lower()
+    features = ' '.join(row.get('missing_features') or []).lower()
+    text = f'{reason} {detail} {features}'
+    if 'no show' in text or 'reschedul' in text or 'get back' in text:
+        return 'Sales process / no-show'
+    if 'software missing' in text or 'integration' in text or 'feature' in text or 'print' in text or 'billing' in text:
+        return 'Product / integration gap'
+    if 'contract' in text or '2027' in text:
+        return 'Incumbent contract timing'
+    if 'not the right time' in text or 'priority' in text or 'q1' in text or 'summit' in text:
+        return 'Timing / priority'
+    if 'no business issue' in text or 'exploratory' in text or 'purpose driven' in text:
+        return 'Weak pain / no business issue'
+    if 'not right customer' in text or 'jira' in text:
+        return 'ICP / customer fit'
+    return row.get('loss_reason') or 'Unspecified'
 
 
 def summarize(rows, report):
@@ -200,8 +266,29 @@ def summarize(rows, report):
         'industry': rollup('industry'),
         'employee_bucket': [],
         'loss_reason': rollup('loss_reason', lost_rows),
+        'loss_theme': [],
+        'stage_detail': [],
+        'closed_lost_detail': [],
         'missing_features': [{'label': k, 'count': v} for k, v in features.most_common()],
     }
+    theme = defaultdict(lambda: {'count': 0, 'amount': 0.0})
+    for r in lost_rows:
+        t = loss_theme(r)
+        r['loss_theme'] = t
+        theme[t]['count'] += 1
+        theme[t]['amount'] += r['amount']
+    summary['loss_theme'] = sorted(([{'label': k, **v} for k, v in theme.items()]), key=lambda x: (-x['amount'], x['label']))
+    for stage_item in summary['stage']:
+        stage_rows = [r for r in rows if r['stage'] == stage_item['label']]
+        top_owner = Counter(r.get('owner') or 'Unspecified' for r in stage_rows).most_common(1)
+        top_platform = Counter(r.get('psa_platform') or 'Unspecified' for r in stage_rows).most_common(1)
+        summary['stage_detail'].append({
+            **stage_item,
+            'top_owner': top_owner[0][0] if top_owner else '—',
+            'top_platform': top_platform[0][0] if top_platform else '—',
+            'avg_age': statistics.mean([r['age'] for r in stage_rows if r.get('age')]) if any(r.get('age') for r in stage_rows) else 0,
+        })
+    summary['closed_lost_detail'] = sorted(lost_rows, key=lambda r: (loss_theme(r), r.get('loss_reason') or '', -r.get('amount', 0), r.get('opportunity') or ''))
     emp = defaultdict(lambda: {'count': 0, 'amount': 0.0})
     for r in rows:
         b = bucket_employee_count(r.get('employees'))
@@ -268,6 +355,58 @@ def render_table(rows):
     return '\n'.join(trs)
 
 
+def render_stage_breakdown(summary):
+    rows = []
+    for item in summary['stage_detail']:
+        label = item['label']
+        pill_class = label.lower().replace(' ', '-').replace('/', '-')
+        rows.append(f'''
+        <tr>
+          <td><span class="pill stage-{escape(pill_class)}">{escape(label)}</span></td>
+          <td>{item['count']}</td>
+          <td>{money(item['amount'])}</td>
+          <td>{pct(item['amount'], summary['total_amount']):.1f}%</td>
+          <td>{escape(item['top_owner'])}</td>
+          <td>{escape(item['top_platform'])}</td>
+          <td>{item['avg_age']:.0f}d</td>
+        </tr>''')
+    return '\n'.join(rows)
+
+
+def render_closed_lost_deep_dive(summary):
+    groups = defaultdict(list)
+    for row in summary['closed_lost_detail']:
+        groups[row.get('loss_theme') or loss_theme(row)].append(row)
+    sections = []
+    for theme in [x['label'] for x in summary['loss_theme']]:
+        items = groups.get(theme) or []
+        amount = sum(r['amount'] for r in items)
+        sections.append(f'''
+        <div class="loss-group">
+          <div class="loss-group-head">
+            <div><strong>{escape(theme)}</strong><span>{len(items)} opps • {money(amount)}</span></div>
+            <div>{pct(amount, summary['lost_amount']):.0f}% of lost $</div>
+          </div>
+          {''.join(render_lost_card(r) for r in items)}
+        </div>''')
+    return '\n'.join(sections)
+
+
+def render_lost_card(r):
+    opp_url = f"https://rev-io.lightning.force.com/lightning/r/Opportunity/{r['opportunity_id']}/view" if r.get('opportunity_id', '').startswith('006') else '#'
+    features = ', '.join(r.get('missing_features') or [])
+    return f'''
+    <div class="lost-card">
+      <div class="lost-title">
+        <a href="{opp_url}" target="_blank">{escape(r.get('opportunity') or '')}</a>
+        <span>{money(r.get('amount'))}</span>
+      </div>
+      <div class="lost-meta">{escape(r.get('owner') or '')} • {escape(r.get('psa_platform') or 'No PSA captured')} • {escape(r.get('industry') or '')}</div>
+      <div class="lost-reason"><b>{escape(r.get('loss_reason') or 'No loss reason')}</b>{' • ' + escape(features) if features else ''}</div>
+      <div class="lost-detail">{escape(r.get('reason_lost_detail') or 'No reason-lost detail captured')}</div>
+    </div>'''
+
+
 def build_html(rows, summary):
     open_gap = summary['open_amount']
     closed_decision_amount = summary['won_amount'] + summary['lost_amount']
@@ -326,6 +465,15 @@ th {{ position:sticky; top:0; background:#0c263a; color:#b9d2e0; z-index:2; text
 .muted {{ color:var(--muted); }}
 .feature-list {{ display:flex; flex-wrap:wrap; gap:8px; }}
 .feature-list span {{ border:1px solid #35536b; background:#0b2032; border-radius:999px; padding:8px 10px; color:#d9eaf2; font-size:12px; }}
+.loss-group {{ border:1px solid #21445d; border-radius:18px; background:#081d2d; margin:14px 0; overflow:hidden; }}
+.loss-group-head {{ display:flex; justify-content:space-between; gap:18px; padding:14px 16px; background:linear-gradient(90deg,rgba(255,93,116,.14),rgba(85,184,255,.06)); color:#f4fbff; align-items:center; }}
+.loss-group-head span {{ display:block; color:var(--muted); font-size:12px; margin-top:3px; }}
+.lost-card {{ padding:14px 16px; border-top:1px solid #173950; }}
+.lost-title {{ display:flex; justify-content:space-between; gap:16px; font-weight:900; }}
+.lost-title span {{ color:var(--gold); }}
+.lost-meta {{ color:var(--muted); font-size:12px; margin-top:4px; }}
+.lost-reason {{ color:#ffe2e7; font-size:13px; margin-top:9px; }}
+.lost-detail {{ color:#dcebf3; font-size:13px; line-height:1.45; margin-top:7px; }}
 @media (max-width:1100px) {{ .metrics {{ grid-template-columns:repeat(2,1fr); }} .grid,.grid.two {{ grid-template-columns:1fr; }} .hero {{ flex-direction:column; }} .source {{ text-align:left; }} .funnel {{ grid-template-columns:1fr; }} }}
 </style>
 </head>
@@ -378,6 +526,14 @@ th {{ position:sticky; top:0; background:#0c263a; color:#b9d2e0; z-index:2; text
     </div>
   </section>
 
+  <section class="card" style="margin-top:18px;">
+    <h2>Opportunity stage breakdown</h2>
+    <div class="table-wrap" style="max-height:none;"><table style="min-width:900px;">
+      <thead><tr><th>Stage</th><th>Opps</th><th>Amount</th><th>% of $</th><th>Top owner</th><th>Top PSA platform</th><th>Avg age</th></tr></thead>
+      <tbody>{render_stage_breakdown(summary)}</tbody>
+    </table></div>
+  </section>
+
   <section class="grid two">
     <div class="card"><h2>Industry split</h2>{css_bar(summary['industry'])}</div>
     <div class="card"><h2>Employee-size bands</h2>{css_bar(summary['employee_bucket'])}</div>
@@ -385,7 +541,18 @@ th {{ position:sticky; top:0; background:#0c263a; color:#b9d2e0; z-index:2; text
 
   <section class="grid two">
     <div class="card"><h2>Closed-lost reasons</h2>{css_bar(summary['loss_reason'])}</div>
+    <div class="card"><h2>Closed-lost themes</h2>{css_bar(summary['loss_theme'])}</div>
+  </section>
+
+  <section class="card" style="margin-top:18px;">
+    <h2>Closed-lost deep dive: reason lost detail + loss reason</h2>
+    <div class="callout">Grouped by inferred theme from the actual Loss Reason and Reason Lost Detail fields. This separates “real product gap” losses from no-shows, weak pain, timing, contract lock-in, and ICP fit issues — because throwing all red dots into one bucket is how dashboards become expensive wallpaper.</div>
+    {render_closed_lost_deep_dive(summary)}
+  </section>
+
+  <section class="grid two">
     <div class="card"><h2>Missing features captured</h2><div class="feature-list">{''.join(f'<span>{escape(x["label"])} × {x["count"]}</span>' for x in summary['missing_features']) or '<span>No missing features captured in report rows</span>'}</div></div>
+    <div class="card"><h2>Loss reason by amount</h2>{css_bar(summary['loss_reason'])}</div>
   </section>
 
   <section class="card">
@@ -447,6 +614,7 @@ def main():
     print('Fetching ICP Pipeline report...')
     report = fetch_report(base, headers)
     rows, detail_columns, column_info = parse_report(report)
+    rows = enrich_from_opportunities(base, headers, rows)
     summary = summarize(rows, report)
     payload = {'summary': summary, 'rows': rows, 'detail_columns': detail_columns, 'column_info': column_info}
     DATA_FILE.write_text(json.dumps(payload, indent=2), encoding='utf-8')
