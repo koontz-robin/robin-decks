@@ -710,7 +710,7 @@ h1 {{ font-size:44px; line-height:1; margin:10px 0 10px; letter-spacing:-.045em;
 .filters {{ display:flex; flex-wrap:wrap; gap:8px; margin-top:12px; }}
 .filters span {{ background:#071c2c; border:1px solid var(--line); color:#bdd0dc; border-radius:999px; padding:7px 10px; font-size:11px; }}
 .table-wrap {{ overflow:auto; border:1px solid var(--line); border-radius:18px; max-height:760px; }}
-table {{ border-collapse:collapse; width:100%; min-width:1450px; background:#071a29; }}
+table {{ border-collapse:collapse; width:100%; min-width:1650px; background:#071a29; }}
 th,td {{ padding:11px 12px; border-bottom:1px solid #14364f; text-align:left; vertical-align:top; font-size:12px; }}
 th {{ position:sticky; top:0; background:#0c263a; color:#b9d2e0; z-index:2; text-transform:uppercase; letter-spacing:.06em; font-size:11px; }}
 .subtle {{ color:var(--muted); font-size:11px; margin-top:3px; }}
@@ -729,7 +729,7 @@ th {{ position:sticky; top:0; background:#0c263a; color:#b9d2e0; z-index:2; text
 .lost-meta {{ color:var(--muted); font-size:12px; margin-top:4px; }}
 .lost-reason {{ color:#ffe2e7; font-size:13px; margin-top:9px; }}
 .lost-detail {{ color:#dcebf3; font-size:13px; line-height:1.45; margin-top:7px; }}
-.issue-cell {{ color:#dcebf3; line-height:1.35; max-width:320px; }}
+.issue-cell {{ color:#dcebf3; line-height:1.38; min-width:420px; max-width:560px; }}
 .issue-cell b {{ color:#f5fbff; display:block; margin-bottom:4px; }}
 .issue-cell span {{ color:var(--green); font-weight:800; }}
 .section-count {{ color:var(--muted); font-size:13px; font-weight:700; margin-left:8px; }}
@@ -807,15 +807,9 @@ th {{ position:sticky; top:0; background:#0c263a; color:#b9d2e0; z-index:2; text
     <div class="feature-list">{''.join(f'<span>{escape(x["label"])} × {x["count"]}</span>' for x in summary['advertised_services']) or '<span>No advertised services detected</span>'}</div>
   </section>
 
-  <section class="grid two">
-    <div class="card">
-      <h2>Business issue capture</h2>
-      <div class="callout"><b>{summary['business_issue_capture']['issues_populated']}</b> of {summary['total_count']} opportunities have a business issue/details captured. <b>{summary['business_issue_capture']['problems_populated']}</b> have Problems populated.</div>
-    </div>
-    <div class="card">
-      <h2>Listed business issue</h2>
-      {css_bar(summary['business_issues'], amount_key='count')}
-    </div>
+  <section class="card" style="margin-top:18px;">
+    <h2>Listed business issue</h2>
+    {css_bar(summary['business_issues'], amount_key='count')}
   </section>
 
   {render_status_sections(rows, statuses=['Active'])}
