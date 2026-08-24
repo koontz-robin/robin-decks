@@ -552,8 +552,11 @@ def render_filters(summary):
     return ''.join(labels)
 
 
-def render_table(rows):
-    ordered = sorted(rows, key=lambda r: (r['stage'] == CLOSED_LOST, r['stage'] == CLOSED_WON, r.get('close_date') or '', -r['amount']))
+def render_table(rows, sort_mode='default'):
+    if sort_mode == 'employees_desc':
+        ordered = sorted(rows, key=lambda r: (-int(r.get('employees') or 0), -float(r.get('amount') or 0), r.get('opportunity') or ''))
+    else:
+        ordered = sorted(rows, key=lambda r: (r['stage'] == CLOSED_LOST, r['stage'] == CLOSED_WON, r.get('close_date') or '', -r['amount']))
     trs = []
     for r in ordered:
         opp_url = f"https://rev-io.lightning.force.com/lightning/r/Opportunity/{r['opportunity_id']}/view" if r.get('opportunity_id', '').startswith('006') else '#'
@@ -657,7 +660,7 @@ def render_status_sections(rows, statuses=None):
           <h2>{escape(label)} opportunities <span class="section-count">{len(items)} opps • {money(amount)}</span></h2>
           <div class="table-wrap"><table>
             <thead><tr><th>Stage</th><th>Opportunity / Account</th><th>Owner</th><th>PSA</th><th>Advertised services</th><th>Business issue / problems identified</th><th>Emp.</th><th>Amount</th><th>Close</th><th>Age</th><th>Next Step / Loss Detail</th><th>Features / Loss Reason</th></tr></thead>
-            <tbody>{render_table(items)}</tbody>
+            <tbody>{render_table(items, sort_mode='employees_desc' if label == 'Active' else 'default')}</tbody>
           </table></div>
         </section>''')
     return '\n'.join(sections)
