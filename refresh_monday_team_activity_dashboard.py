@@ -157,6 +157,7 @@ def empty_rep(role=""):
     return {
         "role": role,
         "discovery_set": empty_periods(),
+        "discovery_complete": empty_periods(),
         "discovery_complete_influenced": empty_periods(),
         "cbrs_set": empty_periods(),
         "initial_demos_ran": empty_periods(),
@@ -237,30 +238,31 @@ def build_payload():
                 metrics[rep] = empty_rep("Other")
             add_metric(metrics[rep], "discovery_set", period)
 
-    # Discovery meetings COMPLETED with SDR influence: completed Discovery Call events credited
-    # by Event.SDR_Influence__c instead of event owner. This is the SDR quality signal Ryan
-    # wants used for top/bottom SDR views alongside SDR-sourced opps.
+    # Discovery meetings COMPLETED: Event.Type = 1-Discovery Call with ActivityDate in-week
+    # and Appointment_Status__c = Completed. Team/AE credit goes to owner; SDR quality credit
+    # also rolls to Event.SDR_Influence__c when populated.
     discovery_complete_events = sf_query(base, headers, f"""
-        SELECT Id, Subject, Type, ActivityDate, Appointment_Status__c, SDR_Influence__c
+        SELECT Id, Subject, Type, ActivityDate, Appointment_Status__c, Owner.Name, SDR_Influence__c
         FROM Event
         WHERE IsDeleted = false
           AND ActivityDate >= {sf_date(range_start)}
           AND ActivityDate < {sf_date(range_end)}
           AND Type = '1-Discovery Call'
-          AND SDR_Influence__c != null
-          AND SDR_Influence__c != 'None'
+          AND Appointment_Status__c = 'Completed'
     """)
     for ev in discovery_complete_events:
-        status = (ev.get("Appointment_Status__c") or "").strip().lower()
         subject = (ev.get("Subject") or "").lower()
         if "cancel" in subject or "internal" in subject:
             continue
-        if status and status not in {"completed", "complete", "held", "ran"}:
-            continue
         dt = datetime.fromisoformat(ev["ActivityDate"]).replace(tzinfo=ET)
         period = period_for_dt(dt, windows)
+        owner = normalize_name((ev.get("Owner") or {}).get("Name"))
+        if period and owner and owner not in EXCLUDED_REPS:
+            if owner not in metrics:
+                metrics[owner] = empty_rep("Other")
+            add_metric(metrics[owner], "discovery_complete", period)
         sdr = normalize_name(ev.get("SDR_Influence__c"))
-        if period and sdr and sdr not in EXCLUDED_REPS:
+        if period and sdr and sdr.lower() != "none" and sdr not in EXCLUDED_REPS:
             if sdr not in metrics:
                 metrics[sdr] = empty_rep("SDR")
             add_metric(metrics[sdr], "discovery_complete_influenced", period)
@@ -385,7 +387,8 @@ def build_payload():
         "windows": {k: format_window(v[0], v[1]) for k, v in windows.items()},
         "definitions": {
             "discovery_set": "Events with Type = 1-Discovery Call created during the week.",
-            "discovery_complete_influenced": "Completed/Held/Ran Discovery Call events credited by Event SDR_Influence__c.",
+            "discovery_complete": "Events with Type = 1-Discovery Call, ActivityDate in-week, and Appointment_Status__c = Completed.",
+            "discovery_complete_influenced": "Completed Discovery Call events credited by Event SDR_Influence__c.",
             "cbrs_set": "Events with Type = Client Business Review created during the week.",
             "initial_demos_ran": "Events with Type = 2-Initial DEMO, ActivityDate in-week, and Appointment_Status__c = Completed.",
             "sdr_sourced_opps": "Opportunities created with SDR_Influence__c populated and not None.",
@@ -439,6 +442,7 @@ def metric_card(label, key, totals, money_flag=False, subkey=None):
 def team_metric_specs(totals):
     return [
         ("Discovery Meetings Set", "discovery_set", False, "Top-of-funnel meetings created"),
+        ("Discovery Meetings Complete", "discovery_complete", False, "Completed discovery calls by activity date"),
         ("CBRs Set", "cbrs_set", False, "Customer business reviews scheduled"),
         ("Initial Demos Ran", "initial_demos_ran", False, "Demo meetings completed/held"),
         ("SDR-Sourced Opps", "sdr_sourced_opps", False, f"{money(totals['sdr_sourced_mrr']['last'])} sourced MRR"),
@@ -570,6 +574,7 @@ def build_html(payload):
     t = payload["totals"]
     cards = "\n".join([
         metric_card("Discovery Meetings Set", "discovery_set", t),
+        metric_card("Discovery Meetings Complete", "discovery_complete", t),
         metric_card("CBRs Set", "cbrs_set", t),
         metric_card("Initial Demos Ran", "initial_demos_ran", t),
         metric_card("SDR-Sourced Opps", "sdr_sourced_opps", t),
@@ -592,7 +597,7 @@ def build_html(payload):
 *{{box-sizing:border-box}} body{{margin:0;font-family:Roboto,Segoe UI,system-ui,sans-serif;background:radial-gradient(900px 420px at 18% -8%,rgba(79,209,197,.30),transparent 64%),radial-gradient(760px 420px at 82% 0%,rgba(52,189,229,.24),transparent 62%),linear-gradient(180deg,#0a141f 0%,#08111b 46%,#060e18 100%);color:var(--text)}}
 body:before{{content:'';position:fixed;inset:-14% -10% 55% -10%;background:radial-gradient(55% 45% at 20% 30%,rgba(79,209,197,.35),transparent 65%),radial-gradient(45% 35% at 78% 22%,rgba(52,189,229,.34),transparent 65%);filter:blur(46px);opacity:.75;pointer-events:none}} .container{{max-width:min(1560px,calc(100vw - 32px));margin:0 auto;padding:18px 16px 28px;position:relative;z-index:1}}
 .header{{border-bottom:1px solid var(--border);padding:20px 0 22px;margin-bottom:22px;position:relative}} .header-top{{display:flex;justify-content:space-between;align-items:center;margin-bottom:12px;padding-right:154px}} .logo{{display:flex;align-items:center;gap:10px}} .logo-dot{{width:9px;height:9px;background:var(--cyan);border-radius:50%;box-shadow:0 0 0 3px rgba(52,189,229,.2),0 0 12px rgba(52,189,229,.85)}} .logo-text{{font-size:11px;font-weight:600;letter-spacing:.22em;text-transform:uppercase;color:var(--cyan-soft)}} .header-date{{font-size:11px;color:var(--muted);letter-spacing:.14em;text-transform:uppercase}} .revio-header-logo{{position:absolute;top:0;right:0;width:132px}} h1{{font-size:clamp(42px,5vw,72px);font-weight:300;color:#fff;letter-spacing:-.03em;line-height:.98;margin:0 0 10px}} h1 span{{color:var(--cyan-soft);font-family:Georgia,serif;font-style:italic;font-weight:500}} .header-sub{{font-size:14px;color:var(--mid);max-width:980px;line-height:1.45}}
-.metric-grid{{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:12px;margin-bottom:18px}} .metric-card{{background:rgba(255,255,255,.035);border:1px solid var(--border);border-radius:16px;padding:16px;box-shadow:0 22px 60px -48px #000;backdrop-filter:blur(12px)}} .metric-label{{font-size:9px;font-weight:800;letter-spacing:.16em;text-transform:uppercase;color:var(--muted);margin-bottom:7px}} .metric-value{{font-size:30px;font-weight:850;line-height:1;color:#fff}} .metric-compare{{margin-top:8px;font-size:12px;color:var(--mid)}} .metric-compare .up,.good{{color:var(--lime)}} .metric-compare .down,.bad{{color:var(--danger)}} .metric-prior{{margin-top:4px;font-size:11px;color:var(--muted)}}
+.metric-grid{{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px;margin-bottom:18px}} .metric-card{{background:rgba(255,255,255,.035);border:1px solid var(--border);border-radius:16px;padding:16px;box-shadow:0 22px 60px -48px #000;backdrop-filter:blur(12px)}} .metric-label{{font-size:9px;font-weight:800;letter-spacing:.16em;text-transform:uppercase;color:var(--muted);margin-bottom:7px}} .metric-value{{font-size:30px;font-weight:850;line-height:1;color:#fff}} .metric-compare{{margin-top:8px;font-size:12px;color:var(--mid)}} .metric-compare .up,.good{{color:var(--lime)}} .metric-compare .down,.bad{{color:var(--danger)}} .metric-prior{{margin-top:4px;font-size:11px;color:var(--muted)}}
 .panel-grid{{display:grid;grid-template-columns:1fr 1fr;gap:14px}} .focus-panel{{border-color:rgba(198,241,120,.22)}} .watch-panel{{border-color:rgba(255,107,107,.24)}} .panel{{background:var(--surface);border:1px solid var(--border);border-radius:16px;margin-bottom:14px;overflow:hidden;box-shadow:0 22px 60px -48px #000;backdrop-filter:blur(12px)}} .panel-head{{display:flex;align-items:flex-end;justify-content:space-between;gap:16px;padding:16px 18px;border-bottom:1px solid var(--border)}} h2{{margin:0;font-size:20px;font-weight:650;color:#fff}} .panel-note{{font-size:12px;color:var(--muted);max-width:720px;line-height:1.4}} table{{width:100%;border-collapse:collapse}} th{{font-size:9px;font-weight:800;text-transform:uppercase;letter-spacing:.16em;color:var(--muted);padding:10px 14px;text-align:left;background:rgba(6,14,24,.55)}} td{{font-size:13px;padding:10px 14px;border-top:1px solid rgba(255,255,255,.06);color:var(--mid);vertical-align:top}} td:first-child{{color:#fff}} td strong{{display:block;color:#fff}} td span, td small{{display:block;color:var(--muted);font-size:10px;margin-top:3px}} td small{{color:var(--cyan-soft)}} .empty{{text-align:center;color:var(--muted);padding:24px}} .definitions{{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px;padding:14px 18px}} .def{{font-size:12px;color:var(--mid);line-height:1.35;background:rgba(255,255,255,.03);border:1px solid rgba(255,255,255,.08);border-radius:12px;padding:10px}} .def strong{{color:#fff}} .footer{{text-align:center;padding:18px;font-size:10px;color:var(--muted);letter-spacing:.14em;border-top:1px solid var(--border);margin-top:8px}}
 @media(max-width:1000px){{.metric-grid,.panel-grid,.definitions{{grid-template-columns:1fr 1fr}}.panel{{overflow-x:auto}}table{{min-width:900px}}.header-top{{padding-right:0;display:block}}.revio-header-logo{{position:relative;width:108px;margin-top:10px}}}} @media(max-width:680px){{.metric-grid,.panel-grid,.definitions{{grid-template-columns:1fr}}}}
 </style></head><body><div class="container"><header class="header"><div class="header-top"><div class="logo"><span class="logo-dot"></span><span class="logo-text">Rev.io Sales Team</span></div><div class="header-date">Generated {escape(payload['generated_at_et'])}</div></div><img class="revio-header-logo" src="https://7091219.fs1.hubspotusercontent-na1.net/hubfs/7091219/email-assets/logo-revio-white.png" alt="Rev.io"><h1>Monday Sales <span>Meeting</span></h1><p class="header-sub">Last week ({escape(payload['windows']['last'])}) vs prior week ({escape(payload['windows']['prior'])}) across meeting creation, demos run, sourced/converted opportunities, and booked MRR by product.</p></header>
