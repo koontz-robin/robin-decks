@@ -186,3 +186,9 @@ When Robin creates a new deck or dashboard:
 - URL: https://koontz-robin.github.io/robin-decks/tigerpaw-migration-interest-dashboard.html
 - Source: Salesforce PSA Account Status accounts + Notion Sales Meetings/CBR snippets
 - Created: 2026-08-24
+
+### Joe Abarno Strategic AE Territory Overview
+- URL: https://koontz-robin.github.io/robin-decks/joe-abarno-strategic-ae-territory.html
+- File: `joe-abarno-strategic-ae-territory.html`
+- Created: 2026-08-25
+- Purpose: One-page Strategic AE territory onboarding/reference page for Joe Abarno, using the West / Central blue-state territory map and qualification rules.

@@ -1,0 +1,164 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Joe Abarno | Strategic AE Territory Overview</title>
+<style>
+  :root {
+    --navy:#07152f;
+    --navy2:#0c2149;
+    --blue:#3f7fdb;
+    --blue2:#2f6fca;
+    --green:#46ad6c;
+    --ink:#172033;
+    --muted:#647188;
+    --line:#dce5f2;
+    --paper:#ffffff;
+    --bg:#eef4ff;
+    --soft:#f6f9ff;
+    --gold:#f8c14a;
+  }
+  * { box-sizing:border-box; }
+  html, body { margin:0; padding:0; }
+  body {
+    font-family: "Segoe UI", Inter, -apple-system, BlinkMacSystemFont, Arial, sans-serif;
+    color:var(--ink);
+    background:
+      radial-gradient(circle at 12% 0%, rgba(63,127,219,.20), transparent 32%),
+      radial-gradient(circle at 90% 10%, rgba(70,173,108,.12), transparent 34%),
+      var(--bg);
+  }
+  .page {
+    max-width: 1160px;
+    margin: 30px auto;
+    background: var(--paper);
+    border:1px solid rgba(12,33,73,.10);
+    border-radius: 26px;
+    overflow:hidden;
+    box-shadow: 0 28px 80px rgba(7,21,47,.16);
+  }
+  .hero {
+    position:relative;
+    padding: 46px 54px 42px;
+    color:#fff;
+    background:
+      linear-gradient(135deg, rgba(7,21,47,.96), rgba(12,33,73,.94)),
+      radial-gradient(circle at 80% 20%, rgba(63,127,219,.5), transparent 42%);
+  }
+  .brand { font-size:13px; font-weight:800; letter-spacing:.15em; text-transform:uppercase; color:#8fd0ff; margin-bottom:18px; }
+  h1 { margin:0; font-size:46px; line-height:1.02; letter-spacing:-1.5px; }
+  .subtitle { max-width:760px; margin-top:16px; color:rgba(255,255,255,.76); font-size:18px; line-height:1.55; }
+  .hero-cards { display:grid; grid-template-columns: repeat(3, 1fr); gap:14px; margin-top:28px; }
+  .hero-card { border:1px solid rgba(255,255,255,.16); background:rgba(255,255,255,.07); border-radius:16px; padding:18px; }
+  .hero-card .k { font-size:12px; color:rgba(255,255,255,.58); font-weight:800; text-transform:uppercase; letter-spacing:.08em; }
+  .hero-card .v { margin-top:7px; font-size:22px; font-weight:850; }
+  .content { padding: 38px 54px 48px; }
+  .grid { display:grid; grid-template-columns: 1.08fr .92fr; gap:24px; align-items:start; }
+  .section { background:var(--soft); border:1px solid var(--line); border-radius:20px; padding:24px; margin-bottom:24px; }
+  .section.white { background:#fff; }
+  h2 { margin:0 0 14px; color:var(--navy); font-size:22px; letter-spacing:-.35px; }
+  h3 { margin:18px 0 8px; font-size:15px; color:var(--navy2); text-transform:uppercase; letter-spacing:.08em; }
+  p { margin:0 0 12px; color:#334059; font-size:15.5px; line-height:1.62; }
+  ul { margin:10px 0 0 0; padding:0; list-style:none; }
+  li { position:relative; margin:10px 0; padding-left:24px; color:#334059; line-height:1.48; font-size:15px; }
+  li:before { content:""; position:absolute; left:0; top:.62em; width:8px; height:8px; border-radius:50%; background:var(--blue); box-shadow:0 0 0 4px rgba(63,127,219,.12); }
+  .qual { display:grid; grid-template-columns: 1fr 1fr; gap:14px; margin-top:14px; }
+  .qual-card { background:#fff; border:1px solid var(--line); border-radius:16px; padding:18px; }
+  .qual-card .num { width:32px; height:32px; display:grid; place-items:center; border-radius:999px; color:#fff; background:var(--blue); font-weight:900; margin-bottom:10px; }
+  .qual-card strong { display:block; font-size:20px; color:var(--navy); margin-bottom:4px; }
+  .map-card { background:#fff; border:1px solid var(--line); border-radius:20px; padding:16px; overflow:hidden; }
+  .map-card img { width:100%; display:block; border-radius:14px; border:1px solid #edf1f8; }
+  .caption { margin-top:10px; color:var(--muted); font-size:12px; line-height:1.45; }
+  .state-list { display:flex; flex-wrap:wrap; gap:8px; margin-top:14px; }
+  .state { padding:7px 10px; border-radius:10px; background:rgba(63,127,219,.10); color:#225da8; font-weight:800; font-size:12px; border:1px solid rgba(63,127,219,.18); }
+  .callout { border-left:5px solid var(--gold); background:#fff9e8; border-radius:16px; padding:18px 18px 18px 20px; margin-top:16px; }
+  .callout p { margin:0; color:#5a4820; }
+  .footer { border-top:1px solid var(--line); padding:18px 54px 24px; display:flex; justify-content:space-between; gap:20px; color:var(--muted); font-size:12px; background:#fbfdff; }
+  .pill { display:inline-flex; gap:8px; align-items:center; padding:8px 11px; border-radius:999px; background:#eaf2ff; color:#275fa7; font-weight:800; font-size:12px; margin-bottom:12px; }
+  .pill span { width:10px; height:10px; border-radius:50%; background:var(--blue); }
+  @media print {
+    body { background:#fff; }
+    .page { box-shadow:none; margin:0; border:0; border-radius:0; }
+    .hero { padding:34px 42px 30px; }
+    .content { padding:28px 42px 34px; }
+    h1 { font-size:38px; }
+  }
+  @media (max-width: 850px) {
+    .page { margin:0; border-radius:0; }
+    .hero, .content, .footer { padding-left:24px; padding-right:24px; }
+    .grid, .hero-cards, .qual { grid-template-columns:1fr; }
+    h1 { font-size:36px; }
+  }
+</style>
+</head>
+<body>
+  <article class="page">
+    <header class="hero">
+      <div class="brand">Rev.io Strategic AE Onboarding</div>
+      <h1>Joe Abarno<br />Strategic AE Territory Overview</h1>
+      <p class="subtitle">A one-page guide to Joe’s Strategic AE ownership model, qualification rules, and West / Central U.S. territory.</p>
+      <div class="hero-cards">
+        <div class="hero-card"><div class="k">Territory</div><div class="v">West / Central U.S.</div></div>
+        <div class="hero-card"><div class="k">State Count</div><div class="v">26 states</div></div>
+        <div class="hero-card"><div class="k">Strategic Trigger</div><div class="v">35+ employees or $200K+ billing</div></div>
+      </div>
+    </header>
+
+    <main class="content">
+      <div class="grid">
+        <section>
+          <div class="section white">
+            <h2>Role context</h2>
+            <p>Joe’s Strategic AE territory is part of Rev.io’s Strategic Account Executive model. Strategic AEs own larger, more complex accounts that require deeper discovery, stronger executive alignment, and more regional relationship-building.</p>
+            <p>Because Strategic AEs are expected to travel more and build market presence, territories are assigned geographically rather than purely by inbound ownership or account volume.</p>
+          </div>
+
+          <div class="section">
+            <h2>Strategic account qualification</h2>
+            <p>An account qualifies for Strategic AE ownership if it meets either of the following criteria:</p>
+            <div class="qual">
+              <div class="qual-card"><div class="num">1</div><strong>35+ employees</strong><p>Accounts with 35 or more employees should route to a Strategic AE, even if communications billing is lower.</p></div>
+              <div class="qual-card"><div class="num">2</div><strong>$200,000+ billing</strong><p>Accounts with $200K+ in communications billing should route to a Strategic AE, even below 35 employees.</p></div>
+            </div>
+            <div class="callout"><p><strong>Simple rule:</strong> either threshold is enough. If the account hits employee count or communications billing, ownership should be reviewed for Strategic AE routing.</p></div>
+          </div>
+
+        </section>
+
+        <aside>
+          <div class="map-card">
+            <div class="pill"><span></span> Joe’s territory = blue states</div>
+            <img src="assets/joe-abarno-territory/strategic-territory-split.png" alt="Strategic Rep Territory Split map showing Joe's West and Central states in blue" />
+            <div class="caption">Source map: Strategic Rep Territory Split. Joe owns the blue West / Central U.S. territory.</div>
+          </div>
+
+          <div class="section" style="margin-top:24px;">
+            <h2>Joe’s states</h2>
+            <p>Joe owns the West / Central U.S. territory shown in blue:</p>
+            <div class="state-list" aria-label="Joe's territory states">
+              <span class="state">AK</span><span class="state">AR</span><span class="state">AZ</span><span class="state">CA</span><span class="state">CO</span><span class="state">HI</span><span class="state">IA</span><span class="state">ID</span><span class="state">IL</span><span class="state">KS</span><span class="state">LA</span><span class="state">MN</span><span class="state">MO</span><span class="state">MT</span><span class="state">ND</span><span class="state">NE</span><span class="state">NM</span><span class="state">NV</span><span class="state">OK</span><span class="state">OR</span><span class="state">SD</span><span class="state">TX</span><span class="state">UT</span><span class="state">WA</span><span class="state">WI</span><span class="state">WY</span>
+            </div>
+          </div>
+
+          <div class="section white">
+            <h2>Communications billing note</h2>
+            <p>Communications billing volume is not currently tracked proactively in Salesforce. Until that is solved, this qualification will usually surface during discovery.</p>
+            <p>If any rep discovers that an account has <strong>$200,000+ in communications billing</strong>, ownership should be reviewed and routed to the Strategic AE team.</p>
+          </div>
+        </aside>
+      </div>
+
+      <div class="section white" style="margin-bottom:0;">
+        <h2>Practical guidance for Joe</h2>
+        <p>Use the territory map as the primary ownership guide and prioritize accounts in the blue states that meet Strategic AE qualification. Joe’s focus should be on larger, more complex prospects where regional presence, executive engagement, travel, and deeper account planning can create leverage.</p>
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div>Prepared for Joe Abarno</div>
+      <div>Strategic AE Territory Overview · Rev.io</div>
+    </footer>
+  </article>
+</body>
+</html>
