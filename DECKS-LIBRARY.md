@@ -183,9 +183,11 @@ When Robin creates a new deck or dashboard:
 - Q3 ICP Pipeline Analysis — detailed Salesforce ICP pipeline dashboard: stage funnel, owner/platform/industry splits, size bands, closed-lost analysis, and opportunity detail. URL: https://koontz-robin.github.io/robin-decks/q3-icp-pipeline-analysis.html
 
 ### Tigerpaw Migration Interest Dashboard
-- URL: https://koontz-robin.github.io/robin-decks/tigerpaw-migration-interest-dashboard.html
+- Dashboard URL: https://koontz-robin.github.io/robin-decks/tigerpaw-migration-interest-dashboard.html
+- Detail page URL: https://koontz-robin.github.io/robin-decks/tigerpaw-migration-interest.html
 - Source: Salesforce PSA Account Status accounts + Notion Sales Meetings/CBR snippets
 - Created: 2026-08-24
+- Refreshed: 2026-08-26
 
 ### Joe Abarno Strategic AE Territory Overview
 - URL: https://koontz-robin.github.io/robin-decks/joe-abarno-strategic-ae-territory.html
