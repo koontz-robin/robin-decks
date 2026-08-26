@@ -115,6 +115,7 @@ Repo: `git@github.com:koontz-robin/robin-decks.git`
 | ROI — SouthEast Telephone | roi-southeast-telephone.html | https://koontz-robin.github.io/robin-decks/roi-southeast-telephone.html | Billing + PSA ROI analysis from Salesforce activity and public business context |
 | Revii AI Billing Modernization — Intermedia PPTX | Intermedia_Revii_AI_Billing_Modernization.pptx | https://koontz-robin.github.io/robin-decks/Intermedia_Revii_AI_Billing_Modernization.pptx | Customer-ready PowerPoint |
 | Revii AI Billing Modernization — Intermedia | intermedia-revii-modernization.html | https://koontz-robin.github.io/robin-decks/intermedia-revii-modernization.html | AI-centric phased billing modernization use case |
+| Enitech Solutions PSA Evaluation Readout | enitech-psa-evaluation-readout.html | https://koontz-robin.github.io/robin-decks/enitech-psa-evaluation-readout.html | Buyer-facing Execute readout focused on Autotask/Kaseya renewal pressure, manual license reconciliation, QuickBooks AR workflow, projects, and integration roadmap proof. |
 | ROI — Scipio | roi-scipio.html | https://koontz-robin.github.io/robin-decks/roi-scipio.html | |
 | ROI — Silver Shield | roi-silver-shield.html | https://koontz-robin.github.io/robin-decks/roi-silver-shield.html | |
 | ROI — Sinch Voyant | roi-sinch-voyant.html | https://koontz-robin.github.io/robin-decks/roi-sinch-voyant.html | |
