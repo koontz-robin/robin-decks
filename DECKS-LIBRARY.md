@@ -136,6 +136,7 @@ Repo: `git@github.com:koontz-robin/robin-decks.git`
 | PSA Opp Requirements | psa-opp-requirements.html | https://koontz-robin.github.io/robin-decks/psa-opp-requirements.html | |
 | Robin Impact | robin-impact.html | https://koontz-robin.github.io/robin-decks/robin-impact.html | |
 | Territory Map | territory-map.html | https://koontz-robin.github.io/robin-decks/territory-map.html | |
+| Navigate26 Company Owner Dashboard | navigate26-company-owner-dashboard.html | https://koontz-robin.github.io/robin-decks/navigate26-company-owner-dashboard.html | Uploaded Navigate26 registration list grouped by matched Salesforce account owner using Company field, with unmatched review bucket. |
 | Tradeshow MQL | tradeshow-mql.html | https://koontz-robin.github.io/robin-decks/tradeshow-mql.html | |
 | Motorola 2026 Addendum (Consolidated) | motorola_2026_addendum_consolidated.html | https://koontz-robin.github.io/robin-decks/motorola_2026_addendum_consolidated.html | 5-location consolidated addendum — 253 licenses, $53,638.08/yr |
 | Monday Sales Meeting | monday-team-activity-dashboard.html | https://koontz-robin.github.io/robin-decks/monday-team-activity-dashboard.html | Weekly Monday sales meeting dashboard comparing last full week vs prior week across team activity, role performers, closed-won opps, and MRR by product; auto-refreshes Sunday night ET |
