@@ -1,6 +1,6 @@
 # DECKS-LIBRARY.md — Robin's Deck & Dashboard Library
 
-Last updated: 2026-08-21
+Last updated: 2026-08-31
 GitHub Pages base: `https://koontz-robin.github.io/robin-decks/`
 Repo: `git@github.com:koontz-robin/robin-decks.git`
 
@@ -48,6 +48,7 @@ Repo: `git@github.com:koontz-robin/robin-decks.git`
 | Jamie Billing Platform Stale Outreach | jamie-billing-platform-stale-outreach.html | https://koontz-robin.github.io/robin-decks/jamie-billing-platform-stale-outreach.html | On demand; Jamie-owned Salesforce accounts with Billing Platform populated and Last Activity blank or older than one year |
 | Jamie 35+ Employee Accounts with No 2026 Activity | jamie-35plus-no-activity-2026.html | https://koontz-robin.github.io/robin-decks/jamie-35plus-no-activity-2026.html | On demand; Jamie-owned Salesforce accounts with Employees >= 35, no 2026 activity, excluding Bad/International tiers |
 | Apollo 3 Re-engagement Command Center | External | https://tony-kaylee.github.io/apollo3-reengagement-dashboard/ | On demand; external Apollo 1-3 win-back dashboard |
+| Q3 ICP Pipeline Analysis | q3-icp-pipeline-analysis.html | https://koontz-robin.github.io/robin-decks/q3-icp-pipeline-analysis.html | On demand; Salesforce ICP pipeline dashboard with stage funnel, owner/platform/industry splits, size bands, closed-lost analysis, and opportunity detail |
 
 ---
 
@@ -184,7 +185,6 @@ When Robin creates a new deck or dashboard:
 | Forecast Targets | forecast-targets.html | https://koontz-robin.github.io/robin-decks/forecast-targets.html | On demand |
 - [Crown Networks PSA Evaluation Readout](https://koontz-robin.github.io/robin-decks/crown-networks-psa-evaluation-readout.html) — Buyer-facing Execute readout for Crown Networks, focused on replacing ConnectWise project/work-order/subcontractor/payment friction with Rev.io PSA.
 
-- Q3 ICP Pipeline Analysis — detailed Salesforce ICP pipeline dashboard: stage funnel, owner/platform/industry splits, size bands, closed-lost analysis, and opportunity detail. URL: https://koontz-robin.github.io/robin-decks/q3-icp-pipeline-analysis.html
 
 ### Tigerpaw Migration Interest Dashboard
 - Dashboard URL: https://koontz-robin.github.io/robin-decks/tigerpaw-migration-interest-dashboard.html
