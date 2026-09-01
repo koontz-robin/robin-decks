@@ -5,10 +5,20 @@ with fresh SF data. Keeps all other tabs, formatting, and structure intact.
 import html as html_lib
 import json, os, re
 from collections import defaultdict
-from datetime import datetime, timezone
+from datetime import datetime
+from zoneinfo import ZoneInfo
 
 WORKSPACE = os.environ.get('FORECAST_WORKSPACE', '/home/openclaw/.openclaw/workspace')
-now = datetime.now(timezone.utc)
+ET = ZoneInfo('America/New_York')
+_now_override = os.environ.get('FORECAST_NOW')
+if _now_override:
+    now = datetime.fromisoformat(_now_override)
+    if now.tzinfo is None:
+        now = now.replace(tzinfo=ET)
+    else:
+        now = now.astimezone(ET)
+else:
+    now = datetime.now(ET)
 TARGET_MONTH = os.environ.get('FORECAST_MONTH') or now.strftime('%B')
 TARGET_MONTH = TARGET_MONTH[:1].upper() + TARGET_MONTH[1:].lower()
 MONTH_SLUG = TARGET_MONTH.lower()
@@ -29,8 +39,10 @@ with open(f'{WORKSPACE}/q2_reengagement_baseline.json') as f:
     mkt_accounts = {r['account_name'].lower() for r in json.load(f)}
 
 PRODUCTS = ['PSA', 'Billing', 'Payments', 'Cyber', 'CommerceHub']
-PROD_COLORS = {'PSA':'#00ff88','Billing':'#00e5ff','Payments':'#7c3aed','Cyber':'#ff6b35','CommerceHub':'#ffd700','Other':'#94a3b8'}
-PROD_LABELS = {'PSA':'PSA','Billing':'Billing / Odin','Payments':'Payments','Cyber':'Cyber Protect','CommerceHub':'CommerceHub','Other':'Other / Unmapped'}
+# Formatting lock: keep the forecast dashboard aligned to the Rev.io Summit visual system.
+# Do not restore the old neon green grid/terminal theme during future forecast refreshes.
+PROD_COLORS = {'PSA':'#c6f178','Billing':'#34bde5','Payments':'#7c3aed','Cyber':'#ff9f43','CommerceHub':'#eace9b','Other':'#94a3b8'}
+PROD_LABELS = {'PSA':'PSA','Billing':'Billing / Odin','Payments':'Payments','Cyber':'Cyber Protect','CommerceHub':'CommerceHub','Other':'Unmapped'}
 QUARTER_LABEL = 'Q3 2026'
 QUARTER_MONTHS = ['July', 'August', 'September']
 QUARTER_QUOTAS = {'PSA':138000,'Billing':42104,'Payments':30740,'Cyber':33702,'CommerceHub':0}
@@ -58,9 +70,9 @@ STAGE_PILLS = {
     '6 - Verbal Commit':                '<span class="stage-pill s6">Verbal</span>',
 }
 FORECAST_COLORS = {
-    'Worst Case':  ('#ff4444','rgba(255,68,68,0.05)','rgba(255,68,68,0.15)','WORST CASE'),
-    'Most Likely': ('#ffd700','rgba(255,215,0,0.05)','rgba(255,215,0,0.15)','MOST LIKELY'),
-    'Best Case':   ('#00ff88','rgba(0,255,136,0.06)','rgba(0,255,136,0.12)','BEST CASE'),
+    'Worst Case':  ('#ff6b6b','rgba(255,107,107,0.08)','rgba(255,107,107,0.16)','WORST CASE'),
+    'Most Likely': ('#eace9b','rgba(234,206,155,0.08)','rgba(234,206,155,0.16)','MOST LIKELY'),
+    'Best Case':   ('#c6f178','rgba(198,241,120,0.08)','rgba(198,241,120,0.16)','BEST CASE'),
 }
 
 def esc(value):
@@ -109,7 +121,7 @@ def closed_booking_splits(o, month_name):
 def prod_label(p):
     if TARGET_MONTH == 'June' and p == 'Cyber':
         return 'CommerceHub / Cyber Protect'
-    return PROD_LABELS.get(p, p or 'Other / Unmapped')
+    return PROD_LABELS.get(p, p or 'Unmapped')
 
 def fmt(n):
     cents = round((float(n or 0) - int(float(n or 0))) * 100)
@@ -206,20 +218,18 @@ def closed_lost_opp_row(o):
       <td><strong>{loss_reason}</strong><div class="loss-detail">{reason_detail}</div></td>
     </tr>'''
 
-def closed_lost_review(product, idx, rows):
-    if not HISTORICAL_MONTH:
-        return ''
+def closed_lost_review(product, idx, rows, show_empty=False):
     rows = sorted(rows, key=lambda o: (o.get('Loss_Reason__c') or 'ZZZ', -(o.get('Amount') or 0), o.get('Account') or o.get('Name') or ''))
-    if not rows:
+    if not rows and not show_empty:
         return ''
     total = sum(o.get('Amount') or 0 for o in rows)
-    body = ''.join(closed_lost_opp_row(o) for o in rows)
+    body = ''.join(closed_lost_opp_row(o) for o in rows) or '<tr><td colspan="6" style="color:#5a8a6a">No closed lost opportunities for this product.</td></tr>'
     return f'''
   <div class="opp-toggle closed-lost-toggle" onclick="toggle('{MONTH_ID}-{idx}-closed-lost')">
-    <span id="toggle-label-{MONTH_ID}-{idx}-closed-lost">▼ Closed lost {prod_label(product)} opportunities with loss reason</span>
+    <span id="toggle-label-{MONTH_ID}-{idx}-closed-lost" data-collapsed="Show {len(rows)} closed lost {prod_label(product)} opportunities" data-expanded="Hide closed lost {prod_label(product)} opportunities">▶ Show {len(rows)} closed lost {prod_label(product)} opportunities</span>
     <span class="toggle-amt">{fmt(total)} total</span>
   </div>
-  <div id="opps-{MONTH_ID}-{idx}-closed-lost" class="opp-list closed-lost-review" style="display:block">
+  <div id="opps-{MONTH_ID}-{idx}-closed-lost" class="opp-list closed-lost-review" style="display:none">
     <table class="opp-table">
       <thead><tr><th>Account / Opportunity</th><th>Amount</th><th>Stage</th><th>Owner</th><th>Close Date / Product</th><th>Loss Reason / Detail</th></tr></thead>
       <tbody>{body}</tbody>
@@ -238,7 +248,7 @@ def build_month_tab():
       <div class="sum-item highlight"><div class="sum-label">Closed Won Opps</div><div class="sum-val yellow">{closed_opp_count()}</div></div>
       <div class="sum-item highlight"><div class="sum-label">Month Status</div><div class="sum-val green">Locked</div></div>'''
     else:
-        total_pipe = sum(o.get('Amount',0) or 0 for o in opps if o.get('StageName') != 'Closed Won')
+        total_pipe = sum(o.get('Amount',0) or 0 for o in opps if o.get('StageName') not in ('Closed Won', 'Closed Lost'))
         open_count = sum(len(buckets[p]['opps']) for p in PRODUCTS)
         total_worst  = total_cw + sum(o.get('Amount',0) or 0 for p in PRODUCTS for o in buckets[p]['opps'] if o.get('Forecast_Status__c') == 'Worst Case')
         total_likely = total_cw + sum(o.get('Amount',0) or 0 for p in PRODUCTS for o in buckets[p]['opps'] if o.get('Forecast_Status__c') in ('Worst Case','Most Likely'))
@@ -255,8 +265,6 @@ def build_month_tab():
     </div>''')
 
     month_products = PRODUCTS[:]
-    if HISTORICAL_MONTH and buckets['Other']['closed_lost_opps']:
-        month_products.append('Other')
     for idx, p in enumerate(month_products):
         b = buckets[p]
         cw    = b['closed']
@@ -272,7 +280,7 @@ def build_month_tab():
                 ['Worst Case','Most Likely','Best Case',''].index(o.get('Forecast_Status__c','') if o.get('Forecast_Status__c','') in ['Worst Case','Most Likely','Best Case'] else ''),
                 -(o.get('Amount') or 0)
             ))
-            lost_list = []
+            lost_list = sorted(b['closed_lost_opps'], key=lambda o: (o.get('Loss_Reason__c') or 'ZZZ', -(o.get('Amount') or 0), o.get('Account') or o.get('Name') or ''))
             pipe = sum(o.get('Amount',0) or 0 for o in opp_list)
             tagged = [o for o in opp_list if o.get('Forecast_Status__c')]
             mkt_opps = [o for o in opp_list if o.get('_mkt')]
@@ -293,7 +301,7 @@ def build_month_tab():
             toggle_label = f'Closed won {actual_closed_count} opportunities' + (' + true-up' if adjustment_count else '')
             meta_html = f'''<span class="meta-chip">Final Sales: <strong>{fmt(cw)}</strong></span>
       <span class="meta-chip">{closed_count_label}</span>
-      <span class="meta-chip" style="border-color:rgba(255,68,68,0.25);color:#ff6666">Closed Lost: <strong>{len(lost_list)}</strong></span>
+      <span class="meta-chip" style="border-color:rgba(255,107,107,0.25);color:#ff8a8a">Closed Lost: <strong>{len(lost_list)}</strong></span>
       <span class="meta-chip quota">Quota: {fmt(quota)}</span>'''
             scenario_html = f'''<div class="scenario closed"><div class="s-label">FINAL SALES</div><div class="s-val">{fmt(cw)}</div><div class="s-sub">locked after month-end</div></div>
     <div class="scenario closed"><div class="s-label">CLOSED WON OPPS</div><div class="s-val">{actual_closed_count}</div></div>
@@ -318,6 +326,7 @@ def build_month_tab():
       <span class="meta-chip">{len(opp_list)} opps</span>
       <span class="meta-chip">{len(tagged)} tagged</span>
       {mkt_chip}
+      <span class="meta-chip" style="border-color:rgba(255,107,107,0.25);color:#ff8a8a">Closed Lost: <strong>{len(lost_list)}</strong></span>
       <span class="meta-chip quota">Quota: {fmt(quota)}</span>'''
             scenario_html = f'''<div class="scenario worst"><div class="s-label">WORST CASE</div><div class="s-val">{fmt(worst)}</div></div>
     <div class="scenario likely"><div class="s-label">MOST LIKELY</div><div class="s-val">{fmt(likely)}</div></div>
@@ -333,7 +342,7 @@ def build_month_tab():
       <span style="color:#555;font-size:11px">
         🔴 Worst: <strong style="color:#ff6666">{worst_pct:.1f}%</strong>
         &nbsp;·&nbsp; 🟡 Most Likely: <strong style="color:#ffd700">{likely_pct:.1f}%</strong>
-        &nbsp;·&nbsp; 🟢 Best Case: <strong style="color:#00ff88">{best_pct:.1f}%</strong>
+        &nbsp;·&nbsp; 🟢 Best Case: <strong style="color:#c6f178">{best_pct:.1f}%</strong>
         &nbsp;·&nbsp; Target: {fmt(quota)}
       </span>
     </div>'''
@@ -393,7 +402,7 @@ def build_month_tab():
     {quota_footer}
   </div>
 {opp_toggle}
-{closed_lost_review(p, idx, lost_list)}
+{closed_lost_review(p, idx, lost_list, show_empty=not HISTORICAL_MONTH)}
 </div>''')
     lines.append('  </div>\n')
     return '\n'.join(lines)
@@ -448,6 +457,42 @@ def build_quarter_bar():
       {prods_html}
     </div>
   </div>'''
+
+def normalize_dashboard_shell(html):
+    html = re.sub(
+        r'\.container \{[^}]*\}',
+        '.container { max-width:min(1500px, calc(100vw - 32px)); margin:0 auto; padding:18px 16px 24px; position:relative; z-index:1; }',
+        html,
+        count=1,
+    )
+    html = re.sub(
+        r'\.header-top \{[^}]*\}',
+        '.header-top { display:flex; align-items:center; justify-content:space-between; margin-bottom:12px; padding-right:154px; }',
+        html,
+        count=1,
+    )
+    if '.revio-header-logo' not in html:
+        html = html.replace(
+            '  .header-date { font-size:11px; color:var(--muted); letter-spacing:1px; }',
+            '  .header-date { font-size:11px; color:var(--muted); letter-spacing:1px; }\n'
+            '  .revio-header-logo { position:absolute; top:0; right:0; width:132px; height:auto; opacity:0.96; }',
+            1,
+        )
+    html = re.sub(r'\n\s*\.header-top \{ padding-right:154px; \}', '', html)
+    html = re.sub(
+        r'<div id="robin-refresh-btn" style="position:fixed;top:12px;right:16px;z-index:9999;">',
+        '<div id="robin-refresh-btn" style="position:fixed;bottom:12px;right:16px;z-index:9999;">',
+        html,
+        count=1,
+    )
+    if 'class="revio-header-logo"' not in html:
+        html = re.sub(
+            r'(<div class="header-date">[^<]*</div>)',
+            r'\1\n      <img class="revio-header-logo" src="revio-logo-white.png" alt="Rev.io">',
+            html,
+            count=1,
+        )
+    return html
 
 with open(f'{WORKSPACE}/forecast.html') as f:
     html = f.read()
@@ -507,6 +552,7 @@ if TARGET_MONTH in QUARTER_MONTHS:
 
 date_str = now.strftime('%B %-d, %Y').upper()
 html = re.sub(r'GENERATED [A-Z]+ \d+, \d{4}', f'GENERATED {date_str}', html)
+html = normalize_dashboard_shell(html)
 if not HISTORICAL_MONTH:
     html = re.sub(r'Live Salesforce data · Jan–[A-Z][a-z]{2} 2026', f'Live Salesforce data · Jan–{TARGET_MONTH[:3]} 2026', html)
     html = re.sub(r"window\.addEventListener\('DOMContentLoaded', \(\) => switchTab\('[A-Z][a-z]+'\)\);",
@@ -532,7 +578,7 @@ if HISTORICAL_MONTH:
     total_pipe = 0
     open_count = 0
 else:
-    total_pipe = sum(o.get('Amount',0) or 0 for o in opps if o.get('StageName') != 'Closed Won')
+    total_pipe = sum(o.get('Amount',0) or 0 for o in opps if o.get('StageName') not in ('Closed Won', 'Closed Lost'))
     open_count = sum(len(buckets[p]["opps"]) for p in PRODUCTS)
 closed_lost_count = sum(len(bucket['closed_lost_opps']) for bucket in buckets.values())
 print(f'{TARGET_MONTH} data patched — CW: {fmt(total_cw)} | Pipeline: {fmt(total_pipe)} | {open_count} open opps | Closed lost: {closed_lost_count}')
