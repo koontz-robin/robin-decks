@@ -193,7 +193,7 @@ When Robin creates a new deck or dashboard:
 - Detail page URL: https://koontz-robin.github.io/robin-decks/tigerpaw-migration-interest.html
 - Source: Salesforce PSA Account Status accounts + Notion Sales Meetings/CBR snippets
 - Created: 2026-08-24
-- Refreshed: 2026-08-26
+- Refreshed: 2026-09-04
 
 ### Joe Abarno Strategic AE Territory Overview
 - URL: https://koontz-robin.github.io/robin-decks/joe-abarno-strategic-ae-territory.html

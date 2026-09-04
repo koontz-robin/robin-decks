@@ -270,8 +270,9 @@ def classify(text, sf_status=''):
     # because statuses like "Do not want to migrate" contain that substring. Tiny goblin, sharp teeth.
     s=(sf_status or '').lower()
     if 'do not' in s or 'not want' in s: return 'do not want to migrate', 'Salesforce web migration status'
-    if 'asap' in s: return 'want to migrate asap', 'Salesforce web migration status'
-    if 'want to migrate' in s: return 'want to migrate / timeline unknown', 'Salesforce web migration status'
+    if 'asap' in s or 'migration in progress' in s: return 'want to migrate asap', 'Salesforce web migration status'
+    if any(x in s for x in ['want to migrate', 'open to migrate', 'opent to migrate', 'interested', 'missing features']):
+        return 'want to migrate / timeline unknown', 'Salesforce web migration status'
     return 'unknown / needs review', 'no clear migration-intent signal found'
 
 
@@ -291,16 +292,45 @@ def get_sf_account_data():
     sys.path.insert(0, str(ROOT))
     from build_forecast_targets import sf_auth, sf_query
     base,h=sf_auth()
-    mapping={}
+    candidates=defaultdict(list)
     for i in range(0,len(ACCOUNT_NAMES),80):
         vals=','.join("'"+n.replace("'","\\'")+"'" for n in ACCOUNT_NAMES[i:i+80])
-        q=f"SELECT Name, TigerPaw_Account_Status__c, Web_Migration__c, Web_Migration_Status_Details__c FROM Account WHERE Name IN ({vals})"
+        q=(
+            "SELECT Id, Name, Type, Owner.Name, TigerPaw_Account_Status__c, "
+            "Web_Migration__c, Web_Migration_Status_Details__c "
+            f"FROM Account WHERE Name IN ({vals})"
+        )
         for r in sf_query(base,h,q):
-            mapping[r['Name']]={
-                'psa_account_status':r.get('TigerPaw_Account_Status__c') or '',
-                'web_migration':r.get('Web_Migration__c') or '',
-                'web_details':r.get('Web_Migration_Status_Details__c') or ''
-            }
+            candidates[r['Name']].append(r)
+
+    def score_account(r):
+        typ=(r.get('Type') or '').lower()
+        psa=r.get('TigerPaw_Account_Status__c') or ''
+        web=r.get('Web_Migration__c') or ''
+        # Prefer actual customer/client records over duplicate cold-prospect shells.
+        return (
+            100 if psa else 0,
+            50 if typ == 'tigerpaw client' else 0,
+            25 if 'client' in typ else 0,
+            10 if web else 0,
+            -25 if 'prospect' in typ else 0,
+            r.get('Id') or ''
+        )
+
+    mapping={}
+    for name, records in candidates.items():
+        chosen=max(records, key=score_account)
+        owner=chosen.get('Owner') or {}
+        mapping[name]={
+            'sf_account_id': chosen.get('Id') or '',
+            'sf_account_name': chosen.get('Name') or name,
+            'sf_account_type': chosen.get('Type') or '',
+            'sf_account_owner': owner.get('Name') or '',
+            'sf_duplicate_count': len(records),
+            'psa_account_status': chosen.get('TigerPaw_Account_Status__c') or '',
+            'web_migration': chosen.get('Web_Migration__c') or '',
+            'web_details': chosen.get('Web_Migration_Status_Details__c') or ''
+        }
     return mapping
 
 
