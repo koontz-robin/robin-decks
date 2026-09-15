@@ -1,6 +1,6 @@
 # DECKS-LIBRARY.md — Robin's Deck & Dashboard Library
 
-Last updated: 2026-08-31
+Last updated: 2026-09-08
 GitHub Pages base: `https://koontz-robin.github.io/robin-decks/`
 Repo: `git@github.com:koontz-robin/robin-decks.git`
 
@@ -26,6 +26,7 @@ Repo: `git@github.com:koontz-robin/robin-decks.git`
 | AE Monthly Performance 2026 | ae-monthly-performance-2026.html | https://koontz-robin.github.io/robin-decks/ae-monthly-performance-2026.html | On demand; Salesforce AE × month activity/funnel/closed MRR dashboard |
 | Monthly Report Pacing Dashboard | monthly-api-pacing-dashboard.html | https://koontz-robin.github.io/robin-decks/monthly-api-pacing-dashboard.html | JSON-driven monthly pacing for Ryan's starting report set |
 | PSA Onboarding Tracker | psa-onboarding-tracker.html | https://koontz-robin.github.io/robin-decks/psa-onboarding-tracker.html | Daily (8am & 1pm ET) |
+| Daniel SDR Onboarding Roadmap | daniel-sdr-onboarding-roadmap.html | https://koontz-robin.github.io/robin-decks/daniel-sdr-onboarding-roadmap.html | 12-week SDR onboarding tracker for Daniel |
 | PSA Opportunity Dashboard | psa-opportunity-dashboard.html | https://koontz-robin.github.io/robin-decks/psa-opportunity-dashboard.html | On demand |
 | PSA Target Tracker | psa-target-tracker.html | https://koontz-robin.github.io/robin-decks/psa-target-tracker.html | On demand |
 | Rep Coaching Dashboard | rep-coaching-dashboard.html | https://koontz-robin.github.io/robin-decks/rep-coaching-dashboard.html | On demand |
@@ -121,6 +122,8 @@ Repo: `git@github.com:koontz-robin/robin-decks.git`
 | Revii AI Billing Modernization — Intermedia PPTX | Intermedia_Revii_AI_Billing_Modernization.pptx | https://koontz-robin.github.io/robin-decks/Intermedia_Revii_AI_Billing_Modernization.pptx | Customer-ready PowerPoint |
 | Revii AI Billing Modernization — Intermedia | intermedia-revii-modernization.html | https://koontz-robin.github.io/robin-decks/intermedia-revii-modernization.html | AI-centric phased billing modernization use case |
 | Enitech Solutions PSA Evaluation Readout | enitech-psa-evaluation-readout.html | https://koontz-robin.github.io/robin-decks/enitech-psa-evaluation-readout.html | Buyer-facing Execute readout focused on Autotask/Kaseya renewal pressure, manual license reconciliation, QuickBooks AR workflow, projects, and integration roadmap proof. |
+| MNJ Technologies × New Rev.io Pre-Evaluation Readout | mnj-new-revio-evaluation-readout.html | https://koontz-robin.github.io/robin-decks/mnj-new-revio-evaluation-readout.html | Account-specific Execute collateral for moving from legacy billing to a unified service and revenue platform; includes ServiceNow and Power BI positioning plus a scoped Microsoft Dynamics integration path. |
+| Nashville Computer Rev.io PSA Evaluation Readout | nashville-computer-revio-psa-evaluation-readout.html | https://koontz-robin.github.io/robin-decks/nashville-computer-revio-psa-evaluation-readout.html | Buyer-facing Execute readout for replacing Autotask/Kaseya: Halo comparison, Neo/Hudu/Ninja/QBO ecosystem, project and billing workflows, payments economics, contingency migration, and evaluation plan. |
 | ROI — Scipio | roi-scipio.html | https://koontz-robin.github.io/robin-decks/roi-scipio.html | |
 | ROI — Silver Shield | roi-silver-shield.html | https://koontz-robin.github.io/robin-decks/roi-silver-shield.html | |
 | ROI — Sinch Voyant | roi-sinch-voyant.html | https://koontz-robin.github.io/robin-decks/roi-sinch-voyant.html | |
@@ -146,6 +149,7 @@ Repo: `git@github.com:koontz-robin/robin-decks.git`
 | Motorola 2026 Addendum (Consolidated) | motorola_2026_addendum_consolidated.html | https://koontz-robin.github.io/robin-decks/motorola_2026_addendum_consolidated.html | 5-location consolidated addendum — 253 licenses, $53,638.08/yr |
 | Monday Sales Meeting | monday-team-activity-dashboard.html | https://koontz-robin.github.io/robin-decks/monday-team-activity-dashboard.html | Weekly Monday sales meeting dashboard comparing last full week vs prior week across team activity, role performers, closed-won opps, and MRR by product; auto-refreshes Sunday night ET |
 | DTS Technology CBR | dts-technology-cbr.html | https://koontz-robin.github.io/robin-decks/dts-technology-cbr.html | Customer-facing Client Business Review page for DTS Technology with agenda, relationship overview, review themes, platform fit, roadmap topics, and action plan |
+| 2026 Client Proactive Outreach | client-proactive-outreach-2026.html | https://koontz-robin.github.io/robin-decks/client-proactive-outreach-2026.html | Salesforce-backed outreach dashboard for 34 requested client labels / 32 unique accounts, including outbound touches, meetings, people reached, owners, themes, and activity timelines. |
 
 ---
 
