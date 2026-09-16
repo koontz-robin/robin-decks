@@ -38,10 +38,8 @@ Cloudli Communications
 Viirtue LLC (Apollo)
 South Carolina Telecommunications Group Holdings, LLC
 Estech Systems, Inc
-NinjaOne, LLC (Sponsor)
 XMission
 Vocus Group Ltd.
-WoltersKluwer (Sponsor)
 PS Lightwave LLC Operating Account
 CCI Network Services
 Coeo Solutions, LLC.
@@ -56,7 +54,7 @@ Xchange Telecom'''.splitlines()
 MATCHES={
 'CallTower':(['0011500001HNQEXAA5'],'exact'), 'Skyswitch':(['0011500001nQiaxAAC'],'case-insensitive exact; reseller/test children excluded'),
 'BCM ONE C/O InvoiceIQ':(['0011500001HNPjbAAH'],'matched to client account BCM One; InvoiceIQ is requester qualifier'),
-'Spectrotel':(['0011500001HNPjiAAH'],'exact'), 'Valhelio Tech':(['0016O00003dmuaQQAQ'],'probable alias/typo: matched to Valhalla; validate before external use'),
+'Spectrotel':(['0011500001HNPjiAAH'],'exact'), 'Valhelio Tech':(['0016O00003E0ekDQAR'],'matched to AhelioTech (AHELIO)'),
 'Telesystem':(['0011C000028IUmYQAW'],'exact client account; cold-prospect duplicate excluded'),
 'Hunter Communications':(['0011500001HNQ2nAAH'],'exact'), 'Nuso LLC':(['0011500001HNQ50AAH'],'normalized exact (Nuso)'),
 'Prestige Technology LLC':(['001PX000006p40BYAQ'],'exact; Salesforce record is a Cold Prospect'),
@@ -67,9 +65,8 @@ MATCHES={
 'Mango Voice':(['0011C00001oM5BwQAK'],'exact'), 'Mango Voice, LLC':(['0011C00001oM5BwQAK'],'same Salesforce account as Mango Voice; duplicate requested label'),
 'Cloudli Communications':(['0016O00003T3PXVQA3'],'exact'), 'Viirtue LLC (Apollo)':(['0016O00003QyGNZQA3'],'matched to Viirtue Inc (Apollo); Zeus account excluded'),
 'South Carolina Telecommunications Group Holdings, LLC':(['0011C00002U2tRGQAZ'],'probable legal-name alias matched to SEGRA; validate before external use'),
-'Estech Systems, Inc':(['0011500001HNQ4XAAX'],'normalized exact'), 'NinjaOne, LLC (Sponsor)':(['001PX00000c0yRKYAY'],'matched to NinjaOne partner prospect'),
+'Estech Systems, Inc':(['0011500001HNQ4XAAX'],'normalized exact'),
 'XMission':(['0011500001HNQBgAAP'],'exact'), 'Vocus Group Ltd.':(['0016O000034F1w8QAC'],'matched to Vocus Group client; cold-prospect duplicates excluded'),
-'WoltersKluwer (Sponsor)':(['0011500001IIF7nAAH'],'matched to Wolters Kluwer partner; prospect duplicates excluded'),
 'PS Lightwave LLC Operating Account':(['0011C00002i396YQAQ'],'matched to PS Lightwave client'), 'CCI Network Services':(['0011500001HNQNtAAP'],'exact'),
 'Coeo Solutions, LLC.':(['0011500001HNQNmAAP'],'normalized exact'), 'Titanium Wireless':(['0011C000025b5oGQAQ'],'exact'),
 'Clear Rate Communications':(['0011500001ecpJJAAY'],'exact'), 'S-Net':(['0011500001HNPlDAAX'],'matched to S-Net Communications client'),
