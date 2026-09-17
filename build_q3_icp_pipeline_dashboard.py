@@ -7,6 +7,7 @@ import shutil
 import statistics
 import subprocess
 import tempfile
+import time
 import re
 from collections import Counter, defaultdict
 from datetime import datetime
@@ -27,6 +28,8 @@ DATA_FILE = WORKSPACE / 'q3_icp_pipeline_analysis.json'
 SERVICES_CACHE_FILE = WORKSPACE / 'q3_icp_website_services_cache.json'
 LIBRARY_FILE = WORKSPACE / 'DECKS-LIBRARY.md'
 ET = ZoneInfo('America/New_York')
+PIPELINE_START = '2026-07-01'
+PIPELINE_END = '2026-12-31'
 
 STAGE_ORDER = [
     '',
@@ -101,11 +104,34 @@ def raw_cell_value(cell):
 
 
 def fetch_report(base, headers):
-    url = f'{base}/services/data/v59.0/analytics/reports/{REPORT_ID}'
-    response = requests.get(url, headers=headers, params={'includeDetails': 'true'}, timeout=60)
+    """Run the saved report with a dashboard-only close-date override through year-end."""
+    url = f'{base}/services/data/v59.0/analytics/reports/{REPORT_ID}/instances'
+    body = {
+        'reportMetadata': {
+            'standardDateFilter': {
+                'column': 'CLOSE_DATE',
+                'durationValue': 'CUSTOM',
+                'startDate': PIPELINE_START,
+                'endDate': PIPELINE_END,
+            }
+        }
+    }
+    response = requests.post(url, headers={**headers, 'Content-Type': 'application/json'}, json=body, timeout=60)
     if not response.ok:
-        raise RuntimeError(f'Salesforce report fetch failed: {response.status_code} {response.text[:500]}')
-    return response.json()
+        raise RuntimeError(f'Salesforce report run failed: {response.status_code} {response.text[:500]}')
+    instance_url = base + response.json()['url']
+    for _ in range(30):
+        result = requests.get(instance_url, headers=headers, timeout=60)
+        if not result.ok:
+            raise RuntimeError(f'Salesforce report fetch failed: {result.status_code} {result.text[:500]}')
+        payload = result.json()
+        status = payload.get('attributes', {}).get('status')
+        if status == 'Success':
+            return payload
+        if status == 'Error':
+            raise RuntimeError(f'Salesforce report failed: {payload.get("attributes", {}).get("errorMessage")}')
+        time.sleep(1)
+    raise RuntimeError('Salesforce report run timed out')
 
 
 def sf_query(base, headers, query):
@@ -311,7 +337,7 @@ def fetch_total_psa_pipeline(base, headers):
         SELECT Id, Amount, StageName
         FROM Opportunity
         WHERE CloseDate >= 2026-07-01
-          AND CloseDate <= 2026-09-30
+          AND CloseDate <= 2026-12-31
           AND Product_Type__c LIKE '%PSA%'
           AND Type = 'New Opportunity'
           AND StageName NOT IN ('Closed Lost','Closed Won')
@@ -745,7 +771,7 @@ def build_html(rows, summary):
 <head>
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
-<title>Q3 2026 New Rev.io ICP Pipeline</title>
+<title>H2 2026 New Rev.io ICP Pipeline</title>
 <style>
 :root {{ --bg:#061522; --panel:#0d2234; --panel2:#102b42; --text:#f5fbff; --muted:#9fb5c5; --line:#1d4059; --green:#50ff8a; --teal:#2ee6be; --blue:#55b8ff; --purple:#9b7cff; --red:#ff5d74; --gold:#eace9b; }}
 * {{ box-sizing:border-box; }}
@@ -814,7 +840,7 @@ th {{ position:sticky; top:0; background:#0c263a; color:#b9d2e0; z-index:2; text
 <div class="wrapper">
   <section class="hero">
     <div>
-      <h1>Q3 2026 New Rev.io ICP Pipeline</h1>
+      <h1>H2 2026 New Rev.io ICP Pipeline</h1>
     </div>
     <div class="source">
       Generated {escape(summary['generated_at_et'])}<br>
@@ -867,7 +893,7 @@ th {{ position:sticky; top:0; background:#0c263a; color:#b9d2e0; z-index:2; text
     <div class="card">
       <h2>Executive readout</h2>
       <div class="callout">
-        Open Q3 ICP pipeline is <b>{money(open_gap)}</b> across <b>{summary['open_count']} active opps</b>, while closed decisions already total <b>{money(closed_decision_amount)}</b>. Closed-lost outweighs closed-won by <b>{money(summary['lost_amount'] - summary['won_amount'])}</b>, so the dashboard should be used less as “how much pipeline exists?” and more as “where is ICP conversion breaking?” — tiny sample size, big Bat-Signal.
+        Open H2 ICP pipeline is <b>{money(open_gap)}</b> across <b>{summary['open_count']} active opps</b>, while closed decisions already total <b>{money(closed_decision_amount)}</b>. Closed-lost outweighs closed-won by <b>{money(summary['lost_amount'] - summary['won_amount'])}</b>, so the dashboard should be used less as “how much pipeline exists?” and more as “where is ICP conversion breaking?” — tiny sample size, big Bat-Signal.
       </div>
       <h3>Owner concentration</h3>
       {css_bar(summary['open_owner'])}
@@ -978,7 +1004,7 @@ def main():
     rows = enrich_from_opportunities(base, headers, rows)
     print('Scraping account websites for advertised services...')
     rows = enrich_with_website_services(rows, refresh=os.environ.get('REFRESH_WEBSITE_SERVICES') == '1')
-    print('Fetching total Q3 PSA pipeline denominator...')
+    print('Fetching total H2 PSA pipeline denominator...')
     total_psa_pipeline = fetch_total_psa_pipeline(base, headers)
     summary = summarize(rows, report, total_psa_pipeline=total_psa_pipeline)
     payload = {'summary': summary, 'rows': rows, 'detail_columns': detail_columns, 'column_info': column_info}
