@@ -590,7 +590,7 @@ def render_filters(summary):
     return ''.join(labels)
 
 
-def render_table(rows, sort_mode='default'):
+def render_table(rows, sort_mode='default', show_active_profile=False):
     if sort_mode == 'employees_desc':
         ordered = sorted(rows, key=lambda r: (-int(r.get('employees') or 0), -float(r.get('amount') or 0), r.get('opportunity') or ''))
     else:
@@ -612,10 +612,16 @@ def render_table(rows, sort_mode='default'):
                 f'{f"<div><span>Problems:</span> {escape(problems)}</div>" if problems else ""}</div>'
             )
         next_step = r.get('next_step') or r.get('reason_lost_detail') or ''
+        active_profile = ''
+        if show_active_profile:
+            employee_count = int(r.get('employees') or 0)
+            employee_label = f'{employee_count:,} employees' if employee_count else 'Employees not captured'
+            platform_label = r.get('psa_platform') or 'PSA not captured'
+            active_profile = f'<div class="subtle"><strong>{escape(employee_label)}</strong> • {escape(platform_label)}</div>'
         trs.append(f'''
         <tr data-stage="{escape(r['stage'])}" data-owner="{escape(r.get('owner',''))}" data-platform="{escape(r.get('psa_platform',''))}">
           <td><span class="pill stage-{escape(r['stage'].lower().replace(' ', '-').replace('/', '-'))}">{escape(r['stage'] or 'Unspecified')}</span></td>
-          <td><a href="{opp_url}" target="_blank">{escape(r.get('opportunity') or '')}</a><div class="subtle">{escape(r.get('account') or '')}</div></td>
+          <td><a href="{opp_url}" target="_blank">{escape(r.get('opportunity') or '')}</a><div class="subtle">{escape(r.get('account') or '')}</div>{active_profile}</td>
           <td>{escape(r.get('owner') or '')}</td>
           <td>{escape(r.get('psa_platform') or '—')}</td>
           <td>{escape(source)}</td>
@@ -717,7 +723,7 @@ def render_status_sections(rows, statuses=None):
           <h2>{escape(label)} opportunities <span class="section-count">{len(items)} opps • {money(amount)}</span></h2>
           <div class="table-wrap"><table>
             <thead><tr><th>Stage</th><th>Opportunity / Account</th><th>Owner</th><th>PSA</th><th>Marketing source</th><th>Advertised services</th><th>Business issue / problems identified</th><th>Emp.</th><th>Amount</th><th>Close</th><th>Age</th><th>Next Step / Loss Detail</th><th>Features / Loss Reason</th></tr></thead>
-            <tbody>{render_table(items, sort_mode='employees_desc' if label == 'Active' else 'default')}</tbody>
+            <tbody>{render_table(items, sort_mode='employees_desc' if label == 'Active' else 'default', show_active_profile=(label == 'Active'))}</tbody>
           </table></div>
         </section>''')
     return '\n'.join(sections)
