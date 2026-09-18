@@ -1,0 +1,55 @@
+import json, calendar
+from collections import Counter, defaultdict
+from datetime import date
+from pathlib import Path
+
+ROOT=Path(__file__).parent
+A=json.load(open(ROOT/'sf_august_opps.json'))
+S=json.load(open(ROOT/'sf_september_opps.json'))
+ASOF=date(2026,9,18)
+
+def amt(rows): return sum((r.get('Amount') or 0) for r in rows)
+def money(n): return '${:,.0f}'.format(n)
+def product(r):
+ p=r.get('Product_Type__c') or 'Other'
+ if 'PSA' in p:return 'PSA'
+ if 'Billing' in p:return 'Billing'
+ if 'Payment' in p:return 'Payments'
+ if 'Cyber' in p:return 'Cyber'
+ return 'Other'
+def rows(d,stage):
+ return [r for r in d if (not r['StageName'].startswith('Closed'))] if stage=='Open' else [r for r in d if r['StageName']==stage]
+def grouped(rs):
+ out=defaultdict(lambda:[0,0])
+ for r in rs: out[product(r)][0]+=1; out[product(r)][1]+=r.get('Amount') or 0
+ return out
+
+aw,al=rows(A,'Closed Won'),rows(A,'Closed Lost')
+sw,sl,so=rows(S,'Closed Won'),rows(S,'Closed Lost'),rows(S,'Open')
+bdays=[date(2026,9,d) for d in range(1,31) if date(2026,9,d).weekday()<5]
+elapsed=sum(d<=ASOF for d in bdays); total=len(bdays); pace=total/elapsed
+proj_w=round(len(sw)*pace); proj_m=amt(sw)*pace
+ag,sg,og=grouped(aw),grouped(sw),grouped(so)
+loss=Counter(r.get('Loss_Reason__c') or 'Unknown' for r in sl).most_common(6)
+stages=Counter(r['StageName'].replace('1- ','').replace('2 - ','').replace('3 - ','').replace('4 - ','').replace('5 - ','').replace('6 - ','') for r in so)
+maxstage=max(stages.values())
+
+cards=''.join(f'<div class="card"><div class="eyebrow">{k}</div><div class="big">{v}</div><div class="sub">{s}</div></div>' for k,v,s in [
+ ('September wins',len(sw),'Closed won through Sep 18'),('Closed-won MRR',money(amt(sw)),'September MTD'),('Projected wins',proj_w,f'{elapsed} of {total} business days'),('Projected MRR',money(proj_m),'Straight-line pace')])
+prodrows=''.join(f'<tr><td>{p}</td><td>{ag[p][0]}</td><td>{money(ag[p][1])}</td><td>{sg[p][0]}</td><td>{money(sg[p][1])}</td><td>{og[p][0]}</td><td>{money(og[p][1])}</td></tr>' for p in ['PSA','Billing','Payments','Cyber','Other'])
+stagebars=''.join(f'<div class="barrow"><span>{k}</span><div class="bar"><i style="width:{v/maxstage*100:.0f}%"></i></div><b>{v}</b></div>' for k,v in stages.most_common())
+lossrows=''.join(f'<tr><td>{k}</td><td>{v}</td><td>{v/len(sl):.0%}</td></tr>' for k,v in loss)
+forecast=Counter(r.get('Forecast_Status__c') or 'Unspecified' for r in so)
+forecast_html=''.join(f'<div class="mini"><b>{k}</b><span>{v} opps · {money(sum((r.get("Amount") or 0) for r in so if (r.get("Forecast_Status__c") or "Unspecified")==k))}</span></div>' for k,v in [('Most Likely',forecast['Most Likely']),('Best Case',forecast['Best Case']),('Worst Case',forecast['Worst Case']),('Unspecified',forecast['Unspecified'])])
+html=f'''<!doctype html><html><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Rev.io Sales · September Update</title>
+<style>@import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@500;700;800;900&family=Inter:wght@400;600;700&display=swap');*{{box-sizing:border-box}}body{{margin:0;background:#06131f;color:#fff;font-family:Inter,sans-serif;overflow:hidden}}.slide{{display:none;width:100vw;height:100vh;padding:54px 64px 86px;position:relative;background:radial-gradient(circle at 90% 10%,rgba(0,212,240,.12),transparent 34%),linear-gradient(145deg,#071523,#0b2034)}}.slide.active{{display:flex;flex-direction:column}}h1,h2{{font-family:Montserrat;margin:0}}h1{{font-size:64px;line-height:1.02;max-width:920px}}h1 span,h2 span,.teal{{color:#00d4f0}}h2{{font-size:40px}}.tag{{color:#00d4f0;text-transform:uppercase;letter-spacing:2px;font-weight:800;font-size:13px;margin-bottom:18px}}.subtitle{{font-size:20px;color:#adc0cf;margin-top:20px;max-width:850px}}.grid4{{display:grid;grid-template-columns:repeat(4,1fr);gap:18px;margin-top:30px}}.card,.panel,.mini{{background:#10263a;border:1px solid rgba(255,255,255,.09);border-radius:14px;padding:22px}}.eyebrow{{font-size:11px;color:#8fa7ba;text-transform:uppercase;letter-spacing:1.2px;font-weight:700}}.big{{font:900 42px Montserrat;color:#3ddc97;margin:7px 0}}.sub{{color:#8fa7ba;font-size:12px}}.header{{display:flex;justify-content:space-between;align-items:start;margin-bottom:26px}}.logo{{font:900 24px Montserrat;color:#fff}}.logo em{{font-style:normal;color:#00d4f0}}table{{width:100%;border-collapse:collapse;background:#10263a;border-radius:14px;overflow:hidden}}th{{color:#00d4f0;text-transform:uppercase;font-size:11px;letter-spacing:1px;background:#0d2133}}td,th{{padding:13px 16px;border-bottom:1px solid rgba(255,255,255,.07);text-align:right}}td:first-child,th:first-child{{text-align:left}}.callout{{margin-top:22px;padding:18px 22px;border-left:4px solid #00d4f0;background:rgba(0,212,240,.08);border-radius:8px;color:#c7d6e2}}.two{{display:grid;grid-template-columns:1.25fr .75fr;gap:22px;flex:1}}.barrow{{display:grid;grid-template-columns:190px 1fr 40px;gap:12px;align-items:center;margin:15px 0;color:#c7d6e2}}.bar{{height:10px;background:#071523;border-radius:8px;overflow:hidden}}.bar i{{display:block;height:100%;background:linear-gradient(90deg,#00d4f0,#3ddc97)}}.mini{{padding:18px;margin-bottom:12px;display:flex;justify-content:space-between}}.mini span{{color:#8fa7ba}}.footer{{position:absolute;bottom:26px;left:64px;color:#6f8799;font-size:11px}}nav{{position:fixed;bottom:0;width:100%;height:58px;background:#07111c;border-top:1px solid rgba(255,255,255,.09);display:flex;align-items:center;justify-content:center;gap:9px;z-index:5}}nav button{{background:#10263a;color:#9db0bf;border:0;border-radius:8px;padding:9px 13px;cursor:pointer;font-weight:700}}nav button.active{{background:#00d4f0;color:#071523}}.cover{{justify-content:center!important}}.cover .kicker{{font:800 14px Montserrat;letter-spacing:2px;color:#3ddc97;text-transform:uppercase;margin-bottom:18px}}.sep{{height:4px;width:120px;background:#00d4f0;margin:30px 0}}@media(max-width:900px){{.slide{{padding:30px 25px 80px;overflow:auto}}h1{{font-size:42px}}.grid4,.two{{grid-template-columns:1fr 1fr}}}}</style></head><body>
+<section class="slide active cover"><div class="kicker">Primus leadership update · September 2026</div><h1>August Final Results<br><span>+ September Pace</span></h1><div class="sep"></div><div class="subtitle">A clean read on where August landed, what September has produced through the 18th, and what the current pipeline says about the finish.</div><div class="footer">Salesforce data refreshed September 18, 2026 · Rev.io Sales Leadership</div></section>
+<section class="slide"><div class="header"><div><div class="tag">Final month results</div><h2>August <span>Final</span></h2></div><div class="logo">REV<em>.IO</em></div></div><div class="grid4">{''.join(f'<div class="card"><div class="eyebrow">{a}</div><div class="big">{b}</div><div class="sub">{c}</div></div>' for a,b,c in [('Opportunities won',len(aw),'Final August count'),('Closed-won MRR',money(amt(aw)),'Final August MRR'),('Closed lost',len(al),money(amt(al))+' lost MRR'),('Average win size',money(amt(aw)/len(aw)),'MRR per closed-won opp')])}</div><div class="callout">August closed with <b>{len(aw)} wins and {money(amt(aw))} in MRR</b>. PSA contributed {ag['PSA'][0]} wins / {money(ag['PSA'][1])}; Payments added {ag['Payments'][0]} wins / {money(ag['Payments'][1])}.</div><div class="footer">Final Salesforce close-date results for August 2026</div></section>
+<section class="slide"><div class="header"><div><div class="tag">Current month</div><h2>September <span>Pacing</span></h2></div><div class="logo">REV<em>.IO</em></div></div><div class="grid4">{cards}</div><div class="callout">At {elapsed}/{total} business days, September is pacing to roughly <b>{proj_w} wins and {money(proj_m)} in closed-won MRR</b>. That trails August's MRR finish by <b>{1-proj_m/amt(aw):.0%}</b> on straight-line pace, with {money(amt(so))} still open.</div><div class="footer">Straight-line projection; excludes holiday adjustment and assumes current daily rate holds</div></section>
+<section class="slide"><div class="header"><div><div class="tag">Product view</div><h2>August Final vs. <span>September MTD</span></h2></div><div class="logo">REV<em>.IO</em></div></div><table><thead><tr><th>Product</th><th>Aug Wins</th><th>Aug MRR</th><th>Sep Wins</th><th>Sep MRR</th><th>Sep Open</th><th>Open MRR</th></tr></thead><tbody>{prodrows}</tbody></table><div class="callout">PSA holds the largest September opportunity pool: <b>{og['PSA'][0]} open opportunities worth {money(og['PSA'][1])}</b>. Billing carries {money(og['Billing'][1])} open, including the month's largest strategic opportunity.</div><div class="footer">Product based on Salesforce Product Type; blank types grouped as Other</div></section>
+<section class="slide"><div class="header"><div><div class="tag">Finish-line view</div><h2>September Open Pipeline: <span>{money(amt(so))}</span></h2></div><div class="logo">REV<em>.IO</em></div></div><div class="two"><div class="panel"><div class="eyebrow">Open opportunities by stage</div>{stagebars}</div><div><div class="eyebrow" style="margin-bottom:12px">Forecast status</div>{forecast_html}</div></div><div class="footer">{len(so)} open opportunities as of September 18</div></section>
+<section class="slide"><div class="header"><div><div class="tag">Quality signal</div><h2>September <span>Closed Lost</span></h2></div><div class="logo">REV<em>.IO</em></div></div><div class="two"><div><table><thead><tr><th>Loss reason</th><th>Opps</th><th>Share</th></tr></thead><tbody>{lossrows}</tbody></table></div><div class="panel"><div class="eyebrow">MTD loss summary</div><div class="big">{len(sl)}</div><div class="sub">closed-lost opportunities · {money(amt(sl))} MRR</div><div class="callout" style="margin-top:24px">The top two loss drivers are <b>{loss[0][0]}</b> and <b>{loss[1][0]}</b>, combining for {loss[0][1]+loss[1][1]} opportunities.</div></div></div><div class="footer">Salesforce loss reasons through September 18</div></section>
+<nav id="nav"></nav><script>const slides=[...document.querySelectorAll('.slide')],labels=['Cover','August Final','September Pace','Product View','Open Pipeline','Closed Lost'];let n=0;const nav=document.getElementById('nav');function show(i){{n=(i+slides.length)%slides.length;slides.forEach((s,j)=>s.classList.toggle('active',j===n));[...nav.children].forEach((b,j)=>b.classList.toggle('active',j===n))}}labels.forEach((x,i)=>{{let b=document.createElement('button');b.textContent=x;b.onclick=()=>show(i);nav.appendChild(b)}});show(0);addEventListener('keydown',e=>{{if(e.key==='ArrowRight'||e.key===' ')show(n+1);if(e.key==='ArrowLeft')show(n-1)}})</script></body></html>'''
+(ROOT/'september-update-deck.html').write_text(html)
+print('wrote september-update-deck.html')
+print({'aug_wins':len(aw),'aug_mrr':amt(aw),'sep_wins':len(sw),'sep_mrr':amt(sw),'sep_open':amt(so),'projected_mrr':round(proj_m),'projected_wins':proj_w})
