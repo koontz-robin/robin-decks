@@ -24,7 +24,9 @@ def prod(x):
     if 'payment' in s: return 'Payments AR'
     if 'cyber' in s or 'commerce' in s: return 'Cyber + CommerceHub + Other'
     return 'Other / Not Set'
-def source(x): return str(x.get('Marketing_Source__c') or x.get('Lead_Direction__c') or 'Unknown')
+def source(x):
+    marketing_source=str(x.get('Marketing_Source__c') or '').strip()
+    return marketing_source or 'Sales'
 def card(label,val,sub,color='teal',extra=''):
     return f'<div class="kpi-card {color} {extra}"><div class="kpi-label">{label}</div><div class="kpi-val {color}">{val}</div><div class="kpi-sub">{sub}</div></div>'
 def header(tag,title):
