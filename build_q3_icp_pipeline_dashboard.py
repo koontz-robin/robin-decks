@@ -338,7 +338,7 @@ def fetch_total_psa_pipeline(base, headers):
         FROM Opportunity
         WHERE CloseDate >= 2026-07-01
           AND CloseDate <= 2026-12-31
-          AND Product_Type__c LIKE '%PSA%'
+          AND Product_Type__c IN ('PSA','PSA 2.0')
           AND Type = 'New Opportunity'
           AND StageName NOT IN ('Closed Lost','Closed Won')
           AND Probability > 0
@@ -482,8 +482,9 @@ def summarize(rows, report, total_psa_pipeline=None):
     populated_issues = 0
     populated_problems = 0
     for r in rows:
-        issue = r.get('business_issue') or 'Not captured'
-        issue_counts[issue] += 1
+        issue = r.get('business_issue')
+        if issue:
+            issue_counts[issue] += 1
         if r.get('business_issue') or r.get('business_issue_details'):
             populated_issues += 1
         if r.get('problems_identified'):
@@ -513,7 +514,8 @@ def summarize(rows, report, total_psa_pipeline=None):
             'win_rate_count': pct(values['won_count'], closed_count),
             'win_rate_amount': pct(values['won_amount'], closed_amount),
         })
-    source_impact.sort(key=lambda x: (-x['active_amount'], -x['amount'], x['label']))
+    # Default the conversion table to the Won column, highest count first.
+    source_impact.sort(key=lambda x: (-x['won_count'], -x['won_amount'], x['label']))
 
     summary = {
         'generated_at_et': datetime.now(ET).strftime('%Y-%m-%d %H:%M %Z'),
@@ -665,7 +667,8 @@ def render_table(rows, sort_mode='default', show_active_profile=False):
 
 def render_stage_breakdown(summary):
     rows = []
-    for item in summary['stage_detail']:
+    stage_rank = {**{stage: i for i, stage in enumerate(STAGE_ORDER)}, CLOSED_WON: -1}
+    for item in sorted(summary['stage_detail'], key=lambda x: (stage_rank.get(x['label'], 999), x['label'])):
         label = item['label']
         pill_class = label.lower().replace(' ', '-').replace('/', '-')
         rows.append(f'''
@@ -855,7 +858,7 @@ th {{ position:sticky; top:0; background:#0c263a; color:#b9d2e0; z-index:2; text
     {metric('Closed won', money(summary['won_amount']), f"{summary['won_count']} won • {summary['win_rate_count']:.0f}% count win rate")}
     {metric('Closed lost', money(summary['lost_amount']), f"{summary['lost_count']} lost • {summary['win_rate_amount']:.0f}% amount win rate")}
     {metric('Win rate', f"{summary['win_rate_count']:.0f}%", f"{summary['won_count']} won / {summary['won_count'] + summary['lost_count']} closed decisions")}
-    {metric('ICP % of PSA pipeline', f"{summary['icp_pct_total_psa_pipeline']:.1f}%", f"{money(summary['open_amount'])} ICP / {money(summary['total_psa_pipeline']['amount'])} total PSA")}
+    {metric('ICP % of New Rev.io pipeline', f"{summary['icp_pct_total_psa_pipeline']:.1f}%", f"{money(summary['open_amount'])} ICP / {money(summary['total_psa_pipeline']['amount'])} New Rev.io pipeline")}
   </section>
 
   <section class="card" style="margin-top:18px;">
@@ -875,7 +878,7 @@ th {{ position:sticky; top:0; background:#0c263a; color:#b9d2e0; z-index:2; text
     <div class="card">
       <h2>Source conversion table</h2>
       <div class="table-wrap source-conversion-wrap"><table style="min-width:980px;">
-        <thead><tr><th>Marketing source</th><th>Total</th><th>Total $</th><th>Active</th><th>Won</th><th>Lost</th><th>Active $ %</th><th>Win rate</th></tr></thead>
+        <thead><tr><th>Marketing source</th><th>Total</th><th>Total $</th><th>Active</th><th>Won ↓</th><th>Lost</th><th>Active $ %</th><th>Win rate</th></tr></thead>
         <tbody>{render_marketing_source_impact(summary)}</tbody>
       </table></div>
     </div>
@@ -889,14 +892,6 @@ th {{ position:sticky; top:0; background:#0c263a; color:#b9d2e0; z-index:2; text
       </div>
       <h3>Open-stage amount</h3>
       {css_bar(summary['open_stage'])}
-    </div>
-    <div class="card">
-      <h2>Executive readout</h2>
-      <div class="callout">
-        Open H2 ICP pipeline is <b>{money(open_gap)}</b> across <b>{summary['open_count']} active opps</b>, while closed decisions already total <b>{money(closed_decision_amount)}</b>. Closed-lost outweighs closed-won by <b>{money(summary['lost_amount'] - summary['won_amount'])}</b>, so the dashboard should be used less as “how much pipeline exists?” and more as “where is ICP conversion breaking?” — tiny sample size, big Bat-Signal.
-      </div>
-      <h3>Owner concentration</h3>
-      {css_bar(summary['open_owner'])}
     </div>
     <div class="card">
       <h2>PSA platform mix</h2>
