@@ -914,7 +914,7 @@ th {{ position:sticky; top:0; background:#0c263a; color:#b9d2e0; z-index:2; text
     </div>
   </section>
 
-  <section class="grid">
+  <section class="grid two">
     <div class="card">
       <h2>Stage funnel</h2>
       <div class="funnel">
