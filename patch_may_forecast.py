@@ -53,6 +53,7 @@ MONTHLY_QUOTAS = {
     # July combines CommerceHub and Cyber Protect under one target.
     'July': {'PSA':42000,'Billing':12368,'Payments':11040,'Cyber':9967,'CommerceHub':0},
     'August': {'PSA':46000,'Billing':12383,'Payments':10540,'Cyber':4500,'CommerceHub':1667},
+    'September': {'PSA':50000,'Billing':12383,'Payments':10540,'Cyber':4500,'CommerceHub':1667},
 }
 DEFAULT_MONTH_QUOTAS = {'PSA':30000,'Billing':13368,'Payments':10540,'Cyber':4500,'CommerceHub':1667}
 TARGET_QUOTAS = MONTHLY_QUOTAS.get(TARGET_MONTH, DEFAULT_MONTH_QUOTAS)
