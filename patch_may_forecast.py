@@ -42,7 +42,7 @@ PRODUCTS = ['PSA', 'Billing', 'Payments', 'Cyber', 'CommerceHub']
 # Formatting lock: keep the forecast dashboard aligned to the Rev.io Summit visual system.
 # Do not restore the old neon green grid/terminal theme during future forecast refreshes.
 PROD_COLORS = {'PSA':'#c6f178','Billing':'#34bde5','Payments':'#7c3aed','Cyber':'#ff9f43','CommerceHub':'#eace9b','Other':'#94a3b8'}
-PROD_LABELS = {'PSA':'PSA','Billing':'Billing / Odin','Payments':'Payments','Cyber':'Cyber Protect','CommerceHub':'CommerceHub','Other':'Unmapped'}
+PROD_LABELS = {'PSA':'New Rev.io','Billing':'Billing / Odin','Payments':'Payments','Cyber':'Cyber Protect','CommerceHub':'CommerceHub','Other':'Unmapped'}
 QUARTER_LABEL = 'Q3 2026'
 QUARTER_MONTHS = ['July', 'August', 'September']
 QUARTER_QUOTAS = {'PSA':138000,'Billing':42104,'Payments':30740,'Cyber':33702,'CommerceHub':0}
@@ -123,6 +123,10 @@ def prod_label(p):
         return 'CommerceHub / Cyber Protect'
     return PROD_LABELS.get(p, p or 'Unmapped')
 
+def display_product_type(value):
+    value = str(value or '')
+    return re.sub(r'\bPSA(?: 2\.0)?\b', 'New Rev.io', value)
+
 def fmt(n):
     cents = round((float(n or 0) - int(float(n or 0))) * 100)
     return f'${n:,.2f}' if cents else f'${n:,.0f}'
@@ -194,7 +198,7 @@ def closed_opp_row(o):
     acc = o.get('Account') or o.get('Name') or 'Unknown'
     owner = o.get('Owner') or ''
     close_date = o.get('CloseDate') or ''
-    product = prod_label(o.get('_booking_product')) if o.get('_booking_product') else (o.get('Product_Type__c') or '')
+    product = prod_label(o.get('_booking_product')) if o.get('_booking_product') else display_product_type(o.get('Product_Type__c'))
     amount = o.get('_booking_amount')
     if amount is None:
         amount = o.get('Amount') or 0
@@ -205,7 +209,7 @@ def closed_lost_opp_row(o):
     opp_name = esc(o.get('Name') or '')
     owner = esc(o.get('Owner') or '')
     close_date = esc(o.get('CloseDate') or '')
-    product = esc(o.get('Product_Type__c') or '')
+    product = esc(display_product_type(o.get('Product_Type__c')))
     amount = fmt(o.get('Amount') or 0)
     loss_reason = esc(o.get('Loss_Reason__c') or 'No loss reason')
     reason_detail = esc(o.get('Reason_Lost_Detail__c') or 'No reason lost detail')
