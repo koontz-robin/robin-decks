@@ -17,7 +17,7 @@ def amount(xs): return sum(float(x.get('Amount') or 0) for x in xs)
 def money(x): return '${:,.0f}'.format(x)
 def prod(x):
  s=(x.get('Product_Type__c') or 'Other').lower()
- if 'psa' in s:return 'PSA'
+ if 'psa' in s:return 'New Rev.io'
  if 'billing' in s or 'odin' in s:return 'Billing / Odin'
  if 'payment' in s:return 'Payments'
  return 'Cyber + CommerceHub + Other'
@@ -61,7 +61,7 @@ def icp_metrics():
  return months
 def product_cards(won,open_,quotas):
  out=[]
- for p in ['PSA','Billing / Odin','Payments','Cyber + CommerceHub + Other']:
+ for p in ['New Rev.io','Billing / Odin','Payments','Cyber + CommerceHub + Other']:
   w=[x for x in won if prod(x)==p]; o=[x for x in open_ if prod(x)==p]; q=quotas[p]; pct=round(amount(w)/q*100) if q else 0
   out.append(f'<div class="prod-card"><div class="prod-name">{p}</div><div class="prod-row"><span class="prod-row-lbl">Won MRR</span><span class="prod-row-val green">{money(amount(w))}</span></div><div class="prod-row"><span class="prod-row-lbl">Open Pipeline</span><span class="prod-row-val teal">{money(amount(o))}</span></div><div class="prod-row"><span class="prod-row-lbl">Opportunities Won</span><span class="prod-row-val">{len(w)}</span></div><div class="prod-row"><span class="prod-row-lbl">Monthly Quota</span><span class="prod-row-val">{money(q)}</span></div><div class="quota-bar-wrap"><div class="quota-bar-bg"><div class="quota-bar-fill {'low' if pct<50 else 'mid'}" style="width:{min(pct,100)}%"></div></div><div class="quota-pct">{pct}% attained</div></div></div>')
  return '<div class="product-grid">'+''.join(out)+'</div>'
@@ -72,7 +72,7 @@ def main():
  icp=icp_metrics()
  aw=[x for x in aug if x['StageName']=='Closed Won']; al=[x for x in aug if x['StageName']=='Closed Lost']
  sw=[x for x in sep if x['StageName']=='Closed Won']; sl=[x for x in sep if x['StageName']=='Closed Lost']; so=[x for x in sep if not x['StageName'].startswith('Closed')]
- quotas={'PSA':46000,'Billing / Odin':12383,'Payments':10540,'Cyber + CommerceHub + Other':6167}
+ quotas={'New Rev.io':46000,'Billing / Odin':12383,'Payments':10540,'Cyber + CommerceHub + Other':6167}
  # Jan-Jun creation comes from the full export. Jul/Aug values are preserved from the August edition; Sep is a close-date-cohort proxy because current exports omit CreatedDate.
  created=base['created_2026_jan_jun']; months=[]
  for m in range(1,7):
@@ -81,21 +81,22 @@ def main():
  # PSA through Sep 18, de-duplicated.
  psa={}
  for x in base['closed_won_2026_jan_jun']+jul+aug+sep:
-  if x.get('StageName')=='Closed Won' and prod(x)=='PSA': psa[x['Id']]=x
+  if x.get('StageName')=='Closed Won' and prod(x)=='New Rev.io': psa[x['Id']]=x
  ps=list(psa.values())
  cycle=[]
  for x in base['closed_won_2026_jan_jun']:
-  if prod(x)=='PSA' and x.get('CreatedDate') and x.get('CloseDate'):
+  if prod(x)=='New Rev.io' and x.get('CreatedDate') and x.get('CloseDate'):
    cycle.append((datetime.fromisoformat(x['CloseDate']).date()-datetime.fromisoformat(x['CreatedDate'].replace('Z','+00:00')).date()).days)
  loss_month=[]
  for m in range(1,7): loss_month.append((datetime(2026,m,1).strftime('%b'),sum(1 for x in base['closed_lost_2026_jan_jun'] if x.get('CloseDate','').startswith(f'2026-{m:02}'))))
  loss_month += [('Jul',sum(x['StageName']=='Closed Lost' for x in jul)),('Aug',len(al)),('Sep MTD',len(sl))]
  reasons=Counter(x.get('Loss_Reason__c') or 'Unknown' for x in sl)
- old=(R/'august-update-deck.html').read_text(); style=re.search(r'<style>(.*?)</style>',old,re.S).group(1)
+ # The May update deck is the visual source of truth for this edition.
+ old=(R/'may-update-deck.html').read_text(); style=re.search(r'<style>(.*?)</style>',old,re.S).group(1)
  logo='https://7091219.fs1.hubspotusercontent-na1.net/hubfs/7091219/email-assets/logo-revio-white.png'
  s=[]
- # 1 cover + August final
- s.append(f'<div class="slide active" id="slide-1" style="justify-content:center;align-items:center;overflow:hidden"><div class="cover-inner" style="width:min(1240px,100%);padding:0 48px 58px"><div class="cover-top"><img src="{logo}" class="cover-logo"><div class="cover-tag">Sales Leadership Update · September 2026</div></div><div class="cover-title">Rev.io Sales <span>September Update</span></div>{section("Final August Pipeline Snapshot")}<div class="kpi-row" style="grid-template-columns:repeat(2,1fr)">{card("Opportunities Won",len(aw),"Final August count")}{card("Closed Won MRR",money(amount(aw)),"Final August result", "green")}</div>{section("August Product Results - Quota Attainment")}{product_cards(aw,[],quotas)}<div class="cover-date">Refreshed September 18, 2026 · Existing Salesforce exports · Rev.io Sales Leadership</div></div></div>')
+ # 1 prior-month snapshot, matching the opening slide pattern in the May deck.
+ s.append(f'<div class="slide active" id="slide-1">{header("Prior Month Snapshot","Final August Pipeline Snapshot")}<div class="slide-body"><div class="kpi-row april-final-row">{card("Deals Won",len(aw),"Final August count")}{card("Closed Won MRR",money(amount(aw)),"Final August result", "green")}</div>{section("August Product Results — Quota Attainment")}{product_cards(aw,[],quotas)}</div></div>')
  # 2 current pipeline
  war=[x for x in so if (x.get('Forecast_Status__c') or '').lower() in ('most likely','commit','best case')]
  s.append(f'<div class="slide" id="slide-2">{header("Current Month Snapshot","September Pipeline Snapshot")}<div class="slide-body"><div class="kpi-row">{card("Opportunities Won MTD",len(sw),"Closed-won count")}{card("Closed Won MRR",money(amount(sw)),"September MTD result","green")}{card("Open Pipeline",len(so),f"opps · {money(amount(so))} value","navy")}{card("War Room Opps",len(war),f"{money(amount(war))} value","orange")}</div>{section("September Product Results - Quota Attainment")}{product_cards(sw,so,quotas)}</div></div>')
@@ -119,7 +120,7 @@ def main():
  s.append(f'<div class="slide" id="slide-4">{header("Pipeline Creation","Pipeline Trends - Jan Through September MTD")}<div class="slide-body">{section("Monthly Pipeline")}<div class="product-grid" style="grid-template-columns:repeat(5,1fr)">{mhtml}</div><div class="insight-banner"><div class="insight-text"><strong>Method note:</strong> Jan–Jun are CreatedDate cohorts. July is retained from the prior Salesforce-built edition. The available Aug/Sep close-month exports omit CreatedDate, so those two cards are explicitly shown as close-date cohorts rather than silently presenting them as created pipeline.</div></div></div></div>')
  # 4 PSA
  byp=Counter(prod(x) for x in ps); avg=amount(ps)/len(ps) if ps else 0
- s.append(f'<div class="slide" id="slide-6">{header("PSA Closed Won","2026 PSA Win Profile")}<div class="slide-body"><div class="psa-six-kpis">{card("Closed Won PSA Opps",len(ps),"Jan 1 - Sep 18")}{card("Closed Won MRR",money(amount(ps)),"PSA family", "green")}{card("Avg Opportunity Size",money(avg),"MRR per won opportunity","navy")}{card("Avg Cycle Duration",f"{sum(cycle)/len(cycle):.1f}","days · Jan-Jun records with CreatedDate","orange")}</div>{section("PSA Wins by Close Month")}<div class="insight-banner"><div class="insight-text">August added <strong>{sum(prod(x)=='PSA' for x in aw)} PSA wins / {money(amount([x for x in aw if prod(x)=='PSA']))}</strong>; September MTD added <strong>{sum(prod(x)=='PSA' for x in sw)} / {money(amount([x for x in sw if prod(x)=='PSA']))}</strong>.</div></div></div></div>')
+ s.append(f'<div class="slide" id="slide-6">{header("New Rev.io Closed Won","2026 New Rev.io Win Profile")}<div class="slide-body"><div class="psa-six-kpis">{card("Closed Won New Rev.io Opps",len(ps),"Jan 1 - Sep 18")}{card("Closed Won MRR",money(amount(ps)),"New Rev.io family", "green")}{card("Avg Opportunity Size",money(avg),"MRR per won opportunity","navy")}{card("Avg Cycle Duration",f"{sum(cycle)/len(cycle):.1f}","days · Jan-Jun records with CreatedDate","orange")}</div>{section("New Rev.io Wins by Close Month")}<div class="insight-banner"><div class="insight-text">August added <strong>{sum(prod(x)=='New Rev.io' for x in aw)} New Rev.io wins / {money(amount([x for x in aw if prod(x)=='New Rev.io']))}</strong>; September MTD added <strong>{sum(prod(x)=='New Rev.io' for x in sw)} / {money(amount([x for x in sw if prod(x)=='New Rev.io']))}</strong>.</div></div></div></div>')
  # 5 losses
  vol=''.join(f'<div class="prod-card"><div class="prod-name">{m}</div><div class="kpi-val" style="color:#f5a623;font-size:28px">{n}</div><div class="kpi-sub">closed lost</div></div>' for m,n in loss_month)
  rows=''.join(f'<tr><td>{escape(k)}</td><td style="text-align:center">{v}</td><td style="text-align:center">{v/len(sl):.0%}</td></tr>' for k,v in reasons.most_common(8))
@@ -128,7 +129,7 @@ def main():
  ytd_created=len(created)+168+len(aug)+len(sep); ytd_value=amount(created)+219000+amount(aug)+amount(sep)
  paid=[x for x in base['closed_won_2026_jan_jun']+jul+aug+sep if x.get('StageName')=='Closed Won' and amount([x])>0]; paid_ids={x['Id'] for x in paid}
  s.append(f'<div class="slide" id="slide-3">{header("Sales Velocity","2026 Sales Team Efficiency - Refreshed")}<div class="slide-body"><div class="kpi-row">{card("YTD Cohort Opps",ytd_created,f"{money(ytd_value)} value; see method note")}{card("YTD Closed Won MRR",money(amount(list({x["Id"]:x for x in base["closed_won_2026_jan_jun"]+jul+aug+sep if x.get("StageName")=="Closed Won"}.values()))),f"{len(paid_ids)} paid wins through Sep 18","green")}{card("Created→Paid Win Rate",f"{len(paid_ids)/ytd_created:.1%}","paid wins / blended cohort denominator","navy")}{card("Open September Pipeline",money(amount(so)),f"{len(so)} open September opps","orange")}</div>{section("September MTD Operating Snapshot")}<div class="product-grid">{card("Close-Date Cohort",len(sep),f"{money(amount(sep))} total value")}{card("Closed Won",len(sw),money(amount(sw)),"green")}{card("Closed Lost",len(sl),money(amount(sl)),"orange")}{card("Open",len(so),money(amount(so)),"teal")}</div><div class="insight-banner"><div class="insight-text">Efficiency refreshed through <strong>September 18, 2026</strong>. The denominator is labeled blended because Aug/Sep exports do not contain CreatedDate; no fabricated creation dates are used.</div></div></div></div>')
- labels=['Cover + August Final','September Pipeline','ICP Created vs. Won','Pipeline Trends','PSA Wins','Closed Lost','Efficiency']; ids=['slide-1','slide-2','slide-icp','slide-4','slide-6','slide-5','slide-3']
+ labels=['August Final','September Pipeline','ICP Created vs. Won','Pipeline Trends','New Rev.io Wins','Closed Lost','Efficiency']; ids=['slide-1','slide-2','slide-icp','slide-4','slide-6','slide-5','slide-3']
  icp_json=json.dumps({x['key']:x for x in icp})
  script=f"const TOTAL=7;let cur=1;const SLIDE_IDS={json.dumps(ids)};const LABELS={json.dumps(labels)};const ICP={icp_json};function buildDots(){{let w=document.getElementById('nav-dots');for(let i=1;i<=TOTAL;i++){{let d=document.createElement('div');d.className='nav-dot';d.title=LABELS[i-1];d.onclick=()=>showSlide(i);w.appendChild(d)}}}}function showSlide(n){{cur=Math.max(1,Math.min(TOTAL,n));document.querySelectorAll('.slide').forEach(x=>x.classList.remove('active'));document.getElementById(SLIDE_IDS[cur-1]).classList.add('active');document.querySelectorAll('.nav-dot').forEach((x,i)=>x.classList.toggle('active',i===cur-1));document.getElementById('nav-counter').textContent=cur+' / '+TOTAL;document.getElementById('btn-prev').disabled=cur===1;document.getElementById('btn-next').disabled=cur===TOTAL}}function goSlide(d){{showSlide(cur+d)}}function openIcp(k){{const x=ICP[k];document.getElementById('icp-modal-title').textContent=x.label+' ICP companies';document.getElementById('icp-created-list').innerHTML=x.created_companies.map(n=>'<li>'+esc(n)+'</li>').join('');document.getElementById('icp-won-list').innerHTML=x.won_companies.length?x.won_companies.map(n=>'<li>'+esc(n)+'</li>').join(''):'<li class=muted>None</li>';document.getElementById('icp-created-count').textContent=x.created+' opportunities · '+x.created_companies.length+' companies';document.getElementById('icp-won-count').textContent=x.won+' opportunities · '+x.won_companies.length+' companies';document.getElementById('icp-modal').classList.add('open')}}function closeIcp(){{document.getElementById('icp-modal').classList.remove('open')}}function esc(s){{return s.replace(/[&<>\"']/g,c=>({{'&':'&amp;','<':'&lt;','>':'&gt;','\"':'&quot;',\"'\":'&#39;'}}[c]))}}buildDots();showSlide(1);addEventListener('keydown',e=>{{if(e.key==='Escape')closeIcp();else if(e.key==='ArrowRight')goSlide(1);else if(e.key==='ArrowLeft')goSlide(-1)}});"
  nav='<div class="nav-bar"><div class="nav-title">Rev.io Sales · September Update</div><div class="nav-controls"><button class="nav-btn" id="btn-prev" onclick="goSlide(-1)">← Prev</button><div class="nav-dots" id="nav-dots"></div><span class="nav-counter" id="nav-counter">1 / 7</span><button class="nav-btn" id="btn-next" onclick="goSlide(1)">Next →</button></div><img src="'+logo+'" class="nav-logo"></div>'
