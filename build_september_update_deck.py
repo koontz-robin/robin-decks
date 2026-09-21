@@ -108,7 +108,19 @@ def main():
     ids=[f'slide-{i}' for i in range(1,7)]; labels=['August Final','September Update','September Pipeline','Efficiency','Pipeline Trends','Closed Lost']
     script=f"const TOTAL=6;let cur=1;const IDS={json.dumps(ids)},LABELS={json.dumps(labels)};function buildDots(){{let w=document.getElementById('nav-dots');for(let i=1;i<=TOTAL;i++){{let d=document.createElement('div');d.className='nav-dot';d.title=LABELS[i-1];d.onclick=()=>showSlide(i);w.appendChild(d)}}}}function showSlide(n){{cur=Math.max(1,Math.min(TOTAL,n));document.querySelectorAll('.slide').forEach(x=>x.classList.remove('active'));document.getElementById(IDS[cur-1]).classList.add('active');document.querySelectorAll('.nav-dot').forEach((x,i)=>x.classList.toggle('active',i===cur-1));document.getElementById('nav-counter').textContent=cur+' / '+TOTAL;document.getElementById('btn-prev').disabled=cur===1;document.getElementById('btn-next').disabled=cur===TOTAL}}function goSlide(d){{showSlide(cur+d)}}buildDots();showSlide(1);addEventListener('keydown',e=>{{if(e.key==='ArrowRight')goSlide(1);if(e.key==='ArrowLeft')goSlide(-1)}});"
     nav=f'<div class="nav-bar"><div class="nav-title">Rev.io Sales · September Update</div><div class="nav-controls"><button class="nav-btn" id="btn-prev" onclick="goSlide(-1)">← Prev</button><div class="nav-dots" id="nav-dots"></div><span class="nav-counter" id="nav-counter">1 / 6</span><button class="nav-btn" id="btn-next" onclick="goSlide(1)">Next →</button></div><img src="{LOGO}" class="nav-logo"></div>'
-    html='<!doctype html><html><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Rev.io Sales · September Update</title><style>'+style+extra+'</style></head><body><div class="deck">'+''.join(slides)+'</div>'+nav+'<script>'+script+'</script></body></html>'
+    # Start with the May deck itself and patch its content in place. This keeps
+    # the original document shell, visual system, and six-slide presentation
+    # behavior instead of creating a parallel deck implementation.
+    html=(R/'may-update-deck.html').read_text()
+    html=re.sub(r'<title>.*?</title>', '<title>Rev.io Sales · September Update</title>', html, count=1, flags=re.S)
+    html=re.sub(r'<style>.*?</style>', '<style>'+style+extra+'</style>', html, count=1, flags=re.S)
+    deck_start=html.index('<div class="deck">')
+    nav_start=html.index('<!-- NAV BAR -->',deck_start)
+    html=html[:deck_start]+'<div class="deck">'+''.join(slides)+'</div>\n'+html[nav_start:]
+    nav_start=html.index('<div class="nav-bar">',deck_start)
+    script_start=html.index('<script>',nav_start)
+    script_end=html.index('</script>',script_start)+len('</script>')
+    html=html[:nav_start]+nav+'<script>'+script+'</script>'+html[script_end:]
     (R/'september-update-deck.html').write_text(html)
     print(json.dumps({'august':{'won':len(aug_won),'mrr':amount(aug_won)},'september':{'created':len(created[9]),'won':len(sep_won),'mrr':amount(sep_won),'open':len(sep_open),'open_mrr':amount(sep_open),'lost':len(sep_lost)}},indent=2))
 
