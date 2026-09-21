@@ -154,14 +154,21 @@ def main():
     columns=''.join(f'<div class="billing-interest-col">{"".join(rows[i:i+chunk])}</div>' for i in range(0,len(rows),chunk))
     open_interest=sum(x.get('StageName') not in ('Closed Won','Closed Lost') for x in billing_clients); lost_interest=sum(x.get('StageName')=='Closed Lost' for x in billing_clients); won_interest=sum(x.get('StageName')=='Closed Won' for x in billing_clients)
     slides.append(f'<div class="slide" id="slide-billing-interest">{header("Billing Client Expansion","Billing Clients Showing Interest in New Rev.io Since July 2025")}<div class="slide-body" style="padding:12px 28px 56px"><div class="summary-strip"><div><strong>{len(billing_clients)}</strong><span>Billing clients with New Rev.io opportunity</span></div><div><strong>{open_interest}</strong><span>Currently open</span></div><div><strong>{won_interest} / {lost_interest}</strong><span>Won / Lost</span></div></div>{section("Most Recent New Rev.io Opportunity — Sorted by Close Date")}<div class="billing-interest-grid">{columns}</div></div></div>')
-    billing_wins=sf_query(base,headers,"SELECT Id,Name,CreatedDate,CloseDate,StageName,Account.Id,Account.Name,Account.PSA_Platform__c FROM Opportunity WHERE CreatedDate>=2025-07-01T00:00:00Z AND Product_Type__c IN ('PSA','PSA 2.0') AND StageName='Closed Won' AND Account.Type='Rev.io PSA Client' AND Account.Billing_Platform__c!=null ORDER BY CloseDate")
+    sold_psa_billing_clients={
+        'Blue Water Networks','All Serve Communications','Xact Communications','RyTel','JD Telecom','KeyCom',
+        'Bullfrog Group LLC','FuseCloud Solutions','Trifecta Solutions','Losh Communications','Stratus Telecom',
+        'Tailwinds Voice & Data','Avalora','Class 5 Technologies','Wyoming.com','Global Data Technologies',
+        'Centra IP Networks','Virtual Guardians','Dialog Telecommunications, Inc.'
+    }
+    billing_wins_raw=sf_query(base,headers,"SELECT Id,Name,CreatedDate,CloseDate,StageName,Account.Id,Account.Name,Account.PSA_Platform__c FROM Opportunity WHERE CloseDate>=2025-07-01 AND Product_Type__c IN ('PSA','PSA 2.0') AND StageName='Closed Won' ORDER BY CloseDate")
+    billing_wins=[x for x in billing_wins_raw if ((x.get('Account') or {}).get('Name') or '') in sold_psa_billing_clients]
     win_rows=[]
     for x in billing_wins:
         account=x.get('Account') or {}
         win_rows.append(f'<div class="billing-interest-row"><div class="billing-client" title="{escape(account.get("Name") or "Unknown")}">{escape(account.get("Name") or "Unknown")}</div><div class="billing-date">{escape(account.get("PSA_Platform__c") or "—")}</div><div class="billing-date">{escape(x.get("CloseDate") or "No date")}</div><div class="billing-stage won">Closed Won</div></div>')
     win_chunk=max(1,(len(win_rows)+2)//3)
     win_columns=''.join(f'<div class="billing-interest-col">{"".join(win_rows[i:i+win_chunk])}</div>' for i in range(0,len(win_rows),win_chunk))
-    slides.append(f'<div class="slide" id="slide-billing-wins">{header("Billing Client Expansion Wins","Billing Clients Converted to New Rev.io Since July 2025")}<div class="slide-body" style="padding:12px 28px 56px"><div class="summary-strip" style="grid-template-columns:1fr"><div><strong>{len(billing_wins)}</strong><span>Closed Won billing-client conversions</span></div></div>{section("Closed Won Accounts — PSA Platform and Close Date")}<div class="billing-interest-grid">{win_columns}</div></div></div>')
+    slides.append(f'<div class="slide" id="slide-billing-wins">{header("Billing Client Expansion Wins","Billing Clients Sold New Rev.io Since July 2025")}<div class="slide-body" style="padding:12px 28px 56px"><div class="summary-strip" style="grid-template-columns:1fr"><div><strong>{len(billing_wins)}</strong><span>Confirmed billing clients sold New Rev.io</span></div></div>{section("Closed Won Accounts — PSA Platform and Close Date")}<div class="billing-interest-grid">{win_columns}</div></div></div>')
     loss_cards=''.join(f'<div class="month-card"><div class="month-name {'current' if m==9 else ''}">{"Sep MTD" if m==9 else datetime(2026,m,1).strftime("%B")}</div><div class="loss-num">{len(lost[m])}</div><div class="month-sub">closed lost</div></div>' for m in range(1,10))
     allreasons=Counter(x.get('Loss_Reason__c') or 'Unknown' for m in range(1,10) for x in lost[m])
     reasons=[r for r,_ in allreasons.most_common(9)]
