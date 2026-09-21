@@ -26,7 +26,9 @@ def prod(x):
     return 'Other / Not Set'
 def source(x):
     marketing_source=str(x.get('Marketing_Source__c') or '').strip()
-    return marketing_source or 'Sales'
+    if not marketing_source or marketing_source.lower() in ('sales', 'sales generated'):
+        return 'Sales'
+    return marketing_source
 def card(label,val,sub,color='teal',extra=''):
     return f'<div class="kpi-card {color} {extra}"><div class="kpi-label">{label}</div><div class="kpi-val {color}">{val}</div><div class="kpi-sub">{sub}</div></div>'
 def header(tag,title):
