@@ -574,6 +574,10 @@ if not HISTORICAL_MONTH:
         count=1,
     )
 
+# Product branding is display-only: Salesforce still uses PSA/PSA 2.0 internally,
+# but no legacy PSA wording should appear anywhere on the published dashboard.
+html = re.sub(r'\bPSA(?: 2\.0)?\b', 'New Rev.io', html)
+
 with open(f'{WORKSPACE}/forecast.html','w') as f:
     f.write(html)
 
