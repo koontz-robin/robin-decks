@@ -10,7 +10,7 @@ import tempfile
 import time
 import re
 from collections import Counter, defaultdict
-from datetime import datetime
+from datetime import datetime, timedelta
 from html.parser import HTMLParser
 from html import escape
 from urllib.parse import urljoin, urlparse
@@ -161,7 +161,7 @@ def enrich_from_opportunities(base, headers, rows):
         return rows
     quoted = ",".join(f"'{i}'" for i in ids)
     query = f"""
-        SELECT Id, StageName, Loss_Reason__c, Reason_Lost_Detail__c, Missing_Features__c, NextStep,
+        SELECT Id, CreatedDate, StageName, Loss_Reason__c, Reason_Lost_Detail__c, Missing_Features__c, NextStep,
                Business_Issue__c, Business_Issue_Details__c, Business_Issues__c, Problems__c,
                Marketing_Source__c, Marketing_Sub_source__c, LeadSource,
                AccountId, Account.Name, Account.Website
@@ -174,6 +174,7 @@ def enrich_from_opportunities(base, headers, rows):
         if not rec:
             continue
         row['stage'] = rec.get('StageName') or row.get('stage') or ''
+        row['created_date'] = (rec.get('CreatedDate') or '')[:10]
         account = rec.get('Account') or {}
         row['account_id'] = rec.get('AccountId') or row.get('account_id') or ''
         row['account'] = account.get('Name') or row.get('account') or ''
@@ -517,6 +518,28 @@ def summarize(rows, report, total_psa_pipeline=None):
     # Default the conversion table to the Won column, highest count first.
     source_impact.sort(key=lambda x: (-x['won_count'], -x['won_amount'], x['label']))
 
+    quarter_start = datetime(2026, 7, 1).date()
+    quarter_end = datetime(2026, 9, 30).date()
+    periods = []
+    period_start = quarter_start
+    while period_start <= quarter_end:
+        days_to_sunday = 6 - period_start.weekday()
+        period_end = min(period_start + timedelta(days=days_to_sunday), quarter_end)
+        periods.append((period_start, period_end))
+        period_start = period_end + timedelta(days=1)
+    created_by_week = []
+    for week_start, week_end in periods:
+        week_rows = []
+        for r in rows:
+            try:
+                created = datetime.strptime(r.get('created_date') or '', '%Y-%m-%d').date()
+            except ValueError:
+                continue
+            if week_start <= created <= week_end:
+                week_rows.append(r)
+        label = f"{week_start.strftime('%b %-d')}–{week_end.strftime('%b %-d')}"
+        created_by_week.append({'label': label, 'count': len(week_rows), 'amount': sum(r['amount'] for r in week_rows)})
+
     summary = {
         'generated_at_et': datetime.now(ET).strftime('%Y-%m-%d %H:%M %Z'),
         'report_id': REPORT_ID,
@@ -555,6 +578,7 @@ def summarize(rows, report, total_psa_pipeline=None):
         'business_issues': [{'label': k, 'count': v} for k, v in issue_counts.most_common()],
         'marketing_sources': rollup('marketing_source_label'),
         'marketing_source_impact': source_impact,
+        'created_by_week': created_by_week,
         'missing_features': [{'label': k, 'count': v} for k, v in features.most_common()],
     }
     theme = defaultdict(lambda: {'count': 0, 'amount': 0.0})
@@ -864,6 +888,12 @@ th {{ position:sticky; top:0; background:#0c263a; color:#b9d2e0; z-index:2; text
   <section class="card" style="margin-top:18px;">
     <h2>Active vs. Won vs. Lost</h2>
     {css_bar(summary['status'])}
+  </section>
+
+  <section class="card" style="margin-top:18px;">
+    <h2>ICP opportunities created by week — Q3 2026</h2>
+    <div class="callout"><b>{sum(x['count'] for x in summary['created_by_week'])}</b> ICP opportunities in the report were created this quarter.</div>
+    {css_bar(summary['created_by_week'], amount_key='count')}
   </section>
 
   <section class="grid two">
