@@ -108,7 +108,7 @@ def main():
         srows.append([f'<strong>{escape(src)}</strong>']+[str(sum(source(x)==src for x in created[m])) for m in range(1,10)])
     monthheads=['Metric']+SHORT[:-1]+['Sep MTD']
     totalpipe=sum(amount(created[m]) for m in range(1,10)); peak=max((len(won[m]),m) for m in range(1,10)); top_prod=max(products,key=lambda p:sum(len([x for x in created[m] if prod(x)==p]) for m in range(1,10)))
-    slides.append(f'<div class="slide zoomed-pipeline" id="slide-5">{header("Pipeline Creation","Pipeline Trends — January Through September MTD")}<div class="slide-body">{section("Monthly Pipeline Created")}<div class="month-grid">{cards}</div><div class="trend-grid"><div>{section("Pipeline by Product")}{table(monthheads,prow)}</div><div>{section("Pipeline by Source")}{table(monthheads,srows)}</div></div><div class="summary-strip"><div><strong>{compact(totalpipe)}</strong><span>Total pipeline Jan–Sep</span></div><div><strong>{peak[0]}</strong><span>Peak monthly deals won</span></div><div><strong>{top_prod}</strong><span>Largest product bucket</span></div></div></div></div>')
+    slides.append(f'<div class="slide zoomed-pipeline" id="slide-5">{header("Pipeline Creation","Pipeline Trends — January Through September MTD")}<div class="slide-body">{section("Monthly Pipeline Created")}<div class="month-grid">{cards}</div><div class="trend-grid"><div>{section("Pipeline by Product")}{table(monthheads,prow)}</div><div>{section("Pipeline by Source")}{table(monthheads,srows)}</div></div></div></div>')
     legacy=[x for x in opps if (x.get('Type') or '')=='Legacy Migration']
     migration_cards=[]
     migration_totals={'created':0,'won':0,'lost':0}
