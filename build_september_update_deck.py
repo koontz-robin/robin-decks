@@ -84,11 +84,13 @@ def main():
     slides.append(f'<div class="slide active" id="slide-1">{header("Prior Month + Current Month Snapshot","August Final and September MTD")}<div class="slide-body">{section("August Product Results — Quota Attainment")}{product_cards(aug_won,[],quotas)}{section("September Product Results — Quota Attainment")}{product_cards(sep_won,sep_open,quotas)}</div></div>')
     eff_cards=[]
     for m in range(1,10):
-        c=len(created[m]); w=len(won[m]); rate=w/c*100 if c else 0; mrr=amount(won[m]); mrr_per=mrr/c if c else 0
+        created_new_revio=[x for x in created[m] if prod(x)=='New Rev.io']
+        won_new_revio=[x for x in won[m] if prod(x)=='New Rev.io']
+        c=len(created_new_revio); w=len(won_new_revio); rate=w/c*100 if c else 0; mrr=amount(won_new_revio); mrr_per=mrr/c if c else 0
         label='Sep MTD' if m==9 else datetime(2026,m,1).strftime('%B')
         eff_cards.append(f'<div class="eff-card"><div class="eff-month">{label}</div><div class="eff-stats"><div class="eff-stat"><strong>{c}</strong><span>Created</span></div><div class="eff-stat"><strong>{w}</strong><span>Won</span></div><div class="eff-stat"><strong>{rate:.1f}%</strong><span>Win rate</span></div><div class="eff-stat"><strong>{money(mrr_per)}</strong><span>Won MRR / created opp</span></div></div></div>')
-    ytd_created=sum(len(created[m]) for m in range(1,10)); ytd_won=sum(len(won[m]) for m in range(1,10)); ytd_mrr=sum(amount(won[m]) for m in range(1,10))
-    slides.append(f'<div class="slide" id="slide-4">{header("Sales Velocity","2026 Sales Team Efficiency — January Through September MTD")}<div class="slide-body">{section("Monthly Creation and Conversion Efficiency")}<div class="eff-grid">{"".join(eff_cards)}</div>{section("Year-to-Date Efficiency")}<div class="summary-strip"><div><strong>{ytd_created}</strong><span>Opportunities created</span></div><div><strong>{ytd_won/ytd_created:.1%}</strong><span>Created-to-won ratio</span></div><div><strong>{money(ytd_mrr/ytd_created)}</strong><span>Won MRR per created opportunity</span></div></div></div></div>')
+    ytd_created=sum(len([x for x in created[m] if prod(x)=='New Rev.io']) for m in range(1,10)); ytd_won=sum(len([x for x in won[m] if prod(x)=='New Rev.io']) for m in range(1,10)); ytd_mrr=sum(amount([x for x in won[m] if prod(x)=='New Rev.io']) for m in range(1,10))
+    slides.append(f'<div class="slide" id="slide-4">{header("New Rev.io Sales Velocity","2026 New Rev.io Efficiency — January Through September MTD")}<div class="slide-body">{section("Monthly New Rev.io Creation and Conversion Efficiency")}<div class="eff-grid">{"".join(eff_cards)}</div>{section("New Rev.io Year-to-Date Efficiency")}<div class="summary-strip"><div><strong>{ytd_created}</strong><span>New Rev.io opportunities created</span></div><div><strong>{ytd_won/ytd_created:.1%}</strong><span>Created-to-won ratio</span></div><div><strong>{money(ytd_mrr/ytd_created)}</strong><span>Won MRR per created opportunity</span></div></div></div></div>')
     cards=''.join(month_card(('Sep MTD' if m==9 else datetime(2026,m,1).strftime('%B')),created[m],won[m],m==9) for m in range(1,10))
     products=['New Rev.io','Billing / Odin','Payments AR','Cyber + CommerceHub + Other','Other / Not Set']
     prow=[]
