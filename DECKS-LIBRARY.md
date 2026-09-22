@@ -1,6 +1,6 @@
 # DECKS-LIBRARY.md — Robin's Deck & Dashboard Library
 
-Last updated: 2026-09-08
+Last updated: 2026-09-22
 GitHub Pages base: `https://koontz-robin.github.io/robin-decks/`
 Repo: `git@github.com:koontz-robin/robin-decks.git`
 
@@ -58,6 +58,7 @@ Repo: `git@github.com:koontz-robin/robin-decks.git`
 | Name | File | URL | Notes |
 |---|---|---|---|
 | Sound Advice & Video Evaluation Readout | sound-advice-video-evaluation-readout.html | https://koontz-robin.github.io/robin-decks/sound-advice-video-evaluation-readout.html | Buyer-facing Execute readout focused on consolidating MicroKey, Trello, Inflow, Google Calendar, and disconnected payment workflows while retaining Portal for quoting. |
+| 35+ Employee Accounts — Jamie Territory States | 35plus-employee-state-accounts.html | https://koontz-robin.github.io/robin-decks/35plus-employee-state-accounts.html | Salesforce accounts with at least 35 employees across Jamie's 25 requested states/DC; searchable and filterable by state and owner. |
 | Native Smart Properties Evaluation Readout | native-smart-properties-evaluation-readout.html | https://koontz-robin.github.io/robin-decks/native-smart-properties-evaluation-readout.html | Buyer-facing Execute readout focused on consolidating Airtable and Freshdesk workflows, preserving simple resident ticket intake, unifying remote-to-field service, inventory, billing, analytics, and the board decision plan. |
 | AVIT Consolidated Deck | avit-consolidated-deck.html | https://koontz-robin.github.io/robin-decks/avit-consolidated-deck.html | Consolidated tabs for Evaluations Summary, Onsite Meeting Recap, and Implementation Plan |
 | Spectrotel September 15 On-Site Agenda | spectrotel-sept15-agenda.html | https://koontz-robin.github.io/robin-decks/spectrotel-sept15-agenda.html | AVIT-style tabbed agenda site for Spectrotel + AirSpring / NuCo operating model, support escalation, platform strategy, SSO, payments, bankruptcy workflow, and roadmap cadence |
@@ -69,6 +70,7 @@ Repo: `git@github.com:koontz-robin/robin-decks.git`
 | STR Technologies PSA Evaluation Readout | str-technologies-psa-evaluation-readout.html | https://koontz-robin.github.io/robin-decks/str-technologies-psa-evaluation-readout.html | Buyer-facing Execute readout for STR Technologies PSA evaluation: Autotask renewal, migration risk, NinjaOne/IT Glue/QuickBooks stack fit, reporting/automation, ROI assumptions, and action plan |
 | CTI Communications PSA Evaluation Readout | cti-communications-psa-evaluation-readout.html | https://koontz-robin.github.io/robin-decks/cti-communications-psa-evaluation-readout.html | Buyer-facing Execute readout for CTI Communications PSA evaluation: ConnectWise replacement, sales/billing validation, mobile technician workflows, OneBill/WisePay considerations, ROI assumptions, and December renewal action plan |
 | Integrated Protection Systems Evaluation Readout | integrated-protection-systems-evaluation-readout.html | https://koontz-robin.github.io/robin-decks/integrated-protection-systems-evaluation-readout.html | Buyer-facing Execute readout for IPS PSA evaluation: Simpro/Zoho consolidation, mobile field workflow, project/service contract management, inventory, QuickBooks integration, ROI assumptions, and action plan |
+| Net Tech Evaluation Readout | net-tech-evaluation-readout.html | https://koontz-robin.github.io/robin-decks/net-tech-evaluation-readout.html | Buyer-facing Execute readout for Net Tech: ConnectWise Manage replacement, Moovila/project scheduling gaps, SharePoint inventory, mobile adoption, migration confidence, and decision plan. |
 | Mad City Techs PSA Evaluation Readout | mad-city-techs-psa-evaluation-readout.html | https://koontz-robin.github.io/robin-decks/mad-city-techs-psa-evaluation-readout.html | Buyer-facing Execute readout for Mad City Techs PSA evaluation: ConnectWise replacement, expired agreement leakage, mobile field workflows, QuickBooks Desktop, NinjaRMM, ROI assumptions, and tailored demo plan |
 | Rev.io PSA vs ConnectWise One-Pager | revio-vs-connectwise-one-pager.html | https://koontz-robin.github.io/robin-decks/revio-vs-connectwise-one-pager.html | Buyer-facing one-pager explaining Rev.io PSA vs ConnectWise positioning, why companies evaluate alternatives, demo triggers, and next-step CTA |
 | Rev.io PSA vs Autotask One-Pager | revio-vs-autotask-one-pager.html | https://koontz-robin.github.io/robin-decks/revio-vs-autotask-one-pager.html | Buyer-facing one-pager explaining Rev.io PSA vs Autotask positioning, why companies evaluate alternatives, demo triggers, and next-step CTA |
