@@ -12,7 +12,7 @@ DATA_FILE = Path("/tmp/ae_capacity_data.json")
 HTML_FILE = WORKSPACE / "ae-capacity-dashboard.html"
 ET = ZoneInfo("America/New_York")
 
-MONTH_ORDER = ["jan", "feb", "mar", "apr", "may", "jun"]
+MONTH_ORDER = ["jan", "feb", "mar", "apr", "may", "jun", "jul", "aug", "sep"]
 MONTH_COLORS = {
     "jan": "#38bdf8",
     "feb": "#a78bfa",
@@ -20,6 +20,9 @@ MONTH_COLORS = {
     "apr": "#f97316",
     "may": "#ec4899",
     "jun": "#facc15",
+    "jul": "#22d3ee",
+    "aug": "#c084fc",
+    "sep": "#4ade80",
 }
 
 
@@ -123,15 +126,20 @@ def main():
         f'<th style="color:{MONTH_COLORS[key]}">{data["months"][key]["label"]}</th>' for key in MONTH_ORDER
     )
     cards = "\n".join(card_html(key, data["months"][key]) for key in MONTH_ORDER)
-    june = data["months"]["jun"]
-    may = data["months"]["may"]
+    current_key = next(
+        (key for key in reversed(MONTH_ORDER) if data["months"][key]["status"] == "current"),
+        MONTH_ORDER[-1],
+    )
+    current = data["months"][current_key]
+    previous_key = MONTH_ORDER[max(MONTH_ORDER.index(current_key) - 1, 0)]
+    previous = data["months"][previous_key]
 
     css = """
 * { margin: 0; padding: 0; box-sizing: border-box; }
 body { background: #000; font-family: 'Segoe UI', system-ui, sans-serif; color: #e2e8f0; min-height: 100vh; padding: 40px 48px; }
 h1 { font-size: 26px; font-weight: 700; color: #fff; margin-bottom: 6px; }
 .subtitle { font-size: 14px; color: #94a3b8; margin-bottom: 32px; }
-.grid { display: grid; grid-template-columns: repeat(6, minmax(0, 1fr)); gap: 18px; margin-bottom: 28px; }
+.grid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 18px; margin-bottom: 28px; }
 .card { background: #1e293b; border-radius: 12px; padding: 22px 20px; position: relative; overflow: hidden; min-width: 0; }
 .card::before { content: ''; position: absolute; top: 0; left: 0; right: 0; height: 4px; background: var(--accent); }
 .month-label { font-size: 11px; font-weight: 700; letter-spacing: 1.2px; text-transform: uppercase; color: #64748b; margin-bottom: 14px; white-space: nowrap; }
@@ -186,19 +194,19 @@ h1 { font-size: 26px; font-weight: 700; color: #fff; margin-bottom: 6px; }
 
 <div class="summary">
   <div class="summary-card">
-    <div class="summary-label">Final May</div>
-    <div class="summary-value">{may["total"]} meetings</div>
-    <div class="summary-sub">{final_rate(may):.2f} meetings / AE / day</div>
+    <div class="summary-label">Final {previous["label"]}</div>
+    <div class="summary-value">{previous["total"]} meetings</div>
+    <div class="summary-sub">{final_rate(previous):.2f} meetings / AE / day</div>
   </div>
   <div class="summary-card">
-    <div class="summary-label">June MTD</div>
-    <div class="summary-value">{june["total"]} meetings</div>
-    <div class="summary-sub">{biz_rate(june):.2f} meetings / AE / day through {june["biz_done"]} biz days</div>
+    <div class="summary-label">{current["label"]} MTD</div>
+    <div class="summary-value">{current["total"]} meetings</div>
+    <div class="summary-sub">{biz_rate(current):.2f} meetings / AE / day through {current["biz_done"]} biz days</div>
   </div>
   <div class="summary-card">
-    <div class="summary-label">June Projection</div>
-    <div class="summary-value">{june["projected"]} meetings</div>
-    <div class="summary-sub">{june["biz_remain"]} business days remaining</div>
+    <div class="summary-label">{current["label"]} Projection</div>
+    <div class="summary-value">{current["projected"]} meetings</div>
+    <div class="summary-sub">{current["biz_remain"]} business days remaining</div>
   </div>
 </div>
 
@@ -212,7 +220,7 @@ h1 { font-size: 26px; font-weight: 700; color: #fff; margin-bottom: 6px; }
     <thead><tr>
       <th>AE</th>
       {month_headers}
-      <th>Jun vs May</th>
+      <th>{current["label"]} vs {previous["label"]}</th>
     </tr></thead>
     <tbody>
       {rep_rows(data)}
