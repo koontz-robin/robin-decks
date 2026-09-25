@@ -1,6 +1,6 @@
 # DECKS-LIBRARY.md — Robin's Deck & Dashboard Library
 
-Last updated: 2026-09-22
+Last updated: 2026-09-25
 GitHub Pages base: `https://koontz-robin.github.io/robin-decks/`
 Repo: `git@github.com:koontz-robin/robin-decks.git`
 
@@ -57,6 +57,7 @@ Repo: `git@github.com:koontz-robin/robin-decks.git`
 
 | Name | File | URL | Notes |
 |---|---|---|---|
+| Bigfoot Technology Group Evaluation Readout | bigfoot-technology-group-evaluation-readout.html | https://koontz-robin.github.io/robin-decks/bigfoot-technology-group-evaluation-readout.html | Buyer-facing Execute readout for the combined PSA and telecom billing evaluation: ConnectWise replacement, direct billing, field/mobile workflows, projects, inventory, compliance, and renewal-clock decision plan. |
 | Sound Advice & Video Evaluation Readout | sound-advice-video-evaluation-readout.html | https://koontz-robin.github.io/robin-decks/sound-advice-video-evaluation-readout.html | Buyer-facing Execute readout focused on consolidating MicroKey, Trello, Inflow, Google Calendar, and disconnected payment workflows while retaining Portal for quoting. |
 | 35+ Employee Accounts — Jamie Territory States | 35plus-employee-state-accounts.html | https://koontz-robin.github.io/robin-decks/35plus-employee-state-accounts.html | Salesforce accounts with at least 35 employees across Jamie's 25 requested states/DC; searchable and filterable by state and owner. |
 | Native Smart Properties Evaluation Readout | native-smart-properties-evaluation-readout.html | https://koontz-robin.github.io/robin-decks/native-smart-properties-evaluation-readout.html | Buyer-facing Execute readout focused on consolidating Airtable and Freshdesk workflows, preserving simple resident ticket intake, unifying remote-to-field service, inventory, billing, analytics, and the board decision plan. |
