@@ -458,8 +458,8 @@ def owner_section(owner: str, owner_rows: list[Row]) -> str:
           </tr>"""
         )
     return f"""
-    <section class="owner-section" id="owner-{section_id}">
-      <div class="owner-header">
+    <details class="owner-section" id="owner-{section_id}">
+      <summary class="owner-header">
         <div>
           <h2>{esc(owner)}</h2>
           <p>{len(owner_rows)} accounts · {small_count} below {EMPLOYEE_THRESHOLD} · {large_count} {EMPLOYEE_THRESHOLD}+</p>
@@ -468,7 +468,7 @@ def owner_section(owner: str, owner_rows: list[Row]) -> str:
           <span>{urgent_count} next 30d</span>
           <span>{soon_count} next 90d</span>
         </div>
-      </div>
+      </summary>
       <div class="table-wrap">
         <table>
           <thead>
@@ -484,7 +484,7 @@ def owner_section(owner: str, owner_rows: list[Row]) -> str:
           <tbody>{''.join(rows_html)}</tbody>
         </table>
       </div>
-    </section>"""
+    </details>"""
 
 
 def render_html(rows: list[Row], metadata: dict[str, Any]) -> str:
@@ -511,7 +511,7 @@ def render_html(rows: list[Row], metadata: dict[str, Any]) -> str:
         ),
     )
     nav = " ".join(
-        f'<a href="#owner-{re.sub(r"[^a-z0-9]+", "-", owner.lower()).strip("-") or "unassigned"}">{esc(owner.split()[0])}</a>'
+        f'<a href="#owner-{re.sub(r"[^a-z0-9]+", "-", owner.lower()).strip("-") or "unassigned"}" onclick="document.getElementById(\'owner-{re.sub(r"[^a-z0-9]+", "-", owner.lower()).strip("-") or "unassigned"}\').open=true">{esc(owner.split()[0])}</a>'
         for owner in owners_sorted
     )
     sections = "".join(owner_section(owner, by_owner[owner]) for owner in owners_sorted)
@@ -569,7 +569,12 @@ h1 {{ margin:4px 0 8px; font-size:34px; line-height:1.06; letter-spacing:0; }}
 .bar-row i {{ position:absolute; left:0; bottom:4px; height:6px; border-radius:99px; background:rgba(23,126,137,.18); }}
 .main {{ display:grid; gap:14px; }}
 .owner-section {{ background:var(--panel); border:1px solid var(--line); border-radius:8px; overflow:hidden; }}
-.owner-header {{ display:flex; align-items:center; justify-content:space-between; gap:12px; padding:13px 15px; background:linear-gradient(180deg,#fff,#f7f9fd); border-bottom:1px solid var(--line); }}
+.owner-header {{ display:flex; align-items:center; justify-content:space-between; gap:12px; padding:13px 44px 13px 15px; background:linear-gradient(180deg,#fff,#f7f9fd); cursor:pointer; position:relative; list-style:none; }}
+.owner-header::-webkit-details-marker {{ display:none; }}
+.owner-header::after {{ content:'+'; position:absolute; right:16px; top:50%; transform:translateY(-50%); width:22px; height:22px; border:1px solid var(--line); border-radius:50%; display:grid; place-items:center; color:var(--blue); font-size:18px; font-weight:800; line-height:1; background:#fff; }}
+.owner-section[open] .owner-header {{ border-bottom:1px solid var(--line); }}
+.owner-section[open] .owner-header::after {{ content:'−'; }}
+.owner-header:hover {{ background:#f2f5fb; }}
 .owner-header h2 {{ margin:0; font-size:18px; }}
 .owner-header p {{ margin:2px 0 0; color:var(--muted); font-size:12px; }}
 .owner-pills {{ display:flex; gap:6px; flex-wrap:wrap; justify-content:flex-end; }}
