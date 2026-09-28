@@ -216,21 +216,25 @@ def build_payload():
     product_mrr = defaultdict(lambda: {"last": {"mrr": 0.0, "count": 0}, "prior": {"mrr": 0.0, "count": 0}})
     conversion_detail = {"mql": [], "tradeshow": [], "sdr": [], "booked": []}
 
-    # Discovery meetings SET: Salesforce creates a Task named
-    # "Contact - Discovery Meeting Set" when a meeting is booked. Count the Task
-    # by CreatedDate and credit its owner (the setter). Discovery Call Events are
-    # calendar records owned mainly by AEs and are not the source-of-truth for this KPI.
-    discovery_set_tasks = sf_query(base, headers, f"""
-        SELECT Id, Subject, CreatedDate, Owner.Name
-        FROM Task
+    # Discovery meetings SET: discovery events scheduled in-week. Include events
+    # explicitly typed as Discovery Calls plus hybrid meetings whose subject contains
+    # "Discovery" (for example, "Discovery/Product Demo"). This matches the team
+    # funnel view: all discovery meetings scheduled for the week, then the completed
+    # subset below represents calls that actually ran.
+    discovery_set_events = sf_query(base, headers, f"""
+        SELECT Id, Subject, Type, ActivityDate, Owner.Name
+        FROM Event
         WHERE IsDeleted = false
-          AND CreatedDate >= {iso_utc(range_start)}
-          AND CreatedDate < {iso_utc(range_end)}
-          AND Subject LIKE '%Discovery Meeting Set%'
+          AND ActivityDate >= {sf_date(range_start)}
+          AND ActivityDate < {sf_date(range_end)}
+          AND (Type = '1-Discovery Call' OR Subject LIKE '%Discovery%')
     """)
-    for task in discovery_set_tasks:
-        period = period_for_dt(parse_sf_datetime(task["CreatedDate"]), windows)
-        rep = normalize_name((task.get("Owner") or {}).get("Name")) or "Unassigned"
+    for event in discovery_set_events:
+        subject = (event.get("Subject") or "").lower()
+        if "cancel" in subject or "internal" in subject:
+            continue
+        period = period_for_dt(datetime.fromisoformat(event["ActivityDate"]).replace(tzinfo=ET), windows)
+        rep = normalize_name((event.get("Owner") or {}).get("Name")) or "Unassigned"
         if not period or rep in EXCLUDED_REPS:
             continue
         if rep not in metrics:
@@ -385,7 +389,7 @@ def build_payload():
         "generated_at_et": now_et.strftime("%b %-d, %Y %-I:%M %p ET"),
         "windows": {k: format_window(v[0], v[1]) for k, v in windows.items()},
         "definitions": {
-            "discovery_set": "Tasks with Subject containing Discovery Meeting Set, grouped by CreatedDate and credited to the Task owner.",
+            "discovery_set": "Discovery Call events scheduled in-week by ActivityDate, including hybrid events with Discovery in the subject.",
             "discovery_complete": "Events with Type = 1-Discovery Call, ActivityDate in-week, and Appointment_Status__c = Completed.",
             "discovery_complete_influenced": "Completed Discovery Call events credited by Event SDR_Influence__c.",
             "cbrs_set": "Events with Type = Client Business Review created during the week.",
