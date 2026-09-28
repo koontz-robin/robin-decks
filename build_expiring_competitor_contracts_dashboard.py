@@ -7,8 +7,8 @@ Rules:
   within the next 6 months.
 - Accounts with 35 or more employees are included when the date is within the
   next 8 months.
-- Accounts expiring in October through December of the current year are also
-  included.
+- Accounts expiring from October of the current year through May of the next
+  year are also included as an extended planning horizon.
 - Accounts with open Salesforce opportunities are excluded.
 - Accounts owned by Ardit Berdyna or Ryan Koontz are excluded.
 """
@@ -24,7 +24,7 @@ import subprocess
 import sys
 import tempfile
 from collections import Counter, defaultdict
-from dataclasses import dataclass
+from dataclasses import dataclass, replace
 from datetime import date, datetime, timezone
 from pathlib import Path
 from typing import Any
@@ -138,8 +138,14 @@ def window_for(employees: int | None) -> tuple[str, int]:
     return f"{EMPLOYEE_THRESHOLD}+ employees", 8
 
 
-def is_october_december_current_year(contract_date: date, today: date) -> bool:
-    return contract_date.year == today.year and 10 <= contract_date.month <= 12
+def extended_planning_bounds(today: date) -> tuple[date, date]:
+    """Return the October-through-May planning horizon spanning year-end."""
+    return date(today.year, 10, 1), date(today.year + 1, 5, 31)
+
+
+def is_extended_planning_window(contract_date: date, today: date) -> bool:
+    start, end = extended_planning_bounds(today)
+    return start <= contract_date <= end
 
 
 def chunks(values: list[str], size: int = 100) -> list[list[str]]:
@@ -167,6 +173,26 @@ def open_opportunity_accounts(base: str, headers: dict[str, str], account_ids: l
     return open_by_account
 
 
+def live_account_owners(base: str, headers: dict[str, str], account_ids: list[str]) -> dict[str, str]:
+    """Fetch current Account owners so report-cached ownership cannot go stale."""
+    owners: dict[str, str] = {}
+    clean_ids = sorted({account_id for account_id in account_ids if account_id})
+    for batch in chunks(clean_ids):
+        id_list = ",".join(f"'{account_id}'" for account_id in batch)
+        records = sf_query(
+            base,
+            headers,
+            f"""
+            SELECT Id, Owner.Name
+            FROM Account
+            WHERE Id IN ({id_list})
+            """,
+        )
+        for record in records:
+            owners[record.get("Id") or ""] = (record.get("Owner") or {}).get("Name") or "Unassigned"
+    return owners
+
+
 def fetch_report_rows(base: str, headers: dict[str, str], today: date) -> tuple[list[Row], dict[str, Any]]:
     response = requests.get(
         f"{base}/services/data/v59.0/analytics/reports/{SOURCE_REPORT_ID}",
@@ -186,7 +212,7 @@ def fetch_report_rows(base: str, headers: dict[str, str], today: date) -> tuple[
     skipped_past = 0
     skipped_outside_window = 0
     skipped_no_date = 0
-    included_oct_dec = 0
+    included_extended = 0
     seen: set[tuple[str, date]] = set()
 
     for fact_key, fact in (payload.get("factMap") or {}).items():
@@ -217,17 +243,17 @@ def fetch_report_rows(base: str, headers: dict[str, str], today: date) -> tuple[
                 continue
             segment, window_months = window_for(employees)
             in_standard_window = contract_date <= add_months(today, window_months)
-            in_oct_dec = is_october_december_current_year(contract_date, today)
-            if not in_standard_window and not in_oct_dec:
+            in_extended = is_extended_planning_window(contract_date, today)
+            if not in_standard_window and not in_extended:
                 skipped_outside_window += 1
                 continue
             include_reason = f"{window_months}-month size window"
-            if in_oct_dec and not in_standard_window:
-                include_reason = "Oct-Dec override"
-                included_oct_dec += 1
-            elif in_oct_dec:
-                include_reason = f"{window_months}-month size window + Oct-Dec"
-                included_oct_dec += 1
+            if in_extended and not in_standard_window:
+                include_reason = "Oct-May override"
+                included_extended += 1
+            elif in_extended:
+                include_reason = f"{window_months}-month size window + Oct-May"
+                included_extended += 1
             rows.append(
                 Row(
                     account_id=account_id,
@@ -245,24 +271,23 @@ def fetch_report_rows(base: str, headers: dict[str, str], today: date) -> tuple[
                 )
             )
 
-    oct_dec_start = date(today.year, 10, 1)
-    oct_dec_end = date(today.year, 12, 31)
-    direct_oct_dec_rows = sf_query(
+    extended_start, extended_end = extended_planning_bounds(today)
+    direct_extended_rows = sf_query(
         base,
         headers,
         f"""
         SELECT Id, Name, Owner.Name, PSA_Platform__c, NumberOfEmployees,
                Competitor_Contract_End_Date__c, Type
         FROM Account
-        WHERE Competitor_Contract_End_Date__c >= {oct_dec_start.isoformat()}
-          AND Competitor_Contract_End_Date__c <= {oct_dec_end.isoformat()}
+        WHERE Competitor_Contract_End_Date__c >= {extended_start.isoformat()}
+          AND Competitor_Contract_End_Date__c <= {extended_end.isoformat()}
           AND Type IN ('Cold Prospect', 'Warm Prospect')
         ORDER BY Competitor_Contract_End_Date__c ASC, Owner.Name ASC, Name ASC
         LIMIT 2000
         """,
     )
-    direct_oct_dec_included = 0
-    for account in direct_oct_dec_rows:
+    direct_extended_included = 0
+    for account in direct_extended_rows:
         contract_date = parse_date(account.get("Competitor_Contract_End_Date__c"))
         if not contract_date:
             continue
@@ -287,12 +312,18 @@ def fetch_report_rows(base: str, headers: dict[str, str], today: date) -> tuple[
                 status=account.get("Type") or "",
                 segment=segment,
                 window_months=window_months,
-                include_reason="Oct-Dec override",
+                include_reason="Oct-May override",
                 days_until=days_until,
-                source_group="direct_oct_dec_account_query",
+                source_group="direct_extended_account_query",
             )
         )
-        direct_oct_dec_included += 1
+        direct_extended_included += 1
+
+    current_owners = live_account_owners(base, headers, [row.account_id for row in rows])
+    ownership_changes = sum(
+        1 for row in rows if row.account_id in current_owners and current_owners[row.account_id] != row.owner
+    )
+    rows = [replace(row, owner=current_owners.get(row.account_id, row.owner)) for row in rows]
 
     open_opps_by_account = open_opportunity_accounts(base, headers, [row.account_id for row in rows])
     rows_before_open_opp_filter = len(rows)
@@ -311,12 +342,16 @@ def fetch_report_rows(base: str, headers: dict[str, str], today: date) -> tuple[
         "skipped_no_date": skipped_no_date,
         "skipped_past": skipped_past,
         "skipped_outside_window": skipped_outside_window,
-        "included_oct_dec": included_oct_dec,
-        "direct_oct_dec_source_rows": len(direct_oct_dec_rows),
-        "direct_oct_dec_included": direct_oct_dec_included,
+        "included_extended": included_extended,
+        "direct_extended_source_rows": len(direct_extended_rows),
+        "direct_extended_included": direct_extended_included,
+        "extended_window_start": extended_start.isoformat(),
+        "extended_window_end": extended_end.isoformat(),
         "excluded_open_opp_rows": excluded_open_opp_rows,
         "excluded_open_opp_accounts": excluded_open_opp_accounts,
         "excluded_owner_rows": excluded_owner_rows,
+        "live_owners_checked": len(current_owners),
+        "ownership_changes_applied": ownership_changes,
         "excluded_owners": sorted(EXCLUDED_OWNERS),
         "open_opportunity_accounts": {
             account_id: [
@@ -465,7 +500,7 @@ def render_html(rows: list[Row], metadata: dict[str, Any]) -> str:
     small_count = segment_counts[f"<{EMPLOYEE_THRESHOLD} employees"]
     large_count = segment_counts[f"{EMPLOYEE_THRESHOLD}+ employees"]
     unknown_count = segment_counts["Unknown size"]
-    oct_dec_count = metadata.get("included_oct_dec", 0) + metadata.get("direct_oct_dec_included", 0)
+    extended_count = metadata.get("included_extended", 0) + metadata.get("direct_extended_included", 0)
     top_competitors = competitor_counts.most_common(8)
 
     owners_sorted = sorted(
@@ -575,7 +610,7 @@ footer {{ color:var(--muted); font-size:12px; padding:18px 0 6px; }}
     <div>
       <div class="eyebrow">Salesforce Contract Timing</div>
       <h1>Expiring Competitor Contracts</h1>
-      <p class="lede">Accounts from Salesforce report {esc(SOURCE_REPORT_ID)} with competitor contracts inside the pursuit window, no open Salesforce opportunities, and not assigned to Ardit or Ryan: below {EMPLOYEE_THRESHOLD} employees gets a 6-month window; {EMPLOYEE_THRESHOLD}+ employees gets an 8-month window; October-December expirations are included as an additional year-end planning view. Sorted by owner and earliest contract end date.</p>
+      <p class="lede">Accounts from Salesforce report {esc(SOURCE_REPORT_ID)} with competitor contracts inside the pursuit window, no open Salesforce opportunities, and not assigned to Ardit or Ryan: below {EMPLOYEE_THRESHOLD} employees gets a 6-month window; {EMPLOYEE_THRESHOLD}+ employees gets an 8-month window; the extended planning view now runs through May. Sorted by owner and earliest contract end date.</p>
     </div>
     <div class="meta">
       Generated {esc(generated)}<br>
@@ -589,7 +624,7 @@ footer {{ color:var(--muted); font-size:12px; padding:18px 0 6px; }}
     <div class="kpi"><span>Next 30 Days</span><b>{urgent_count}</b></div>
     <div class="kpi"><span>31-90 Days</span><b>{soon_count}</b></div>
     <div class="kpi"><span>&lt;{EMPLOYEE_THRESHOLD} Employees</span><b>{small_count}</b></div>
-    <div class="kpi"><span>Oct-Dec Expirations</span><b>{oct_dec_count}</b></div>
+    <div class="kpi"><span>Oct-May Expirations</span><b>{extended_count}</b></div>
   </section>
 
   <div class="grid">
@@ -599,7 +634,7 @@ footer {{ color:var(--muted); font-size:12px; padding:18px 0 6px; }}
         <div class="rule-list">
           <div><b>&lt;{EMPLOYEE_THRESHOLD} employees:</b> contract end date from today through {esc(fmt_date(add_months(date.fromisoformat(metadata["as_of"]), 6)))}</div>
           <div><b>{EMPLOYEE_THRESHOLD}+ employees:</b> contract end date from today through {esc(fmt_date(add_months(date.fromisoformat(metadata["as_of"]), 8)))}</div>
-          <div><b>October-December:</b> included for the current year regardless of employee-size window. Current Oct-Dec count: {oct_dec_count}</div>
+          <div><b>October-May:</b> included from {esc(fmt_date(date.fromisoformat(metadata["extended_window_start"])))} through {esc(fmt_date(date.fromisoformat(metadata["extended_window_end"])))} regardless of employee-size window. Current count: {extended_count}</div>
           <div><b>Open opportunities:</b> accounts with open Salesforce opportunities are excluded. Current exclusions: {metadata["excluded_open_opp_rows"]} rows across {metadata["excluded_open_opp_accounts"]} accounts</div>
           <div><b>Owner exclusions:</b> Ardit Berdyna and Ryan Koontz are excluded. Current excluded count: {metadata["excluded_owner_rows"]}</div>
           <div><b>Unknown employees:</b> included on the 6-month rule and counted separately. Current unknown count: {unknown_count}</div>
@@ -619,7 +654,7 @@ footer {{ color:var(--muted); font-size:12px; padding:18px 0 6px; }}
     </main>
   </div>
   <footer>
-    Source report rows: {metadata["source_rows"]}. Direct Oct-Dec rows: {metadata["direct_oct_dec_source_rows"]}. Excluded with open opportunities: {metadata["excluded_open_opp_rows"]} rows / {metadata["excluded_open_opp_accounts"]} accounts. Excluded by owner: {metadata["excluded_owner_rows"]}. Skipped outside window: {metadata["skipped_outside_window"]}. Skipped past dates: {metadata["skipped_past"]}. Skipped missing dates: {metadata["skipped_no_date"]}.
+    Source report rows: {metadata["source_rows"]}. Direct Oct-May rows: {metadata["direct_extended_source_rows"]}. Excluded with open opportunities: {metadata["excluded_open_opp_rows"]} rows / {metadata["excluded_open_opp_accounts"]} accounts. Excluded by owner: {metadata["excluded_owner_rows"]}. Skipped outside window: {metadata["skipped_outside_window"]}. Skipped past dates: {metadata["skipped_past"]}. Skipped missing dates: {metadata["skipped_no_date"]}.
   </footer>
 </div>
 </body>
@@ -679,7 +714,7 @@ def main() -> int:
     print(
         "Expiring competitor contracts dashboard refreshed: "
         f"{metadata['included_rows']} included from {metadata['source_rows']} source rows; "
-        f"{metadata['direct_oct_dec_included']} direct Oct-Dec additions; "
+        f"{metadata['direct_extended_included']} direct Oct-May additions; "
         f"{metadata['excluded_open_opp_rows']} rows / {metadata['excluded_open_opp_accounts']} accounts excluded with open opps; "
         f"{metadata['excluded_owner_rows']} excluded by owner; "
         f"{metadata['skipped_outside_window']} outside window; {metadata['skipped_past']} past."
