@@ -252,6 +252,7 @@ def build_payload():
           AND ActivityDate < {sf_date(range_end)}
           AND Type = '1-Discovery Call'
           AND Appointment_Status__c = 'Completed'
+          AND LastModifiedDate < {iso_utc(range_end)}
     """)
     for ev in discovery_complete_events:
         subject = (ev.get("Subject") or "").lower()
@@ -296,6 +297,7 @@ def build_payload():
           AND ActivityDate < {sf_date(range_end)}
           AND Type = '2-Initial DEMO'
           AND Appointment_Status__c = 'Completed'
+          AND LastModifiedDate < {iso_utc(range_end)}
     """)
     for ev in demo_events:
         rep = normalize_name((ev.get("Owner") or {}).get("Name"))
@@ -390,10 +392,10 @@ def build_payload():
         "windows": {k: format_window(v[0], v[1]) for k, v in windows.items()},
         "definitions": {
             "discovery_set": "Discovery Call events scheduled in-week by ActivityDate, including hybrid events with Discovery in the subject.",
-            "discovery_complete": "Events with Type = 1-Discovery Call, ActivityDate in-week, and Appointment_Status__c = Completed.",
+            "discovery_complete": "Discovery Call events scheduled in-week and marked Completed by the end-of-week cutoff.",
             "discovery_complete_influenced": "Completed Discovery Call events credited by Event SDR_Influence__c.",
             "cbrs_set": "Events with Type = Client Business Review created during the week.",
-            "initial_demos_ran": "Events with Type = 2-Initial DEMO, ActivityDate in-week, and Appointment_Status__c = Completed.",
+            "initial_demos_ran": "Initial Demo events scheduled in-week and marked Completed by the end-of-week cutoff.",
             "sdr_sourced_opps": "Opportunities created with SDR_Influence__c populated and not None.",
             "mqls_converted": "Marketing-sourced opportunities created, excluding tradeshow, sales/outbound, partner/channel, and referral sources.",
             "tradeshow_leads_converted": "Opportunities created with Marketing_Source__c = Tradeshow.",
