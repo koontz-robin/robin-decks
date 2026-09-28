@@ -38,11 +38,14 @@ with open(f'{WORKSPACE}/sf_april_opps.json') as f:
 with open(f'{WORKSPACE}/q2_reengagement_baseline.json') as f:
     mkt_accounts = {r['account_name'].lower() for r in json.load(f)}
 
-PRODUCTS = ['PSA', 'Billing', 'Payments', 'Cyber', 'CommerceHub']
+# Active forecast product lines. Cyber Protect and CommerceHub were retired from
+# this dashboard effective Sep 28, 2026; keep their Salesforce mappings below so
+# source records classify cleanly, but do not render or include them in totals.
+PRODUCTS = ['PSA', 'Billing', 'Payments']
 # Formatting lock: keep the forecast dashboard aligned to the Rev.io Summit visual system.
 # Do not restore the old neon green grid/terminal theme during future forecast refreshes.
 PROD_COLORS = {'PSA':'#c6f178','Billing':'#34bde5','Payments':'#7c3aed','Cyber':'#ff9f43','CommerceHub':'#eace9b','Other':'#94a3b8'}
-PROD_LABELS = {'PSA':'New Rev.io','Billing':'Billing / Odin','Payments':'Payments','Cyber':'Cyber Protect','CommerceHub':'CommerceHub','Other':'Unmapped'}
+PROD_LABELS = {'PSA':'New Rev.io','Billing':'Classic Rev.io','Payments':'Payments','Cyber':'Cyber Protect','CommerceHub':'CommerceHub','Other':'Unmapped'}
 QUARTER_LABEL = 'Q3 2026'
 QUARTER_MONTHS = ['July', 'August', 'September']
 QUARTER_QUOTAS = {'PSA':138000,'Billing':42104,'Payments':30740,'Cyber':33702,'CommerceHub':0}
@@ -126,7 +129,9 @@ def prod_label(p):
 
 def display_product_type(value):
     value = str(value or '')
-    return re.sub(r'\bPSA(?: 2\.0)?\b', 'New Rev.io', value)
+    value = re.sub(r'\bPSA(?: 2\.0)?\b', 'New Rev.io', value)
+    value = re.sub(r'\bBilling\s*/\s*Odin\b', 'Classic Rev.io', value, flags=re.I)
+    return re.sub(r'\bBilling\b', 'Classic Rev.io', value, flags=re.I)
 
 def fmt(n):
     cents = round((float(n or 0) - int(float(n or 0))) * 100)
@@ -575,9 +580,13 @@ if not HISTORICAL_MONTH:
         count=1,
     )
 
-# Product branding is display-only: Salesforce still uses PSA/PSA 2.0 internally,
-# but no legacy PSA wording should appear anywhere on the published dashboard.
+# Product branding is display-only: Salesforce still uses the legacy product keys
+# internally, but the published dashboard uses current customer-facing names.
 html = re.sub(r'\bPSA(?: 2\.0)?\b', 'New Rev.io', html)
+html = html.replace('>Billing / Odin<', '>Classic Rev.io<')
+html = html.replace('>Billing Add-on<', '>Classic Rev.io Add-on<')
+html = html.replace('>Billing<', '>Classic Rev.io<')
+html = html.replace('closed lost Billing / Odin opportunities', 'closed lost Classic Rev.io opportunities')
 
 with open(f'{WORKSPACE}/forecast.html','w') as f:
     f.write(html)
@@ -587,7 +596,7 @@ if HISTORICAL_MONTH:
     total_pipe = 0
     open_count = 0
 else:
-    total_pipe = sum(o.get('Amount',0) or 0 for o in opps if o.get('StageName') not in ('Closed Won', 'Closed Lost'))
+    total_pipe = sum((o.get('Amount', 0) or 0) for p in PRODUCTS for o in buckets[p]['opps'])
     open_count = sum(len(buckets[p]["opps"]) for p in PRODUCTS)
 closed_lost_count = sum(len(bucket['closed_lost_opps']) for bucket in buckets.values())
 print(f'{TARGET_MONTH} data patched — CW: {fmt(total_cw)} | Pipeline: {fmt(total_pipe)} | {open_count} open opps | Closed lost: {closed_lost_count}')
