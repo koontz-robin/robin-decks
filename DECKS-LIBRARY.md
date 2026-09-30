@@ -175,6 +175,7 @@ Repo: `git@github.com:koontz-robin/robin-decks.git`
 | MSP PSA Requirements | msp-psa-requirements.html | https://koontz-robin.github.io/robin-decks/msp-psa-requirements.html | |
 | Company Story — PCQuest | company-story-pcquest.html | https://koontz-robin.github.io/robin-decks/company-story-pcquest.html | |
 | Billing MSP Clients | billing-msp-clients.html | https://koontz-robin.github.io/robin-decks/billing-msp-clients.html | |
+| Jay's Last Day Trivia | jay-last-day-trivia.pptx | Downloadable PowerPoint | 50-slide farewell trivia deck with four team lineups, 24 questions, answer reveals, scoreboards, tie-breaker, and closing tribute |
 
 ---
 
