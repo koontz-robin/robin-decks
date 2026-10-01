@@ -199,6 +199,7 @@ When Robin creates a new deck or dashboard:
 **Do not use** `htmlpreview.github.io` or `raw.githack.com` — these are blocked by enterprise email security (Proofpoint). Always use `https://koontz-robin.github.io/robin-decks/` as the base.
 | Forecast Targets | forecast-targets.html | https://koontz-robin.github.io/robin-decks/forecast-targets.html | On demand |
 - [Crown Networks PSA Evaluation Readout](https://koontz-robin.github.io/robin-decks/crown-networks-psa-evaluation-readout.html) — Buyer-facing Execute readout for Crown Networks, focused on replacing ConnectWise project/work-order/subcontractor/payment friction with Rev.io PSA.
+- [SecureTech Systems USA Evaluation Readout](https://koontz-robin.github.io/robin-decks/securetech-systems-evaluation-readout.html) — Buyer-facing Execute readout covering iPoint consolidation, quote-margin protection, project/field operations, inventory, recurring revenue, QuickBooks, and the Monday decision plan.
 
 
 ### Tigerpaw Migration Interest Dashboard
