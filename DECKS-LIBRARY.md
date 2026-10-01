@@ -1,6 +1,6 @@
 # DECKS-LIBRARY.md — Robin's Deck & Dashboard Library
 
-Last updated: 2026-09-25
+Last updated: 2026-09-29
 GitHub Pages base: `https://koontz-robin.github.io/robin-decks/`
 Repo: `git@github.com:koontz-robin/robin-decks.git`
 
@@ -48,6 +48,7 @@ Repo: `git@github.com:koontz-robin/robin-decks.git`
 | Andy PSA Platform 35+ Employee Accounts | andy-psa-platform-35plus-accounts.html | https://koontz-robin.github.io/robin-decks/andy-psa-platform-35plus-accounts.html | On demand; Andy-owned Salesforce accounts with Employees > 35 and PSA Platform populated |
 | Jamie Billing Platform Stale Outreach | jamie-billing-platform-stale-outreach.html | https://koontz-robin.github.io/robin-decks/jamie-billing-platform-stale-outreach.html | On demand; Jamie-owned Salesforce accounts with Billing Platform populated and Last Activity blank or older than one year |
 | Jamie 35+ Employee Accounts with No 2026 Activity | jamie-35plus-no-activity-2026.html | https://koontz-robin.github.io/robin-decks/jamie-35plus-no-activity-2026.html | On demand; Jamie-owned Salesforce accounts with Employees >= 35, no 2026 activity, excluding Bad/International tiers |
+| Jamie Strategic Prospecting Dashboard | jamie-strategic-prospecting-dashboard.html | https://koontz-robin.github.io/robin-decks/jamie-strategic-prospecting-dashboard.html | On demand; live Salesforce snapshot of currently Jamie-owned strategic prospecting targets, excluding Bad, International, Tier 1, and Tier One accounts |
 | Apollo 3 Re-engagement Command Center | External | https://tony-kaylee.github.io/apollo3-reengagement-dashboard/ | On demand; external Apollo 1-3 win-back dashboard |
 | Q3 ICP Pipeline Analysis | q3-icp-pipeline-analysis.html | https://koontz-robin.github.io/robin-decks/q3-icp-pipeline-analysis.html | On demand; Salesforce ICP pipeline dashboard with stage funnel, owner/platform/industry splits, size bands, closed-lost analysis, and opportunity detail |
 
@@ -174,6 +175,7 @@ Repo: `git@github.com:koontz-robin/robin-decks.git`
 | MSP PSA Requirements | msp-psa-requirements.html | https://koontz-robin.github.io/robin-decks/msp-psa-requirements.html | |
 | Company Story — PCQuest | company-story-pcquest.html | https://koontz-robin.github.io/robin-decks/company-story-pcquest.html | |
 | Billing MSP Clients | billing-msp-clients.html | https://koontz-robin.github.io/robin-decks/billing-msp-clients.html | |
+| Jay's Last Day Trivia | jay-last-day-trivia.pptx | Downloadable PowerPoint | 50-slide farewell trivia deck with four team lineups, 24 questions, answer reveals, scoreboards, tie-breaker, and closing tribute |
 
 ---
 
@@ -197,6 +199,7 @@ When Robin creates a new deck or dashboard:
 **Do not use** `htmlpreview.github.io` or `raw.githack.com` — these are blocked by enterprise email security (Proofpoint). Always use `https://koontz-robin.github.io/robin-decks/` as the base.
 | Forecast Targets | forecast-targets.html | https://koontz-robin.github.io/robin-decks/forecast-targets.html | On demand |
 - [Crown Networks PSA Evaluation Readout](https://koontz-robin.github.io/robin-decks/crown-networks-psa-evaluation-readout.html) — Buyer-facing Execute readout for Crown Networks, focused on replacing ConnectWise project/work-order/subcontractor/payment friction with Rev.io PSA.
+- [SecureTech Systems USA Evaluation Readout](https://koontz-robin.github.io/robin-decks/securetech-systems-evaluation-readout.html) — Buyer-facing Execute readout covering iPoint consolidation, quote-margin protection, project/field operations, inventory, recurring revenue, QuickBooks, and the Monday decision plan.
 
 
 ### Tigerpaw Migration Interest Dashboard
