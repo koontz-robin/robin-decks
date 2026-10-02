@@ -107,7 +107,8 @@ def main():
     for sf_name, display_name in AE_ROSTER:
         user = users_by_name[sf_name]
         role = ((user.get("UserRole") or {}).get("Name") or "").replace(" Sales", "")
-        reps.append({"id": user.get("Id"), "name": display_name, "sf_name": sf_name, "title": user.get("Title") or "Account Executive", "team": role})
+        title = "Strategic Account Executive" if display_name in {"Jamie Butler", "Joe Abarno"} else "Commercial Account Executive"
+        reps.append({"id": user.get("Id"), "name": display_name, "sf_name": sf_name, "title": title, "team": role})
     names = [r["sf_name"] for r in reps]
     quoted = ", ".join("'" + n.replace("'", "\\'") + "'" for n in names)
     opps = sf_query(base, headers, f"""
