@@ -131,6 +131,14 @@ def main():
           AND Owner.Name IN ({quoted})
         ORDER BY Owner.Name, CloseDate DESC, Amount DESC NULLS LAST
     """)
+    # Billing expansions/add-ons are excluded from this commission tracker.
+    opps = [
+        opp for opp in opps
+        if not (
+            "billing" in (opp.get("Product_Type__c") or "").lower()
+            and (opp.get("Type") or "").lower() == "add-on / expansion"
+        )
+    ]
     onboarding_clients, onboarding_sync = fetch_onboarding_clients()
     grouped = defaultdict(list)
     onboarding_counts = defaultdict(int)
