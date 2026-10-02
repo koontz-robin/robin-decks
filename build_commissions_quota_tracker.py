@@ -22,7 +22,10 @@ ET = ZoneInfo("America/New_York")
 HTML_PATH = ROOT / "commissions-quota-tracker.html"
 JSON_PATH = ROOT / "commissions_quota_tracker.json"
 SF_BASE = "https://rev-io.my.salesforce.com"
-ONBOARDING_API = "https://green-river-03f870c10.4.azurestaticapps.net/api/forecast?lob=psa"
+ONBOARDING_APIS = {
+    "New Rev.io": "https://green-river-03f870c10.4.azurestaticapps.net/api/forecast?lob=psa",
+    "Classic Rev.io": "https://green-river-03f870c10.4.azurestaticapps.net/api/forecast?lob=billing",
+}
 AE_ROSTER = [
     ("Jamie Butler", "Jamie Butler"),
     ("Connor Flynn", "Connor Flynn"),
@@ -49,10 +52,16 @@ def normalize_company(value):
 
 
 def fetch_onboarding_clients():
-    response = requests.get(ONBOARDING_API, timeout=90)
-    response.raise_for_status()
-    data = response.json()
-    return data.get("statusClients") or [], data.get("latestSync")
+    clients = []
+    sync_times = {}
+    for lob, url in ONBOARDING_APIS.items():
+        response = requests.get(url, timeout=90)
+        response.raise_for_status()
+        data = response.json()
+        sync_times[lob] = data.get("latestSync")
+        for client in data.get("statusClients") or []:
+            clients.append({**client, "_lob": lob})
+    return clients, sync_times
 
 
 def match_onboarding(opp, clients):
@@ -155,6 +164,7 @@ def main():
             "activation_date": (client or {}).get("activationDate"),
             "canceled_date": (client or {}).get("dateCanceled"),
             "onboarding_name": (client or {}).get("name"),
+            "onboarding_lob": (client or {}).get("_lob"),
             "onboarding_url": (client or {}).get("wrikeUrl") or (client or {}).get("notionUrl"),
             "onboarding_match": match_confidence,
         })
@@ -184,7 +194,7 @@ def main():
                 f'''<tr class="status-group"><td colspan="6"><span class="status-title">{escape(status)}</span><span class="status-count">{len(opportunities)} deal{'s' if len(opportunities) != 1 else ''}</span><span class="badge {badge_class}">{escape(commission_state)}</span></td></tr>'''
             )
             detail_parts.extend(
-                f'''<tr class="deal-row"><td><a href="{SF_BASE}/{escape(o['id'])}" target="_blank" rel="noopener">{escape(o['name'])}</a><span>{escape(o['account'])}</span></td><td>{escape(o['product'])}</td><td>{escape(o['close_date'])}</td><td>{f'<a href="{escape(o["onboarding_url"])}" target="_blank" rel="noopener">{escape(o["onboarding_status"])}</a>' if o.get('onboarding_url') else escape(o['onboarding_status'])}<span>{escape(o.get('onboarding_name') or 'No onboarding match')}</span></td><td><span class="badge {o['commission_state'].lower().replace(' ', '-')}">{escape(o['commission_state'])}</span></td><td class="money">{money(o['amount'])}</td></tr>'''
+                f'''<tr class="deal-row"><td><a href="{SF_BASE}/{escape(o['id'])}" target="_blank" rel="noopener">{escape(o['name'])}</a><span>{escape(o['account'])}</span></td><td>{escape(o['product'])}</td><td>{escape(o['close_date'])}</td><td>{f'<a href="{escape(o["onboarding_url"])}" target="_blank" rel="noopener">{escape(o["onboarding_status"])}</a>' if o.get('onboarding_url') else escape(o['onboarding_status'])}<span>{escape(o.get('onboarding_name') or 'No onboarding match')}{' · ' + escape(o['onboarding_lob']) if o.get('onboarding_lob') else ''}</span></td><td><span class="badge {o['commission_state'].lower().replace(' ', '-')}">{escape(o['commission_state'])}</span></td><td class="money">{money(o['amount'])}</td></tr>'''
                 for o in opportunities
             )
         detail_rows = "".join(detail_parts) or '<tr><td colspan="6" class="empty">No Closed Won opportunities in 2026.</td></tr>'
