@@ -32,13 +32,23 @@ tbody td{padding:10px;font-size:13px;color:#b8c7d6;vertical-align:middle;border-
 .sales-note-editor:focus{outline:none;border-color:#38bdf8;box-shadow:0 0 0 2px #38bdf822}.sales-note-editor.note-saved{border-color:#22c55e}
 .sales-note-meta{display:flex;justify-content:space-between;align-items:center;gap:8px;margin-top:4px;font-size:9px;color:#7890a5}.note-reset{border:0;background:transparent;color:#8aa0b4;font-size:9px;cursor:pointer;padding:0}.note-reset:hover{color:#f87171}
 [style*="background:#0a0f1a"]{background:#123553!important}[style*="background:#0f172a"]{background:#173c59!important}[style*="background:#1e293b"]{background:#1a4565!important}
-@media(max-width:800px){body{padding:28px 14px}.kpi-row{gap:10px}.sec{padding:14px}h1{padding-right:100px}}</style>
-</head><body>
-<div style="position:relative">
-  <img src="https://raw.githubusercontent.com/koontz-robin/robin-decks/master/revio-logo.png" style="position:absolute;top:0;right:0;height:44px;opacity:0.95" alt="rev.io">
-  <h1>New Rev.io RTS Tracker</h1>
-  <p class="sub">Return to Sales / RTTP · Cancellations · October 02, 2026</p>
-</div>
+@media(max-width:800px){body{padding:28px 14px}.kpi-row{gap:10px}.sec{padding:14px}h1{padding-right:100px}}
+html{background:#07192d}body{margin:0;padding:0;max-width:none;background:radial-gradient(circle at 85% 0,#123e62 0,transparent 35%),#07192d;color:#f3f8fd;font-family:Inter,ui-sans-serif,system-ui,-apple-system,sans-serif}main{max-width:1600px;margin:auto;padding:48px 24px 72px}
+header{display:flex;justify-content:space-between;gap:24px;align-items:end;margin-bottom:28px}.eyebrow{color:#3ee0d0;font-size:12px;font-weight:800;letter-spacing:.16em;text-transform:uppercase}h1{font-size:clamp(32px,5vw,54px);margin:8px 0 6px;padding:0;letter-spacing:-.04em}.sub{color:#9eb1c5;margin:0}.totals{display:flex;gap:12px}.pill{padding:14px 18px;background:#ffffff0b;border:1px solid #24445f;border-radius:14px}.pill small{display:block;color:#9eb1c5;font-size:11px;text-transform:uppercase;letter-spacing:.08em}.pill strong{font-size:20px}
+.note-toolbar{background:transparent;border:0;border-radius:0;padding:0;box-shadow:none;margin:0 0 14px}.note-toolbar button,.note-import-label{background:#112f4e;color:#f3f8fd;border:1px solid #24445f;border-radius:9px;padding:9px 13px}.note-help{color:#9eb1c5}.tabs{border-color:#24445f}.tab{background:#112f4e;color:#9eb1c5;border-color:#24445f}.tab.active{background:#0b223a;color:#f3f8fd;border-color:#24445f;box-shadow:inset 0 3px 0 #3ee0d0}
+.kpi{background:#0b223a;border:1px solid #24445f;border-radius:14px;box-shadow:0 10px 30px #0002}.sec{background:#0b223a;border:1px solid #24445f;border-radius:14px;box-shadow:0 10px 30px #0002}.sec-title{color:#9eb1c5}thead th{color:#9eb1c5;border-bottom:1px solid #24445f}tbody td{color:#b8c7d6;border-bottom:1px solid #193650}.cr:hover{background:#ffffff08}.sales-note-editor{background:#061a2d;border-color:#24445f}.footer{color:#9eb1c5}
+[style*="background:#0a0f1a"]{background:#102d48!important}[style*="background:#0f172a"]{background:#061a2d!important}[style*="background:#1e293b"]{background:#0b223a!important}
+@media(max-width:720px){header{display:block}.totals{margin-top:18px;overflow:auto}main{padding:28px 14px}}
+</style>
+</head><body><main>
+<header>
+  <div><div class="eyebrow">Rev.io · Sales Operations</div><h1>New Rev.io RTS Tracker</h1><p class="sub">Return to Sales / RTTP · Cancellations · October 02, 2026</p></div>
+  <div class="totals">
+    <div class="pill"><small>Active RTS/RTTP</small><strong>17</strong></div>
+    <div class="pill"><small>MRR at Risk</small><strong>$12,520</strong></div>
+    <div class="pill"><small>Canceled</small><strong>110</strong></div>
+  </div>
+</header>
 
 <div style="background:#0a0f1a;border:1px solid #1e3a5f;border-radius:10px;padding:16px 20px;margin-bottom:20px"><div style="font-size:11px;font-weight:700;color:#38bdf8;letter-spacing:2px;text-transform:uppercase;margin-bottom:10px">📋 Rules of Engagement</div><div style="display:grid;grid-template-columns:repeat(4,1fr);gap:12px;font-size:12px;color:#94a3b8;line-height:1.5"><div><span style="color:#fbbf24;font-weight:700">Off Track:</span> SA escalates within 24hrs.</div><div><span style="color:#64748b;font-weight:700">On Hold:</span> SA contacts every 2-3 days. 3 no-responses → RTS/RTTP.</div><div><span style="color:#f87171;font-weight:700">RTS/RTTP:</span> Sales engages in <strong style="color:#fff">24hrs</strong>. Timeline in <strong style="color:#fff">5 biz days</strong> or canceled.</div><div><span style="color:#a78bfa;font-weight:700">Cancel:</span> Requires specific documented reason. No "Other."</div></div></div>
 
@@ -223,4 +233,4 @@ function exportSalesNotes(){const blob=new Blob([JSON.stringify({version:1,expor
 function importSalesNotes(input){const file=input.files&&input.files[0];if(!file)return;const reader=new FileReader();reader.onload=()=>{try{const data=JSON.parse(reader.result);const incoming=data.notes||data;if(!incoming||Array.isArray(incoming)||typeof incoming!=='object')throw new Error('Invalid format');const merged={...getSalesNotes(),...incoming};localStorage.setItem(SALES_NOTES_KEY,JSON.stringify(merged));Object.entries(incoming).forEach(([k,v])=>syncNoteEditors(k,String(v),true));setStatus('Imported '+Object.keys(incoming).length+' notes.');}catch(e){setStatus('Import failed: invalid notes file.');}input.value='';};reader.readAsText(file);}
 document.addEventListener('DOMContentLoaded',loadSalesNotes);
 </script>
-</body></html>
+</main></body></html>
