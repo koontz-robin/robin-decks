@@ -199,13 +199,13 @@ def main():
             commission_state = opportunities[0]["commission_state"]
             badge_class = commission_state.lower().replace(" ", "-")
             detail_parts.append(
-                f'''<tr class="status-group"><td colspan="6"><span class="status-title">{escape(status)}</span><span class="status-count">{len(opportunities)} deal{'s' if len(opportunities) != 1 else ''}</span><span class="badge {badge_class}">{escape(commission_state)}</span></td></tr>'''
+                f'''<tr class="status-group"><td colspan="7"><span class="status-title">{escape(status)}</span><span class="status-count">{len(opportunities)} deal{'s' if len(opportunities) != 1 else ''}</span><span class="badge {badge_class}">{escape(commission_state)}</span></td></tr>'''
             )
             detail_parts.extend(
-                f'''<tr class="deal-row"><td><a href="{SF_BASE}/{escape(o['id'])}" target="_blank" rel="noopener">{escape(o['name'])}</a><span>{escape(o['account'])}</span></td><td>{escape(o['product'])}</td><td>{escape(o['close_date'])}</td><td>{f'<a href="{escape(o["onboarding_url"])}" target="_blank" rel="noopener">{escape(o["onboarding_status"])}</a>' if o.get('onboarding_url') else escape(o['onboarding_status'])}<span>{escape(o.get('onboarding_name') or 'No onboarding match')}{' · ' + escape(o['onboarding_lob']) if o.get('onboarding_lob') else ''}</span></td><td><span class="badge {o['commission_state'].lower().replace(' ', '-')}">{escape(o['commission_state'])}</span></td><td class="money">{money(o['amount'])}</td></tr>'''
+                f'''<tr class="deal-row"><td><a href="{SF_BASE}/{escape(o['id'])}" target="_blank" rel="noopener">{escape(o['name'])}</a><span>{escape(o['account'])}</span></td><td>{escape(o['product'])}</td><td>{escape(o['close_date'])}</td><td>{f'<a href="{escape(o["onboarding_url"])}" target="_blank" rel="noopener">{escape(o["onboarding_status"])}</a>' if o.get('onboarding_url') else escape(o['onboarding_status'])}<span>{escape(o.get('onboarding_name') or 'No onboarding match')}{' · ' + escape(o['onboarding_lob']) if o.get('onboarding_lob') else ''}</span></td><td>{escape(o.get('activation_date') or '—')}</td><td><span class="badge {o['commission_state'].lower().replace(' ', '-')}">{escape(o['commission_state'])}</span></td><td class="money">{money(o['amount'])}</td></tr>'''
                 for o in opportunities
             )
-        detail_rows = "".join(detail_parts) or '<tr><td colspan="6" class="empty">No Closed Won opportunities in 2026.</td></tr>'
+        detail_rows = "".join(detail_parts) or '<tr><td colspan="7" class="empty">No Closed Won opportunities in 2026.</td></tr>'
         rep_rows.append(f'''
         <section class="rep-card" data-name="{escape(rep['name'].lower())}">
           <button class="rep-summary" type="button" aria-expanded="false" aria-controls="rep-{i}">
@@ -213,7 +213,7 @@ def main():
             <span class="metric"><small>Closed Won</small><strong>{money(rep['closed_won'])}</strong></span>
             <span class="metric"><small>Opportunities</small><strong>{rep['opportunity_count']}</strong></span>
           </button>
-          <div class="details" id="rep-{i}" hidden><div class="table-wrap"><table><thead><tr><th>Opportunity / Account</th><th>Product</th><th>Close date</th><th>Onboarding status</th><th>Commission</th><th>Amount</th></tr></thead><tbody>{detail_rows}</tbody></table></div></div>
+          <div class="details" id="rep-{i}" hidden><div class="table-wrap"><table><thead><tr><th>Opportunity / Account</th><th>Product</th><th>Close date</th><th>Onboarding status</th><th>Activation date</th><th>Commission</th><th>Amount</th></tr></thead><tbody>{detail_rows}</tbody></table></div></div>
         </section>''')
 
     total = sum(r["closed_won"] for r in payload["reps"])
