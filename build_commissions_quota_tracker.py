@@ -17,6 +17,16 @@ ET = ZoneInfo("America/New_York")
 HTML_PATH = ROOT / "commissions-quota-tracker.html"
 JSON_PATH = ROOT / "commissions_quota_tracker.json"
 SF_BASE = "https://rev-io.my.salesforce.com"
+AE_ROSTER = [
+    ("Jamie Butler", "Jamie Butler"),
+    ("Connor Flynn", "Connor Flynn"),
+    ("Andy Whisenant", "Andy Whisenant"),
+    ("Jaylin Bender", "Jaylin Bender"),
+    ("Jake Borah", "Jake Borah"),
+    ("Patrick Davies", "Patrick Davies"),
+    ("Abbey McIntosh", "Abbey McIntosh"),
+    ("Joseph Abarno", "Joe Abarno"),
+]
 
 
 def money(value):
@@ -32,11 +42,16 @@ def main():
           AND UserRole.Name IN ('MSP Sales', 'Integrator Sales')
         ORDER BY Name
     """)
+    users_by_name = {user.get("Name"): user for user in users}
+    missing = [sf_name for sf_name, _ in AE_ROSTER if sf_name not in users_by_name]
+    if missing:
+        raise RuntimeError(f"Configured active AEs missing from Salesforce: {', '.join(missing)}")
     reps = []
-    for user in users:
+    for sf_name, display_name in AE_ROSTER:
+        user = users_by_name[sf_name]
         role = ((user.get("UserRole") or {}).get("Name") or "").replace(" Sales", "")
-        reps.append({"id": user.get("Id"), "name": user.get("Name"), "title": user.get("Title") or "Account Executive", "team": role})
-    names = [r["name"] for r in reps]
+        reps.append({"id": user.get("Id"), "name": display_name, "sf_name": sf_name, "title": user.get("Title") or "Account Executive", "team": role})
+    names = [r["sf_name"] for r in reps]
     quoted = ", ".join("'" + n.replace("'", "\\'") + "'" for n in names)
     opps = sf_query(base, headers, f"""
         SELECT Id, Name, Amount, CloseDate, CreatedDate, Type, Product_Type__c,
@@ -64,7 +79,7 @@ def main():
     generated = datetime.now(ET)
     payload = {"generated_at_et": generated.isoformat(), "year": YEAR, "reps": []}
     for rep in reps:
-        wins = grouped.get(rep["name"], [])
+        wins = grouped.get(rep["sf_name"], [])
         payload["reps"].append({**rep, "opportunity_count": len(wins), "closed_won": sum(x["amount"] for x in wins), "opportunities": wins})
     JSON_PATH.write_text(json.dumps(payload, indent=2) + "\n")
 
