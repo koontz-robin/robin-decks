@@ -1,6 +1,6 @@
 # DECKS-LIBRARY.md — Robin's Deck & Dashboard Library
 
-Last updated: 2026-09-29
+Last updated: 2026-10-02
 GitHub Pages base: `https://koontz-robin.github.io/robin-decks/`
 Repo: `git@github.com:koontz-robin/robin-decks.git`
 
@@ -24,6 +24,7 @@ Repo: `git@github.com:koontz-robin/robin-decks.git`
 | CSA Cohorts | csa-cohorts.html | https://koontz-robin.github.io/robin-decks/csa-cohorts.html | Snapshot copy of Sales Opportunities Created |
 | 2026 PSA Team Tracker | 2026-psa-team-tracker.html | https://koontz-robin.github.io/robin-decks/2026-psa-team-tracker.html | Nightly (11pm ET) |
 | AE Monthly Performance 2026 | ae-monthly-performance-2026.html | https://koontz-robin.github.io/robin-decks/ae-monthly-performance-2026.html | On demand; Salesforce AE × month activity/funnel/closed MRR dashboard |
+| AE Commissions & Quota Tracker | commissions-quota-tracker.html | https://koontz-robin.github.io/robin-decks/commissions-quota-tracker.html | On demand; expandable current-AE rows with 2026 Closed Won opportunities |
 | Monthly Report Pacing Dashboard | monthly-api-pacing-dashboard.html | https://koontz-robin.github.io/robin-decks/monthly-api-pacing-dashboard.html | JSON-driven monthly pacing for Ryan's starting report set |
 | PSA Onboarding Tracker | psa-onboarding-tracker.html | https://koontz-robin.github.io/robin-decks/psa-onboarding-tracker.html | Daily (8am & 1pm ET) |
 | Daniel SDR Onboarding Roadmap | daniel-sdr-onboarding-roadmap.html | https://koontz-robin.github.io/robin-decks/daniel-sdr-onboarding-roadmap.html | 12-week SDR onboarding tracker for Daniel |
@@ -200,6 +201,7 @@ When Robin creates a new deck or dashboard:
 | Forecast Targets | forecast-targets.html | https://koontz-robin.github.io/robin-decks/forecast-targets.html | On demand |
 - [Crown Networks PSA Evaluation Readout](https://koontz-robin.github.io/robin-decks/crown-networks-psa-evaluation-readout.html) — Buyer-facing Execute readout for Crown Networks, focused on replacing ConnectWise project/work-order/subcontractor/payment friction with Rev.io PSA.
 - [SecureTech Systems USA Evaluation Readout](https://koontz-robin.github.io/robin-decks/securetech-systems-evaluation-readout.html) — Buyer-facing Execute readout covering iPoint consolidation, quote-margin protection, project/field operations, inventory, recurring revenue, QuickBooks, and the Monday decision plan.
+- [Fuse.Cloud Solutions Evaluation Readout](https://koontz-robin.github.io/robin-decks/fusecloud-solutions-evaluation-readout.html) — Buyer-facing Execute readout for Fuse.Cloud’s PSA evaluation, separating demonstrated capability, dated commitments, roadmap items, and open Must Haves.
 
 
 ### Tigerpaw Migration Interest Dashboard
