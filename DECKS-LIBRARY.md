@@ -1,6 +1,6 @@
 # DECKS-LIBRARY.md — Robin's Deck & Dashboard Library
 
-Last updated: 2026-10-02
+Last updated: 2026-10-06
 GitHub Pages base: `https://koontz-robin.github.io/robin-decks/`
 Repo: `git@github.com:koontz-robin/robin-decks.git`
 
@@ -52,6 +52,7 @@ Repo: `git@github.com:koontz-robin/robin-decks.git`
 | Jamie Strategic Prospecting Dashboard | jamie-strategic-prospecting-dashboard.html | https://koontz-robin.github.io/robin-decks/jamie-strategic-prospecting-dashboard.html | On demand; live Salesforce snapshot of currently Jamie-owned strategic prospecting targets, excluding Bad, International, Tier 1, and Tier One accounts |
 | Apollo 3 Re-engagement Command Center | External | https://tony-kaylee.github.io/apollo3-reengagement-dashboard/ | On demand; external Apollo 1-3 win-back dashboard |
 | Q3 ICP Pipeline Analysis | q3-icp-pipeline-analysis.html | https://koontz-robin.github.io/robin-decks/q3-icp-pipeline-analysis.html | On demand; Salesforce ICP pipeline dashboard with stage funnel, owner/platform/industry splits, size bands, closed-lost analysis, and opportunity detail |
+| Account Assignment Lineup | account-round-robin.html | https://koontz-robin.github.io/robin-decks/account-round-robin.html | Interactive baseball-style round robin for fair account assignment across Connor, Andy, Patrick, Jake, Jaylin, and Abbey; browser-local history, undo, and CSV export |
 
 ---
 
