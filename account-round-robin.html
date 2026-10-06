@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="theme-color" content="#071a30">
+  <title>Account Assignment Lineup</title>
+  <style>
+    :root{--navy:#071a30;--navy2:#0d2947;--blue:#28a8e0;--cyan:#65d7ff;--orange:#ff9d2e;--cream:#fff7e8;--white:#fff;--muted:#9fb4ca;--line:rgba(255,255,255,.12);--green:#61d68a;--red:#ff6978}
+    *{box-sizing:border-box}body{margin:0;min-height:100vh;color:var(--white);font-family:Inter,ui-sans-serif,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;background:radial-gradient(circle at 50% 0%,#164468 0,transparent 36%),linear-gradient(145deg,#061426,#081f39 55%,#07192d);overflow-x:hidden}
+    body:before{content:"";position:fixed;inset:0;pointer-events:none;opacity:.13;background-image:linear-gradient(rgba(255,255,255,.05) 1px,transparent 1px),linear-gradient(90deg,rgba(255,255,255,.05) 1px,transparent 1px);background-size:32px 32px;mask-image:linear-gradient(to bottom,black,transparent 75%)}
+    .wrap{width:min(1180px,calc(100% - 32px));margin:auto;padding:28px 0 42px;position:relative}
+    header{display:flex;justify-content:space-between;align-items:center;gap:18px;margin-bottom:24px}.brand{display:flex;align-items:center;gap:14px}.logo{width:54px;height:54px;border-radius:16px;background:linear-gradient(135deg,var(--blue),#1370ba);display:grid;place-items:center;font-size:29px;box-shadow:0 12px 28px rgba(40,168,224,.25)}h1{font-size:clamp(24px,3vw,38px);margin:0;line-height:1;letter-spacing:-.04em}.subtitle{color:var(--muted);font-size:14px;margin-top:7px}.status{font-size:12px;font-weight:800;letter-spacing:.11em;text-transform:uppercase;color:var(--green);display:flex;gap:8px;align-items:center}.status:before{content:"";width:8px;height:8px;border-radius:50%;background:var(--green);box-shadow:0 0 14px var(--green)}
+    .scoreboard{display:grid;grid-template-columns:1.35fr .65fr;gap:18px;margin-bottom:18px}.card{border:1px solid var(--line);background:linear-gradient(145deg,rgba(18,50,82,.86),rgba(7,25,46,.9));border-radius:22px;box-shadow:0 20px 50px rgba(0,0,0,.22);backdrop-filter:blur(14px)}
+    .batter{padding:26px;position:relative;overflow:hidden}.batter:after{content:"";position:absolute;width:300px;height:300px;border:44px solid rgba(255,255,255,.025);border-radius:50%;right:-100px;top:-110px}.eyebrow{font-size:12px;text-transform:uppercase;letter-spacing:.17em;font-weight:900;color:var(--cyan);margin-bottom:13px}.current{display:flex;align-items:center;gap:20px;position:relative;z-index:1}.avatar{flex:0 0 auto;width:88px;height:88px;border-radius:24px;display:grid;place-items:center;background:linear-gradient(145deg,var(--orange),#f06b22);color:#241204;font-size:31px;font-weight:950;box-shadow:inset 0 0 0 4px rgba(255,255,255,.18),0 16px 32px rgba(240,107,34,.2);transform:rotate(-2deg)}.current-name{font-size:clamp(34px,5vw,62px);font-weight:950;letter-spacing:-.055em;line-height:.96}.current-label{margin-top:9px;color:var(--cream);font-size:15px}.pill{display:inline-flex;margin-left:8px;padding:4px 9px;border-radius:99px;background:rgba(255,157,46,.15);border:1px solid rgba(255,157,46,.45);color:#ffbf72;font-size:11px;font-weight:900;text-transform:uppercase;letter-spacing:.08em;vertical-align:2px}
+    .due{padding:24px;display:flex;flex-direction:column;justify-content:center}.due-row{display:flex;justify-content:space-between;align-items:center;padding:15px 0;border-bottom:1px solid var(--line)}.due-row:last-child{border:none}.due-label{color:var(--muted);font-size:12px;font-weight:800;text-transform:uppercase;letter-spacing:.12em}.due-name{font-size:18px;font-weight:850}.due-index{width:27px;height:27px;border-radius:9px;display:grid;place-items:center;background:rgba(255,255,255,.08);color:var(--muted);font-size:12px;font-weight:900;margin-right:10px}
+    .assign{padding:24px;margin-bottom:18px}.assign-form{display:grid;grid-template-columns:1fr auto;gap:12px}.input-wrap{position:relative}.input-wrap span{position:absolute;left:18px;top:50%;transform:translateY(-50%);font-size:20px}.account-input{width:100%;border:1px solid rgba(255,255,255,.15);border-radius:15px;background:rgba(3,14,26,.65);color:white;padding:18px 18px 18px 52px;font:700 17px inherit;outline:none;transition:.2s}.account-input:focus{border-color:var(--blue);box-shadow:0 0 0 4px rgba(40,168,224,.13)}.account-input::placeholder{color:#728aa2}.assign-btn{border:0;border-radius:15px;padding:0 25px;color:#061426;background:linear-gradient(135deg,var(--cyan),var(--blue));font:900 15px inherit;cursor:pointer;box-shadow:0 12px 25px rgba(40,168,224,.2);transition:.18s;min-height:58px}.assign-btn:hover{transform:translateY(-2px);filter:brightness(1.07)}.assign-btn:active{transform:translateY(0)}.hint{color:var(--muted);font-size:12px;margin-top:11px}
+    .lower{display:grid;grid-template-columns:.8fr 1.2fr;gap:18px}.section-head{display:flex;align-items:center;justify-content:space-between;margin-bottom:16px}.section-title{font-size:16px;font-weight:900;letter-spacing:-.01em}.lineup,.history{padding:22px}.lineup-list{display:grid;gap:8px}.rep{display:grid;grid-template-columns:31px 1fr auto;align-items:center;gap:10px;padding:11px 12px;border:1px solid transparent;border-radius:12px;color:#c5d4e3;transition:.2s}.rep.active{background:rgba(255,157,46,.1);border-color:rgba(255,157,46,.35);color:white}.rep-num{width:27px;height:27px;display:grid;place-items:center;border-radius:8px;background:rgba(255,255,255,.07);font-size:11px;font-weight:900}.rep.active .rep-num{background:var(--orange);color:#261200}.rep-name{font-size:14px;font-weight:800}.rep-stat{font-size:11px;color:var(--muted);font-weight:800}.rep.active .rep-stat{color:#ffc984}.actions{display:flex;gap:8px}.ghost{border:1px solid var(--line);background:rgba(255,255,255,.04);color:var(--muted);border-radius:9px;padding:8px 10px;font:800 11px inherit;cursor:pointer}.ghost:hover{color:white;background:rgba(255,255,255,.08)}.history-list{display:grid;gap:8px;max-height:334px;overflow:auto;padding-right:4px}.empty{min-height:190px;display:grid;place-items:center;text-align:center;color:var(--muted);font-size:14px}.empty b{display:block;color:white;margin-bottom:6px}.record{display:grid;grid-template-columns:auto 1fr auto;gap:12px;align-items:center;padding:12px;border-radius:12px;background:rgba(255,255,255,.045);border:1px solid rgba(255,255,255,.065)}.record-icon{width:34px;height:34px;display:grid;place-items:center;border-radius:10px;background:rgba(40,168,224,.13);font-size:16px}.record-account{font-size:14px;font-weight:850;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.record-meta{color:var(--muted);font-size:11px;margin-top:3px}.record-time{color:#7e98b1;font-size:10px;text-align:right}.toast{position:fixed;left:50%;bottom:28px;transform:translate(-50%,25px);padding:12px 18px;border-radius:12px;background:#f7fbff;color:#071a30;font-weight:850;font-size:13px;box-shadow:0 18px 40px rgba(0,0,0,.35);opacity:0;pointer-events:none;transition:.25s;z-index:10}.toast.show{opacity:1;transform:translate(-50%,0)}
+    @media(max-width:800px){.scoreboard,.lower{grid-template-columns:1fr}.assign-form{grid-template-columns:1fr}.assign-btn{height:56px}.status{display:none}.current-name{font-size:38px}.avatar{width:70px;height:70px;font-size:25px}.wrap{width:min(100% - 20px,1180px);padding-top:18px}.batter,.due,.assign,.lineup,.history{padding:19px}header{align-items:flex-start}}
+  </style>
+</head>
+<body>
+  <main class="wrap">
+    <header><div class="brand"><div class="logo">⚾</div><div><h1>Account Assignment Lineup</h1><div class="subtitle">Fair rotation. Clean handoffs. Everyone gets their at-bat.</div></div></div><div class="status">Lineup active</div></header>
+
+    <section class="scoreboard">
+      <div class="card batter"><div class="eyebrow">Now batting · Assign next account to</div><div class="current"><div class="avatar" id="avatar">CF</div><div><div class="current-name" id="currentName">Connor Flynn</div><div class="current-label">At the plate <span class="pill">Up next</span></div></div></div></div>
+      <div class="card due"><div class="due-row"><div><div class="due-label">On deck</div><div class="due-name" id="onDeck">Andy Whisenant</div></div><div class="due-index">2</div></div><div class="due-row"><div><div class="due-label">In the hole</div><div class="due-name" id="inHole">Patrick Davies</div></div><div class="due-index">3</div></div><div class="due-row"><div><div class="due-label">Assignments today</div><div class="due-name" id="todayCount">0</div></div><div class="due-index">#</div></div></div>
+    </section>
+
+    <section class="card assign"><div class="eyebrow">New account assignment</div><form class="assign-form" id="assignForm"><div class="input-wrap"><span>🏢</span><input class="account-input" id="accountInput" autocomplete="off" maxlength="100" placeholder="Enter account name…" aria-label="Account name" required></div><button class="assign-btn" type="submit">Assign account →</button></form><div class="hint">Submitting assigns the account to the rep at bat and automatically advances the lineup.</div></section>
+
+    <section class="lower">
+      <div class="card lineup"><div class="section-head"><div class="section-title">Batting Order</div><button class="ghost" id="resetBtn" type="button">Reset lineup</button></div><div class="lineup-list" id="lineupList"></div></div>
+      <div class="card history"><div class="section-head"><div class="section-title">Assignment Log</div><div class="actions"><button class="ghost" id="exportBtn" type="button">Export CSV</button><button class="ghost" id="undoBtn" type="button">Undo last</button></div></div><div class="history-list" id="historyList"></div></div>
+    </section>
+  </main>
+  <div class="toast" id="toast"></div>
+
+<script>
+(() => {
+  const REPS = ['Connor Flynn','Andy Whisenant','Patrick Davies','Jake Borah','Jaylin Bender','Abbey McIntosh'];
+  const KEY = 'revio-account-round-robin-v1';
+  const $ = id => document.getElementById(id);
+  let state = load();
+
+  function load(){
+    try {
+      const saved = JSON.parse(localStorage.getItem(KEY));
+      if(saved && Number.isInteger(saved.current) && Array.isArray(saved.history)) return {current:saved.current % REPS.length,history:saved.history};
+    } catch(e){}
+    return {current:0,history:[]};
+  }
+  function save(){ localStorage.setItem(KEY,JSON.stringify(state)); }
+  function initials(name){ return name.split(' ').map(x=>x[0]).join(''); }
+  function countFor(name){ return state.history.filter(x=>x.rep===name).length; }
+  function todayCount(){ const today=new Date().toDateString(); return state.history.filter(x=>new Date(x.time).toDateString()===today).length; }
+  function esc(s){ const d=document.createElement('div');d.textContent=s;return d.innerHTML; }
+  function render(){
+    const current=REPS[state.current], next=REPS[(state.current+1)%REPS.length], third=REPS[(state.current+2)%REPS.length];
+    $('currentName').textContent=current; $('avatar').textContent=initials(current); $('onDeck').textContent=next; $('inHole').textContent=third; $('todayCount').textContent=todayCount();
+    $('lineupList').innerHTML=REPS.map((rep,i)=>`<div class="rep ${i===state.current?'active':''}"><div class="rep-num">${i+1}</div><div class="rep-name">${esc(rep)}</div><div class="rep-stat">${i===state.current?'AT BAT':countFor(rep)+' assigned'}</div></div>`).join('');
+    if(!state.history.length){ $('historyList').innerHTML='<div class="empty"><div><b>No assignments yet</b>Enter an account above to start the rotation.</div></div>'; }
+    else $('historyList').innerHTML=[...state.history].reverse().map(x=>{const d=new Date(x.time);return `<div class="record"><div class="record-icon">✓</div><div><div class="record-account">${esc(x.account)}</div><div class="record-meta">Assigned to ${esc(x.rep)}</div></div><div class="record-time">${d.toLocaleDateString([], {month:'short',day:'numeric'})}<br>${d.toLocaleTimeString([], {hour:'numeric',minute:'2-digit'})}</div></div>`}).join('');
+    $('undoBtn').disabled=!state.history.length;
+  }
+  function notify(text){ const t=$('toast');t.textContent=text;t.classList.add('show');clearTimeout(t.timer);t.timer=setTimeout(()=>t.classList.remove('show'),2300); }
+  $('assignForm').addEventListener('submit',e=>{e.preventDefault();const account=$('accountInput').value.trim();if(!account)return;const rep=REPS[state.current];state.history.push({account,rep,time:new Date().toISOString(),index:state.current});state.current=(state.current+1)%REPS.length;save();render();$('accountInput').value='';$('accountInput').focus();notify(`${account} assigned to ${rep}`);});
+  $('undoBtn').addEventListener('click',()=>{if(!state.history.length)return;const last=state.history.pop();state.current=Number.isInteger(last.index)?last.index:(state.current-1+REPS.length)%REPS.length;save();render();notify(`Undid ${last.account} → ${last.rep}`);});
+  $('resetBtn').addEventListener('click',()=>{if(confirm('Reset the lineup to Connor Flynn? Assignment history will be kept.')){state.current=0;save();render();notify('Lineup reset to Connor Flynn');}});
+  $('exportBtn').addEventListener('click',()=>{if(!state.history.length){notify('Nothing to export yet');return;}const rows=[['Account','Assigned Rep','Timestamp'],...state.history.map(x=>[x.account,x.rep,x.time])];const csv=rows.map(r=>r.map(v=>'"'+String(v).replaceAll('"','""')+'"').join(',')).join('\n');const a=document.createElement('a');a.href=URL.createObjectURL(new Blob([csv],{type:'text/csv'}));a.download='account-assignments.csv';a.click();URL.revokeObjectURL(a.href);});
+  render();
+})();
+</script>
+</body>
+</html>
