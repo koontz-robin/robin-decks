@@ -60,7 +60,6 @@ Repo: `git@github.com:koontz-robin/robin-decks.git`
 
 | Name | File | URL | Notes |
 |---|---|---|---|
-| Advantage Security Evaluation Readout | advantage-security-evaluation-readout.html | https://koontz-robin.github.io/robin-decks/advantage-security-evaluation-readout.html | Buyer-facing Execute readout for Advantage Security: recurring billing automation, QuickBooks Online continuity, quote and job margin, inventory, field service, analytics, and January 1 decision plan. |
 | Bigfoot Technology Group Evaluation Readout | bigfoot-technology-group-evaluation-readout.html | https://koontz-robin.github.io/robin-decks/bigfoot-technology-group-evaluation-readout.html | Buyer-facing Execute readout for the combined PSA and telecom billing evaluation: ConnectWise replacement, direct billing, field/mobile workflows, projects, inventory, compliance, and renewal-clock decision plan. |
 | Sound Advice & Video Evaluation Readout | sound-advice-video-evaluation-readout.html | https://koontz-robin.github.io/robin-decks/sound-advice-video-evaluation-readout.html | Buyer-facing Execute readout focused on consolidating MicroKey, Trello, Inflow, Google Calendar, and disconnected payment workflows while retaining Portal for quoting. |
 | 35+ Employee Accounts — Jamie Territory States | 35plus-employee-state-accounts.html | https://koontz-robin.github.io/robin-decks/35plus-employee-state-accounts.html | Salesforce accounts with at least 35 employees across Jamie's 25 requested states/DC; searchable and filterable by state and owner. |
