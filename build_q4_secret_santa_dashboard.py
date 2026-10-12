@@ -26,6 +26,7 @@ LIBRARY_FILE = WORKSPACE / "DECKS-LIBRARY.md"
 ET = ZoneInfo("America/New_York")
 CONTEST_START = date(2026, 10, 1)
 CONTEST_END = date(2026, 12, 17)
+SOLUTION_ENGINEERS = {"Tony Mehner", "Michael Young"}
 
 
 def iso_utc(d: date) -> str:
@@ -42,10 +43,13 @@ def build_payload():
     end_exclusive = min(now_et.date() + __import__("datetime").timedelta(days=1), CONTEST_END + __import__("datetime").timedelta(days=1))
     base, headers = sf_auth()
     roster = get_team_members(base, headers)
+    for name in SOLUTION_ENGINEERS:
+        roster[name] = "SE"
     people = {
         name: {
             "name": name, "role": role, "standard_seats": 0, "classic_mrr": 0.0,
             "sourced_standard_users": 0, "sourced_classic_mrr": 0.0,
+            "influenced_standard_users": 0, "influenced_classic_mrr": 0.0,
             "closed_won": 0, "closed_mrr": 0.0,
             "sdr_discoveries": 0, "sdr_wins": 0, "demos_covered": 0, "calls": 0,
         }
@@ -54,7 +58,7 @@ def build_payload():
 
     wins = sf_query(base, headers, f"""
         SELECT Id, Name, Amount, CloseDate, Owner.Name, SDR_Influence__c, Account.Name,
-               Product_Type__c, New_Deal_Quantity__c
+               Product_Type__c, New_Deal_Quantity__c, Rev_io_Influence__r.Name
         FROM Opportunity
         WHERE IsDeleted = false
           AND StageName = 'Closed Won'
@@ -71,6 +75,12 @@ def build_payload():
                 people[owner]["standard_seats"] += int(opp.get("New_Deal_Quantity__c") or 0)
             if opp.get("Product_Type__c") in ("Billing", "Billing Add-on", "Odin", "New Rev.io Add-on"):
                 people[owner]["classic_mrr"] += amount
+        influencer = normalize_name((opp.get("Rev_io_Influence__r") or {}).get("Name"))
+        if influencer in people and people[influencer]["role"] == "SE":
+            if opp.get("Product_Type__c") == "PSA 2.0":
+                people[influencer]["influenced_standard_users"] += int(opp.get("New_Deal_Quantity__c") or 0)
+            if opp.get("Product_Type__c") in ("Billing", "Billing Add-on", "Odin", "New Rev.io Add-on"):
+                people[influencer]["influenced_classic_mrr"] += amount
         sdr = normalize_name(opp.get("SDR_Influence__c"))
         if sdr in people and people[sdr]["role"] == "SDR":
             people[sdr]["sdr_wins"] += 1
@@ -105,7 +115,7 @@ def build_payload():
     """)
     for event in demos:
         owner = normalize_name((event.get("Owner") or {}).get("Name"))
-        if owner in people and people[owner]["role"] == "CSA":
+        if owner in people and people[owner]["role"] == "SE":
             people[owner]["demos_covered"] += 1
 
     calls = sf_query(base, headers, f"""
@@ -131,9 +141,9 @@ def build_payload():
             p["scoring_mrr"] = p["sourced_classic_mrr"]
             p["points_discoveries"] = p["sdr_discoveries"]
             p["points_demos"] = 0
-        elif p["role"] == "CSA":
-            p["scoring_users"] = p["standard_seats"]
-            p["scoring_mrr"] = p["classic_mrr"]
+        elif p["role"] == "SE":
+            p["scoring_users"] = p["influenced_standard_users"]
+            p["scoring_mrr"] = p["influenced_classic_mrr"]
             p["points_discoveries"] = 0
             p["points_demos"] = p["demos_covered"] // 5
         else:
@@ -207,10 +217,10 @@ def build_html(payload):
         gap = leader_points - p["points"]
         rows.append(f'''<tr>
           <td class="rank">#{p['rank']}</td>
-          <td><strong>{escape(p['name'])}</strong><small>{'Solutions Engineer' if p['role'] == 'CSA' else escape(p['role'])}</small></td>
+          <td><strong>{escape(p['name'])}</strong><small>{'Solutions Engineer' if p['role'] == 'SE' else escape(p['role'])}</small></td>
           <td class="points">{p['points']}</td>
           <td>{p['sdr_discoveries'] if p['role'] == 'SDR' else '—'}<small>{p['points_discoveries']} pts</small></td>
-          <td>{p['demos_covered'] if p['role'] == 'CSA' else '—'}<small>{p['points_demos']} pts</small></td>
+          <td>{p['demos_covered'] if p['role'] == 'SE' else '—'}<small>{p['points_demos']} pts</small></td>
           <td>{p['scoring_users']}<small>{p['points_users']} pts</small></td>
           <td>{money(p['scoring_mrr'])}<small>{p['points_classic_mrr']} pts</small></td>
           <td class="pick-number">#{p['pick_order']}</td>
