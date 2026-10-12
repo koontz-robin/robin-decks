@@ -47,7 +47,7 @@ def build_payload():
             "name": name, "role": role, "standard_seats": 0, "classic_mrr": 0.0,
             "sourced_standard_users": 0, "sourced_classic_mrr": 0.0,
             "closed_won": 0, "closed_mrr": 0.0,
-            "sdr_discoveries": 0, "sdr_wins": 0, "calls": 0,
+            "sdr_discoveries": 0, "sdr_wins": 0, "demos_covered": 0, "calls": 0,
         }
         for name, role in roster.items()
     }
@@ -94,6 +94,20 @@ def build_payload():
         if sdr in people and people[sdr]["role"] == "SDR":
             people[sdr]["sdr_discoveries"] += 1
 
+    demos = sf_query(base, headers, f"""
+        SELECT Id, Owner.Name
+        FROM Event
+        WHERE IsDeleted = false
+          AND ActivityDate >= {CONTEST_START.isoformat()}
+          AND ActivityDate < {end_exclusive.isoformat()}
+          AND Type = '2-Initial DEMO'
+          AND Appointment_Status__c = 'Completed'
+    """)
+    for event in demos:
+        owner = normalize_name((event.get("Owner") or {}).get("Name"))
+        if owner in people and people[owner]["role"] == "CSA":
+            people[owner]["demos_covered"] += 1
+
     calls = sf_query(base, headers, f"""
         SELECT Owner.Name, COUNT(Id) total
         FROM Task
@@ -116,13 +130,20 @@ def build_payload():
             p["scoring_users"] = p["sourced_standard_users"]
             p["scoring_mrr"] = p["sourced_classic_mrr"]
             p["points_discoveries"] = p["sdr_discoveries"]
+            p["points_demos"] = 0
+        elif p["role"] == "CSA":
+            p["scoring_users"] = p["standard_seats"]
+            p["scoring_mrr"] = p["classic_mrr"]
+            p["points_discoveries"] = 0
+            p["points_demos"] = p["demos_covered"] // 5
         else:
             p["scoring_users"] = p["standard_seats"]
             p["scoring_mrr"] = p["classic_mrr"]
             p["points_discoveries"] = 0
+            p["points_demos"] = 0
         p["points_users"] = p["scoring_users"]
         p["points_classic_mrr"] = int(p["scoring_mrr"] // 100)
-        p["points"] = p["points_discoveries"] + p["points_users"] + p["points_classic_mrr"]
+        p["points"] = p["points_discoveries"] + p["points_demos"] + p["points_users"] + p["points_classic_mrr"]
 
     standings = sorted(people.values(), key=lambda p: (-p["points"], -p["classic_mrr"], -p["standard_seats"], p["name"]))
     last_points = None
@@ -165,6 +186,9 @@ def build_payload():
             {"label": "SDR discovery meeting sourced", "points": "1 pt each"},
             {"label": "SDR-sourced New Rev.io standard user", "points": "1 pt each"},
             {"label": "SDR-sourced Classic Rev.io MRR", "points": "1 pt per full $100"},
+            {"label": "Solutions Engineer demos covered", "points": "1 pt per 5 demos"},
+            {"label": "Solutions Engineer-influenced New Rev.io standard user", "points": "1 pt each"},
+            {"label": "Solutions Engineer-influenced Classic Rev.io MRR", "points": "1 pt per full $100"},
         ],
     }
 
@@ -183,9 +207,10 @@ def build_html(payload):
         gap = leader_points - p["points"]
         rows.append(f'''<tr>
           <td class="rank">#{p['rank']}</td>
-          <td><strong>{escape(p['name'])}</strong><small>{escape(p['role'])}</small></td>
+          <td><strong>{escape(p['name'])}</strong><small>{'Solutions Engineer' if p['role'] == 'CSA' else escape(p['role'])}</small></td>
           <td class="points">{p['points']}</td>
           <td>{p['sdr_discoveries'] if p['role'] == 'SDR' else '—'}<small>{p['points_discoveries']} pts</small></td>
+          <td>{p['demos_covered'] if p['role'] == 'CSA' else '—'}<small>{p['points_demos']} pts</small></td>
           <td>{p['scoring_users']}<small>{p['points_users']} pts</small></td>
           <td>{money(p['scoring_mrr'])}<small>{p['points_classic_mrr']} pts</small></td>
           <td class="pick-number">#{p['pick_order']}</td>
@@ -199,7 +224,7 @@ def build_html(payload):
 </style></head><body><main class="wrap"><section class="hero"><div class="lights"></div><div class="eyebrow">Rev.io Sales · Q4 2026</div><h1>Secret Santa <em>Showdown</em> 🎄</h1><div class="sub">Earn points from October 1 through December 17. The twist: the leaderboard runs opposite the gift table—<strong>last place picks first, and the leader picks last.</strong></div><div class="progress-wrap"><div class="track"><div class="bar"></div></div><div class="progress-label">{contest['percent_complete']:.0f}% complete · Through {escape(contest['through'])}</div></div></section>
 <section class="stats"><div class="stat"><strong>{totals['points']:,}</strong><small>Total points</small></div><div class="stat"><strong>{totals['standard_seats']:,}</strong><small>New Rev.io standard seats sold or renewed</small></div><div class="stat"><strong>{money(totals['classic_mrr'])}</strong><small>Classic Rev.io MRR</small></div></section>
 <section class="rules">{rule_cards}</section><section class="podiums">{podium}</section>
-<section class="grid"><div class="panel"><div class="panel-head"><h2>Leaderboard</h2><div class="panel-note">AEs earn points on sales/renewals; SDRs earn points on sourced discoveries, users, and Classic MRR.</div></div><div class="table-wrap"><table><thead><tr><th>Rank</th><th>Teammate</th><th>Points</th><th>SDR Discoveries</th><th>New Rev.io Users</th><th>Classic MRR</th><th>Pick</th><th>Gap</th></tr></thead><tbody>{''.join(rows)}</tbody></table></div></div><aside class="panel"><div class="panel-head"><h2>🎁 Gift Pick Order</h2><div class="panel-note">Least points draws first; most points draws last. Equal-score ties are ordered alphabetically.</div></div><ol>{pick_list}</ol></aside></section>
+<section class="grid"><div class="panel"><div class="panel-head"><h2>Leaderboard</h2><div class="panel-note">AEs earn points on sales/renewals; SDRs on sourced results; Solutions Engineers on demos and influenced results.</div></div><div class="table-wrap"><table><thead><tr><th>Rank</th><th>Teammate</th><th>Points</th><th>SDR Discoveries</th><th>SE Demos</th><th>New Rev.io Users</th><th>Classic MRR</th><th>Pick</th><th>Gap</th></tr></thead><tbody>{''.join(rows)}</tbody></table></div></div><aside class="panel"><div class="panel-head"><h2>🎁 Gift Pick Order</h2><div class="panel-note">Least points draws first; most points draws last. Equal-score ties are ordered alphabetically.</div></div><ol>{pick_list}</ol></aside></section>
 <div class="footer">SALESFORCE LIVE DATA · GENERATED {escape(payload['generated_at_et'])} · CONTEST ENDS DECEMBER 17, 2026</div></main></body></html>'''
 
 
