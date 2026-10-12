@@ -45,6 +45,7 @@ def build_payload():
     people = {
         name: {
             "name": name, "role": role, "standard_seats": 0, "classic_mrr": 0.0,
+            "sourced_standard_users": 0, "sourced_classic_mrr": 0.0,
             "closed_won": 0, "closed_mrr": 0.0,
             "sdr_discoveries": 0, "sdr_wins": 0, "calls": 0,
         }
@@ -73,6 +74,10 @@ def build_payload():
         sdr = normalize_name(opp.get("SDR_Influence__c"))
         if sdr in people and people[sdr]["role"] == "SDR":
             people[sdr]["sdr_wins"] += 1
+            if opp.get("Product_Type__c") == "PSA 2.0":
+                people[sdr]["sourced_standard_users"] += int(opp.get("New_Deal_Quantity__c") or 0)
+            if opp.get("Product_Type__c") in ("Billing", "Billing Add-on", "Odin", "New Rev.io Add-on"):
+                people[sdr]["sourced_classic_mrr"] += amount
 
     discoveries = sf_query(base, headers, f"""
         SELECT Id, ActivityDate, SDR_Influence__c
@@ -107,9 +112,17 @@ def build_payload():
             people[owner]["calls"] = int(row.get("total") or 0)
 
     for p in people.values():
-        p["points_seats"] = p["standard_seats"]
-        p["points_classic_mrr"] = int(p["classic_mrr"] // 100)
-        p["points"] = p["points_seats"] + p["points_classic_mrr"]
+        if p["role"] == "SDR":
+            p["scoring_users"] = p["sourced_standard_users"]
+            p["scoring_mrr"] = p["sourced_classic_mrr"]
+            p["points_discoveries"] = p["sdr_discoveries"]
+        else:
+            p["scoring_users"] = p["standard_seats"]
+            p["scoring_mrr"] = p["classic_mrr"]
+            p["points_discoveries"] = 0
+        p["points_users"] = p["scoring_users"]
+        p["points_classic_mrr"] = int(p["scoring_mrr"] // 100)
+        p["points"] = p["points_discoveries"] + p["points_users"] + p["points_classic_mrr"]
 
     standings = sorted(people.values(), key=lambda p: (-p["points"], -p["classic_mrr"], -p["standard_seats"], p["name"]))
     last_points = None
@@ -149,6 +162,9 @@ def build_payload():
         "rules": [
             {"label": "New Rev.io standard seat sold or renewed", "points": "1 pt each"},
             {"label": "Classic Rev.io MRR sold", "points": "1 pt per full $100"},
+            {"label": "SDR discovery meeting sourced", "points": "1 pt each"},
+            {"label": "SDR-sourced New Rev.io standard user", "points": "1 pt each"},
+            {"label": "SDR-sourced Classic Rev.io MRR", "points": "1 pt per full $100"},
         ],
     }
 
@@ -169,8 +185,9 @@ def build_html(payload):
           <td class="rank">#{p['rank']}</td>
           <td><strong>{escape(p['name'])}</strong><small>{escape(p['role'])}</small></td>
           <td class="points">{p['points']}</td>
-          <td>{p['standard_seats']}<small>{p['points_seats']} pts</small></td>
-          <td>{money(p['classic_mrr'])}<small>{p['points_classic_mrr']} pts</small></td>
+          <td>{p['sdr_discoveries'] if p['role'] == 'SDR' else '—'}<small>{p['points_discoveries']} pts</small></td>
+          <td>{p['scoring_users']}<small>{p['points_users']} pts</small></td>
+          <td>{money(p['scoring_mrr'])}<small>{p['points_classic_mrr']} pts</small></td>
           <td class="pick-number">#{p['pick_order']}</td>
           <td>{'Leader' if gap == 0 else f'{gap} pts back'}</td>
         </tr>''')
@@ -182,7 +199,7 @@ def build_html(payload):
 </style></head><body><main class="wrap"><section class="hero"><div class="lights"></div><div class="eyebrow">Rev.io Sales · Q4 2026</div><h1>Secret Santa <em>Showdown</em> 🎄</h1><div class="sub">Earn points from October 1 through December 17. The twist: the leaderboard runs opposite the gift table—<strong>last place picks first, and the leader picks last.</strong></div><div class="progress-wrap"><div class="track"><div class="bar"></div></div><div class="progress-label">{contest['percent_complete']:.0f}% complete · Through {escape(contest['through'])}</div></div></section>
 <section class="stats"><div class="stat"><strong>{totals['points']:,}</strong><small>Total points</small></div><div class="stat"><strong>{totals['standard_seats']:,}</strong><small>New Rev.io standard seats sold or renewed</small></div><div class="stat"><strong>{money(totals['classic_mrr'])}</strong><small>Classic Rev.io MRR</small></div></section>
 <section class="rules">{rule_cards}</section><section class="podiums">{podium}</section>
-<section class="grid"><div class="panel"><div class="panel-head"><h2>Leaderboard</h2><div class="panel-note">1 point per New Rev.io standard seat sold or renewed and 1 point per full $100 of Classic Rev.io MRR.</div></div><div class="table-wrap"><table><thead><tr><th>Rank</th><th>Teammate</th><th>Points</th><th>Standard Seats</th><th>Classic MRR</th><th>Pick</th><th>Gap</th></tr></thead><tbody>{''.join(rows)}</tbody></table></div></div><aside class="panel"><div class="panel-head"><h2>🎁 Gift Pick Order</h2><div class="panel-note">Least points draws first; most points draws last. Equal-score ties are ordered alphabetically.</div></div><ol>{pick_list}</ol></aside></section>
+<section class="grid"><div class="panel"><div class="panel-head"><h2>Leaderboard</h2><div class="panel-note">AEs earn points on sales/renewals; SDRs earn points on sourced discoveries, users, and Classic MRR.</div></div><div class="table-wrap"><table><thead><tr><th>Rank</th><th>Teammate</th><th>Points</th><th>SDR Discoveries</th><th>New Rev.io Users</th><th>Classic MRR</th><th>Pick</th><th>Gap</th></tr></thead><tbody>{''.join(rows)}</tbody></table></div></div><aside class="panel"><div class="panel-head"><h2>🎁 Gift Pick Order</h2><div class="panel-note">Least points draws first; most points draws last. Equal-score ties are ordered alphabetically.</div></div><ol>{pick_list}</ol></aside></section>
 <div class="footer">SALESFORCE LIVE DATA · GENERATED {escape(payload['generated_at_et'])} · CONTEST ENDS DECEMBER 17, 2026</div></main></body></html>'''
 
 
