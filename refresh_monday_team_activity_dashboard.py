@@ -39,6 +39,11 @@ KNOWN_AES = {"Andy Whisenant", "Connor Flynn", "Jake Borah", "Jamie Butler", "Ja
 KNOWN_CSAS = {"Ingrid Beard", "Justin Lee"}
 CBR_TYPES = ["Client Business Review"]
 DEMO_TYPES = ["2-Initial DEMO"]
+FOLLOW_UP_PRICING_TYPES = [
+    "3-Follow Up DEMO / Meeting",
+    "Follow-up Payments Meeting",
+    "4-Pricing / Negotiation Call",
+]
 MQL_EXCLUDED_SOURCES = {"", "none", "sales", "sdr", "outbound", "partner", "partner/channel", "channel", "referral", "customer referral", "tradeshow"}
 
 
@@ -161,6 +166,7 @@ def empty_rep(role=""):
         "discovery_complete_influenced": empty_periods(),
         "cbrs_set": empty_periods(),
         "initial_demos_ran": empty_periods(),
+        "follow_up_pricing_complete": empty_periods(),
         "sdr_sourced_opps": empty_periods(),
         "sdr_sourced_mrr": empty_periods(0.0),
         "mqls_converted": empty_periods(),
@@ -314,6 +320,30 @@ def build_payload():
         if period:
             add_metric(metrics[rep], "initial_demos_ran", period)
 
+    # Follow-up / pricing meetings COMPLETED: combine the standard follow-up,
+    # Payments follow-up, and pricing/negotiation event types for AE coaching.
+    follow_up_pricing_events = sf_query(base, headers, f"""
+        SELECT Id, Subject, Type, ActivityDate, Appointment_Status__c, Owner.Name, What.Name
+        FROM Event
+        WHERE IsDeleted = false
+          AND ActivityDate >= {sf_date(range_start)}
+          AND ActivityDate < {sf_date(range_end)}
+          AND Type IN ({soql_list(FOLLOW_UP_PRICING_TYPES)})
+          AND Appointment_Status__c = 'Completed'
+          AND LastModifiedDate < {iso_utc(range_end)}
+    """)
+    for ev in follow_up_pricing_events:
+        rep = normalize_name((ev.get("Owner") or {}).get("Name"))
+        if rep not in metrics:
+            continue
+        subject = (ev.get("Subject") or "").lower()
+        if "cancel" in subject or "internal" in subject:
+            continue
+        dt = datetime.fromisoformat(ev["ActivityDate"]).replace(tzinfo=ET)
+        period = period_for_dt(dt, windows)
+        if period:
+            add_metric(metrics[rep], "follow_up_pricing_complete", period)
+
     # Opportunity-created conversions: SDR sourced, MQL converted, Tradeshow converted.
     opps_created = sf_query(base, headers, f"""
         SELECT Id, Name, Amount, CreatedDate, StageName, Product_Type__c, Marketing_Source__c,
@@ -396,6 +426,7 @@ def build_payload():
             "discovery_complete_influenced": "Completed Discovery Call events credited by Event SDR_Influence__c.",
             "cbrs_set": "Events with Type = Client Business Review created during the week.",
             "initial_demos_ran": "Initial Demo events scheduled in-week and marked Completed by the end-of-week cutoff.",
+            "follow_up_pricing_complete": "Completed Follow Up Demo / Meeting, Payments Follow-up, and Pricing / Negotiation events scheduled in-week.",
             "sdr_sourced_opps": "Opportunities created with SDR_Influence__c populated and not None.",
             "mqls_converted": "Marketing-sourced opportunities created, excluding tradeshow, sales/outbound, partner/channel, and referral sources.",
             "tradeshow_leads_converted": "Opportunities created with Marketing_Source__c = Tradeshow.",
@@ -550,6 +581,27 @@ def build_role_performer_rows(metrics, top=True):
     return "\n".join(rows)
 
 
+def build_ae_activity_rows(metrics):
+    metric_keys = [
+        "discovery_set",
+        "discovery_complete",
+        "initial_demos_ran",
+        "follow_up_pricing_complete",
+    ]
+    aes = [(rep, m) for rep, m in metrics.items() if (m.get("role") or "").upper() == "AE"]
+    aes.sort(key=lambda item: (-sum(item[1][key]["last"] for key in metric_keys), item[0]))
+    rows = []
+    for rep, m in aes:
+        cells = []
+        for key in metric_keys:
+            cells.append(
+                f'<td><strong>{fmt_int(m[key]["last"])}</strong>'
+                f'<small>Prior: {fmt_int(m[key]["prior"])}</small></td>'
+            )
+        rows.append(f'<tr><td><strong>{escape(rep)}</strong></td>{"".join(cells)}</tr>')
+    return "\n".join(rows) or '<tr><td colspan="5" class="empty">No AE activity found.</td></tr>'
+
+
 def build_product_rows(product_mrr):
     rows = []
     for product, p in product_mrr.items():
@@ -593,6 +645,7 @@ def build_html(payload):
     team_summary_rows = build_team_summary_rows(t)
     top_performer_rows = build_role_performer_rows(payload["metrics"], top=True)
     bottom_performer_rows = build_role_performer_rows(payload["metrics"], top=False)
+    ae_activity_rows = build_ae_activity_rows(payload["metrics"])
     product_rows = build_product_rows(payload["product_mrr"])
     closed_won_rows = build_detail_rows(payload["conversion_detail"]["booked"], "closed won opportunities")
     return f'''<!doctype html>
@@ -609,6 +662,7 @@ body:before{{content:'';position:fixed;inset:-14% -10% 55% -10%;background:radia
 <div class="metric-grid">{cards}</div>
 <div class="panel-grid"><section class="panel focus-panel"><div class="panel-head"><h2>Positive movement</h2><div class="panel-note">Metrics up or flat vs the prior week — easier to scan for what improved.</div></div><table><thead><tr><th>Metric</th><th>Last Week</th><th>Prior Week</th><th>Difference</th></tr></thead><tbody>{positive_rows}</tbody></table></section><section class="panel watch-panel"><div class="panel-head"><h2>Watch list</h2><div class="panel-note">Metrics down vs the prior week — the Monday coaching queue, minus the detective corkboard chaos.</div></div><table><thead><tr><th>Metric</th><th>Last Week</th><th>Prior Week</th><th>Difference</th></tr></thead><tbody>{negative_rows}</tbody></table></section></div>
 <section class="panel"><div class="panel-head"><h2>Team metric scorecard</h2><div class="panel-note">Team-level view only: last week, prior week, and variance. No rep-by-rep difference pileup.</div></div><table><thead><tr><th>Metric</th><th>Last Week</th><th>Prior Week</th><th>Difference</th></tr></thead><tbody>{team_summary_rows}</tbody></table></section>
+<section class="panel"><div class="panel-head"><h2>AE meeting activity</h2><div class="panel-note">Last completed Monday–Sunday week by AE. Prior-week counts appear beneath each result for quick coaching context.</div></div><table><thead><tr><th>AE</th><th>Discovery Set</th><th>Discovery Complete</th><th>Initial Demo Complete</th><th>Follow Up / Pricing Complete</th></tr></thead><tbody>{ae_activity_rows}</tbody></table></section>
 <div class="panel-grid"><section class="panel focus-panel"><div class="panel-head"><h2>Top performer by role last week</h2><div class="panel-note">One AE, one CSA, and one SDR using the metrics each role owns. SDR ranking = sourced opps first, influenced completed discovery meetings second.</div></div><table><thead><tr><th>Role</th><th>Person</th><th>Role-Owned Metrics</th><th>Score</th></tr></thead><tbody>{top_performer_rows}</tbody></table></section><section class="panel watch-panel"><div class="panel-head"><h2>Bottom performer by role last week</h2><div class="panel-note">One AE, one CSA, and one SDR for coaching focus. SDR ranking uses opps sourced plus completed discovery meetings credited by SDR influence.</div></div><table><thead><tr><th>Role</th><th>Person</th><th>Role-Owned Metrics</th><th>Score</th></tr></thead><tbody>{bottom_performer_rows}</tbody></table></section></div>
 <section class="panel"><div class="panel-head"><h2>MRR booked by product</h2><div class="panel-note">Closed-won Opportunity Amount by CloseDate and Product Type.</div></div><table><thead><tr><th>Product</th><th>Last Week</th><th>Prior Week</th><th>Delta</th></tr></thead><tbody>{product_rows}</tbody></table></section>
 <section class="panel"><div class="panel-head"><h2>All closed won opportunities last week</h2><div class="panel-note">Every opportunity marked Closed Won with a close date in the previous week.</div></div><table><thead><tr><th>Owner</th><th>Account / Opportunity</th><th>Product</th><th>MRR</th></tr></thead><tbody>{closed_won_rows}</tbody></table></section>
