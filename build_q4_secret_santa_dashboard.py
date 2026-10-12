@@ -45,11 +45,13 @@ def build_payload():
     roster = get_team_members(base, headers)
     for name in SOLUTION_ENGINEERS:
         roster[name] = "SE"
+    roster["Jake Mitchell"] = "Channel"
     people = {
         name: {
             "name": name, "role": role, "standard_seats": 0, "classic_mrr": 0.0,
             "sourced_standard_users": 0, "sourced_classic_mrr": 0.0,
             "influenced_standard_users": 0, "influenced_classic_mrr": 0.0,
+            "referrals_received": 0, "channel_mrr": 0.0,
             "closed_won": 0, "closed_mrr": 0.0,
             "sdr_discoveries": 0, "sdr_wins": 0, "demos_covered": 0, "calls": 0,
         }
@@ -58,7 +60,8 @@ def build_payload():
 
     wins = sf_query(base, headers, f"""
         SELECT Id, Name, Amount, CloseDate, Owner.Name, SDR_Influence__c, Account.Name,
-               Product_Type__c, New_Deal_Quantity__c, Rev_io_Influence__r.Name
+               Product_Type__c, New_Deal_Quantity__c, Rev_io_Influence__r.Name,
+               Marketing_Source__c
         FROM Opportunity
         WHERE IsDeleted = false
           AND StageName = 'Closed Won'
@@ -68,6 +71,10 @@ def build_payload():
     for opp in wins:
         owner = normalize_name((opp.get("Owner") or {}).get("Name"))
         amount = max(0.0, float(opp.get("Amount") or 0))
+        if (opp.get("Marketing_Source__c") or "").strip().lower() in {
+            "partner", "partner/channel", "channel", "referral", "customer referral"
+        }:
+            people["Jake Mitchell"]["channel_mrr"] += amount
         if owner in people:
             people[owner]["closed_won"] += 1
             people[owner]["closed_mrr"] += amount
@@ -104,6 +111,16 @@ def build_payload():
         sdr = normalize_name(event.get("SDR_Influence__c"))
         if sdr in people and people[sdr]["role"] == "SDR":
             people[sdr]["sdr_discoveries"] += 1
+
+    referrals = sf_query(base, headers, f"""
+        SELECT Id
+        FROM Event
+        WHERE IsDeleted = false
+          AND ActivityDate >= {CONTEST_START.isoformat()}
+          AND ActivityDate < {end_exclusive.isoformat()}
+          AND Type = 'Referral Received'
+    """)
+    people["Jake Mitchell"]["referrals_received"] = len(referrals)
 
     demos = sf_query(base, headers, f"""
         SELECT Id, Owner.Name
@@ -147,6 +164,11 @@ def build_payload():
             p["scoring_mrr"] = p["influenced_classic_mrr"]
             p["points_discoveries"] = 0
             p["points_demos"] = p["demos_covered"] // 5
+        elif p["role"] == "Channel":
+            p["scoring_users"] = 0
+            p["scoring_mrr"] = p["channel_mrr"]
+            p["points_discoveries"] = 0
+            p["points_demos"] = 0
         else:
             p["scoring_users"] = p["standard_seats"]
             p["scoring_mrr"] = p["classic_mrr"]
@@ -154,7 +176,8 @@ def build_payload():
             p["points_demos"] = 0
         p["points_users"] = p["scoring_users"]
         p["points_classic_mrr"] = int(p["scoring_mrr"] // 100)
-        p["points"] = p["points_discoveries"] + p["points_demos"] + p["points_users"] + p["points_classic_mrr"]
+        p["points_referrals"] = p["referrals_received"] if p["role"] == "Channel" else 0
+        p["points"] = p["points_discoveries"] + p["points_demos"] + p["points_users"] + p["points_classic_mrr"] + p["points_referrals"]
 
     standings = sorted(people.values(), key=lambda p: (-p["points"], -p["classic_mrr"], -p["standard_seats"], p["name"]))
     last_points = None
@@ -200,6 +223,8 @@ def build_payload():
             {"label": "Solutions Engineer demos covered", "points": "1 pt per 5 demos"},
             {"label": "Solutions Engineer-influenced New Rev.io standard user", "points": "1 pt each"},
             {"label": "Solutions Engineer-influenced Classic Rev.io MRR", "points": "1 pt per full $100"},
+            {"label": "Jake Mitchell: referral received", "points": "1 pt each"},
+            {"label": "Jake Mitchell: channel-sourced MRR", "points": "1 pt per full $100"},
         ],
     }
 
@@ -222,6 +247,7 @@ def build_html(payload):
           <td class="points">{p['points']}</td>
           <td>{p['sdr_discoveries'] if p['role'] == 'SDR' else '—'}<small>{p['points_discoveries']} pts</small></td>
           <td>{p['demos_covered'] if p['role'] == 'SE' else '—'}<small>{p['points_demos']} pts</small></td>
+          <td>{p['referrals_received'] if p['role'] == 'Channel' else '—'}<small>{p['points_referrals']} pts</small></td>
           <td>{p['scoring_users']}<small>{p['points_users']} pts</small></td>
           <td>{money(p['scoring_mrr'])}<small>{p['points_classic_mrr']} pts</small></td>
           <td class="pick-number">#{p['pick_order']}</td>
@@ -235,7 +261,7 @@ def build_html(payload):
 </style></head><body><main class="wrap"><section class="hero"><div class="lights"></div><div class="eyebrow">Rev.io Sales · Q4 2026</div><h1>Secret Santa <em>Showdown</em> 🎄</h1><div class="sub">Earn points from October 1 through December 17. The twist: the leaderboard runs opposite the gift table—<strong>last place picks first, and the leader picks last.</strong></div><div class="progress-wrap"><div class="track"><div class="bar"></div></div><div class="progress-label">{contest['percent_complete']:.0f}% complete · Through {escape(contest['through'])}</div></div></section>
 <section class="stats"><div class="stat"><strong>{totals['points']:,}</strong><small>Total points</small></div><div class="stat"><strong>{totals['standard_seats']:,}</strong><small>New Rev.io standard seats sold or renewed</small></div><div class="stat"><strong>{money(totals['classic_mrr'])}</strong><small>Classic Rev.io or Payments MRR sold</small></div></section>
 <section class="rules">{rule_cards}</section><section class="podiums">{podium}</section>
-<section class="grid"><div class="panel"><div class="panel-head"><h2>Leaderboard</h2><div class="panel-note">AEs earn points on sales/renewals; SDRs on influenced results; Solutions Engineers on demos and influenced results.</div></div><div class="table-wrap"><table><thead><tr><th>Rank</th><th>Teammate</th><th>Points</th><th>SDR Discovery Calls Influenced</th><th>SE Demos</th><th>New Rev.io Users</th><th>Eligible MRR</th><th>Pick</th><th>Gap</th></tr></thead><tbody>{''.join(rows)}</tbody></table></div></div><aside class="panel"><div class="panel-head"><h2>🎁 Gift Pick Order</h2><div class="panel-note">Least points draws first; most points draws last. Equal-score ties are ordered alphabetically.</div></div><ol>{pick_list}</ol></aside></section>
+<section class="grid"><div class="panel"><div class="panel-head"><h2>Leaderboard</h2><div class="panel-note">AEs/CSAs earn on sales, SDRs on influenced results, SEs on demos/influence, and Jake on referrals/channel MRR.</div></div><div class="table-wrap"><table><thead><tr><th>Rank</th><th>Teammate</th><th>Points</th><th>SDR Discovery Calls Influenced</th><th>SE Demos</th><th>Referrals Received</th><th>New Rev.io Users</th><th>Eligible MRR</th><th>Pick</th><th>Gap</th></tr></thead><tbody>{''.join(rows)}</tbody></table></div></div><aside class="panel"><div class="panel-head"><h2>🎁 Gift Pick Order</h2><div class="panel-note">Least points draws first; most points draws last. Equal-score ties are ordered alphabetically.</div></div><ol>{pick_list}</ol></aside></section>
 <div class="footer">SALESFORCE LIVE DATA · GENERATED {escape(payload['generated_at_et'])} · CONTEST ENDS DECEMBER 17, 2026</div></main></body></html>'''
 
 
