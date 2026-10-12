@@ -165,6 +165,10 @@ def empty_rep(role=""):
         "discovery_complete": empty_periods(),
         "discovery_complete_influenced": empty_periods(),
         "cbrs_set": empty_periods(),
+        "cbrs_complete": empty_periods(),
+        "client_followups_complete": empty_periods(),
+        "initial_expansion_complete": empty_periods(),
+        "payments_quote_reviews_complete": empty_periods(),
         "initial_demos_ran": empty_periods(),
         "follow_up_pricing_complete": empty_periods(),
         "sdr_sourced_opps": empty_periods(),
@@ -293,6 +297,37 @@ def build_payload():
         period = period_for_dt(parse_sf_datetime(ev["CreatedDate"]), windows)
         if period:
             add_metric(metrics[rep], "cbrs_set", period)
+
+    # CSA meetings completed by activity date. Keep the Salesforce event-type
+    # mapping explicit so the activity table is auditable and doesn't rely on
+    # fuzzy subject matching.
+    csa_completed_events = sf_query(base, headers, f"""
+        SELECT Id, Subject, Type, ActivityDate, Appointment_Status__c, Owner.Name, What.Name
+        FROM Event
+        WHERE IsDeleted = false
+          AND ActivityDate >= {sf_date(range_start)}
+          AND ActivityDate < {sf_date(range_end)}
+          AND Type IN ('Client Business Review', 'Client Follow Up', 'Initial Expansion Meeting', 'Payments Quote Review')
+          AND Appointment_Status__c = 'Completed'
+          AND LastModifiedDate < {iso_utc(range_end)}
+    """)
+    csa_metric_by_type = {
+        "Client Business Review": "cbrs_complete",
+        "Client Follow Up": "client_followups_complete",
+        "Initial Expansion Meeting": "initial_expansion_complete",
+        "Payments Quote Review": "payments_quote_reviews_complete",
+    }
+    for ev in csa_completed_events:
+        rep = normalize_name((ev.get("Owner") or {}).get("Name"))
+        if rep not in metrics:
+            continue
+        subject = (ev.get("Subject") or "").lower()
+        if "cancel" in subject or "internal" in subject:
+            continue
+        period = period_for_dt(datetime.fromisoformat(ev["ActivityDate"]).replace(tzinfo=ET), windows)
+        metric_key = csa_metric_by_type.get(ev.get("Type"))
+        if period and metric_key:
+            add_metric(metrics[rep], metric_key, period)
 
     # Initial demos RAN: Events with Type = 2-Initial DEMO and ActivityDate during the week.
     demo_events = sf_query(base, headers, f"""
@@ -425,6 +460,10 @@ def build_payload():
             "discovery_complete": "Discovery Call events scheduled in-week and marked Completed by the end-of-week cutoff.",
             "discovery_complete_influenced": "Completed Discovery Call events credited by Event SDR_Influence__c.",
             "cbrs_set": "Events with Type = Client Business Review created during the week.",
+            "cbrs_complete": "Client Business Review events scheduled in-week and marked Completed by the end-of-week cutoff.",
+            "client_followups_complete": "Client Follow Up events scheduled in-week and marked Completed by the end-of-week cutoff.",
+            "initial_expansion_complete": "Initial Expansion Meeting events scheduled in-week and marked Completed by the end-of-week cutoff.",
+            "payments_quote_reviews_complete": "Payments Quote Review events scheduled in-week and marked Completed by the end-of-week cutoff.",
             "initial_demos_ran": "Initial Demo events scheduled in-week and marked Completed by the end-of-week cutoff.",
             "follow_up_pricing_complete": "Completed Follow Up Demo / Meeting, Payments Follow-up, and Pricing / Negotiation events scheduled in-week.",
             "sdr_sourced_opps": "Opportunities created with SDR_Influence__c populated and not None.",
@@ -602,6 +641,28 @@ def build_ae_activity_rows(metrics):
     return "\n".join(rows) or '<tr><td colspan="5" class="empty">No AE activity found.</td></tr>'
 
 
+def build_csa_activity_rows(metrics):
+    metric_keys = [
+        "cbrs_set",
+        "cbrs_complete",
+        "client_followups_complete",
+        "initial_expansion_complete",
+        "payments_quote_reviews_complete",
+    ]
+    csas = [(rep, m) for rep, m in metrics.items() if (m.get("role") or "").upper() == "CSA"]
+    csas.sort(key=lambda item: (-sum(item[1][key]["last"] for key in metric_keys), item[0]))
+    rows = []
+    for rep, m in csas:
+        cells = []
+        for key in metric_keys:
+            cells.append(
+                f'<td><strong>{fmt_int(m[key]["last"])}</strong>'
+                f'<small>Prior: {fmt_int(m[key]["prior"])}</small></td>'
+            )
+        rows.append(f'<tr><td><strong>{escape(rep)}</strong></td>{"".join(cells)}</tr>')
+    return "\n".join(rows) or '<tr><td colspan="6" class="empty">No CSA activity found.</td></tr>'
+
+
 def build_product_rows(product_mrr):
     rows = []
     for product, p in product_mrr.items():
@@ -633,6 +694,7 @@ def build_html(payload):
         metric_card("Discovery Meetings Set", "discovery_set", t),
         metric_card("Discovery Meetings Complete", "discovery_complete", t),
         metric_card("CBRs Set", "cbrs_set", t),
+        metric_card("CBRs Complete", "cbrs_complete", t),
         metric_card("Initial Demos Ran", "initial_demos_ran", t),
         metric_card("SDR-Sourced Opps", "sdr_sourced_opps", t),
         metric_card("MQLs Converted", "mqls_converted", t),
@@ -644,6 +706,7 @@ def build_html(payload):
     negative_rows = build_difference_rows(t, positive=False)
     team_summary_rows = build_team_summary_rows(t)
     ae_activity_rows = build_ae_activity_rows(payload["metrics"])
+    csa_activity_rows = build_csa_activity_rows(payload["metrics"])
     closed_won_rows = build_detail_rows(payload["conversion_detail"]["booked"], "closed won opportunities")
     return f'''<!doctype html>
 <html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Monday Sales Meeting</title>
@@ -659,6 +722,7 @@ body:before{{content:'';position:fixed;inset:-14% -10% 55% -10%;background:radia
 <div class="metric-grid">{cards}</div>
 <div class="panel-grid"><section class="panel focus-panel"><div class="panel-head"><h2>Positive movement</h2><div class="panel-note">Metrics up or flat vs the prior week — easier to scan for what improved.</div></div><table><thead><tr><th>Metric</th><th>Last Week</th><th>Prior Week</th><th>Difference</th></tr></thead><tbody>{positive_rows}</tbody></table></section><section class="panel watch-panel"><div class="panel-head"><h2>Watch list</h2><div class="panel-note">Metrics down vs the prior week — the Monday coaching queue, minus the detective corkboard chaos.</div></div><table><thead><tr><th>Metric</th><th>Last Week</th><th>Prior Week</th><th>Difference</th></tr></thead><tbody>{negative_rows}</tbody></table></section></div>
 <section class="panel"><div class="panel-head"><h2>AE meeting activity</h2><div class="panel-note">Last completed Monday–Sunday week by AE. Prior-week counts appear beneath each result for quick coaching context.</div></div><table><thead><tr><th>AE</th><th>Discovery Set</th><th>Discovery Complete</th><th>Initial Demo Complete</th><th>Follow Up / Pricing Complete</th></tr></thead><tbody>{ae_activity_rows}</tbody></table></section>
+<section class="panel"><div class="panel-head"><h2>CSA meeting activity</h2><div class="panel-note">Last completed Monday–Sunday week by CSA. Prior-week counts appear beneath each result.</div></div><table><thead><tr><th>CSA</th><th>CBRs Set</th><th>CBRs Complete</th><th>Follow-up Client Meetings</th><th>Initial Expansion Meetings</th><th>Payments Quote Reviews</th></tr></thead><tbody>{csa_activity_rows}</tbody></table></section>
 <section class="panel"><div class="panel-head"><h2>All closed won opportunities last week</h2><div class="panel-note">Every opportunity marked Closed Won with a close date in the previous week.</div></div><table><thead><tr><th>Owner</th><th>Account / Opportunity</th><th>Product</th><th>MRR</th></tr></thead><tbody>{closed_won_rows}</tbody></table></section>
 <section class="panel"><div class="panel-head"><h2>Metric definitions</h2><div class="panel-note">So nobody has to decode the Batcomputer during the team meeting.</div></div><div class="definitions">{''.join(f'<div class="def"><strong>{escape(k.replace("_", " ").title())}:</strong> {escape(v)}</div>' for k, v in payload['definitions'].items())}</div></section>
 <div class="footer">SOURCE: SALESFORCE TASKS, EVENTS, AND OPPORTUNITIES · AUTO-REFRESHES SUNDAY NIGHT ET</div></div></body></html>'''
