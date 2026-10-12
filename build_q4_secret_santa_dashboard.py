@@ -3,7 +3,6 @@
 from __future__ import annotations
 
 import json
-import math
 import os
 import shutil
 import subprocess
@@ -45,14 +44,16 @@ def build_payload():
     roster = get_team_members(base, headers)
     people = {
         name: {
-            "name": name, "role": role, "closed_won": 0, "closed_mrr": 0.0,
+            "name": name, "role": role, "standard_seats": 0, "classic_mrr": 0.0,
+            "closed_won": 0, "closed_mrr": 0.0,
             "sdr_discoveries": 0, "sdr_wins": 0, "calls": 0,
         }
         for name, role in roster.items()
     }
 
     wins = sf_query(base, headers, f"""
-        SELECT Id, Name, Amount, CloseDate, Owner.Name, SDR_Influence__c, Account.Name
+        SELECT Id, Name, Amount, CloseDate, Owner.Name, SDR_Influence__c, Account.Name,
+               Product_Type__c, New_Deal_Quantity__c
         FROM Opportunity
         WHERE IsDeleted = false
           AND StageName = 'Closed Won'
@@ -65,6 +66,10 @@ def build_payload():
         if owner in people:
             people[owner]["closed_won"] += 1
             people[owner]["closed_mrr"] += amount
+            if opp.get("Product_Type__c") == "PSA 2.0":
+                people[owner]["standard_seats"] += int(opp.get("New_Deal_Quantity__c") or 0)
+            if opp.get("Product_Type__c") in ("Billing", "Billing Add-on", "Odin", "New Rev.io Add-on"):
+                people[owner]["classic_mrr"] += amount
         sdr = normalize_name(opp.get("SDR_Influence__c"))
         if sdr in people and people[sdr]["role"] == "SDR":
             people[sdr]["sdr_wins"] += 1
@@ -102,18 +107,11 @@ def build_payload():
             people[owner]["calls"] = int(row.get("total") or 0)
 
     for p in people.values():
-        p["points_closed_won"] = p["closed_won"] * 5
-        p["points_mrr"] = math.floor(p["closed_mrr"] / 1000) * 10
-        p["points_discoveries"] = p["sdr_discoveries"] * 2
-        p["points_sdr_wins"] = p["sdr_wins"] * 5
-        p["points_calls"] = math.floor(p["calls"] / 500) * 10
-        p["points"] = sum(p[k] for k in (
-            "points_closed_won", "points_mrr", "points_discoveries",
-            "points_sdr_wins", "points_calls",
-        ))
-        p["calls_to_next_bonus"] = 500 - (p["calls"] % 500) if p["calls"] % 500 else 500
+        p["points_seats"] = p["standard_seats"]
+        p["points_classic_mrr"] = int(p["classic_mrr"] // 100)
+        p["points"] = p["points_seats"] + p["points_classic_mrr"]
 
-    standings = sorted(people.values(), key=lambda p: (-p["points"], -p["closed_mrr"], -p["closed_won"], p["name"]))
+    standings = sorted(people.values(), key=lambda p: (-p["points"], -p["classic_mrr"], -p["standard_seats"], p["name"]))
     last_points = None
     rank = 0
     for idx, p in enumerate(standings, 1):
@@ -123,7 +121,7 @@ def build_payload():
         p["rank"] = rank
 
     # Lowest score picks first; deterministic alphabetical tie-break for equal scores.
-    pick_order = sorted(standings, key=lambda p: (p["points"], p["closed_mrr"], p["closed_won"], p["name"]))
+    pick_order = sorted(standings, key=lambda p: (p["points"], p["classic_mrr"], p["standard_seats"], p["name"]))
     for pick, p in enumerate(pick_order, 1):
         p["pick_order"] = pick
 
@@ -140,6 +138,8 @@ def build_payload():
         "pick_order": [p["name"] for p in pick_order],
         "totals": {
             "points": sum(p["points"] for p in standings),
+            "standard_seats": sum(p["standard_seats"] for p in standings),
+            "classic_mrr": sum(p["classic_mrr"] for p in standings),
             "closed_won": sum(p["closed_won"] for p in standings),
             "mrr": sum(p["closed_mrr"] for p in standings),
             "discoveries": sum(p["sdr_discoveries"] for p in standings),
@@ -147,11 +147,8 @@ def build_payload():
             "calls": sum(p["calls"] for p in standings),
         },
         "rules": [
-            {"label": "Closed-won opportunity", "points": "5 pts each"},
-            {"label": "Closed MRR", "points": "10 pts per full $1,000"},
-            {"label": "Discovery meeting sourced (SDRs)", "points": "2 pts each"},
-            {"label": "Closed-won opportunity sourced (SDRs)", "points": "5 pts each"},
-            {"label": "Calls logged", "points": "10 pts per full 500"},
+            {"label": "New Rev.io standard seat sold", "points": "1 pt each"},
+            {"label": "Classic Rev.io MRR sold", "points": "1 pt per full $100"},
         ],
     }
 
@@ -172,11 +169,8 @@ def build_html(payload):
           <td class="rank">#{p['rank']}</td>
           <td><strong>{escape(p['name'])}</strong><small>{escape(p['role'])}</small></td>
           <td class="points">{p['points']}</td>
-          <td>{p['closed_won']}<small>{p['points_closed_won']} pts</small></td>
-          <td>{money(p['closed_mrr'])}<small>{p['points_mrr']} pts</small></td>
-          <td>{p['sdr_discoveries']}<small>{p['points_discoveries']} pts</small></td>
-          <td>{p['sdr_wins']}<small>{p['points_sdr_wins']} pts</small></td>
-          <td>{p['calls']:,}<small>{p['points_calls']} pts · {p['calls_to_next_bonus']:,} to bonus</small></td>
+          <td>{p['standard_seats']}<small>{p['points_seats']} pts</small></td>
+          <td>{money(p['classic_mrr'])}<small>{p['points_classic_mrr']} pts</small></td>
           <td class="pick-number">#{p['pick_order']}</td>
           <td>{'Leader' if gap == 0 else f'{gap} pts back'}</td>
         </tr>''')
@@ -186,9 +180,9 @@ def build_html(payload):
 <style>
 :root{{--pine:#062f26;--pine2:#0a4938;--red:#c62828;--red2:#8f151b;--gold:#f4cf73;--cream:#fff9e9;--ink:#16372f;--snow:#f7fbff;--muted:#6d7d76}}*{{box-sizing:border-box}}body{{margin:0;font-family:Inter,Segoe UI,system-ui,sans-serif;background:radial-gradient(circle at 15% 5%,rgba(255,255,255,.16),transparent 24%),linear-gradient(145deg,#041e19,#083f31 55%,#5b1118);color:var(--cream);min-height:100vh}}body:before{{content:'❄   ·   ❅      ·   ❄   ·      ❅   ·   ❄      ·   ❅';position:fixed;inset:0;font-size:34px;line-height:110px;word-spacing:44px;color:rgba(255,255,255,.12);pointer-events:none;transform:rotate(-8deg) scale(1.2)}}.wrap{{position:relative;z-index:1;max-width:1580px;margin:auto;padding:22px}}.hero{{position:relative;overflow:hidden;background:linear-gradient(130deg,rgba(6,47,38,.96),rgba(10,73,56,.9));border:1px solid rgba(244,207,115,.45);border-radius:26px;padding:28px 30px;box-shadow:0 28px 80px rgba(0,0,0,.35)}}.lights{{position:absolute;left:0;right:0;top:0;height:12px;background:repeating-linear-gradient(90deg,#e43131 0 14px,#f4cf73 14px 28px,#fff 28px 42px,#2db56f 42px 56px);box-shadow:0 0 24px rgba(244,207,115,.7)}}.eyebrow{{color:var(--gold);font-size:11px;font-weight:800;letter-spacing:.22em;text-transform:uppercase}}h1{{font-family:Georgia,serif;font-size:clamp(42px,6vw,78px);line-height:.95;margin:13px 0 10px;font-weight:500}}h1 em{{color:var(--gold)}}.sub{{max-width:850px;color:#dce9e4;font-size:15px;line-height:1.55}}.progress-wrap{{margin-top:20px;display:flex;align-items:center;gap:14px}}.track{{height:10px;flex:1;max-width:650px;background:rgba(255,255,255,.12);border-radius:99px;overflow:hidden}}.bar{{height:100%;width:{contest['percent_complete']}%;background:linear-gradient(90deg,#dc3038,var(--gold));border-radius:99px}}.progress-label{{font-size:12px;color:#dce9e4}}.stats{{display:grid;grid-template-columns:repeat(5,1fr);gap:10px;margin:14px 0}}.stat,.panel{{background:rgba(255,249,233,.97);color:var(--ink);border-radius:17px;border:1px solid rgba(244,207,115,.52);box-shadow:0 18px 50px rgba(0,0,0,.2)}}.stat{{padding:15px}}.stat strong{{font-size:25px;display:block}}.stat small{{color:var(--muted);font-size:10px;text-transform:uppercase;letter-spacing:.12em;font-weight:800}}.rules{{display:grid;grid-template-columns:repeat(5,1fr);gap:10px;margin:14px 0}}.rule{{background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.16);border-radius:15px;padding:13px;min-height:92px}}.rule span{{font-size:20px;float:right}}.rule strong,.rule small{{display:block}}.rule strong{{color:var(--gold);font-size:17px;margin-bottom:6px}}.rule small{{color:#e4eee9;line-height:1.3}}.podiums{{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin:14px 0}}.podium{{text-align:center;border-radius:18px;padding:17px;background:linear-gradient(145deg,rgba(255,249,233,.98),rgba(244,207,115,.88));color:var(--ink);border:2px solid var(--gold)}}.p1{{transform:translateY(-4px);box-shadow:0 0 35px rgba(244,207,115,.32)}}.medal{{font-size:30px}}.podium-name{{font-weight:900;font-size:18px}}.podium-role{{font-size:10px;color:var(--muted);text-transform:uppercase;letter-spacing:.12em}}.podium-points{{font-size:27px;font-weight:900;color:var(--red)}}.pick{{font-size:11px;font-weight:800;color:var(--pine2)}}.grid{{display:grid;grid-template-columns:minmax(0,4fr) minmax(250px,1fr);gap:14px}}.panel{{overflow:hidden}}.panel-head{{padding:15px 17px;background:linear-gradient(90deg,#f6ecd0,#fff9e9);border-bottom:1px solid #e6dcc4}}h2{{margin:0;font-family:Georgia,serif;font-size:22px}}.panel-note{{font-size:11px;color:var(--muted);margin-top:4px}}.table-wrap{{overflow-x:auto}}table{{width:100%;border-collapse:collapse;min-width:1120px}}th{{font-size:9px;letter-spacing:.09em;text-transform:uppercase;text-align:left;color:#6d7d76;background:#f5f0e3;padding:10px}}td{{padding:11px 10px;border-top:1px solid #eee7d8;font-size:13px}}td strong,td small{{display:block}}td small{{font-size:10px;color:var(--muted);margin-top:2px}}.rank,.points,.pick-number{{font-weight:900}}.points{{font-size:20px;color:var(--red)}}.pick-number{{font-size:17px;color:var(--pine2)}}ol{{list-style:none;margin:0;padding:10px 16px 18px}}li{{display:flex;align-items:center;gap:10px;padding:8px 0;border-bottom:1px dashed #ddd3bc;font-weight:700;font-size:13px}}li span{{width:25px;height:25px;border-radius:50%;display:grid;place-items:center;background:var(--red);color:white;font-size:11px}}.footer{{text-align:center;color:#d9e8e2;font-size:10px;letter-spacing:.1em;padding:18px}}@media(max-width:1050px){{.stats,.rules{{grid-template-columns:repeat(2,1fr)}}.grid{{grid-template-columns:1fr}}}}@media(max-width:650px){{.wrap{{padding:10px}}.hero{{padding:24px 18px}}.podiums{{grid-template-columns:1fr}}.p1{{transform:none}}}}
 </style></head><body><main class="wrap"><section class="hero"><div class="lights"></div><div class="eyebrow">Rev.io Sales · Q4 2026</div><h1>Secret Santa <em>Showdown</em> 🎄</h1><div class="sub">Earn points from October 1 through December 17. The twist: the leaderboard runs opposite the gift table—<strong>last place picks first, and the leader picks last.</strong></div><div class="progress-wrap"><div class="track"><div class="bar"></div></div><div class="progress-label">{contest['percent_complete']:.0f}% complete · Through {escape(contest['through'])}</div></div></section>
-<section class="stats"><div class="stat"><strong>{totals['points']:,}</strong><small>Total points</small></div><div class="stat"><strong>{totals['closed_won']:,}</strong><small>Closed-won deals</small></div><div class="stat"><strong>{money(totals['mrr'])}</strong><small>Closed MRR</small></div><div class="stat"><strong>{totals['discoveries']:,}</strong><small>SDR discoveries</small></div><div class="stat"><strong>{totals['calls']:,}</strong><small>Calls logged</small></div></section>
+<section class="stats"><div class="stat"><strong>{totals['points']:,}</strong><small>Total points</small></div><div class="stat"><strong>{totals['standard_seats']:,}</strong><small>New Rev.io standard seats</small></div><div class="stat"><strong>{money(totals['classic_mrr'])}</strong><small>Classic Rev.io MRR</small></div></section>
 <section class="rules">{rule_cards}</section><section class="podiums">{podium}</section>
-<section class="grid"><div class="panel"><div class="panel-head"><h2>Leaderboard</h2><div class="panel-note">MRR and call bonuses award points only for each full threshold reached.</div></div><div class="table-wrap"><table><thead><tr><th>Rank</th><th>Teammate</th><th>Points</th><th>Closed Won</th><th>Closed MRR</th><th>SDR Discoveries</th><th>SDR-Sourced Wins</th><th>Calls</th><th>Pick</th><th>Gap</th></tr></thead><tbody>{''.join(rows)}</tbody></table></div></div><aside class="panel"><div class="panel-head"><h2>🎁 Gift Pick Order</h2><div class="panel-note">Lowest score picks first. Equal-score ties are ordered alphabetically.</div></div><ol>{pick_list}</ol></aside></section>
+<section class="grid"><div class="panel"><div class="panel-head"><h2>Leaderboard</h2><div class="panel-note">1 point per standard seat and 1 point per full $100 of Classic Rev.io MRR.</div></div><div class="table-wrap"><table><thead><tr><th>Rank</th><th>Teammate</th><th>Points</th><th>Standard Seats</th><th>Classic MRR</th><th>Pick</th><th>Gap</th></tr></thead><tbody>{''.join(rows)}</tbody></table></div></div><aside class="panel"><div class="panel-head"><h2>🎁 Gift Pick Order</h2><div class="panel-note">Least points draws first; most points draws last. Equal-score ties are ordered alphabetically.</div></div><ol>{pick_list}</ol></aside></section>
 <div class="footer">SALESFORCE LIVE DATA · GENERATED {escape(payload['generated_at_et'])} · CONTEST ENDS DECEMBER 17, 2026</div></main></body></html>'''
 
 
