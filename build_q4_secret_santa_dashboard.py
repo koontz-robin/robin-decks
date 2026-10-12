@@ -96,6 +96,7 @@ def build_payload():
           AND ActivityDate >= {CONTEST_START.isoformat()}
           AND ActivityDate < {end_exclusive.isoformat()}
           AND Type = '1-Discovery Call'
+          AND Appointment_Status__c = 'Completed'
           AND SDR_Influence__c != null
           AND SDR_Influence__c != 'None'
     """)
@@ -139,7 +140,7 @@ def build_payload():
         if p["role"] == "SDR":
             p["scoring_users"] = p["sourced_standard_users"]
             p["scoring_mrr"] = p["sourced_classic_mrr"]
-            p["points_discoveries"] = p["sdr_discoveries"]
+            p["points_discoveries"] = p["sdr_discoveries"] // 5
             p["points_demos"] = 0
         elif p["role"] == "SE":
             p["scoring_users"] = p["influenced_standard_users"]
@@ -193,7 +194,7 @@ def build_payload():
         "rules": [
             {"label": "AEs & CSAs: New Rev.io standard seat sold or renewed", "points": "1 pt each"},
             {"label": "AEs & CSAs: Classic Rev.io or Payments MRR sold", "points": "1 pt per full $100"},
-            {"label": "SDR discovery meeting sourced", "points": "1 pt each"},
+            {"label": "SDR discovery calls influenced", "points": "1 pt per 5 calls"},
             {"label": "SDR-sourced New Rev.io standard user", "points": "1 pt each"},
             {"label": "SDR-sourced Classic Rev.io MRR", "points": "1 pt per full $100"},
             {"label": "Solutions Engineer demos covered", "points": "1 pt per 5 demos"},
@@ -234,7 +235,7 @@ def build_html(payload):
 </style></head><body><main class="wrap"><section class="hero"><div class="lights"></div><div class="eyebrow">Rev.io Sales · Q4 2026</div><h1>Secret Santa <em>Showdown</em> 🎄</h1><div class="sub">Earn points from October 1 through December 17. The twist: the leaderboard runs opposite the gift table—<strong>last place picks first, and the leader picks last.</strong></div><div class="progress-wrap"><div class="track"><div class="bar"></div></div><div class="progress-label">{contest['percent_complete']:.0f}% complete · Through {escape(contest['through'])}</div></div></section>
 <section class="stats"><div class="stat"><strong>{totals['points']:,}</strong><small>Total points</small></div><div class="stat"><strong>{totals['standard_seats']:,}</strong><small>New Rev.io standard seats sold or renewed</small></div><div class="stat"><strong>{money(totals['classic_mrr'])}</strong><small>Classic Rev.io or Payments MRR sold</small></div></section>
 <section class="rules">{rule_cards}</section><section class="podiums">{podium}</section>
-<section class="grid"><div class="panel"><div class="panel-head"><h2>Leaderboard</h2><div class="panel-note">AEs earn points on sales/renewals; SDRs on sourced results; Solutions Engineers on demos and influenced results.</div></div><div class="table-wrap"><table><thead><tr><th>Rank</th><th>Teammate</th><th>Points</th><th>SDR Discoveries</th><th>SE Demos</th><th>New Rev.io Users</th><th>Eligible MRR</th><th>Pick</th><th>Gap</th></tr></thead><tbody>{''.join(rows)}</tbody></table></div></div><aside class="panel"><div class="panel-head"><h2>🎁 Gift Pick Order</h2><div class="panel-note">Least points draws first; most points draws last. Equal-score ties are ordered alphabetically.</div></div><ol>{pick_list}</ol></aside></section>
+<section class="grid"><div class="panel"><div class="panel-head"><h2>Leaderboard</h2><div class="panel-note">AEs earn points on sales/renewals; SDRs on influenced results; Solutions Engineers on demos and influenced results.</div></div><div class="table-wrap"><table><thead><tr><th>Rank</th><th>Teammate</th><th>Points</th><th>SDR Discovery Calls Influenced</th><th>SE Demos</th><th>New Rev.io Users</th><th>Eligible MRR</th><th>Pick</th><th>Gap</th></tr></thead><tbody>{''.join(rows)}</tbody></table></div></div><aside class="panel"><div class="panel-head"><h2>🎁 Gift Pick Order</h2><div class="panel-note">Least points draws first; most points draws last. Equal-score ties are ordered alphabetically.</div></div><ol>{pick_list}</ol></aside></section>
 <div class="footer">SALESFORCE LIVE DATA · GENERATED {escape(payload['generated_at_et'])} · CONTEST ENDS DECEMBER 17, 2026</div></main></body></html>'''
 
 
