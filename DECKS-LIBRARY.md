@@ -223,3 +223,8 @@ When Robin creates a new deck or dashboard:
 - **File:** `xssentials-revio-evaluation-readout.html`
 - **URL:** https://koontz-robin.github.io/robin-decks/xssentials-revio-evaluation-readout.html
 - **Purpose:** Customer-facing platform evaluation readout built from Xssentials website research and Rev.io discovery/demo notes.
+
+### Premier Security Rev.io Evaluation Readout
+- **File:** `premier-security-revio-evaluation-readout.html`
+- **URL:** https://koontz-robin.github.io/robin-decks/premier-security-revio-evaluation-readout.html
+- **Purpose:** Customer-facing platform evaluation readout built from Premier Security website research and Rev.io discovery/demo notes.
