@@ -217,3 +217,9 @@ When Robin creates a new deck or dashboard:
 - File: `joe-abarno-strategic-ae-territory.html`
 - Created: 2026-08-25
 - Purpose: One-page Strategic AE territory onboarding/reference page for Joe Abarno, using the West / Central blue-state territory map and qualification rules.
+| Q4 Secret Santa Contest | q4-secret-santa-contest.html | https://koontz-robin.github.io/robin-decks/q4-secret-santa-contest.html | On demand |
+
+### Xssentials Rev.io Evaluation Readout
+- **File:** `xssentials-revio-evaluation-readout.html`
+- **URL:** https://koontz-robin.github.io/robin-decks/xssentials-revio-evaluation-readout.html
+- **Purpose:** Customer-facing platform evaluation readout built from Xssentials website research and Rev.io discovery/demo notes.
