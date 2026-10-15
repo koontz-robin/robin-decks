@@ -1,0 +1,108 @@
+#!/usr/bin/env python3
+"""Build 2026 New + Classic Rev.io pipeline source performance dashboard."""
+from collections import Counter
+from datetime import datetime, timezone
+from html import escape
+from pathlib import Path
+from build_september_update_deck import sf_auth, sf_query, source
+
+ROOT = Path(__file__).parent
+OUT = ROOT / "pipeline-source-performance-dashboard.html"
+MONTHS = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct"]
+REPS = {1: 12, 2: 11, 3: 9, 4: 7, 5: 7, 6: 7, 7: 7, 8: 7, 9: 7, 10: 8}
+ALLOWED = {"PSA", "PSA 2.0", "Billing", "Billing Add-on", "Odin"}
+SOURCE_ORDER = ["Sales", "Tradeshow", "Website", "Paid Media", "SEO", "Email", "Rev.io Summit", "Referral", "Webinar", "Partner/Channel", "Phone"]
+
+
+def pct(n, d):
+    return 100 * n / d if d else None
+
+
+def fmt_pct(v):
+    return "—" if v is None else f"{v:.1f}%"
+
+
+def td_pct(v, kind="share"):
+    if v is None:
+        return '<td class="na">—</td>'
+    scale = min(v / (70 if kind == "share" else 50), 1)
+    hue = 187 if kind == "share" else 151
+    return f'<td style="--heat:{scale:.3f};--hue:{hue}">{v:.1f}%</td>'
+
+
+def main():
+    base, headers = sf_auth()
+    fields = "Id,CreatedDate,CloseDate,StageName,Product_Type__c,Marketing_Source__c"
+    opps = sf_query(base, headers, f"SELECT {fields} FROM Opportunity WHERE (CreatedDate>=2026-01-01T00:00:00Z AND CreatedDate<2026-11-01T00:00:00Z) OR (CloseDate>=2026-01-01 AND CloseDate<2026-11-01) ORDER BY CreatedDate")
+    opps = [x for x in opps if (x.get("Product_Type__c") or "") in ALLOWED]
+
+    created = {m: [x for x in opps if (x.get("CreatedDate") or "").startswith(f"2026-{m:02d}")] for m in range(1, 11)}
+    decided = {m: [x for x in opps if x.get("StageName") in ("Closed Won", "Closed Lost") and (x.get("CloseDate") or "").startswith(f"2026-{m:02d}")] for m in range(1, 11)}
+
+    totals = [len(created[m]) for m in range(1, 11)]
+    avgs = [totals[m-1] / REPS[m] for m in range(1, 11)]
+    ytd_total = sum(totals)
+    weighted_reps = sum(REPS.values())
+    avg_per_rep_month = ytd_total / weighted_reps
+
+    source_counts = {s: [sum(source(x) == s for x in created[m]) for m in range(1, 11)] for s in SOURCE_ORDER}
+    source_shares = {s: [pct(source_counts[s][m-1], totals[m-1]) for m in range(1, 11)] for s in SOURCE_ORDER}
+    source_avg_shares = {s: sum(v for v in source_shares[s] if v is not None) / len([v for v in source_shares[s] if v is not None]) for s in SOURCE_ORDER}
+
+    win_rates, win_counts = {}, {}
+    for s in SOURCE_ORDER:
+        rates, counts = [], []
+        for m in range(1, 11):
+            rows = [x for x in decided[m] if source(x) == s]
+            wins = sum(x.get("StageName") == "Closed Won" for x in rows)
+            rates.append(pct(wins, len(rows)))
+            counts.append((wins, len(rows)))
+        win_rates[s], win_counts[s] = rates, counts
+
+    overall_decisions = sum(len(decided[m]) for m in range(1, 11))
+    overall_wins = sum(sum(x.get("StageName") == "Closed Won" for x in decided[m]) for m in range(1, 11))
+    overall_wr = pct(overall_wins, overall_decisions)
+    top_volume = max(SOURCE_ORDER, key=lambda s: sum(source_counts[s]))
+    meaningful = [s for s in SOURCE_ORDER if sum(n for _, n in win_counts[s]) >= 20]
+    top_win = max(meaningful, key=lambda s: pct(sum(w for w, _ in win_counts[s]), sum(n for _, n in win_counts[s])) or 0)
+
+    monthly_cards = "".join(
+        f'<div class="month-card {"current" if m == 10 else ""}"><span>{MONTHS[m-1]}{" MTD" if m == 10 else ""}</span><strong>{totals[m-1]}</strong><em>{REPS[m]} AEs</em><b>{avgs[m-1]:.1f} <small>opps / AE</small></b></div>'
+        for m in range(1, 11)
+    )
+
+    share_rows = "".join(
+        f'<tr><th>{escape(s)}</th>' + "".join(td_pct(v, "share") for v in source_shares[s]) + f'<td class="avg">{source_avg_shares[s]:.1f}%</td></tr>'
+        for s in SOURCE_ORDER
+    )
+    win_rows = "".join(
+        f'<tr><th>{escape(s)}</th>' + "".join(td_pct(v, "win") for v in win_rates[s]) +
+        (lambda w, n: f'<td class="avg" title="{w} wins / {n} decisions">{fmt_pct(pct(w,n))}<small>{w}/{n}</small></td>')(
+            sum(w for w, _ in win_counts[s]), sum(n for _, n in win_counts[s])) + '</tr>'
+        for s in SOURCE_ORDER
+    )
+
+    max_total = max(totals)
+    bars = "".join(
+        f'<div class="bar-col"><div class="bar-value">{avgs[i]:.1f}</div><div class="bar" style="height:{44 + avgs[i]/max(avgs)*120:.0f}px"><i style="height:{totals[i]/max_total*100:.0f}%"></i></div><span>{MONTHS[i]}</span></div>'
+        for i in range(10)
+    )
+
+    html = f'''<!doctype html><html><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Rev.io Pipeline Source Performance</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&family=Montserrat:wght@700;800;900&display=swap');
+:root{{--bg:#071525;--card:#0e2338;--card2:#102a42;--line:rgba(255,255,255,.08);--text:#f3f8fc;--muted:#8195aa;--cyan:#24d2ef;--green:#42dca0;--gold:#f2bb5b}}
+*{{box-sizing:border-box}}body{{margin:0;background:radial-gradient(circle at 88% 2%,#103452 0,transparent 26%),var(--bg);color:var(--text);font-family:Inter,Arial,sans-serif}}.wrap{{max-width:1600px;margin:auto;padding:34px 36px 64px}}header{{display:flex;justify-content:space-between;gap:30px;align-items:flex-end;border-bottom:1px solid var(--line);padding-bottom:22px}}.kicker{{font:800 11px Montserrat;letter-spacing:2.4px;color:var(--cyan);text-transform:uppercase}}h1{{font:900 31px Montserrat;margin:7px 0 5px}}header p,.footnote{{color:var(--muted);margin:0;font-size:12px}}.stamp{{text-align:right;color:var(--muted);font-size:11px;line-height:1.7}}.stamp strong{{color:#fff}}.kpis{{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin:20px 0}}.kpi,.panel,.month-card{{background:linear-gradient(145deg,var(--card2),var(--card));border:1px solid var(--line);border-radius:12px}}.kpi{{padding:17px 19px}}.kpi span{{font:700 9px Montserrat;letter-spacing:1.1px;color:var(--muted);text-transform:uppercase}}.kpi strong{{display:block;font:900 28px Montserrat;color:var(--cyan);margin:5px 0 2px}}.kpi em{{font-size:11px;color:var(--muted);font-style:normal}}h2{{font:800 15px Montserrat;margin:0 0 13px}}.section-label{{display:flex;align-items:center;gap:10px;margin:24px 0 10px}}.section-label span{{font:800 10px Montserrat;letter-spacing:1.2px;color:var(--cyan);text-transform:uppercase;white-space:nowrap}}.section-label i{{height:1px;background:var(--line);width:100%}}.months{{display:grid;grid-template-columns:repeat(10,1fr);gap:8px}}.month-card{{padding:13px 12px}}.month-card.current{{border-color:rgba(36,210,239,.45)}}.month-card span{{font:800 9px Montserrat;color:var(--muted);text-transform:uppercase}}.month-card strong{{display:block;font:900 22px Montserrat;color:#fff;margin-top:7px}}.month-card em{{display:block;color:var(--muted);font-style:normal;font-size:10px}}.month-card b{{display:block;color:var(--green);font:800 15px Montserrat;margin-top:9px;padding-top:8px;border-top:1px solid var(--line)}}.month-card small{{font:600 8px Inter;color:var(--muted)}}.panel{{padding:17px 18px;margin-top:12px}}.table-wrap{{overflow-x:auto;border:1px solid var(--line);border-radius:9px}}table{{width:100%;border-collapse:collapse;table-layout:fixed;min-width:1160px}}th,td{{padding:10px 6px;text-align:center;border-right:1px solid rgba(255,255,255,.045);border-bottom:1px solid rgba(255,255,255,.055);font-size:11px}}thead th{{background:#17364e;color:#94a8bc;font:700 9px Montserrat;text-transform:uppercase}}th:first-child{{text-align:left;padding-left:13px;width:145px}}tbody th{{color:#e9f0f6;font-size:11px}}td{{background:hsla(var(--hue),80%,50%,calc(var(--heat)*.22));color:#dbeaf3;font-weight:700}}td.avg{{background:#17364e;color:var(--cyan);font-weight:800}}td.avg small{{display:block;color:var(--muted);font-weight:600;font-size:8px;margin-top:2px}}td.na{{color:#445a6d;background:transparent}}.legend{{display:flex;justify-content:space-between;color:var(--muted);font-size:10px;margin:8px 2px 0}}.bars{{height:220px;display:flex;align-items:flex-end;gap:12px;padding:12px 8px 0}}.bar-col{{flex:1;text-align:center}}.bar{{height:170px;max-width:70px;margin:auto;background:rgba(255,255,255,.035);border-radius:7px 7px 2px 2px;display:flex;align-items:flex-end;overflow:hidden}}.bar i{{display:block;width:100%;background:linear-gradient(#28d7f2,#2877b7);border-radius:7px 7px 0 0}}.bar-value{{font:800 11px Montserrat;color:var(--green);margin-bottom:5px}}.bar-col span{{font:700 9px Montserrat;color:var(--muted);display:block;margin-top:6px}}.definition{{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:12px}}.definition div{{padding:12px 14px;background:rgba(255,255,255,.025);border:1px solid var(--line);border-radius:9px;color:var(--muted);font-size:11px;line-height:1.55}}.definition strong{{color:#fff}}footer{{margin-top:18px;color:#62798f;font-size:10px;text-align:right}}@media(max-width:900px){{.kpis{{grid-template-columns:1fr 1fr}}.months{{grid-template-columns:repeat(2,1fr)}}header{{display:block}}.stamp{{text-align:left;margin-top:12px}}.definition{{grid-template-columns:1fr}}}}
+</style></head><body><div class="wrap"><header><div><div class="kicker">Rev.io Sales Intelligence</div><h1>Pipeline Source Performance</h1><p>New Rev.io + Classic Rev.io opportunities • January–October 2026</p></div><div class="stamp"><strong>October MTD through October 15</strong><br>Live Salesforce snapshot • Created and Close Date analysis</div></header>
+<div class="kpis"><div class="kpi"><span>YTD opportunities created</span><strong>{ytd_total:,}</strong><em>New + Classic Rev.io</em></div><div class="kpi"><span>Average opportunities / AE-month</span><strong>{avg_per_rep_month:.1f}</strong><em>{weighted_reps} cumulative AE-months</em></div><div class="kpi"><span>Largest source</span><strong>{top_volume}</strong><em>{sum(source_counts[top_volume]):,} created • {sum(source_counts[top_volume])/ytd_total*100:.1f}% YTD</em></div><div class="kpi"><span>Overall decision win rate</span><strong>{overall_wr:.1f}%</strong><em>{overall_wins} wins / {overall_decisions} decisions</em></div></div>
+<div class="section-label"><span>Monthly AE productivity</span><i></i></div><div class="months">{monthly_cards}</div>
+<div class="panel"><h2>Opportunities Created per AE</h2><div class="bars">{bars}</div></div>
+<div class="section-label"><span>Where opportunities come from</span><i></i></div><div class="panel"><h2>Source Share of Monthly Opportunities Created</h2><div class="table-wrap"><table><thead><tr><th>Marketing Source</th>{''.join(f'<th>{m}{"*" if m=="Oct" else ""}</th>' for m in MONTHS)}<th>Monthly Avg</th></tr></thead><tbody>{share_rows}</tbody></table></div><div class="legend"><span>Darker cells represent a larger share of the month</span><span>Each monthly column totals 100%</span></div></div>
+<div class="section-label"><span>How each source converts</span><i></i></div><div class="panel"><h2>Decision Win Rate by Source and Close Month</h2><div class="table-wrap"><table><thead><tr><th>Marketing Source</th>{''.join(f'<th>{m}{"*" if m=="Oct" else ""}</th>' for m in MONTHS)}<th>YTD Win Rate</th></tr></thead><tbody>{win_rows}</tbody></table></div><div class="legend"><span>Win rate = Closed Won ÷ (Closed Won + Closed Lost)</span><span>YTD cells show wins / total decisions</span></div></div>
+<div class="definition"><div><strong>Included products:</strong> PSA, PSA 2.0, Billing, Billing Add-on, and Odin. These represent New Rev.io and Classic Rev.io.</div><div><strong>Important:</strong> October is partial. Small-source percentages can swing sharply because their opportunity and decision counts are low.</div></div><footer>Generated {datetime.now(timezone.utc).strftime('%B %d, %Y at %H:%M UTC')} • Source: Salesforce</footer></div></body></html>'''
+    OUT.write_text(html)
+    print(f"Wrote {OUT.name} ({OUT.stat().st_size:,} bytes)")
+
+
+if __name__ == "__main__":
+    main()
