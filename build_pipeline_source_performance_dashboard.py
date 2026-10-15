@@ -41,7 +41,7 @@ def td_pct(v, kind="share"):
 
 def main():
     base, headers = sf_auth()
-    fields = "Id,CreatedDate,CloseDate,StageName,Product_Type__c,Marketing_Source__c,Owner.Name"
+    fields = "Id,CreatedDate,CloseDate,StageName,Product_Type__c,Marketing_Source__c,SDR_Influence__c,Owner.Name"
     opps = sf_query(base, headers, f"SELECT {fields} FROM Opportunity WHERE (CreatedDate>=2026-01-01T00:00:00Z AND CreatedDate<2026-11-01T00:00:00Z) OR (CloseDate>=2026-01-01 AND CloseDate<2026-11-01) ORDER BY CreatedDate")
     opps = [x for x in opps if (x.get("Product_Type__c") or "") in ALLOWED and owner_key(x) not in EXCLUDED_OWNERS]
 
@@ -57,6 +57,12 @@ def main():
     source_counts = {s: [sum(source(x) == s for x in created[m]) for m in range(1, 11)] for s in SOURCE_ORDER}
     source_shares = {s: [pct(source_counts[s][m-1], totals[m-1]) for m in range(1, 11)] for s in SOURCE_ORDER}
     source_avg_shares = {s: sum(v for v in source_shares[s] if v is not None) / len([v for v in source_shares[s] if v is not None]) for s in SOURCE_ORDER}
+    sales_created = [[x for x in created[m] if source(x) == "Sales"] for m in range(1, 11)]
+    sdr_influenced = [
+        [x for x in month_rows if str(x.get("SDR_Influence__c") or "").strip().lower() not in ("", "none")]
+        for month_rows in sales_created
+    ]
+    sdr_rates = [pct(len(influenced), len(sales)) for influenced, sales in zip(sdr_influenced, sales_created)]
 
     win_rates, win_counts = {}, {}
     for s in SOURCE_ORDER:
@@ -154,6 +160,12 @@ def main():
         ) + f'<td class="avg">{source_avg_shares[s]:.1f}%<small>{sum(source_counts[s])} YTD</small></td></tr>'
         for s in SOURCE_ORDER
     )
+    sdr_rows = "".join([
+        '<tr><th>Sales-generated opportunities</th>' + ''.join(f'<td>{len(rows)}</td>' for rows in sales_created) + f'<td class="avg">{sum(len(rows) for rows in sales_created):,}</td></tr>',
+        '<tr><th>With SDR influence</th>' + ''.join(f'<td>{len(rows)}</td>' for rows in sdr_influenced) + f'<td class="avg">{sum(len(rows) for rows in sdr_influenced):,}</td></tr>',
+        '<tr><th>SDR-influenced percentage</th>' + ''.join(td_pct(rate, "win") for rate in sdr_rates) + f'<td class="avg">{fmt_pct(pct(sum(len(rows) for rows in sdr_influenced), sum(len(rows) for rows in sales_created)))}</td></tr>',
+    ])
+
     win_rows = "".join(
         f'<tr><th>{escape(s)}</th>' + "".join(td_pct(v, "win") for v in win_rates[s]) +
         (lambda w, n: f'<td class="avg" title="{w} wins / {n} decisions">{fmt_pct(pct(w,n))}<small>{w}/{n}</small></td>')(
@@ -179,6 +191,7 @@ def main():
 <div class="section-label"><span>Monthly AE productivity</span><i></i></div><div class="months">{monthly_cards}</div>
 <div class="panel"><h2>Opportunities Created per AE</h2><div class="bars">{bars}</div></div>
 <div class="section-label"><span>Where opportunities come from</span><i></i></div><div class="panel"><h2>Source Share of Monthly Opportunities Created</h2><div class="table-wrap"><table><thead><tr><th>Marketing Source</th>{''.join(f'<th>{m}{"*" if m=="Oct" else ""}</th>' for m in MONTHS)}<th>Monthly Avg</th></tr></thead><tbody>{share_rows}</tbody></table></div><div class="legend"><span>Darker cells represent a larger share of the month</span><span>Each monthly column totals 100%</span></div></div>
+<div class="section-label"><span>SDR influence on Sales-generated pipeline</span><i></i></div><div class="panel"><h2>Sales-Generated Opportunities with SDR Influence</h2><div class="table-wrap"><table><thead><tr><th>Metric</th>{''.join(f'<th>{m}{"*" if m=="Oct" else ""}</th>' for m in MONTHS)}<th>YTD</th></tr></thead><tbody>{sdr_rows}</tbody></table></div><div class="legend"><span>SDR influenced = SDR_Influence__c is populated and is not “None”</span><span>Denominator: Sales-generated New + Classic Rev.io opportunities</span></div></div>
 <div class="section-label"><span>How each source converts</span><i></i></div><div class="panel"><h2>Decision Win Rate by Source and Close Month</h2><div class="table-wrap"><table><thead><tr><th>Marketing Source</th>{''.join(f'<th>{m}{"*" if m=="Oct" else ""}</th>' for m in MONTHS)}<th>YTD Win Rate</th></tr></thead><tbody>{win_rows}</tbody></table></div><div class="legend"><span>Win rate = Closed Won ÷ (Closed Won + Closed Lost)</span><span>YTD cells show wins / total decisions</span></div></div>
 <div class="definition"><div><strong>Included products:</strong> PSA, PSA 2.0, Billing, Billing Add-on, and Odin. These represent New Rev.io and Classic Rev.io.</div><div><strong>Owner exclusions:</strong> Justin Lee, Ingrid Beard, Jakob Champion, and Katerra Stephenson-Greenwood are excluded from every metric and target calculation.</div><div><strong>Important:</strong> October is partial. Small-source percentages can swing sharply because their opportunity and decision counts are low.</div></div><footer>Generated {datetime.now(timezone.utc).strftime('%B %d, %Y at %H:%M UTC')} • Source: Salesforce</footer></section></div><script>function showTab(id){{document.querySelectorAll('.tab-pane').forEach(x=>x.classList.toggle('active',x.id===id));document.querySelectorAll('.tabbtn').forEach(x=>x.classList.toggle('active',x.dataset.tab===id));history.replaceState(null,'','#'+id)}}if(location.hash==='#tab-2026')showTab('tab-2026');</script></body></html>'''
     OUT.write_text(html)
