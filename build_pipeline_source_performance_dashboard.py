@@ -4,6 +4,7 @@ from collections import Counter
 from datetime import datetime, timezone
 from html import escape
 from pathlib import Path
+import re
 from build_september_update_deck import sf_auth, sf_query, source
 
 ROOT = Path(__file__).parent
@@ -12,6 +13,13 @@ MONTHS = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct"]
 REPS = {1: 12, 2: 11, 3: 9, 4: 7, 5: 7, 6: 7, 7: 7, 8: 7, 9: 7, 10: 8}
 ALLOWED = {"PSA", "PSA 2.0", "Billing", "Billing Add-on", "Odin"}
 SOURCE_ORDER = ["Sales", "Tradeshow", "Website", "Paid Media", "SEO", "Email", "Rev.io Summit", "Referral", "Webinar", "Partner/Channel", "Phone"]
+EXCLUDED_OWNERS = {"justinlee", "ingridbeard", "jakobchampion", "katerrastephensongreenwood"}
+
+
+def owner_key(x):
+    owner = x.get("Owner") or {}
+    name = owner.get("Name") if isinstance(owner, dict) else str(owner)
+    return re.sub(r"[^a-z0-9]", "", (name or "").lower())
 
 
 def pct(n, d):
@@ -32,9 +40,9 @@ def td_pct(v, kind="share"):
 
 def main():
     base, headers = sf_auth()
-    fields = "Id,CreatedDate,CloseDate,StageName,Product_Type__c,Marketing_Source__c"
+    fields = "Id,CreatedDate,CloseDate,StageName,Product_Type__c,Marketing_Source__c,Owner.Name"
     opps = sf_query(base, headers, f"SELECT {fields} FROM Opportunity WHERE (CreatedDate>=2026-01-01T00:00:00Z AND CreatedDate<2026-11-01T00:00:00Z) OR (CloseDate>=2026-01-01 AND CloseDate<2026-11-01) ORDER BY CreatedDate")
-    opps = [x for x in opps if (x.get("Product_Type__c") or "") in ALLOWED]
+    opps = [x for x in opps if (x.get("Product_Type__c") or "") in ALLOWED and owner_key(x) not in EXCLUDED_OWNERS]
 
     created = {m: [x for x in opps if (x.get("CreatedDate") or "").startswith(f"2026-{m:02d}")] for m in range(1, 11)}
     decided = {m: [x for x in opps if x.get("StageName") in ("Closed Won", "Closed Lost") and (x.get("CloseDate") or "").startswith(f"2026-{m:02d}")] for m in range(1, 11)}
@@ -126,7 +134,7 @@ def main():
 <div class="panel"><h2>Opportunities Created per AE</h2><div class="bars">{bars}</div></div>
 <div class="section-label"><span>Where opportunities come from</span><i></i></div><div class="panel"><h2>Source Share of Monthly Opportunities Created</h2><div class="table-wrap"><table><thead><tr><th>Marketing Source</th>{''.join(f'<th>{m}{"*" if m=="Oct" else ""}</th>' for m in MONTHS)}<th>Monthly Avg</th></tr></thead><tbody>{share_rows}</tbody></table></div><div class="legend"><span>Darker cells represent a larger share of the month</span><span>Each monthly column totals 100%</span></div></div>
 <div class="section-label"><span>How each source converts</span><i></i></div><div class="panel"><h2>Decision Win Rate by Source and Close Month</h2><div class="table-wrap"><table><thead><tr><th>Marketing Source</th>{''.join(f'<th>{m}{"*" if m=="Oct" else ""}</th>' for m in MONTHS)}<th>YTD Win Rate</th></tr></thead><tbody>{win_rows}</tbody></table></div><div class="legend"><span>Win rate = Closed Won ÷ (Closed Won + Closed Lost)</span><span>YTD cells show wins / total decisions</span></div></div>
-<div class="definition"><div><strong>Included products:</strong> PSA, PSA 2.0, Billing, Billing Add-on, and Odin. These represent New Rev.io and Classic Rev.io.</div><div><strong>Important:</strong> October is partial. Small-source percentages can swing sharply because their opportunity and decision counts are low.</div></div><footer>Generated {datetime.now(timezone.utc).strftime('%B %d, %Y at %H:%M UTC')} • Source: Salesforce</footer></div></body></html>'''
+<div class="definition"><div><strong>Included products:</strong> PSA, PSA 2.0, Billing, Billing Add-on, and Odin. These represent New Rev.io and Classic Rev.io.</div><div><strong>Owner exclusions:</strong> Justin Lee, Ingrid Beard, Jakob Champion, and Katerra Stephenson-Greenwood are excluded from every metric and target calculation.</div><div><strong>Important:</strong> October is partial. Small-source percentages can swing sharply because their opportunity and decision counts are low.</div></div><footer>Generated {datetime.now(timezone.utc).strftime('%B %d, %Y at %H:%M UTC')} • Source: Salesforce</footer></div></body></html>'''
     OUT.write_text(html)
     print(f"Wrote {OUT.name} ({OUT.stat().st_size:,} bytes)")
 
