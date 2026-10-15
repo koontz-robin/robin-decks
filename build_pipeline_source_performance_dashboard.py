@@ -12,6 +12,7 @@ ROOT = Path(__file__).parent
 OUT = ROOT / "pipeline-source-performance-dashboard.html"
 MONTHS = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct"]
 REPS = {1: 12, 2: 11, 3: 9, 4: 7, 5: 7, 6: 7, 7: 7, 8: 7, 9: 7, 10: 8}
+SDR_HEADCOUNT = {1: 5, 2: 4, 3: 6, 4: 6, 5: 6, 6: 6, 7: 5, 8: 6, 9: 6, 10: 5}
 ALLOWED = {"PSA", "PSA 2.0", "Billing", "Billing Add-on", "Odin"}
 SOURCE_ORDER = ["Sales", "Tradeshow", "Website", "Paid Media", "SEO", "Email", "Rev.io Summit", "Referral", "Webinar", "Partner/Channel", "Phone"]
 EXCLUDED_OWNERS = {"justinlee", "ingridbeard", "jakobchampion", "katerrastephensongreenwood"}
@@ -63,6 +64,9 @@ def main():
         for month_rows in sales_created
     ]
     sdr_rates = [pct(len(influenced), len(sales)) for influenced, sales in zip(sdr_influenced, sales_created)]
+    sdr_opps_per_rep = [len(sdr_influenced[m-1]) / SDR_HEADCOUNT[m] for m in range(1, 11)]
+    total_sdr_months = sum(SDR_HEADCOUNT.values())
+    ytd_sdr_opps_per_rep = sum(len(rows) for rows in sdr_influenced) / total_sdr_months
 
     win_rates, win_counts = {}, {}
     for s in SOURCE_ORDER:
@@ -163,6 +167,8 @@ def main():
     sdr_rows = "".join([
         '<tr><th>Sales-generated opportunities</th>' + ''.join(f'<td>{len(rows)}</td>' for rows in sales_created) + f'<td class="avg">{sum(len(rows) for rows in sales_created):,}</td></tr>',
         '<tr><th>With SDR influence</th>' + ''.join(f'<td>{len(rows)}</td>' for rows in sdr_influenced) + f'<td class="avg">{sum(len(rows) for rows in sdr_influenced):,}</td></tr>',
+        '<tr><th>SDR headcount</th>' + ''.join(f'<td>{SDR_HEADCOUNT[m]}</td>' for m in range(1, 11)) + f'<td class="avg">{total_sdr_months} SDR-months</td></tr>',
+        '<tr><th>Influenced opps per SDR</th>' + ''.join(f'<td>{value:.1f}</td>' for value in sdr_opps_per_rep) + f'<td class="avg">{ytd_sdr_opps_per_rep:.1f}</td></tr>',
         '<tr><th>SDR-influenced percentage</th>' + ''.join(td_pct(rate, "win") for rate in sdr_rates) + f'<td class="avg">{fmt_pct(pct(sum(len(rows) for rows in sdr_influenced), sum(len(rows) for rows in sales_created)))}</td></tr>',
     ])
 
