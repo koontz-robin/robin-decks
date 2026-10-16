@@ -36,7 +36,8 @@ Would you be open to a brief conversation to see whether the timing is better no
 
 Best,
 Ryan`,lastContact:'',nextStep:'Confirm the original business need and offer a pre-scheduled, clearly owned onboarding restart.',notes:'Canceled before onboarding kickoff'},
-...['Simple Innovations Group','Losh Network Services','West Virginia Security','Particle Communications','Eternal Networks','Semetra'].map((company,i)=>({id:'seed-'+(i===0?1:i+2),company,salesRep:'',contact:'',email:'',cancelDate:'',status:'Not Started',reason:'',productUpdates:'',subject:'',draft:'',lastContact:'',nextStep:'Add cancellation reasons and relevant product updates.',notes:''}))
+{id:'particle-communications',company:'Particle Communications',salesRep:'Joe Abarno',contact:'',email:'',cancelDate:'',status:'Not Started',reason:'',productUpdates:'',subject:'',draft:'',lastContact:'',nextStep:'Add cancellation reasons and relevant product updates.',notes:''},
+...['Simple Innovations Group','Losh Network Services','West Virginia Security','Eternal Networks','Semetra'].map((company,i)=>({id:'seed-'+(i===0?1:i<3?i+2:i+3),company,salesRep:'',contact:'',email:'',cancelDate:'',status:'Not Started',reason:'',productUpdates:'',subject:'',draft:'',lastContact:'',nextStep:'Add cancellation reasons and relevant product updates.',notes:''}))
 ];
 let data=load(),selected=data[0]?.id||null;
 function load(){try{const x=JSON.parse(localStorage.getItem(KEY));if(!Array.isArray(x)||!x.length)return seed;const byCompany=Object.fromEntries(seed.map(a=>[a.company,a]));x.forEach(a=>{const base=byCompany[a.company];if(base){Object.keys(base).forEach(k=>{if(!a[k])a[k]=base[k]});a.id=base.id}});seed.forEach(base=>{if(!x.some(a=>a.company===base.company))x.push(base)});return x.map(a=>({salesRep:'',autoRefresh:true,...a}))}catch(e){return seed}}
