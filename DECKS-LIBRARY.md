@@ -229,3 +229,10 @@ When Robin creates a new deck or dashboard:
 - **File:** `premier-security-revio-evaluation-readout.html`
 - **URL:** https://koontz-robin.github.io/robin-decks/premier-security-revio-evaluation-readout.html
 - **Purpose:** Customer-facing platform evaluation readout built from Premier Security website research and Rev.io discovery/demo notes.
+
+### Client Win-Back Dashboard
+- **File:** `client-win-back-dashboard.html`
+- **URL:** https://koontz-robin.github.io/robin-decks/client-win-back-dashboard.html
+- **Purpose:** Editable browser-based tracker for cancellation context, product proof points, outreach status, and tailored re-engagement emails.
+- **Storage:** Browser local storage with JSON export/import backups.
+- **Created:** 2026-10-16
