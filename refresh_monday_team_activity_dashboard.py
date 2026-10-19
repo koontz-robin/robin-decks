@@ -35,7 +35,7 @@ EXCLUDED_REPS = {
     "Hu" + "sam " + "Zal" + "miyar",
 }
 ROLE_GROUPS = {"SDRs": "SDR", "MSP Sales": "AE", "Integrator Sales": "AE", "CSA": "CSA"}
-KNOWN_AES = {"Andy Whisenant", "Connor Flynn", "Jake Borah", "Jamie Butler", "Jaylin Bender", "Patrick Davies"}
+KNOWN_AES = {"Abbey McIntosh", "Andy Whisenant", "Connor Flynn", "Jake Borah", "Jamie Butler", "Jaylin Bender", "Patrick Davies"}
 KNOWN_CSAS = {"Ingrid Beard", "Justin Lee"}
 CBR_TYPES = ["Client Business Review"]
 DEMO_TYPES = ["2-Initial DEMO"]
