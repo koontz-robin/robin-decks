@@ -27,6 +27,11 @@ ET = ZoneInfo("America/New_York")
 CONTEST_START = date(2026, 10, 1)
 CONTEST_END = date(2026, 12, 17)
 SOLUTION_ENGINEERS = {"Tony Mehner", "Michael Young"}
+# Renewals are not represented by the new-deal quantity field in Salesforce.
+MANUAL_STANDARD_RENEWALS = {
+    "Justin Lee": 5,
+    "Ingrid Beard": 6,
+}
 
 
 def iso_utc(d: date) -> str:
@@ -152,6 +157,10 @@ def build_payload():
             owner = normalize_name((row.get("Owner") or {}).get("Name"))
         if owner in people:
             people[owner]["calls"] = int(row.get("total") or 0)
+
+    for name, renewed_users in MANUAL_STANDARD_RENEWALS.items():
+        if name in people:
+            people[name]["standard_seats"] += renewed_users
 
     for p in people.values():
         if p["role"] == "SDR":
