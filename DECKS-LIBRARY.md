@@ -236,3 +236,8 @@ When Robin creates a new deck or dashboard:
 - **Purpose:** Editable browser-based tracker for cancellation context, product proof points, outreach status, and tailored re-engagement emails.
 - **Storage:** Browser local storage with JSON export/import backups.
 - **Created:** 2026-10-16
+
+### Silver Star × Rev.io Evaluation Readout
+- **File:** `silver-star-evaluation-readout.html`
+- **URL:** https://koontz-robin.github.io/robin-decks/silver-star-evaluation-readout.html
+- **Purpose:** Buyer-facing Execute readout for Silver Star's telecom billing and PSA evaluation, centered on scalable operations, quantified ROI hurdles, critical product gaps, and a proof-based action plan.
