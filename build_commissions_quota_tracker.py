@@ -36,6 +36,16 @@ AE_ROSTER = [
     ("Abbey McIntosh", "Abbey McIntosh"),
     ("Joseph Abarno", "Joe Abarno"),
 ]
+Q4_QUOTAS = {
+    "Jamie Butler": 24000,
+    "Joe Abarno": 24000,
+    "Andy Whisenant": 15000,
+    "Connor Flynn": 15000,
+    "Patrick Davies": 15000,
+    "Jake Borah": 15000,
+    "Jaylin Bender": 12000,
+    "Abbey McIntosh": 12000,
+}
 
 
 def money(value):
@@ -101,11 +111,13 @@ def match_onboarding(opp, clients):
 
 def main():
     base, headers = sf_auth()
-    users = sf_query(base, headers, """
+    roster_names = [sf_name for sf_name, _ in AE_ROSTER]
+    roster_quoted = ", ".join("'" + n.replace("'", "\\'") + "'" for n in roster_names)
+    users = sf_query(base, headers, f"""
         SELECT Id, Name, Title, UserRole.Name
         FROM User
         WHERE IsActive = true
-          AND UserRole.Name IN ('MSP Sales', 'Integrator Sales')
+          AND Name IN ({roster_quoted})
         ORDER BY Name
     """)
     users_by_name = {user.get("Name"): user for user in users}
@@ -115,7 +127,7 @@ def main():
     reps = []
     for sf_name, display_name in AE_ROSTER:
         user = users_by_name[sf_name]
-        role = ((user.get("UserRole") or {}).get("Name") or "").replace(" Sales", "")
+        role = ((user.get("UserRole") or {}).get("Name") or "Sales").replace(" Sales", "")
         title = "Strategic Account Executive" if display_name in {"Jamie Butler", "Joe Abarno"} else "Commercial Account Executive"
         reps.append({"id": user.get("Id"), "name": display_name, "sf_name": sf_name, "title": title, "team": role})
     names = [r["sf_name"] for r in reps]
@@ -182,7 +194,19 @@ def main():
     payload = {"generated_at_et": generated.isoformat(), "onboarding_synced_at": onboarding_sync, "year": YEAR, "onboarding_summary": dict(onboarding_counts), "reps": []}
     for rep in reps:
         wins = grouped.get(rep["sf_name"], [])
-        payload["reps"].append({**rep, "opportunity_count": len(wins), "closed_won": sum(x["amount"] for x in wins), "opportunities": wins})
+        q4_wins = [x for x in wins if x["close_date"] >= f"{YEAR}-10-01"]
+        q4_quota = Q4_QUOTAS[rep["name"]]
+        q4_closed_won = sum(x["amount"] for x in q4_wins)
+        payload["reps"].append({
+            **rep,
+            "opportunity_count": len(wins),
+            "closed_won": sum(x["amount"] for x in wins),
+            "q4_quota": q4_quota,
+            "q4_closed_won": q4_closed_won,
+            "q4_attainment": round((q4_closed_won / q4_quota) * 100, 1) if q4_quota else 0,
+            "q4_gap": max(q4_quota - q4_closed_won, 0),
+            "opportunities": wins,
+        })
     JSON_PATH.write_text(json.dumps(payload, indent=2) + "\n")
 
     rep_rows = []
@@ -206,12 +230,15 @@ def main():
                 for o in opportunities
             )
         detail_rows = "".join(detail_parts) or '<tr><td colspan="7" class="empty">No Closed Won opportunities in 2026.</td></tr>'
+        attainment_width = min(rep['q4_attainment'], 100)
+        attainment_class = "attained" if rep['q4_attainment'] >= 100 else ""
         rep_rows.append(f'''
         <section class="rep-card" data-name="{escape(rep['name'].lower())}">
           <button class="rep-summary" type="button" aria-expanded="false" aria-controls="rep-{i}">
             <span class="chevron">›</span><span class="identity"><strong>{escape(rep['name'])}</strong><small>{escape(rep['team'])} · {escape(rep['title'])}</small></span>
-            <span class="metric"><small>Closed Won</small><strong>{money(rep['closed_won'])}</strong></span>
-            <span class="metric"><small>Opportunities</small><strong>{rep['opportunity_count']}</strong></span>
+            <span class="metric quota-metric"><small>Q4 Closed Won / Quota</small><strong>{money(rep['q4_closed_won'])} <em>/ {money(rep['q4_quota'])}</em></strong><span class="progress"><i class="{attainment_class}" style="width:{attainment_width:.1f}%"></i></span></span>
+            <span class="metric"><small>Q4 Attainment</small><strong>{rep['q4_attainment']:.1f}%</strong><span>{'Quota achieved' if rep['q4_gap'] == 0 else money(rep['q4_gap']) + ' remaining'}</span></span>
+            <span class="metric"><small>2026 Closed Won</small><strong>{money(rep['closed_won'])}</strong></span>
           </button>
           <div class="details" id="rep-{i}" hidden><div class="table-wrap"><table><thead><tr><th>Opportunity / Account</th><th>Product</th><th>Close date</th><th>Onboarding status</th><th>Activation date</th><th>Commission</th><th>Amount</th></tr></thead><tbody>{detail_rows}</tbody></table></div></div>
         </section>''')
@@ -220,7 +247,7 @@ def main():
     count = sum(r["opportunity_count"] for r in payload["reps"])
     html = f'''<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>AE Commissions & Quota Tracker</title>
 <style>
-:root{{--navy:#07192d;--panel:#0d2742;--line:#24445f;--cyan:#3ee0d0;--blue:#65a9ff;--text:#f3f8fd;--muted:#9eb1c5;--green:#72e6a2}}*{{box-sizing:border-box}}body{{margin:0;background:radial-gradient(circle at 85% 0,#123e62 0,transparent 35%),var(--navy);color:var(--text);font-family:Inter,ui-sans-serif,system-ui,-apple-system,sans-serif}}main{{max-width:1180px;margin:auto;padding:48px 24px 72px}}header{{display:flex;justify-content:space-between;gap:24px;align-items:end;margin-bottom:28px}}.eyebrow{{color:var(--cyan);font-size:12px;font-weight:800;letter-spacing:.16em;text-transform:uppercase}}h1{{font-size:clamp(32px,5vw,54px);margin:8px 0 6px;letter-spacing:-.04em}}.sub{{color:var(--muted);margin:0}}.totals{{display:flex;gap:12px}}.pill{{padding:14px 18px;background:#ffffff0b;border:1px solid var(--line);border-radius:14px}}.pill small,.metric small{{display:block;color:var(--muted);font-size:11px;text-transform:uppercase;letter-spacing:.08em}}.pill strong{{font-size:20px}}.toolbar{{display:flex;gap:10px;margin-bottom:14px}}button,input{{font:inherit}}.toolbar button{{background:#112f4e;color:var(--text);border:1px solid var(--line);border-radius:9px;padding:9px 13px;cursor:pointer}}.rep-card{{border:1px solid var(--line);border-radius:14px;background:#0b223a;margin:10px 0;overflow:hidden;box-shadow:0 10px 30px #0002}}.rep-summary{{width:100%;display:grid;grid-template-columns:24px 1fr 170px 130px;gap:16px;align-items:center;text-align:left;background:none;color:inherit;border:0;padding:18px 20px;cursor:pointer}}.rep-summary:hover{{background:#ffffff08}}.chevron{{font-size:28px;color:var(--cyan);transition:.2s}}.rep-summary[aria-expanded=true] .chevron{{transform:rotate(90deg)}}.identity strong{{display:block;font-size:17px}}.identity small{{color:var(--muted)}}.metric strong{{font-size:17px}}.details{{border-top:1px solid var(--line);background:#061a2d;padding:8px 18px 18px}}.table-wrap{{overflow:auto}}table{{width:100%;border-collapse:collapse;font-size:14px}}th{{color:var(--muted);text-transform:uppercase;letter-spacing:.08em;font-size:10px;text-align:left;padding:13px 10px;border-bottom:1px solid var(--line)}}td{{padding:12px 10px;border-bottom:1px solid #193650}}td a{{color:var(--text);font-weight:700;text-decoration:none}}td a:hover{{color:var(--cyan)}}td span{{display:block;color:var(--muted);font-size:12px;margin-top:2px}}.status-group td{{background:#102d48;padding:10px 12px;border-top:2px solid #2c536f;border-bottom:1px solid #2c536f}}.status-group .status-title{{display:inline-block;color:var(--text);font-size:13px;font-weight:900;margin:0 10px 0 0}}.status-group .status-count{{display:inline-block;color:var(--muted);font-size:11px;margin:0 10px 0 0}}.status-group .badge{{vertical-align:middle}}.deal-row td:first-child{{padding-left:24px}}.badge{{display:inline-block;padding:5px 9px;border-radius:999px;background:#ffffff12;color:var(--text);font-weight:800;font-size:11px}}.badge.released{{background:#143d2b;color:#72e6a2}}.badge.not-payable{{background:#4a2027;color:#ff9ca8}}.badge.pending{{background:#3e3518;color:#f7d36c}}.badge.unmatched{{background:#27384a;color:#aac0d5}}.money{{text-align:right;font-weight:800;color:var(--green)}}th:last-child{{text-align:right}}.empty{{color:var(--muted);text-align:center;padding:24px}}footer{{color:var(--muted);font-size:12px;margin-top:18px}}@media(max-width:720px){{header{{display:block}}.totals{{margin-top:18px}}.rep-summary{{grid-template-columns:20px 1fr 90px}}.rep-summary .metric:last-child{{display:none}}main{{padding:28px 14px}}}}
+:root{{--navy:#07192d;--panel:#0d2742;--line:#24445f;--cyan:#3ee0d0;--blue:#65a9ff;--text:#f3f8fd;--muted:#9eb1c5;--green:#72e6a2}}*{{box-sizing:border-box}}body{{margin:0;background:radial-gradient(circle at 85% 0,#123e62 0,transparent 35%),var(--navy);color:var(--text);font-family:Inter,ui-sans-serif,system-ui,-apple-system,sans-serif}}main{{max-width:1180px;margin:auto;padding:48px 24px 72px}}header{{display:flex;justify-content:space-between;gap:24px;align-items:end;margin-bottom:28px}}.eyebrow{{color:var(--cyan);font-size:12px;font-weight:800;letter-spacing:.16em;text-transform:uppercase}}h1{{font-size:clamp(32px,5vw,54px);margin:8px 0 6px;letter-spacing:-.04em}}.sub{{color:var(--muted);margin:0}}.totals{{display:flex;gap:12px}}.pill{{padding:14px 18px;background:#ffffff0b;border:1px solid var(--line);border-radius:14px}}.pill small,.metric small{{display:block;color:var(--muted);font-size:11px;text-transform:uppercase;letter-spacing:.08em}}.pill strong{{font-size:20px}}.toolbar{{display:flex;gap:10px;margin-bottom:14px}}button,input{{font:inherit}}.toolbar button{{background:#112f4e;color:var(--text);border:1px solid var(--line);border-radius:9px;padding:9px 13px;cursor:pointer}}.rep-card{{border:1px solid var(--line);border-radius:14px;background:#0b223a;margin:10px 0;overflow:hidden;box-shadow:0 10px 30px #0002}}.rep-summary{{width:100%;display:grid;grid-template-columns:24px minmax(180px,1fr) minmax(210px,1.2fr) 150px 150px;gap:16px;align-items:center;text-align:left;background:none;color:inherit;border:0;padding:18px 20px;cursor:pointer}}.rep-summary:hover{{background:#ffffff08}}.chevron{{font-size:28px;color:var(--cyan);transition:.2s}}.rep-summary[aria-expanded=true] .chevron{{transform:rotate(90deg)}}.identity strong{{display:block;font-size:17px}}.identity small{{color:var(--muted)}}.metric strong{{font-size:17px}}.metric strong em{{color:var(--muted);font-size:13px;font-style:normal;font-weight:600}}.metric>span{{display:block;color:var(--muted);font-size:11px;margin-top:4px}}.progress{{height:6px;background:#ffffff14;border-radius:99px;overflow:hidden;margin-top:8px!important}}.progress i{{display:block;height:100%;background:linear-gradient(90deg,var(--blue),var(--cyan));border-radius:99px}}.progress i.attained{{background:var(--green)}}.details{{border-top:1px solid var(--line);background:#061a2d;padding:8px 18px 18px}}.table-wrap{{overflow:auto}}table{{width:100%;border-collapse:collapse;font-size:14px}}th{{color:var(--muted);text-transform:uppercase;letter-spacing:.08em;font-size:10px;text-align:left;padding:13px 10px;border-bottom:1px solid var(--line)}}td{{padding:12px 10px;border-bottom:1px solid #193650}}td a{{color:var(--text);font-weight:700;text-decoration:none}}td a:hover{{color:var(--cyan)}}td span{{display:block;color:var(--muted);font-size:12px;margin-top:2px}}.status-group td{{background:#102d48;padding:10px 12px;border-top:2px solid #2c536f;border-bottom:1px solid #2c536f}}.status-group .status-title{{display:inline-block;color:var(--text);font-size:13px;font-weight:900;margin:0 10px 0 0}}.status-group .status-count{{display:inline-block;color:var(--muted);font-size:11px;margin:0 10px 0 0}}.status-group .badge{{vertical-align:middle}}.deal-row td:first-child{{padding-left:24px}}.badge{{display:inline-block;padding:5px 9px;border-radius:999px;background:#ffffff12;color:var(--text);font-weight:800;font-size:11px}}.badge.released{{background:#143d2b;color:#72e6a2}}.badge.not-payable{{background:#4a2027;color:#ff9ca8}}.badge.pending{{background:#3e3518;color:#f7d36c}}.badge.unmatched{{background:#27384a;color:#aac0d5}}.money{{text-align:right;font-weight:800;color:var(--green)}}th:last-child{{text-align:right}}.empty{{color:var(--muted);text-align:center;padding:24px}}footer{{color:var(--muted);font-size:12px;margin-top:18px}}@media(max-width:860px){{header{{display:block}}.totals{{margin-top:18px;flex-wrap:wrap}}.rep-summary{{grid-template-columns:20px 1fr 120px}}.quota-metric{{grid-column:2 / -1;grid-row:2}}.rep-summary .metric:last-child{{display:none}}main{{padding:28px 14px}}}}
 </style></head><body><main><header><div><div class="eyebrow">Rev.io · Sales Compensation</div><h1>AE Commissions & Quota Tracker</h1><p class="sub">2026 Closed Won deals matched to onboarding · Activated or Graduated releases commission; Canceled does not.</p></div><div class="totals"><div class="pill"><small>Active AEs</small><strong>{len(reps)}</strong></div><div class="pill"><small>Closed Won</small><strong>{money(total)}</strong></div><div class="pill"><small>Wins</small><strong>{count}</strong></div></div></header><div class="toolbar"><button id="expand">Expand all</button><button id="collapse">Collapse all</button></div>{''.join(rep_rows)}<footer>Salesforce and onboarding snapshot refreshed {generated.strftime('%b %-d, %Y at %-I:%M %p ET')} · Activated/Graduated = released; Canceled/Cancelled = not payable; other matched statuses = pending.</footer></main>
 <script>const cards=[...document.querySelectorAll('.rep-summary')];function setRow(b,open){{b.setAttribute('aria-expanded',open);document.getElementById(b.getAttribute('aria-controls')).hidden=!open}}cards.forEach(b=>b.addEventListener('click',()=>setRow(b,b.getAttribute('aria-expanded')!=='true')));document.getElementById('expand').onclick=()=>cards.forEach(b=>setRow(b,true));document.getElementById('collapse').onclick=()=>cards.forEach(b=>setRow(b,false));</script></body></html>'''
     HTML_PATH.write_text(html)
