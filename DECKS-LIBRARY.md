@@ -1,6 +1,6 @@
 # DECKS-LIBRARY.md — Robin's Deck & Dashboard Library
 
-Last updated: 2026-10-06
+Last updated: 2026-10-21
 GitHub Pages base: `https://koontz-robin.github.io/robin-decks/`
 Repo: `git@github.com:koontz-robin/robin-decks.git`
 
@@ -179,6 +179,7 @@ Repo: `git@github.com:koontz-robin/robin-decks.git`
 | Company Story — PCQuest | company-story-pcquest.html | https://koontz-robin.github.io/robin-decks/company-story-pcquest.html | |
 | Billing MSP Clients | billing-msp-clients.html | https://koontz-robin.github.io/robin-decks/billing-msp-clients.html | |
 | Jay's Last Day Trivia | jay-last-day-trivia.pptx | Downloadable PowerPoint | 50-slide farewell trivia deck with four team lineups, 24 questions, answer reveals, scoreboards, tie-breaker, and closing tribute |
+| Solution Selling Sales Training | Solution-Selling-Sales-Training.pptx | Downloadable PowerPoint | 15-slide facilitator-ready workshop based on Salesforce's solution-selling guide; includes framework, discovery questions, value mapping, role-play, live-deal clinic, scorecard, and speaker notes |
 
 ---
 
@@ -236,3 +237,18 @@ When Robin creates a new deck or dashboard:
 - **Purpose:** Editable browser-based tracker for cancellation context, product proof points, outreach status, and tailored re-engagement emails.
 - **Storage:** Browser local storage with JSON export/import backups.
 - **Created:** 2026-10-16
+
+### Silver Star × Rev.io Evaluation Readout
+- **File:** `silver-star-evaluation-readout.html`
+- **URL:** https://koontz-robin.github.io/robin-decks/silver-star-evaluation-readout.html
+- **Purpose:** Buyer-facing Execute readout for Silver Star's telecom billing and PSA evaluation, centered on scalable operations, quantified ROI hurdles, critical product gaps, and a proof-based action plan.
+
+### Coeo / Netwolves × Rev.io Evaluation Readout
+- **File:** `coeo-netwolves-evaluation-readout.html`
+- **URL:** https://koontz-robin.github.io/robin-decks/coeo-netwolves-evaluation-readout.html
+- **Purpose:** Buyer-facing Execute readout for the Coeo/Netwolves evaluation, centered on IDI overlap exposure, automation capacity, incident communications, platform economics, migration risk, and transparent ROI assumptions.
+
+### R.E. Michel × Rev.io Evaluation Readout
+- **File:** `re-michel-evaluation-readout.html`
+- **URL:** https://koontz-robin.github.io/robin-decks/re-michel-evaluation-readout.html
+- **Purpose:** Buyer-facing Execute readout for R.E. Michel, centered on service-workflow capacity, technician productivity, billing handoffs, migration risk, transparent ROI sensitivity scenarios, and a proof-based action plan.
