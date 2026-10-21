@@ -252,3 +252,8 @@ When Robin creates a new deck or dashboard:
 - **File:** `re-michel-evaluation-readout.html`
 - **URL:** https://koontz-robin.github.io/robin-decks/re-michel-evaluation-readout.html
 - **Purpose:** Buyer-facing Execute readout for R.E. Michel, centered on service-workflow capacity, technician productivity, billing handoffs, migration risk, transparent ROI sensitivity scenarios, and a proof-based action plan.
+
+### Transformitive × Rev.io Evaluation Readout
+- **File:** `transformitive-evaluation-readout.html`
+- **URL:** https://koontz-robin.github.io/robin-decks/transformitive-evaluation-readout.html
+- **Purpose:** Buyer-facing Execute readout for Transformitive's MXP billing-platform evaluation, centered on parent-child billing, operating capacity, recurring-revenue activation, cash-flow efficiency, and an interactive ROI model.
