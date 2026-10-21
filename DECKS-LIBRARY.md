@@ -241,3 +241,13 @@ When Robin creates a new deck or dashboard:
 - **File:** `silver-star-evaluation-readout.html`
 - **URL:** https://koontz-robin.github.io/robin-decks/silver-star-evaluation-readout.html
 - **Purpose:** Buyer-facing Execute readout for Silver Star's telecom billing and PSA evaluation, centered on scalable operations, quantified ROI hurdles, critical product gaps, and a proof-based action plan.
+
+### Coeo / Netwolves × Rev.io Evaluation Readout
+- **File:** `coeo-netwolves-evaluation-readout.html`
+- **URL:** https://koontz-robin.github.io/robin-decks/coeo-netwolves-evaluation-readout.html
+- **Purpose:** Buyer-facing Execute readout for the Coeo/Netwolves evaluation, centered on IDI overlap exposure, automation capacity, incident communications, platform economics, migration risk, and transparent ROI assumptions.
+
+### R.E. Michel × Rev.io Evaluation Readout
+- **File:** `re-michel-evaluation-readout.html`
+- **URL:** https://koontz-robin.github.io/robin-decks/re-michel-evaluation-readout.html
+- **Purpose:** Buyer-facing Execute readout for R.E. Michel, centered on service-workflow capacity, technician productivity, billing handoffs, migration risk, transparent ROI sensitivity scenarios, and a proof-based action plan.
