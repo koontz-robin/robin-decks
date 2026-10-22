@@ -518,7 +518,7 @@ def summarize(rows, report, total_psa_pipeline=None):
     # Default the conversion table to the Won column, highest count first.
     source_impact.sort(key=lambda x: (-x['won_count'], -x['won_amount'], x['label']))
 
-    quarter_months = [(2026, 7), (2026, 8), (2026, 9)]
+    quarter_months = [(2026, 7), (2026, 8), (2026, 9), (2026, 10)]
     created_by_month = []
     for year, month in quarter_months:
         month_rows = []
@@ -883,8 +883,8 @@ th {{ position:sticky; top:0; background:#0c263a; color:#b9d2e0; z-index:2; text
   </section>
 
   <section class="card" style="margin-top:18px;">
-    <h2>ICP opportunities created by month — Q3 2026</h2>
-    <div class="callout"><b>{sum(x['count'] for x in summary['created_by_month'])}</b> ICP opportunities in the report were created this quarter.</div>
+    <h2>ICP opportunities created by month — July through October MTD 2026</h2>
+    <div class="callout"><b>{sum(x['count'] for x in summary['created_by_month'])}</b> ICP opportunities in the report were created from July through October MTD.</div>
     {css_bar(summary['created_by_month'], amount_key='count')}
   </section>
 
