@@ -105,7 +105,7 @@ def main():
             forecast=x.get('Forecast_Status__c') or 'Not Categorized'
             ranked.append(f'<div class="q4-row"><span class="q4-rank">{rank}</span><span class="q4-name" title="{escape(account_name)}">{escape(account_name)}</span><span class="q4-owner">{escape(owner_name(x) or "Unassigned")}</span><span class="q4-stage">{escape(stage)}</span><span class="q4-forecast">{escape(forecast)}</span><span class="q4-mrr">{money(float(x.get("Amount") or 0))}</span></div>')
         columns='<div class="q4-row q4-columns"><span>#</span><span>Account</span><span>Owner</span><span>Stage</span><span>Forecast</span><span style="text-align:right">MRR</span></div>'
-        q4_cards.append(f'<div class="q4-card"><div class="q4-card-head"><strong>{escape(product_label)}</strong><span>{money(amount(rows))}</span></div>{columns}{"".join(ranked)}</div>')
+        q4_cards.append(f'<div class="q4-card">{columns}{"".join(ranked)}</div>')
     q4_total=amount(q4_open)
     slides.append(f'<div class="slide" id="slide-q4">{header("Q4 Pipeline","Open Pipeline Ranked by MRR and Product")}<div class="slide-body" style="padding:12px 34px 58px"><div class="month-total-strip"><span>Total Q4 open MRR <strong class="green">{money(q4_total)}</strong></span><span>Total open opportunities <strong>{len(q4_open)}</strong></span><span>Close dates <strong>Oct 1 – Dec 31</strong></span></div><div class="q4-grid">{"".join(q4_cards)}</div></div></div>')
     excluded_efficiency_owners={'justin lee','ingrid beard','katerra stephenson greenwood','jakob champion'}
