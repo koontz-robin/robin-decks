@@ -89,7 +89,8 @@ def main():
 '''
     slides=[]
     slides.append(f'<div class="slide active" id="slide-1">{header("Prior Month + Current Month Snapshot","September Final and October MTD")}<div class="slide-body">{section("September Product Results — Quota Attainment")}<div class="month-total-strip"><span>Total won MRR <strong class="green">{money(amount(sep_report))}</strong></span><span>Total deals won <strong>{len(sep_report)}</strong></span><span>Total open pipeline <strong>$0</strong></span></div>{product_cards(sep_report,[],quotas)}{section("October Product Results — Quota Attainment")}<div class="month-total-strip"><span>Total won MRR <strong class="green">{money(amount(oct_report))}</strong></span><span>Total deals won <strong>{len(oct_report)}</strong></span><span>Total open pipeline <strong>{money(amount(oct_open_report))}</strong></span><span>Total open opps <strong>{len(oct_open_report)}</strong></span></div>{product_cards(oct_report,oct_open_report,quotas)}</div></div>')
-    q4_open=[x for x in opps if x.get('StageName') not in ('Closed Won','Closed Lost') and '2026-10-01' <= (x.get('CloseDate') or '') <= '2026-12-31']
+    q4_stage3_plus={'3 - Initial Product Demo','4 - Proposal Sent','5 - Product / Contract Validated','6 - Verbal Commit'}
+    q4_open=[x for x in opps if x.get('StageName') in q4_stage3_plus and '2026-10-01' <= (x.get('CloseDate') or '') <= '2026-12-31']
     q4_groups=['New Rev.io','Billing / Odin','Payments AR','Cyber + CommerceHub + Other','Other / Not Set']
     q4_cards=[]
     for product in q4_groups:
