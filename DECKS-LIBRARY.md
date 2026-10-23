@@ -260,3 +260,8 @@ When Robin creates a new deck or dashboard:
 - **File:** `transformitive-evaluation-readout.html`
 - **URL:** https://koontz-robin.github.io/robin-decks/transformitive-evaluation-readout.html
 - **Purpose:** Buyer-facing Execute readout for Transformitive's MXP billing-platform evaluation, centered on parent-child billing, operating capacity, recurring-revenue activation, cash-flow efficiency, and an interactive ROI model.
+
+### Seaside Alarms × Rev.io Evaluation Readout
+- **File:** `seaside-alarms-evaluation-readout.html`
+- **URL:** https://koontz-robin.github.io/robin-decks/seaside-alarms-evaluation-readout.html
+- **Purpose:** Buyer-facing Execute readout for Seaside Alarms / Cape Cod Security Systems, centered on legacy-platform risk, field-to-office modernization, transparent ROI assumptions, adoption controls, technical validation gates, and linked discovery/demo recordings.
