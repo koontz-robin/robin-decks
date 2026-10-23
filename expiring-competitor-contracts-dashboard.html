@@ -31,6 +31,18 @@ h1 { margin:4px 0 8px; font-size:34px; line-height:1.06; letter-spacing:0; }
 .kpi { background:var(--panel); border:1px solid var(--line); border-radius:8px; padding:14px; }
 .kpi span { display:block; color:var(--muted); font-size:12px; font-weight:700; text-transform:uppercase; }
 .kpi b { display:block; font-size:28px; margin-top:4px; }
+.pipeline-summary { margin:0 0 18px; padding:16px; background:linear-gradient(135deg,#172554,#2854a3); color:#fff; border-radius:10px; box-shadow:0 8px 24px rgba(40,84,163,.14); }
+.pipeline-heading { display:flex; justify-content:space-between; align-items:flex-end; gap:16px; margin-bottom:13px; }
+.pipeline-heading h2 { margin:0; font-size:20px; }
+.pipeline-heading p { margin:3px 0 0; color:#dbeafe; font-size:12px; }
+.pipeline-totals { display:flex; gap:18px; flex-wrap:wrap; text-align:right; }
+.pipeline-total span { display:block; color:#bfdbfe; font-size:11px; font-weight:800; text-transform:uppercase; letter-spacing:.05em; }
+.pipeline-total b { display:block; font-size:22px; margin-top:2px; }
+.stage-grid { display:grid; grid-template-columns:repeat(auto-fit,minmax(155px,1fr)); gap:8px; }
+.stage-card { padding:10px 12px; border:1px solid rgba(255,255,255,.18); border-radius:8px; background:rgba(255,255,255,.09); }
+.stage-card span { display:block; color:#dbeafe; font-size:11px; font-weight:800; text-transform:uppercase; letter-spacing:.04em; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+.stage-card b { display:block; margin-top:5px; font-size:14px; }
+.stage-card strong { display:block; margin-top:2px; font-size:18px; }
 .grid { display:grid; grid-template-columns:340px 1fr; gap:16px; align-items:start; }
 .side { position:sticky; top:12px; display:grid; gap:12px; }
 .panel { background:var(--panel); border:1px solid var(--line); border-radius:8px; padding:14px; }
@@ -99,7 +111,7 @@ footer { color:var(--muted); font-size:12px; padding:18px 0 6px; }
       <p class="lede">Accounts with at least 8 employees from Salesforce report 00OPX000009VWxh2AG and competitor contracts in the current calendar month or next six months, excluding accounts assigned to Ardit or Ryan. The window rolls automatically on the first of each month, and open Salesforce opportunities plus the account's latest activity date are shown inline.</p>
     </div>
     <div class="meta">
-      Generated Oct 23, 2026 5:07 PM UTC<br>
+      Generated Oct 23, 2026 5:09 PM UTC<br>
       As of Oct 23, 2026<br>
       <a href="https://rev-io.lightning.force.com/lightning/r/Report/00OPX000009VWxh2AG/view">Source Salesforce report</a>
     </div>
@@ -111,6 +123,22 @@ footer { color:var(--muted); font-size:12px; padding:18px 0 6px; }
     <div class="kpi"><span>31-90 Days</span><b>33</b></div>
     <div class="kpi"><span>&lt;35 Employees</span><b>89</b></div>
     <div class="kpi"><span>Open Opportunities</span><b>7</b></div>
+  </section>
+
+  <section class="pipeline-summary">
+    <div class="pipeline-heading">
+      <div>
+        <h2>Open Pipeline for Expiring-Contract Accounts</h2>
+        <p>Only open Salesforce opportunities tied to accounts currently visible on this dashboard.</p>
+      </div>
+      <div class="pipeline-totals">
+        <div class="pipeline-total"><span>Open Opportunities</span><b>4</b></div>
+        <div class="pipeline-total"><span>Accounts</span><b>7</b></div>
+        <div class="pipeline-total"><span>Total Pipeline</span><b>$20,125</b></div>
+        <div class="pipeline-total"><span>Closing ≤90 Days</span><b>4 · $20,125</b></div>
+      </div>
+    </div>
+    <div class="stage-grid"><div class="stage-card"><span>3 - Initial Product Demo</span><b>3 opps</b><strong>$19,125</strong></div><div class="stage-card"><span>1- Discovery Scheduled</span><b>1 opp</b><strong>$1,000</strong></div></div>
   </section>
 
   <div class="grid">
