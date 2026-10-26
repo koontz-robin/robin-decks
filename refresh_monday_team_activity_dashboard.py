@@ -226,24 +226,22 @@ def build_payload():
     product_mrr = defaultdict(lambda: {"last": {"mrr": 0.0, "count": 0}, "prior": {"mrr": 0.0, "count": 0}})
     conversion_detail = {"mql": [], "tradeshow": [], "sdr": [], "booked": []}
 
-    # Discovery meetings SET: discovery events scheduled in-week. Include events
-    # explicitly typed as Discovery Calls plus hybrid meetings whose subject contains
-    # "Discovery" (for example, "Discovery/Product Demo"). This matches the team
-    # funnel view: all discovery meetings scheduled for the week, then the completed
-    # subset below represents calls that actually ran.
+    # Discovery meetings SET: use Salesforce's appointment-set date, matching the
+    # Discovery Set report. ActivityDate measures when a meeting is scheduled to occur,
+    # not when it was set.
     discovery_set_events = sf_query(base, headers, f"""
-        SELECT Id, Subject, Type, ActivityDate, Owner.Name
+        SELECT Id, Subject, Type, Date_Appt_Was_Set__c, Owner.Name
         FROM Event
         WHERE IsDeleted = false
-          AND ActivityDate >= {sf_date(range_start)}
-          AND ActivityDate < {sf_date(range_end)}
-          AND (Type = '1-Discovery Call' OR Subject LIKE '%Discovery%')
+          AND Date_Appt_Was_Set__c >= {sf_date(range_start)}
+          AND Date_Appt_Was_Set__c < {sf_date(range_end)}
+          AND Type = '1-Discovery Call'
     """)
     for event in discovery_set_events:
         subject = (event.get("Subject") or "").lower()
         if "cancel" in subject or "internal" in subject:
             continue
-        period = period_for_dt(datetime.fromisoformat(event["ActivityDate"]).replace(tzinfo=ET), windows)
+        period = period_for_dt(datetime.fromisoformat(event["Date_Appt_Was_Set__c"]).replace(tzinfo=ET), windows)
         rep = normalize_name((event.get("Owner") or {}).get("Name")) or "Unassigned"
         if not period or rep in EXCLUDED_REPS:
             continue
@@ -456,7 +454,7 @@ def build_payload():
         "generated_at_et": now_et.strftime("%b %-d, %Y %-I:%M %p ET"),
         "windows": {k: format_window(v[0], v[1]) for k, v in windows.items()},
         "definitions": {
-            "discovery_set": "Discovery Call events scheduled in-week by ActivityDate, including hybrid events with Discovery in the subject.",
+            "discovery_set": "Discovery Call events set in-week by Date_Appt_Was_Set__c, matching the Salesforce Discovery Set report.",
             "discovery_complete": "Discovery Call events scheduled in-week and marked Completed by the end-of-week cutoff.",
             "discovery_complete_influenced": "Completed Discovery Call events credited by Event SDR_Influence__c.",
             "cbrs_set": "Events with Type = Client Business Review created during the week.",
