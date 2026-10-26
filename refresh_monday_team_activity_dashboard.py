@@ -279,20 +279,22 @@ def build_payload():
                 metrics[sdr] = empty_rep("SDR")
             add_metric(metrics[sdr], "discovery_complete_influenced", period)
 
-    # CBRs SET: Events with Type = Client Business Review created during the week.
+    # CBRs SET: use Salesforce's appointment-set date, matching the discovery-set
+    # methodology. CreatedDate is the record creation timestamp, not the reporting
+    # field used to measure when the meeting was set.
     cbr_events = sf_query(base, headers, f"""
-        SELECT Id, Subject, Type, CreatedDate, ActivityDate, Owner.Name, What.Name
+        SELECT Id, Subject, Type, Date_Appt_Was_Set__c, ActivityDate, Owner.Name, What.Name
         FROM Event
         WHERE IsDeleted = false
-          AND CreatedDate >= {iso_utc(range_start)}
-          AND CreatedDate < {iso_utc(range_end)}
+          AND Date_Appt_Was_Set__c >= {sf_date(range_start)}
+          AND Date_Appt_Was_Set__c < {sf_date(range_end)}
           AND Type = 'Client Business Review'
     """)
     for ev in cbr_events:
         rep = normalize_name((ev.get("Owner") or {}).get("Name"))
         if rep not in metrics:
             continue
-        period = period_for_dt(parse_sf_datetime(ev["CreatedDate"]), windows)
+        period = period_for_dt(datetime.fromisoformat(ev["Date_Appt_Was_Set__c"]).replace(tzinfo=ET), windows)
         if period:
             add_metric(metrics[rep], "cbrs_set", period)
 
@@ -457,7 +459,7 @@ def build_payload():
             "discovery_set": "Discovery Call events set in-week by Date_Appt_Was_Set__c, matching the Salesforce Discovery Set report.",
             "discovery_complete": "Discovery Call events scheduled in-week and marked Completed by the end-of-week cutoff.",
             "discovery_complete_influenced": "Completed Discovery Call events credited by Event SDR_Influence__c.",
-            "cbrs_set": "Events with Type = Client Business Review created during the week.",
+            "cbrs_set": "Client Business Review events set in-week by Date_Appt_Was_Set__c, matching the discovery-set methodology.",
             "cbrs_complete": "Client Business Review events scheduled in-week and marked Completed by the end-of-week cutoff.",
             "client_followups_complete": "Client Follow Up events scheduled in-week and marked Completed by the end-of-week cutoff.",
             "initial_expansion_complete": "Initial Expansion Meeting events scheduled in-week and marked Completed by the end-of-week cutoff.",
