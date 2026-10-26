@@ -902,10 +902,12 @@ def build_html(payload):
     csa_activity_rows = build_csa_activity_rows(payload["metrics"])
     closed_won_rows = build_detail_rows(payload["conversion_detail"]["booked"], "closed won opportunities")
     mql_rows = build_mql_rows(payload["mqls_last_week"])
-    msp_items = payload["msp_month"]["opportunities"]
-    msp_stage_rows = build_msp_stage_rows(msp_items)
+    msp_items = [
+        item for item in payload["msp_month"]["opportunities"]
+        if (item.get("stage") or "").lower() == "closed lost"
+    ]
     msp_opportunity_rows = build_msp_opportunity_rows(msp_items)
-    msp_lost_count = sum((item.get("stage") or "").lower() == "closed lost" for item in msp_items)
+    msp_lost_count = len(msp_items)
     return f'''<!doctype html>
 <html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Monday Sales Meeting</title>
 <style>
@@ -922,7 +924,7 @@ body:before{{content:'';position:fixed;inset:-14% -10% 55% -10%;background:radia
 <section class="panel"><div class="panel-head"><h2>AE meeting activity</h2><div class="panel-note">Last completed Monday–Sunday week by AE. Prior-week counts appear beneath each result for quick coaching context.</div></div><table><thead><tr><th>AE</th><th>Discovery Set</th><th>Discovery Complete</th><th>Initial Demo Complete</th><th>Follow Up / Pricing Complete</th></tr></thead><tbody>{ae_activity_rows}</tbody></table></section>
 <section class="panel"><div class="panel-head"><h2>CSA meeting activity</h2><div class="panel-note">Last completed Monday–Sunday week by CSA. Prior-week counts appear beneath each result.</div></div><table><thead><tr><th>CSA</th><th>CBRs Set</th><th>CBRs Complete</th><th>Follow-up Client Meetings</th><th>Initial Expansion Meetings</th><th>Payments Quote Reviews</th></tr></thead><tbody>{csa_activity_rows}</tbody></table></section>
 <section class="panel"><div class="panel-head"><h2>All marketing leads converted last week</h2><div class="panel-note">Every MQL and tradeshow-sourced opportunity created during {escape(payload['windows']['last'])}; this list is not truncated.</div></div><table><thead><tr><th>Date</th><th>Owner</th><th>Account / Opportunity</th><th>Marketing Source</th><th>Marketing Subsource</th><th>Opportunity Stage</th></tr></thead><tbody>{mql_rows}</tbody></table></section>
-<section class="panel"><div class="panel-head"><h2>MSP opportunities created — {escape(payload['msp_month']['label'])}</h2><div class="panel-note">{fmt_int(len(msp_items))} MSP opportunities created this month · {fmt_int(msp_lost_count)} currently Closed Lost. MSP is based on Account Vertical = MSP.</div></div><div class="panel-grid" style="padding:14px"><div><table><thead><tr><th>Stage</th><th>Opportunities</th><th>MRR</th></tr></thead><tbody>{msp_stage_rows}</tbody></table></div><div class="def"><strong>Closed-lost interpretation</strong><br>The table below shows Salesforce’s exact Loss Reason, Reason Lost Detail, and Missing Features entries. Blank fields are called out rather than guessed.</div></div><table><thead><tr><th>Created</th><th>Account / Opportunity</th><th>Owner</th><th>Stage</th><th>Product / MRR</th><th>Industry</th><th>Closed-Lost Reason / Detail</th></tr></thead><tbody>{msp_opportunity_rows}</tbody></table></section>
+<section class="panel"><div class="panel-head"><h2>Closed-lost MSP opportunities — {escape(payload['msp_month']['label'])}</h2><div class="panel-note">{fmt_int(msp_lost_count)} MSP opportunities created this month that are currently Closed Lost. Salesforce’s exact loss reason, written detail, and missing-feature notes are shown below.</div></div><table><thead><tr><th>Created</th><th>Account / Opportunity</th><th>Owner</th><th>Stage</th><th>Product / MRR</th><th>Industry</th><th>Closed-Lost Reason / Detail</th></tr></thead><tbody>{msp_opportunity_rows}</tbody></table></section>
 <section class="panel"><div class="panel-head"><h2>All closed won opportunities last week</h2><div class="panel-note">Every opportunity marked Closed Won with a close date in the previous week.</div></div><table><thead><tr><th>Owner</th><th>Account / Opportunity</th><th>Product</th><th>MRR</th></tr></thead><tbody>{closed_won_rows}</tbody></table></section>
 <section class="panel"><div class="panel-head"><h2>Metric definitions</h2><div class="panel-note">So nobody has to decode the Batcomputer during the team meeting.</div></div><div class="definitions">{''.join(f'<div class="def"><strong>{escape(k.replace("_", " ").title())}:</strong> {escape(v)}</div>' for k, v in payload['definitions'].items())}</div></section>
 <div class="footer">SOURCE: SALESFORCE TASKS, EVENTS, AND OPPORTUNITIES · AUTO-REFRESHES SUNDAY NIGHT ET</div></div></body></html>'''
