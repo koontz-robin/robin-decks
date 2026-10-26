@@ -188,6 +188,20 @@ def add_metric(bucket, key, period, count=1, mrr_key=None, mrr=0.0):
         bucket[mrr_key][period] += mrr
 
 
+def add_detail(details, metric, period, rec_id, date, owner, account="", subject="", meta="", mrr=None):
+    """Store a compact, JSON-safe Salesforce row for a metric drill-down."""
+    details[metric][period].append({
+        "id": rec_id or "",
+        "url": f"{SF_INSTANCE}/{rec_id}" if rec_id else "",
+        "date": date or "",
+        "owner": owner or "Unassigned",
+        "account": account or "",
+        "subject": subject or "",
+        "meta": meta or "",
+        "mrr": float(mrr) if mrr is not None else None,
+    })
+
+
 def source_norm(value):
     return (value or "").strip().lower()
 
@@ -225,12 +239,17 @@ def build_payload():
     metrics = {rep: empty_rep(role) for rep, role in reps.items()}
     product_mrr = defaultdict(lambda: {"last": {"mrr": 0.0, "count": 0}, "prior": {"mrr": 0.0, "count": 0}})
     conversion_detail = {"mql": [], "tradeshow": [], "sdr": [], "booked": []}
+    mqls_last_week = []
+    detail_metrics = ["discovery_set", "discovery_complete", "cbrs_set", "cbrs_complete",
+                      "initial_demos_ran", "sdr_sourced_opps", "mqls_converted",
+                      "tradeshow_leads_converted", "booked_mrr", "booked_count"]
+    metric_details = {key: {"last": [], "prior": []} for key in detail_metrics}
 
     # Discovery meetings SET: use Salesforce's appointment-set date, matching the
     # Discovery Set report. ActivityDate measures when a meeting is scheduled to occur,
     # not when it was set.
     discovery_set_events = sf_query(base, headers, f"""
-        SELECT Id, Subject, Type, Date_Appt_Was_Set__c, Owner.Name
+        SELECT Id, Subject, Type, Date_Appt_Was_Set__c, Owner.Name, What.Name
         FROM Event
         WHERE IsDeleted = false
           AND Date_Appt_Was_Set__c >= {sf_date(range_start)}
@@ -248,12 +267,14 @@ def build_payload():
         if rep not in metrics:
             metrics[rep] = empty_rep("Other")
         add_metric(metrics[rep], "discovery_set", period)
+        add_detail(metric_details, "discovery_set", period, event.get("Id"), event.get("Date_Appt_Was_Set__c"), rep,
+                   (event.get("What") or {}).get("Name"), event.get("Subject"), "Discovery Call")
 
     # Discovery meetings COMPLETED: Event.Type = 1-Discovery Call with ActivityDate in-week
     # and Appointment_Status__c = Completed. Team/AE credit goes to owner; SDR quality credit
     # also rolls to Event.SDR_Influence__c when populated.
     discovery_complete_events = sf_query(base, headers, f"""
-        SELECT Id, Subject, Type, ActivityDate, Appointment_Status__c, Owner.Name, SDR_Influence__c
+        SELECT Id, Subject, Type, ActivityDate, Appointment_Status__c, Owner.Name, SDR_Influence__c, What.Name
         FROM Event
         WHERE IsDeleted = false
           AND ActivityDate >= {sf_date(range_start)}
@@ -273,6 +294,8 @@ def build_payload():
             if owner not in metrics:
                 metrics[owner] = empty_rep("Other")
             add_metric(metrics[owner], "discovery_complete", period)
+            add_detail(metric_details, "discovery_complete", period, ev.get("Id"), ev.get("ActivityDate"), owner,
+                       (ev.get("What") or {}).get("Name"), ev.get("Subject"), "Completed")
         sdr = normalize_name(ev.get("SDR_Influence__c"))
         if period and sdr and sdr.lower() != "none" and sdr not in EXCLUDED_REPS:
             if sdr not in metrics:
@@ -297,6 +320,8 @@ def build_payload():
         period = period_for_dt(datetime.fromisoformat(ev["Date_Appt_Was_Set__c"]).replace(tzinfo=ET), windows)
         if period:
             add_metric(metrics[rep], "cbrs_set", period)
+            add_detail(metric_details, "cbrs_set", period, ev.get("Id"), ev.get("Date_Appt_Was_Set__c"), rep,
+                       (ev.get("What") or {}).get("Name"), ev.get("Subject"), "Client Business Review")
 
     # CSA meetings completed by activity date. Keep the Salesforce event-type
     # mapping explicit so the activity table is auditable and doesn't rely on
@@ -328,6 +353,9 @@ def build_payload():
         metric_key = csa_metric_by_type.get(ev.get("Type"))
         if period and metric_key:
             add_metric(metrics[rep], metric_key, period)
+            if metric_key == "cbrs_complete":
+                add_detail(metric_details, "cbrs_complete", period, ev.get("Id"), ev.get("ActivityDate"), rep,
+                           (ev.get("What") or {}).get("Name"), ev.get("Subject"), "Completed")
 
     # Initial demos RAN: Events with Type = 2-Initial DEMO and ActivityDate during the week.
     demo_events = sf_query(base, headers, f"""
@@ -354,6 +382,8 @@ def build_payload():
         period = period_for_dt(dt, windows)
         if period:
             add_metric(metrics[rep], "initial_demos_ran", period)
+            add_detail(metric_details, "initial_demos_ran", period, ev.get("Id"), ev.get("ActivityDate"), rep,
+                       (ev.get("What") or {}).get("Name"), ev.get("Subject"), "Completed")
 
     # Follow-up / pricing meetings COMPLETED: combine the standard follow-up,
     # Payments follow-up, and pricing/negotiation event types for AE coaching.
@@ -404,16 +434,33 @@ def build_payload():
             if sdr not in metrics:
                 metrics[sdr] = empty_rep("SDR")
             add_metric(metrics[sdr], "sdr_sourced_opps", period, mrr_key="sdr_sourced_mrr", mrr=mrr)
+            add_detail(metric_details, "sdr_sourced_opps", period, opp.get("Id"), created_dt.date().isoformat(), sdr,
+                       account_name, opp_name, product_label(opp.get("Product_Type__c")), mrr)
             if period == "last":
                 conversion_detail["sdr"].append({"rep": sdr, "opp": opp_name, "account": account_name, "mrr": mrr, "date": created_dt.strftime("%a %-m/%-d")})
         if owner in metrics and is_tradeshow_source(source):
             add_metric(metrics[owner], "tradeshow_leads_converted", period, mrr_key="tradeshow_converted_mrr", mrr=mrr)
+            add_detail(metric_details, "tradeshow_leads_converted", period, opp.get("Id"), created_dt.date().isoformat(), owner,
+                       account_name, opp_name, subsource or source, mrr)
             if period == "last":
                 conversion_detail["tradeshow"].append({"rep": owner, "opp": opp_name, "account": account_name, "source": subsource or source, "mrr": mrr, "date": created_dt.strftime("%a %-m/%-d")})
         elif owner in metrics and is_mql_source(source):
             add_metric(metrics[owner], "mqls_converted", period, mrr_key="mql_converted_mrr", mrr=mrr)
+            add_detail(metric_details, "mqls_converted", period, opp.get("Id"), created_dt.date().isoformat(), owner,
+                       account_name, opp_name, subsource or source, mrr)
             if period == "last":
                 conversion_detail["mql"].append({"rep": owner, "opp": opp_name, "account": account_name, "source": subsource or source, "mrr": mrr, "date": created_dt.strftime("%a %-m/%-d")})
+                mqls_last_week.append({
+                    "id": opp.get("Id") or "",
+                    "url": f"{SF_INSTANCE}/{opp.get('Id')}" if opp.get("Id") else "",
+                    "date": created_dt.date().isoformat(),
+                    "owner": owner,
+                    "account": account_name,
+                    "opportunity": opp_name,
+                    "marketing_source": source,
+                    "marketing_subsource": subsource,
+                    "stage": opp.get("StageName") or "",
+                })
 
     # Booked MRR by product: closed-won opps by close date.
     opps_closed = sf_query(base, headers, f"""
@@ -436,6 +483,9 @@ def build_payload():
         product_mrr[product][period]["count"] += 1
         if owner in metrics:
             add_metric(metrics[owner], "booked_count", period, mrr_key="booked_mrr", mrr=mrr)
+            for metric_key in ("booked_mrr", "booked_count"):
+                add_detail(metric_details, metric_key, period, opp.get("Id"), opp.get("CloseDate"), owner,
+                           (opp.get("Account") or {}).get("Name"), opp.get("Name") or "Opportunity", product, mrr)
         if period == "last" and owner not in EXCLUDED_REPS:
             conversion_detail["booked"].append({"rep": owner, "opp": opp.get("Name") or "Opportunity", "account": (opp.get("Account") or {}).get("Name") or "", "product": product, "mrr": mrr, "date": dt.strftime("%a %-m/%-d")})
 
@@ -451,6 +501,10 @@ def build_payload():
     for key in conversion_detail:
         rows = sorted(conversion_detail[key], key=lambda x: (-x.get("mrr", 0), x.get("rep", "")))
         conversion_detail[key] = rows if key == "booked" else rows[:12]
+    for periods in metric_details.values():
+        for period in ("last", "prior"):
+            periods[period].sort(key=lambda row: (row["date"], row["owner"], row["subject"]), reverse=True)
+    mqls_last_week.sort(key=lambda row: (row["date"], row["owner"], row["opportunity"]), reverse=True)
 
     return {
         "generated_at_et": now_et.strftime("%b %-d, %Y %-I:%M %p ET"),
@@ -475,6 +529,8 @@ def build_payload():
         "totals": totals,
         "product_mrr": product_rows,
         "conversion_detail": conversion_detail,
+        "metric_details": metric_details,
+        "mqls_last_week": mqls_last_week,
     }
 
 
@@ -499,19 +555,45 @@ def signed(last, prior, money_flag=False):
     return ("+" if diff >= 0 else "") + fmt_int(diff)
 
 
-def metric_card(label, key, totals, money_flag=False, subkey=None):
+def metric_detail_rows(details, windows):
+    rows = []
+    for period in ("last", "prior"):
+        period_label = "Last week" if period == "last" else "Prior week"
+        for item in details.get(period, []):
+            subject = escape(item.get("subject") or "Salesforce record")
+            if item.get("url"):
+                subject = f'<a href="{escape(item["url"])}" target="_blank" rel="noopener">{subject}</a>'
+            value = "—" if item.get("mrr") is None else money(item["mrr"])
+            rows.append(f'''<tr>
+              <td><strong>{period_label}</strong><span>{escape(windows[period])}</span></td>
+              <td>{escape(item.get('date') or '')}</td>
+              <td>{escape(item.get('owner') or '')}</td>
+              <td>{escape(item.get('account') or '')}</td>
+              <td>{subject}</td>
+              <td>{escape(item.get('meta') or '')}</td>
+              <td>{value}</td>
+            </tr>''')
+    return "\n".join(rows) or '<tr><td colspan="7" class="empty">No underlying records in either week.</td></tr>'
+
+
+def metric_card(label, key, totals, details, windows, money_flag=False, subkey=None):
     source = totals[key] if subkey is None else totals[subkey]
     last = source["last"]
     prior = source["prior"]
     main = money(last) if money_flag else fmt_int(last)
     prior_txt = money(prior) if money_flag else fmt_int(prior)
     cls = "up" if last >= prior else "down"
-    return f'''<div class="metric-card">
+    rows = metric_detail_rows(details, windows)
+    return f'''<details class="metric-card">
+      <summary aria-label="Open details for {escape(label)}">
       <div class="metric-label">{escape(label)}</div>
       <div class="metric-value">{main}</div>
       <div class="metric-compare"><span class="{cls}">{escape(signed(last, prior, money_flag))}</span> vs prior · {escape(pct_delta(last, prior))}</div>
       <div class="metric-prior">Prior week: {prior_txt}</div>
-    </div>'''
+      <div class="open-details">Open details <span aria-hidden="true">▾</span></div>
+      </summary>
+      <div class="metric-detail"><table><caption class="sr-only">Underlying Salesforce records for {escape(label)}, last and prior weeks</caption><thead><tr><th>Week</th><th>Date</th><th>Owner / Rep</th><th>Account</th><th>Subject / Opportunity</th><th>Product / Source</th><th>MRR</th></tr></thead><tbody>{rows}</tbody></table></div>
+    </details>'''
 
 
 def team_metric_specs(totals):
@@ -519,6 +601,7 @@ def team_metric_specs(totals):
         ("Discovery Meetings Set", "discovery_set", False, "Top-of-funnel meetings created"),
         ("Discovery Meetings Complete", "discovery_complete", False, "Completed discovery calls by activity date"),
         ("CBRs Set", "cbrs_set", False, "Customer business reviews scheduled"),
+        ("CBRs Complete", "cbrs_complete", False, "Customer business reviews completed"),
         ("Initial Demos Ran", "initial_demos_ran", False, "Demo meetings completed/held"),
         ("SDR-Sourced Opps", "sdr_sourced_opps", False, f"{money(totals['sdr_sourced_mrr']['last'])} sourced MRR"),
         ("MQLs Converted", "mqls_converted", False, f"{money(totals['mql_converted_mrr']['last'])} converted MRR"),
@@ -688,19 +771,38 @@ def build_detail_rows(items, kind):
     return "\n".join(rows) or f'<tr><td colspan="4" class="empty">No {escape(kind)} last week.</td></tr>'
 
 
+def build_mql_rows(items):
+    rows = []
+    for item in items:
+        opportunity = escape(item.get("opportunity") or "Opportunity")
+        if item.get("url"):
+            opportunity = f'<a href="{escape(item["url"])}" target="_blank" rel="noopener">{opportunity}</a>'
+        rows.append(f'''<tr>
+          <td>{escape(item.get('date') or '')}</td>
+          <td><strong>{escape(item.get('owner') or '')}</strong></td>
+          <td>{escape(item.get('account') or '')}<span>{opportunity}</span></td>
+          <td>{escape(item.get('marketing_source') or '')}</td>
+          <td>{escape(item.get('marketing_subsource') or '')}</td>
+          <td>{escape(item.get('stage') or '')}</td>
+        </tr>''')
+    return "\n".join(rows) or '<tr><td colspan="6" class="empty">No MQLs converted last week.</td></tr>'
+
+
 def build_html(payload):
     t = payload["totals"]
+    d = payload["metric_details"]
+    w = payload["windows"]
     cards = "\n".join([
-        metric_card("Discovery Meetings Set", "discovery_set", t),
-        metric_card("Discovery Meetings Complete", "discovery_complete", t),
-        metric_card("CBRs Set", "cbrs_set", t),
-        metric_card("CBRs Complete", "cbrs_complete", t),
-        metric_card("Initial Demos Ran", "initial_demos_ran", t),
-        metric_card("SDR-Sourced Opps", "sdr_sourced_opps", t),
-        metric_card("MQLs Converted", "mqls_converted", t),
-        metric_card("Tradeshow Leads Converted", "tradeshow_leads_converted", t),
-        metric_card("Booked MRR", "booked_mrr", t, True),
-        metric_card("Booked Deals", "booked_count", t),
+        metric_card("Discovery Meetings Set", "discovery_set", t, d["discovery_set"], w),
+        metric_card("Discovery Meetings Complete", "discovery_complete", t, d["discovery_complete"], w),
+        metric_card("CBRs Set", "cbrs_set", t, d["cbrs_set"], w),
+        metric_card("CBRs Complete", "cbrs_complete", t, d["cbrs_complete"], w),
+        metric_card("Initial Demos Ran", "initial_demos_ran", t, d["initial_demos_ran"], w),
+        metric_card("SDR-Sourced Opps", "sdr_sourced_opps", t, d["sdr_sourced_opps"], w),
+        metric_card("MQLs Converted", "mqls_converted", t, d["mqls_converted"], w),
+        metric_card("Tradeshow Leads Converted", "tradeshow_leads_converted", t, d["tradeshow_leads_converted"], w),
+        metric_card("Booked MRR", "booked_mrr", t, d["booked_mrr"], w, True),
+        metric_card("Booked Deals", "booked_count", t, d["booked_count"], w),
     ])
     positive_rows = build_difference_rows(t, positive=True)
     negative_rows = build_difference_rows(t, positive=False)
@@ -708,6 +810,7 @@ def build_html(payload):
     ae_activity_rows = build_ae_activity_rows(payload["metrics"])
     csa_activity_rows = build_csa_activity_rows(payload["metrics"])
     closed_won_rows = build_detail_rows(payload["conversion_detail"]["booked"], "closed won opportunities")
+    mql_rows = build_mql_rows(payload["mqls_last_week"])
     return f'''<!doctype html>
 <html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Monday Sales Meeting</title>
 <style>
@@ -715,7 +818,7 @@ def build_html(payload):
 *{{box-sizing:border-box}} body{{margin:0;font-family:Roboto,Segoe UI,system-ui,sans-serif;background:radial-gradient(900px 420px at 18% -8%,rgba(79,209,197,.30),transparent 64%),radial-gradient(760px 420px at 82% 0%,rgba(52,189,229,.24),transparent 62%),linear-gradient(180deg,#0a141f 0%,#08111b 46%,#060e18 100%);color:var(--text)}}
 body:before{{content:'';position:fixed;inset:-14% -10% 55% -10%;background:radial-gradient(55% 45% at 20% 30%,rgba(79,209,197,.35),transparent 65%),radial-gradient(45% 35% at 78% 22%,rgba(52,189,229,.34),transparent 65%);filter:blur(46px);opacity:.75;pointer-events:none}} .container{{max-width:min(1560px,calc(100vw - 32px));margin:0 auto;padding:18px 16px 28px;position:relative;z-index:1}}
 .header{{border-bottom:1px solid var(--border);padding:20px 0 22px;margin-bottom:22px;position:relative}} .header-top{{display:flex;justify-content:space-between;align-items:center;margin-bottom:12px;padding-right:154px}} .logo{{display:flex;align-items:center;gap:10px}} .logo-dot{{width:9px;height:9px;background:var(--cyan);border-radius:50%;box-shadow:0 0 0 3px rgba(52,189,229,.2),0 0 12px rgba(52,189,229,.85)}} .logo-text{{font-size:11px;font-weight:600;letter-spacing:.22em;text-transform:uppercase;color:var(--cyan-soft)}} .header-date{{font-size:11px;color:var(--muted);letter-spacing:.14em;text-transform:uppercase}} .revio-header-logo{{position:absolute;top:0;right:0;width:132px}} h1{{font-size:clamp(42px,5vw,72px);font-weight:300;color:#fff;letter-spacing:-.03em;line-height:.98;margin:0 0 10px}} h1 span{{color:var(--cyan-soft);font-family:Georgia,serif;font-style:italic;font-weight:500}} .header-sub{{font-size:14px;color:var(--mid);max-width:980px;line-height:1.45}}
-.metric-grid{{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px;margin-bottom:18px}} .metric-card{{background:rgba(255,255,255,.035);border:1px solid var(--border);border-radius:16px;padding:16px;box-shadow:0 22px 60px -48px #000;backdrop-filter:blur(12px)}} .metric-label{{font-size:9px;font-weight:800;letter-spacing:.16em;text-transform:uppercase;color:var(--muted);margin-bottom:7px}} .metric-value{{font-size:30px;font-weight:850;line-height:1;color:#fff}} .metric-compare{{margin-top:8px;font-size:12px;color:var(--mid)}} .metric-compare .up,.good{{color:var(--lime)}} .metric-compare .down,.bad{{color:var(--danger)}} .metric-prior{{margin-top:4px;font-size:11px;color:var(--muted)}}
+.metric-grid{{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px;margin-bottom:18px}} .metric-card{{background:rgba(255,255,255,.035);border:1px solid var(--border);border-radius:16px;box-shadow:0 22px 60px -48px #000;backdrop-filter:blur(12px);min-width:0}} .metric-card[open]{{grid-column:1/-1}} .metric-card summary{{padding:20px;cursor:pointer;list-style:none;min-height:168px;position:relative}} .metric-card summary::-webkit-details-marker{{display:none}} .metric-card summary:focus-visible{{outline:3px solid var(--cyan);outline-offset:-3px;border-radius:16px}} .metric-label{{font-size:10px;font-weight:800;letter-spacing:.16em;text-transform:uppercase;color:var(--muted);margin-bottom:9px}} .metric-value{{font-size:38px;font-weight:850;line-height:1;color:#fff}} .metric-compare{{margin-top:10px;font-size:13px;color:var(--mid)}} .metric-compare .up,.good{{color:var(--lime)}} .metric-compare .down,.bad{{color:var(--danger)}} .metric-prior{{margin-top:5px;font-size:12px;color:var(--muted)}} .open-details{{position:absolute;right:20px;bottom:20px;color:var(--cyan-soft);font-size:12px;font-weight:750;letter-spacing:.04em}} .metric-card[open] .open-details span{{display:inline-block;transform:rotate(180deg)}} .metric-detail{{overflow-x:auto;border-top:1px solid var(--border)}} .metric-detail table{{min-width:920px}} .metric-detail a{{color:var(--cyan-soft);font-weight:700}} .sr-only{{position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap;border:0}}
 .panel-grid{{display:grid;grid-template-columns:1fr 1fr;gap:14px}} .focus-panel{{border-color:rgba(198,241,120,.22)}} .watch-panel{{border-color:rgba(255,107,107,.24)}} .panel{{background:var(--surface);border:1px solid var(--border);border-radius:16px;margin-bottom:14px;overflow:hidden;box-shadow:0 22px 60px -48px #000;backdrop-filter:blur(12px)}} .panel-head{{display:flex;align-items:flex-end;justify-content:space-between;gap:16px;padding:16px 18px;border-bottom:1px solid var(--border)}} h2{{margin:0;font-size:20px;font-weight:650;color:#fff}} .panel-note{{font-size:12px;color:var(--muted);max-width:720px;line-height:1.4}} table{{width:100%;border-collapse:collapse}} th{{font-size:9px;font-weight:800;text-transform:uppercase;letter-spacing:.16em;color:var(--muted);padding:10px 14px;text-align:left;background:rgba(6,14,24,.55)}} td{{font-size:13px;padding:10px 14px;border-top:1px solid rgba(255,255,255,.06);color:var(--mid);vertical-align:top}} td:first-child{{color:#fff}} td strong{{display:block;color:#fff}} td span, td small{{display:block;color:var(--muted);font-size:10px;margin-top:3px}} td small{{color:var(--cyan-soft)}} .empty{{text-align:center;color:var(--muted);padding:24px}} .definitions{{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px;padding:14px 18px}} .def{{font-size:12px;color:var(--mid);line-height:1.35;background:rgba(255,255,255,.03);border:1px solid rgba(255,255,255,.08);border-radius:12px;padding:10px}} .def strong{{color:#fff}} .footer{{text-align:center;padding:18px;font-size:10px;color:var(--muted);letter-spacing:.14em;border-top:1px solid var(--border);margin-top:8px}}
 @media(max-width:1000px){{.metric-grid,.panel-grid,.definitions{{grid-template-columns:1fr 1fr}}.panel{{overflow-x:auto}}table{{min-width:900px}}.header-top{{padding-right:0;display:block}}.revio-header-logo{{position:relative;width:108px;margin-top:10px}}}} @media(max-width:680px){{.metric-grid,.panel-grid,.definitions{{grid-template-columns:1fr}}}}
 </style></head><body><div class="container"><header class="header"><div class="header-top"><div class="logo"><span class="logo-dot"></span><span class="logo-text">Rev.io Sales Team</span></div><div class="header-date">Generated {escape(payload['generated_at_et'])}</div></div><img class="revio-header-logo" src="https://7091219.fs1.hubspotusercontent-na1.net/hubfs/7091219/email-assets/logo-revio-white.png" alt="Rev.io"><h1>Monday Sales <span>Meeting</span></h1><p class="header-sub">Last week ({escape(payload['windows']['last'])}) vs prior week ({escape(payload['windows']['prior'])}) across meeting creation, demos run, sourced/converted opportunities, and booked MRR by product.</p></header>
@@ -723,6 +826,7 @@ body:before{{content:'';position:fixed;inset:-14% -10% 55% -10%;background:radia
 <div class="panel-grid"><section class="panel focus-panel"><div class="panel-head"><h2>Positive movement</h2><div class="panel-note">Metrics up or flat vs the prior week — easier to scan for what improved.</div></div><table><thead><tr><th>Metric</th><th>Last Week</th><th>Prior Week</th><th>Difference</th></tr></thead><tbody>{positive_rows}</tbody></table></section><section class="panel watch-panel"><div class="panel-head"><h2>Watch list</h2><div class="panel-note">Metrics down vs the prior week — the Monday coaching queue, minus the detective corkboard chaos.</div></div><table><thead><tr><th>Metric</th><th>Last Week</th><th>Prior Week</th><th>Difference</th></tr></thead><tbody>{negative_rows}</tbody></table></section></div>
 <section class="panel"><div class="panel-head"><h2>AE meeting activity</h2><div class="panel-note">Last completed Monday–Sunday week by AE. Prior-week counts appear beneath each result for quick coaching context.</div></div><table><thead><tr><th>AE</th><th>Discovery Set</th><th>Discovery Complete</th><th>Initial Demo Complete</th><th>Follow Up / Pricing Complete</th></tr></thead><tbody>{ae_activity_rows}</tbody></table></section>
 <section class="panel"><div class="panel-head"><h2>CSA meeting activity</h2><div class="panel-note">Last completed Monday–Sunday week by CSA. Prior-week counts appear beneath each result.</div></div><table><thead><tr><th>CSA</th><th>CBRs Set</th><th>CBRs Complete</th><th>Follow-up Client Meetings</th><th>Initial Expansion Meetings</th><th>Payments Quote Reviews</th></tr></thead><tbody>{csa_activity_rows}</tbody></table></section>
+<section class="panel"><div class="panel-head"><h2>All MQLs converted last week</h2><div class="panel-note">Every marketing-sourced opportunity created during {escape(payload['windows']['last'])}; this list is not truncated.</div></div><table><thead><tr><th>Date</th><th>Owner</th><th>Account / Opportunity</th><th>Marketing Source</th><th>Marketing Subsource</th><th>Opportunity Stage</th></tr></thead><tbody>{mql_rows}</tbody></table></section>
 <section class="panel"><div class="panel-head"><h2>All closed won opportunities last week</h2><div class="panel-note">Every opportunity marked Closed Won with a close date in the previous week.</div></div><table><thead><tr><th>Owner</th><th>Account / Opportunity</th><th>Product</th><th>MRR</th></tr></thead><tbody>{closed_won_rows}</tbody></table></section>
 <section class="panel"><div class="panel-head"><h2>Metric definitions</h2><div class="panel-note">So nobody has to decode the Batcomputer during the team meeting.</div></div><div class="definitions">{''.join(f'<div class="def"><strong>{escape(k.replace("_", " ").title())}:</strong> {escape(v)}</div>' for k, v in payload['definitions'].items())}</div></section>
 <div class="footer">SOURCE: SALESFORCE TASKS, EVENTS, AND OPPORTUNITIES · AUTO-REFRESHES SUNDAY NIGHT ET</div></div></body></html>'''

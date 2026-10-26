@@ -5,70 +5,2242 @@
 *{box-sizing:border-box} body{margin:0;font-family:Roboto,Segoe UI,system-ui,sans-serif;background:radial-gradient(900px 420px at 18% -8%,rgba(79,209,197,.30),transparent 64%),radial-gradient(760px 420px at 82% 0%,rgba(52,189,229,.24),transparent 62%),linear-gradient(180deg,#0a141f 0%,#08111b 46%,#060e18 100%);color:var(--text)}
 body:before{content:'';position:fixed;inset:-14% -10% 55% -10%;background:radial-gradient(55% 45% at 20% 30%,rgba(79,209,197,.35),transparent 65%),radial-gradient(45% 35% at 78% 22%,rgba(52,189,229,.34),transparent 65%);filter:blur(46px);opacity:.75;pointer-events:none} .container{max-width:min(1560px,calc(100vw - 32px));margin:0 auto;padding:18px 16px 28px;position:relative;z-index:1}
 .header{border-bottom:1px solid var(--border);padding:20px 0 22px;margin-bottom:22px;position:relative} .header-top{display:flex;justify-content:space-between;align-items:center;margin-bottom:12px;padding-right:154px} .logo{display:flex;align-items:center;gap:10px} .logo-dot{width:9px;height:9px;background:var(--cyan);border-radius:50%;box-shadow:0 0 0 3px rgba(52,189,229,.2),0 0 12px rgba(52,189,229,.85)} .logo-text{font-size:11px;font-weight:600;letter-spacing:.22em;text-transform:uppercase;color:var(--cyan-soft)} .header-date{font-size:11px;color:var(--muted);letter-spacing:.14em;text-transform:uppercase} .revio-header-logo{position:absolute;top:0;right:0;width:132px} h1{font-size:clamp(42px,5vw,72px);font-weight:300;color:#fff;letter-spacing:-.03em;line-height:.98;margin:0 0 10px} h1 span{color:var(--cyan-soft);font-family:Georgia,serif;font-style:italic;font-weight:500} .header-sub{font-size:14px;color:var(--mid);max-width:980px;line-height:1.45}
-.metric-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px;margin-bottom:18px} .metric-card{background:rgba(255,255,255,.035);border:1px solid var(--border);border-radius:16px;padding:16px;box-shadow:0 22px 60px -48px #000;backdrop-filter:blur(12px)} .metric-label{font-size:9px;font-weight:800;letter-spacing:.16em;text-transform:uppercase;color:var(--muted);margin-bottom:7px} .metric-value{font-size:30px;font-weight:850;line-height:1;color:#fff} .metric-compare{margin-top:8px;font-size:12px;color:var(--mid)} .metric-compare .up,.good{color:var(--lime)} .metric-compare .down,.bad{color:var(--danger)} .metric-prior{margin-top:4px;font-size:11px;color:var(--muted)}
+.metric-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px;margin-bottom:18px} .metric-card{background:rgba(255,255,255,.035);border:1px solid var(--border);border-radius:16px;box-shadow:0 22px 60px -48px #000;backdrop-filter:blur(12px);min-width:0} .metric-card[open]{grid-column:1/-1} .metric-card summary{padding:20px;cursor:pointer;list-style:none;min-height:168px;position:relative} .metric-card summary::-webkit-details-marker{display:none} .metric-card summary:focus-visible{outline:3px solid var(--cyan);outline-offset:-3px;border-radius:16px} .metric-label{font-size:10px;font-weight:800;letter-spacing:.16em;text-transform:uppercase;color:var(--muted);margin-bottom:9px} .metric-value{font-size:38px;font-weight:850;line-height:1;color:#fff} .metric-compare{margin-top:10px;font-size:13px;color:var(--mid)} .metric-compare .up,.good{color:var(--lime)} .metric-compare .down,.bad{color:var(--danger)} .metric-prior{margin-top:5px;font-size:12px;color:var(--muted)} .open-details{position:absolute;right:20px;bottom:20px;color:var(--cyan-soft);font-size:12px;font-weight:750;letter-spacing:.04em} .metric-card[open] .open-details span{display:inline-block;transform:rotate(180deg)} .metric-detail{overflow-x:auto;border-top:1px solid var(--border)} .metric-detail table{min-width:920px} .metric-detail a{color:var(--cyan-soft);font-weight:700} .sr-only{position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap;border:0}
 .panel-grid{display:grid;grid-template-columns:1fr 1fr;gap:14px} .focus-panel{border-color:rgba(198,241,120,.22)} .watch-panel{border-color:rgba(255,107,107,.24)} .panel{background:var(--surface);border:1px solid var(--border);border-radius:16px;margin-bottom:14px;overflow:hidden;box-shadow:0 22px 60px -48px #000;backdrop-filter:blur(12px)} .panel-head{display:flex;align-items:flex-end;justify-content:space-between;gap:16px;padding:16px 18px;border-bottom:1px solid var(--border)} h2{margin:0;font-size:20px;font-weight:650;color:#fff} .panel-note{font-size:12px;color:var(--muted);max-width:720px;line-height:1.4} table{width:100%;border-collapse:collapse} th{font-size:9px;font-weight:800;text-transform:uppercase;letter-spacing:.16em;color:var(--muted);padding:10px 14px;text-align:left;background:rgba(6,14,24,.55)} td{font-size:13px;padding:10px 14px;border-top:1px solid rgba(255,255,255,.06);color:var(--mid);vertical-align:top} td:first-child{color:#fff} td strong{display:block;color:#fff} td span, td small{display:block;color:var(--muted);font-size:10px;margin-top:3px} td small{color:var(--cyan-soft)} .empty{text-align:center;color:var(--muted);padding:24px} .definitions{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px;padding:14px 18px} .def{font-size:12px;color:var(--mid);line-height:1.35;background:rgba(255,255,255,.03);border:1px solid rgba(255,255,255,.08);border-radius:12px;padding:10px} .def strong{color:#fff} .footer{text-align:center;padding:18px;font-size:10px;color:var(--muted);letter-spacing:.14em;border-top:1px solid var(--border);margin-top:8px}
 @media(max-width:1000px){.metric-grid,.panel-grid,.definitions{grid-template-columns:1fr 1fr}.panel{overflow-x:auto}table{min-width:900px}.header-top{padding-right:0;display:block}.revio-header-logo{position:relative;width:108px;margin-top:10px}} @media(max-width:680px){.metric-grid,.panel-grid,.definitions{grid-template-columns:1fr}}
-</style></head><body><div class="container"><header class="header"><div class="header-top"><div class="logo"><span class="logo-dot"></span><span class="logo-text">Rev.io Sales Team</span></div><div class="header-date">Generated Oct 26, 2026 7:35 AM ET</div></div><img class="revio-header-logo" src="https://7091219.fs1.hubspotusercontent-na1.net/hubfs/7091219/email-assets/logo-revio-white.png" alt="Rev.io"><h1>Monday Sales <span>Meeting</span></h1><p class="header-sub">Last week (Oct 19 - Oct 25, 2026) vs prior week (Oct 12 - Oct 18, 2026) across meeting creation, demos run, sourced/converted opportunities, and booked MRR by product.</p></header>
-<div class="metric-grid"><div class="metric-card">
+</style></head><body><div class="container"><header class="header"><div class="header-top"><div class="logo"><span class="logo-dot"></span><span class="logo-text">Rev.io Sales Team</span></div><div class="header-date">Generated Oct 26, 2026 7:40 AM ET</div></div><img class="revio-header-logo" src="https://7091219.fs1.hubspotusercontent-na1.net/hubfs/7091219/email-assets/logo-revio-white.png" alt="Rev.io"><h1>Monday Sales <span>Meeting</span></h1><p class="header-sub">Last week (Oct 19 - Oct 25, 2026) vs prior week (Oct 12 - Oct 18, 2026) across meeting creation, demos run, sourced/converted opportunities, and booked MRR by product.</p></header>
+<div class="metric-grid"><details class="metric-card">
+      <summary aria-label="Open details for Discovery Meetings Set">
       <div class="metric-label">Discovery Meetings Set</div>
       <div class="metric-value">21</div>
       <div class="metric-compare"><span class="down">-5</span> vs prior · -19%</div>
       <div class="metric-prior">Prior week: 26</div>
-    </div>
-<div class="metric-card">
+      <div class="open-details">Open details <span aria-hidden="true">▾</span></div>
+      </summary>
+      <div class="metric-detail"><table><caption class="sr-only">Underlying Salesforce records for Discovery Meetings Set, last and prior weeks</caption><thead><tr><th>Week</th><th>Date</th><th>Owner / Rep</th><th>Account</th><th>Subject / Opportunity</th><th>Product / Source</th><th>MRR</th></tr></thead><tbody><tr>
+              <td><strong>Last week</strong><span>Oct 19 - Oct 25, 2026</span></td>
+              <td>2026-10-23</td>
+              <td>Joseph Abarno</td>
+              <td></td>
+              <td><a href="https://rev-io.my.salesforce.com/00UPX00000RIGl82AH" target="_blank" rel="noopener">(New Platform Discussion) Epic.io &amp; Rev.io</a></td>
+              <td>Discovery Call</td>
+              <td>—</td>
+            </tr>
+<tr>
+              <td><strong>Last week</strong><span>Oct 19 - Oct 25, 2026</span></td>
+              <td>2026-10-23</td>
+              <td>Joseph Abarno</td>
+              <td></td>
+              <td><a href="https://rev-io.my.salesforce.com/00UPX00000RIOCQ2A5" target="_blank" rel="noopener">(Initial Meeting) Software Tech Enterprises &amp; Rev.io</a></td>
+              <td>Discovery Call</td>
+              <td>—</td>
+            </tr>
+<tr>
+              <td><strong>Last week</strong><span>Oct 19 - Oct 25, 2026</span></td>
+              <td>2026-10-23</td>
+              <td>Jake Borah</td>
+              <td></td>
+              <td><a href="https://rev-io.my.salesforce.com/00UPX00000RHYc22AH" target="_blank" rel="noopener">(Discovery Call) Ironstack Technology &amp; Rev.io</a></td>
+              <td>Discovery Call</td>
+              <td>—</td>
+            </tr>
+<tr>
+              <td><strong>Last week</strong><span>Oct 19 - Oct 25, 2026</span></td>
+              <td>2026-10-22</td>
+              <td>Patrick Davies</td>
+              <td></td>
+              <td><a href="https://rev-io.my.salesforce.com/00UPX00000RGVmf2AH" target="_blank" rel="noopener">(Discovery Call) TPG Security Tech &amp; Rev.io</a></td>
+              <td>Discovery Call</td>
+              <td>—</td>
+            </tr>
+<tr>
+              <td><strong>Last week</strong><span>Oct 19 - Oct 25, 2026</span></td>
+              <td>2026-10-22</td>
+              <td>Jaylin Bender</td>
+              <td></td>
+              <td><a href="https://rev-io.my.salesforce.com/00UPX00000RGENd2AP" target="_blank" rel="noopener">(Discovery Call) GoTech LLC &amp; Rev.io</a></td>
+              <td>Discovery Call</td>
+              <td>—</td>
+            </tr>
+<tr>
+              <td><strong>Last week</strong><span>Oct 19 - Oct 25, 2026</span></td>
+              <td>2026-10-21</td>
+              <td>Patrick Davies</td>
+              <td></td>
+              <td><a href="https://rev-io.my.salesforce.com/00UPX00000RDFeP2AX" target="_blank" rel="noopener">(Discovery Call) Avisight &amp; Rev.io</a></td>
+              <td>Discovery Call</td>
+              <td>—</td>
+            </tr>
+<tr>
+              <td><strong>Last week</strong><span>Oct 19 - Oct 25, 2026</span></td>
+              <td>2026-10-21</td>
+              <td>Jaylin Bender</td>
+              <td></td>
+              <td><a href="https://rev-io.my.salesforce.com/00UPX00000RDMuR2AX" target="_blank" rel="noopener">(Discovery Call) Link IT Integrators &amp; Rev.io</a></td>
+              <td>Discovery Call</td>
+              <td>—</td>
+            </tr>
+<tr>
+              <td><strong>Last week</strong><span>Oct 19 - Oct 25, 2026</span></td>
+              <td>2026-10-21</td>
+              <td>Jaylin Bender</td>
+              <td></td>
+              <td><a href="https://rev-io.my.salesforce.com/00UPX00000RDoYv2AL" target="_blank" rel="noopener">(Discovery Call) American Safe Company, Inc. &amp; Rev.io</a></td>
+              <td>Discovery Call</td>
+              <td>—</td>
+            </tr>
+<tr>
+              <td><strong>Last week</strong><span>Oct 19 - Oct 25, 2026</span></td>
+              <td>2026-10-21</td>
+              <td>Jake Borah</td>
+              <td></td>
+              <td><a href="https://rev-io.my.salesforce.com/00UPX00000RDUOv2AP" target="_blank" rel="noopener">(Discovery Call) Cutter Security &amp; Rev.io</a></td>
+              <td>Discovery Call</td>
+              <td>—</td>
+            </tr>
+<tr>
+              <td><strong>Last week</strong><span>Oct 19 - Oct 25, 2026</span></td>
+              <td>2026-10-21</td>
+              <td>Connor Flynn</td>
+              <td></td>
+              <td><a href="https://rev-io.my.salesforce.com/00UPX00000RD9lt2AD" target="_blank" rel="noopener">tidra anydreb: Rev.io | ASCII San Antonio</a></td>
+              <td>Discovery Call</td>
+              <td>—</td>
+            </tr>
+<tr>
+              <td><strong>Last week</strong><span>Oct 19 - Oct 25, 2026</span></td>
+              <td>2026-10-21</td>
+              <td>Abbey McIntosh</td>
+              <td></td>
+              <td><a href="https://rev-io.my.salesforce.com/00UPX00000RE8e52AD" target="_blank" rel="noopener">(Discovery Call) Homeland Surveillance, Investigations &amp; Installations, Corp. &amp; Rev.io</a></td>
+              <td>Discovery Call</td>
+              <td>—</td>
+            </tr>
+<tr>
+              <td><strong>Last week</strong><span>Oct 19 - Oct 25, 2026</span></td>
+              <td>2026-10-20</td>
+              <td>Patrick Davies</td>
+              <td>Greenman It Support</td>
+              <td><a href="https://rev-io.my.salesforce.com/00UPX00000RB9V32AL" target="_blank" rel="noopener">Rev.io | Pax8 Peer Group with Gianni Agrusa</a></td>
+              <td>Discovery Call</td>
+              <td>—</td>
+            </tr>
+<tr>
+              <td><strong>Last week</strong><span>Oct 19 - Oct 25, 2026</span></td>
+              <td>2026-10-20</td>
+              <td>Patrick Davies</td>
+              <td></td>
+              <td><a href="https://rev-io.my.salesforce.com/00UPX00000RB3ZJ2A1" target="_blank" rel="noopener">(Discovery Call) Nutmeg Consulting &amp; Rev.io</a></td>
+              <td>Discovery Call</td>
+              <td>—</td>
+            </tr>
+<tr>
+              <td><strong>Last week</strong><span>Oct 19 - Oct 25, 2026</span></td>
+              <td>2026-10-20</td>
+              <td>Connor Flynn</td>
+              <td></td>
+              <td><a href="https://rev-io.my.salesforce.com/00UPX00000RATpI2AX" target="_blank" rel="noopener">Don Brown: Rev.io | Pax8 Peer Group</a></td>
+              <td>Discovery Call</td>
+              <td>—</td>
+            </tr>
+<tr>
+              <td><strong>Last week</strong><span>Oct 19 - Oct 25, 2026</span></td>
+              <td>2026-10-20</td>
+              <td>Abbey McIntosh</td>
+              <td></td>
+              <td><a href="https://rev-io.my.salesforce.com/00UPX00000RBTFF2A5" target="_blank" rel="noopener">(Discovery Call) Technolojunkies &amp; Rev.io</a></td>
+              <td>Discovery Call</td>
+              <td>—</td>
+            </tr>
+<tr>
+              <td><strong>Last week</strong><span>Oct 19 - Oct 25, 2026</span></td>
+              <td>2026-10-19</td>
+              <td>Jaylin Bender</td>
+              <td></td>
+              <td><a href="https://rev-io.my.salesforce.com/00UPX00000R9Fcz2AF" target="_blank" rel="noopener">(Discovery Call) The Audio Visual Group &amp; Rev.io</a></td>
+              <td>Discovery Call</td>
+              <td>—</td>
+            </tr>
+<tr>
+              <td><strong>Last week</strong><span>Oct 19 - Oct 25, 2026</span></td>
+              <td>2026-10-19</td>
+              <td>Jaylin Bender</td>
+              <td></td>
+              <td><a href="https://rev-io.my.salesforce.com/00UPX00000R9GxF2AV" target="_blank" rel="noopener">(Discovery Call) Independent Door &amp; Gate &amp; Rev.io</a></td>
+              <td>Discovery Call</td>
+              <td>—</td>
+            </tr>
+<tr>
+              <td><strong>Last week</strong><span>Oct 19 - Oct 25, 2026</span></td>
+              <td>2026-10-19</td>
+              <td>Jamie Butler</td>
+              <td></td>
+              <td><a href="https://rev-io.my.salesforce.com/00UPX00000R8iHF2AZ" target="_blank" rel="noopener">(Discovery Call) CRV Surveillance LLC &amp; Rev.io</a></td>
+              <td>Discovery Call</td>
+              <td>—</td>
+            </tr>
+<tr>
+              <td><strong>Last week</strong><span>Oct 19 - Oct 25, 2026</span></td>
+              <td>2026-10-19</td>
+              <td>Connor Flynn</td>
+              <td></td>
+              <td><a href="https://rev-io.my.salesforce.com/00UPX00000R8pll2AB" target="_blank" rel="noopener">(Discovery Call) ChatterBox Phone &amp; Rev.io</a></td>
+              <td>Discovery Call</td>
+              <td>—</td>
+            </tr>
+<tr>
+              <td><strong>Last week</strong><span>Oct 19 - Oct 25, 2026</span></td>
+              <td>2026-10-19</td>
+              <td>Connor Flynn</td>
+              <td></td>
+              <td><a href="https://rev-io.my.salesforce.com/00UPX00000R8HVa2AN" target="_blank" rel="noopener">(Discovery Call) Benjamin Whatley &amp; Rev.io</a></td>
+              <td>Discovery Call</td>
+              <td>—</td>
+            </tr>
+<tr>
+              <td><strong>Last week</strong><span>Oct 19 - Oct 25, 2026</span></td>
+              <td>2026-10-19</td>
+              <td>Abbey McIntosh</td>
+              <td></td>
+              <td><a href="https://rev-io.my.salesforce.com/00UPX00000R9MEf2AN" target="_blank" rel="noopener">(Initial Demo) Infinite Technologies, LLC &amp; Rev.io</a></td>
+              <td>Discovery Call</td>
+              <td>—</td>
+            </tr>
+<tr>
+              <td><strong>Prior week</strong><span>Oct 12 - Oct 18, 2026</span></td>
+              <td>2026-10-16</td>
+              <td>Jaylin Bender</td>
+              <td></td>
+              <td><a href="https://rev-io.my.salesforce.com/00UPX00000R4uLp2AJ" target="_blank" rel="noopener">(Discovery Call) HNL Corp &amp; Rev.io</a></td>
+              <td>Discovery Call</td>
+              <td>—</td>
+            </tr>
+<tr>
+              <td><strong>Prior week</strong><span>Oct 12 - Oct 18, 2026</span></td>
+              <td>2026-10-16</td>
+              <td>Andy Whisenant</td>
+              <td></td>
+              <td><a href="https://rev-io.my.salesforce.com/00UPX00000R5Cp02AF" target="_blank" rel="noopener">(Discovery Call) Televoi &amp; Rev.io</a></td>
+              <td>Discovery Call</td>
+              <td>—</td>
+            </tr>
+<tr>
+              <td><strong>Prior week</strong><span>Oct 12 - Oct 18, 2026</span></td>
+              <td>2026-10-16</td>
+              <td>Andy Whisenant</td>
+              <td></td>
+              <td><a href="https://rev-io.my.salesforce.com/00UPX00000R5c3W2AR" target="_blank" rel="noopener">(Discovery Call) Clicrite &amp; Rev.io</a></td>
+              <td>Discovery Call</td>
+              <td>—</td>
+            </tr>
+<tr>
+              <td><strong>Prior week</strong><span>Oct 12 - Oct 18, 2026</span></td>
+              <td>2026-10-15</td>
+              <td>Patrick Davies</td>
+              <td></td>
+              <td><a href="https://rev-io.my.salesforce.com/00UPX00000R2r0g2AB" target="_blank" rel="noopener">(Discovery Call) Core Security Services &amp; Rev.io</a></td>
+              <td>Discovery Call</td>
+              <td>—</td>
+            </tr>
+<tr>
+              <td><strong>Prior week</strong><span>Oct 12 - Oct 18, 2026</span></td>
+              <td>2026-10-15</td>
+              <td>Joseph Abarno</td>
+              <td></td>
+              <td><a href="https://rev-io.my.salesforce.com/00UPX00000R3Gv82AF" target="_blank" rel="noopener">(Platform Update Discussion) H&amp;S Protection Systems &amp; Rev.io</a></td>
+              <td>Discovery Call</td>
+              <td>—</td>
+            </tr>
+<tr>
+              <td><strong>Prior week</strong><span>Oct 12 - Oct 18, 2026</span></td>
+              <td>2026-10-15</td>
+              <td>Jaylin Bender</td>
+              <td></td>
+              <td><a href="https://rev-io.my.salesforce.com/00UPX00000R3aaU2AR" target="_blank" rel="noopener">(Discovery Call) Master Mounts Installations &amp; Rev.io</a></td>
+              <td>Discovery Call</td>
+              <td>—</td>
+            </tr>
+<tr>
+              <td><strong>Prior week</strong><span>Oct 12 - Oct 18, 2026</span></td>
+              <td>2026-10-15</td>
+              <td>Connor Flynn</td>
+              <td></td>
+              <td><a href="https://rev-io.my.salesforce.com/00UPX00000R3UYH2A3" target="_blank" rel="noopener">(Discovery Call) Big Wave Technologies &amp; Rev.io</a></td>
+              <td>Discovery Call</td>
+              <td>—</td>
+            </tr>
+<tr>
+              <td><strong>Prior week</strong><span>Oct 12 - Oct 18, 2026</span></td>
+              <td>2026-10-15</td>
+              <td>Andy Whisenant</td>
+              <td></td>
+              <td><a href="https://rev-io.my.salesforce.com/00UPX00000R2ezV2AR" target="_blank" rel="noopener">(Discovery Call) S &amp; B Cloud Communications &amp; Rev.io</a></td>
+              <td>Discovery Call</td>
+              <td>—</td>
+            </tr>
+<tr>
+              <td><strong>Prior week</strong><span>Oct 12 - Oct 18, 2026</span></td>
+              <td>2026-10-14</td>
+              <td>Patrick Davies</td>
+              <td></td>
+              <td><a href="https://rev-io.my.salesforce.com/00UPX00000R0b9h2AB" target="_blank" rel="noopener">(Discovery Call) R.E. Michel Company LLC &amp; Rev.io</a></td>
+              <td>Discovery Call</td>
+              <td>—</td>
+            </tr>
+<tr>
+              <td><strong>Prior week</strong><span>Oct 12 - Oct 18, 2026</span></td>
+              <td>2026-10-14</td>
+              <td>Joseph Abarno</td>
+              <td></td>
+              <td><a href="https://rev-io.my.salesforce.com/00UPX00000R03T02AJ" target="_blank" rel="noopener">(Discovery Call) Answer360 &amp; Rev.io</a></td>
+              <td>Discovery Call</td>
+              <td>—</td>
+            </tr>
+<tr>
+              <td><strong>Prior week</strong><span>Oct 12 - Oct 18, 2026</span></td>
+              <td>2026-10-14</td>
+              <td>Jamie Butler</td>
+              <td></td>
+              <td><a href="https://rev-io.my.salesforce.com/00UPX00000R08ME2AZ" target="_blank" rel="noopener">(Discovery Call) Clarity ITS &amp; Rev.io</a></td>
+              <td>Discovery Call</td>
+              <td>—</td>
+            </tr>
+<tr>
+              <td><strong>Prior week</strong><span>Oct 12 - Oct 18, 2026</span></td>
+              <td>2026-10-14</td>
+              <td>Jake Borah</td>
+              <td></td>
+              <td><a href="https://rev-io.my.salesforce.com/00UPX00000QQqGv2AL" target="_blank" rel="noopener">(Discovery Call) ORI &amp; Rev.io</a></td>
+              <td>Discovery Call</td>
+              <td>—</td>
+            </tr>
+<tr>
+              <td><strong>Prior week</strong><span>Oct 12 - Oct 18, 2026</span></td>
+              <td>2026-10-14</td>
+              <td>Andy Whisenant</td>
+              <td></td>
+              <td><a href="https://rev-io.my.salesforce.com/00UPX00000R0T2b2AF" target="_blank" rel="noopener">(Discovery Call) DMR Technologies &amp; Rev.io</a></td>
+              <td>Discovery Call</td>
+              <td>—</td>
+            </tr>
+<tr>
+              <td><strong>Prior week</strong><span>Oct 12 - Oct 18, 2026</span></td>
+              <td>2026-10-14</td>
+              <td>Andy Whisenant</td>
+              <td></td>
+              <td><a href="https://rev-io.my.salesforce.com/00UPX00000R1Jqf2AF" target="_blank" rel="noopener">(Discovery Call) Broadband Technology Corp &amp; Rev.io</a></td>
+              <td>Discovery Call</td>
+              <td>—</td>
+            </tr>
+<tr>
+              <td><strong>Prior week</strong><span>Oct 12 - Oct 18, 2026</span></td>
+              <td>2026-10-13</td>
+              <td>Patrick Davies</td>
+              <td></td>
+              <td><a href="https://rev-io.my.salesforce.com/00UPX00000Qy9Cj2AJ" target="_blank" rel="noopener">(Discovery Call) Silent Partner Communications &amp; Rev.io</a></td>
+              <td>Discovery Call</td>
+              <td>—</td>
+            </tr>
+<tr>
+              <td><strong>Prior week</strong><span>Oct 12 - Oct 18, 2026</span></td>
+              <td>2026-10-13</td>
+              <td>Joseph Abarno</td>
+              <td></td>
+              <td><a href="https://rev-io.my.salesforce.com/00UPX00000QyUnR2AV" target="_blank" rel="noopener">(Discovery Call) Sasco Contractors &amp; Rev.io</a></td>
+              <td>Discovery Call</td>
+              <td>—</td>
+            </tr>
+<tr>
+              <td><strong>Prior week</strong><span>Oct 12 - Oct 18, 2026</span></td>
+              <td>2026-10-13</td>
+              <td>Jaylin Bender</td>
+              <td></td>
+              <td><a href="https://rev-io.my.salesforce.com/00UPX00000QynJp2AJ" target="_blank" rel="noopener">(Rev.io Updates) WIP &amp; Rev.io</a></td>
+              <td>Discovery Call</td>
+              <td>—</td>
+            </tr>
+<tr>
+              <td><strong>Prior week</strong><span>Oct 12 - Oct 18, 2026</span></td>
+              <td>2026-10-13</td>
+              <td>Connor Flynn</td>
+              <td></td>
+              <td><a href="https://rev-io.my.salesforce.com/00UPX00000Qxwx32AB" target="_blank" rel="noopener">(Discovery Call) East Coast Alarms &amp; Rev.io</a></td>
+              <td>Discovery Call</td>
+              <td>—</td>
+            </tr>
+<tr>
+              <td><strong>Prior week</strong><span>Oct 12 - Oct 18, 2026</span></td>
+              <td>2026-10-13</td>
+              <td>Andy Whisenant</td>
+              <td></td>
+              <td><a href="https://rev-io.my.salesforce.com/00UPX00000Qypbl2AB" target="_blank" rel="noopener">(Discovery Call) UC Five &amp; Rev.io</a></td>
+              <td>Discovery Call</td>
+              <td>—</td>
+            </tr>
+<tr>
+              <td><strong>Prior week</strong><span>Oct 12 - Oct 18, 2026</span></td>
+              <td>2026-10-13</td>
+              <td>Andy Whisenant</td>
+              <td></td>
+              <td><a href="https://rev-io.my.salesforce.com/00UPX00000QyoB32AJ" target="_blank" rel="noopener">(Discovery Call) Spangle Tech, LLC &amp; Rev.io</a></td>
+              <td>Discovery Call</td>
+              <td>—</td>
+            </tr>
+<tr>
+              <td><strong>Prior week</strong><span>Oct 12 - Oct 18, 2026</span></td>
+              <td>2026-10-13</td>
+              <td>Abbey McIntosh</td>
+              <td></td>
+              <td><a href="https://rev-io.my.salesforce.com/00UPX00000QynRt2AJ" target="_blank" rel="noopener">(Discovery Call) Seaside Alarms &amp; Rev.io</a></td>
+              <td>Discovery Call</td>
+              <td>—</td>
+            </tr>
+<tr>
+              <td><strong>Prior week</strong><span>Oct 12 - Oct 18, 2026</span></td>
+              <td>2026-10-13</td>
+              <td>Abbey McIntosh</td>
+              <td></td>
+              <td><a href="https://rev-io.my.salesforce.com/00UPX00000QyWNq2AN" target="_blank" rel="noopener">(Discovery Call) IVA Solutions, Inc. &amp; Rev.io</a></td>
+              <td>Discovery Call</td>
+              <td>—</td>
+            </tr>
+<tr>
+              <td><strong>Prior week</strong><span>Oct 12 - Oct 18, 2026</span></td>
+              <td>2026-10-12</td>
+              <td>Jamie Butler</td>
+              <td></td>
+              <td><a href="https://rev-io.my.salesforce.com/00UPX00000Qwk3V2AR" target="_blank" rel="noopener">(Discovery Call) Toma Fire Protection Equipment &amp; Rev.io</a></td>
+              <td>Discovery Call</td>
+              <td>—</td>
+            </tr>
+<tr>
+              <td><strong>Prior week</strong><span>Oct 12 - Oct 18, 2026</span></td>
+              <td>2026-10-12</td>
+              <td>Connor Flynn</td>
+              <td></td>
+              <td><a href="https://rev-io.my.salesforce.com/00UPX00000QqLB42AN" target="_blank" rel="noopener">Hunter Gordon: Rev.io | Pax8 Peer Group</a></td>
+              <td>Discovery Call</td>
+              <td>—</td>
+            </tr>
+<tr>
+              <td><strong>Prior week</strong><span>Oct 12 - Oct 18, 2026</span></td>
+              <td>2026-10-12</td>
+              <td>Abbey McIntosh</td>
+              <td></td>
+              <td><a href="https://rev-io.my.salesforce.com/00UPX00000QvlZV2AZ" target="_blank" rel="noopener">(Discovery Call) Szulgit Electric &amp; Rev.io</a></td>
+              <td>Discovery Call</td>
+              <td>—</td>
+            </tr>
+<tr>
+              <td><strong>Prior week</strong><span>Oct 12 - Oct 18, 2026</span></td>
+              <td>2026-10-12</td>
+              <td>Abbey McIntosh</td>
+              <td></td>
+              <td><a href="https://rev-io.my.salesforce.com/00UPX00000QwdEv2AJ" target="_blank" rel="noopener">(Discovery Call) Soundsight Technologies &amp; Rev.io</a></td>
+              <td>Discovery Call</td>
+              <td>—</td>
+            </tr></tbody></table></div>
+    </details>
+<details class="metric-card">
+      <summary aria-label="Open details for Discovery Meetings Complete">
       <div class="metric-label">Discovery Meetings Complete</div>
       <div class="metric-value">15</div>
       <div class="metric-compare"><span class="down">-6</span> vs prior · -29%</div>
       <div class="metric-prior">Prior week: 21</div>
-    </div>
-<div class="metric-card">
+      <div class="open-details">Open details <span aria-hidden="true">▾</span></div>
+      </summary>
+      <div class="metric-detail"><table><caption class="sr-only">Underlying Salesforce records for Discovery Meetings Complete, last and prior weeks</caption><thead><tr><th>Week</th><th>Date</th><th>Owner / Rep</th><th>Account</th><th>Subject / Opportunity</th><th>Product / Source</th><th>MRR</th></tr></thead><tbody><tr>
+              <td><strong>Last week</strong><span>Oct 19 - Oct 25, 2026</span></td>
+              <td>2026-10-23</td>
+              <td>Jake Borah</td>
+              <td></td>
+              <td><a href="https://rev-io.my.salesforce.com/00UPX00000QrAa92AF" target="_blank" rel="noopener">(Intro/demo) Aurum Home Technology &amp; Rev.io</a></td>
+              <td>Completed</td>
+              <td>—</td>
+            </tr>
+<tr>
+              <td><strong>Last week</strong><span>Oct 19 - Oct 25, 2026</span></td>
+              <td>2026-10-23</td>
+              <td>Connor Flynn</td>
+              <td></td>
+              <td><a href="https://rev-io.my.salesforce.com/00UPX00000RATpI2AX" target="_blank" rel="noopener">Don Brown: Rev.io | Pax8 Peer Group</a></td>
+              <td>Completed</td>
+              <td>—</td>
+            </tr>
+<tr>
+              <td><strong>Last week</strong><span>Oct 19 - Oct 25, 2026</span></td>
+              <td>2026-10-22</td>
+              <td>Jaylin Bender</td>
+              <td></td>
+              <td><a href="https://rev-io.my.salesforce.com/00UPX00000R4uLp2AJ" target="_blank" rel="noopener">(Discovery Call) HNL Corp &amp; Rev.io</a></td>
+              <td>Completed</td>
+              <td>—</td>
+            </tr>
+<tr>
+              <td><strong>Last week</strong><span>Oct 19 - Oct 25, 2026</span></td>
+              <td>2026-10-22</td>
+              <td>Andy Whisenant</td>
+              <td></td>
+              <td><a href="https://rev-io.my.salesforce.com/00UPX00000QyoB32AJ" target="_blank" rel="noopener">(Discovery Call) Spangle Tech, LLC &amp; Rev.io</a></td>
+              <td>Completed</td>
+              <td>—</td>
+            </tr>
+<tr>
+              <td><strong>Last week</strong><span>Oct 19 - Oct 25, 2026</span></td>
+              <td>2026-10-22</td>
+              <td>Abbey McIntosh</td>
+              <td></td>
+              <td><a href="https://rev-io.my.salesforce.com/00UPX00000QvlZV2AZ" target="_blank" rel="noopener">(Discovery Call) Szulgit Electric &amp; Rev.io</a></td>
+              <td>Completed</td>
+              <td>—</td>
+            </tr>
+<tr>
+              <td><strong>Last week</strong><span>Oct 19 - Oct 25, 2026</span></td>
+              <td>2026-10-22</td>
+              <td>Abbey McIntosh</td>
+              <td></td>
+              <td><a href="https://rev-io.my.salesforce.com/00UPX00000RE8e52AD" target="_blank" rel="noopener">(Discovery Call) Homeland Surveillance, Investigations &amp; Installations, Corp. &amp; Rev.io</a></td>
+              <td>Completed</td>
+              <td>—</td>
+            </tr>
+<tr>
+              <td><strong>Last week</strong><span>Oct 19 - Oct 25, 2026</span></td>
+              <td>2026-10-21</td>
+              <td>Connor Flynn</td>
+              <td></td>
+              <td><a href="https://rev-io.my.salesforce.com/00UPX00000R8pll2AB" target="_blank" rel="noopener">(Discovery Call) ChatterBox Phone &amp; Rev.io</a></td>
+              <td>Completed</td>
+              <td>—</td>
+            </tr>
+<tr>
+              <td><strong>Last week</strong><span>Oct 19 - Oct 25, 2026</span></td>
+              <td>2026-10-21</td>
+              <td>Andy Whisenant</td>
+              <td></td>
+              <td><a href="https://rev-io.my.salesforce.com/00UPX00000R5Cp02AF" target="_blank" rel="noopener">(Discovery Call) Televoi &amp; Rev.io</a></td>
+              <td>Completed</td>
+              <td>—</td>
+            </tr>
+<tr>
+              <td><strong>Last week</strong><span>Oct 19 - Oct 25, 2026</span></td>
+              <td>2026-10-20</td>
+              <td>Patrick Davies</td>
+              <td></td>
+              <td><a href="https://rev-io.my.salesforce.com/00UPX00000QZFbV2AX" target="_blank" rel="noopener">(Product Demo) DigiTronix / Rev.io</a></td>
+              <td>Completed</td>
+              <td>—</td>
+            </tr>
+<tr>
+              <td><strong>Last week</strong><span>Oct 19 - Oct 25, 2026</span></td>
+              <td>2026-10-20</td>
+              <td>Jaylin Bender</td>
+              <td></td>
+              <td><a href="https://rev-io.my.salesforce.com/00UPX00000QynJp2AJ" target="_blank" rel="noopener">(Rev.io Updates) WIP &amp; Rev.io</a></td>
+              <td>Completed</td>
+              <td>—</td>
+            </tr>
+<tr>
+              <td><strong>Last week</strong><span>Oct 19 - Oct 25, 2026</span></td>
+              <td>2026-10-20</td>
+              <td>Andy Whisenant</td>
+              <td></td>
+              <td><a href="https://rev-io.my.salesforce.com/00UPX00000R5c3W2AR" target="_blank" rel="noopener">(Discovery Call) Clicrite &amp; Rev.io</a></td>
+              <td>Completed</td>
+              <td>—</td>
+            </tr>
+<tr>
+              <td><strong>Last week</strong><span>Oct 19 - Oct 25, 2026</span></td>
+              <td>2026-10-19</td>
+              <td>Patrick Davies</td>
+              <td></td>
+              <td><a href="https://rev-io.my.salesforce.com/00UPX00000QfbcX2AR" target="_blank" rel="noopener">(Discovery Call) Torch Ignited &amp; Rev.io</a></td>
+              <td>Completed</td>
+              <td>—</td>
+            </tr>
+<tr>
+              <td><strong>Last week</strong><span>Oct 19 - Oct 25, 2026</span></td>
+              <td>2026-10-19</td>
+              <td>Patrick Davies</td>
+              <td></td>
+              <td><a href="https://rev-io.my.salesforce.com/00UPX00000R0b9h2AB" target="_blank" rel="noopener">(Discovery Call) R.E. Michel Company LLC &amp; Rev.io</a></td>
+              <td>Completed</td>
+              <td>—</td>
+            </tr>
+<tr>
+              <td><strong>Last week</strong><span>Oct 19 - Oct 25, 2026</span></td>
+              <td>2026-10-19</td>
+              <td>Connor Flynn</td>
+              <td></td>
+              <td><a href="https://rev-io.my.salesforce.com/00UPX00000R8HVa2AN" target="_blank" rel="noopener">(Discovery Call) Benjamin Whatley &amp; Rev.io</a></td>
+              <td>Completed</td>
+              <td>—</td>
+            </tr>
+<tr>
+              <td><strong>Last week</strong><span>Oct 19 - Oct 25, 2026</span></td>
+              <td>2026-10-19</td>
+              <td>Andy Whisenant</td>
+              <td></td>
+              <td><a href="https://rev-io.my.salesforce.com/00UPX00000Qypbl2AB" target="_blank" rel="noopener">(Discovery Call) UC Five &amp; Rev.io</a></td>
+              <td>Completed</td>
+              <td>—</td>
+            </tr>
+<tr>
+              <td><strong>Prior week</strong><span>Oct 12 - Oct 18, 2026</span></td>
+              <td>2026-10-16</td>
+              <td>Patrick Davies</td>
+              <td></td>
+              <td><a href="https://rev-io.my.salesforce.com/00UPX00000Qqo4z2AB" target="_blank" rel="noopener">(Discovery Call) Tenarai &amp; Rev.io</a></td>
+              <td>Completed</td>
+              <td>—</td>
+            </tr>
+<tr>
+              <td><strong>Prior week</strong><span>Oct 12 - Oct 18, 2026</span></td>
+              <td>2026-10-15</td>
+              <td>Joseph Abarno</td>
+              <td></td>
+              <td><a href="https://rev-io.my.salesforce.com/00UPX00000QyUnR2AV" target="_blank" rel="noopener">(Discovery Call) Sasco Contractors &amp; Rev.io</a></td>
+              <td>Completed</td>
+              <td>—</td>
+            </tr>
+<tr>
+              <td><strong>Prior week</strong><span>Oct 12 - Oct 18, 2026</span></td>
+              <td>2026-10-15</td>
+              <td>Jake Borah</td>
+              <td></td>
+              <td><a href="https://rev-io.my.salesforce.com/00UPX00000Qjcwb2AB" target="_blank" rel="noopener">(Discovery Call) Fortress Lock, Safe, &amp; Security &amp; Rev.io</a></td>
+              <td>Completed</td>
+              <td>—</td>
+            </tr>
+<tr>
+              <td><strong>Prior week</strong><span>Oct 12 - Oct 18, 2026</span></td>
+              <td>2026-10-15</td>
+              <td>Andy Whisenant</td>
+              <td></td>
+              <td><a href="https://rev-io.my.salesforce.com/00UPX00000R1Jqf2AF" target="_blank" rel="noopener">(Discovery Call) Broadband Technology Corp &amp; Rev.io</a></td>
+              <td>Completed</td>
+              <td>—</td>
+            </tr>
+<tr>
+              <td><strong>Prior week</strong><span>Oct 12 - Oct 18, 2026</span></td>
+              <td>2026-10-15</td>
+              <td>Andy Whisenant</td>
+              <td></td>
+              <td><a href="https://rev-io.my.salesforce.com/00UPX00000Qoo132AB" target="_blank" rel="noopener">(Discovery Call) All Systems Integrated &amp; Rev.io</a></td>
+              <td>Completed</td>
+              <td>—</td>
+            </tr>
+<tr>
+              <td><strong>Prior week</strong><span>Oct 12 - Oct 18, 2026</span></td>
+              <td>2026-10-15</td>
+              <td>Abbey McIntosh</td>
+              <td></td>
+              <td><a href="https://rev-io.my.salesforce.com/00UPX00000QqlK52AJ" target="_blank" rel="noopener">(Updated Demo) Integrated Electronic Systems Inc &amp; Rev.io</a></td>
+              <td>Completed</td>
+              <td>—</td>
+            </tr>
+<tr>
+              <td><strong>Prior week</strong><span>Oct 12 - Oct 18, 2026</span></td>
+              <td>2026-10-15</td>
+              <td>Abbey McIntosh</td>
+              <td></td>
+              <td><a href="https://rev-io.my.salesforce.com/00UPX00000QynRt2AJ" target="_blank" rel="noopener">(Discovery Call) Seaside Alarms &amp; Rev.io</a></td>
+              <td>Completed</td>
+              <td>—</td>
+            </tr>
+<tr>
+              <td><strong>Prior week</strong><span>Oct 12 - Oct 18, 2026</span></td>
+              <td>2026-10-14</td>
+              <td>Jaylin Bender</td>
+              <td></td>
+              <td><a href="https://rev-io.my.salesforce.com/00UPX00000Qj6gb2AB" target="_blank" rel="noopener">(Discovery Call) Blockhouse Managed Technology Services Corp. &amp; Rev.io</a></td>
+              <td>Completed</td>
+              <td>—</td>
+            </tr>
+<tr>
+              <td><strong>Prior week</strong><span>Oct 12 - Oct 18, 2026</span></td>
+              <td>2026-10-14</td>
+              <td>Jamie Butler</td>
+              <td></td>
+              <td><a href="https://rev-io.my.salesforce.com/00UPX00000QkLor2AF" target="_blank" rel="noopener">(New Platform Demo) Cloudli Communications &amp; Rev.io</a></td>
+              <td>Completed</td>
+              <td>—</td>
+            </tr>
+<tr>
+              <td><strong>Prior week</strong><span>Oct 12 - Oct 18, 2026</span></td>
+              <td>2026-10-14</td>
+              <td>Jamie Butler</td>
+              <td></td>
+              <td><a href="https://rev-io.my.salesforce.com/00UPX00000Qwk3V2AR" target="_blank" rel="noopener">(Discovery Call) Toma Fire Protection Equipment &amp; Rev.io</a></td>
+              <td>Completed</td>
+              <td>—</td>
+            </tr>
+<tr>
+              <td><strong>Prior week</strong><span>Oct 12 - Oct 18, 2026</span></td>
+              <td>2026-10-14</td>
+              <td>Jamie Butler</td>
+              <td></td>
+              <td><a href="https://rev-io.my.salesforce.com/00UPX00000Qqh582AB" target="_blank" rel="noopener">(Discovery Call) Grey Matter Technologies &amp; Rev.io</a></td>
+              <td>Completed</td>
+              <td>—</td>
+            </tr>
+<tr>
+              <td><strong>Prior week</strong><span>Oct 12 - Oct 18, 2026</span></td>
+              <td>2026-10-13</td>
+              <td>Joseph Abarno</td>
+              <td></td>
+              <td><a href="https://rev-io.my.salesforce.com/00UPX00000QtMaP2AV" target="_blank" rel="noopener">(Discovery/Requirements Conversation) COEO Solutions &amp; Rev.io</a></td>
+              <td>Completed</td>
+              <td>—</td>
+            </tr>
+<tr>
+              <td><strong>Prior week</strong><span>Oct 12 - Oct 18, 2026</span></td>
+              <td>2026-10-13</td>
+              <td>Joseph Abarno</td>
+              <td></td>
+              <td><a href="https://rev-io.my.salesforce.com/00UPX00000Qnt1D2AR" target="_blank" rel="noopener">(Discovery Call) Cine Audio Visual &amp; Rev.io</a></td>
+              <td>Completed</td>
+              <td>—</td>
+            </tr>
+<tr>
+              <td><strong>Prior week</strong><span>Oct 12 - Oct 18, 2026</span></td>
+              <td>2026-10-13</td>
+              <td>Jaylin Bender</td>
+              <td></td>
+              <td><a href="https://rev-io.my.salesforce.com/00UPX00000QTCA52AP" target="_blank" rel="noopener">(Discovery Call) ProTex &amp; Rev.io</a></td>
+              <td>Completed</td>
+              <td>—</td>
+            </tr>
+<tr>
+              <td><strong>Prior week</strong><span>Oct 12 - Oct 18, 2026</span></td>
+              <td>2026-10-13</td>
+              <td>Jaylin Bender</td>
+              <td></td>
+              <td><a href="https://rev-io.my.salesforce.com/00UPX00000Qsxgr2AB" target="_blank" rel="noopener">(Discovery Call) Norcal Electronics &amp; Rev.io</a></td>
+              <td>Completed</td>
+              <td>—</td>
+            </tr>
+<tr>
+              <td><strong>Prior week</strong><span>Oct 12 - Oct 18, 2026</span></td>
+              <td>2026-10-13</td>
+              <td>Connor Flynn</td>
+              <td></td>
+              <td><a href="https://rev-io.my.salesforce.com/00UPX00000Qlr5A2AR" target="_blank" rel="noopener">(Discovery Call) A&amp;B Lock and Security &amp; Rev.io</a></td>
+              <td>Completed</td>
+              <td>—</td>
+            </tr>
+<tr>
+              <td><strong>Prior week</strong><span>Oct 12 - Oct 18, 2026</span></td>
+              <td>2026-10-13</td>
+              <td>Abbey McIntosh</td>
+              <td></td>
+              <td><a href="https://rev-io.my.salesforce.com/00UPX00000Qm1xJ2AR" target="_blank" rel="noopener">(Updated Demo) BNIT Solutions Ltd. &amp; Rev.io</a></td>
+              <td>Completed</td>
+              <td>—</td>
+            </tr>
+<tr>
+              <td><strong>Prior week</strong><span>Oct 12 - Oct 18, 2026</span></td>
+              <td>2026-10-12</td>
+              <td>Joseph Abarno</td>
+              <td></td>
+              <td><a href="https://rev-io.my.salesforce.com/00UPX00000QpDIn2AN" target="_blank" rel="noopener">Philip Liu: Rev.io Discovery Call</a></td>
+              <td>Completed</td>
+              <td>—</td>
+            </tr>
+<tr>
+              <td><strong>Prior week</strong><span>Oct 12 - Oct 18, 2026</span></td>
+              <td>2026-10-12</td>
+              <td>Jamie Butler</td>
+              <td></td>
+              <td><a href="https://rev-io.my.salesforce.com/00UPX00000QsNqH2AV" target="_blank" rel="noopener">Rev.io New Platform Discussion / Custom Online</a></td>
+              <td>Completed</td>
+              <td>—</td>
+            </tr>
+<tr>
+              <td><strong>Prior week</strong><span>Oct 12 - Oct 18, 2026</span></td>
+              <td>2026-10-12</td>
+              <td>Jamie Butler</td>
+              <td></td>
+              <td><a href="https://rev-io.my.salesforce.com/00UPX00000QVxha2AD" target="_blank" rel="noopener">(New Platform) Affiliated Technology Solutions &amp; Rev.io</a></td>
+              <td>Completed</td>
+              <td>—</td>
+            </tr>
+<tr>
+              <td><strong>Prior week</strong><span>Oct 12 - Oct 18, 2026</span></td>
+              <td>2026-10-12</td>
+              <td>Jake Borah</td>
+              <td></td>
+              <td><a href="https://rev-io.my.salesforce.com/00UPX00000Qo7iT2AR" target="_blank" rel="noopener">(Discovery Call) Atlantic Sound Inc &amp; Rev.io</a></td>
+              <td>Completed</td>
+              <td>—</td>
+            </tr></tbody></table></div>
+    </details>
+<details class="metric-card">
+      <summary aria-label="Open details for CBRs Set">
       <div class="metric-label">CBRs Set</div>
       <div class="metric-value">21</div>
       <div class="metric-compare"><span class="down">-1</span> vs prior · -5%</div>
       <div class="metric-prior">Prior week: 22</div>
-    </div>
-<div class="metric-card">
+      <div class="open-details">Open details <span aria-hidden="true">▾</span></div>
+      </summary>
+      <div class="metric-detail"><table><caption class="sr-only">Underlying Salesforce records for CBRs Set, last and prior weeks</caption><thead><tr><th>Week</th><th>Date</th><th>Owner / Rep</th><th>Account</th><th>Subject / Opportunity</th><th>Product / Source</th><th>MRR</th></tr></thead><tbody><tr>
+              <td><strong>Last week</strong><span>Oct 19 - Oct 25, 2026</span></td>
+              <td>2026-10-23</td>
+              <td>Jakob Champion</td>
+              <td>Motorola - Orlando</td>
+              <td><a href="https://rev-io.my.salesforce.com/00UPX00000RILXw2AP" target="_blank" rel="noopener">Motorola / Rev.io (New Rev.io Discussion)</a></td>
+              <td>Client Business Review</td>
+              <td>—</td>
+            </tr>
+<tr>
+              <td><strong>Last week</strong><span>Oct 19 - Oct 25, 2026</span></td>
+              <td>2026-10-22</td>
+              <td>Justin Lee</td>
+              <td></td>
+              <td><a href="https://rev-io.my.salesforce.com/00UPX00000RFdmH2AT" target="_blank" rel="noopener">(Client Business Review) Rev.io &amp; Indiana Electronics Corp</a></td>
+              <td>Client Business Review</td>
+              <td>—</td>
+            </tr>
+<tr>
+              <td><strong>Last week</strong><span>Oct 19 - Oct 25, 2026</span></td>
+              <td>2026-10-22</td>
+              <td>Justin Lee</td>
+              <td></td>
+              <td><a href="https://rev-io.my.salesforce.com/00UPX00000RFg4D2AT" target="_blank" rel="noopener">(Client Business Review) Rev.io &amp; CC-Teknologies Inc.</a></td>
+              <td>Client Business Review</td>
+              <td>—</td>
+            </tr>
+<tr>
+              <td><strong>Last week</strong><span>Oct 19 - Oct 25, 2026</span></td>
+              <td>2026-10-22</td>
+              <td>Jakob Champion</td>
+              <td></td>
+              <td><a href="https://rev-io.my.salesforce.com/00UPX00000RFDyL2AX" target="_blank" rel="noopener">(Client Business Review) Premise Solutions &amp; Rev.io</a></td>
+              <td>Client Business Review</td>
+              <td>—</td>
+            </tr>
+<tr>
+              <td><strong>Last week</strong><span>Oct 19 - Oct 25, 2026</span></td>
+              <td>2026-10-22</td>
+              <td>Jakob Champion</td>
+              <td>Broadvoice</td>
+              <td><a href="https://rev-io.my.salesforce.com/00UPX00000RGXmr2AH" target="_blank" rel="noopener">(Client Business Review) Broadvoice / Rev.io</a></td>
+              <td>Client Business Review</td>
+              <td>—</td>
+            </tr>
+<tr>
+              <td><strong>Last week</strong><span>Oct 19 - Oct 25, 2026</span></td>
+              <td>2026-10-21</td>
+              <td>Katerra Stephenson Greenwood</td>
+              <td></td>
+              <td><a href="https://rev-io.my.salesforce.com/00UPX00000REUcz2AH" target="_blank" rel="noopener">Client Business Review  &amp; Rev.io- Pavion Corp</a></td>
+              <td>Client Business Review</td>
+              <td>—</td>
+            </tr>
+<tr>
+              <td><strong>Last week</strong><span>Oct 19 - Oct 25, 2026</span></td>
+              <td>2026-10-21</td>
+              <td>Justin Lee</td>
+              <td></td>
+              <td><a href="https://rev-io.my.salesforce.com/00UPX00000REBTv2AP" target="_blank" rel="noopener">(Client Business Review) Rev.io &amp; Behnke Enterprise dba WeKnowBest</a></td>
+              <td>Client Business Review</td>
+              <td>—</td>
+            </tr>
+<tr>
+              <td><strong>Last week</strong><span>Oct 19 - Oct 25, 2026</span></td>
+              <td>2026-10-21</td>
+              <td>Jakob Champion</td>
+              <td></td>
+              <td><a href="https://rev-io.my.salesforce.com/00UPX00000RDHOT2A5" target="_blank" rel="noopener">Client Business Review HTDNET, LLC &amp; Rev.io</a></td>
+              <td>Client Business Review</td>
+              <td>—</td>
+            </tr>
+<tr>
+              <td><strong>Last week</strong><span>Oct 19 - Oct 25, 2026</span></td>
+              <td>2026-10-21</td>
+              <td>Jakob Champion</td>
+              <td></td>
+              <td><a href="https://rev-io.my.salesforce.com/00UPX00000RDxig2AD" target="_blank" rel="noopener">American Business Phones / Rev.io (Rev.io Onboarding Discussion)</a></td>
+              <td>Client Business Review</td>
+              <td>—</td>
+            </tr>
+<tr>
+              <td><strong>Last week</strong><span>Oct 19 - Oct 25, 2026</span></td>
+              <td>2026-10-20</td>
+              <td>Katerra Stephenson Greenwood</td>
+              <td></td>
+              <td><a href="https://rev-io.my.salesforce.com/00UPX00000RBQ2t2AH" target="_blank" rel="noopener">Client Business Review Voice Central &amp; Rev.io</a></td>
+              <td>Client Business Review</td>
+              <td>—</td>
+            </tr>
+<tr>
+              <td><strong>Last week</strong><span>Oct 19 - Oct 25, 2026</span></td>
+              <td>2026-10-20</td>
+              <td>Katerra Stephenson Greenwood</td>
+              <td></td>
+              <td><a href="https://rev-io.my.salesforce.com/00UPX00000RB93d2AD" target="_blank" rel="noopener">Client Business Review Kinetic VoIP, Inc &amp; Rev.io</a></td>
+              <td>Client Business Review</td>
+              <td>—</td>
+            </tr>
+<tr>
+              <td><strong>Last week</strong><span>Oct 19 - Oct 25, 2026</span></td>
+              <td>2026-10-20</td>
+              <td>Katerra Stephenson Greenwood</td>
+              <td>Corbell Telephone &amp; Electronic (CTE)</td>
+              <td><a href="https://rev-io.my.salesforce.com/00UPX00000RBpqr2AD" target="_blank" rel="noopener">Call</a></td>
+              <td>Client Business Review</td>
+              <td>—</td>
+            </tr>
+<tr>
+              <td><strong>Last week</strong><span>Oct 19 - Oct 25, 2026</span></td>
+              <td>2026-10-20</td>
+              <td>Justin Lee</td>
+              <td></td>
+              <td><a href="https://rev-io.my.salesforce.com/00UPX00000RBLb32AH" target="_blank" rel="noopener">(Client Business Review) Rev.io &amp; Vision CTS</a></td>
+              <td>Client Business Review</td>
+              <td>—</td>
+            </tr>
+<tr>
+              <td><strong>Last week</strong><span>Oct 19 - Oct 25, 2026</span></td>
+              <td>2026-10-20</td>
+              <td>Jakob Champion</td>
+              <td>B&amp;T Telecom</td>
+              <td><a href="https://rev-io.my.salesforce.com/00UPX00000RAlCb2AL" target="_blank" rel="noopener">Rev.io / B&amp;T Telecom (Client Business Review)</a></td>
+              <td>Client Business Review</td>
+              <td>—</td>
+            </tr>
+<tr>
+              <td><strong>Last week</strong><span>Oct 19 - Oct 25, 2026</span></td>
+              <td>2026-10-20</td>
+              <td>Jakob Champion</td>
+              <td></td>
+              <td><a href="https://rev-io.my.salesforce.com/00UPX00000RBQfZ2AX" target="_blank" rel="noopener">Client Business Review Call Save USA &amp; Rev.io</a></td>
+              <td>Client Business Review</td>
+              <td>—</td>
+            </tr>
+<tr>
+              <td><strong>Last week</strong><span>Oct 19 - Oct 25, 2026</span></td>
+              <td>2026-10-20</td>
+              <td>Jakob Champion</td>
+              <td></td>
+              <td><a href="https://rev-io.my.salesforce.com/00UPX00000RArLG2A1" target="_blank" rel="noopener">Client Business Review CPI Global &amp; Rev.io</a></td>
+              <td>Client Business Review</td>
+              <td>—</td>
+            </tr>
+<tr>
+              <td><strong>Last week</strong><span>Oct 19 - Oct 25, 2026</span></td>
+              <td>2026-10-20</td>
+              <td>Jakob Champion</td>
+              <td></td>
+              <td><a href="https://rev-io.my.salesforce.com/00UPX00000RBQ4T2AX" target="_blank" rel="noopener">(Payments Discussion) PWR Technologies &amp; Rev.io</a></td>
+              <td>Client Business Review</td>
+              <td>—</td>
+            </tr>
+<tr>
+              <td><strong>Last week</strong><span>Oct 19 - Oct 25, 2026</span></td>
+              <td>2026-10-19</td>
+              <td>Katerra Stephenson Greenwood</td>
+              <td>ARTCOM Assoc Inc</td>
+              <td><a href="https://rev-io.my.salesforce.com/00UPX00000R8WEV2A3" target="_blank" rel="noopener">Call</a></td>
+              <td>Client Business Review</td>
+              <td>—</td>
+            </tr>
+<tr>
+              <td><strong>Last week</strong><span>Oct 19 - Oct 25, 2026</span></td>
+              <td>2026-10-19</td>
+              <td>Jakob Champion</td>
+              <td>Sunshine Communications Mgt LLC - Broadstar</td>
+              <td><a href="https://rev-io.my.salesforce.com/00UPX00000R8sgP2AR" target="_blank" rel="noopener">Rev.io / Broadstar (New Rev.io Discussion)</a></td>
+              <td>Client Business Review</td>
+              <td>—</td>
+            </tr>
+<tr>
+              <td><strong>Last week</strong><span>Oct 19 - Oct 25, 2026</span></td>
+              <td>2026-10-19</td>
+              <td>Ingrid Beard</td>
+              <td></td>
+              <td><a href="https://rev-io.my.salesforce.com/00UPX00000R8wX72AJ" target="_blank" rel="noopener">Client Business Review</a></td>
+              <td>Client Business Review</td>
+              <td>—</td>
+            </tr>
+<tr>
+              <td><strong>Last week</strong><span>Oct 19 - Oct 25, 2026</span></td>
+              <td>2026-10-19</td>
+              <td>Ingrid Beard</td>
+              <td></td>
+              <td><a href="https://rev-io.my.salesforce.com/00UPX00000R9QRx2AN" target="_blank" rel="noopener">Business Review Managed Technology &amp; Rev.io Demo</a></td>
+              <td>Client Business Review</td>
+              <td>—</td>
+            </tr>
+<tr>
+              <td><strong>Prior week</strong><span>Oct 12 - Oct 18, 2026</span></td>
+              <td>2026-10-16</td>
+              <td>Katerra Stephenson Greenwood</td>
+              <td>Access Control Group</td>
+              <td><a href="https://rev-io.my.salesforce.com/00UPX00000R5pLi2AJ" target="_blank" rel="noopener">Client Business Review Access Control Group &amp; Rev.io</a></td>
+              <td>Client Business Review</td>
+              <td>—</td>
+            </tr>
+<tr>
+              <td><strong>Prior week</strong><span>Oct 12 - Oct 18, 2026</span></td>
+              <td>2026-10-16</td>
+              <td>Justin Lee</td>
+              <td></td>
+              <td><a href="https://rev-io.my.salesforce.com/00UPX00000R4kG12AJ" target="_blank" rel="noopener">(Client Business Review) Rev.io &amp; Virtual Guardians</a></td>
+              <td>Client Business Review</td>
+              <td>—</td>
+            </tr>
+<tr>
+              <td><strong>Prior week</strong><span>Oct 12 - Oct 18, 2026</span></td>
+              <td>2026-10-16</td>
+              <td>Jakob Champion</td>
+              <td>Midwest Security Systems, Inc.</td>
+              <td><a href="https://rev-io.my.salesforce.com/00UPX00000R5Rkn2AF" target="_blank" rel="noopener">Rev.io / Midwest Security Systems (Kick Off Call)</a></td>
+              <td>Client Business Review</td>
+              <td>—</td>
+            </tr>
+<tr>
+              <td><strong>Prior week</strong><span>Oct 12 - Oct 18, 2026</span></td>
+              <td>2026-10-16</td>
+              <td>Jakob Champion</td>
+              <td></td>
+              <td><a href="https://rev-io.my.salesforce.com/00UPX00000R5IZR2A3" target="_blank" rel="noopener">Rev.io / BBO (Sandbox Discussion)</a></td>
+              <td>Client Business Review</td>
+              <td>—</td>
+            </tr>
+<tr>
+              <td><strong>Prior week</strong><span>Oct 12 - Oct 18, 2026</span></td>
+              <td>2026-10-15</td>
+              <td>Katerra Stephenson Greenwood</td>
+              <td></td>
+              <td><a href="https://rev-io.my.salesforce.com/00UPX00000R2U5h2AF" target="_blank" rel="noopener">Client Business Review Techmode &amp; Rev.io</a></td>
+              <td>Client Business Review</td>
+              <td>—</td>
+            </tr>
+<tr>
+              <td><strong>Prior week</strong><span>Oct 12 - Oct 18, 2026</span></td>
+              <td>2026-10-15</td>
+              <td>Justin Lee</td>
+              <td></td>
+              <td><a href="https://rev-io.my.salesforce.com/00UPX00000R3HzF2AV" target="_blank" rel="noopener">(Client Business Review) Rev.io &amp; Fusion Security</a></td>
+              <td>Client Business Review</td>
+              <td>—</td>
+            </tr>
+<tr>
+              <td><strong>Prior week</strong><span>Oct 12 - Oct 18, 2026</span></td>
+              <td>2026-10-15</td>
+              <td>Jakob Champion</td>
+              <td></td>
+              <td><a href="https://rev-io.my.salesforce.com/00UPX00000R2dIf2AJ" target="_blank" rel="noopener">Rev.io / Enitech Solutions (Payments Quote Review)</a></td>
+              <td>Client Business Review</td>
+              <td>—</td>
+            </tr>
+<tr>
+              <td><strong>Prior week</strong><span>Oct 12 - Oct 18, 2026</span></td>
+              <td>2026-10-15</td>
+              <td>Ingrid Beard</td>
+              <td>R.E. Michel Company</td>
+              <td><a href="https://rev-io.my.salesforce.com/00UPX00000R2NnO2AV" target="_blank" rel="noopener">Client Business Review R.E. Michel Company LLC &amp; Rev.io</a></td>
+              <td>Client Business Review</td>
+              <td>—</td>
+            </tr>
+<tr>
+              <td><strong>Prior week</strong><span>Oct 12 - Oct 18, 2026</span></td>
+              <td>2026-10-15</td>
+              <td>Ingrid Beard</td>
+              <td></td>
+              <td><a href="https://rev-io.my.salesforce.com/00UPX00000R31hZ2AR" target="_blank" rel="noopener">Business Review TRC Networks &amp; Rev.io</a></td>
+              <td>Client Business Review</td>
+              <td>—</td>
+            </tr>
+<tr>
+              <td><strong>Prior week</strong><span>Oct 12 - Oct 18, 2026</span></td>
+              <td>2026-10-14</td>
+              <td>Katerra Stephenson Greenwood</td>
+              <td></td>
+              <td><a href="https://rev-io.my.salesforce.com/00UPX00000R0A9V2AV" target="_blank" rel="noopener">Client Business Review DataPhone &amp; Rev.io</a></td>
+              <td>Client Business Review</td>
+              <td>—</td>
+            </tr>
+<tr>
+              <td><strong>Prior week</strong><span>Oct 12 - Oct 18, 2026</span></td>
+              <td>2026-10-14</td>
+              <td>Justin Lee</td>
+              <td></td>
+              <td><a href="https://rev-io.my.salesforce.com/00UPX00000R04k22AB" target="_blank" rel="noopener">(Client Business Review) Rev.io &amp; Generex Systems</a></td>
+              <td>Client Business Review</td>
+              <td>—</td>
+            </tr>
+<tr>
+              <td><strong>Prior week</strong><span>Oct 12 - Oct 18, 2026</span></td>
+              <td>2026-10-14</td>
+              <td>Justin Lee</td>
+              <td></td>
+              <td><a href="https://rev-io.my.salesforce.com/00UPX00000R6Tm92AF" target="_blank" rel="noopener">(Client Business Review) Rev.io &amp; Evotech</a></td>
+              <td>Client Business Review</td>
+              <td>—</td>
+            </tr>
+<tr>
+              <td><strong>Prior week</strong><span>Oct 12 - Oct 18, 2026</span></td>
+              <td>2026-10-14</td>
+              <td>Jakob Champion</td>
+              <td></td>
+              <td><a href="https://rev-io.my.salesforce.com/00UPX00000R0FU92AN" target="_blank" rel="noopener">Rev.io / VTi Communications (Client Business Review)</a></td>
+              <td>Client Business Review</td>
+              <td>—</td>
+            </tr>
+<tr>
+              <td><strong>Prior week</strong><span>Oct 12 - Oct 18, 2026</span></td>
+              <td>2026-10-14</td>
+              <td>Jakob Champion</td>
+              <td>Heritage Telecom</td>
+              <td><a href="https://rev-io.my.salesforce.com/00UPX00000R0v8P2AR" target="_blank" rel="noopener">Rev.io / Heritage Telecom (Client Business Review)</a></td>
+              <td>Client Business Review</td>
+              <td>—</td>
+            </tr>
+<tr>
+              <td><strong>Prior week</strong><span>Oct 12 - Oct 18, 2026</span></td>
+              <td>2026-10-13</td>
+              <td>Justin Lee</td>
+              <td></td>
+              <td><a href="https://rev-io.my.salesforce.com/00UPX00000QzD7p2AF" target="_blank" rel="noopener">Client Business Review Sng Electrics P/l &amp; Rev.io</a></td>
+              <td>Client Business Review</td>
+              <td>—</td>
+            </tr>
+<tr>
+              <td><strong>Prior week</strong><span>Oct 12 - Oct 18, 2026</span></td>
+              <td>2026-10-13</td>
+              <td>Jakob Champion</td>
+              <td></td>
+              <td><a href="https://rev-io.my.salesforce.com/00UPX00000QyXBr2AN" target="_blank" rel="noopener">Rev.io / Xtel (Client Business Review)</a></td>
+              <td>Client Business Review</td>
+              <td>—</td>
+            </tr>
+<tr>
+              <td><strong>Prior week</strong><span>Oct 12 - Oct 18, 2026</span></td>
+              <td>2026-10-13</td>
+              <td>Jakob Champion</td>
+              <td>Idea Networks Inc.</td>
+              <td><a href="https://rev-io.my.salesforce.com/00UPX00000Qy9ZJ2AZ" target="_blank" rel="noopener">Rev.io / Idea Networks (Tigerpaw to New Rev.io)</a></td>
+              <td>Client Business Review</td>
+              <td>—</td>
+            </tr>
+<tr>
+              <td><strong>Prior week</strong><span>Oct 12 - Oct 18, 2026</span></td>
+              <td>2026-10-13</td>
+              <td>Jakob Champion</td>
+              <td></td>
+              <td><a href="https://rev-io.my.salesforce.com/00UPX00000QxlC12AJ" target="_blank" rel="noopener">Rev.io / Hoosier Equipment Brokers (Tigerpaw to New Rev.io)</a></td>
+              <td>Client Business Review</td>
+              <td>—</td>
+            </tr>
+<tr>
+              <td><strong>Prior week</strong><span>Oct 12 - Oct 18, 2026</span></td>
+              <td>2026-10-13</td>
+              <td>Ingrid Beard</td>
+              <td></td>
+              <td><a href="https://rev-io.my.salesforce.com/00UPX00000QyilZ2AR" target="_blank" rel="noopener">Business Review Emi Business Communications &amp; Rev.io Demo</a></td>
+              <td>Client Business Review</td>
+              <td>—</td>
+            </tr>
+<tr>
+              <td><strong>Prior week</strong><span>Oct 12 - Oct 18, 2026</span></td>
+              <td>2026-10-12</td>
+              <td>Katerra Stephenson Greenwood</td>
+              <td>Pro Video Security - Legacy Migration</td>
+              <td><a href="https://rev-io.my.salesforce.com/00UPX00000QjQVj2AN" target="_blank" rel="noopener">(Product Demo) Provideo Security / Rev.io</a></td>
+              <td>Client Business Review</td>
+              <td>—</td>
+            </tr>
+<tr>
+              <td><strong>Prior week</strong><span>Oct 12 - Oct 18, 2026</span></td>
+              <td>2026-10-12</td>
+              <td>Ingrid Beard</td>
+              <td></td>
+              <td><a href="https://rev-io.my.salesforce.com/00UPX00000Qw5Es2AJ" target="_blank" rel="noopener">Business Review Executone Systems Co Of LA &amp; Rev.io</a></td>
+              <td>Client Business Review</td>
+              <td>—</td>
+            </tr>
+<tr>
+              <td><strong>Prior week</strong><span>Oct 12 - Oct 18, 2026</span></td>
+              <td>2026-10-12</td>
+              <td>Ingrid Beard</td>
+              <td></td>
+              <td><a href="https://rev-io.my.salesforce.com/00UPX00000Qwm8X2AR" target="_blank" rel="noopener">Business Review Delta Telephone &amp; Cabling &amp; Rev.io</a></td>
+              <td>Client Business Review</td>
+              <td>—</td>
+            </tr></tbody></table></div>
+    </details>
+<details class="metric-card">
+      <summary aria-label="Open details for CBRs Complete">
       <div class="metric-label">CBRs Complete</div>
       <div class="metric-value">15</div>
       <div class="metric-compare"><span class="down">-7</span> vs prior · -32%</div>
       <div class="metric-prior">Prior week: 22</div>
-    </div>
-<div class="metric-card">
+      <div class="open-details">Open details <span aria-hidden="true">▾</span></div>
+      </summary>
+      <div class="metric-detail"><table><caption class="sr-only">Underlying Salesforce records for CBRs Complete, last and prior weeks</caption><thead><tr><th>Week</th><th>Date</th><th>Owner / Rep</th><th>Account</th><th>Subject / Opportunity</th><th>Product / Source</th><th>MRR</th></tr></thead><tbody><tr>
+              <td><strong>Last week</strong><span>Oct 19 - Oct 25, 2026</span></td>
+              <td>2026-10-23</td>
+              <td>Jakob Champion</td>
+              <td></td>
+              <td><a href="https://rev-io.my.salesforce.com/00UPX00000RBQfZ2AX" target="_blank" rel="noopener">Client Business Review Call Save USA &amp; Rev.io</a></td>
+              <td>Completed</td>
+              <td>—</td>
+            </tr>
+<tr>
+              <td><strong>Last week</strong><span>Oct 19 - Oct 25, 2026</span></td>
+              <td>2026-10-23</td>
+              <td>Jakob Champion</td>
+              <td></td>
+              <td><a href="https://rev-io.my.salesforce.com/00UPX00000RDxig2AD" target="_blank" rel="noopener">American Business Phones / Rev.io (Rev.io Onboarding Discussion)</a></td>
+              <td>Completed</td>
+              <td>—</td>
+            </tr>
+<tr>
+              <td><strong>Last week</strong><span>Oct 19 - Oct 25, 2026</span></td>
+              <td>2026-10-22</td>
+              <td>Katerra Stephenson Greenwood</td>
+              <td></td>
+              <td><a href="https://rev-io.my.salesforce.com/00UPX00000REUcz2AH" target="_blank" rel="noopener">Client Business Review  &amp; Rev.io- Pavion Corp</a></td>
+              <td>Completed</td>
+              <td>—</td>
+            </tr>
+<tr>
+              <td><strong>Last week</strong><span>Oct 19 - Oct 25, 2026</span></td>
+              <td>2026-10-21</td>
+              <td>Jakob Champion</td>
+              <td></td>
+              <td><a href="https://rev-io.my.salesforce.com/00UPX00000R0FU92AN" target="_blank" rel="noopener">Rev.io / VTi Communications (Client Business Review)</a></td>
+              <td>Completed</td>
+              <td>—</td>
+            </tr>
+<tr>
+              <td><strong>Last week</strong><span>Oct 19 - Oct 25, 2026</span></td>
+              <td>2026-10-21</td>
+              <td>Jakob Champion</td>
+              <td></td>
+              <td><a href="https://rev-io.my.salesforce.com/00UPX00000RDHOT2A5" target="_blank" rel="noopener">Client Business Review HTDNET, LLC &amp; Rev.io</a></td>
+              <td>Completed</td>
+              <td>—</td>
+            </tr>
+<tr>
+              <td><strong>Last week</strong><span>Oct 19 - Oct 25, 2026</span></td>
+              <td>2026-10-21</td>
+              <td>Jakob Champion</td>
+              <td></td>
+              <td><a href="https://rev-io.my.salesforce.com/00UPX00000RArLG2A1" target="_blank" rel="noopener">Client Business Review CPI Global &amp; Rev.io</a></td>
+              <td>Completed</td>
+              <td>—</td>
+            </tr>
+<tr>
+              <td><strong>Last week</strong><span>Oct 19 - Oct 25, 2026</span></td>
+              <td>2026-10-20</td>
+              <td>Katerra Stephenson Greenwood</td>
+              <td>Corbell Telephone &amp; Electronic (CTE)</td>
+              <td><a href="https://rev-io.my.salesforce.com/00UPX00000RBpqr2AD" target="_blank" rel="noopener">Call</a></td>
+              <td>Completed</td>
+              <td>—</td>
+            </tr>
+<tr>
+              <td><strong>Last week</strong><span>Oct 19 - Oct 25, 2026</span></td>
+              <td>2026-10-20</td>
+              <td>Jakob Champion</td>
+              <td></td>
+              <td><a href="https://rev-io.my.salesforce.com/00UPX00000R5IZR2A3" target="_blank" rel="noopener">Rev.io / BBO (Sandbox Discussion)</a></td>
+              <td>Completed</td>
+              <td>—</td>
+            </tr>
+<tr>
+              <td><strong>Last week</strong><span>Oct 19 - Oct 25, 2026</span></td>
+              <td>2026-10-20</td>
+              <td>Jakob Champion</td>
+              <td>B&amp;T Telecom</td>
+              <td><a href="https://rev-io.my.salesforce.com/00UPX00000RAlCb2AL" target="_blank" rel="noopener">Rev.io / B&amp;T Telecom (Client Business Review)</a></td>
+              <td>Completed</td>
+              <td>—</td>
+            </tr>
+<tr>
+              <td><strong>Last week</strong><span>Oct 19 - Oct 25, 2026</span></td>
+              <td>2026-10-19</td>
+              <td>Katerra Stephenson Greenwood</td>
+              <td>Access Control Group</td>
+              <td><a href="https://rev-io.my.salesforce.com/00UPX00000R5pLi2AJ" target="_blank" rel="noopener">Client Business Review Access Control Group &amp; Rev.io</a></td>
+              <td>Completed</td>
+              <td>—</td>
+            </tr>
+<tr>
+              <td><strong>Last week</strong><span>Oct 19 - Oct 25, 2026</span></td>
+              <td>2026-10-19</td>
+              <td>Katerra Stephenson Greenwood</td>
+              <td>ARTCOM Assoc Inc</td>
+              <td><a href="https://rev-io.my.salesforce.com/00UPX00000R8WEV2A3" target="_blank" rel="noopener">Call</a></td>
+              <td>Completed</td>
+              <td>—</td>
+            </tr>
+<tr>
+              <td><strong>Last week</strong><span>Oct 19 - Oct 25, 2026</span></td>
+              <td>2026-10-19</td>
+              <td>Justin Lee</td>
+              <td></td>
+              <td><a href="https://rev-io.my.salesforce.com/00UPX00000R4kG12AJ" target="_blank" rel="noopener">(Client Business Review) Rev.io &amp; Virtual Guardians</a></td>
+              <td>Completed</td>
+              <td>—</td>
+            </tr>
+<tr>
+              <td><strong>Last week</strong><span>Oct 19 - Oct 25, 2026</span></td>
+              <td>2026-10-19</td>
+              <td>Jakob Champion</td>
+              <td>Heritage Telecom</td>
+              <td><a href="https://rev-io.my.salesforce.com/00UPX00000R0v8P2AR" target="_blank" rel="noopener">Rev.io / Heritage Telecom (Client Business Review)</a></td>
+              <td>Completed</td>
+              <td>—</td>
+            </tr>
+<tr>
+              <td><strong>Last week</strong><span>Oct 19 - Oct 25, 2026</span></td>
+              <td>2026-10-19</td>
+              <td>Jakob Champion</td>
+              <td>Sunshine Communications Mgt LLC - Broadstar</td>
+              <td><a href="https://rev-io.my.salesforce.com/00UPX00000R8sgP2AR" target="_blank" rel="noopener">Rev.io / Broadstar (New Rev.io Discussion)</a></td>
+              <td>Completed</td>
+              <td>—</td>
+            </tr>
+<tr>
+              <td><strong>Last week</strong><span>Oct 19 - Oct 25, 2026</span></td>
+              <td>2026-10-19</td>
+              <td>Ingrid Beard</td>
+              <td></td>
+              <td><a href="https://rev-io.my.salesforce.com/00UPX00000R8wX72AJ" target="_blank" rel="noopener">Client Business Review</a></td>
+              <td>Completed</td>
+              <td>—</td>
+            </tr>
+<tr>
+              <td><strong>Prior week</strong><span>Oct 12 - Oct 18, 2026</span></td>
+              <td>2026-10-16</td>
+              <td>Katerra Stephenson Greenwood</td>
+              <td></td>
+              <td><a href="https://rev-io.my.salesforce.com/00UPX00000R2U5h2AF" target="_blank" rel="noopener">Client Business Review Techmode &amp; Rev.io</a></td>
+              <td>Completed</td>
+              <td>—</td>
+            </tr>
+<tr>
+              <td><strong>Prior week</strong><span>Oct 12 - Oct 18, 2026</span></td>
+              <td>2026-10-16</td>
+              <td>Jakob Champion</td>
+              <td>Midwest Security Systems, Inc.</td>
+              <td><a href="https://rev-io.my.salesforce.com/00UPX00000R5Rkn2AF" target="_blank" rel="noopener">Rev.io / Midwest Security Systems (Kick Off Call)</a></td>
+              <td>Completed</td>
+              <td>—</td>
+            </tr>
+<tr>
+              <td><strong>Prior week</strong><span>Oct 12 - Oct 18, 2026</span></td>
+              <td>2026-10-16</td>
+              <td>Jakob Champion</td>
+              <td></td>
+              <td><a href="https://rev-io.my.salesforce.com/00UPX00000R2dIf2AJ" target="_blank" rel="noopener">Rev.io / Enitech Solutions (Payments Quote Review)</a></td>
+              <td>Completed</td>
+              <td>—</td>
+            </tr>
+<tr>
+              <td><strong>Prior week</strong><span>Oct 12 - Oct 18, 2026</span></td>
+              <td>2026-10-15</td>
+              <td>Katerra Stephenson Greenwood</td>
+              <td></td>
+              <td><a href="https://rev-io.my.salesforce.com/00UPX00000R0A9V2AV" target="_blank" rel="noopener">Client Business Review DataPhone &amp; Rev.io</a></td>
+              <td>Completed</td>
+              <td>—</td>
+            </tr>
+<tr>
+              <td><strong>Prior week</strong><span>Oct 12 - Oct 18, 2026</span></td>
+              <td>2026-10-15</td>
+              <td>Katerra Stephenson Greenwood</td>
+              <td></td>
+              <td><a href="https://rev-io.my.salesforce.com/00UPX00000QFq5m2AD" target="_blank" rel="noopener">Client Business Review Atlantech Online &amp; Rev.io</a></td>
+              <td>Completed</td>
+              <td>—</td>
+            </tr>
+<tr>
+              <td><strong>Prior week</strong><span>Oct 12 - Oct 18, 2026</span></td>
+              <td>2026-10-15</td>
+              <td>Jakob Champion</td>
+              <td>Idea Networks Inc.</td>
+              <td><a href="https://rev-io.my.salesforce.com/00UPX00000Qy9ZJ2AZ" target="_blank" rel="noopener">Rev.io / Idea Networks (Tigerpaw to New Rev.io)</a></td>
+              <td>Completed</td>
+              <td>—</td>
+            </tr>
+<tr>
+              <td><strong>Prior week</strong><span>Oct 12 - Oct 18, 2026</span></td>
+              <td>2026-10-15</td>
+              <td>Ingrid Beard</td>
+              <td></td>
+              <td><a href="https://rev-io.my.salesforce.com/00UPX00000Qo2kS2AR" target="_blank" rel="noopener">Business Review Dominion Design &amp; Integration &amp; Rev.io</a></td>
+              <td>Completed</td>
+              <td>—</td>
+            </tr>
+<tr>
+              <td><strong>Prior week</strong><span>Oct 12 - Oct 18, 2026</span></td>
+              <td>2026-10-14</td>
+              <td>Katerra Stephenson Greenwood</td>
+              <td>Synergy</td>
+              <td><a href="https://rev-io.my.salesforce.com/00UPX00000Qok0f2AB" target="_blank" rel="noopener">Call</a></td>
+              <td>Completed</td>
+              <td>—</td>
+            </tr>
+<tr>
+              <td><strong>Prior week</strong><span>Oct 12 - Oct 18, 2026</span></td>
+              <td>2026-10-14</td>
+              <td>Justin Lee</td>
+              <td></td>
+              <td><a href="https://rev-io.my.salesforce.com/00UPX00000R04k22AB" target="_blank" rel="noopener">(Client Business Review) Rev.io &amp; Generex Systems</a></td>
+              <td>Completed</td>
+              <td>—</td>
+            </tr>
+<tr>
+              <td><strong>Prior week</strong><span>Oct 12 - Oct 18, 2026</span></td>
+              <td>2026-10-14</td>
+              <td>Justin Lee</td>
+              <td></td>
+              <td><a href="https://rev-io.my.salesforce.com/00UPX00000R6Tm92AF" target="_blank" rel="noopener">(Client Business Review) Rev.io &amp; Evotech</a></td>
+              <td>Completed</td>
+              <td>—</td>
+            </tr>
+<tr>
+              <td><strong>Prior week</strong><span>Oct 12 - Oct 18, 2026</span></td>
+              <td>2026-10-14</td>
+              <td>Jakob Champion</td>
+              <td></td>
+              <td><a href="https://rev-io.my.salesforce.com/00UPX00000QqrKd2AJ" target="_blank" rel="noopener">Rev.io / Low Voltage Integrators (Tigerpaw to New Rev.io)</a></td>
+              <td>Completed</td>
+              <td>—</td>
+            </tr>
+<tr>
+              <td><strong>Prior week</strong><span>Oct 12 - Oct 18, 2026</span></td>
+              <td>2026-10-14</td>
+              <td>Jakob Champion</td>
+              <td></td>
+              <td><a href="https://rev-io.my.salesforce.com/00UPX00000QxlC12AJ" target="_blank" rel="noopener">Rev.io / Hoosier Equipment Brokers (Tigerpaw to New Rev.io)</a></td>
+              <td>Completed</td>
+              <td>—</td>
+            </tr>
+<tr>
+              <td><strong>Prior week</strong><span>Oct 12 - Oct 18, 2026</span></td>
+              <td>2026-10-14</td>
+              <td>Ingrid Beard</td>
+              <td></td>
+              <td><a href="https://rev-io.my.salesforce.com/00UPX00000Qw5Es2AJ" target="_blank" rel="noopener">Business Review Executone Systems Co Of LA &amp; Rev.io</a></td>
+              <td>Completed</td>
+              <td>—</td>
+            </tr>
+<tr>
+              <td><strong>Prior week</strong><span>Oct 12 - Oct 18, 2026</span></td>
+              <td>2026-10-14</td>
+              <td>Ingrid Beard</td>
+              <td></td>
+              <td><a href="https://rev-io.my.salesforce.com/00UPX00000Qwm8X2AR" target="_blank" rel="noopener">Business Review Delta Telephone &amp; Cabling &amp; Rev.io</a></td>
+              <td>Completed</td>
+              <td>—</td>
+            </tr>
+<tr>
+              <td><strong>Prior week</strong><span>Oct 12 - Oct 18, 2026</span></td>
+              <td>2026-10-13</td>
+              <td>Katerra Stephenson Greenwood</td>
+              <td></td>
+              <td><a href="https://rev-io.my.salesforce.com/00UPX00000QMpjF2AT" target="_blank" rel="noopener">Client Business Review Zeus Communications &amp; Rev.io</a></td>
+              <td>Completed</td>
+              <td>—</td>
+            </tr>
+<tr>
+              <td><strong>Prior week</strong><span>Oct 12 - Oct 18, 2026</span></td>
+              <td>2026-10-13</td>
+              <td>Katerra Stephenson Greenwood</td>
+              <td></td>
+              <td><a href="https://rev-io.my.salesforce.com/00UPX00000QqYWT2A3" target="_blank" rel="noopener">Client Business Review Fisher Systems Inc. &amp; Rev.io</a></td>
+              <td>Completed</td>
+              <td>—</td>
+            </tr>
+<tr>
+              <td><strong>Prior week</strong><span>Oct 12 - Oct 18, 2026</span></td>
+              <td>2026-10-13</td>
+              <td>Katerra Stephenson Greenwood</td>
+              <td></td>
+              <td><a href="https://rev-io.my.salesforce.com/00UPX00000Qoqm12AB" target="_blank" rel="noopener">Client Business Review Corbell Telephone &amp; Electronic (CTE) &amp; Rev.io</a></td>
+              <td>Completed</td>
+              <td>—</td>
+            </tr>
+<tr>
+              <td><strong>Prior week</strong><span>Oct 12 - Oct 18, 2026</span></td>
+              <td>2026-10-13</td>
+              <td>Jakob Champion</td>
+              <td>SVHai</td>
+              <td><a href="https://rev-io.my.salesforce.com/00UPX00000QrKw52AF" target="_blank" rel="noopener">Rev.io/SVHai (Classic Kickoff Call)</a></td>
+              <td>Completed</td>
+              <td>—</td>
+            </tr>
+<tr>
+              <td><strong>Prior week</strong><span>Oct 12 - Oct 18, 2026</span></td>
+              <td>2026-10-13</td>
+              <td>Jakob Champion</td>
+              <td></td>
+              <td><a href="https://rev-io.my.salesforce.com/00UPX00000QPISc2AP" target="_blank" rel="noopener">Rev.io / Idea Networks (CSA / AM Check-in)</a></td>
+              <td>Completed</td>
+              <td>—</td>
+            </tr>
+<tr>
+              <td><strong>Prior week</strong><span>Oct 12 - Oct 18, 2026</span></td>
+              <td>2026-10-12</td>
+              <td>Katerra Stephenson Greenwood</td>
+              <td>Pro Video Security - Legacy Migration</td>
+              <td><a href="https://rev-io.my.salesforce.com/00UPX00000QjQVj2AN" target="_blank" rel="noopener">(Product Demo) Provideo Security / Rev.io</a></td>
+              <td>Completed</td>
+              <td>—</td>
+            </tr>
+<tr>
+              <td><strong>Prior week</strong><span>Oct 12 - Oct 18, 2026</span></td>
+              <td>2026-10-12</td>
+              <td>Jakob Champion</td>
+              <td>Centerpoint IT</td>
+              <td><a href="https://rev-io.my.salesforce.com/00UPX00000QnXdO2AV" target="_blank" rel="noopener">Rev.io / Centerpoint IT (Kick Off Call)</a></td>
+              <td>Completed</td>
+              <td>—</td>
+            </tr>
+<tr>
+              <td><strong>Prior week</strong><span>Oct 12 - Oct 18, 2026</span></td>
+              <td>2026-10-12</td>
+              <td>Ingrid Beard</td>
+              <td></td>
+              <td><a href="https://rev-io.my.salesforce.com/00UPX00000QtKFF2A3" target="_blank" rel="noopener">Business Review Sam E Mitchell Jr. Associate Inc &amp; Rev.io</a></td>
+              <td>Completed</td>
+              <td>—</td>
+            </tr></tbody></table></div>
+    </details>
+<details class="metric-card">
+      <summary aria-label="Open details for Initial Demos Ran">
       <div class="metric-label">Initial Demos Ran</div>
       <div class="metric-value">3</div>
       <div class="metric-compare"><span class="down">-3</span> vs prior · -50%</div>
       <div class="metric-prior">Prior week: 6</div>
-    </div>
-<div class="metric-card">
+      <div class="open-details">Open details <span aria-hidden="true">▾</span></div>
+      </summary>
+      <div class="metric-detail"><table><caption class="sr-only">Underlying Salesforce records for Initial Demos Ran, last and prior weeks</caption><thead><tr><th>Week</th><th>Date</th><th>Owner / Rep</th><th>Account</th><th>Subject / Opportunity</th><th>Product / Source</th><th>MRR</th></tr></thead><tbody><tr>
+              <td><strong>Last week</strong><span>Oct 19 - Oct 25, 2026</span></td>
+              <td>2026-10-23</td>
+              <td>Joseph Abarno</td>
+              <td></td>
+              <td><a href="https://rev-io.my.salesforce.com/00UPX00000R2xNp2AJ" target="_blank" rel="noopener">(Product Demo) Mango Voice / Rev.io</a></td>
+              <td>Completed</td>
+              <td>—</td>
+            </tr>
+<tr>
+              <td><strong>Last week</strong><span>Oct 19 - Oct 25, 2026</span></td>
+              <td>2026-10-22</td>
+              <td>Patrick Davies</td>
+              <td></td>
+              <td><a href="https://rev-io.my.salesforce.com/00UPX00000R8Zlp2AF" target="_blank" rel="noopener">(Product Demo) R.E. Michel Company LLC / Rev.io</a></td>
+              <td>Completed</td>
+              <td>—</td>
+            </tr>
+<tr>
+              <td><strong>Last week</strong><span>Oct 19 - Oct 25, 2026</span></td>
+              <td>2026-10-21</td>
+              <td>Andy Whisenant</td>
+              <td></td>
+              <td><a href="https://rev-io.my.salesforce.com/00UPX00000R5mpF2AR" target="_blank" rel="noopener">(Product Demo) All Systems Integrated / Rev.io</a></td>
+              <td>Completed</td>
+              <td>—</td>
+            </tr>
+<tr>
+              <td><strong>Prior week</strong><span>Oct 12 - Oct 18, 2026</span></td>
+              <td>2026-10-16</td>
+              <td>Joseph Abarno</td>
+              <td></td>
+              <td><a href="https://rev-io.my.salesforce.com/00UPX00000QnuRu2AJ" target="_blank" rel="noopener">(New Rev.io Demo) Coeo / Rev.io</a></td>
+              <td>Completed</td>
+              <td>—</td>
+            </tr>
+<tr>
+              <td><strong>Prior week</strong><span>Oct 12 - Oct 18, 2026</span></td>
+              <td>2026-10-16</td>
+              <td>Abbey McIntosh</td>
+              <td></td>
+              <td><a href="https://rev-io.my.salesforce.com/00UPX00000R2yTZ2AZ" target="_blank" rel="noopener">(Product Demo) Seaside Alarms / Rev.io</a></td>
+              <td>Completed</td>
+              <td>—</td>
+            </tr>
+<tr>
+              <td><strong>Prior week</strong><span>Oct 12 - Oct 18, 2026</span></td>
+              <td>2026-10-14</td>
+              <td>Abbey McIntosh</td>
+              <td></td>
+              <td><a href="https://rev-io.my.salesforce.com/00UPX00000QnmuA2AR" target="_blank" rel="noopener">(Product Demo) ReplCloud, LLC / Rev.io</a></td>
+              <td>Completed</td>
+              <td>—</td>
+            </tr>
+<tr>
+              <td><strong>Prior week</strong><span>Oct 12 - Oct 18, 2026</span></td>
+              <td>2026-10-13</td>
+              <td>Jaylin Bender</td>
+              <td>Norcal Electronics</td>
+              <td><a href="https://rev-io.my.salesforce.com/00UPX00000R8BZp2AN" target="_blank" rel="noopener">Disco/demo</a></td>
+              <td>Completed</td>
+              <td>—</td>
+            </tr>
+<tr>
+              <td><strong>Prior week</strong><span>Oct 12 - Oct 18, 2026</span></td>
+              <td>2026-10-13</td>
+              <td>Jamie Butler</td>
+              <td></td>
+              <td><a href="https://rev-io.my.salesforce.com/00UPX00000QbLOI2A3" target="_blank" rel="noopener">(New Platform Demo) Clear Rate Communications / Rev.io</a></td>
+              <td>Completed</td>
+              <td>—</td>
+            </tr>
+<tr>
+              <td><strong>Prior week</strong><span>Oct 12 - Oct 18, 2026</span></td>
+              <td>2026-10-12</td>
+              <td>Jake Borah</td>
+              <td></td>
+              <td><a href="https://rev-io.my.salesforce.com/00UPX00000QltOf2AJ" target="_blank" rel="noopener">(Product Demo) Premier Security / Rev.io</a></td>
+              <td>Completed</td>
+              <td>—</td>
+            </tr></tbody></table></div>
+    </details>
+<details class="metric-card">
+      <summary aria-label="Open details for SDR-Sourced Opps">
       <div class="metric-label">SDR-Sourced Opps</div>
       <div class="metric-value">6</div>
       <div class="metric-compare"><span class="down">-3</span> vs prior · -33%</div>
       <div class="metric-prior">Prior week: 9</div>
-    </div>
-<div class="metric-card">
+      <div class="open-details">Open details <span aria-hidden="true">▾</span></div>
+      </summary>
+      <div class="metric-detail"><table><caption class="sr-only">Underlying Salesforce records for SDR-Sourced Opps, last and prior weeks</caption><thead><tr><th>Week</th><th>Date</th><th>Owner / Rep</th><th>Account</th><th>Subject / Opportunity</th><th>Product / Source</th><th>MRR</th></tr></thead><tbody><tr>
+              <td><strong>Last week</strong><span>Oct 19 - Oct 25, 2026</span></td>
+              <td>2026-10-22</td>
+              <td>Max Coopman</td>
+              <td>TPG Security Tech</td>
+              <td><a href="https://rev-io.my.salesforce.com/006PX00000hfru1YAA" target="_blank" rel="noopener">TPG Security Tech</a></td>
+              <td>PSA</td>
+              <td>$1,000</td>
+            </tr>
+<tr>
+              <td><strong>Last week</strong><span>Oct 19 - Oct 25, 2026</span></td>
+              <td>2026-10-22</td>
+              <td>Blake Boatright</td>
+              <td>GoTech LLC</td>
+              <td><a href="https://rev-io.my.salesforce.com/006PX00000hfNUYYA2" target="_blank" rel="noopener">GoTech LLC</a></td>
+              <td>PSA</td>
+              <td>$1,000</td>
+            </tr>
+<tr>
+              <td><strong>Last week</strong><span>Oct 19 - Oct 25, 2026</span></td>
+              <td>2026-10-21</td>
+              <td>Miguel Ocampo</td>
+              <td>Avisight</td>
+              <td><a href="https://rev-io.my.salesforce.com/006PX00000hbeovYAA" target="_blank" rel="noopener">Avisight</a></td>
+              <td>PSA</td>
+              <td>$1,000</td>
+            </tr>
+<tr>
+              <td><strong>Last week</strong><span>Oct 19 - Oct 25, 2026</span></td>
+              <td>2026-10-21</td>
+              <td>Blake Boatright</td>
+              <td>American Safe Company, Inc.</td>
+              <td><a href="https://rev-io.my.salesforce.com/006PX00000hcFuvYAE" target="_blank" rel="noopener">American Safe Company</a></td>
+              <td>PSA</td>
+              <td>$1,000</td>
+            </tr>
+<tr>
+              <td><strong>Last week</strong><span>Oct 19 - Oct 25, 2026</span></td>
+              <td>2026-10-20</td>
+              <td>Blake Boatright</td>
+              <td>Core Security Services</td>
+              <td><a href="https://rev-io.my.salesforce.com/006PX00000hYfw1YAC" target="_blank" rel="noopener">Core Security Services</a></td>
+              <td>PSA</td>
+              <td>$1,000</td>
+            </tr>
+<tr>
+              <td><strong>Last week</strong><span>Oct 19 - Oct 25, 2026</span></td>
+              <td>2026-10-19</td>
+              <td>Ptah Robinson</td>
+              <td>Independent Door &amp; Gate</td>
+              <td><a href="https://rev-io.my.salesforce.com/006PX00000hVy2MYAS" target="_blank" rel="noopener">Independent Door &amp; Gate</a></td>
+              <td>PSA</td>
+              <td>$1,000</td>
+            </tr>
+<tr>
+              <td><strong>Prior week</strong><span>Oct 12 - Oct 18, 2026</span></td>
+              <td>2026-10-16</td>
+              <td>Ptah Robinson</td>
+              <td>Master Mounts Installations</td>
+              <td><a href="https://rev-io.my.salesforce.com/006PX00000hQ6AgYAK" target="_blank" rel="noopener">Master Mounts Installations</a></td>
+              <td>PSA</td>
+              <td>$1,000</td>
+            </tr>
+<tr>
+              <td><strong>Prior week</strong><span>Oct 12 - Oct 18, 2026</span></td>
+              <td>2026-10-15</td>
+              <td>Max Coopman</td>
+              <td>Big Wave Technologies</td>
+              <td><a href="https://rev-io.my.salesforce.com/006PX00000hMp6LYAS" target="_blank" rel="noopener">Big Wave Technologies</a></td>
+              <td>Billing / Odin</td>
+              <td>$1,000</td>
+            </tr>
+<tr>
+              <td><strong>Prior week</strong><span>Oct 12 - Oct 18, 2026</span></td>
+              <td>2026-10-14</td>
+              <td>Blake Boatright</td>
+              <td>Unique HD Audio Video Designs</td>
+              <td><a href="https://rev-io.my.salesforce.com/006PX00000hJUjBYAW" target="_blank" rel="noopener">Unique HD Audio Video Designs</a></td>
+              <td>PSA</td>
+              <td>$1,000</td>
+            </tr>
+<tr>
+              <td><strong>Prior week</strong><span>Oct 12 - Oct 18, 2026</span></td>
+              <td>2026-10-14</td>
+              <td>Blake Boatright</td>
+              <td>S &amp; B Cloud Communications</td>
+              <td><a href="https://rev-io.my.salesforce.com/006PX00000hJFH7YAO" target="_blank" rel="noopener">S &amp; B Cloud Communications</a></td>
+              <td>Billing / Odin</td>
+              <td>$1,000</td>
+            </tr>
+<tr>
+              <td><strong>Prior week</strong><span>Oct 12 - Oct 18, 2026</span></td>
+              <td>2026-10-14</td>
+              <td>Blake Boatright</td>
+              <td>Enterprise Security Solutions of Texas</td>
+              <td><a href="https://rev-io.my.salesforce.com/006PX00000hJ5o4YAC" target="_blank" rel="noopener">Enterprise Security Solutions of Texas</a></td>
+              <td>PSA</td>
+              <td>$1,000</td>
+            </tr>
+<tr>
+              <td><strong>Prior week</strong><span>Oct 12 - Oct 18, 2026</span></td>
+              <td>2026-10-13</td>
+              <td>Ptah Robinson</td>
+              <td>Spangle Tech, LLC</td>
+              <td><a href="https://rev-io.my.salesforce.com/006PX00000hG59TYAS" target="_blank" rel="noopener">Spangle Tech</a></td>
+              <td>PSA</td>
+              <td>$1,000</td>
+            </tr>
+<tr>
+              <td><strong>Prior week</strong><span>Oct 12 - Oct 18, 2026</span></td>
+              <td>2026-10-13</td>
+              <td>Ptah Robinson</td>
+              <td>East Coast Alarms</td>
+              <td><a href="https://rev-io.my.salesforce.com/006PX00000hG46vYAC" target="_blank" rel="noopener">East Coast Alarms</a></td>
+              <td>PSA</td>
+              <td>$1,000</td>
+            </tr>
+<tr>
+              <td><strong>Prior week</strong><span>Oct 12 - Oct 18, 2026</span></td>
+              <td>2026-10-13</td>
+              <td>Blake Boatright</td>
+              <td>IVA Solutions, Inc.</td>
+              <td><a href="https://rev-io.my.salesforce.com/006PX00000hG0cnYAC" target="_blank" rel="noopener">IVA Solutions, Inc.</a></td>
+              <td>PSA</td>
+              <td>$1,000</td>
+            </tr>
+<tr>
+              <td><strong>Prior week</strong><span>Oct 12 - Oct 18, 2026</span></td>
+              <td>2026-10-12</td>
+              <td>Max Coopman</td>
+              <td>Atlantic Sound Inc</td>
+              <td><a href="https://rev-io.my.salesforce.com/006PX00000hCWjJYAW" target="_blank" rel="noopener">Atlantic Sound</a></td>
+              <td>PSA</td>
+              <td>$1,000</td>
+            </tr></tbody></table></div>
+    </details>
+<details class="metric-card">
+      <summary aria-label="Open details for MQLs Converted">
       <div class="metric-label">MQLs Converted</div>
       <div class="metric-value">4</div>
       <div class="metric-compare"><span class="down">-10</span> vs prior · -71%</div>
       <div class="metric-prior">Prior week: 14</div>
-    </div>
-<div class="metric-card">
+      <div class="open-details">Open details <span aria-hidden="true">▾</span></div>
+      </summary>
+      <div class="metric-detail"><table><caption class="sr-only">Underlying Salesforce records for MQLs Converted, last and prior weeks</caption><thead><tr><th>Week</th><th>Date</th><th>Owner / Rep</th><th>Account</th><th>Subject / Opportunity</th><th>Product / Source</th><th>MRR</th></tr></thead><tbody><tr>
+              <td><strong>Last week</strong><span>Oct 19 - Oct 25, 2026</span></td>
+              <td>2026-10-22</td>
+              <td>Jakob Champion</td>
+              <td>RSS (Restaurant Service Solutions)</td>
+              <td><a href="https://rev-io.my.salesforce.com/006PX00000heCMgYAM" target="_blank" rel="noopener">RSS - Tigerpaw Migration</a></td>
+              <td>Webinar</td>
+              <td>$0</td>
+            </tr>
+<tr>
+              <td><strong>Last week</strong><span>Oct 19 - Oct 25, 2026</span></td>
+              <td>2026-10-22</td>
+              <td>Jakob Champion</td>
+              <td>RSS (Restaurant Service Solutions)</td>
+              <td><a href="https://rev-io.my.salesforce.com/006PX00000heAzCYAU" target="_blank" rel="noopener">RSS - Monthly Min Increase</a></td>
+              <td>Webinar</td>
+              <td>$797</td>
+            </tr>
+<tr>
+              <td><strong>Last week</strong><span>Oct 19 - Oct 25, 2026</span></td>
+              <td>2026-10-19</td>
+              <td>Connor Flynn</td>
+              <td>ChatterBox Phone</td>
+              <td><a href="https://rev-io.my.salesforce.com/006PX00000hVgWrYAK" target="_blank" rel="noopener">ChatterBox Phone</a></td>
+              <td>Request Demo</td>
+              <td>$1,000</td>
+            </tr>
+<tr>
+              <td><strong>Last week</strong><span>Oct 19 - Oct 25, 2026</span></td>
+              <td>2026-10-19</td>
+              <td>Connor Flynn</td>
+              <td>Ben Whatley Co</td>
+              <td><a href="https://rev-io.my.salesforce.com/006PX00000hVeYHYA0" target="_blank" rel="noopener">Ben Whatley Co</a></td>
+              <td>Request Demo</td>
+              <td>$1,000</td>
+            </tr>
+<tr>
+              <td><strong>Prior week</strong><span>Oct 12 - Oct 18, 2026</span></td>
+              <td>2026-10-16</td>
+              <td>Jakob Champion</td>
+              <td>Broadband Office Solutions</td>
+              <td><a href="https://rev-io.my.salesforce.com/006PX00000hPuRFYA0" target="_blank" rel="noopener">BBO - Sandbox</a></td>
+              <td>Request Demo</td>
+              <td>$500</td>
+            </tr>
+<tr>
+              <td><strong>Prior week</strong><span>Oct 12 - Oct 18, 2026</span></td>
+              <td>2026-10-15</td>
+              <td>Jakob Champion</td>
+              <td>Idea Networks Inc.</td>
+              <td><a href="https://rev-io.my.salesforce.com/006PX00000hMVR0YAO" target="_blank" rel="noopener">Idea Networks - Monthly Min Increase</a></td>
+              <td>Request Demo</td>
+              <td>$276</td>
+            </tr>
+<tr>
+              <td><strong>Prior week</strong><span>Oct 12 - Oct 18, 2026</span></td>
+              <td>2026-10-15</td>
+              <td>Ingrid Beard</td>
+              <td>Valley Lock &amp; Security</td>
+              <td><a href="https://rev-io.my.salesforce.com/006PX00000hMT0zYAG" target="_blank" rel="noopener">Valley Lock - TP Migration 8</a></td>
+              <td>Contact Us</td>
+              <td>$0</td>
+            </tr>
+<tr>
+              <td><strong>Prior week</strong><span>Oct 12 - Oct 18, 2026</span></td>
+              <td>2026-10-15</td>
+              <td>Ingrid Beard</td>
+              <td>Valley Lock &amp; Security</td>
+              <td><a href="https://rev-io.my.salesforce.com/006PX00000hMTNZYA4" target="_blank" rel="noopener">Valley Lock - Monthly Min Increase</a></td>
+              <td>Contact Us</td>
+              <td>$209</td>
+            </tr>
+<tr>
+              <td><strong>Prior week</strong><span>Oct 12 - Oct 18, 2026</span></td>
+              <td>2026-10-15</td>
+              <td>Connor Flynn</td>
+              <td>Big Wave Technologies</td>
+              <td><a href="https://rev-io.my.salesforce.com/006PX00000hMp6LYAS" target="_blank" rel="noopener">Big Wave Technologies</a></td>
+              <td>Inbound</td>
+              <td>$1,000</td>
+            </tr>
+<tr>
+              <td><strong>Prior week</strong><span>Oct 12 - Oct 18, 2026</span></td>
+              <td>2026-10-14</td>
+              <td>Patrick Davies</td>
+              <td>R.E. Michel Company LLC</td>
+              <td><a href="https://rev-io.my.salesforce.com/006PX00000hIOKsYAO" target="_blank" rel="noopener">R.E. Michel Company</a></td>
+              <td>Request Demo</td>
+              <td>$1,000</td>
+            </tr>
+<tr>
+              <td><strong>Prior week</strong><span>Oct 12 - Oct 18, 2026</span></td>
+              <td>2026-10-14</td>
+              <td>Joseph Abarno</td>
+              <td>Global Data Systems</td>
+              <td><a href="https://rev-io.my.salesforce.com/006PX00000hJHxIYAW" target="_blank" rel="noopener">GDS (New Rev)</a></td>
+              <td>Rev.io Summit</td>
+              <td>$4,950</td>
+            </tr>
+<tr>
+              <td><strong>Prior week</strong><span>Oct 12 - Oct 18, 2026</span></td>
+              <td>2026-10-14</td>
+              <td>Jamie Butler</td>
+              <td>Clear Rate Communications</td>
+              <td><a href="https://rev-io.my.salesforce.com/006PX00000hJqGfYAK" target="_blank" rel="noopener">Clear Rate - New Platform</a></td>
+              <td>Outbound</td>
+              <td>$1,000</td>
+            </tr>
+<tr>
+              <td><strong>Prior week</strong><span>Oct 12 - Oct 18, 2026</span></td>
+              <td>2026-10-13</td>
+              <td>Joseph Abarno</td>
+              <td>Sasco Contractors</td>
+              <td><a href="https://rev-io.my.salesforce.com/006PX00000hFwpJYAS" target="_blank" rel="noopener">Sasco</a></td>
+              <td>Request Demo</td>
+              <td>$18,000</td>
+            </tr>
+<tr>
+              <td><strong>Prior week</strong><span>Oct 12 - Oct 18, 2026</span></td>
+              <td>2026-10-13</td>
+              <td>Jaylin Bender</td>
+              <td>Norcal Electronics</td>
+              <td><a href="https://rev-io.my.salesforce.com/006PX00000hG8YkYAK" target="_blank" rel="noopener">Norcal Electronics</a></td>
+              <td>Facebook Ads</td>
+              <td>$1,000</td>
+            </tr>
+<tr>
+              <td><strong>Prior week</strong><span>Oct 12 - Oct 18, 2026</span></td>
+              <td>2026-10-13</td>
+              <td>Jakob Champion</td>
+              <td>ISET</td>
+              <td><a href="https://rev-io.my.salesforce.com/006PX00000hFWtFYAW" target="_blank" rel="noopener">ISET Service - TP Migration</a></td>
+              <td>Webinar</td>
+              <td>$0</td>
+            </tr>
+<tr>
+              <td><strong>Prior week</strong><span>Oct 12 - Oct 18, 2026</span></td>
+              <td>2026-10-13</td>
+              <td>Jakob Champion</td>
+              <td>ISET</td>
+              <td><a href="https://rev-io.my.salesforce.com/006PX00000hFX1JYAW" target="_blank" rel="noopener">ISET Service - Monthly Min Increase</a></td>
+              <td>Webinar</td>
+              <td>$97</td>
+            </tr>
+<tr>
+              <td><strong>Prior week</strong><span>Oct 12 - Oct 18, 2026</span></td>
+              <td>2026-10-12</td>
+              <td>Katerra Stephenson Greenwood</td>
+              <td>Chief Datacom</td>
+              <td><a href="https://rev-io.my.salesforce.com/006PX00000hCBWnYAO" target="_blank" rel="noopener">Chief Datacom TP Migration</a></td>
+              <td>Webinar</td>
+              <td>$0</td>
+            </tr>
+<tr>
+              <td><strong>Prior week</strong><span>Oct 12 - Oct 18, 2026</span></td>
+              <td>2026-10-12</td>
+              <td>Ingrid Beard</td>
+              <td>IMC Facility Management</td>
+              <td><a href="https://rev-io.my.salesforce.com/006PX00000hDGfhYAG" target="_blank" rel="noopener">IMC - AR Payments</a></td>
+              <td>Webinar</td>
+              <td>$50</td>
+            </tr></tbody></table></div>
+    </details>
+<details class="metric-card">
+      <summary aria-label="Open details for Tradeshow Leads Converted">
       <div class="metric-label">Tradeshow Leads Converted</div>
       <div class="metric-value">2</div>
       <div class="metric-compare"><span class="down">-5</span> vs prior · -71%</div>
       <div class="metric-prior">Prior week: 7</div>
-    </div>
-<div class="metric-card">
+      <div class="open-details">Open details <span aria-hidden="true">▾</span></div>
+      </summary>
+      <div class="metric-detail"><table><caption class="sr-only">Underlying Salesforce records for Tradeshow Leads Converted, last and prior weeks</caption><thead><tr><th>Week</th><th>Date</th><th>Owner / Rep</th><th>Account</th><th>Subject / Opportunity</th><th>Product / Source</th><th>MRR</th></tr></thead><tbody><tr>
+              <td><strong>Last week</strong><span>Oct 19 - Oct 25, 2026</span></td>
+              <td>2026-10-22</td>
+              <td>Jaylin Bender</td>
+              <td>GoTech LLC</td>
+              <td><a href="https://rev-io.my.salesforce.com/006PX00000hfNUYYA2" target="_blank" rel="noopener">GoTech LLC</a></td>
+              <td>Pax8 Beyond 26</td>
+              <td>$1,000</td>
+            </tr>
+<tr>
+              <td><strong>Last week</strong><span>Oct 19 - Oct 25, 2026</span></td>
+              <td>2026-10-20</td>
+              <td>Patrick Davies</td>
+              <td>Nutmeg Consulting, Inc.</td>
+              <td><a href="https://rev-io.my.salesforce.com/006PX00000hYhJVYA0" target="_blank" rel="noopener">Nutmeg Consulting</a></td>
+              <td>ChannelCon 26</td>
+              <td>$1,000</td>
+            </tr>
+<tr>
+              <td><strong>Prior week</strong><span>Oct 12 - Oct 18, 2026</span></td>
+              <td>2026-10-14</td>
+              <td>Jaylin Bender</td>
+              <td>WIP</td>
+              <td><a href="https://rev-io.my.salesforce.com/006PX00000hJLeHYAW" target="_blank" rel="noopener">WIP</a></td>
+              <td>InfoComm 26</td>
+              <td>$1,400</td>
+            </tr>
+<tr>
+              <td><strong>Prior week</strong><span>Oct 12 - Oct 18, 2026</span></td>
+              <td>2026-10-14</td>
+              <td>Jakob Champion</td>
+              <td>Low Voltage Integrators</td>
+              <td><a href="https://rev-io.my.salesforce.com/006PX00000hIaM2YAK" target="_blank" rel="noopener">Low Voltage Integrators - TP Migration</a></td>
+              <td>ISC West 26</td>
+              <td>$0</td>
+            </tr>
+<tr>
+              <td><strong>Prior week</strong><span>Oct 12 - Oct 18, 2026</span></td>
+              <td>2026-10-14</td>
+              <td>Jakob Champion</td>
+              <td>Low Voltage Integrators</td>
+              <td><a href="https://rev-io.my.salesforce.com/006PX00000hJre9YAC" target="_blank" rel="noopener">Low Voltage Integrators - Monthly Min Increase</a></td>
+              <td>ISC West 26</td>
+              <td>$124</td>
+            </tr>
+<tr>
+              <td><strong>Prior week</strong><span>Oct 12 - Oct 18, 2026</span></td>
+              <td>2026-10-14</td>
+              <td>Jake Borah</td>
+              <td>Aurum Home Technology</td>
+              <td><a href="https://rev-io.my.salesforce.com/006PX00000hJRzqYAG" target="_blank" rel="noopener">Aurum Home Technology</a></td>
+              <td>Cedia 26</td>
+              <td>$1,000</td>
+            </tr>
+<tr>
+              <td><strong>Prior week</strong><span>Oct 12 - Oct 18, 2026</span></td>
+              <td>2026-10-13</td>
+              <td>Connor Flynn</td>
+              <td>Techcierge</td>
+              <td><a href="https://rev-io.my.salesforce.com/006PX00000hG2oHYAS" target="_blank" rel="noopener">Techcierge</a></td>
+              <td>Tradeshow</td>
+              <td>$1,000</td>
+            </tr>
+<tr>
+              <td><strong>Prior week</strong><span>Oct 12 - Oct 18, 2026</span></td>
+              <td>2026-10-13</td>
+              <td>Abbey McIntosh</td>
+              <td>IVA Solutions, Inc.</td>
+              <td><a href="https://rev-io.my.salesforce.com/006PX00000hG0cnYAC" target="_blank" rel="noopener">IVA Solutions, Inc.</a></td>
+              <td>InfoComm 26</td>
+              <td>$1,000</td>
+            </tr>
+<tr>
+              <td><strong>Prior week</strong><span>Oct 12 - Oct 18, 2026</span></td>
+              <td>2026-10-13</td>
+              <td>Abbey McIntosh</td>
+              <td>ECV First Security &amp; Telecom</td>
+              <td><a href="https://rev-io.my.salesforce.com/006PX00000hG1VdYAK" target="_blank" rel="noopener">ECV First Security &amp; Telecom</a></td>
+              <td>Tradeshow</td>
+              <td>$1,000</td>
+            </tr></tbody></table></div>
+    </details>
+<details class="metric-card">
+      <summary aria-label="Open details for Booked MRR">
       <div class="metric-label">Booked MRR</div>
       <div class="metric-value">$1,618</div>
       <div class="metric-compare"><span class="up">+$1,568</span> vs prior · +3136%</div>
       <div class="metric-prior">Prior week: $50</div>
-    </div>
-<div class="metric-card">
+      <div class="open-details">Open details <span aria-hidden="true">▾</span></div>
+      </summary>
+      <div class="metric-detail"><table><caption class="sr-only">Underlying Salesforce records for Booked MRR, last and prior weeks</caption><thead><tr><th>Week</th><th>Date</th><th>Owner / Rep</th><th>Account</th><th>Subject / Opportunity</th><th>Product / Source</th><th>MRR</th></tr></thead><tbody><tr>
+              <td><strong>Last week</strong><span>Oct 19 - Oct 25, 2026</span></td>
+              <td>2026-10-23</td>
+              <td>Katerra Stephenson Greenwood</td>
+              <td>Datapro Solutions</td>
+              <td><a href="https://rev-io.my.salesforce.com/006PX00000dT2eHYAS" target="_blank" rel="noopener">Datapro - TP Migration</a></td>
+              <td>Unspecified</td>
+              <td>$0</td>
+            </tr>
+<tr>
+              <td><strong>Last week</strong><span>Oct 19 - Oct 25, 2026</span></td>
+              <td>2026-10-22</td>
+              <td>Katerra Stephenson Greenwood</td>
+              <td>Intelligent Power Solutions</td>
+              <td><a href="https://rev-io.my.salesforce.com/006PX00000hLka9YAC" target="_blank" rel="noopener">Intelligent Power Solutions- TP Migration</a></td>
+              <td>Unspecified</td>
+              <td>$0</td>
+            </tr>
+<tr>
+              <td><strong>Last week</strong><span>Oct 19 - Oct 25, 2026</span></td>
+              <td>2026-10-22</td>
+              <td>Katerra Stephenson Greenwood</td>
+              <td>Intelligent Power Solutions</td>
+              <td><a href="https://rev-io.my.salesforce.com/006PX00000hJHkLYAW" target="_blank" rel="noopener">Intelligent Power Solutions - Increase</a></td>
+              <td>PSA</td>
+              <td>$55</td>
+            </tr>
+<tr>
+              <td><strong>Last week</strong><span>Oct 19 - Oct 25, 2026</span></td>
+              <td>2026-10-22</td>
+              <td>Ingrid Beard</td>
+              <td>Pathcom</td>
+              <td><a href="https://rev-io.my.salesforce.com/006PX00000hMzqTYAS" target="_blank" rel="noopener">Pathcom - AR Payments</a></td>
+              <td>Payments AR</td>
+              <td>$54</td>
+            </tr>
+<tr>
+              <td><strong>Last week</strong><span>Oct 19 - Oct 25, 2026</span></td>
+              <td>2026-10-21</td>
+              <td>Ingrid Beard</td>
+              <td>Pathcom</td>
+              <td><a href="https://rev-io.my.salesforce.com/006PX00000gNRIfYAO" target="_blank" rel="noopener">Pathcom - TP Migration</a></td>
+              <td>Unspecified</td>
+              <td>$0</td>
+            </tr>
+<tr>
+              <td><strong>Last week</strong><span>Oct 19 - Oct 25, 2026</span></td>
+              <td>2026-10-20</td>
+              <td>Ingrid Beard</td>
+              <td>Valley Lock &amp; Security</td>
+              <td><a href="https://rev-io.my.salesforce.com/006PX00000hMT0zYAG" target="_blank" rel="noopener">Valley Lock - TP Migration 8</a></td>
+              <td>Unspecified</td>
+              <td>$0</td>
+            </tr>
+<tr>
+              <td><strong>Last week</strong><span>Oct 19 - Oct 25, 2026</span></td>
+              <td>2026-10-20</td>
+              <td>Ingrid Beard</td>
+              <td>Valley Lock &amp; Security</td>
+              <td><a href="https://rev-io.my.salesforce.com/006PX00000hMTNZYA4" target="_blank" rel="noopener">Valley Lock - Monthly Min Increase</a></td>
+              <td>PSA</td>
+              <td>$209</td>
+            </tr>
+<tr>
+              <td><strong>Last week</strong><span>Oct 19 - Oct 25, 2026</span></td>
+              <td>2026-10-20</td>
+              <td>Connor Flynn</td>
+              <td>SIPEngines</td>
+              <td><a href="https://rev-io.my.salesforce.com/006PX00000gkinRYAQ" target="_blank" rel="noopener">SIPEngines (Combo Part 2)</a></td>
+              <td>PSA</td>
+              <td>$500</td>
+            </tr>
+<tr>
+              <td><strong>Last week</strong><span>Oct 19 - Oct 25, 2026</span></td>
+              <td>2026-10-20</td>
+              <td>Connor Flynn</td>
+              <td>SIPEngines</td>
+              <td><a href="https://rev-io.my.salesforce.com/006PX00000gNcXSYA0" target="_blank" rel="noopener">SIPEngines (Combo Part 1)</a></td>
+              <td>Billing / Odin</td>
+              <td>$750</td>
+            </tr>
+<tr>
+              <td><strong>Last week</strong><span>Oct 19 - Oct 25, 2026</span></td>
+              <td>2026-10-19</td>
+              <td>Jakob Champion</td>
+              <td>Millennium Systems Integration</td>
+              <td><a href="https://rev-io.my.salesforce.com/006PX00000eUSELYA4" target="_blank" rel="noopener">Millennium Systems Integration - Payments (Portal)</a></td>
+              <td>Payments AR</td>
+              <td>$50</td>
+            </tr>
+<tr>
+              <td><strong>Prior week</strong><span>Oct 12 - Oct 18, 2026</span></td>
+              <td>2026-10-14</td>
+              <td>Justin Lee</td>
+              <td>First Response Security Services</td>
+              <td><a href="https://rev-io.my.salesforce.com/006PX00000ftVpxYAE" target="_blank" rel="noopener">First Response Security Services - AR Payments (Portal)</a></td>
+              <td>Payments AR</td>
+              <td>$50</td>
+            </tr>
+<tr>
+              <td><strong>Prior week</strong><span>Oct 12 - Oct 18, 2026</span></td>
+              <td>2026-10-14</td>
+              <td>Ingrid Beard</td>
+              <td>Sam E Mitchell Jr. Associate Inc</td>
+              <td><a href="https://rev-io.my.salesforce.com/006PX00000hCgNiYAK" target="_blank" rel="noopener">Sam E Mitchell - TP Migration 6</a></td>
+              <td>Unspecified</td>
+              <td>$0</td>
+            </tr></tbody></table></div>
+    </details>
+<details class="metric-card">
+      <summary aria-label="Open details for Booked Deals">
       <div class="metric-label">Booked Deals</div>
       <div class="metric-value">10</div>
       <div class="metric-compare"><span class="up">+8</span> vs prior · +400%</div>
       <div class="metric-prior">Prior week: 2</div>
-    </div></div>
+      <div class="open-details">Open details <span aria-hidden="true">▾</span></div>
+      </summary>
+      <div class="metric-detail"><table><caption class="sr-only">Underlying Salesforce records for Booked Deals, last and prior weeks</caption><thead><tr><th>Week</th><th>Date</th><th>Owner / Rep</th><th>Account</th><th>Subject / Opportunity</th><th>Product / Source</th><th>MRR</th></tr></thead><tbody><tr>
+              <td><strong>Last week</strong><span>Oct 19 - Oct 25, 2026</span></td>
+              <td>2026-10-23</td>
+              <td>Katerra Stephenson Greenwood</td>
+              <td>Datapro Solutions</td>
+              <td><a href="https://rev-io.my.salesforce.com/006PX00000dT2eHYAS" target="_blank" rel="noopener">Datapro - TP Migration</a></td>
+              <td>Unspecified</td>
+              <td>$0</td>
+            </tr>
+<tr>
+              <td><strong>Last week</strong><span>Oct 19 - Oct 25, 2026</span></td>
+              <td>2026-10-22</td>
+              <td>Katerra Stephenson Greenwood</td>
+              <td>Intelligent Power Solutions</td>
+              <td><a href="https://rev-io.my.salesforce.com/006PX00000hLka9YAC" target="_blank" rel="noopener">Intelligent Power Solutions- TP Migration</a></td>
+              <td>Unspecified</td>
+              <td>$0</td>
+            </tr>
+<tr>
+              <td><strong>Last week</strong><span>Oct 19 - Oct 25, 2026</span></td>
+              <td>2026-10-22</td>
+              <td>Katerra Stephenson Greenwood</td>
+              <td>Intelligent Power Solutions</td>
+              <td><a href="https://rev-io.my.salesforce.com/006PX00000hJHkLYAW" target="_blank" rel="noopener">Intelligent Power Solutions - Increase</a></td>
+              <td>PSA</td>
+              <td>$55</td>
+            </tr>
+<tr>
+              <td><strong>Last week</strong><span>Oct 19 - Oct 25, 2026</span></td>
+              <td>2026-10-22</td>
+              <td>Ingrid Beard</td>
+              <td>Pathcom</td>
+              <td><a href="https://rev-io.my.salesforce.com/006PX00000hMzqTYAS" target="_blank" rel="noopener">Pathcom - AR Payments</a></td>
+              <td>Payments AR</td>
+              <td>$54</td>
+            </tr>
+<tr>
+              <td><strong>Last week</strong><span>Oct 19 - Oct 25, 2026</span></td>
+              <td>2026-10-21</td>
+              <td>Ingrid Beard</td>
+              <td>Pathcom</td>
+              <td><a href="https://rev-io.my.salesforce.com/006PX00000gNRIfYAO" target="_blank" rel="noopener">Pathcom - TP Migration</a></td>
+              <td>Unspecified</td>
+              <td>$0</td>
+            </tr>
+<tr>
+              <td><strong>Last week</strong><span>Oct 19 - Oct 25, 2026</span></td>
+              <td>2026-10-20</td>
+              <td>Ingrid Beard</td>
+              <td>Valley Lock &amp; Security</td>
+              <td><a href="https://rev-io.my.salesforce.com/006PX00000hMT0zYAG" target="_blank" rel="noopener">Valley Lock - TP Migration 8</a></td>
+              <td>Unspecified</td>
+              <td>$0</td>
+            </tr>
+<tr>
+              <td><strong>Last week</strong><span>Oct 19 - Oct 25, 2026</span></td>
+              <td>2026-10-20</td>
+              <td>Ingrid Beard</td>
+              <td>Valley Lock &amp; Security</td>
+              <td><a href="https://rev-io.my.salesforce.com/006PX00000hMTNZYA4" target="_blank" rel="noopener">Valley Lock - Monthly Min Increase</a></td>
+              <td>PSA</td>
+              <td>$209</td>
+            </tr>
+<tr>
+              <td><strong>Last week</strong><span>Oct 19 - Oct 25, 2026</span></td>
+              <td>2026-10-20</td>
+              <td>Connor Flynn</td>
+              <td>SIPEngines</td>
+              <td><a href="https://rev-io.my.salesforce.com/006PX00000gkinRYAQ" target="_blank" rel="noopener">SIPEngines (Combo Part 2)</a></td>
+              <td>PSA</td>
+              <td>$500</td>
+            </tr>
+<tr>
+              <td><strong>Last week</strong><span>Oct 19 - Oct 25, 2026</span></td>
+              <td>2026-10-20</td>
+              <td>Connor Flynn</td>
+              <td>SIPEngines</td>
+              <td><a href="https://rev-io.my.salesforce.com/006PX00000gNcXSYA0" target="_blank" rel="noopener">SIPEngines (Combo Part 1)</a></td>
+              <td>Billing / Odin</td>
+              <td>$750</td>
+            </tr>
+<tr>
+              <td><strong>Last week</strong><span>Oct 19 - Oct 25, 2026</span></td>
+              <td>2026-10-19</td>
+              <td>Jakob Champion</td>
+              <td>Millennium Systems Integration</td>
+              <td><a href="https://rev-io.my.salesforce.com/006PX00000eUSELYA4" target="_blank" rel="noopener">Millennium Systems Integration - Payments (Portal)</a></td>
+              <td>Payments AR</td>
+              <td>$50</td>
+            </tr>
+<tr>
+              <td><strong>Prior week</strong><span>Oct 12 - Oct 18, 2026</span></td>
+              <td>2026-10-14</td>
+              <td>Justin Lee</td>
+              <td>First Response Security Services</td>
+              <td><a href="https://rev-io.my.salesforce.com/006PX00000ftVpxYAE" target="_blank" rel="noopener">First Response Security Services - AR Payments (Portal)</a></td>
+              <td>Payments AR</td>
+              <td>$50</td>
+            </tr>
+<tr>
+              <td><strong>Prior week</strong><span>Oct 12 - Oct 18, 2026</span></td>
+              <td>2026-10-14</td>
+              <td>Ingrid Beard</td>
+              <td>Sam E Mitchell Jr. Associate Inc</td>
+              <td><a href="https://rev-io.my.salesforce.com/006PX00000hCgNiYAK" target="_blank" rel="noopener">Sam E Mitchell - TP Migration 6</a></td>
+              <td>Unspecified</td>
+              <td>$0</td>
+            </tr></tbody></table></div>
+    </details></div>
 <div class="panel-grid"><section class="panel focus-panel"><div class="panel-head"><h2>Positive movement</h2><div class="panel-note">Metrics up or flat vs the prior week — easier to scan for what improved.</div></div><table><thead><tr><th>Metric</th><th>Last Week</th><th>Prior Week</th><th>Difference</th></tr></thead><tbody><tr>
           <td><strong>Booked MRR</strong><span>10 closed-won deals</span></td>
           <td>$1,618</td>
@@ -97,6 +2269,12 @@ body:before{content:'';position:fixed;inset:-14% -10% 55% -10%;background:radial
           <td>21</td>
           <td>22</td>
           <td><span class="bad">-1</span><small>-5%</small></td>
+        </tr>
+<tr>
+          <td><strong>CBRs Complete</strong><span>Customer business reviews completed</span></td>
+          <td>15</td>
+          <td>22</td>
+          <td><span class="bad">-7</span><small>-32%</small></td>
         </tr>
 <tr>
           <td><strong>Initial Demos Ran</strong><span>Demo meetings completed/held</span></td>
@@ -133,6 +2311,38 @@ body:before{content:'';position:fixed;inset:-14% -10% 55% -10%;background:radial
 <tr><td><strong>Katerra Stephenson Greenwood</strong></td><td><strong>5</strong><small>Prior: 4</small></td><td><strong>4</strong><small>Prior: 8</small></td><td><strong>0</strong><small>Prior: 0</small></td><td><strong>0</strong><small>Prior: 0</small></td><td><strong>0</strong><small>Prior: 0</small></td></tr>
 <tr><td><strong>Justin Lee</strong></td><td><strong>4</strong><small>Prior: 5</small></td><td><strong>1</strong><small>Prior: 2</small></td><td><strong>0</strong><small>Prior: 0</small></td><td><strong>2</strong><small>Prior: 1</small></td><td><strong>0</strong><small>Prior: 0</small></td></tr>
 <tr><td><strong>Ingrid Beard</strong></td><td><strong>2</strong><small>Prior: 5</small></td><td><strong>1</strong><small>Prior: 4</small></td><td><strong>0</strong><small>Prior: 0</small></td><td><strong>0</strong><small>Prior: 0</small></td><td><strong>1</strong><small>Prior: 0</small></td></tr></tbody></table></section>
+<section class="panel"><div class="panel-head"><h2>All MQLs converted last week</h2><div class="panel-note">Every marketing-sourced opportunity created during Oct 19 - Oct 25, 2026; this list is not truncated.</div></div><table><thead><tr><th>Date</th><th>Owner</th><th>Account / Opportunity</th><th>Marketing Source</th><th>Marketing Subsource</th><th>Opportunity Stage</th></tr></thead><tbody><tr>
+          <td>2026-10-22</td>
+          <td><strong>Jakob Champion</strong></td>
+          <td>RSS (Restaurant Service Solutions)<span><a href="https://rev-io.my.salesforce.com/006PX00000heCMgYAM" target="_blank" rel="noopener">RSS - Tigerpaw Migration</a></span></td>
+          <td>Webinar</td>
+          <td></td>
+          <td>4 - Proposal Sent</td>
+        </tr>
+<tr>
+          <td>2026-10-22</td>
+          <td><strong>Jakob Champion</strong></td>
+          <td>RSS (Restaurant Service Solutions)<span><a href="https://rev-io.my.salesforce.com/006PX00000heAzCYAU" target="_blank" rel="noopener">RSS - Monthly Min Increase</a></span></td>
+          <td>Webinar</td>
+          <td></td>
+          <td>4 - Proposal Sent</td>
+        </tr>
+<tr>
+          <td>2026-10-19</td>
+          <td><strong>Connor Flynn</strong></td>
+          <td>ChatterBox Phone<span><a href="https://rev-io.my.salesforce.com/006PX00000hVgWrYAK" target="_blank" rel="noopener">ChatterBox Phone</a></span></td>
+          <td>Website</td>
+          <td>Request Demo</td>
+          <td>Closed Lost</td>
+        </tr>
+<tr>
+          <td>2026-10-19</td>
+          <td><strong>Connor Flynn</strong></td>
+          <td>Ben Whatley Co<span><a href="https://rev-io.my.salesforce.com/006PX00000hVeYHYA0" target="_blank" rel="noopener">Ben Whatley Co</a></span></td>
+          <td>SEO</td>
+          <td>Request Demo</td>
+          <td>2 - Discovery Completed</td>
+        </tr></tbody></table></section>
 <section class="panel"><div class="panel-head"><h2>All closed won opportunities last week</h2><div class="panel-note">Every opportunity marked Closed Won with a close date in the previous week.</div></div><table><thead><tr><th>Owner</th><th>Account / Opportunity</th><th>Product</th><th>MRR</th></tr></thead><tbody><tr>
           <td><strong>Connor Flynn</strong><span>Tue 10/20</span></td>
           <td>SIPEngines<span>SIPEngines (Combo Part 1)</span></td>
