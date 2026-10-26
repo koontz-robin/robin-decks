@@ -444,6 +444,17 @@ def build_payload():
                        account_name, opp_name, subsource or source, mrr)
             if period == "last":
                 conversion_detail["tradeshow"].append({"rep": owner, "opp": opp_name, "account": account_name, "source": subsource or source, "mrr": mrr, "date": created_dt.strftime("%a %-m/%-d")})
+                mqls_last_week.append({
+                    "id": opp.get("Id") or "",
+                    "url": f"{SF_INSTANCE}/{opp.get('Id')}" if opp.get("Id") else "",
+                    "date": created_dt.date().isoformat(),
+                    "owner": owner,
+                    "account": account_name,
+                    "opportunity": opp_name,
+                    "marketing_source": source,
+                    "marketing_subsource": subsource,
+                    "stage": opp.get("StageName") or "",
+                })
         elif owner in metrics and is_mql_source(source):
             add_metric(metrics[owner], "mqls_converted", period, mrr_key="mql_converted_mrr", mrr=mrr)
             add_detail(metric_details, "mqls_converted", period, opp.get("Id"), created_dt.date().isoformat(), owner,
@@ -826,7 +837,7 @@ body:before{{content:'';position:fixed;inset:-14% -10% 55% -10%;background:radia
 <div class="panel-grid"><section class="panel focus-panel"><div class="panel-head"><h2>Positive movement</h2><div class="panel-note">Metrics up or flat vs the prior week — easier to scan for what improved.</div></div><table><thead><tr><th>Metric</th><th>Last Week</th><th>Prior Week</th><th>Difference</th></tr></thead><tbody>{positive_rows}</tbody></table></section><section class="panel watch-panel"><div class="panel-head"><h2>Watch list</h2><div class="panel-note">Metrics down vs the prior week — the Monday coaching queue, minus the detective corkboard chaos.</div></div><table><thead><tr><th>Metric</th><th>Last Week</th><th>Prior Week</th><th>Difference</th></tr></thead><tbody>{negative_rows}</tbody></table></section></div>
 <section class="panel"><div class="panel-head"><h2>AE meeting activity</h2><div class="panel-note">Last completed Monday–Sunday week by AE. Prior-week counts appear beneath each result for quick coaching context.</div></div><table><thead><tr><th>AE</th><th>Discovery Set</th><th>Discovery Complete</th><th>Initial Demo Complete</th><th>Follow Up / Pricing Complete</th></tr></thead><tbody>{ae_activity_rows}</tbody></table></section>
 <section class="panel"><div class="panel-head"><h2>CSA meeting activity</h2><div class="panel-note">Last completed Monday–Sunday week by CSA. Prior-week counts appear beneath each result.</div></div><table><thead><tr><th>CSA</th><th>CBRs Set</th><th>CBRs Complete</th><th>Follow-up Client Meetings</th><th>Initial Expansion Meetings</th><th>Payments Quote Reviews</th></tr></thead><tbody>{csa_activity_rows}</tbody></table></section>
-<section class="panel"><div class="panel-head"><h2>All MQLs converted last week</h2><div class="panel-note">Every marketing-sourced opportunity created during {escape(payload['windows']['last'])}; this list is not truncated.</div></div><table><thead><tr><th>Date</th><th>Owner</th><th>Account / Opportunity</th><th>Marketing Source</th><th>Marketing Subsource</th><th>Opportunity Stage</th></tr></thead><tbody>{mql_rows}</tbody></table></section>
+<section class="panel"><div class="panel-head"><h2>All marketing leads converted last week</h2><div class="panel-note">Every MQL and tradeshow-sourced opportunity created during {escape(payload['windows']['last'])}; this list is not truncated.</div></div><table><thead><tr><th>Date</th><th>Owner</th><th>Account / Opportunity</th><th>Marketing Source</th><th>Marketing Subsource</th><th>Opportunity Stage</th></tr></thead><tbody>{mql_rows}</tbody></table></section>
 <section class="panel"><div class="panel-head"><h2>All closed won opportunities last week</h2><div class="panel-note">Every opportunity marked Closed Won with a close date in the previous week.</div></div><table><thead><tr><th>Owner</th><th>Account / Opportunity</th><th>Product</th><th>MRR</th></tr></thead><tbody>{closed_won_rows}</tbody></table></section>
 <section class="panel"><div class="panel-head"><h2>Metric definitions</h2><div class="panel-note">So nobody has to decode the Batcomputer during the team meeting.</div></div><div class="definitions">{''.join(f'<div class="def"><strong>{escape(k.replace("_", " ").title())}:</strong> {escape(v)}</div>' for k, v in payload['definitions'].items())}</div></section>
 <div class="footer">SOURCE: SALESFORCE TASKS, EVENTS, AND OPPORTUNITIES · AUTO-REFRESHES SUNDAY NIGHT ET</div></div></body></html>'''
