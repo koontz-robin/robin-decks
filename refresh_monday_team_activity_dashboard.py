@@ -234,12 +234,15 @@ def build_payload():
     now_et = datetime.now(ET)
     windows = week_windows(now_et)
     range_start, range_end = windows["prior"][0], windows["last"][1]
+    month_start = now_et.date().replace(day=1)
+    next_month = (month_start.replace(day=28) + timedelta(days=4)).replace(day=1)
     base, headers = sf_auth()
     reps = get_team_members(base, headers)
     metrics = {rep: empty_rep(role) for rep, role in reps.items()}
     product_mrr = defaultdict(lambda: {"last": {"mrr": 0.0, "count": 0}, "prior": {"mrr": 0.0, "count": 0}})
     conversion_detail = {"mql": [], "tradeshow": [], "sdr": [], "booked": []}
     mqls_last_week = []
+    msp_month_opportunities = []
     detail_metrics = ["discovery_set", "discovery_complete", "cbrs_set", "cbrs_complete",
                       "initial_demos_ran", "sdr_sourced_opps", "mqls_converted",
                       "tradeshow_leads_converted", "booked_mrr", "booked_count"]
@@ -500,6 +503,41 @@ def build_payload():
         if period == "last" and owner not in EXCLUDED_REPS:
             conversion_detail["booked"].append({"rep": owner, "opp": opp.get("Name") or "Opportunity", "account": (opp.get("Account") or {}).get("Name") or "", "product": product, "mrr": mrr, "date": dt.strftime("%a %-m/%-d")})
 
+    # MSP opportunities created this month. Account.Vertical__c is the canonical
+    # MSP classification; closed-lost rows retain the exact Salesforce reason and
+    # free-text detail so the dashboard explains the loss rather than just counting it.
+    msp_opps = sf_query(base, headers, f"""
+        SELECT Id, Name, CreatedDate, CloseDate, StageName, Amount, Product_Type__c,
+               Marketing_Source__c, Marketing_Sub_source__c, Owner.Name,
+               Account.Name, Account.Vertical__c, Account.Industry,
+               Loss_Reason__c, Reason_Lost_Detail__c, Missing_Features__c
+        FROM Opportunity
+        WHERE IsDeleted = false
+          AND CreatedDate >= {month_start.isoformat()}T00:00:00Z
+          AND CreatedDate < {next_month.isoformat()}T00:00:00Z
+          AND Account.Vertical__c = 'MSP'
+        ORDER BY CreatedDate DESC
+    """)
+    for opp in msp_opps:
+        created_dt = parse_sf_datetime(opp["CreatedDate"])
+        msp_month_opportunities.append({
+            "id": opp.get("Id") or "",
+            "url": f"{SF_INSTANCE}/{opp.get('Id')}" if opp.get("Id") else "",
+            "created_date": created_dt.date().isoformat(),
+            "account": (opp.get("Account") or {}).get("Name") or "",
+            "opportunity": opp.get("Name") or "Opportunity",
+            "owner": normalize_name((opp.get("Owner") or {}).get("Name")),
+            "stage": opp.get("StageName") or "",
+            "product": product_label(opp.get("Product_Type__c")),
+            "mrr": amount(opp),
+            "industry": (opp.get("Account") or {}).get("Industry") or "",
+            "marketing_source": opp.get("Marketing_Source__c") or "",
+            "marketing_subsource": opp.get("Marketing_Sub_source__c") or "",
+            "loss_reason": opp.get("Loss_Reason__c") or "",
+            "loss_detail": opp.get("Reason_Lost_Detail__c") or "",
+            "missing_features": opp.get("Missing_Features__c") or "",
+        })
+
     totals = empty_rep("Total")
     for repdata in metrics.values():
         for key, val in repdata.items():
@@ -542,6 +580,10 @@ def build_payload():
         "conversion_detail": conversion_detail,
         "metric_details": metric_details,
         "mqls_last_week": mqls_last_week,
+        "msp_month": {
+            "label": now_et.strftime("%B %Y"),
+            "opportunities": msp_month_opportunities,
+        },
     }
 
 
@@ -799,6 +841,44 @@ def build_mql_rows(items):
     return "\n".join(rows) or '<tr><td colspan="6" class="empty">No MQLs converted last week.</td></tr>'
 
 
+def build_msp_stage_rows(items):
+    stages = defaultdict(lambda: {"count": 0, "mrr": 0.0})
+    for item in items:
+        stages[item.get("stage") or "No Stage"]["count"] += 1
+        stages[item.get("stage") or "No Stage"]["mrr"] += item.get("mrr") or 0
+    rows = []
+    for stage, values in sorted(stages.items(), key=lambda pair: (-pair[1]["count"], pair[0])):
+        rows.append(f'<tr><td><strong>{escape(stage)}</strong></td><td>{fmt_int(values["count"])}</td><td>{money(values["mrr"])}</td></tr>')
+    return "\n".join(rows) or '<tr><td colspan="3" class="empty">No MSP opportunities created this month.</td></tr>'
+
+
+def build_msp_opportunity_rows(items):
+    rows = []
+    for item in items:
+        opportunity = escape(item.get("opportunity") or "Opportunity")
+        if item.get("url"):
+            opportunity = f'<a href="{escape(item["url"])}" target="_blank" rel="noopener">{opportunity}</a>'
+        loss = ""
+        if (item.get("stage") or "").lower() == "closed lost":
+            reason = item.get("loss_reason") or "No loss reason recorded"
+            detail = item.get("loss_detail") or "No loss detail recorded"
+            features = item.get("missing_features") or ""
+            feature_html = f'<small>Missing features: {escape(features)}</small>' if features else ""
+            loss = f'<strong class="bad">{escape(reason)}</strong><span>{escape(detail)}</span>{feature_html}'
+        else:
+            loss = '<span>—</span>'
+        rows.append(f'''<tr>
+          <td>{escape(item.get('created_date') or '')}</td>
+          <td>{escape(item.get('account') or '')}<span>{opportunity}</span></td>
+          <td><strong>{escape(item.get('owner') or '')}</strong></td>
+          <td>{escape(item.get('stage') or '')}</td>
+          <td>{escape(item.get('product') or '')}<span>{money(item.get('mrr') or 0)}</span></td>
+          <td>{escape(item.get('industry') or '')}</td>
+          <td>{loss}</td>
+        </tr>''')
+    return "\n".join(rows) or '<tr><td colspan="7" class="empty">No MSP opportunities created this month.</td></tr>'
+
+
 def build_html(payload):
     t = payload["totals"]
     d = payload["metric_details"]
@@ -822,6 +902,10 @@ def build_html(payload):
     csa_activity_rows = build_csa_activity_rows(payload["metrics"])
     closed_won_rows = build_detail_rows(payload["conversion_detail"]["booked"], "closed won opportunities")
     mql_rows = build_mql_rows(payload["mqls_last_week"])
+    msp_items = payload["msp_month"]["opportunities"]
+    msp_stage_rows = build_msp_stage_rows(msp_items)
+    msp_opportunity_rows = build_msp_opportunity_rows(msp_items)
+    msp_lost_count = sum((item.get("stage") or "").lower() == "closed lost" for item in msp_items)
     return f'''<!doctype html>
 <html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Monday Sales Meeting</title>
 <style>
@@ -838,6 +922,7 @@ body:before{{content:'';position:fixed;inset:-14% -10% 55% -10%;background:radia
 <section class="panel"><div class="panel-head"><h2>AE meeting activity</h2><div class="panel-note">Last completed Monday–Sunday week by AE. Prior-week counts appear beneath each result for quick coaching context.</div></div><table><thead><tr><th>AE</th><th>Discovery Set</th><th>Discovery Complete</th><th>Initial Demo Complete</th><th>Follow Up / Pricing Complete</th></tr></thead><tbody>{ae_activity_rows}</tbody></table></section>
 <section class="panel"><div class="panel-head"><h2>CSA meeting activity</h2><div class="panel-note">Last completed Monday–Sunday week by CSA. Prior-week counts appear beneath each result.</div></div><table><thead><tr><th>CSA</th><th>CBRs Set</th><th>CBRs Complete</th><th>Follow-up Client Meetings</th><th>Initial Expansion Meetings</th><th>Payments Quote Reviews</th></tr></thead><tbody>{csa_activity_rows}</tbody></table></section>
 <section class="panel"><div class="panel-head"><h2>All marketing leads converted last week</h2><div class="panel-note">Every MQL and tradeshow-sourced opportunity created during {escape(payload['windows']['last'])}; this list is not truncated.</div></div><table><thead><tr><th>Date</th><th>Owner</th><th>Account / Opportunity</th><th>Marketing Source</th><th>Marketing Subsource</th><th>Opportunity Stage</th></tr></thead><tbody>{mql_rows}</tbody></table></section>
+<section class="panel"><div class="panel-head"><h2>MSP opportunities created — {escape(payload['msp_month']['label'])}</h2><div class="panel-note">{fmt_int(len(msp_items))} MSP opportunities created this month · {fmt_int(msp_lost_count)} currently Closed Lost. MSP is based on Account Vertical = MSP.</div></div><div class="panel-grid" style="padding:14px"><div><table><thead><tr><th>Stage</th><th>Opportunities</th><th>MRR</th></tr></thead><tbody>{msp_stage_rows}</tbody></table></div><div class="def"><strong>Closed-lost interpretation</strong><br>The table below shows Salesforce’s exact Loss Reason, Reason Lost Detail, and Missing Features entries. Blank fields are called out rather than guessed.</div></div><table><thead><tr><th>Created</th><th>Account / Opportunity</th><th>Owner</th><th>Stage</th><th>Product / MRR</th><th>Industry</th><th>Closed-Lost Reason / Detail</th></tr></thead><tbody>{msp_opportunity_rows}</tbody></table></section>
 <section class="panel"><div class="panel-head"><h2>All closed won opportunities last week</h2><div class="panel-note">Every opportunity marked Closed Won with a close date in the previous week.</div></div><table><thead><tr><th>Owner</th><th>Account / Opportunity</th><th>Product</th><th>MRR</th></tr></thead><tbody>{closed_won_rows}</tbody></table></section>
 <section class="panel"><div class="panel-head"><h2>Metric definitions</h2><div class="panel-note">So nobody has to decode the Batcomputer during the team meeting.</div></div><div class="definitions">{''.join(f'<div class="def"><strong>{escape(k.replace("_", " ").title())}:</strong> {escape(v)}</div>' for k, v in payload['definitions'].items())}</div></section>
 <div class="footer">SOURCE: SALESFORCE TASKS, EVENTS, AND OPPORTUNITIES · AUTO-REFRESHES SUNDAY NIGHT ET</div></div></body></html>'''
