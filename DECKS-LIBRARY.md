@@ -265,3 +265,10 @@ When Robin creates a new deck or dashboard:
 - **File:** `seaside-alarms-evaluation-readout.html`
 - **URL:** https://koontz-robin.github.io/robin-decks/seaside-alarms-evaluation-readout.html
 - **Purpose:** Buyer-facing Execute readout for Seaside Alarms / Cape Cod Security Systems, centered on legacy-platform risk, field-to-office modernization, transparent ROI assumptions, adoption controls, technical validation gates, and linked discovery/demo recordings.
+
+### Sales Manager Inspection Dashboard
+- **File:** `sales-manager-inspection-dashboard.html`
+- **URL:** https://koontz-robin.github.io/robin-decks/sales-manager-inspection-dashboard.html
+- **Generator:** `build_sales_manager_inspection_dashboard.py`
+- **Purpose:** Weekly manager → rep inspection of opportunities created and closed lost, including source, product, stage, next step, amount, business issue, problems, value, and loss context.
+- **Created:** 2026-10-26
