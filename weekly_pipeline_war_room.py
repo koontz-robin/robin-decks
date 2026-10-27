@@ -124,9 +124,23 @@ def change_row(item, kind):
 
 def render(payload):
     current, added, removed = payload["current"], payload["added"], payload["removed"]
+    current_total = sum(float(x.get("Amount") or 0) for x in current)
+    previous_total = float(payload.get("previous_total") or 0)
+    if payload["baseline"]:
+        wow_value = "—"
+        wow_note = "Baseline week"
+        wow_class = "flat"
+    elif previous_total:
+        wow_pct = ((current_total - previous_total) / previous_total) * 100
+        wow_value = f"{wow_pct:+.1f}%"
+        wow_note = f"vs. {money(previous_total)} last week"
+        wow_class = "up" if wow_pct > 0 else "down" if wow_pct < 0 else "flat"
+    else:
+        wow_value = "+100.0%" if current_total else "0.0%"
+        wow_note = "vs. $0 last week"
+        wow_class = "up" if current_total else "flat"
     groups = defaultdict(list)
     for o in current: groups[product_name(o.get("Product_Type__c"))].append(o)
-    product_cards = "".join(f'<div class="metric"><span>{esc(p)}</span><strong>{len(v)}</strong><small>{money(sum(float(x.get("Amount") or 0) for x in v))} open MRR</small></div>' for p,v in sorted(groups.items(), key=lambda x: -sum(float(o.get("Amount") or 0) for o in x[1])))
     sections = []
     for p, opps in sorted(groups.items(), key=lambda x: -sum(float(o.get("Amount") or 0) for o in x[1])):
         total = sum(float(o.get("Amount") or 0) for o in opps)
@@ -139,9 +153,9 @@ def render(payload):
         changes = f'<div class="table"><table><thead><tr><th>Change / Opportunity</th><th>Product</th><th>Owner</th><th>MRR</th><th>Why it changed</th><th>Loss reason / detail</th></tr></thead><tbody>{cr or "<tr><td colspan=6>No changes from last week.</td></tr>"}</tbody></table></div>'
     generated = datetime.fromisoformat(payload["generated_at"]).astimezone(ET).strftime("%B %-d, %Y at %-I:%M %p ET")
     return f"""<!doctype html><html><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Weekly Pipeline War Room</title><style>
-:root{{--navy:#07152d;--panel:#102443;--line:#284161;--text:#edf5ff;--muted:#9cb0c9;--blue:#46a5ff;--green:#35d39a;--red:#ff6f7d;--gold:#ffc857}}*{{box-sizing:border-box}}body{{margin:0;background:linear-gradient(150deg,#061226,#0a1d38);color:var(--text);font:14px Inter,Segoe UI,sans-serif}}main{{max-width:1500px;margin:auto;padding:38px}}header{{display:flex;justify-content:space-between;gap:30px;align-items:end;margin-bottom:26px}}.eyebrow{{color:var(--blue);font-weight:800;text-transform:uppercase;letter-spacing:.15em;font-size:12px}}h1{{font-size:38px;margin:7px 0}}p{{color:var(--muted);margin:4px 0}}.metrics{{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:12px;margin:20px 0}}.metric,section{{background:rgba(16,36,67,.92);border:1px solid var(--line);border-radius:14px}}.metric{{padding:18px}}.metric span,.metric small{{display:block;color:var(--muted)}}.metric strong{{font-size:28px;display:block;margin:5px 0}}section{{margin:18px 0;overflow:hidden}}.section-head{{padding:20px 22px;border-bottom:1px solid var(--line)}}h2{{margin:0;font-size:21px}}.table{{overflow:auto}}table{{border-collapse:collapse;width:100%;min-width:950px}}th,td{{padding:13px 16px;text-align:left;border-bottom:1px solid rgba(40,65,97,.65);vertical-align:top}}th{{font-size:11px;text-transform:uppercase;color:var(--muted);letter-spacing:.07em}}td small{{display:block;color:var(--muted);margin-top:5px;max-width:440px;white-space:normal}}.num{{font-weight:800}}.stage,.change{{display:inline-block;border-radius:999px;padding:4px 8px;font-size:11px;font-weight:800;white-space:nowrap}}.stage{{background:#183557;color:#baddff}}.change{{margin:0 8px 6px 0;text-transform:uppercase}}.added{{background:#123f35;color:var(--green)}}.removed{{background:#502630;color:#ffb7bf}}.empty{{padding:24px;color:var(--muted)}}footer{{color:var(--muted);padding:20px 2px 40px}}@media(max-width:700px){{main{{padding:20px}}header{{display:block}}h1{{font-size:29px}}}}
+:root{{--navy:#07152d;--panel:#102443;--line:#284161;--text:#edf5ff;--muted:#9cb0c9;--blue:#46a5ff;--green:#35d39a;--red:#ff6f7d;--gold:#ffc857}}*{{box-sizing:border-box}}body{{margin:0;background:linear-gradient(150deg,#061226,#0a1d38);color:var(--text);font:14px Inter,Segoe UI,sans-serif}}main{{max-width:1500px;margin:auto;padding:38px}}header{{display:flex;justify-content:space-between;gap:30px;align-items:end;margin-bottom:26px}}.eyebrow{{color:var(--blue);font-weight:800;text-transform:uppercase;letter-spacing:.15em;font-size:12px}}h1{{font-size:38px;margin:7px 0}}p{{color:var(--muted);margin:4px 0}}.war-room-total{{display:flex;align-items:end;gap:42px;padding:8px 0 28px;border-bottom:1px solid var(--line);margin-bottom:22px}}.total-label{{display:block;color:var(--muted);font-size:12px;text-transform:uppercase;letter-spacing:.1em;font-weight:800}}.total-value{{display:block;font-size:52px;line-height:1;font-weight:850;margin-top:8px}}.wow-value{{display:block;font-size:28px;font-weight:850}}.wow-value.up{{color:var(--green)}}.wow-value.down{{color:var(--red)}}.wow-value.flat{{color:var(--muted)}}.wow-note{{display:block;color:var(--muted);margin-top:5px}}section{{background:rgba(16,36,67,.92);border:1px solid var(--line);border-radius:14px;margin:18px 0;overflow:hidden}}.section-head{{padding:20px 22px;border-bottom:1px solid var(--line)}}h2{{margin:0;font-size:21px}}.table{{overflow:auto}}table{{border-collapse:collapse;width:100%;min-width:950px}}th,td{{padding:13px 16px;text-align:left;border-bottom:1px solid rgba(40,65,97,.65);vertical-align:top}}th{{font-size:11px;text-transform:uppercase;color:var(--muted);letter-spacing:.07em}}td small{{display:block;color:var(--muted);margin-top:5px;max-width:440px;white-space:normal}}.num{{font-weight:800}}.stage,.change{{display:inline-block;border-radius:999px;padding:4px 8px;font-size:11px;font-weight:800;white-space:nowrap}}.stage{{background:#183557;color:#baddff}}.change{{margin:0 8px 6px 0;text-transform:uppercase}}.added{{background:#123f35;color:var(--green)}}.removed{{background:#502630;color:#ffb7bf}}.empty{{padding:24px;color:var(--muted)}}footer{{color:var(--muted);padding:20px 2px 40px}}@media(max-width:700px){{main{{padding:20px}}header{{display:block}}h1{{font-size:29px}}.war-room-total{{display:block}}.war-room-total>div+div{{margin-top:20px}}.total-value{{font-size:42px}}}}
 </style></head><body><main><header><div><div class="eyebrow">Rev.io · Weekly Sales Inspection</div><h1>Pipeline War Room</h1><p>Every open opportunity at Stage 3 or later, grouped by product.</p></div><p>Updated {esc(generated)}</p></header>
-<div class="metrics"><div class="metric"><span>Total open Stage 3+</span><strong>{len(current)}</strong><small>{money(sum(float(x.get('Amount') or 0) for x in current))} MRR</small></div><div class="metric"><span>Added since prior snapshot</span><strong style="color:var(--green)">{len(added)}</strong><small>{money(sum(float(x['current'].get('Amount') or 0) for x in added))} MRR</small></div><div class="metric"><span>Removed since prior snapshot</span><strong style="color:var(--red)">{len(removed)}</strong><small>{money(sum(float(x['previous'].get('Amount') or 0) for x in removed))} MRR</small></div>{product_cards}</div>
+<div class="war-room-total"><div><span class="total-label">Total war room value</span><strong class="total-value">{money(current_total)}</strong></div><div><span class="total-label">Week-over-week change</span><strong class="wow-value {wow_class}">{wow_value}</strong><span class="wow-note">{esc(wow_note)}</span></div></div>
 <section><div class="section-head"><h2>Week-over-week war-room changes</h2><p>Additions entered Stage 3+; removals closed, regressed below Stage 3, or left the active set. Closed-lost records show Salesforce loss reason and detail.</p></div>{changes}</section>{''.join(sections)}<footer>Source: Salesforce Opportunity. Stage 3+ = Initial Product Demo, Proposal Sent, Product / Contract Validated, and Verbal Commit. Amount is shown as MRR.</footer></main></body></html>"""
 
 
@@ -188,7 +202,8 @@ def main():
     added=[] if baseline else [{"current":cur_map[i]} for i in sorted(cur_map.keys()-prev_map.keys())]
     removed_ids=[] if baseline else sorted(prev_map.keys()-cur_map.keys()); removed_current=fetch_prior_ids(base,headers,removed_ids)
     removed=[{"previous":prev_map[i],"current":removed_current.get(i),"removal_reason":removal_reason(removed_current.get(i))} for i in removed_ids]
-    payload={"generated_at":now.isoformat(),"baseline":baseline,"current":current,"added":added,"removed":removed,"previous_generated_at":(previous or {}).get("generated_at")}
+    previous_total=sum(float(x.get("Amount") or 0) for x in prev_records)
+    payload={"generated_at":now.isoformat(),"baseline":baseline,"current":current,"added":added,"removed":removed,"previous_total":previous_total,"previous_generated_at":(previous or {}).get("generated_at")}
     OUTPUT.write_text(render(payload)); SOURCE.write_text(json.dumps(payload,indent=2))
     if not args.no_publish: publish()
     if not args.no_send: send_email(payload)
