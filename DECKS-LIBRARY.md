@@ -272,3 +272,10 @@ When Robin creates a new deck or dashboard:
 - **Generator:** `build_sales_manager_inspection_dashboard.py`
 - **Purpose:** Weekly manager → rep inspection of opportunities created and closed lost, including source, product, stage, next step, amount, business issue, problems, value, and loss context.
 - **Created:** 2026-10-26
+
+### Weekly Pipeline War Room
+- **File:** `weekly-pipeline-war-room.html`
+- **URL:** https://koontz-robin.github.io/robin-decks/weekly-pipeline-war-room.html
+- **Generator:** `weekly_pipeline_war_room.py`
+- **Purpose:** Monday Stage 3+ open-opportunity inspection grouped by exact Salesforce product, with week-over-week additions/removals and Closed Lost reason/detail context.
+- **Created:** 2026-10-27
