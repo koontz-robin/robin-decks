@@ -251,6 +251,11 @@ When Robin creates a new deck or dashboard:
 - **URL:** https://koontz-robin.github.io/robin-decks/coeo-netwolves-evaluation-readout.html
 - **Purpose:** Buyer-facing Execute readout for the Coeo/Netwolves evaluation, centered on IDI overlap exposure, automation capacity, incident communications, platform economics, migration risk, and transparent ROI assumptions.
 
+### COEO / NetWolves — SolarWinds Integration SOW Overview
+- **File:** `coeo-solarwinds-revio-sow.html`
+- **URL:** https://koontz-robin.github.io/robin-decks/coeo-solarwinds-revio-sow.html
+- **Purpose:** Rev.io-branded, executive-friendly version of the October 27 ticketing and SolarWinds integration solution overview, preserving the complete scope, timeline, workstreams, acceptance criteria, dependencies, risks, and phase disposition.
+
 ### R.E. Michel × Rev.io Evaluation Readout
 - **File:** `re-michel-evaluation-readout.html`
 - **URL:** https://koontz-robin.github.io/robin-decks/re-michel-evaluation-readout.html
