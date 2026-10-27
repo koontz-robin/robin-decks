@@ -85,8 +85,9 @@ FROM Opportunity WHERE Id IN ({id_list})
 
 
 def product_name(raw):
-    """Keep Salesforce product values exact so the breakdown is auditable."""
-    return (raw or "Unspecified").strip()
+    """Apply dashboard display labels while preserving source values in snapshot data."""
+    value = (raw or "Unspecified").strip()
+    return "New Rev.io" if value == "PSA 2.0" else value
 
 
 def removal_reason(current):
