@@ -162,7 +162,7 @@ def render(payload):
     sections = []
     for p, opps in sorted(groups.items(), key=lambda x: -sum(float(o.get("Amount") or 0) for o in x[1])):
         total = sum(float(o.get("Amount") or 0) for o in opps)
-        rows = "".join(row(o) for o in sorted(opps, key=lambda x: (-STAGE_RANK.get(x.get("StageName"),0), -float(x.get("Amount") or 0))))
+        rows = "".join(row(o) for o in sorted(opps, key=lambda x: -float(x.get("Amount") or 0)))
         sections.append(f'<section><div class="section-head"><div><h2>{esc(p)}</h2><p>{len(opps)} open opportunities · {money(total)} MRR</p></div></div><div class="table"><table><thead><tr><th>Account / Opportunity</th><th>Owner</th><th>Stage</th><th>MRR</th><th>Close</th><th>Forecast</th><th>Next step</th></tr></thead><tbody>{rows}</tbody></table></div></section>')
     if payload["baseline"]:
         changes = '<div class="empty">Baseline captured this week. Week-over-week additions and removals will begin with the next Monday run.</div>'
