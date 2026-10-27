@@ -189,9 +189,11 @@ def main():
     removed_ids=[] if baseline else sorted(prev_map.keys()-cur_map.keys()); removed_current=fetch_prior_ids(base,headers,removed_ids)
     removed=[{"previous":prev_map[i],"current":removed_current.get(i),"removal_reason":removal_reason(removed_current.get(i))} for i in removed_ids]
     payload={"generated_at":now.isoformat(),"baseline":baseline,"current":current,"added":added,"removed":removed,"previous_generated_at":(previous or {}).get("generated_at")}
-    OUTPUT.write_text(render(payload)); SOURCE.write_text(json.dumps(payload,indent=2)); STATE.write_text(json.dumps({"generated_at":payload["generated_at"],"current":current},indent=2))
+    OUTPUT.write_text(render(payload)); SOURCE.write_text(json.dumps(payload,indent=2))
     if not args.no_publish: publish()
     if not args.no_send: send_email(payload)
+    # Advance the comparison snapshot only after all requested side effects succeed.
+    STATE.write_text(json.dumps({"generated_at":payload["generated_at"],"current":current},indent=2))
     print(f"Built {OUTPUT.name}: {len(current)} open, {len(added)} added, {len(removed)} removed; baseline={baseline}; published={not args.no_publish}; emailed={not args.no_send}")
 
 if __name__ == "__main__": main()
