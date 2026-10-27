@@ -59,7 +59,7 @@ def query_all(base, headers, soql):
 
 def fetch_current(base, headers):
     stages = ",".join("'" + s.replace("'", "\\'") + "'" for s in STAGES)
-    return query_all(base, headers, f"""
+    records = query_all(base, headers, f"""
 SELECT Id, Name, Amount, StageName, CloseDate, CreatedDate, LastModifiedDate,
        Product_Type__c, Forecast_Status__c, NextStep, Account.Name, Owner.Name,
        Loss_Reason__c, Reason_Lost_Detail__c,
@@ -69,6 +69,7 @@ FROM Opportunity
 WHERE IsClosed = false AND StageName IN ({stages})
 ORDER BY Product_Type__c, Amount DESC NULLS LAST
 """.strip())
+    return [r for r in records if (r.get("Product_Type__c") or "").strip() != "CommerceHub"]
 
 
 def fetch_prior_ids(base, headers, ids):
