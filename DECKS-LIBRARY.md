@@ -1,6 +1,6 @@
 # DECKS-LIBRARY.md — Robin's Deck & Dashboard Library
 
-Last updated: 2026-10-21
+Last updated: 2026-10-27
 GitHub Pages base: `https://koontz-robin.github.io/robin-decks/`
 Repo: `git@github.com:koontz-robin/robin-decks.git`
 
@@ -14,7 +14,7 @@ Repo: `git@github.com:koontz-robin/robin-decks.git`
 
 | Name | File | URL | Refresh |
 |---|---|---|---|
-| Q2 Forecast Dashboard | forecast.html | https://koontz-robin.github.io/robin-decks/forecast.html | Daily (8am ET, weekdays) |
+| Updated Goals / 2027 Forecast Dashboard | forecast.html | https://koontz-robin.github.io/robin-decks/forecast.html | Daily (8am ET, weekdays) |
 | AE Capacity Dashboard | ae-capacity-dashboard.html | https://koontz-robin.github.io/robin-decks/ae-capacity-dashboard.html | Daily (12pm ET, weekdays) |
 | AE Capacity Slide (EXECUTE theme) | ae-capacity-slide.html | https://koontz-robin.github.io/robin-decks/ae-capacity-slide.html | Manual |
 | Sales Opportunities Created | june-ae-csa-opportunities.html | https://koontz-robin.github.io/robin-decks/june-ae-csa-opportunities.html | Hourly (9am-5pm ET, weekdays) |
@@ -251,6 +251,11 @@ When Robin creates a new deck or dashboard:
 - **URL:** https://koontz-robin.github.io/robin-decks/coeo-netwolves-evaluation-readout.html
 - **Purpose:** Buyer-facing Execute readout for the Coeo/Netwolves evaluation, centered on IDI overlap exposure, automation capacity, incident communications, platform economics, migration risk, and transparent ROI assumptions.
 
+### COEO / NetWolves — SolarWinds Integration SOW Overview
+- **File:** `coeo-solarwinds-revio-sow.html`
+- **URL:** https://koontz-robin.github.io/robin-decks/coeo-solarwinds-revio-sow.html
+- **Purpose:** Rev.io-branded, executive-friendly version of the October 27 ticketing and SolarWinds integration solution overview, preserving the complete scope, timeline, workstreams, acceptance criteria, dependencies, risks, and phase disposition.
+
 ### R.E. Michel × Rev.io Evaluation Readout
 - **File:** `re-michel-evaluation-readout.html`
 - **URL:** https://koontz-robin.github.io/robin-decks/re-michel-evaluation-readout.html
@@ -260,3 +265,22 @@ When Robin creates a new deck or dashboard:
 - **File:** `transformitive-evaluation-readout.html`
 - **URL:** https://koontz-robin.github.io/robin-decks/transformitive-evaluation-readout.html
 - **Purpose:** Buyer-facing Execute readout for Transformitive's MXP billing-platform evaluation, centered on parent-child billing, operating capacity, recurring-revenue activation, cash-flow efficiency, and an interactive ROI model.
+
+### Seaside Alarms × Rev.io Evaluation Readout
+- **File:** `seaside-alarms-evaluation-readout.html`
+- **URL:** https://koontz-robin.github.io/robin-decks/seaside-alarms-evaluation-readout.html
+- **Purpose:** Buyer-facing Execute readout for Seaside Alarms / Cape Cod Security Systems, centered on legacy-platform risk, field-to-office modernization, transparent ROI assumptions, adoption controls, technical validation gates, and linked discovery/demo recordings.
+
+### Sales Manager Inspection Dashboard
+- **File:** `sales-manager-inspection-dashboard.html`
+- **URL:** https://koontz-robin.github.io/robin-decks/sales-manager-inspection-dashboard.html
+- **Generator:** `build_sales_manager_inspection_dashboard.py`
+- **Purpose:** Weekly manager → rep inspection of opportunities created and closed lost, including source, product, stage, next step, amount, business issue, problems, value, and loss context.
+- **Created:** 2026-10-26
+
+### Weekly Pipeline War Room
+- **File:** `weekly-pipeline-war-room.html`
+- **URL:** https://koontz-robin.github.io/robin-decks/weekly-pipeline-war-room.html
+- **Generator:** `weekly_pipeline_war_room.py`
+- **Purpose:** Monday Stage 3+ open-opportunity inspection grouped by exact Salesforce product, with week-over-week additions/removals and Closed Lost reason/detail context.
+- **Created:** 2026-10-27
