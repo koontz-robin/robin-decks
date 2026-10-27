@@ -89,8 +89,8 @@ FROM Opportunity WHERE Id IN ({id_list})
 
 def product_name(raw):
     """Apply dashboard display labels while preserving source values in snapshot data."""
-    value = (raw or "Unspecified").strip()
-    display_labels = {"PSA 2.0": "New Rev.io", "Billing": "Classic Rev.io"}
+    value = (raw or "Tigerpaw Migration").strip()
+    display_labels = {"PSA 2.0": "New Rev.io", "Billing": "Classic Rev.io", "Unspecified": "Tigerpaw Migration"}
     return display_labels.get(value, value)
 
 
