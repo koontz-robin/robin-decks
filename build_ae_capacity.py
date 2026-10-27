@@ -12,7 +12,7 @@ DATA_FILE = Path("/tmp/ae_capacity_data.json")
 HTML_FILE = WORKSPACE / "ae-capacity-dashboard.html"
 ET = ZoneInfo("America/New_York")
 
-MONTH_ORDER = ["jan", "feb", "mar", "apr", "may", "jun", "jul", "aug", "sep"]
+MONTH_ORDER = ["jan", "feb", "mar", "apr", "may", "jun", "jul", "aug", "sep", "oct"]
 MONTH_COLORS = {
     "jan": "#38bdf8",
     "feb": "#a78bfa",
@@ -23,6 +23,7 @@ MONTH_COLORS = {
     "jul": "#22d3ee",
     "aug": "#c084fc",
     "sep": "#4ade80",
+    "oct": "#fb7185",
 }
 
 
@@ -232,6 +233,7 @@ h1 { font-size: 26px; font-weight: 700; color: #fff; margin-bottom: 6px; }
 </body>
 </html>
 """
+    html = "\n".join(line.rstrip() for line in html.splitlines()) + "\n"
     HTML_FILE.write_text(html, encoding="utf-8")
     print(f"Built {HTML_FILE.name}: {len(html):,} chars")
 
