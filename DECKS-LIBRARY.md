@@ -284,3 +284,9 @@ When Robin creates a new deck or dashboard:
 - **Generator:** `weekly_pipeline_war_room.py`
 - **Purpose:** Monday Stage 3+ open-opportunity inspection grouped by exact Salesforce product, with week-over-week additions/removals and Closed Lost reason/detail context.
 - **Created:** 2026-10-27
+
+### ReplCloud Execute Evaluation Readout
+- **File:** `replcloud-evaluation-readout.html`
+- **URL:** https://koontz-robin.github.io/robin-decks/replcloud-evaluation-readout.html
+- **Purpose:** Buyer-facing evaluation summary with sourced operating case, demonstrated/open capability status, mutual action plan, and interactive ROI calculator.
+- **Created:** 2026-10-28
