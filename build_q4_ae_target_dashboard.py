@@ -9,7 +9,9 @@ ROOT=Path(__file__).resolve().parent
 OUT=ROOT/'q4-ae-target-dashboard.html'
 DATA=ROOT/'q4_ae_target_dashboard.json'
 MONTHS=['October','November','December']
-TARGETS={'October':{'New Rev.io':55000,'Classic Rev.io':12368},'November':{'New Rev.io':30000,'Classic Rev.io':13368},'December':{'New Rev.io':30000,'Classic Rev.io':13368}}
+# Updated Q4 target source: build_forecast_targets.py. November and December use
+# the current monthly defaults; October is the reconciled remainder to the Q4 total.
+TARGETS={'October':{'New Rev.io':78000,'Classic Rev.io':15368},'November':{'New Rev.io':30000,'Classic Rev.io':13368},'December':{'New Rev.io':30000,'Classic Rev.io':13368}}
 ROSTER=['Jamie Butler','Joe Abarno','Andy Whisenant','Connor Flynn','Patrick Davies','Jake Borah','Jaylin Bender','Abbey McIntosh']
 SF_NAMES={'Joseph Abarno':'Joe Abarno'}
 QUOTAS={'Jamie Butler':24000,'Joe Abarno':24000,'Andy Whisenant':15000,'Connor Flynn':15000,'Patrick Davies':15000,'Jake Borah':15000,'Jaylin Bender':12000,'Abbey McIntosh':12000}
