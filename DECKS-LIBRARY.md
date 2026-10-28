@@ -1,6 +1,6 @@
 # DECKS-LIBRARY.md — Robin's Deck & Dashboard Library
 
-Last updated: 2026-10-27
+Last updated: 2026-10-28
 GitHub Pages base: `https://koontz-robin.github.io/robin-decks/`
 Repo: `git@github.com:koontz-robin/robin-decks.git`
 
@@ -15,6 +15,7 @@ Repo: `git@github.com:koontz-robin/robin-decks.git`
 | Name | File | URL | Refresh |
 |---|---|---|---|
 | Updated Goals / 2027 Forecast Dashboard | forecast.html | https://koontz-robin.github.io/robin-decks/forecast.html | Daily (8am ET, weekdays) |
+| Q4 AE Targets & Closed MRR | q4-ae-target-dashboard.html | https://koontz-robin.github.io/robin-decks/q4-ae-target-dashboard.html | On demand; October–December and Q4 AE closed MRR by New Rev.io and Classic Rev.io |
 | AE Capacity Dashboard | ae-capacity-dashboard.html | https://koontz-robin.github.io/robin-decks/ae-capacity-dashboard.html | Daily (12pm ET, weekdays) |
 | AE Capacity Slide (EXECUTE theme) | ae-capacity-slide.html | https://koontz-robin.github.io/robin-decks/ae-capacity-slide.html | Manual |
 | Sales Opportunities Created | june-ae-csa-opportunities.html | https://koontz-robin.github.io/robin-decks/june-ae-csa-opportunities.html | Hourly (9am-5pm ET, weekdays) |
