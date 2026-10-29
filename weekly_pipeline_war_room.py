@@ -220,7 +220,7 @@ def send_email(payload):
 
 
 def main():
-    ap=argparse.ArgumentParser(); ap.add_argument("--no-publish",action="store_true"); ap.add_argument("--no-send",action="store_true"); ap.add_argument("--baseline",action="store_true",help="Capture current pipeline without treating it as added")
+    ap=argparse.ArgumentParser(); ap.add_argument("--no-publish",action="store_true"); ap.add_argument("--no-send",action="store_true"); ap.add_argument("--no-advance",action="store_true",help="Keep the weekly comparison snapshot unchanged"); ap.add_argument("--baseline",action="store_true",help="Capture current pipeline without treating it as added")
     args=ap.parse_args(); now=datetime.now(ET); previous=load_state(); base,headers=sf_session(); current=fetch_current(base,headers)
     prev_records=(previous or {}).get("current",[]); prev_map={x["Id"]:x for x in prev_records}; cur_map={x["Id"]:x for x in current}
     baseline=args.baseline or previous is None
@@ -232,8 +232,9 @@ def main():
     OUTPUT.write_text(render(payload)); SOURCE.write_text(json.dumps(payload,indent=2))
     if not args.no_publish: publish()
     if not args.no_send: send_email(payload)
-    # Advance the comparison snapshot only after all requested side effects succeed.
-    STATE.write_text(json.dumps({"generated_at":payload["generated_at"],"current":current},indent=2))
-    print(f"Built {OUTPUT.name}: {len(current)} open, {len(added)} added, {len(removed)} removed; baseline={baseline}; published={not args.no_publish}; emailed={not args.no_send}")
+    # Advance the weekly comparison snapshot only after all requested side effects succeed.
+    if not args.no_advance:
+        STATE.write_text(json.dumps({"generated_at":payload["generated_at"],"current":current},indent=2))
+    print(f"Built {OUTPUT.name}: {len(current)} open, {len(added)} added, {len(removed)} removed; baseline={baseline}; published={not args.no_publish}; emailed={not args.no_send}; advanced={not args.no_advance}")
 
 if __name__ == "__main__": main()
