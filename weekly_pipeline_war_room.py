@@ -167,7 +167,7 @@ def row(opp, change=""):
         f'<div class="planner-field"><span>{esc(label)}</span><p>{esc(value or "Not entered")}</p></div>'
         for label, value in value_planner
     )
-    return f"""<tr class="opp-row" data-target="{detail_id}" tabindex="0" role="button" aria-expanded="false"><td><strong>{esc(account)}</strong><small>{esc(name)}</small>{badge}<span class="expand-hint">Value planner <b>⌄</b></span></td>
+    return f"""<tr class="opp-row" data-target="{detail_id}" tabindex="0" role="button" aria-expanded="false"><td><strong>{esc(account)}</strong><small>{esc(name)}</small>{badge}<span class="expand-hint">Opportunity details — click to expand <b>⌄</b></span></td>
 <td>{esc(opp.get('Owner'))}</td><td><span class="stage s{STAGE_RANK.get(opp.get('StageName'),0)}">{esc(opp.get('StageName'))}</span></td>
 <td class="num">{money(opp.get('Amount'))}</td><td>{esc(opp.get('CloseDate'))}</td><td>{esc(opp.get('Forecast_Status__c') or 'Not tagged')}</td><td>{esc(opp.get('NextStep') or '—')}</td></tr>
 <tr class="planner-row" id="{detail_id}" hidden><td colspan="7"><div class="planner-grid">{planner_html}</div></td></tr>"""
