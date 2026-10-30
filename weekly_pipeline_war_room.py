@@ -102,7 +102,24 @@ SELECT Id, Name, Amount, StageName, IsClosed, IsWon, CloseDate, LastModifiedDate
        Loss_Reason__c, Reason_Lost_Detail__c
 FROM Opportunity WHERE Id IN ({id_list})
 """.strip()))
-    return {x["Id"]: x for x in found}
+    result = {x["Id"]: x for x in found}
+    # Use Salesforce field history to identify the stage immediately before a
+    # Closed Lost transition. Fall back to the weekly snapshot if unavailable.
+    for start in range(0, len(ids), 150):
+        batch = ids[start:start+150]
+        id_list = ",".join(f"'{x}'" for x in batch)
+        history = query_all(base, headers, f"""
+SELECT OpportunityId, OldValue, NewValue, CreatedDate
+FROM OpportunityFieldHistory
+WHERE Field = 'StageName' AND OpportunityId IN ({id_list})
+ORDER BY CreatedDate DESC
+""".strip())
+        for event in history:
+            opp_id = event.get("OpportunityId")
+            if (event.get("NewValue") == "Closed Lost" and opp_id in result
+                    and not result[opp_id].get("_PriorStageBeforeClose")):
+                result[opp_id]["_PriorStageBeforeClose"] = event.get("OldValue")
+    return result
 
 
 def product_name(raw):
@@ -160,6 +177,9 @@ def change_row(item, kind):
     o = item["current"] if kind == "Added" else item["previous"]
     cur = item.get("current") or {}
     reason = "Entered the open Stage 3+ war room" if kind == "Added" else item["removal_reason"]
+    if kind == "Removed" and reason == "Closed Lost":
+        prior_stage = cur.get("_PriorStageBeforeClose") or o.get("StageName")
+        reason = f"Closed Lost · previously {prior_stage or 'Unknown stage'}"
     loss = cur.get("Loss_Reason__c") or ("Not closed lost" if kind == "Removed" else "—")
     detail = cur.get("Reason_Lost_Detail__c") or ("No reason-loss detail in Salesforce" if cur.get("StageName") == "Closed Lost" else "—")
     return f"""<tr><td><span class="change {kind.lower()}">{kind}</span><strong>{esc(o.get('Account') or 'No account')}</strong><small>{esc(o.get('Name'))}</small></td>
