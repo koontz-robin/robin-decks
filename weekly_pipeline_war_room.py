@@ -22,10 +22,25 @@ STAGE_RANK = {stage: i + 3 for i, stage in enumerate(STAGES)}
 
 def esc(value): return html.escape(str(value or "—"))
 def money(value): return f"${float(value or 0):,.0f}"
+def money_or_missing(value): return money(value) if value not in (None, "") else "Not entered"
+def integer(value): return f"{int(value):,}" if value not in (None, "") else "Not entered"
+def semicolon_list(value): return str(value).replace(";", ", ") if value else "Not entered"
+def opportunity_duration(created):
+    if not created: return "Not entered"
+    try:
+        started = datetime.fromisoformat(str(created).replace("Z", "+00:00"))
+        days = max(0, (datetime.now(started.tzinfo) - started).days)
+        return f"{days:,} days (created {started.astimezone(ET):%b %-d, %Y})"
+    except (TypeError, ValueError):
+        return str(created)
 def clean_record(r):
     out = {k: v for k, v in r.items() if k != "attributes"}
-    for key in ("Account", "Owner"):
-        if isinstance(out.get(key), dict): out[key] = out[key].get("Name", "")
+    account = out.get("Account")
+    if isinstance(account, dict):
+        out["Account"] = account.get("Name", "")
+        for field in ("NumberOfEmployees", "AnnualRevenue", "PSA_Platform__c", "Billing_Platform__c", "Mutual_Client__c", "Industry"):
+            out[f"Account_{field}"] = account.get(field)
+    if isinstance(out.get("Owner"), dict): out["Owner"] = out["Owner"].get("Name", "")
     return out
 
 
@@ -61,7 +76,10 @@ def fetch_current(base, headers):
     stages = ",".join("'" + s.replace("'", "\\'") + "'" for s in STAGES)
     records = query_all(base, headers, f"""
 SELECT Id, Name, Amount, StageName, CloseDate, CreatedDate, LastModifiedDate,
-       Product_Type__c, Forecast_Status__c, NextStep, Account.Name, Owner.Name,
+       Product_Type__c, Forecast_Status__c, NextStep,
+       Account.Name, Account.NumberOfEmployees, Account.AnnualRevenue,
+       Account.PSA_Platform__c, Account.Billing_Platform__c,
+       Account.Mutual_Client__c, Account.Industry, Owner.Name,
        Loss_Reason__c, Reason_Lost_Detail__c,
        Business_Issue__c, Business_Issue_Details__c, Business_Issues__c,
        Problems__c, Solutions__c, Values__c, Risk_Mitigation_Plan__c
@@ -114,6 +132,13 @@ def row(opp, change=""):
     detail_id = f"vp-{re.sub(r'[^a-zA-Z0-9_-]', '', opp.get('Id') or name)}"
     badge = f'<span class="change {change.lower()}">{esc(change)}</span>' if change else ""
     value_planner = [
+        ("Opportunity duration", opportunity_duration(opp.get("CreatedDate"))),
+        ("Employees", integer(opp.get("Account_NumberOfEmployees"))),
+        ("Annual revenue", money_or_missing(opp.get("Account_AnnualRevenue"))),
+        ("PSA platform", opp.get("Account_PSA_Platform__c")),
+        ("Billing platform", opp.get("Account_Billing_Platform__c")),
+        ("Vendors", semicolon_list(opp.get("Account_Mutual_Client__c"))),
+        ("Industry", opp.get("Account_Industry")),
         ("Business issue", opp.get("Business_Issue__c") or opp.get("Business_Issues__c")),
         ("Business issue detail", opp.get("Business_Issue_Details__c")),
         ("Problems", opp.get("Problems__c")),
