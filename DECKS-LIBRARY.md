@@ -291,3 +291,9 @@ When Robin creates a new deck or dashboard:
 - **URL:** https://koontz-robin.github.io/robin-decks/replcloud-evaluation-readout.html
 - **Purpose:** Buyer-facing evaluation summary with sourced operating case, demonstrated/open capability status, mutual action plan, and interactive ROI calculator.
 - **Created:** 2026-10-28
+
+### Tenarai × Rev.io Work-Order Requirements Assessment
+- **File:** `tenarai-work-order-requirements-assessment.html`
+- **URL:** https://koontz-robin.github.io/robin-decks/tenarai-work-order-requirements-assessment.html
+- **Purpose:** Customer-facing Rev.io fit assessment covering 28 Tenarai work-order, field-service, partner, compliance, mobile, integration, reporting, and security requirements with customer-safe validation and discovery recommendations.
+- **Created:** 2026-10-30
