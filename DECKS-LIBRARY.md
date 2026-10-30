@@ -297,3 +297,9 @@ When Robin creates a new deck or dashboard:
 - **URL:** https://koontz-robin.github.io/robin-decks/tenarai-work-order-requirements-assessment.html
 - **Purpose:** Customer-facing Rev.io fit assessment covering 28 Tenarai work-order, field-service, partner, compliance, mobile, integration, reporting, and security requirements with customer-safe validation and discovery recommendations.
 - **Created:** 2026-10-30
+
+### Nored Telcom × Rev.io Evaluation Readout
+- **File:** `nored-telcom-evaluation-readout.html`
+- **URL:** https://koontz-robin.github.io/robin-decks/nored-telcom-evaluation-readout.html
+- **Purpose:** Buyer-facing evaluation readout covering Nored's ConnectWise/DataGate replacement, tax reconciliation, field inventory capture, live-catalog quoting, progressive billing, QuickBooks Desktop, and Q2 2027 decision plan.
+- **Created:** 2026-10-30
