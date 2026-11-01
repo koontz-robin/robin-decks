@@ -10,6 +10,7 @@ from __future__ import annotations
 
 import json
 import os
+import argparse
 from collections import defaultdict
 from datetime import date, datetime, time, timedelta, timezone
 from decimal import Decimal, InvalidOperation
@@ -76,6 +77,22 @@ def current_week(now: datetime | None = None) -> tuple[datetime, datetime]:
     return start, start + timedelta(days=7)
 
 
+def rolling_weeks(now: datetime | None = None, count: int = 12) -> list[tuple[datetime, datetime]]:
+    """Return selectable weeks: last week, latest, then older descending.
+
+    On Sunday, ``latest`` is the week beginning the following day; on all
+    other days it is the week containing ``now``.
+    """
+    now_et = (now or datetime.now(ET)).astimezone(ET)
+    monday = now_et.date() - timedelta(days=now_et.weekday())
+    if now_et.weekday() == 6:
+        monday += timedelta(days=7)
+    latest = datetime.combine(monday, time.min, tzinfo=ET)
+    starts = [latest - timedelta(days=7), latest]
+    starts.extend(latest - timedelta(days=7 * offset) for offset in range(2, count))
+    return [(start, start + timedelta(days=7)) for start in starts[:count]]
+
+
 def sf_datetime(value: datetime) -> str:
     return value.astimezone(timezone.utc).strftime("%Y-%m-%dT%H:%M:%SZ")
 
@@ -108,6 +125,35 @@ def fetch_opportunities(base: str, headers: dict[str, str], start: datetime, end
             if kind not in combined[opp_id]["_matches"]:
                 combined[opp_id]["_matches"].append(kind)
     return list(combined.values())
+
+
+def allocate_weeks(rows: list[dict[str, Any]], weeks: list[tuple[datetime, datetime]]) -> list[list[dict[str, Any]]]:
+    """Independently allocate each opportunity to each weekly window."""
+    allocated: list[list[dict[str, Any]]] = [[] for _ in weeks]
+    for row in rows:
+        created = None
+        if row.get("CreatedDate"):
+            try:
+                created = datetime.fromisoformat(str(row["CreatedDate"]).replace("Z", "+00:00")).astimezone(ET)
+            except ValueError:
+                pass
+        closed = None
+        if row.get("CloseDate") and row.get("StageName") == "Closed Lost":
+            try:
+                closed = date.fromisoformat(str(row["CloseDate"])[:10])
+            except ValueError:
+                pass
+        for index, (start, end) in enumerate(weeks):
+            matches = []
+            if created is not None and start <= created < end:
+                matches.append("created")
+            if closed is not None and start.date() <= closed < end.date():
+                matches.append("lost")
+            if matches:
+                copy = dict(row)
+                copy["_matches"] = matches
+                allocated[index].append(copy)
+    return allocated
 
 
 def nested_name(row: dict[str, Any], key: str) -> str:
@@ -222,18 +268,72 @@ def build_html(rows: list[dict[str, Any]], base: str, start: datetime, end: date
 <div class="legend"><b>Inclusion:</b><span class="badge created">Created This Week</span><span class="badge lost">Closed Lost This Week</span><span>An opportunity matching both is counted once in “Unique opportunities” and tagged twice.</span></div>{''.join(teams_html)}<footer>Direct Salesforce links open in a new tab · Amounts are Opportunity Amount · Week boundaries use America/New_York</footer></main></body></html>'''
 
 
+def week_label(index: int, start: datetime, end: datetime) -> str:
+    prefix = "Last week · " if index == 0 else ("Latest week · " if index == 1 else "")
+    # Show the actual Monday-to-Monday boundary so the selector matches the
+    # dashboard's end-exclusive inspection window exactly.
+    return f"{prefix}{start.strftime('%b %-d')}–{end.strftime('%b %-d, %Y')}"
+
+
+def build_rolling_html(week_rows: list[list[dict[str, Any]]], base: str,
+                       weeks: list[tuple[datetime, datetime]], generated: datetime) -> str:
+    """Build one document containing all week views for instant client-side switching."""
+    documents = [build_html(rows, base, start, end, generated)
+                 for rows, (start, end) in zip(week_rows, weeks)]
+    head = documents[0].split("</head>", 1)[0]
+    head += '''
+<style>
+.week-controls{max-width:1440px;margin:28px auto 0;padding:0 24px}.week-picker{display:flex;gap:12px;align-items:center;flex-wrap:wrap}.week-picker label{font-size:12px}.week-picker select{min-width:280px;background:var(--panel);color:var(--text);border:1px solid var(--line);border-radius:10px;padding:10px 12px;font:inherit}.week-picker select:focus-visible,.trend button:focus-visible{outline:3px solid var(--blue);outline-offset:2px}.trend{display:grid;grid-template-columns:repeat(12,minmax(92px,1fr));gap:7px;margin-top:14px;overflow-x:auto;padding-bottom:4px}.trend button{cursor:pointer;text-align:left;color:var(--text);background:var(--panel);border:1px solid var(--line);border-radius:10px;padding:9px}.trend button[aria-current="true"]{border-color:var(--green);box-shadow:0 0 0 1px var(--green)}.trend b,.trend small{display:block;white-space:nowrap}.trend small{color:var(--muted)}.week-view[hidden]{display:none}@media(max-width:620px){.week-controls{padding:0 13px}.week-picker select{width:100%;min-width:0}}
+</style>'''
+    options, trend, sections = [], [], []
+    for index, ((start, end), rows, document) in enumerate(zip(weeks, week_rows, documents)):
+        label = week_label(index, start, end)
+        summary = summarize(rows)
+        selected = " selected" if index == 0 else ""
+        current = "true" if index == 0 else "false"
+        options.append(f'<option value="{index}"{selected}>{escape(label)}</option>')
+        trend.append(f'<button type="button" data-week="{index}" aria-current="{current}" aria-label="Show {escape(label)}"><b>{escape(start.strftime("%b %-d"))}</b><small>{summary["total"]} unique</small><small>{summary["created"]} created · {summary["lost"]} lost</small></button>')
+        inner = document.split('<main class="wrap">', 1)[1].split('</main>', 1)[0]
+        hidden = "" if index == 0 else " hidden"
+        sections.append(f'<section class="week-view" data-week-view="{index}"{hidden}>{inner}</section>')
+    controls = f'''<nav class="week-controls" aria-label="Weekly dashboard navigation"><div class="week-picker"><label for="week-select">Inspection week</label><select id="week-select">{''.join(options)}</select></div><div class="trend" aria-label="12-week opportunity trend">{''.join(trend)}</div></nav>'''
+    script = '''<script>
+const select=document.getElementById('week-select');
+function showWeek(value){
+  document.querySelectorAll('[data-week-view]').forEach(el=>el.hidden=el.dataset.weekView!==String(value));
+  document.querySelectorAll('[data-week]').forEach(el=>el.setAttribute('aria-current',el.dataset.week===String(value)?'true':'false'));
+  select.value=String(value);
+}
+select.addEventListener('change',()=>showWeek(select.value));
+document.querySelectorAll('[data-week]').forEach(el=>el.addEventListener('click',()=>showWeek(el.dataset.week)));
+</script>'''
+    return head + '</head><body>' + controls + ''.join(sections) + script + '</body></html>'
+
+
 def main() -> None:
-    start, end = current_week()
-    generated = datetime.now(ET)
-    print(f"Inspection window: {start.isoformat()} through {end.isoformat()} (exclusive)")
+    parser = argparse.ArgumentParser(description=__doc__)
+    parser.add_argument("--now", help="ISO timestamp used to determine rolling weeks (default: current time)")
+    args = parser.parse_args()
+    if args.now:
+        generated = datetime.fromisoformat(args.now.replace("Z", "+00:00"))
+        if generated.tzinfo is None:
+            generated = generated.replace(tzinfo=ET)
+        generated = generated.astimezone(ET)
+    else:
+        generated = datetime.now(ET)
+    weeks = rolling_weeks(generated)
+    broad_start = min(start for start, _ in weeks)
+    broad_end = max(end for _, end in weeks)
+    print(f"Fetch window: {broad_start.isoformat()} through {broad_end.isoformat()} (exclusive)")
     base, headers = sf_auth()
-    rows = fetch_opportunities(base, headers, start, end)
-    html = build_html(rows, base, start, end, generated)
+    rows = fetch_opportunities(base, headers, broad_start, broad_end)
+    week_rows = allocate_weeks(rows, weeks)
+    html = build_rolling_html(week_rows, base, weeks, generated)
     OUTPUT_FILE.write_text(html, encoding="utf-8")
-    total = summarize(rows)
+    total = summarize(week_rows[0])
     print(json.dumps({"output": str(OUTPUT_FILE), "unique": total["total"], "created": total["created"], "closed_lost": total["lost"], "amount": str(total["amount"])}, indent=2))
     for manager, reps in TEAMS.items():
-        print(manager + ": " + ", ".join(f"{rep}={sum(1 for r in rows if OWNER_ALIASES.get(nested_name(r, 'Owner'), nested_name(r, 'Owner')) == rep)}" for rep in reps))
+        print(manager + ": " + ", ".join(f"{rep}={sum(1 for r in week_rows[0] if OWNER_ALIASES.get(nested_name(r, 'Owner'), nested_name(r, 'Owner')) == rep)}" for rep in reps))
 
 
 if __name__ == "__main__":
