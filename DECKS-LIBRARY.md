@@ -1,6 +1,6 @@
 # DECKS-LIBRARY.md — Robin's Deck & Dashboard Library
 
-Last updated: 2026-10-28
+Last updated: 2026-11-02
 GitHub Pages base: `https://koontz-robin.github.io/robin-decks/`
 Repo: `git@github.com:koontz-robin/robin-decks.git`
 
@@ -15,6 +15,7 @@ Repo: `git@github.com:koontz-robin/robin-decks.git`
 | Name | File | URL | Refresh |
 |---|---|---|---|
 | Updated Goals / 2027 Forecast Dashboard | forecast.html | https://koontz-robin.github.io/robin-decks/forecast.html | Daily (8am ET, weekdays) |
+| Q4 New Rev.io War-Room Closed Lost | q4-new-revio-war-room-closed-lost.html | https://koontz-robin.github.io/robin-decks/q4-new-revio-war-room-closed-lost.html | Q4-to-date New Rev.io opportunities verified via stage history as having reached Stage 3+ before closing lost; board-ready loss reason, owner, stage, MRR, and deal detail view |
 | Q4 AE Targets & Closed MRR | q4-ae-target-dashboard.html | https://koontz-robin.github.io/robin-decks/q4-ae-target-dashboard.html | On demand; adjusted combined Rev.io targets for October–December and Q4 AE closed MRR |
 | AE Capacity Dashboard | ae-capacity-dashboard.html | https://koontz-robin.github.io/robin-decks/ae-capacity-dashboard.html | Daily (12pm ET, weekdays) |
 | AE Capacity Slide (EXECUTE theme) | ae-capacity-slide.html | https://koontz-robin.github.io/robin-decks/ae-capacity-slide.html | Manual |
@@ -61,6 +62,7 @@ Repo: `git@github.com:koontz-robin/robin-decks.git`
 
 | Name | File | URL | Notes |
 |---|---|---|---|
+| Q4 2026 Board Meeting Deck | q4-2026-board-meeting-deck.html | https://koontz-robin.github.io/robin-decks/q4-2026-board-meeting-deck.html | In progress; board deck shell with dedicated New Rev.io Stage 3+ closed-lost analysis slide |
 | Bigfoot Technology Group Evaluation Readout | bigfoot-technology-group-evaluation-readout.html | https://koontz-robin.github.io/robin-decks/bigfoot-technology-group-evaluation-readout.html | Buyer-facing Execute readout for the combined PSA and telecom billing evaluation: ConnectWise replacement, direct billing, field/mobile workflows, projects, inventory, compliance, and renewal-clock decision plan. |
 | Ben Whatley New MSP Evaluation Readout | ben-whatley-new-msp-evaluation-readout.html | https://koontz-robin.github.io/robin-decks/ben-whatley-new-msp-evaluation-readout.html | Buyer-facing Execute readout for Ben Whatley’s new MSP: consolidated IT/telecom billing, Odoo/SkySwitch transition, service communication, mobile time capture, SureWeb reconciliation, Payments, ROI assumptions, commercial framework, and launch plan. |
 | A&B Lock and Security Evaluation Readout | a-b-lock-security-evaluation-readout.html | https://koontz-robin.github.io/robin-decks/a-b-lock-security-evaluation-readout.html | Buyer-facing Execute readout for A&B’s Service Fusion evaluation: reporting, ClickUp/project consolidation, mobile field workflows, multi-location inventory, recurring billing, QuickBooks, integration proof, and the decision plan. |
