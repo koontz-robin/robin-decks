@@ -305,3 +305,9 @@ When Robin creates a new deck or dashboard:
 - **URL:** https://koontz-robin.github.io/robin-decks/nored-telcom-evaluation-readout.html
 - **Purpose:** Buyer-facing evaluation readout covering Nored's ConnectWise/DataGate replacement, tax reconciliation, field inventory capture, live-catalog quoting, progressive billing, QuickBooks Desktop, and Q2 2027 decision plan.
 - **Created:** 2026-10-30
+
+### All Systems Integrated Value Plan
+- **File:** `all-systems-integrated-value-plan.html`
+- **URL:** https://koontz-robin.github.io/robin-decks/all-systems-integrated-value-plan.html
+- **Purpose:** Customer-facing Rev.io value plan and workflow validation path for ASI Northwest.
+- **Created:** 2026-11-03
