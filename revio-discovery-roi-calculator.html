@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Rev.io Discovery ROI Calculator</title>
+<style>
+:root{--navy:#102b4e;--navy2:#183f69;--teal:#1596ad;--green:#70bf44;--ink:#16263a;--muted:#61758a;--line:#dce6ee;--wash:#f3f7fa;--paper:#fff;--amber:#f4a62a;--red:#d85b63;--shadow:0 18px 50px rgba(16,43,78,.13)}
+*{box-sizing:border-box}html{scroll-behavior:smooth}body{margin:0;background:var(--wash);color:var(--ink);font:15px/1.45 Inter,"Segoe UI",Arial,sans-serif}button,input,select,textarea{font:inherit}button{cursor:pointer}
+.hero{color:#fff;background:radial-gradient(circle at 88% 18%,rgba(112,191,68,.28),transparent 24%),linear-gradient(135deg,#102b4e 0%,#174b72 62%,#1596ad 135%);padding:24px 28px 62px}.hero-inner,.wrap{max-width:1440px;margin:auto}.topbar{display:flex;justify-content:space-between;align-items:center;gap:20px}.brand{display:flex;align-items:center;gap:14px}.brand img{width:116px;max-height:42px;object-fit:contain}.brand-tag{padding-left:14px;border-left:1px solid rgba(255,255,255,.32);color:#d8e7f1;font-weight:800;font-size:13px}.actions{display:flex;gap:8px;flex-wrap:wrap}.btn{border:1px solid rgba(255,255,255,.38);background:rgba(255,255,255,.1);color:#fff;border-radius:9px;padding:9px 13px;font-weight:800}.btn:hover{background:rgba(255,255,255,.18)}.btn.primary{border-color:var(--green);background:var(--green);color:#102b4e}.eyebrow{margin-top:46px;color:#bce9f1;font-size:11px;font-weight:900;letter-spacing:1.4px;text-transform:uppercase}.hero h1{max-width:900px;margin:10px 0 12px;font-size:clamp(35px,5vw,62px);line-height:1.02}.hero p{max-width:850px;margin:0;color:rgba(255,255,255,.78);font-size:17px}
+.wrap{margin-top:-34px;padding:0 24px 70px}.panel{background:var(--paper);border:1px solid var(--line);border-radius:14px;box-shadow:var(--shadow);overflow:hidden;margin-bottom:18px}.panel-head{display:flex;justify-content:space-between;align-items:flex-start;gap:20px;padding:21px 24px;border-bottom:1px solid var(--line)}.step{display:flex;gap:13px}.step-num{display:grid;place-items:center;width:30px;height:30px;flex:0 0 30px;border-radius:50%;background:var(--navy);color:#fff;font-weight:900}.panel h2{margin:0 0 4px;color:var(--navy);font-size:21px}.helper{margin:0;color:var(--muted);font-size:13px}.section-pad{padding:20px 24px}.grid{display:grid;gap:14px}.grid.cols-4{grid-template-columns:1.4fr 1fr 1fr 1fr}.grid.cols-3{grid-template-columns:repeat(3,1fr)}.field label,.cell label{display:block;margin-bottom:6px;color:var(--muted);font-size:10px;font-weight:900;letter-spacing:.75px;text-transform:uppercase}.field input,.field select,.field textarea,.cell input,.cell select{width:100%;min-height:42px;border:1px solid #c8d6e1;border-radius:8px;background:#fff;color:var(--ink);padding:8px 10px;font-weight:700}.field textarea{min-height:78px;resize:vertical}.field input:focus,.field select:focus,.field textarea:focus,.cell input:focus,.cell select:focus{outline:3px solid rgba(21,150,173,.16);border-color:var(--teal)}
+.scenario{display:flex;gap:6px;padding:5px;background:#eaf1f5;border-radius:10px}.scenario button{border:0;border-radius:7px;background:transparent;color:var(--muted);padding:7px 11px;font-weight:850}.scenario button.active{background:#fff;color:var(--navy);box-shadow:0 2px 8px rgba(16,43,78,.12)}
+.table-wrap{overflow:auto}.entry-table{width:100%;border-collapse:collapse;min-width:940px}.entry-table th{background:#f5f8fa;color:var(--muted);padding:10px;text-align:left;font-size:10px;letter-spacing:.7px;text-transform:uppercase}.entry-table td{padding:9px 10px;border-top:1px solid var(--line);vertical-align:middle}.entry-table input,.entry-table select{width:100%;min-height:38px;border:1px solid #cbd8e2;border-radius:7px;padding:7px 8px;color:var(--ink);font-weight:700}.entry-table .money,.entry-table .number{text-align:right}.entry-table .result{font-weight:900;color:var(--navy);white-space:nowrap}.remove{width:32px;height:32px;border:0;border-radius:7px;background:#f9e9eb;color:var(--red);font-weight:900}.add-row{margin:14px 20px 18px;border:1px dashed var(--teal);border-radius:8px;background:#f3fbfc;color:#0f7184;padding:9px 13px;font-weight:900}.small-note{padding:0 24px 18px;color:var(--muted);font-size:12px}
+.results{display:grid;grid-template-columns:1.12fr .88fr;gap:18px}.result-panel{background:linear-gradient(145deg,#102b4e,#173e66);color:#fff;border-radius:14px;box-shadow:var(--shadow);padding:24px}.result-panel h2{color:#fff}.result-panel .helper{color:#b8c9d8}.headline{margin:22px 0 16px;padding:19px;border:1px solid rgba(255,255,255,.14);border-radius:12px;background:rgba(255,255,255,.06)}.headline span{display:block;color:#b8c9d8;font-size:11px;font-weight:900;letter-spacing:.8px;text-transform:uppercase}.headline strong{display:block;margin-top:3px;color:#b6ee8f;font-size:clamp(36px,5vw,57px);line-height:1}.metrics{display:grid;grid-template-columns:repeat(2,1fr);gap:10px}.metric{padding:14px;border:1px solid rgba(255,255,255,.13);border-radius:10px;background:rgba(255,255,255,.05)}.metric span{display:block;color:#b8c9d8;font-size:11px;font-weight:800}.metric strong{display:block;margin-top:4px;font-size:24px}.metric em{display:block;margin-top:2px;color:#8fabc1;font-size:11px;font-style:normal}.negative{color:#ff9ba2!important}.positive{color:#b6ee8f!important}
+.waterfall{margin-top:16px}.bar-row{display:grid;grid-template-columns:155px 1fr 82px;align-items:center;gap:10px;margin:9px 0;color:#c8d7e3;font-size:12px}.track{height:9px;background:rgba(255,255,255,.1);border-radius:999px;overflow:hidden}.fill{height:100%;border-radius:999px;background:var(--teal)}.fill.green{background:var(--green)}.fill.amber{background:var(--amber)}.bar-row b{text-align:right;color:#fff}
+.case-panel{background:#fff;border:1px solid var(--line);border-radius:14px;box-shadow:var(--shadow);overflow:hidden}.case-panel .case-body{padding:20px}.case-summary{padding:17px;border-left:4px solid var(--green);background:#f5faf2;color:#274423;font-size:15px}.case-summary strong{color:var(--navy)}.breakdown{margin-top:15px}.breakdown-row{display:flex;justify-content:space-between;gap:20px;padding:10px 2px;border-bottom:1px solid var(--line)}.breakdown-row span{color:var(--muted)}.breakdown-row b{color:var(--navy)}.assumption-box{margin-top:15px;padding:13px;border:1px solid #f0d49e;border-radius:9px;background:#fff9ed;color:#78561d;font-size:12px}.talk-track{margin-top:15px;padding:14px;border-radius:10px;background:#eef7fa;color:#174b5a}.talk-track b{display:block;margin-bottom:5px;color:var(--navy)}
+.footer-note{max-width:1100px;margin:22px auto 0;text-align:center;color:var(--muted);font-size:12px}.hide{display:none!important}
+@media(max-width:1050px){.grid.cols-4{grid-template-columns:1fr 1fr}.results{grid-template-columns:1fr}}@media(max-width:700px){.hero{padding:18px 16px 52px}.wrap{padding:0 12px 50px}.topbar,.panel-head{display:block}.actions{margin-top:14px}.brand-tag{display:none}.grid.cols-4,.grid.cols-3,.metrics{grid-template-columns:1fr}.panel-head,.section-pad{padding:18px}.bar-row{grid-template-columns:115px 1fr 70px}.hero h1{font-size:38px}}
+@media print{body{background:#fff}.hero{padding:18px 24px 42px}.actions,.add-row,.remove,.scenario{display:none!important}.wrap{margin-top:-24px;padding:0}.panel,.result-panel,.case-panel{box-shadow:none;break-inside:avoid}.entry-table{min-width:0;font-size:10px}.entry-table input,.entry-table select{border:0;padding:0;min-height:0;appearance:none}.results{grid-template-columns:1fr 1fr}.hero h1{font-size:35px}}
+</style>
+</head>
+<body>
+<header class="hero"><div class="hero-inner">
+  <div class="topbar"><div class="brand"><img src="revio-logo-white.png" alt="Rev.io"><div class="brand-tag">Discovery ROI Calculator</div></div><div class="actions"><button class="btn" id="resetBtn">Reset</button><button class="btn" id="shareBtn">Copy scenario link</button><button class="btn primary" onclick="window.print()">Print / Save PDF</button></div></div>
+  <div class="eyebrow">Quantify the cost of the current state</div>
+  <h1>Turn operational pain into a defensible business case.</h1>
+  <p>Capture what the prospect confirms, isolate assumptions, and model the potential value of reducing software overlap, manual work, revenue leakage, and avoidable operating friction.</p>
+</div></header>
+<main class="wrap">
+<section class="panel">
+ <div class="panel-head"><div class="step"><div class="step-num">1</div><div><h2>Prospect and scenario</h2><p class="helper">Set the context before entering assumptions. Values save locally while you work.</p></div></div><div class="scenario" aria-label="Scenario"><button data-scenario="conservative">Conservative</button><button data-scenario="base" class="active">Expected</button><button data-scenario="upside">Upside</button></div></div>
+ <div class="section-pad grid cols-4">
+  <div class="field"><label>Prospect / account</label><input id="account" placeholder="Company name"></div>
+  <div class="field"><label>Primary contact</label><input id="contact" placeholder="Name / role"></div>
+  <div class="field"><label>Employees / users</label><input id="employees" type="number" min="0" value="50"></div>
+  <div class="field"><label>Prepared by</label><input id="preparedBy" value="Rev.io"></div>
+ </div>
+ <div class="section-pad" style="padding-top:0"><div class="field"><label>Confirmed pains and desired outcomes</label><textarea id="painSummary" placeholder="Example: duplicate billing entry, delayed invoicing, poor technician utilization visibility, disconnected customer records..."></textarea></div></div>
+</section>
+<section class="panel">
+ <div class="panel-head"><div class="step"><div class="step-num">2</div><div><h2>Current software and vendor costs</h2><p class="helper">Enter tools that Rev.io could replace, consolidate, or reduce. Keep retained systems at 0% avoidable.</p></div></div></div>
+ <div class="table-wrap"><table class="entry-table"><thead><tr><th style="width:31%">Software / vendor</th><th style="width:16%">Monthly cost</th><th style="width:16%">Avoidable with Rev.io</th><th>Discovery note</th><th style="width:14%">Annual value</th><th></th></tr></thead><tbody id="softwareBody"></tbody></table></div>
+ <button class="add-row" data-add="software">+ Add software cost</button>
+</section>
+<section class="panel">
+ <div class="panel-head"><div class="step"><div class="step-num">3</div><div><h2>Manual work and operating friction</h2><p class="helper">Translate recurring work into capacity value. Ask: who does it, how often, and what happens when it is delayed?</p></div></div></div>
+ <div class="table-wrap"><table class="entry-table"><thead><tr><th style="width:25%">Pain / manual process</th><th>Hours per week</th><th>People</th><th>Loaded hourly cost</th><th>Potential reduction</th><th style="width:14%">Annual value</th><th></th></tr></thead><tbody id="laborBody"></tbody></table></div>
+ <button class="add-row" data-add="labor">+ Add manual process</button>
+ <div class="small-note">Capacity value = hours/week × people × loaded hourly cost × 52 weeks × estimated reduction. This is productive capacity recovered—not automatically a payroll reduction.</div>
+</section>
+<section class="panel">
+ <div class="panel-head"><div class="step"><div class="step-num">4</div><div><h2>Revenue, cash-flow, and risk opportunities</h2><p class="helper">Use only when discovery establishes a measurable leakage, delay, or avoidable loss.</p></div></div></div>
+ <div class="section-pad grid cols-3">
+  <div class="field"><label>Annual revenue exposed to leakage / missed billing</label><input id="revenueBase" type="number" min="0" value="0"></div>
+  <div class="field"><label>Estimated leakage rate</label><input id="leakageRate" type="number" min="0" max="100" value="0"></div>
+  <div class="field"><label>Recoverable portion with Rev.io</label><input id="recoveryRate" type="number" min="0" max="100" value="50"></div>
+  <div class="field"><label>One-time avoided cost / risk</label><input id="riskValue" type="number" min="0" value="0"></div>
+  <div class="field"><label>Value timing</label><select id="riskTiming"><option value="1">Year 1 only</option><option value="0">Exclude from model</option></select></div>
+  <div class="field"><label>Evidence / note</label><input id="revenueNote" placeholder="Expired agreements, missed usage, invoice errors..."></div>
+ </div>
+</section>
+<section class="panel">
+ <div class="panel-head"><div class="step"><div class="step-num">5</div><div><h2>Estimated Rev.io investment</h2><p class="helper">Enter a working commercial estimate. Keep implementation separate so payback is transparent.</p></div></div></div>
+ <div class="section-pad grid cols-4">
+  <div class="field"><label>Monthly platform investment</label><input id="revioMonthly" type="number" min="0" value="1500"></div>
+  <div class="field"><label>One-time implementation</label><input id="implementation" type="number" min="0" value="5000"></div>
+  <div class="field"><label>Other annual Rev.io costs</label><input id="otherAnnual" type="number" min="0" value="0"></div>
+  <div class="field"><label>Value realization in Year 1</label><input id="rampRate" type="number" min="0" max="100" value="75"></div>
+ </div>
+</section>
+<section class="results">
+ <div class="result-panel" aria-live="polite">
+  <h2>Modeled business impact</h2><p class="helper" id="resultContext">Expected scenario · Year 1</p>
+  <div class="headline"><span>Three-year net value</span><strong id="threeYearNet">$0</strong></div>
+  <div class="metrics">
+   <div class="metric"><span>Annual gross value at full run rate</span><strong id="annualGross">$0</strong><em>Before Rev.io investment</em></div>
+   <div class="metric"><span>Year 1 net value</span><strong id="yearOneNet">$0</strong><em>Includes ramp and implementation</em></div>
+   <div class="metric"><span>Three-year ROI</span><strong id="roi">0%</strong><em>Net benefit ÷ total investment</em></div>
+   <div class="metric"><span>Estimated payback</span><strong id="payback">—</strong><em>Based on Year 1 monthly value</em></div>
+  </div>
+  <div class="waterfall">
+   <div class="bar-row"><span>Software consolidation</span><div class="track"><div class="fill" id="softwareBar"></div></div><b id="softwareValue">$0</b></div>
+   <div class="bar-row"><span>Capacity recovered</span><div class="track"><div class="fill green" id="laborBar"></div></div><b id="laborValue">$0</b></div>
+   <div class="bar-row"><span>Revenue / risk</span><div class="track"><div class="fill amber" id="revenueBar"></div></div><b id="revenueValue">$0</b></div>
+  </div>
+ </div>
+ <aside class="case-panel"><div class="panel-head"><div><h2>Discovery business case</h2><p class="helper">A buyer-safe summary for the conversation.</p></div></div><div class="case-body">
+  <div class="case-summary" id="caseSummary">Enter the prospect’s current-state costs and operational pain to begin building the case.</div>
+  <div class="breakdown">
+   <div class="breakdown-row"><span>Current annual software burden entered</span><b id="currentSoftware">$0</b></div>
+   <div class="breakdown-row"><span>Current annual manual-work burden entered</span><b id="currentLabor">$0</b></div>
+   <div class="breakdown-row"><span>Year 1 Rev.io investment</span><b id="yearOneInvestment">$0</b></div>
+   <div class="breakdown-row"><span>Ongoing annual Rev.io investment</span><b id="ongoingInvestment">$0</b></div>
+  </div>
+  <div class="talk-track"><b>Suggested transition</b><span id="talkTrack">“Based on what you’ve shared, would it be useful to validate these assumptions together and determine which value drivers belong in a formal business case?”</span></div>
+  <div class="assumption-box"><strong>Working estimate—not a guarantee.</strong> Confirmed prospect inputs and assumptions should be validated during solution review. Capacity value represents potentially redeployable time; revenue recovery depends on adoption, process design, and data quality.</div>
+ </div></aside>
+</section>
+<div class="footer-note">Rev.io Discovery ROI Calculator · Prospect inputs and assumptions are stored only in this browser unless a scenario link is copied.</div>
+</main>
+<script>
+const $=(s,r=document)=>r.querySelector(s), $$=(s,r=document)=>[...r.querySelectorAll(s)];
+const money=new Intl.NumberFormat('en-US',{style:'currency',currency:'USD',maximumFractionDigits:0});
+const scenarios={conservative:.70,base:1,upside:1.20}; let scenario='base';
+const defaults={software:[['PSA / billing platform',0,100,''],['Accounting add-ons / connectors',0,50,''],['Payment processing tools',0,50,''],['Other overlapping software',0,100,'']],labor:[['Duplicate data entry',0,1,45,60],['Billing and invoice reconciliation',0,1,45,60],['Manual reporting / spreadsheet work',0,1,45,60],['Technician scheduling and follow-up',0,1,45,50]]};
+function n(v){const x=Number(String(v??'').replace(/[^0-9.-]/g,''));return Number.isFinite(x)?Math.max(0,x):0}function pct(v){return Math.min(100,n(v))/100}
+function softwareRow(v=['',0,100,'']){const tr=document.createElement('tr');tr.innerHTML=`<td><input class="sw-name" value="${esc(v[0])}" placeholder="Tool or vendor"></td><td><input class="sw-cost money" type="number" min="0" value="${v[1]}"></td><td><input class="sw-avoid number" type="number" min="0" max="100" value="${v[2]}"></td><td><input class="sw-note" value="${esc(v[3]||'')}" placeholder="Why it can change"></td><td class="result sw-value">$0</td><td><button class="remove" aria-label="Remove">×</button></td>`;return tr}
+function laborRow(v=['',0,1,45,60]){const tr=document.createElement('tr');tr.innerHTML=`<td><input class="lb-name" value="${esc(v[0])}" placeholder="Manual process"></td><td><input class="lb-hours number" type="number" min="0" step=".5" value="${v[1]}"></td><td><input class="lb-people number" type="number" min="0" value="${v[2]}"></td><td><input class="lb-cost money" type="number" min="0" value="${v[3]}"></td><td><input class="lb-reduce number" type="number" min="0" max="100" value="${v[4]}"></td><td class="result lb-value">$0</td><td><button class="remove" aria-label="Remove">×</button></td>`;return tr}
+function esc(s){return String(s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]))}
+function add(type,v){$(`#${type}Body`).append(type==='software'?softwareRow(v):laborRow(v));calc()}
+function init(){defaults.software.forEach(v=>add('software',v));defaults.labor.forEach(v=>add('labor',v));loadFromUrl()||loadLocal();calc()}
+function calc(){let swCurrent=0,swValue=0,laborCurrent=0,laborValue=0;$$('#softwareBody tr').forEach(tr=>{const cost=n($('.sw-cost',tr)?.value),value=cost*12*pct($('.sw-avoid',tr)?.value);swCurrent+=cost*12;swValue+=value;$('.sw-value',tr).textContent=money.format(value)});$$('#laborBody tr').forEach(tr=>{const current=n($('.lb-hours',tr)?.value)*n($('.lb-people',tr)?.value)*n($('.lb-cost',tr)?.value)*52,value=current*pct($('.lb-reduce',tr)?.value);laborCurrent+=current;laborValue+=value;$('.lb-value',tr).textContent=money.format(value)});
+ const revenueValue=n($('#revenueBase').value)*pct($('#leakageRate').value)*pct($('#recoveryRate').value)+n($('#riskValue').value)*n($('#riskTiming').value);const multiplier=scenarios[scenario];const gross=(swValue+laborValue+revenueValue)*multiplier;const monthly=n($('#revioMonthly').value),implementation=n($('#implementation').value),other=n($('#otherAnnual').value),ramp=pct($('#rampRate').value);const ongoing=monthly*12+other,year1Investment=ongoing+implementation,year1Gross=gross*ramp,year1Net=year1Gross-year1Investment,threeYearGross=year1Gross+gross*2,threeYearCost=year1Investment+ongoing*2,threeYearNet=threeYearGross-threeYearCost,roi=threeYearCost?threeYearNet/threeYearCost*100:0,monthlyNet=year1Gross/12-monthly-other/12,payback=monthlyNet>0?implementation/monthlyNet:null;
+ text('#annualGross',money.format(gross));text('#yearOneNet',money.format(year1Net));text('#threeYearNet',money.format(threeYearNet));text('#roi',`${Math.round(roi)}%`);text('#payback',payback===null?'Not reached':payback<.1?'Immediate':`${payback.toFixed(1)} months`);text('#softwareValue',money.format(swValue*multiplier));text('#laborValue',money.format(laborValue*multiplier));text('#revenueValue',money.format(revenueValue*multiplier));text('#currentSoftware',money.format(swCurrent));text('#currentLabor',money.format(laborCurrent));text('#yearOneInvestment',money.format(year1Investment));text('#ongoingInvestment',money.format(ongoing));$('#yearOneNet').className=year1Net>=0?'positive':'negative';$('#threeYearNet').className=threeYearNet>=0?'positive':'negative';$('#roi').className=roi>=0?'positive':'negative';const max=Math.max(swValue,laborValue,revenueValue,1);$('#softwareBar').style.width=`${swValue/max*100}%`;$('#laborBar').style.width=`${laborValue/max*100}%`;$('#revenueBar').style.width=`${revenueValue/max*100}%`;const label={conservative:'Conservative',base:'Expected',upside:'Upside'}[scenario];text('#resultContext',`${label} scenario · Year 1 realization ${Math.round(ramp*100)}%`);const acct=$('#account').value.trim()||'the prospect';text('#caseSummary',gross?`${acct} has approximately ${money.format(swCurrent+laborCurrent)} in entered annual software and labor burden. Under the ${label.toLowerCase()} assumptions, Rev.io could create ${money.format(gross)} in annual gross value at full run rate and ${money.format(threeYearNet)} in modeled net value over three years.`:'Enter the prospect’s current-state costs and operational pain to begin building the case.');text('#talkTrack',`“Based on what you’ve shared, the largest quantified opportunity is ${largest(swValue,laborValue,revenueValue)}. Are these assumptions directionally right, and who else should validate them before we formalize the business case?”`);saveLocal()}
+function largest(a,b,c){return a>=b&&a>=c?'software consolidation':b>=c?'recovering productive capacity':'reducing revenue leakage and avoidable risk'}function text(sel,val){$(sel).textContent=val}
+function state(){return{scenario,fields:Object.fromEntries($$('input[id],textarea[id],select[id]').map(e=>[e.id,e.value])),software:$$('#softwareBody tr').map(tr=>[$('.sw-name',tr).value,$('.sw-cost',tr).value,$('.sw-avoid',tr).value,$('.sw-note',tr).value]),labor:$$('#laborBody tr').map(tr=>[$('.lb-name',tr).value,$('.lb-hours',tr).value,$('.lb-people',tr).value,$('.lb-cost',tr).value,$('.lb-reduce',tr).value])}}
+function apply(s){if(!s)return;scenario=s.scenario||'base';$$('.scenario button').forEach(b=>b.classList.toggle('active',b.dataset.scenario===scenario));Object.entries(s.fields||{}).forEach(([id,v])=>{if(document.getElementById(id))document.getElementById(id).value=v});if(s.software){$('#softwareBody').innerHTML='';s.software.forEach(v=>add('software',v))}if(s.labor){$('#laborBody').innerHTML='';s.labor.forEach(v=>add('labor',v))}}
+function saveLocal(){try{localStorage.setItem('revioDiscoveryRoi',JSON.stringify(state()))}catch(e){}}function loadLocal(){try{const s=JSON.parse(localStorage.getItem('revioDiscoveryRoi'));if(s)apply(s)}catch(e){}}
+function loadFromUrl(){try{const p=new URLSearchParams(location.search).get('s');if(!p)return false;apply(JSON.parse(decodeURIComponent(escape(atob(p)))));return true}catch(e){return false}}
+async function share(){const encoded=btoa(unescape(encodeURIComponent(JSON.stringify(state()))));const url=`${location.origin}${location.pathname}?s=${encodeURIComponent(encoded)}`;try{await navigator.clipboard.writeText(url);text('#shareBtn','Copied ✓');setTimeout(()=>text('#shareBtn','Copy scenario link'),1600)}catch(e){prompt('Copy this scenario link:',url)}}
+document.addEventListener('input',e=>{if(e.target.matches('input,textarea,select'))calc()});document.addEventListener('click',e=>{const addBtn=e.target.closest('[data-add]');if(addBtn)add(addBtn.dataset.add);const rem=e.target.closest('.remove');if(rem){rem.closest('tr').remove();calc()}const sc=e.target.closest('[data-scenario]');if(sc){scenario=sc.dataset.scenario;$$('.scenario button').forEach(b=>b.classList.toggle('active',b===sc));calc()}});$('#shareBtn').addEventListener('click',share);$('#resetBtn').addEventListener('click',()=>{if(!confirm('Reset this discovery scenario?'))return;localStorage.removeItem('revioDiscoveryRoi');location.href=location.pathname});
+init();
+</script>
+</body></html>
