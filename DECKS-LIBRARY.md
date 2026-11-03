@@ -1,6 +1,6 @@
 # DECKS-LIBRARY.md — Robin's Deck & Dashboard Library
 
-Last updated: 2026-10-27
+Last updated: 2026-11-02
 GitHub Pages base: `https://koontz-robin.github.io/robin-decks/`
 Repo: `git@github.com:koontz-robin/robin-decks.git`
 
@@ -15,6 +15,8 @@ Repo: `git@github.com:koontz-robin/robin-decks.git`
 | Name | File | URL | Refresh |
 |---|---|---|---|
 | Updated Goals / 2027 Forecast Dashboard | forecast.html | https://koontz-robin.github.io/robin-decks/forecast.html | Daily (8am ET, weekdays) |
+| Q4 New Rev.io War-Room Closed Lost | q4-new-revio-war-room-closed-lost.html | https://koontz-robin.github.io/robin-decks/q4-new-revio-war-room-closed-lost.html | Q4-to-date New Rev.io opportunities verified via stage history as having reached Stage 3+ before closing lost; board-ready loss reason, owner, stage, MRR, and deal detail view |
+| Q4 AE Targets & Closed MRR | q4-ae-target-dashboard.html | https://koontz-robin.github.io/robin-decks/q4-ae-target-dashboard.html | On demand; adjusted combined Rev.io targets for October–December and Q4 AE closed MRR |
 | AE Capacity Dashboard | ae-capacity-dashboard.html | https://koontz-robin.github.io/robin-decks/ae-capacity-dashboard.html | Daily (12pm ET, weekdays) |
 | AE Capacity Slide (EXECUTE theme) | ae-capacity-slide.html | https://koontz-robin.github.io/robin-decks/ae-capacity-slide.html | Manual |
 | Sales Opportunities Created | june-ae-csa-opportunities.html | https://koontz-robin.github.io/robin-decks/june-ae-csa-opportunities.html | Hourly (9am-5pm ET, weekdays) |
@@ -60,6 +62,7 @@ Repo: `git@github.com:koontz-robin/robin-decks.git`
 
 | Name | File | URL | Notes |
 |---|---|---|---|
+| Q4 2026 Board Meeting Deck | q4-2026-board-meeting-deck.html | https://koontz-robin.github.io/robin-decks/q4-2026-board-meeting-deck.html | In progress; board deck shell with dedicated New Rev.io Stage 3+ closed-lost analysis slide |
 | Bigfoot Technology Group Evaluation Readout | bigfoot-technology-group-evaluation-readout.html | https://koontz-robin.github.io/robin-decks/bigfoot-technology-group-evaluation-readout.html | Buyer-facing Execute readout for the combined PSA and telecom billing evaluation: ConnectWise replacement, direct billing, field/mobile workflows, projects, inventory, compliance, and renewal-clock decision plan. |
 | Ben Whatley New MSP Evaluation Readout | ben-whatley-new-msp-evaluation-readout.html | https://koontz-robin.github.io/robin-decks/ben-whatley-new-msp-evaluation-readout.html | Buyer-facing Execute readout for Ben Whatley’s new MSP: consolidated IT/telecom billing, Odoo/SkySwitch transition, service communication, mobile time capture, SureWeb reconciliation, Payments, ROI assumptions, commercial framework, and launch plan. |
 | A&B Lock and Security Evaluation Readout | a-b-lock-security-evaluation-readout.html | https://koontz-robin.github.io/robin-decks/a-b-lock-security-evaluation-readout.html | Buyer-facing Execute readout for A&B’s Service Fusion evaluation: reporting, ClickUp/project consolidation, mobile field workflows, multi-location inventory, recurring billing, QuickBooks, integration proof, and the decision plan. |
@@ -69,7 +72,7 @@ Repo: `git@github.com:koontz-robin/robin-decks.git`
 | AVIT Consolidated Deck | avit-consolidated-deck.html | https://koontz-robin.github.io/robin-decks/avit-consolidated-deck.html | Consolidated tabs for Evaluations Summary, Onsite Meeting Recap, and Implementation Plan |
 | Spectrotel September 15 On-Site Agenda | spectrotel-sept15-agenda.html | https://koontz-robin.github.io/robin-decks/spectrotel-sept15-agenda.html | AVIT-style tabbed agenda site for Spectrotel + AirSpring / NuCo operating model, support escalation, platform strategy, SSO, payments, bankruptcy workflow, and roadmap cadence |
 | Altourage PSA Evaluation Readout | altourage-psa-evaluation-readout.html | https://koontz-robin.github.io/robin-decks/altourage-psa-evaluation-readout.html | Buyer-facing Execute readout for Altourage PSA evaluation: ConnectWise replacement, Halo comparison, Lyra context, requirements, ROI assumptions, and action plan |
-| Forward Edge - ConnectWise Replacement Evaluation with Rev.io | forward-edge-psa-evaluation-readout.html | https://koontz-robin.github.io/robin-decks/forward-edge-psa-evaluation-readout.html | Buyer-facing Execute readout for Forward Edge ConnectWise replacement: software sprawl, reporting/finance pain, multi-brand Bill Profiles, MSP/VAR workflows, requirements, ROI assumptions, and action plan |
+| Forward Edge - ConnectWise Replacement Evaluation with Rev.io | forward-edge-psa-evaluation-readout.html | https://koontz-robin.github.io/robin-decks/forward-edge-psa-evaluation-readout.html | Buyer-facing Execute readout for Forward Edge PSA replacement: sourced business case, interactive ROI model, demonstrated vs. open requirements, migration risk, and Q4 decision plan |
 | New York Security Solutions Evaluation Readout | new-york-security-solutions-evaluation-readout.html | https://koontz-robin.github.io/robin-decks/new-york-security-solutions-evaluation-readout.html | Buyer-facing Execute readout for NYSS security integration operations: cloud security, access control, video surveillance, migrations, requirements, ROI assumptions, and action plan |
 | Main Line Sound & Video Evaluation Readout | main-line-sound-video-evaluation-readout.html | https://koontz-robin.github.io/robin-decks/main-line-sound-video-evaluation-readout.html | Buyer-facing Execute readout for Main Line Sound & Video: DTools replacement, QuickBooks/inventory fragmentation, Portal IO quoting path, recurring security billing, mobile service workflow, requirements, ROI assumptions, and action plan |
 | Canitan PSA Evaluation Readout | canitan-psa-evaluation-readout.html | https://koontz-robin.github.io/robin-decks/canitan-psa-evaluation-readout.html | Buyer-facing Execute readout for Canitan PSA evaluation: Field Motion 2.0 comparison, workflow mapping, QuickBooks confidence, mobile/inventory/assets requirements, ROI assumptions, and action plan |
@@ -290,3 +293,21 @@ When Robin creates a new deck or dashboard:
 - **URL:** https://koontz-robin.github.io/robin-decks/replcloud-evaluation-readout.html
 - **Purpose:** Buyer-facing evaluation summary with sourced operating case, demonstrated/open capability status, mutual action plan, and interactive ROI calculator.
 - **Created:** 2026-10-28
+
+### Tenarai × Rev.io Work-Order Requirements Assessment
+- **File:** `tenarai-work-order-requirements-assessment.html`
+- **URL:** https://koontz-robin.github.io/robin-decks/tenarai-work-order-requirements-assessment.html
+- **Purpose:** Customer-facing Rev.io fit assessment covering 28 Tenarai work-order, field-service, partner, compliance, mobile, integration, reporting, and security requirements with customer-safe validation and discovery recommendations.
+- **Created:** 2026-10-30
+
+### Nored Telcom × Rev.io Evaluation Readout
+- **File:** `nored-telcom-evaluation-readout.html`
+- **URL:** https://koontz-robin.github.io/robin-decks/nored-telcom-evaluation-readout.html
+- **Purpose:** Buyer-facing evaluation readout covering Nored's ConnectWise/DataGate replacement, tax reconciliation, field inventory capture, live-catalog quoting, progressive billing, QuickBooks Desktop, and Q2 2027 decision plan.
+- **Created:** 2026-10-30
+
+### All Systems Integrated Value Plan
+- **File:** `all-systems-integrated-value-plan.html`
+- **URL:** https://koontz-robin.github.io/robin-decks/all-systems-integrated-value-plan.html
+- **Purpose:** Customer-facing Rev.io value plan and workflow validation path for ASI Northwest.
+- **Created:** 2026-11-03
