@@ -48,7 +48,6 @@ NAME_ALIASES = {
     "Andrew Whisenant": "Andy Whisenant",
 }
 EXCLUDED_REPS = {
-    "Abbey McIntosh",
     "Davis" + " Herndon",
     "Jake Mitchell",
 }
@@ -436,8 +435,6 @@ def build_html(opps, members):
     sdr_opps_by_rep = defaultdict(list)
 
     for rep, group in members.items():
-        if rep in EXCLUDED_REPS:
-            continue
         if group in {"AE", "CSA"}:
             rep_groups[rep] = group
             _ = by_rep[rep]
@@ -448,7 +445,7 @@ def build_html(opps, members):
         date_text = created_date_et(opp["CreatedDate"])
         week_id = week_for_date(date_text)
         sdr = clean_sdr_name(opp.get("SDR_Influence__c"))
-        if week_id and sdr and sdr not in EXCLUDED_REPS:
+        if week_id and sdr:
             sdr_opp = {**opp, "CreatedDateET": date_text, "Week": week_id, "SDR": sdr}
             sdr_enriched.append(sdr_opp)
             by_sdr[sdr][week_id]["count"] += 1
