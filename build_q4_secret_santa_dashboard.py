@@ -27,6 +27,7 @@ ET = ZoneInfo("America/New_York")
 CONTEST_START = date(2026, 10, 1)
 CONTEST_END = date(2026, 12, 17)
 SOLUTION_ENGINEERS = {"Tony Mehner", "Michael Young"}
+EXCLUDED_PEOPLE = {"Abbey McIntosh"}
 # Renewals are not represented by the new-deal quantity field in Salesforce.
 MANUAL_STANDARD_RENEWALS = {
     "Justin Lee": 5,
@@ -48,6 +49,7 @@ def build_payload():
     end_exclusive = min(now_et.date() + __import__("datetime").timedelta(days=1), CONTEST_END + __import__("datetime").timedelta(days=1))
     base, headers = sf_auth()
     roster = get_team_members(base, headers)
+    roster = {name: role for name, role in roster.items() if name not in EXCLUDED_PEOPLE}
     for name in SOLUTION_ENGINEERS:
         roster[name] = "SE"
     roster["Jake Mitchell"] = "Channel"
