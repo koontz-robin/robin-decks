@@ -30,12 +30,12 @@ ET = ZoneInfo("America/New_York")
 
 NAME_ALIASES = {"Andrew Whisenant": "Andy Whisenant"}
 EXCLUDED_REPS = {
-    "Ardit Berdyna", "Blaine Villafuerte", "Cam Sharpe", "Davis Herndon",
+    "Abbey McIntosh", "Ardit Berdyna", "Blaine Villafuerte", "Cam Sharpe", "Davis Herndon",
     "Jake Mitchell", "Matt Salin", "Olivia Sandefur", "Reid Doster", "Usman Zahoor",
     "Hu" + "sam " + "Zal" + "miyar",
 }
 ROLE_GROUPS = {"SDRs": "SDR", "MSP Sales": "AE", "Integrator Sales": "AE", "CSA": "CSA"}
-KNOWN_AES = {"Abbey McIntosh", "Andy Whisenant", "Connor Flynn", "Jake Borah", "Jamie Butler", "Jaylin Bender", "Patrick Davies"}
+KNOWN_AES = {"Andy Whisenant", "Connor Flynn", "Jake Borah", "Jamie Butler", "Jaylin Bender", "Patrick Davies"}
 KNOWN_CSAS = {"Ingrid Beard", "Justin Lee"}
 CBR_TYPES = ["Client Business Review"]
 DEMO_TYPES = ["2-Initial DEMO"]
