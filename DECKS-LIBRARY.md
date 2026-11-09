@@ -320,3 +320,9 @@ When Robin creates a new deck or dashboard:
 - **URL:** https://koontz-robin.github.io/robin-decks/nucleus-networks-evaluation-readout.html
 - **Purpose:** Buyer-facing Execute readout for Nucleus Networks covering the ConnectWise replacement timeline, Lyra/Business Central boundaries, tool-sprawl consolidation, validation gates, phased proof plan, and interactive ROI model.
 - **Created:** 2026-11-09
+
+### Slice Wireless Solutions × Rev.io Execute Evaluation Readout
+- **File:** `slice-wireless-solutions-evaluation-readout.html`
+- **URL:** https://koontz-robin.github.io/robin-decks/slice-wireless-solutions-evaluation-readout.html
+- **Purpose:** Buyer-facing Execute evaluation program for Slice Wireless Solutions covering the Autotask replacement case, quote-to-cash leakage, QuickBooks Desktop proof, mobile/project/migration gates, decision path, and auditable interactive ROI model.
+- **Created:** 2026-11-09
