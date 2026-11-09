@@ -314,3 +314,9 @@ When Robin creates a new deck or dashboard:
 - **Purpose:** Customer-facing Rev.io value plan and workflow validation path for ASI Northwest.
 - **Created:** 2026-11-03
 | Newport Network Security Evaluation Readout | newport-network-security-evaluation-readout.html | https://koontz-robin.github.io/robin-decks/newport-network-security-evaluation-readout.html | Buyer-facing Execute readout for Newport’s re-evaluation: quoting, multi-entity tax and billing, field/mobile workflows, QuickBooks Desktop, validation gates, proof plan, and interactive ROI model. |
+
+### Nucleus Networks × Rev.io Execute Evaluation Readout
+- **File:** `nucleus-networks-evaluation-readout.html`
+- **URL:** https://koontz-robin.github.io/robin-decks/nucleus-networks-evaluation-readout.html
+- **Purpose:** Buyer-facing Execute readout for Nucleus Networks covering the ConnectWise replacement timeline, Lyra/Business Central boundaries, tool-sprawl consolidation, validation gates, phased proof plan, and interactive ROI model.
+- **Created:** 2026-11-09
