@@ -200,3 +200,9 @@ When Robin creates a new deck or dashboard:
 - File: `joe-abarno-strategic-ae-territory.html`
 - Created: 2026-08-25
 - Purpose: One-page Strategic AE territory onboarding/reference page for Joe Abarno, using the West / Central blue-state territory map and qualification rules.
+
+### Nucleus Networks × Rev.io Execute Evaluation Readout
+- **File:** `nucleus-networks-evaluation-readout.html`
+- **URL:** https://koontz-robin.github.io/robin-decks/nucleus-networks-evaluation-readout.html
+- **Purpose:** Buyer-facing Execute readout for Nucleus Networks covering the ConnectWise replacement timeline, Lyra/Business Central boundaries, tool-sprawl consolidation, validation gates, phased proof plan, and interactive ROI model.
+- **Created:** 2026-11-09
