@@ -41,7 +41,7 @@
 
 <script>
 (() => {
-  const REPS = ['Connor Flynn','Andy Whisenant','Patrick Davies','Jake Borah','Jaylin Bender','Abbey McIntosh'];
+  const REPS = ['Connor Flynn','Andy Whisenant','Patrick Davies','Jake Borah','Jaylin Bender'];
   const KEY = 'revio-account-round-robin-v1';
   const $ = id => document.getElementById(id);
   let state = load();
@@ -62,7 +62,8 @@
     const current=REPS[state.current], next=REPS[(state.current+1)%REPS.length], third=REPS[(state.current+2)%REPS.length];
     $('currentName').textContent=current; $('avatar').textContent=initials(current); $('onDeck').textContent=next; $('inHole').textContent=third; $('todayCount').textContent=todayCount();
     $('lineupList').innerHTML=REPS.map((rep,i)=>`<div class="rep ${i===state.current?'active':''}"><div class="rep-num">${i+1}</div><div class="rep-name">${esc(rep)}</div><div class="rep-stat">${i===state.current?'AT BAT':countFor(rep)+' assigned'}</div></div>`).join('');
-    $('repBooks').innerHTML=REPS.map(rep=>{const accounts=state.history.filter(x=>x.rep===rep);return `<div class="rep-book"><div class="book-head"><div class="book-name">${esc(rep)}</div><div class="book-count">${accounts.length}</div></div>${accounts.length?`<div class="account-chips">${accounts.map(x=>`<span class="account-chip">${esc(x.account)}</span>`).join('')}</div>`:'<div class="book-empty">No accounts assigned yet</div>'}</div>`}).join('');
+    const bookReps=[...REPS,...new Set(state.history.map(x=>x.rep).filter(rep=>!REPS.includes(rep)))];
+    $('repBooks').innerHTML=bookReps.map(rep=>{const accounts=state.history.filter(x=>x.rep===rep);return `<div class="rep-book"><div class="book-head"><div class="book-name">${esc(rep)}${REPS.includes(rep)?'':' <small>(inactive)</small>'}</div><div class="book-count">${accounts.length}</div></div>${accounts.length?`<div class="account-chips">${accounts.map(x=>`<span class="account-chip">${esc(x.account)}</span>`).join('')}</div>`:'<div class="book-empty">No accounts assigned yet</div>'}</div>`}).join('');
     if(!state.history.length){ $('historyList').innerHTML='<div class="empty"><div><b>No assignments yet</b>Enter an account above to start the rotation.</div></div>'; }
     else $('historyList').innerHTML=[...state.history].reverse().map(x=>{const d=new Date(x.time);return `<div class="record"><div class="record-icon">✓</div><div><div class="record-account">${esc(x.account)}</div><div class="record-meta">Assigned to ${esc(x.rep)}</div></div><div class="record-time">${d.toLocaleDateString([], {month:'short',day:'numeric'})}<br>${d.toLocaleTimeString([], {hour:'numeric',minute:'2-digit'})}</div></div>`}).join('');
     $('undoBtn').disabled=!state.history.length;
