@@ -313,3 +313,4 @@ When Robin creates a new deck or dashboard:
 - **URL:** https://koontz-robin.github.io/robin-decks/all-systems-integrated-value-plan.html
 - **Purpose:** Customer-facing Rev.io value plan and workflow validation path for ASI Northwest.
 - **Created:** 2026-11-03
+| Newport Network Security Evaluation Readout | newport-network-security-evaluation-readout.html | https://koontz-robin.github.io/robin-decks/newport-network-security-evaluation-readout.html | Buyer-facing Execute readout for Newport’s re-evaluation: quoting, multi-entity tax and billing, field/mobile workflows, QuickBooks Desktop, validation gates, proof plan, and interactive ROI model. |
