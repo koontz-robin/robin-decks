@@ -28,10 +28,12 @@ CONTEST_START = date(2026, 10, 1)
 CONTEST_END = date(2026, 12, 17)
 SOLUTION_ENGINEERS = {"Tony Mehner", "Michael Young"}
 EXCLUDED_PEOPLE = {"Abbey McIntosh"}
-# Renewals are not represented by the new-deal quantity field in Salesforce.
-MANUAL_STANDARD_RENEWALS = {
+# Contest-approved standard-user totals. These override Salesforce quantities
+# because renewals are not consistently represented by the new-deal field.
+MANUAL_STANDARD_USER_TOTALS = {
+    "Ingrid Beard": 42,
     "Justin Lee": 5,
-    "Ingrid Beard": 6,
+    "Katerra Stephenson Greenwood": 22,
 }
 
 
@@ -160,9 +162,9 @@ def build_payload():
         if owner in people:
             people[owner]["calls"] = int(row.get("total") or 0)
 
-    for name, renewed_users in MANUAL_STANDARD_RENEWALS.items():
+    for name, standard_users in MANUAL_STANDARD_USER_TOTALS.items():
         if name in people:
-            people[name]["standard_seats"] += renewed_users
+            people[name]["standard_seats"] = standard_users
 
     for p in people.values():
         if p["role"] == "SDR":
