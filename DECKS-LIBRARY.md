@@ -312,3 +312,9 @@ When Robin creates a new deck or dashboard:
 - **URL:** https://koontz-robin.github.io/robin-decks/all-systems-integrated-value-plan.html
 - **Purpose:** Customer-facing Rev.io value plan and workflow validation path for ASI Northwest.
 - **Created:** 2026-11-03
+
+### Slice Wireless Solutions × Rev.io Execute Evaluation Readout
+- **File:** `slice-wireless-solutions-evaluation-readout.html`
+- **URL:** https://koontz-robin.github.io/robin-decks/slice-wireless-solutions-evaluation-readout.html
+- **Purpose:** Buyer-facing Execute evaluation program for Slice Wireless Solutions covering the Autotask replacement case, quote-to-cash leakage, QuickBooks Desktop proof, mobile/project/migration gates, decision path, and auditable interactive ROI model.
+- **Created:** 2026-11-09
