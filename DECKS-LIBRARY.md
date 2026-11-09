@@ -318,3 +318,9 @@ When Robin creates a new deck or dashboard:
 - **URL:** https://koontz-robin.github.io/robin-decks/slice-wireless-solutions-evaluation-readout.html
 - **Purpose:** Buyer-facing Execute evaluation program for Slice Wireless Solutions covering the Autotask replacement case, quote-to-cash leakage, QuickBooks Desktop proof, mobile/project/migration gates, decision path, and auditable interactive ROI model.
 - **Created:** 2026-11-09
+
+### Prime Secured × Rev.io Execute Evaluation Readout
+- **File:** `prime-secured-evaluation-readout.html`
+- **URL:** https://koontz-robin.github.io/robin-decks/prime-secured-evaluation-readout.html
+- **Purpose:** Buyer-facing Execute readout for Prime Secured covering complex-project WIP, AIA and subcontractor cost controls, QuickBooks Online boundaries, extensibility, migration gates, operator proof, and an auditable interactive ROI model.
+- **Created:** 2026-11-09
