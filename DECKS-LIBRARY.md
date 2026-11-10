@@ -31,6 +31,7 @@ Repo: `git@github.com:koontz-robin/robin-decks.git`
 | Monthly Report Pacing Dashboard | monthly-api-pacing-dashboard.html | https://koontz-robin.github.io/robin-decks/monthly-api-pacing-dashboard.html | JSON-driven monthly pacing for Ryan's starting report set |
 | PSA Onboarding Tracker | psa-onboarding-tracker.html | https://koontz-robin.github.io/robin-decks/psa-onboarding-tracker.html | Daily (8am & 1pm ET) |
 | Daniel SDR Onboarding Roadmap | daniel-sdr-onboarding-roadmap.html | https://koontz-robin.github.io/robin-decks/daniel-sdr-onboarding-roadmap.html | 12-week SDR onboarding tracker for Daniel |
+| Harrison Crenshaw SDR Onboarding Roadmap | harrison-crenshaw-sdr-onboarding-roadmap.html | https://koontz-robin.github.io/robin-decks/harrison-crenshaw-sdr-onboarding-roadmap.html | 12-week SDR onboarding tracker for Harrison Crenshaw |
 | PSA Opportunity Dashboard | psa-opportunity-dashboard.html | https://koontz-robin.github.io/robin-decks/psa-opportunity-dashboard.html | On demand |
 | PSA Target Tracker | psa-target-tracker.html | https://koontz-robin.github.io/robin-decks/psa-target-tracker.html | On demand |
 | Rep Coaching Dashboard | rep-coaching-dashboard.html | https://koontz-robin.github.io/robin-decks/rep-coaching-dashboard.html | On demand |
