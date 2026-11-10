@@ -332,3 +332,9 @@ When Robin creates a new deck or dashboard:
 - **URL:** https://koontz-robin.github.io/robin-decks/prime-secured-evaluation-readout.html
 - **Purpose:** Buyer-facing Execute readout for Prime Secured covering complex-project WIP, AIA and subcontractor cost controls, QuickBooks Online boundaries, extensibility, migration gates, operator proof, and an auditable interactive ROI model.
 - **Created:** 2026-11-09
+
+### Grey Matter × Rev.io Execute Evaluation Readout
+- **File:** `grey-matter-evaluation-readout.html`
+- **URL:** https://koontz-robin.github.io/robin-decks/grey-matter-evaluation-readout.html
+- **Purpose:** Buyer-facing Execute readout for Grey Matter covering Halo replacement, MSP/security/AV workflows, quote and project controls, recurring revenue reconciliation, QuickBooks Online, migration gates, proof plan, and interactive ROI model.
+- **Created:** 2026-11-10
