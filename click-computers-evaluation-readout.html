@@ -1,0 +1,351 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Click Computers × Rev.io Execute Evaluation Readout</title>
+  <meta name="description" content="Buyer-facing Rev.io Execute evaluation readout for Click Computers.">
+  <style>
+    :root {
+      --bsn-red: #34aee8;
+      --bsn-blue: #13589b;
+      --bsn-dark: #071827;
+      --revio: #6cc04a;
+      --ink: #142033;
+      --muted: #607086;
+      --paper: #f5f7fa;
+      --line: #dce4ee;
+      --white: #ffffff;
+      --teal: #1b8a96;
+      --amber: #f2b84b;
+      --steel: #253142;
+    }
+
+    * { box-sizing: border-box; }
+    html { scroll-behavior: smooth; }
+    body {
+      margin: 0;
+      color: var(--ink);
+      background: var(--paper);
+      font-family: Aptos, Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      letter-spacing: 0;
+    }
+
+    .deck { min-height: 100vh; }
+    .slide {
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      position: relative;
+      overflow: hidden;
+      border-bottom: 1px solid rgba(20,32,51,0.08);
+    }
+
+    .slide.dark {
+      color: var(--white);
+      background:
+        linear-gradient(118deg, rgba(16,24,39,0.98), rgba(22,63,127,0.90)),
+        repeating-linear-gradient(0deg, rgba(255,255,255,0.035) 0 1px, transparent 1px 42px),
+        repeating-linear-gradient(90deg, rgba(255,255,255,0.03) 0 1px, transparent 1px 42px),
+        var(--bsn-dark);
+    }
+
+    .slide.light { background: var(--paper); }
+    .wrap {
+      width: min(1180px, calc(100vw - 48px));
+      margin: 0 auto;
+      padding: 78px 0 58px;
+      position: relative;
+      z-index: 2;
+    }
+
+    .topline {
+      position: absolute;
+      top: 28px;
+      left: 32px;
+      right: 32px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 22px;
+      z-index: 5;
+    }
+
+    .logo-lane {
+      display: flex;
+      align-items: center;
+      min-width: 0;
+      gap: 14px;
+    }
+
+    .bsn-logo {
+      width: 128px;
+      height: 88px;
+      object-fit: contain;
+      background: var(--white);
+      border-radius: 8px;
+      padding: 10px 16px;
+      border: 1px solid rgba(255,255,255,0.16);
+    }
+
+    .revio-logo {
+      width: 126px;
+      height: 38px;
+      object-fit: contain;
+      display: block;
+    }
+
+    .light .revio-logo {
+      background: var(--steel);
+      border-radius: 7px;
+      padding: 8px 10px;
+    }
+
+    .kicker {
+      font-size: 12px;
+      font-weight: 900;
+      text-transform: uppercase;
+      color: #37c8f3;
+      letter-spacing: 1.8px;
+      margin-bottom: 18px;
+    }
+
+    .light .kicker { color: var(--bsn-red); }
+    h1, h2, h3, p { margin: 0; }
+    h1 {
+      font-size: clamp(44px, 6.5vw, 84px);
+      line-height: 0.98;
+      max-width: 960px;
+      letter-spacing: 0;
+    }
+
+    h2 {
+      font-size: clamp(34px, 4.4vw, 58px);
+      line-height: 1;
+      max-width: 1000px;
+      margin-bottom: 24px;
+      letter-spacing: 0;
+    }
+
+    h3 {
+      font-size: 18px;
+      line-height: 1.16;
+      margin-bottom: 10px;
+      color: inherit;
+    }
+
+    .lead {
+      max-width: 850px;
+      margin-top: 24px;
+      color: rgba(255,255,255,0.76);
+      font-size: clamp(17px, 2vw, 23px);
+      line-height: 1.37;
+    }
+
+    .light .lead { color: var(--muted); }
+    .hero-grid {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) 340px;
+      gap: 48px;
+      align-items: end;
+    }
+
+    .metric-stack { display: grid; gap: 14px; }
+    .metric {
+      background: rgba(255,255,255,0.08);
+      border: 1px solid rgba(255,255,255,0.14);
+      border-radius: 8px;
+      padding: 18px;
+    }
+
+    .metric strong {
+      display: block;
+      font-size: 34px;
+      line-height: 1;
+      color: #37c8f3;
+    }
+
+    .metric span {
+      display: block;
+      margin-top: 8px;
+      color: rgba(255,255,255,0.73);
+      font-size: 12px;
+      font-weight: 800;
+      text-transform: uppercase;
+      line-height: 1.35;
+    }
+
+    .image-panel {
+      height: 280px;
+      border-radius: 8px;
+      overflow: hidden;
+      border: 1px solid rgba(255,255,255,0.18);
+      box-shadow: 0 28px 65px rgba(0,0,0,0.22);
+    }
+
+    .image-panel img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      display: block;
+    }
+
+    .grid-2 { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 18px; }
+    .grid-3 { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 18px; }
+
+    .card {
+      background: var(--white);
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      padding: 22px;
+      min-height: 158px;
+      box-shadow: 0 18px 45px rgba(20,32,51,0.06);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .dark .card { color: var(--ink); }
+    .card::before {
+      content: "";
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 5px;
+      background: var(--bsn-red);
+    }
+
+    .card.blue::before { background: var(--bsn-blue); }
+    .card.green::before { background: var(--revio); }
+    .card.amber::before { background: var(--amber); }
+    .card.teal::before { background: var(--teal); }
+    .card p, .card li {
+      color: var(--muted);
+      font-size: 15px;
+      line-height: 1.44;
+    }
+
+    ul { margin: 0; padding-left: 18px; }
+    li + li { margin-top: 8px; }
+
+    .band {
+      background: var(--steel);
+      color: var(--white);
+      padding: 18px 22px;
+      border-radius: 8px;
+      border-left: 6px solid var(--bsn-red);
+      margin-top: 24px;
+      font-size: 18px;
+      line-height: 1.4;
+    }
+
+    .impact-grid {
+      display: grid;
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+      gap: 14px;
+      margin: 24px 0;
+    }
+
+    .impact {
+      background: var(--steel);
+      color: var(--white);
+      border-radius: 8px;
+      padding: 18px;
+      border-top: 5px solid var(--bsn-red);
+    }
+
+    .impact strong {
+      display: block;
+      font-size: 31px;
+      line-height: 1;
+      color: #37c8f3;
+    }
+
+    .impact span {
+      display: block;
+      margin-top: 9px;
+      font-size: 12px;
+      line-height: 1.3;
+      color: rgba(255,255,255,0.74);
+      text-transform: uppercase;
+      font-weight: 800;
+    }
+
+    .timeline { display: grid; gap: 14px; }
+    .step {
+      display: grid;
+      grid-template-columns: 144px minmax(0, 1fr);
+      gap: 18px;
+      align-items: start;
+      background: var(--white);
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      padding: 18px;
+    }
+
+    .step .date {
+      color: var(--bsn-red);
+      font-size: 13px;
+      font-weight: 900;
+      text-transform: uppercase;
+    }
+
+    .step p { color: var(--muted); line-height: 1.45; font-size: 15px; }
+    .source {
+      position: absolute;
+      bottom: 20px;
+      left: 32px;
+      right: 32px;
+      display: flex;
+      justify-content: space-between;
+      gap: 18px;
+      color: rgba(20,32,51,0.45);
+      font-size: 11px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.9px;
+    }
+
+    .dark .source { color: rgba(255,255,255,0.42); }
+    .pill-row { display: flex; gap: 10px; flex-wrap: wrap; margin-top: 20px; }
+    .pill {
+      border: 1px solid rgba(255,255,255,0.18);
+      border-radius: 999px;
+      padding: 8px 12px;
+      color: rgba(255,255,255,0.78);
+      font-size: 12px;
+      font-weight: 800;
+      text-transform: uppercase;
+    }
+
+    .light .pill {
+      color: var(--bsn-blue);
+      border-color: rgba(22,63,127,0.18);
+      background: rgba(255,255,255,0.62);
+    }
+
+    @media (max-width: 900px) {
+      .slide { min-height: auto; display: block; }
+      .wrap { width: min(100% - 32px, 720px); padding: 112px 0 64px; }
+      .topline {
+        top: 18px;
+        left: 16px;
+        right: 16px;
+        align-items: flex-start;
+      }
+      .bsn-logo { width: 94px; height: 68px; padding: 8px 12px; }
+      .revio-logo { width: 108px; height: 34px; }
+      .hero-grid, .grid-2, .grid-3, .impact-grid { grid-template-columns: 1fr; }
+      .hero-grid { gap: 24px; }
+      .image-panel { height: 220px; }
+      .step { grid-template-columns: 1fr; gap: 8px; }
+      .source {
+        position: static;
+        width: min(100% - 32px, 720px);
+        margin: -34px auto 24px;
+        flex-direction: column;
+      }
+    }
+  </style>
+</head>
+<body><main class="deck"><section class="slide dark"><div class="topline"><div class="logo-lane"><img class="bsn-logo" src="assets/click-computers/logo.png" alt="Click Computers logo"></div><img class="revio-logo" src="revio-logo-white.png" alt="Rev.io logo"></div><div class="wrap hero-grid"><div><div class="kicker">Execute evaluation</div><h1>Make every click—from quote to cash—simpler.</h1><p class="lead">Click Computers built its reputation on fast, local, transparent IT service: “100% transparency” and “You buy or we buy, we make it easy.” Rev.io can help bring that same simplicity to quoting, tax, NinjaOne alerts, service delivery, recurring billing, and collections—without forcing the team to keep engineering around Odoo.</p><div class="pill-row"><span class="pill">Central Texas since 2004</span><span class="pill">MSP + repair</span><span class="pill">Simplify operations</span></div></div><div class="metric-stack"><div class="metric"><strong>60–100</strong><span>NinjaOne alerts per week</span></div><div class="metric"><strong>30 min</strong><span>Example monitor quote workflow</span></div><div class="metric"><strong>~10</strong><span>Current Odoo users</span></div></div></div><div class="source"><span>Source: Click Computers website and Rev.io evaluation notes</span><span>Prepared for Click Computers</span></div></section><section class="slide light"><div class="topline light"><div class="logo-lane"><img class="bsn-logo" src="assets/click-computers/logo.png" alt="Click Computers logo"></div><img class="revio-logo" src="revio-logo-white.png" alt="Rev.io logo"></div><div class="wrap"><div class="kicker">1. Business context</div><h2>A hometown IT team with two businesses under one owner—and two Odoo instances.</h2><div class="grid-3"><div class="card"><h3>Local, trusted service</h3><p>Click Computers has served Central Texas since 2004 with computer repair, technology consulting, cybersecurity, backups, and managed IT support—backed by a 4.9-star Google rating from 204 reviews shown on its website.</p></div><div class="card blue"><h3>Mixed customer model</h3><p>The business combines recurring MSP services with a residential storefront that represents roughly 30% of the operation, creating both scheduled and transactional workflows.</p></div><div class="card green"><h3>Recent operating change</h3><p>Owner Tyler Andrews acquired Click and moved the MSP onto a second Odoo instance used alongside PoE Texas. Dalton is now evaluating whether a purpose-built platform can simplify the model.</p></div></div><div class="band">Click's customer promise is “fast, easy, and local.” The internal operating system should feel the same way.</div></div><div class="source"><span>Website: clickcomputers.biz</span><span>Evaluation notes: acquisition, Odoo structure, storefront mix</span></div></section><section class="slide dark"><div class="topline"><div class="logo-lane"><img class="bsn-logo" src="assets/click-computers/logo.png" alt="Click Computers logo"></div><img class="revio-logo" src="revio-logo-white.png" alt="Rev.io logo"></div><div class="wrap"><div class="kicker">2. Why change now?</div><h2>Routine work is becoming backend configuration, manual matching, and rework.</h2><div class="grid-2"><div class="card"><h3>Quoting is fragile</h3><p>New products require backend setup and tax coding. To avoid broken invoices, staff reuse a generic “MSP hardware” item and manually edit descriptions and pricing.</p></div><div class="card blue"><h3>Tax exceptions consume the day</h3><p>A ten-minute task can become an hour when tax setup fails. Dalton described recurring friction that can surface as often as every other day.</p></div><div class="card amber"><h3>Alerts need human translation</h3><p>The custom NinjaOne integration is one-way. Alerts arrive as raw text and staff manually identify the correct customer across roughly 60–100 tickets each week.</p></div><div class="card green"><h3>Billing remains hands-on</h3><p>Staff review monthly billing, check payments daily, handle failed tokens and checks, and follow up on collections—while ticket notes and billable work remain difficult to connect.</p></div></div></div><div class="source"><span>Source: Rev.io evaluation notes</span><span>Primary goal: simplify operations and control software cost</span></div></section><section class="slide light"><div class="topline light"><div class="logo-lane"><img class="bsn-logo" src="assets/click-computers/logo.png" alt="Click Computers logo"></div><img class="revio-logo" src="revio-logo-white.png" alt="Rev.io logo"></div><div class="wrap"><div class="kicker">3. The workflow gaps</div><h2>The pain connects across products, service, and revenue.</h2><div class="grid-3"><div class="card"><h3>Quote and tax</h3><ul><li>No vendor-tied catalog in the current workflow.</li><li>Manual product creation and tax coding can break invoices.</li><li>Odoo e-signature and menu navigation feel cumbersome.</li></ul></div><div class="card blue"><h3>Ticket to billing</h3><ul><li>Tickets require projects before billing can settle.</li><li>Notes are difficult to find.</li><li>NinjaOne alerts require manual customer matching.</li></ul></div><div class="card teal"><h3>Cost and consolidation</h3><ul><li>Odoo and IT Glue spend must be validated against avoidable cost.</li><li>IT Glue minimum users may exceed Click's actual need.</li><li>Accounting, TaxCloud, payment, and distributor boundaries remain unclear.</li></ul></div></div></div><div class="source"><span>Systems named: Odoo, TaxCloud, NinjaOne, SentinelOne, IT Glue, Ingram Micro, Intermedia</span><span>Source: evaluation notes</span></div></section><section class="slide dark"><div class="topline"><div class="logo-lane"><img class="bsn-logo" src="assets/click-computers/logo.png" alt="Click Computers logo"></div><img class="revio-logo" src="revio-logo-white.png" alt="Rev.io logo"></div><div class="wrap"><div class="kicker">4. Value and ROI</div><h2>There is measurable capacity value—but software savings decide the business case.</h2><div class="impact-grid"><div class="impact"><strong>52+ hrs</strong><span>Annual product/tax setup baseline at one hour per week</span></div><div class="impact"><strong>3,120–5,200</strong><span>NinjaOne alerts annually at 60–100 per week</span></div><div class="impact"><strong>$3,600</strong><span>Illustrative annual capacity value under current assumptions</span></div><div class="impact"><strong>$700/mo</strong><span>Avoidable software spend needed to cover subscription after modeled value</span></div></div><div class="grid-2"><div class="card"><h3>What the model says today</h3><p>At the illustrative $50 hourly rate, 48 weeks, 50% quote/tax reduction, and one minute saved per NinjaOne alert, Click recovers about 72 hours of capacity. That is not cash savings unless labor is avoided or converted into measurable contribution.</p></div><div class="card green"><h3>What still decides the deal</h3><p>Obtain Odoo and IT Glue invoices, cancellation terms, final Rev.io pricing, migration costs, and actual workflow measurements. Without verified avoidable spend, the first-year case remains negative under the current assumptions.</p></div></div></div><div class="source"><span>Illustrative scenario—not validated savings or a guarantee</span><span>Source: evaluation ROI model</span></div></section><section class="slide light"><div class="topline light"><div class="logo-lane"><img class="bsn-logo" src="assets/click-computers/logo.png" alt="Click Computers logo"></div><img class="revio-logo" src="revio-logo-white.png" alt="Rev.io logo"></div><div class="wrap"><div class="kicker">5. What Rev.io must prove</div><h2>Use Click's real products, alerts, customers, and payment exceptions.</h2><div class="grid-2"><div class="card"><h3>Quote, product, and tax</h3><ul><li>Create a new product on the fly and apply the correct tax treatment by product type and address.</li><li>Use price books, bundles, macros, options, proposal templates, and e-signature.</li><li>Validate Click's edge cases—not a clean demo catalog.</li></ul></div><div class="card blue"><h3>NinjaOne and service</h3><ul><li>Prove customer and asset sync, alert association, routing, and exceptions.</li><li>Show labor, parts, entitlements, notes, and customer history on the ticket.</li><li>Measure actual match rate and time saved.</li></ul></div><div class="card teal"><h3>Billing and payments</h3><ul><li>Trace one-time and recurring quote items into service and billing.</li><li>Validate first-of-month runs, proration, autopay, failed tokens, checks, and collection follow-up.</li><li>Define TaxCloud, accounting, and payment-system boundaries.</li></ul></div><div class="card amber"><h3>Consolidation boundaries</h3><ul><li>Confirm Ingram Micro workflow and Intermedia support.</li><li>Compare Knowledge Hub and credential security to Click's IT Glue requirements.</li><li>Do not assume IT Glue or Odoo can be eliminated until contracts and parity are proven.</li></ul></div></div></div><div class="source"><span>Source: evaluation fit and risk sections</span><span>Required posture: validate gaps and workarounds explicitly</span></div></section><section class="slide dark"><div class="topline"><div class="logo-lane"><img class="bsn-logo" src="assets/click-computers/logo.png" alt="Click Computers logo"></div><img class="revio-logo" src="revio-logo-white.png" alt="Rev.io logo"></div><div class="wrap"><div class="kicker">6. Decision plan</div><h2>Turn Dalton's enthusiasm into Tyler's evidence-based decision.</h2><div class="timeline"><div class="step"><div class="date">Step 1</div><p>Send the recording, concise recap, and written pricing with the exact monthly user mix, onboarding fee, two one-time payments, AI credits, overages, and migration assumptions.</p></div><div class="step"><div class="date">Step 2</div><p>Run a proof session using one real monitor quote, a tax edge case, representative NinjaOne alerts, a failed payment, and a check-paying customer.</p></div><div class="step"><div class="date">Step 3</div><p>Dalton and the affected staff log product/tax effort and NinjaOne matching time for 2–4 weeks. Tyler supplies Odoo and IT Glue contracts plus fully loaded labor assumptions.</p></div><div class="step"><div class="date">Step 4</div><p>Recalculate cash ROI using verified software savings and financially realized labor value, then agree on migration scope, cutover, and 60–90-day onboarding success criteria.</p></div></div><div class="band">Recommendation: invite Tyler to the proof and lead with bottom-line evidence. Dalton can champion the workflow; Tyler must validate the economics.</div></div><div class="source"><span>Possible purchase window: Q1 2027; January 1 discussed, not committed</span><span>Final decision maker: Tyler Andrews</span></div></section><section class="slide light"><div class="topline light"><div class="logo-lane"><img class="bsn-logo" src="assets/click-computers/logo.png" alt="Click Computers logo"></div><img class="revio-logo" src="revio-logo-white.png" alt="Rev.io logo"></div><div class="wrap"><div class="kicker">Decision gates</div><h2>No assumptions disguised as savings. Five gates to a confident yes.</h2><div class="grid-3"><div class="card"><h3>Workflow fit</h3><p>Tax, quote-to-ticket-to-billing, NinjaOne matching, payments, storefront/service needs, and compliance-heavy projects pass with Click examples.</p></div><div class="card blue"><h3>Integration fit</h3><p>Ingram Micro, Intermedia, NinjaOne, TaxCloud/accounting, payment, knowledge, and credential requirements are documented with owners and exceptions.</p></div><div class="card green"><h3>Commercial fit</h3><p>Written user pricing, onboarding fees, one-time costs, AI usage, migration, overages, and month-to-month terms match what was discussed.</p></div></div><div class="grid-2" style="margin-top:18px"><div class="card amber"><h3>Migration fit</h3><p>Source data, history, API access, validation, parallel run, cutover, and internal effort are agreed before launch.</p></div><div class="card teal"><h3>Economic fit</h3><p>Verified avoidable Odoo/IT Glue spend plus realized workflow value exceeds all incremental subscription, setup, migration, and overlap costs.</p></div></div><div class="band">The winning outcome: Click spends less time fighting the back office and more time delivering the fast, transparent service its customers already expect.</div></div><div class="source"><span>Prepared by Rev.io</span><span>Click Computers Execute evaluation</span></div></section></main></body></html>

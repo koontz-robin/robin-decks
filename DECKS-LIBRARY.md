@@ -345,3 +345,9 @@ When Robin creates a new deck or dashboard:
 - **URL:** https://koontz-robin.github.io/robin-decks/net-at-work-evaluation-readout.html
 - **Purpose:** Buyer-facing Execute readout for Net at Work covering acquisition-led MSP consolidation, Creatio/ConnectWise fragmentation, NinjaOne alert operations, Sage Intacct and ChangePoint boundaries, CSP revenue assurance, technical validation gates, and the November 19 proof plan.
 - **Created:** 2026-11-12
+
+### Click Computers × Rev.io Execute Evaluation Readout
+- **File:** `click-computers-evaluation-readout.html`
+- **URL:** https://koontz-robin.github.io/robin-decks/click-computers-evaluation-readout.html
+- **Purpose:** Buyer-facing Execute readout for Click Computers covering Odoo replacement economics, quote and tax friction, NinjaOne alert matching, ticket-to-billing workflows, collections, software-consolidation boundaries, proof gates, and an auditable ROI decision plan.
+- **Created:** 2026-11-12
