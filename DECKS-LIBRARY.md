@@ -339,3 +339,9 @@ When Robin creates a new deck or dashboard:
 - **URL:** https://koontz-robin.github.io/robin-decks/grey-matter-evaluation-readout.html
 - **Purpose:** Buyer-facing Execute readout for Grey Matter covering Halo replacement, MSP/security/AV workflows, quote and project controls, recurring revenue reconciliation, QuickBooks Online, migration gates, proof plan, and interactive ROI model.
 - **Created:** 2026-11-10
+
+### Net at Work × Rev.io Execute Evaluation Readout
+- **File:** `net-at-work-evaluation-readout.html`
+- **URL:** https://koontz-robin.github.io/robin-decks/net-at-work-evaluation-readout.html
+- **Purpose:** Buyer-facing Execute readout for Net at Work covering acquisition-led MSP consolidation, Creatio/ConnectWise fragmentation, NinjaOne alert operations, Sage Intacct and ChangePoint boundaries, CSP revenue assurance, technical validation gates, and the November 19 proof plan.
+- **Created:** 2026-11-12

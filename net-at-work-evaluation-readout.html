@@ -1,0 +1,376 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Net at Work × Rev.io Execute Evaluation Readout</title>
+  <meta name="description" content="Buyer-facing Rev.io Execute evaluation readout for Net at Work.">
+  <style>
+    :root {
+      --bsn-red: #00a8e0;
+      --bsn-blue: #0067a8;
+      --bsn-dark: #071a2d;
+      --revio: #6cc04a;
+      --ink: #142033;
+      --muted: #607086;
+      --paper: #f5f7fa;
+      --line: #dce4ee;
+      --white: #ffffff;
+      --teal: #1b8a96;
+      --amber: #f2b84b;
+      --steel: #253142;
+    }
+
+    * { box-sizing: border-box; }
+    html { scroll-behavior: smooth; }
+    body {
+      margin: 0;
+      color: var(--ink);
+      background: var(--paper);
+      font-family: Aptos, Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      letter-spacing: 0;
+    }
+
+    .deck { min-height: 100vh; }
+    .slide {
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      position: relative;
+      overflow: hidden;
+      border-bottom: 1px solid rgba(20,32,51,0.08);
+    }
+
+    .slide.dark {
+      color: var(--white);
+      background:
+        linear-gradient(118deg, rgba(16,24,39,0.98), rgba(22,63,127,0.90)),
+        repeating-linear-gradient(0deg, rgba(255,255,255,0.035) 0 1px, transparent 1px 42px),
+        repeating-linear-gradient(90deg, rgba(255,255,255,0.03) 0 1px, transparent 1px 42px),
+        var(--bsn-dark);
+    }
+
+    .slide.light { background: var(--paper); }
+    .wrap {
+      width: min(1180px, calc(100vw - 48px));
+      margin: 0 auto;
+      padding: 78px 0 58px;
+      position: relative;
+      z-index: 2;
+    }
+
+    .topline {
+      position: absolute;
+      top: 28px;
+      left: 32px;
+      right: 32px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 22px;
+      z-index: 5;
+    }
+
+    .logo-lane {
+      display: flex;
+      align-items: center;
+      min-width: 0;
+      gap: 14px;
+    }
+
+    .bsn-logo {
+      width: 128px;
+      height: 88px;
+      object-fit: contain;
+      background: var(--white);
+      border-radius: 8px;
+      padding: 10px 16px;
+      border: 1px solid rgba(255,255,255,0.16);
+    }
+
+    .revio-logo {
+      width: 126px;
+      height: 38px;
+      object-fit: contain;
+      display: block;
+    }
+
+    .light .revio-logo {
+      background: var(--steel);
+      border-radius: 7px;
+      padding: 8px 10px;
+    }
+
+    .kicker {
+      font-size: 12px;
+      font-weight: 900;
+      text-transform: uppercase;
+      color: #37c8f3;
+      letter-spacing: 1.8px;
+      margin-bottom: 18px;
+    }
+
+    .light .kicker { color: var(--bsn-red); }
+    h1, h2, h3, p { margin: 0; }
+    h1 {
+      font-size: clamp(44px, 6.5vw, 84px);
+      line-height: 0.98;
+      max-width: 960px;
+      letter-spacing: 0;
+    }
+
+    h2 {
+      font-size: clamp(34px, 4.4vw, 58px);
+      line-height: 1;
+      max-width: 1000px;
+      margin-bottom: 24px;
+      letter-spacing: 0;
+    }
+
+    h3 {
+      font-size: 18px;
+      line-height: 1.16;
+      margin-bottom: 10px;
+      color: inherit;
+    }
+
+    .lead {
+      max-width: 850px;
+      margin-top: 24px;
+      color: rgba(255,255,255,0.76);
+      font-size: clamp(17px, 2vw, 23px);
+      line-height: 1.37;
+    }
+
+    .light .lead { color: var(--muted); }
+    .hero-grid {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) 340px;
+      gap: 48px;
+      align-items: end;
+    }
+
+    .metric-stack { display: grid; gap: 14px; }
+    .metric {
+      background: rgba(255,255,255,0.08);
+      border: 1px solid rgba(255,255,255,0.14);
+      border-radius: 8px;
+      padding: 18px;
+    }
+
+    .metric strong {
+      display: block;
+      font-size: 34px;
+      line-height: 1;
+      color: #37c8f3;
+    }
+
+    .metric span {
+      display: block;
+      margin-top: 8px;
+      color: rgba(255,255,255,0.73);
+      font-size: 12px;
+      font-weight: 800;
+      text-transform: uppercase;
+      line-height: 1.35;
+    }
+
+    .image-panel {
+      height: 280px;
+      border-radius: 8px;
+      overflow: hidden;
+      border: 1px solid rgba(255,255,255,0.18);
+      box-shadow: 0 28px 65px rgba(0,0,0,0.22);
+    }
+
+    .image-panel img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      display: block;
+    }
+
+    .grid-2 { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 18px; }
+    .grid-3 { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 18px; }
+
+    .card {
+      background: var(--white);
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      padding: 22px;
+      min-height: 158px;
+      box-shadow: 0 18px 45px rgba(20,32,51,0.06);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .dark .card { color: var(--ink); }
+    .card::before {
+      content: "";
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 5px;
+      background: var(--bsn-red);
+    }
+
+    .card.blue::before { background: var(--bsn-blue); }
+    .card.green::before { background: var(--revio); }
+    .card.amber::before { background: var(--amber); }
+    .card.teal::before { background: var(--teal); }
+    .card p, .card li {
+      color: var(--muted);
+      font-size: 15px;
+      line-height: 1.44;
+    }
+
+    ul { margin: 0; padding-left: 18px; }
+    li + li { margin-top: 8px; }
+
+    .band {
+      background: var(--steel);
+      color: var(--white);
+      padding: 18px 22px;
+      border-radius: 8px;
+      border-left: 6px solid var(--bsn-red);
+      margin-top: 24px;
+      font-size: 18px;
+      line-height: 1.4;
+    }
+
+    .impact-grid {
+      display: grid;
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+      gap: 14px;
+      margin: 24px 0;
+    }
+
+    .impact {
+      background: var(--steel);
+      color: var(--white);
+      border-radius: 8px;
+      padding: 18px;
+      border-top: 5px solid var(--bsn-red);
+    }
+
+    .impact strong {
+      display: block;
+      font-size: 31px;
+      line-height: 1;
+      color: #37c8f3;
+    }
+
+    .impact span {
+      display: block;
+      margin-top: 9px;
+      font-size: 12px;
+      line-height: 1.3;
+      color: rgba(255,255,255,0.74);
+      text-transform: uppercase;
+      font-weight: 800;
+    }
+
+    .timeline { display: grid; gap: 14px; }
+    .step {
+      display: grid;
+      grid-template-columns: 144px minmax(0, 1fr);
+      gap: 18px;
+      align-items: start;
+      background: var(--white);
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      padding: 18px;
+    }
+
+    .step .date {
+      color: var(--bsn-red);
+      font-size: 13px;
+      font-weight: 900;
+      text-transform: uppercase;
+    }
+
+    .step p { color: var(--muted); line-height: 1.45; font-size: 15px; }
+    .source {
+      position: absolute;
+      bottom: 20px;
+      left: 32px;
+      right: 32px;
+      display: flex;
+      justify-content: space-between;
+      gap: 18px;
+      color: rgba(20,32,51,0.45);
+      font-size: 11px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.9px;
+    }
+
+    .dark .source { color: rgba(255,255,255,0.42); }
+    .pill-row { display: flex; gap: 10px; flex-wrap: wrap; margin-top: 20px; }
+    .pill {
+      border: 1px solid rgba(255,255,255,0.18);
+      border-radius: 999px;
+      padding: 8px 12px;
+      color: rgba(255,255,255,0.78);
+      font-size: 12px;
+      font-weight: 800;
+      text-transform: uppercase;
+    }
+
+    .light .pill {
+      color: var(--bsn-blue);
+      border-color: rgba(22,63,127,0.18);
+      background: rgba(255,255,255,0.62);
+    }
+
+    @media (max-width: 900px) {
+      .slide { min-height: auto; display: block; }
+      .wrap { width: min(100% - 32px, 720px); padding: 112px 0 64px; }
+      .topline {
+        top: 18px;
+        left: 16px;
+        right: 16px;
+        align-items: flex-start;
+      }
+      .bsn-logo { width: 94px; height: 68px; padding: 8px 12px; }
+      .revio-logo { width: 108px; height: 34px; }
+      .hero-grid, .grid-2, .grid-3, .impact-grid { grid-template-columns: 1fr; }
+      .hero-grid { gap: 24px; }
+      .image-panel { height: 220px; }
+      .step { grid-template-columns: 1fr; gap: 8px; }
+      .source {
+        position: static;
+        width: min(100% - 32px, 720px);
+        margin: -34px auto 24px;
+        flex-direction: column;
+      }
+    }
+  </style>
+</head>
+<body>
+  <main class="deck">
+    <section class="slide dark">
+      <div class="topline"><div class="logo-lane"><img class="bsn-logo" src="assets/net-at-work/logo.png" alt="Net at Work logo"></div><img class="revio-logo" src="revio-logo-white.png" alt="Rev.io logo"></div>
+      <div class="wrap hero-grid">
+        <div><div class="kicker">Value planner</div><h1>One MSP operating model for the next acquisition—and the one after that.</h1><p class="lead">Net at Work's MSP business is scaling through acquisition, but service delivery is split across Creatio, ConnectWise, ChangePoint, and manual handoffs. Rev.io can become the MSP-specific operating layer that improves service, protects revenue, and still works with the enterprise systems that must remain.</p><div class="pill-row"><span class="pill">MSP consolidation</span><span class="pill">Service operations</span><span class="pill">Revenue assurance</span></div></div>
+        <div class="metric-stack"><div class="metric"><strong>3–4</strong><span>Recent acquisitions discussed</span></div><div class="metric"><strong>~75 → 150</strong><span>PSA users today vs. 2027 goal</span></div><div class="metric"><strong>6,000+</strong><span>Clients across North America</span></div></div>
+      </div><div class="source"><span>Source: Net at Work website and Rev.io discovery notes</span><span>Prepared for Net at Work</span></div>
+    </section>
+
+    <section class="slide light"><div class="topline light"><div class="logo-lane"><img class="bsn-logo" src="assets/net-at-work/logo.png" alt="Net at Work logo"></div><img class="revio-logo" src="revio-logo-white.png" alt="Rev.io logo"></div><div class="wrap"><div class="kicker">1. The business context</div><h2>“Business Performance Unleashed” needs a repeatable MSP platform.</h2><div class="grid-3"><div class="card"><h3>Broad transformation portfolio</h3><p>Founded in 1996, Net at Work serves 6,000+ clients across North America and positions itself around “making software, systems and people work together.”</p></div><div class="card blue"><h3>Acquisition-led MSP growth</h3><p>The MSP unit has absorbed several businesses and wants one destination, one process set, and one service model for future acquisitions—including rapid 2026 expansion.</p></div><div class="card green"><h3>Enterprise constraints are real</h3><p>The MSP business does not fully control finance or adjacent systems. Any PSA decision must coexist with Sage Intacct, Creatio, and ChangePoint while supporting shared services.</p></div></div><div class="band">This is not a rip-and-replace exercise. It is an MSP operating-layer decision inside a larger enterprise architecture.</div></div><div class="source"><span>Website: netatwork.com</span><span>Discovery: MSP business unit, acquisitions, shared enterprise systems</span></div></section>
+
+    <section class="slide dark"><div class="topline"><div class="logo-lane"><img class="bsn-logo" src="assets/net-at-work/logo.png" alt="Net at Work logo"></div><img class="revio-logo" src="revio-logo-white.png" alt="Rev.io logo"></div><div class="wrap"><div class="kicker">2. Why change now?</div><h2>Growth is exposing the cost of making a CRM behave like a PSA.</h2><div class="grid-2"><div class="card"><h3>Fragmented operating model</h3><p>Most teams use Creatio, one acquired business remains on ConnectWise, and legacy back-end PSAs still matter. The result is inconsistent process, reporting, and onboarding after acquisitions.</p></div><div class="card blue"><h3>Service capacity is hard to see</h3><p>Scheduling lacks skill-based assignment and a clear capacity view. Alerts arrive through SMTP and require manual merging, creating missed work and long staff hours.</p></div><div class="card amber"><h3>Customer experience is taking the hit</h3><p>SLAs are visible but not actively managed, alert behavior can reset clocks, and the portal is still limited. The team explicitly connected these gaps to upset customers.</p></div><div class="card green"><h3>Revenue leakage is already suspected</h3><p>Microsoft CSP billing and subscription audits remain manual. The discovery team said they could “guarantee” revenue is being missed.</p></div></div></div><div class="source"><span>Source: November 12 discovery call</span><span>Primary driver: scale acquisitions without scaling operational friction</span></div></section>
+
+    <section class="slide light"><div class="topline light"><div class="logo-lane"><img class="bsn-logo" src="assets/net-at-work/logo.png" alt="Net at Work logo"></div><img class="revio-logo" src="revio-logo-white.png" alt="Rev.io logo"></div><div class="wrap"><div class="kicker">3. Uncovered problems</div><h2>The friction runs from alert intake to invoicing.</h2><div class="grid-3"><div class="card"><h3>Service operations</h3><ul><li>Email-based alerts from NinjaOne, Datto, and Auvik require manual handling.</li><li>No reliable skill-based assignment or resource-capacity view.</li><li>SLA behavior and missed alerts undermine response consistency.</li></ul></div><div class="card blue"><h3>Platform fragmentation</h3><ul><li>Creatio, ConnectWise, ChangePoint, and legacy PSAs divide the workflow.</li><li>Acquisition migrations require spreadsheet exports and manual time transfer.</li><li>Bi-directional ticket exchange with Creatio is a core requirement.</li></ul></div><div class="card teal"><h3>Revenue and customer access</h3><ul><li>Manual Microsoft CSP license and subscription audits create leakage risk.</li><li>Customers mostly submit tickets through email; a portal is considered a must-have.</li><li>Project, agreement, and utilization data remain tied to ChangePoint.</li></ul></div></div></div><div class="source"><span>Source: November 12 discovery call</span><span>Tools named: Creatio, ConnectWise, ChangePoint, NinjaOne, Datto, Auvik</span></div></section>
+
+    <section class="slide dark"><div class="topline"><div class="logo-lane"><img class="bsn-logo" src="assets/net-at-work/logo.png" alt="Net at Work logo"></div><img class="revio-logo" src="revio-logo-white.png" alt="Rev.io logo"></div><div class="wrap"><div class="kicker">4. Business impact / ROI</div><h2>The business case is better service plus recovered revenue—not just fewer tools.</h2><div class="impact-grid"><div class="impact"><strong>1 platform</strong><span>Target MSP operating model for future acquisitions</span></div><div class="impact"><strong>2× users</strong><span>Planned PSA growth from roughly 75 to 150 by 2027</span></div><div class="impact"><strong>280+</strong><span>Managed-client relationships exposed to service inconsistency</span></div><div class="impact"><strong>0 missed $</strong><span>North-star for CSP license and subscription reconciliation</span></div></div><div class="grid-2"><div class="card"><h3>Quantifiable upside</h3><p>Measure recovered CSP charges, avoided manual audit hours, reduced alert triage, improved utilization, and faster acquisition onboarding. These inputs convert the current pain into a defensible payback model.</p></div><div class="card green"><h3>Strategic upside</h3><p>A purpose-built MSP layer gives leadership a scalable post-acquisition playbook without forcing the rest of Net at Work off Creatio, Sage Intacct, or ChangePoint on day one.</p></div></div></div><div class="source"><span>Directional value until baseline labor, leakage, SLA, and migration metrics are supplied</span><span>Source: discovery notes</span></div></section>
+
+    <section class="slide light"><div class="topline light"><div class="logo-lane"><img class="bsn-logo" src="assets/net-at-work/logo.png" alt="Net at Work logo"></div><img class="revio-logo" src="revio-logo-white.png" alt="Rev.io logo"></div><div class="wrap"><div class="kicker">5. Target architecture</div><h2>Let Rev.io run the MSP workflow while enterprise systems keep their jobs.</h2><div class="grid-2"><div class="card"><h3>Rev.io PSA core</h3><ul><li>Tickets, dispatch, skill-based assignment, capacity, SLA management, assets, portal, agreements, projects, and utilization.</li><li>Revy-supported workflows and MSP-specific reporting.</li><li>A consistent operating template for newly acquired teams.</li></ul></div><div class="card blue"><h3>Enterprise coexistence</h3><ul><li>Bi-directional ticket/data exchange with Creatio.</li><li>Clear handoff of billing, payment, reconciliation, and financial data to Sage Intacct.</li><li>Plan to work alongside ChangePoint while its long-term future is decided.</li></ul></div><div class="card teal"><h3>Monitoring ecosystem</h3><ul><li>Prioritize NinjaOne integration and validate Datto/Auvik alert paths.</li><li>Map IT Glue, Microsoft 365, Blackpoint, SentinelOne, Cove, and Five9 touchpoints.</li><li>Use REST APIs and webhooks for acquisition-specific legacy requirements.</li></ul></div><div class="card amber"><h3>Revenue assurance</h3><ul><li>Automate CSP subscription and usage reconciliation.</li><li>Support agreement, project, and consumption-based billing logic.</li><li>Preserve consolidated-invoice and accounting requirements downstream.</li></ul></div></div></div><div class="source"><span>Source: discovery call requirements</span><span>Architecture boundary to confirm: PSA vs. Sage Intacct vs. ChangePoint</span></div></section>
+
+    <section class="slide dark"><div class="topline"><div class="logo-lane"><img class="bsn-logo" src="assets/net-at-work/logo.png" alt="Net at Work logo"></div><img class="revio-logo" src="revio-logo-white.png" alt="Rev.io logo"></div><div class="wrap"><div class="kicker">6. November 19 technical proof</div><h2>Prove the hard integrations and operational workflow—not a generic feature tour.</h2><div class="timeline"><div class="step"><div class="date">Service flow</div><p>Ingest a NinjaOne alert, create and enrich the ticket, assign by skill/capacity, manage the SLA, and expose the customer-facing result in the portal.</p></div><div class="step"><div class="date">System handoffs</div><p>Whiteboard the bi-directional Creatio exchange, Rev.io-to-Sage Intacct financial boundary, and ChangePoint coexistence pattern with the technical engineer.</p></div><div class="step"><div class="date">Revenue proof</div><p>Walk a Microsoft CSP subscription change from source data through reconciliation and billable charge, including exception handling and audit visibility.</p></div><div class="step"><div class="date">Acquisition test</div><p>Show how a newly acquired ConnectWise team, customer set, agreements, tickets, time, and assets would move into the standard Net at Work model.</p></div></div><div class="band">Recommendation: use one real customer and one real NinjaOne alert in the demo. The winning story is “better MSP operations without breaking the enterprise.”</div></div><div class="source"><span>Follow-up demo: Thursday, November 19 at 1:00 PM ET</span><span>Rev.io technical engineer requested</span></div></section>
+
+    <section class="slide light"><div class="topline light"><div class="logo-lane"><img class="bsn-logo" src="assets/net-at-work/logo.png" alt="Net at Work logo"></div><img class="revio-logo" src="revio-logo-white.png" alt="Rev.io logo"></div><div class="wrap"><div class="kicker">Decision checklist</div><h2>Close these questions to turn interest into an executable plan.</h2><div class="grid-3"><div class="card"><h3>Ownership and scope</h3><p>Confirm the executive decision path, whether Creatio replacement is politically viable for the MSP unit, and the exact 75-user list plus shared-services users.</p></div><div class="card blue"><h3>Architecture</h3><p>Define where PSA responsibility ends and Sage Intacct begins; document required Creatio objects, ChangePoint functions, and consolidated-invoice behavior.</p></div><div class="card green"><h3>Business case</h3><p>Baseline monthly CSP leakage, alert-triage labor, SLA misses, acquisition migration effort, portal adoption, and utilization-reporting effort.</p></div></div><div class="band">A strong next step is a technical validation sprint with explicit pass/fail criteria for NinjaOne, Creatio, Sage Intacct, ChangePoint, and CSP reconciliation.</div></div><div class="source"><span>Prepared by Rev.io</span><span>Net at Work value planner</span></div></section>
+  </main>
+</body>
+</html>
