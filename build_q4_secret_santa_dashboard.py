@@ -70,7 +70,7 @@ def build_payload():
     wins = sf_query(base, headers, f"""
         SELECT Id, Name, Amount, CloseDate, Owner.Name, SDR_Influence__c, Account.Name,
                Product_Type__c, New_Deal_Quantity__c, Rev_io_Influence__r.Name,
-               Marketing_Source__c
+               Channel_Coverage__c
         FROM Opportunity
         WHERE IsDeleted = false
           AND StageName = 'Closed Won'
@@ -80,23 +80,22 @@ def build_payload():
     for opp in wins:
         owner = normalize_name((opp.get("Owner") or {}).get("Name"))
         amount = max(0.0, float(opp.get("Amount") or 0))
-        if (opp.get("Marketing_Source__c") or "").strip().lower() in {
-            "partner", "partner/channel", "channel", "referral", "customer referral"
-        }:
+        # Jake receives channel influence credit from Salesforce's Channel
+        # Influence field, not from Marketing Source.
+        if (opp.get("Channel_Coverage__c") or "").strip():
             people["Jake Mitchell"]["channel_mrr"] += amount
         if owner in people:
             people[owner]["closed_won"] += 1
             people[owner]["closed_mrr"] += amount
             if opp.get("Product_Type__c") == "PSA 2.0":
                 people[owner]["standard_seats"] += int(opp.get("New_Deal_Quantity__c") or 0)
-            if opp.get("Product_Type__c") in ("Billing", "Billing Add-on", "Odin", "New Rev.io Add-on", "Payments AR"):
-                people[owner]["classic_mrr"] += amount
+            # Opportunity Amount is monthly recurring revenue for contest scoring.
+            people[owner]["classic_mrr"] += amount
         influencer = normalize_name((opp.get("Rev_io_Influence__r") or {}).get("Name"))
         if influencer in people and people[influencer]["role"] == "SE":
             if opp.get("Product_Type__c") == "PSA 2.0":
                 people[influencer]["influenced_standard_users"] += int(opp.get("New_Deal_Quantity__c") or 0)
-            if opp.get("Product_Type__c") in ("Billing", "Billing Add-on", "Odin", "New Rev.io Add-on"):
-                people[influencer]["influenced_classic_mrr"] += amount
+            people[influencer]["influenced_classic_mrr"] += amount
         sdr = normalize_name(opp.get("SDR_Influence__c"))
         if sdr in people and people[sdr]["role"] == "SDR":
             people[sdr]["sdr_wins"] += 1
@@ -169,7 +168,8 @@ def build_payload():
     for p in people.values():
         if p["role"] == "SDR":
             p["scoring_users"] = p["sourced_standard_users"]
-            p["scoring_mrr"] = p["sourced_classic_mrr"]
+            # SDR points come from completed sourced discovery calls.
+            p["scoring_mrr"] = 0.0
             p["points_discoveries"] = p["sdr_discoveries"] // 5
             p["points_demos"] = 0
         elif p["role"] == "SE":
@@ -190,7 +190,8 @@ def build_payload():
         # Standard users remain visible as a tracked contest metric but no longer
         # contribute points.
         p["points_users"] = 0
-        p["points_classic_mrr"] = int(p["scoring_mrr"] // 100)
+        mrr_point_rate = 250 if p["role"] in {"SE", "Channel"} else 100
+        p["points_classic_mrr"] = int(p["scoring_mrr"] // mrr_point_rate)
         p["points_referrals"] = p["referrals_received"] if p["role"] == "Channel" else 0
         p["points"] = p["points_discoveries"] + p["points_demos"] + p["points_classic_mrr"] + p["points_referrals"]
 
@@ -230,13 +231,12 @@ def build_payload():
             "calls": sum(p["calls"] for p in standings),
         },
         "rules": [
-            {"label": "AEs & CSAs: Classic Rev.io or Payments MRR sold", "points": "1 pt per full $100"},
+            {"label": "AEs & CSAs: MRR sold", "points": "1 pt per full $100"},
             {"label": "SDR discovery calls influenced", "points": "1 pt per 5 calls"},
-            {"label": "SDR-sourced Classic Rev.io MRR", "points": "1 pt per full $100"},
             {"label": "Solutions Engineer demos covered", "points": "1 pt per 5 demos"},
-            {"label": "Solutions Engineer-influenced Classic Rev.io MRR", "points": "1 pt per full $100"},
+            {"label": "Solutions Engineer-influenced MRR", "points": "1 pt per full $250"},
             {"label": "Jake Mitchell: referral received", "points": "1 pt each"},
-            {"label": "Jake Mitchell: channel-sourced MRR", "points": "1 pt per full $100"},
+            {"label": "Jake Mitchell: Channel Influence MRR", "points": "1 pt per full $250"},
         ],
     }
 
