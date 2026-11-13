@@ -151,6 +151,7 @@ def build_payload():
           AND ActivityDate >= {CONTEST_START.isoformat()}
           AND ActivityDate < {end_exclusive.isoformat()}
           AND Type = 'Referral Received'
+          AND Owner.Name = 'Jake Mitchell'
     """)
     people["Jake Mitchell"]["referrals_received"] = len(referrals)
 
