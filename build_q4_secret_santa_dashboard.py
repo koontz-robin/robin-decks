@@ -194,7 +194,12 @@ def build_payload():
         # Standard users remain visible as a tracked contest metric but no longer
         # contribute points.
         p["points_users"] = 0
-        mrr_point_rate = 250 if p["role"] in {"SE", "Channel"} else 100
+        if p["name"] in {"Jamie Butler", "Joseph Abarno"}:
+            mrr_point_rate = 200
+        elif p["role"] in {"SE", "Channel"}:
+            mrr_point_rate = 250
+        else:
+            mrr_point_rate = 100
         p["points_classic_mrr"] = int(p["scoring_mrr"] // mrr_point_rate)
         p["points_referrals"] = p["referrals_received"] if p["role"] == "Channel" else 0
         p["points"] = p["points_discoveries"] + p["points_demos"] + p["points_classic_mrr"] + p["points_referrals"]
@@ -236,6 +241,7 @@ def build_payload():
         },
         "rules": [
             {"label": "AEs & CSAs: MRR sold", "points": "1 pt per full $100"},
+            {"label": "Strategic AEs Jamie Butler & Joseph Abarno: MRR sold", "points": "1 pt per full $200"},
             {"label": "SDR discovery calls influenced", "points": "1 pt per 3 calls"},
             {"label": "Jake Mitchell: referral received", "points": "1 pt each"},
             {"label": "Jake Mitchell: Channel Influence MRR", "points": "1 pt per full $250"},
