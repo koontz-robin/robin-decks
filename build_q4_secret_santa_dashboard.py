@@ -54,6 +54,9 @@ def build_payload():
     roster = {name: role for name, role in roster.items() if name not in EXCLUDED_PEOPLE}
     # Solutions Engineers are excluded from this contest dashboard.
     roster = {name: role for name, role in roster.items() if role != "SE" and name not in SOLUTION_ENGINEERS}
+    # Salesforce places Joseph under the generic "Bryan's Team" role, so
+    # explicitly classify him as an AE for contest eligibility.
+    roster["Joseph Abarno"] = "AE"
     roster["Jake Mitchell"] = "Channel"
     people = {
         name: {
