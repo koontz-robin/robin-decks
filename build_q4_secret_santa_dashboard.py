@@ -187,10 +187,12 @@ def build_payload():
             p["scoring_mrr"] = p["classic_mrr"]
             p["points_discoveries"] = 0
             p["points_demos"] = 0
-        p["points_users"] = p["scoring_users"]
+        # Standard users remain visible as a tracked contest metric but no longer
+        # contribute points.
+        p["points_users"] = 0
         p["points_classic_mrr"] = int(p["scoring_mrr"] // 100)
         p["points_referrals"] = p["referrals_received"] if p["role"] == "Channel" else 0
-        p["points"] = p["points_discoveries"] + p["points_demos"] + p["points_users"] + p["points_classic_mrr"] + p["points_referrals"]
+        p["points"] = p["points_discoveries"] + p["points_demos"] + p["points_classic_mrr"] + p["points_referrals"]
 
     standings = sorted(people.values(), key=lambda p: (-p["points"], -p["classic_mrr"], -p["standard_seats"], p["name"]))
     last_points = None
@@ -228,13 +230,10 @@ def build_payload():
             "calls": sum(p["calls"] for p in standings),
         },
         "rules": [
-            {"label": "AEs & CSAs: New Rev.io standard seat sold or renewed", "points": "1 pt each"},
             {"label": "AEs & CSAs: Classic Rev.io or Payments MRR sold", "points": "1 pt per full $100"},
             {"label": "SDR discovery calls influenced", "points": "1 pt per 5 calls"},
-            {"label": "SDR-sourced New Rev.io standard user", "points": "1 pt each"},
             {"label": "SDR-sourced Classic Rev.io MRR", "points": "1 pt per full $100"},
             {"label": "Solutions Engineer demos covered", "points": "1 pt per 5 demos"},
-            {"label": "Solutions Engineer-influenced New Rev.io standard user", "points": "1 pt each"},
             {"label": "Solutions Engineer-influenced Classic Rev.io MRR", "points": "1 pt per full $100"},
             {"label": "Jake Mitchell: referral received", "points": "1 pt each"},
             {"label": "Jake Mitchell: channel-sourced MRR", "points": "1 pt per full $100"},
@@ -261,7 +260,7 @@ def build_html(payload):
           <td>{p['sdr_discoveries'] if p['role'] == 'SDR' else '—'}<small>{p['points_discoveries']} pts</small></td>
           <td>{p['demos_covered'] if p['role'] == 'SE' else '—'}<small>{p['points_demos']} pts</small></td>
           <td>{p['referrals_received'] if p['role'] == 'Channel' else '—'}<small>{p['points_referrals']} pts</small></td>
-          <td>{p['scoring_users']}<small>{p['points_users']} pts</small></td>
+          <td>{p['scoring_users']}<small>tracking only</small></td>
           <td>{money(p['scoring_mrr'])}<small>{p['points_classic_mrr']} pts</small></td>
           <td class="pick-number">#{p['pick_order']}</td>
           <td>{'Leader' if gap == 0 else f'{gap} pts back'}</td>
