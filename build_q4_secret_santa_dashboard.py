@@ -57,6 +57,7 @@ def build_payload():
     # Salesforce places Joseph under the generic "Bryan's Team" role, so
     # explicitly classify him as an AE for contest eligibility.
     roster["Joseph Abarno"] = "AE"
+    roster["Petrit Xhigoli"] = "AE"
     roster["Jake Mitchell"] = "Channel"
     people = {
         name: {
