@@ -14,7 +14,7 @@ Repo: `git@github.com:koontz-robin/robin-decks.git`
 
 | Name | File | URL | Refresh |
 |---|---|---|---|
-| Spectrotel Workstreams Dashboard | spectrotel-product-enhancement-dashboard.html | https://koontz-robin.github.io/robin-decks/spectrotel-product-enhancement-dashboard.html | Notion-sourced client workstreams with status, delivery progress, owners, due dates, and interactive milestone runways |
+| Spectrotel Workstreams Tracker | spectrotel-product-enhancement-dashboard.html | https://koontz-robin.github.io/robin-decks/spectrotel-product-enhancement-dashboard.html | Notion-sourced client workstreams with status, delivery progress, owners, due dates, and interactive milestone runways |
 | Sales Inspection Command Center | inspection-command-center.html | https://koontz-robin.github.io/robin-decks/inspection-command-center.html | Curated VP Sales launchpad for executive pulse, pipeline, team performance, customer growth, prospecting, and operating dashboards |
 | Updated Goals / 2027 Forecast Dashboard | forecast.html | https://koontz-robin.github.io/robin-decks/forecast.html | Daily (8am ET, weekdays) |
 | Q4 New Rev.io War-Room Closed Lost | q4-new-revio-war-room-closed-lost.html | https://koontz-robin.github.io/robin-decks/q4-new-revio-war-room-closed-lost.html | Q4-to-date New Rev.io opportunities verified via stage history as having reached Stage 3+ before closing lost; board-ready loss reason, owner, stage, MRR, and deal detail view |
