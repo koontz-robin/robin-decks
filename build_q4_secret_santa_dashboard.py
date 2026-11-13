@@ -67,6 +67,7 @@ def build_payload():
             "referrals_received": 0, "channel_mrr": 0.0,
             "closed_won": 0, "closed_mrr": 0.0,
             "sdr_discoveries": 0, "sdr_wins": 0, "demos_covered": 0, "calls": 0,
+            "contract_enddate_updates": 0,
         }
         for name, role in roster.items()
     }
@@ -123,6 +124,25 @@ def build_payload():
         sdr = normalize_name(event.get("SDR_Influence__c"))
         if sdr in people and people[sdr]["role"] == "SDR":
             people[sdr]["sdr_discoveries"] += 1
+
+    contract_updates = sf_query(base, headers, f"""
+        SELECT AccountId, CreatedBy.Name
+        FROM AccountHistory
+        WHERE Field = 'Competitor_Contract_End_Date__c'
+          AND CreatedDate >= {iso_utc(CONTEST_START)}
+          AND CreatedDate < {iso_utc(end_exclusive)}
+        ORDER BY CreatedDate DESC
+    """)
+    # Score unique accounts per updater; repeat edits to the same account do not
+    # create additional contest credit.
+    updated_accounts_by_person = {}
+    for update in contract_updates:
+        updater = normalize_name((update.get("CreatedBy") or {}).get("Name"))
+        account_id = update.get("AccountId")
+        if updater in people and account_id:
+            updated_accounts_by_person.setdefault(updater, set()).add(account_id)
+    for updater, account_ids in updated_accounts_by_person.items():
+        people[updater]["contract_enddate_updates"] = len(account_ids)
 
     referrals = sf_query(base, headers, f"""
         SELECT Id
@@ -202,7 +222,8 @@ def build_payload():
             mrr_point_rate = 100
         p["points_classic_mrr"] = int(p["scoring_mrr"] // mrr_point_rate)
         p["points_referrals"] = p["referrals_received"] if p["role"] == "Channel" else 0
-        p["points"] = p["points_discoveries"] + p["points_demos"] + p["points_classic_mrr"] + p["points_referrals"]
+        p["points_contract_updates"] = p["contract_enddate_updates"] // 5
+        p["points"] = p["points_discoveries"] + p["points_demos"] + p["points_classic_mrr"] + p["points_referrals"] + p["points_contract_updates"]
 
     standings = sorted(people.values(), key=lambda p: (-p["points"], -p["classic_mrr"], -p["standard_seats"], p["name"]))
     last_points = None
@@ -244,6 +265,7 @@ def build_payload():
             {"label": "Strategic AEs Jamie Butler & Joseph Abarno: MRR sold", "points": "1 pt per full $200"},
             {"label": "SDR discovery calls influenced", "points": "1 pt per 3 calls"},
             {"label": "Jake Mitchell: referral received", "points": "1 pt each"},
+            {"label": "Competitor contract-end-date accounts updated in Q4", "points": "1 pt per 5 unique accounts"},
             {"label": "Jake Mitchell: Channel Influence MRR", "points": "1 pt per full $250"},
         ],
     }
@@ -267,6 +289,7 @@ def build_html(payload):
           <td class="points">{p['points']}</td>
           <td>{p['sdr_discoveries'] if p['role'] == 'SDR' else '—'}<small>{p['points_discoveries']} pts</small></td>
           <td>{p['referrals_received'] if p['role'] == 'Channel' else '—'}<small>{p['points_referrals']} pts</small></td>
+          <td>{p['contract_enddate_updates']}<small>{p['points_contract_updates']} pts</small></td>
           <td>{money(p['scoring_mrr'])}<small>{p['points_classic_mrr']} pts</small></td>
           <td class="pick-number">#{p['pick_order']}</td>
           <td>{'Leader' if gap == 0 else f'{gap} pts back'}</td>
@@ -279,7 +302,7 @@ def build_html(payload):
 </style></head><body><main class="wrap"><section class="hero"><div class="lights"></div><div class="brand-row"><img class="brand-logo" src="revio-logo-white.png" alt="Rev.io"><div class="santa-train">🎅🛷🦌</div></div><div class="eyebrow">Rev.io Sales · Q4 2026 · North Pole Division</div><h1>Secret Santa <em>Showdown</em> 🎄</h1><div class="sub">Earn points from October 1 through December 17. The twist: the leaderboard runs opposite the gift table—<strong>last place picks first, and the leader picks last.</strong></div><div class="progress-wrap"><div class="track"><div class="bar"></div></div><div class="progress-label">{contest['percent_complete']:.0f}% complete · Through {escape(contest['through'])}</div></div></section>
 <section class="stats"><div class="stat"><strong>{totals['points']:,}</strong><small>Total points</small></div><div class="stat"><strong>{totals['standard_seats']:,}</strong><small>New Rev.io standard seats sold or renewed</small></div><div class="stat"><strong>{money(totals['classic_mrr'])}</strong><small>Classic Rev.io or Payments MRR sold</small></div></section>
 <section class="rules">{rule_cards}</section><section class="podiums">{podium}</section>
-<section class="grid"><div class="panel"><div class="panel-head"><h2>Leaderboard</h2><div class="panel-note">AEs/CSAs earn on MRR sold, SDRs on completed influenced discoveries, and Jake on referrals and channel-influenced MRR.</div></div><div class="table-wrap"><table><thead><tr><th>Rank</th><th>Teammate</th><th>Points</th><th>SDR Discovery Calls Influenced</th><th>Referrals Received</th><th>Eligible MRR</th><th>Pick</th><th>Gap</th></tr></thead><tbody>{''.join(rows)}</tbody></table></div></div><aside class="panel"><div class="panel-head"><h2>🎁 Gift Pick Order</h2><div class="panel-note">Least points draws first; most points draws last. Equal-score ties are ordered alphabetically.</div></div><ol>{pick_list}</ol></aside></section>
+<section class="grid"><div class="panel"><div class="panel-head"><h2>Leaderboard</h2><div class="panel-note">AEs/CSAs earn on MRR sold, SDRs on completed influenced discoveries, everyone earns on contract-date coverage, and Jake earns on referrals and channel-influenced MRR.</div></div><div class="table-wrap"><table><thead><tr><th>Rank</th><th>Teammate</th><th>Points</th><th>SDR Discovery Calls Influenced</th><th>Referrals Received</th><th>Contract End-Date Accounts Updated</th><th>Eligible MRR</th><th>Pick</th><th>Gap</th></tr></thead><tbody>{''.join(rows)}</tbody></table></div></div><aside class="panel"><div class="panel-head"><h2>🎁 Gift Pick Order</h2><div class="panel-note">Least points draws first; most points draws last. Equal-score ties are ordered alphabetically.</div></div><ol>{pick_list}</ol></aside></section>
 <div class="footer">🎄 ❄️ 🎁 SALESFORCE LIVE DATA · GENERATED {escape(payload['generated_at_et'])} · CONTEST ENDS DECEMBER 17, 2026 🎁 ❄️ 🎄</div></main></body></html>'''
 
 
