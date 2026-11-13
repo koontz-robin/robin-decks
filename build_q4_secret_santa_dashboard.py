@@ -170,7 +170,7 @@ def build_payload():
             p["scoring_users"] = p["sourced_standard_users"]
             # SDR points come from completed sourced discovery calls.
             p["scoring_mrr"] = 0.0
-            p["points_discoveries"] = p["sdr_discoveries"] // 5
+            p["points_discoveries"] = p["sdr_discoveries"] // 3
             p["points_demos"] = 0
         elif p["role"] == "SE":
             p["scoring_users"] = p["influenced_standard_users"]
@@ -232,7 +232,7 @@ def build_payload():
         },
         "rules": [
             {"label": "AEs & CSAs: MRR sold", "points": "1 pt per full $100"},
-            {"label": "SDR discovery calls influenced", "points": "1 pt per 5 calls"},
+            {"label": "SDR discovery calls influenced", "points": "1 pt per 3 calls"},
             {"label": "Solutions Engineer demos covered", "points": "1 pt per 5 demos"},
             {"label": "Solutions Engineer-influenced MRR", "points": "1 pt per full $250"},
             {"label": "Jake Mitchell: referral received", "points": "1 pt each"},
