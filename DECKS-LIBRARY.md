@@ -1,6 +1,6 @@
 # DECKS-LIBRARY.md — Robin's Deck & Dashboard Library
 
-Last updated: 2026-11-13
+Last updated: 2026-11-16
 GitHub Pages base: `https://koontz-robin.github.io/robin-decks/`
 Repo: `git@github.com:koontz-robin/robin-decks.git`
 
@@ -97,6 +97,7 @@ Repo: `git@github.com:koontz-robin/robin-decks.git`
 | Rev.io Tech Stack | revio-tech-stack.html | https://koontz-robin.github.io/robin-decks/revio-tech-stack.html | Visual stack deck: HubSpot, Salesforce, Outreach, ZoomInfo, OpenClaw, Clay, Claude, Rox, DocuSign, Notion |
 | H2 Sales Growth Motion | h2-leadership-offsite-direct-sales.html | https://koontz-robin.github.io/robin-decks/h2-leadership-offsite-direct-sales.html | H2 leadership offsite deck for direct sales growth, pipeline creation, source diversification, referrals, partner ecosystems, Revii, and integration proof |
 | H2 Leadership Offsite - Direct Sales Growth Motion v2 | h2-leadership-offsite-direct-sales-v2.html | https://koontz-robin.github.io/robin-decks/h2-leadership-offsite-direct-sales-v2.html?v=b33c8f0 | Version 2 leadership offsite deck covering trigger timing, referral ecosystems, proof assets, Revii packaging, product readiness, and H2 PSA growth motion |
+| 2027 Leadership Offsite - Sales Growth Operating System | leadership-offsite-2027-sales-operating-plan.html | https://koontz-robin.github.io/robin-decks/leadership-offsite-2027-sales-operating-plan.html | 15-slide working deck answering the 12 leadership questions across funnel, targets, forecast, contract timing, product packaging, CSA accountability, role clarity, staffing, and referral growth |
 | Q2 Board Deck | q2-board-deck.html | https://koontz-robin.github.io/robin-decks/q2-board-deck.html | Main board deck |
 | Q2 Board — Slide 0: Pipeline Gaps | q2-board-slide-0-pipeline-gaps.html | https://koontz-robin.github.io/robin-decks/q2-board-slide-0-pipeline-gaps.html | |
 | Q2 Board — Slide 1: Efficiency (Branded) | q2-board-slide-1-efficiency-branded.html | https://koontz-robin.github.io/robin-decks/q2-board-slide-1-efficiency-branded.html | |
