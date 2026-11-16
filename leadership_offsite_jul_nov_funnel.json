@@ -7,7 +7,14 @@
   "definition": {
     "all_new_revio": "Product_Type__c = 'PSA 2.0'",
     "icp": "NumberOfEmployees >= 10 and Amount >= $1,000",
+    "new_deal": "Type = 'New Opportunity'",
+    "expansion": "Type = 'Add-On / Expansion'",
     "conversion": "Opportunities reaching next stage divided by opportunities reaching prior stage; highest stage reached uses OpportunityFieldHistory."
+  },
+  "opportunity_type_counts": {
+    "Add-On / Expansion": 80,
+    "New Opportunity": 366,
+    "Renewal": 1
   },
   "all_new_revio": {
     "opportunities": 447,
@@ -126,5 +133,245 @@
     "closed_won": 15,
     "closed_lost": 148,
     "decision_win_rate_pct": 9.2
+  },
+  "all_new_revio_by_type": {
+    "new_deal": {
+      "opportunities": 366,
+      "reached_counts": [
+        366,
+        204,
+        106,
+        38,
+        29,
+        29,
+        25
+      ],
+      "transitions": [
+        {
+          "from": "Stage 1 \u00b7 Discovery Scheduled",
+          "to": "Stage 2 \u00b7 Discovery Completed",
+          "from_count": 366,
+          "to_count": 204,
+          "conversion_pct": 55.7
+        },
+        {
+          "from": "Stage 2 \u00b7 Discovery Completed",
+          "to": "Stage 3 \u00b7 Initial Product Demo",
+          "from_count": 204,
+          "to_count": 106,
+          "conversion_pct": 52.0
+        },
+        {
+          "from": "Stage 3 \u00b7 Initial Product Demo",
+          "to": "Stage 4 \u00b7 Proposal Sent",
+          "from_count": 106,
+          "to_count": 38,
+          "conversion_pct": 35.8
+        },
+        {
+          "from": "Stage 4 \u00b7 Proposal Sent",
+          "to": "Stage 5 \u00b7 Product / Contract Validated",
+          "from_count": 38,
+          "to_count": 29,
+          "conversion_pct": 76.3
+        },
+        {
+          "from": "Stage 5 \u00b7 Product / Contract Validated",
+          "to": "Stage 6 \u00b7 Verbal Commit",
+          "from_count": 29,
+          "to_count": 29,
+          "conversion_pct": 100.0
+        },
+        {
+          "from": "Stage 6 \u00b7 Verbal Commit",
+          "to": "Closed Won",
+          "from_count": 29,
+          "to_count": 25,
+          "conversion_pct": 86.2
+        }
+      ],
+      "closed_won": 25,
+      "closed_lost": 295,
+      "decision_win_rate_pct": 7.8
+    },
+    "expansion": {
+      "opportunities": 80,
+      "reached_counts": [
+        80,
+        73,
+        54,
+        44,
+        28,
+        25,
+        21
+      ],
+      "transitions": [
+        {
+          "from": "Stage 1 \u00b7 Discovery Scheduled",
+          "to": "Stage 2 \u00b7 Discovery Completed",
+          "from_count": 80,
+          "to_count": 73,
+          "conversion_pct": 91.2
+        },
+        {
+          "from": "Stage 2 \u00b7 Discovery Completed",
+          "to": "Stage 3 \u00b7 Initial Product Demo",
+          "from_count": 73,
+          "to_count": 54,
+          "conversion_pct": 74.0
+        },
+        {
+          "from": "Stage 3 \u00b7 Initial Product Demo",
+          "to": "Stage 4 \u00b7 Proposal Sent",
+          "from_count": 54,
+          "to_count": 44,
+          "conversion_pct": 81.5
+        },
+        {
+          "from": "Stage 4 \u00b7 Proposal Sent",
+          "to": "Stage 5 \u00b7 Product / Contract Validated",
+          "from_count": 44,
+          "to_count": 28,
+          "conversion_pct": 63.6
+        },
+        {
+          "from": "Stage 5 \u00b7 Product / Contract Validated",
+          "to": "Stage 6 \u00b7 Verbal Commit",
+          "from_count": 28,
+          "to_count": 25,
+          "conversion_pct": 89.3
+        },
+        {
+          "from": "Stage 6 \u00b7 Verbal Commit",
+          "to": "Closed Won",
+          "from_count": 25,
+          "to_count": 21,
+          "conversion_pct": 84.0
+        }
+      ],
+      "closed_won": 21,
+      "closed_lost": 38,
+      "decision_win_rate_pct": 35.6
+    }
+  },
+  "icp_by_type": {
+    "new_deal": {
+      "opportunities": 192,
+      "reached_counts": [
+        192,
+        112,
+        60,
+        19,
+        15,
+        15,
+        12
+      ],
+      "transitions": [
+        {
+          "from": "Stage 1 \u00b7 Discovery Scheduled",
+          "to": "Stage 2 \u00b7 Discovery Completed",
+          "from_count": 192,
+          "to_count": 112,
+          "conversion_pct": 58.3
+        },
+        {
+          "from": "Stage 2 \u00b7 Discovery Completed",
+          "to": "Stage 3 \u00b7 Initial Product Demo",
+          "from_count": 112,
+          "to_count": 60,
+          "conversion_pct": 53.6
+        },
+        {
+          "from": "Stage 3 \u00b7 Initial Product Demo",
+          "to": "Stage 4 \u00b7 Proposal Sent",
+          "from_count": 60,
+          "to_count": 19,
+          "conversion_pct": 31.7
+        },
+        {
+          "from": "Stage 4 \u00b7 Proposal Sent",
+          "to": "Stage 5 \u00b7 Product / Contract Validated",
+          "from_count": 19,
+          "to_count": 15,
+          "conversion_pct": 78.9
+        },
+        {
+          "from": "Stage 5 \u00b7 Product / Contract Validated",
+          "to": "Stage 6 \u00b7 Verbal Commit",
+          "from_count": 15,
+          "to_count": 15,
+          "conversion_pct": 100.0
+        },
+        {
+          "from": "Stage 6 \u00b7 Verbal Commit",
+          "to": "Closed Won",
+          "from_count": 15,
+          "to_count": 12,
+          "conversion_pct": 80.0
+        }
+      ],
+      "closed_won": 12,
+      "closed_lost": 144,
+      "decision_win_rate_pct": 7.7
+    },
+    "expansion": {
+      "opportunities": 12,
+      "reached_counts": [
+        12,
+        9,
+        7,
+        4,
+        3,
+        3,
+        3
+      ],
+      "transitions": [
+        {
+          "from": "Stage 1 \u00b7 Discovery Scheduled",
+          "to": "Stage 2 \u00b7 Discovery Completed",
+          "from_count": 12,
+          "to_count": 9,
+          "conversion_pct": 75.0
+        },
+        {
+          "from": "Stage 2 \u00b7 Discovery Completed",
+          "to": "Stage 3 \u00b7 Initial Product Demo",
+          "from_count": 9,
+          "to_count": 7,
+          "conversion_pct": 77.8
+        },
+        {
+          "from": "Stage 3 \u00b7 Initial Product Demo",
+          "to": "Stage 4 \u00b7 Proposal Sent",
+          "from_count": 7,
+          "to_count": 4,
+          "conversion_pct": 57.1
+        },
+        {
+          "from": "Stage 4 \u00b7 Proposal Sent",
+          "to": "Stage 5 \u00b7 Product / Contract Validated",
+          "from_count": 4,
+          "to_count": 3,
+          "conversion_pct": 75.0
+        },
+        {
+          "from": "Stage 5 \u00b7 Product / Contract Validated",
+          "to": "Stage 6 \u00b7 Verbal Commit",
+          "from_count": 3,
+          "to_count": 3,
+          "conversion_pct": 100.0
+        },
+        {
+          "from": "Stage 6 \u00b7 Verbal Commit",
+          "to": "Closed Won",
+          "from_count": 3,
+          "to_count": 3,
+          "conversion_pct": 100.0
+        }
+      ],
+      "closed_won": 3,
+      "closed_lost": 4,
+      "decision_win_rate_pct": 42.9
+    }
   }
 }

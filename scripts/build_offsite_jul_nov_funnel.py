@@ -41,7 +41,7 @@ def query(base,headers,soql):
 a=requests.post(f'{SF_INSTANCE}/services/oauth2/token',data={'grant_type':'client_credentials','client_id':SF_CLIENT_ID,'client_secret':SF_CLIENT_SECRET},timeout=30)
 a.raise_for_status(); auth=a.json(); base=auth['instance_url']; headers={'Authorization':f"Bearer {auth['access_token']}"}
 opps=query(base,headers,f"""
-SELECT Id, Name, CreatedDate, StageName, Amount, Product_Type__c,
+SELECT Id, Name, CreatedDate, StageName, Amount, Type, Product_Type__c,
        Account.Name, Account.NumberOfEmployees
 FROM Opportunity
 WHERE CreatedDate >= {START} AND CreatedDate < {END}
@@ -89,9 +89,21 @@ def summarize(rows):
     return {'opportunities':len(rows),'reached_counts':reached,'transitions':transitions,'closed_won':won,'closed_lost':lost,
             'decision_win_rate_pct':round(won/(won+lost)*100,1) if won+lost else None}
 
+type_counts={}
+for o in opps:
+    key=o.get('Type') or 'Blank'
+    type_counts[key]=type_counts.get(key,0)+1
+new_deals=[o for o in opps if o.get('Type') == 'New Opportunity']
+expansions=[o for o in opps if o.get('Type') == 'Add-On / Expansion']
+icp_opps=[o for o in opps if is_icp(o)]
 payload={'window':{'start':'2026-07-01','end_exclusive':'2026-12-01','label':'July–November 2026'},
          'definition':{'all_new_revio':"Product_Type__c = 'PSA 2.0'",'icp':'NumberOfEmployees >= 10 and Amount >= $1,000',
+                       'new_deal':"Type = 'New Opportunity'",'expansion':"Type = 'Add-On / Expansion'",
                        'conversion':'Opportunities reaching next stage divided by opportunities reaching prior stage; highest stage reached uses OpportunityFieldHistory.'},
-         'all_new_revio':summarize(opps),'icp':summarize([o for o in opps if is_icp(o)])}
+         'opportunity_type_counts':type_counts,
+         'all_new_revio':summarize(opps),
+         'icp':summarize(icp_opps),
+         'all_new_revio_by_type':{'new_deal':summarize(new_deals),'expansion':summarize(expansions)},
+         'icp_by_type':{'new_deal':summarize([o for o in new_deals if is_icp(o)]),'expansion':summarize([o for o in expansions if is_icp(o)])}}
 OUT.write_text(json.dumps(payload,indent=2)+'\n')
 print(json.dumps(payload,indent=2))
