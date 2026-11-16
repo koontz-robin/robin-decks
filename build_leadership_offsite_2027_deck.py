@@ -103,6 +103,7 @@ slides.append(slide(15,'Leadership Decisions','Approve the operating rules, owne
 <div class="closing-line">The objective is not more activity. It is a system that produces better evidence, faster decisions and more predictable revenue.</div>'''))
 
 html=TEMPLATE.read_text()
+html=html.replace('<title>H2 Leadership Offsite · Sales Evolution Strategy</title>', '<title>Leadership Offsite · 2027 Sales Growth Operating System</title>')
 start=html.index('<div class="deck">')
 nav=html.index('<div class="nav-bar">', start)
 prefix=html[:start]
