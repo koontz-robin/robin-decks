@@ -86,8 +86,13 @@ def summarize(rows):
         })
     won=sum(o.get('StageName')=='Closed Won' for o in rows)
     lost=sum(o.get('StageName')=='Closed Lost' for o in rows)
+    war_room_rows=[o for o in rows if max_rank(o) >= 3]
+    war_room_won=sum(o.get('StageName')=='Closed Won' for o in war_room_rows)
+    war_room_lost=sum(o.get('StageName')=='Closed Lost' for o in war_room_rows)
     return {'opportunities':len(rows),'reached_counts':reached,'transitions':transitions,'closed_won':won,'closed_lost':lost,
-            'decision_win_rate_pct':round(won/(won+lost)*100,1) if won+lost else None}
+            'decision_win_rate_pct':round(won/(won+lost)*100,1) if won+lost else None,
+            'war_room_closed_won':war_room_won,'war_room_closed_lost':war_room_lost,
+            'war_room_decision_win_rate_pct':round(war_room_won/(war_room_won+war_room_lost)*100,1) if war_room_won+war_room_lost else None}
 
 type_counts={}
 for o in opps:
