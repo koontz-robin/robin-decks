@@ -102,6 +102,35 @@ slides.append(slide(15,'Leadership Decisions','Approve the operating rules, owne
 <div class="grid-3">{card('0–30 days','Lock definitions, owners, dashboards and pilot cohorts.','LAUNCH')}{card('31–60 days','Certify teams, run pilots and inspect adoption weekly.','PROVE')}{card('61–90 days','Scale what converts; remove steps and partnerships that do not.','SCALE')}</div>
 <div class="closing-line">The objective is not more activity. It is a system that produces better evidence, faster decisions and more predictable revenue.</div>'''))
 
+# Convert the working narrative into one dedicated slide per leadership question.
+# Keep the cover, drop the executive-summary and closing-decision slides, and
+# title each remaining slide with Ryan's exact question.
+questions = [
+    "How is the funnel performing by stage, and what's our official win rate and how is it defined?",
+    "What pipeline and bookings per rep do we need to hit the 2027 bookings target?",
+    "What's the locked Q4 forecast and the 2027 bookings forecast, and how much comes from clients who fit our ideal profile?",
+    "How do manager forecasts roll up to you every week, and how do we raise the quality of war-room deals?",
+    "How do we capture competitor contract end dates, and make sure an AE calls within 2 days of finding one?",
+    "What does Sales need from Classic Billing parity, migrations and Revi packaging to win?",
+    "What's the plan for Sales and the CSAs to sell and enable Revi and CommerceHub, and what incentives and processes make it happen?",
+    "What should the CSAs be accountable for on Revi and CommerceHub: adoption, usage, expansion and revenue?",
+    "Which responsibilities pull Sales leadership away from selling, and where should they go?",
+    "Where should Sales Engineering and Channel live?",
+    "What's the staffing model, ramp plan and average deal per rep?",
+    "How are we nurturing lead generation from customers and vendors, how are we tracking it for the reps, and how does it move into their activity model?",
+]
+question_slides = []
+for new_number, (question, original) in enumerate(zip(questions, slides[2:14]), start=2):
+    original = re.sub(r'id="slide-\d+"', f'id="slide-{new_number}"', original, count=1)
+    original = re.sub(r'<h2>.*?</h2>', f'<h2>{question}</h2>', original, count=1, flags=re.S)
+    question_slides.append(original)
+slides = [slides[0]] + question_slides
+slides[0] = (slides[0]
+    .replace('href="#slide-3"', 'href="#slide-2"')
+    .replace('href="#slide-4"', 'href="#slide-3"')
+    .replace('href="#slide-6"', 'href="#slide-5"')
+    .replace('href="#slide-9"', 'href="#slide-8"'))
+
 html=TEMPLATE.read_text()
 html=html.replace('<title>H2 Leadership Offsite · Sales Evolution Strategy</title>', '<title>Leadership Offsite · 2027 Sales Growth Operating System</title>')
 start=html.index('<div class="deck">')
