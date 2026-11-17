@@ -361,3 +361,9 @@ When Robin creates a new deck or dashboard:
 - **URL:** https://koontz-robin.github.io/robin-decks/szulgit-electric-evaluation-readout.html
 - **Purpose:** Buyer-facing Execute readout for Szulgit Electric covering ZenTrades/Word/QuickBooks Desktop fragmentation, mobile field time, proposal automation, dispatch reassignment, ADI/Graybar pricing, accounting validation, user mix, implementation, and a source-labeled value plan.
 - **Created:** 2026-11-17
+
+### Comlock Security Group × Rev.io Execute Evaluation Readout
+- **File:** `comlock-security-group-evaluation-readout.html`
+- **URL:** https://koontz-robin.github.io/robin-decks/comlock-security-group-evaluation-readout.html
+- **Purpose:** Buyer-facing Execute readout covering Evolution replacement, California partial trip-charge tax, dual QuickBooks Online companies, recurring billing, barcode/truck inventory, security workflows, mobile payments, migration, and a source-labeled value plan.
+- **Created:** 2026-11-17
