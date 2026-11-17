@@ -355,3 +355,9 @@ When Robin creates a new deck or dashboard:
 - **URL:** https://koontz-robin.github.io/robin-decks/click-computers-evaluation-readout.html
 - **Purpose:** Buyer-facing Execute readout for Click Computers covering Odoo replacement economics, quote and tax friction, NinjaOne alert matching, ticket-to-billing workflows, collections, software-consolidation boundaries, proof gates, and an auditable ROI decision plan.
 - **Created:** 2026-11-12
+
+### Szulgit Electric × Rev.io Execute Evaluation Readout
+- **File:** `szulgit-electric-evaluation-readout.html`
+- **URL:** https://koontz-robin.github.io/robin-decks/szulgit-electric-evaluation-readout.html
+- **Purpose:** Buyer-facing Execute readout for Szulgit Electric covering ZenTrades/Word/QuickBooks Desktop fragmentation, mobile field time, proposal automation, dispatch reassignment, ADI/Graybar pricing, accounting validation, user mix, implementation, and a source-labeled value plan.
+- **Created:** 2026-11-17
