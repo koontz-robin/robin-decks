@@ -373,3 +373,9 @@ When Robin creates a new deck or dashboard:
 - **URL:** https://koontz-robin.github.io/robin-decks/otsworx-evaluation-readout.html
 - **Purpose:** Customer-facing evaluation covering ConnectWise replacement, construction workflow, document organization, ticket-email handling, purchasing, QuickBooks Online, integrations, migration assurance, value validation, and a joint proof plan.
 - **Created:** 2026-11-19
+
+### Infinite Technologies × Rev.io Solutions Evaluation Readout
+- **File:** `infinite-technologies-evaluation-readout.html`
+- **URL:** https://koontz-robin.github.io/robin-decks/infinite-technologies-evaluation-readout.html
+- **Purpose:** Customer-facing evaluation covering ConnectWise replacement, security-hardware inventory, quoting, project delivery, technician mobile access, distributor validation, QuickBooks, migration assurance, commercial boundaries, and a joint proof plan.
+- **Created:** 2026-11-19
