@@ -367,3 +367,9 @@ When Robin creates a new deck or dashboard:
 - **URL:** https://koontz-robin.github.io/robin-decks/comlock-security-group-evaluation-readout.html
 - **Purpose:** Buyer-facing Execute readout covering Evolution replacement, California partial trip-charge tax, dual QuickBooks Online companies, recurring billing, barcode/truck inventory, security workflows, mobile payments, migration, and a source-labeled value plan.
 - **Created:** 2026-11-17
+
+### OTSworx × Rev.io Solutions Evaluation Readout
+- **File:** `otsworx-evaluation-readout.html`
+- **URL:** https://koontz-robin.github.io/robin-decks/otsworx-evaluation-readout.html
+- **Purpose:** Customer-facing evaluation covering ConnectWise replacement, construction workflow, document organization, ticket-email handling, purchasing, QuickBooks Online, integrations, migration assurance, value validation, and a joint proof plan.
+- **Created:** 2026-11-19
