@@ -78,7 +78,7 @@ def current_week(now: datetime | None = None) -> tuple[datetime, datetime]:
 
 
 def rolling_weeks(now: datetime | None = None, count: int = 12) -> list[tuple[datetime, datetime]]:
-    """Return selectable weeks: last week, latest, then older descending.
+    """Return selectable weeks with the current inspection week first.
 
     On Sunday, ``latest`` is the week beginning the following day; on all
     other days it is the week containing ``now``.
@@ -88,9 +88,8 @@ def rolling_weeks(now: datetime | None = None, count: int = 12) -> list[tuple[da
     if now_et.weekday() == 6:
         monday += timedelta(days=7)
     latest = datetime.combine(monday, time.min, tzinfo=ET)
-    starts = [latest - timedelta(days=7), latest]
-    starts.extend(latest - timedelta(days=7 * offset) for offset in range(2, count))
-    return [(start, start + timedelta(days=7)) for start in starts[:count]]
+    starts = [latest - timedelta(days=7 * offset) for offset in range(count)]
+    return [(start, start + timedelta(days=7)) for start in starts]
 
 
 def sf_datetime(value: datetime) -> str:
@@ -269,7 +268,7 @@ def build_html(rows: list[dict[str, Any]], base: str, start: datetime, end: date
 
 
 def week_label(index: int, start: datetime, end: datetime) -> str:
-    prefix = "Last week · " if index == 0 else ("Latest week · " if index == 1 else "")
+    prefix = "Current week · " if index == 0 else ("Last week · " if index == 1 else "")
     # Show the actual Monday-to-Monday boundary so the selector matches the
     # dashboard's end-exclusive inspection window exactly.
     return f"{prefix}{start.strftime('%b %-d')}–{end.strftime('%b %-d, %Y')}"
