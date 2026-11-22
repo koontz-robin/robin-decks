@@ -1,6 +1,6 @@
 # DECKS-LIBRARY.md — Robin's Deck & Dashboard Library
 
-Last updated: 2026-11-16
+Last updated: 2026-11-22
 GitHub Pages base: `https://koontz-robin.github.io/robin-decks/`
 Repo: `git@github.com:koontz-robin/robin-decks.git`
 
@@ -65,6 +65,7 @@ Repo: `git@github.com:koontz-robin/robin-decks.git`
 
 | Name | File | URL | Notes |
 |---|---|---|---|
+| November 2026 Board Update Deck | november-2026-board-update-deck.html | https://koontz-robin.github.io/robin-decks/november-2026-board-update-deck.html | Four-slide commercial update: October bookings and November pacing, ICP creation/source trends, competitor contract-date coverage, and New Rev.io war-room loss/penetration trends |
 | Q4 2026 Board Meeting Deck | q4-2026-board-meeting-deck.html | https://koontz-robin.github.io/robin-decks/q4-2026-board-meeting-deck.html | In progress; board deck shell with dedicated New Rev.io Stage 3+ closed-lost analysis slide |
 | Results Technology Evaluation Readout | results-technology-evaluation-readout.html | https://koontz-robin.github.io/robin-decks/results-technology-evaluation-readout.html | Buyer-facing Execute readout for Results Technology: Autotask replacement, quoting, agreements, Pax8, multi-ticket time, billing, QuickBooks Online, profitability, AI, migration, and decision plan. |
 | Life Safety Security Evaluation Readout | life-safety-security-evaluation-readout.html | https://koontz-robin.github.io/robin-decks/life-safety-security-evaluation-readout.html | Buyer-facing Execute readout for Life Safety Security: Housecall Pro and QuickBooks consolidation, recurring inspections, quoting, CMS transition, field/mobile workflows, inventory, ROI assumptions, and phased decision plan. |
