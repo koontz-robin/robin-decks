@@ -195,6 +195,7 @@ suffix=re.sub(r"const labels = \[[^;]+;",'const labels = '+repr(labels).replace(
 suffix=re.sub(r'<span class="nav-counter" id="nav-counter">[^<]+</span>',f'<span class="nav-counter" id="nav-counter">1 / {len(slides)}</span>',suffix)
 suffix=suffix.replace('<div class="nav-title">H2 Leadership Offsite</div>','<div class="nav-title">Leadership Offsite · 2027 Sales Operating Plan</div>')
 out=prefix+'<div class="deck">\n'+'\n'.join(slides)+'\n</div>\n'+suffix
+out=out.replace('Meeting cemented to uncover three “gets”', 'Meeting cemented with required data points')
 OUTPUT.write_text(out)
 print(OUTPUT)
 print('slides',len(slides))
