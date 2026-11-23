@@ -196,6 +196,7 @@ suffix=re.sub(r'<span class="nav-counter" id="nav-counter">[^<]+</span>',f'<span
 suffix=suffix.replace('<div class="nav-title">H2 Leadership Offsite</div>','<div class="nav-title">Leadership Offsite · 2027 Sales Operating Plan</div>')
 out=prefix+'<div class="deck">\n'+'\n'.join(slides)+'\n</div>\n'+suffix
 out=out.replace('Meeting cemented to uncover three “gets”', 'Meeting cemented with required data points')
+out=out.replace('<li>Salesforce opportunity created</li>', '')
 OUTPUT.write_text(out)
 print(OUTPUT)
 print('slides',len(slides))
