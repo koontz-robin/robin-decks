@@ -162,11 +162,10 @@ plan_mrr=[15072,17489,20466,21600,23228,24396,26560,28125,29978,31574,34760,3520
 plan_bookings=[16,17,18,18,19,19,20,20,21,21,22,22]
 plan_opps=[167,178,188,188,198,198,209,209,219,219,230,230]
 plan_aes=[9,10,10,10,11,11,12,12,12,12,13,13]
-plan_sdrs=[6,7,7,7,7,7,8,8,8,8,9,9]
-plan_rows=''.join(f'''<tr><td><b>{m}</b></td><td>${mrr/1000:.1f}K</td><td>{bookings}</td><td>${mrr/bookings:,.0f}</td><td>{opps}</td><td>{aes}</td><td>{bookings/aes:.2f}</td><td>{sdrs}</td></tr>''' for m,mrr,bookings,opps,aes,sdrs in zip(plan_months,plan_mrr,plan_bookings,plan_opps,plan_aes,plan_sdrs))
+plan_rows=''.join(f'''<tr><td><b>{m}</b></td><td>${mrr/1000:.1f}K</td><td>{bookings}</td><td>${mrr/bookings:,.0f}</td><td>{opps}</td><td>{aes}</td><td>{bookings/aes:.2f}</td></tr>''' for m,mrr,bookings,opps,aes in zip(plan_months,plan_mrr,plan_bookings,plan_opps,plan_aes))
 question_slides[1] = slide(4, '2 · 2027 Pipeline + Bookings Plan', questions[1], f'''
-<div class="kpi-row compact-plan">{metric('Annual bookings','233','16 in January → 22 in December','green')}{metric('Annual MRR','$308.4K','$15.1K → $35.2K monthly')}{metric('Required opportunities','2,433','At 9.6% decision win rate','orange')}{metric('Capacity ramp','9 → 13 AEs','6 → 9 SDRs')}</div>
-<div class="card plan-table-card"><table class="plan-table"><thead><tr><th>Month</th><th>MRR target</th><th>Bookings</th><th>Avg. deal</th><th>Opps needed</th><th>AEs</th><th>Bookings / AE</th><th>SDRs</th></tr></thead><tbody>{plan_rows}</tbody><tfoot><tr><td>2027</td><td>$308.4K</td><td>233</td><td>$1,324</td><td>2,433</td><td>13 peak</td><td>1.66 avg.</td><td>9 peak</td></tr></tfoot></table></div>
+<div class="kpi-row compact-plan">{metric('Annual bookings','233','16 in January → 22 in December','green')}{metric('Annual MRR','$308.4K','$15.1K → $35.2K monthly')}{metric('Required opportunities','2,433','At 9.6% decision win rate','orange')}{metric('Capacity ramp','9 → 13 AEs','Fully productive capacity')}</div>
+<div class="card plan-table-card"><table class="plan-table"><thead><tr><th>Month</th><th>MRR target</th><th>Bookings</th><th>Avg. deal</th><th>Opps needed</th><th>AEs</th><th>Bookings / AE</th></tr></thead><tbody>{plan_rows}</tbody><tfoot><tr><td>2027</td><td>$308.4K</td><td>233</td><td>$1,324</td><td>2,433</td><td>13 peak</td><td>1.66 avg.</td></tr></tfoot></table></div>
 <div class="plan-bottom"><div class="card"><div class="mini-eyebrow">SOURCE PLAN</div><div class="mix-bar"><i style="width:60%;--c:#00d4f0">60% Sales</i><i style="width:20%;--c:#3ddc97">20% Events</i><i style="width:12%;--c:#f5a623">12% Web</i><i style="width:8%;--c:#8b9bb6">8% Other</i></div></div><div class="definition-strip"><b>Capacity rule:</b> hire 60–90 days before productive capacity is required. Opportunity demand assumes the current 9.6% decision win rate and 19 opportunities per AE-month.</div></div>
 ''', note='Pipeline Source Performance dashboard · 2027 planning model')
 
