@@ -285,13 +285,13 @@ def build_html(payload):
     for p in standings:
         gap = leader_points - p["points"]
         rows.append(f'''<tr>
-          <td>{money(p['scoring_mrr'])}<small>{p['points_classic_mrr']} pts</small></td>
           <td class="rank">#{p['rank']}</td>
           <td><strong>{escape(p['name'])}</strong><small>{'Solutions Engineer' if p['role'] == 'SE' else escape(p['role'])}</small></td>
           <td class="points">{p['points']}</td>
           <td>{p['sdr_discoveries'] if p['role'] == 'SDR' else '—'}<small>{p['points_discoveries']} pts</small></td>
           <td>{p['referrals_received'] if p['role'] == 'Channel' else '—'}<small>{p['points_referrals']} pts</small></td>
           <td>{p['contract_enddate_updates']}<small>{p['points_contract_updates']} pts</small></td>
+          <td>{money(p['scoring_mrr'])}<small>{p['points_classic_mrr']} pts</small></td>
           <td class="pick-number">#{p['pick_order']}</td>
           <td>{'Leader' if gap == 0 else f'{gap} pts back'}</td>
         </tr>''')
@@ -303,7 +303,7 @@ def build_html(payload):
 </style></head><body><main class="wrap"><section class="hero"><div class="lights"></div><div class="brand-row"><img class="brand-logo" src="revio-logo-white.png" alt="Rev.io"><div class="santa-train">🎅🛷🦌</div></div><div class="eyebrow">Rev.io Sales · Q4 2026 · North Pole Division</div><h1>Secret Santa <em>Showdown</em> 🎄</h1><div class="sub">Earn points from October 1 through December 17. The twist: the leaderboard runs opposite the gift table—<strong>last place picks first, and the leader picks last.</strong></div><div class="progress-wrap"><div class="track"><div class="bar"></div></div><div class="progress-label">{contest['percent_complete']:.0f}% complete · Through {escape(contest['through'])}</div></div></section>
 <section class="stats"><div class="stat"><strong>{totals['points']:,}</strong><small>Total points</small></div><div class="stat"><strong>{totals['standard_seats']:,}</strong><small>New Rev.io standard seats sold or renewed</small></div><div class="stat"><strong>{money(totals['classic_mrr'])}</strong><small>Classic Rev.io or Payments MRR sold</small></div></section>
 <section class="rules">{rule_cards}</section><section class="podiums">{podium}</section>
-<section class="grid"><div class="panel"><div class="panel-head"><h2>Leaderboard</h2><div class="panel-note">AEs/CSAs earn on MRR sold, SDRs on completed influenced discoveries, everyone earns on contract-date coverage, and Jake earns on referrals and channel-influenced MRR.</div></div><div class="table-wrap"><table><thead><tr><th>Eligible MRR</th><th>Rank</th><th>Teammate</th><th>Points</th><th>SDR Discovery Calls Influenced</th><th>Referrals Received</th><th>Contract End-Date Accounts Updated</th><th>Pick</th><th>Gap</th></tr></thead><tbody>{''.join(rows)}</tbody></table></div></div><aside class="panel"><div class="panel-head"><h2>🎁 Gift Pick Order</h2><div class="panel-note">Least points draws first; most points draws last. Equal-score ties are ordered alphabetically.</div></div><ol>{pick_list}</ol></aside></section>
+<section class="grid"><div class="panel"><div class="panel-head"><h2>Leaderboard</h2><div class="panel-note">AEs/CSAs earn on MRR sold, SDRs on completed influenced discoveries, everyone earns on contract-date coverage, and Jake earns on referrals and channel-influenced MRR.</div></div><div class="table-wrap"><table><thead><tr><th>Rank</th><th>Teammate</th><th>Points</th><th>SDR Discovery Calls Influenced</th><th>Referrals Received</th><th>Contract End-Date Accounts Updated</th><th>Eligible MRR</th><th>Pick</th><th>Gap</th></tr></thead><tbody>{''.join(rows)}</tbody></table></div></div><aside class="panel"><div class="panel-head"><h2>🎁 Gift Pick Order</h2><div class="panel-note">Least points draws first; most points draws last. Equal-score ties are ordered alphabetically.</div></div><ol>{pick_list}</ol></aside></section>
 <div class="footer">🎄 ❄️ 🎁 SALESFORCE LIVE DATA · GENERATED {escape(payload['generated_at_et'])} · CONTEST ENDS DECEMBER 17, 2026 🎁 ❄️ 🎄</div></main></body></html>'''
 
 
