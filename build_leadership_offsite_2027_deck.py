@@ -197,6 +197,7 @@ suffix=suffix.replace('<div class="nav-title">H2 Leadership Offsite</div>','<div
 out=prefix+'<div class="deck">\n'+'\n'.join(slides)+'\n</div>\n'+suffix
 out=out.replace('Meeting cemented to uncover three “gets”', 'Meeting cemented with required data points')
 out=out.replace('<li>Salesforce opportunity created</li>', '')
+out=out.replace('SDR assignment logged, if applicable', 'SDR / Channel influence logged, if applicable')
 OUTPUT.write_text(out)
 print(OUTPUT)
 print('slides',len(slides))
