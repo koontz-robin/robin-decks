@@ -221,6 +221,7 @@ When Robin creates a new deck or dashboard:
 - [SecureTech Systems USA Evaluation Readout](https://koontz-robin.github.io/robin-decks/securetech-systems-evaluation-readout.html) — Buyer-facing Execute readout covering iPoint consolidation, quote-margin protection, project/field operations, inventory, recurring revenue, QuickBooks, and the Monday decision plan.
 - [Fuse.Cloud Solutions Evaluation Readout](https://koontz-robin.github.io/robin-decks/fusecloud-solutions-evaluation-readout.html) — Buyer-facing Execute readout for Fuse.Cloud’s PSA evaluation, separating demonstrated capability, dated commitments, roadmap items, and open Must Haves.
 - [Fuse.Cloud Requirements & Roadmap Tracker](https://koontz-robin.github.io/robin-decks/fuse-cloud-requirements-roadmap.html) — Client-facing interactive tracker for all 62 requirements, with current coverage, remaining gaps, and conservative Viking 3 / roadmap dispositions.
+- [Quota Pirates vs Sales Team Six](https://koontz-robin.github.io/robin-decks/quota-pirates-vs-sales-team-six.html) — Live Salesforce competition scoreboard for monthly and Q4 MRR, discovery meetings set/completed, demos run, team category points, and individual leaders.
 
 
 ### Tigerpaw Migration Interest Dashboard
