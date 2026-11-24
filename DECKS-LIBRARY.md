@@ -220,6 +220,7 @@ When Robin creates a new deck or dashboard:
 - [Crown Networks PSA Evaluation Readout](https://koontz-robin.github.io/robin-decks/crown-networks-psa-evaluation-readout.html) — Buyer-facing Execute readout for Crown Networks, focused on replacing ConnectWise project/work-order/subcontractor/payment friction with Rev.io PSA.
 - [SecureTech Systems USA Evaluation Readout](https://koontz-robin.github.io/robin-decks/securetech-systems-evaluation-readout.html) — Buyer-facing Execute readout covering iPoint consolidation, quote-margin protection, project/field operations, inventory, recurring revenue, QuickBooks, and the Monday decision plan.
 - [Fuse.Cloud Solutions Evaluation Readout](https://koontz-robin.github.io/robin-decks/fusecloud-solutions-evaluation-readout.html) — Buyer-facing Execute readout for Fuse.Cloud’s PSA evaluation, separating demonstrated capability, dated commitments, roadmap items, and open Must Haves.
+- [Fuse.Cloud Requirements & Roadmap Tracker](https://koontz-robin.github.io/robin-decks/fuse-cloud-requirements-roadmap.html) — Client-facing interactive tracker for all 62 requirements, with current coverage, remaining gaps, and conservative Viking 3 / roadmap dispositions.
 
 
 ### Tigerpaw Migration Interest Dashboard
