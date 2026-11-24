@@ -383,3 +383,9 @@ When Robin creates a new deck or dashboard:
 - **URL:** https://koontz-robin.github.io/robin-decks/infinite-technologies-evaluation-readout.html
 - **Purpose:** Customer-facing evaluation covering ConnectWise replacement, security-hardware inventory, quoting, project delivery, technician mobile access, distributor validation, QuickBooks, migration assurance, commercial boundaries, and a joint proof plan.
 - **Created:** 2026-11-19
+
+### True Blue Technology × Rev.io Evaluation Readout
+- **File:** `true-blue-technology-evaluation-readout.html`
+- **URL:** https://koontz-robin.github.io/robin-decks/true-blue-technology-evaluation-readout.html
+- **Purpose:** Customer-facing evaluation covering ConnectWise replacement, recurring-revenue protection, AppRiver reconciliation, time approvals, invoice and tax workflows, reporting, security validation, quantified capacity assumptions, and an evidence-led decision plan.
+- **Created:** 2026-11-24
