@@ -5,6 +5,8 @@ from datetime import datetime
 from pathlib import Path
 from zoneinfo import ZoneInfo
 
+from refresh_monday_team_activity_dashboard import sf_auth, sf_query
+
 ROOT=Path(__file__).resolve().parent
 OUT=ROOT/'q4-ae-target-dashboard.html'
 DATA=ROOT/'q4_ae_target_dashboard.json'
@@ -12,9 +14,13 @@ MONTHS=['October','November','December']
 # Adjusted end-of-year targets supplied by Bryan Bettiol on 2026-10-28.
 # New Rev.io and Classic Rev.io are intentionally combined into one Rev.io target.
 TARGETS={'October':11418,'November':17646,'December':24912}
-ROSTER=['Jamie Butler','Joe Abarno','Andy Whisenant','Connor Flynn','Patrick Davies','Jake Borah','Jaylin Bender','Abbey McIntosh']
+TEAMS={
+    'Sales Team Six':['Connor Flynn','Jamie Butler','Patrick Davies','Jake Borah'],
+    'Quota Pirates':['Joe Abarno','Andy Whisenant','Jaylin Bender'],
+}
+ROSTER=[rep for members in TEAMS.values() for rep in members]
 SF_NAMES={'Joseph Abarno':'Joe Abarno'}
-QUOTAS={'Jamie Butler':24000,'Joe Abarno':24000,'Andy Whisenant':15000,'Connor Flynn':15000,'Patrick Davies':15000,'Jake Borah':15000,'Jaylin Bender':12000,'Abbey McIntosh':12000}
+QUOTAS={'Jamie Butler':24000,'Joe Abarno':24000,'Andy Whisenant':15000,'Connor Flynn':15000,'Patrick Davies':15000,'Jake Borah':15000,'Jaylin Bender':12000}
 
 def money(v): return f'${v:,.0f}'
 def product_key(text):
@@ -36,12 +42,26 @@ def splits(o):
     if key!='Other': out[key]+=float(o.get('Amount') or 0)
     return out
 
+def live_month_opps(base, headers, month):
+    month_num=MONTHS.index(month)+10
+    start=f'2026-{month_num:02d}-01'
+    end='2027-01-01' if month_num==12 else f'2026-{month_num+1:02d}-01'
+    records=sf_query(base,headers,f'''SELECT Id, Name, Amount, Product_Type__c, CloseDate, StageName,
+      Owner.Name, Account.Name,
+      (SELECT Id, Quantity, UnitPrice, TotalPrice, Product2.Name, Product2.Family FROM OpportunityLineItems)
+      FROM Opportunity WHERE IsDeleted=false AND StageName='Closed Won'
+      AND CloseDate >= {start} AND CloseDate < {end}''')
+    for o in records:
+        o['Owner']=(o.get('Owner') or {}).get('Name','')
+        o['Account']=(o.get('Account') or {}).get('Name','')
+    return records
+
+base,headers=sf_auth()
 actual=defaultdict(lambda:defaultdict(lambda:defaultdict(float)))
 deals=[]
 for month in MONTHS:
-    opps=json.loads((ROOT/f'sf_{month.lower()}_opps.json').read_text())
+    opps=live_month_opps(base,headers,month)
     for o in opps:
-        if o.get('StageName')!='Closed Won': continue
         rep=SF_NAMES.get(o.get('Owner'),o.get('Owner'))
         if rep not in ROSTER: continue
         for product,amount in splits(o).items():
@@ -54,6 +74,17 @@ def row(rep, period):
     total=sum(actual[rep][m]['New Rev.io'] + actual[rep][m]['Classic Rev.io'] for m in months)
     deals_count=sum(1 for d in deals if d['rep']==rep and d['month'] in months)
     return f'<tr><td><strong>{rep}</strong></td><td class="money total">{money(total)}</td><td>{deals_count}</td></tr>'
+
+def team_rows(period):
+    months=MONTHS if period=='Quarter' else [period]
+    output=[]
+    for team,members in TEAMS.items():
+        team_total=sum(actual[rep][m]['New Rev.io'] + actual[rep][m]['Classic Rev.io'] for rep in members for m in months)
+        team_deals=sum(1 for d in deals if d['rep'] in members and d['month'] in months)
+        output.append(f'<tr class="teamhead"><td colspan="3">{team}</td></tr>')
+        output.extend(row(rep,period) for rep in members)
+        output.append(f'<tr class="teamsub"><td>{team} Total</td><td class="money total">{money(team_total)}</td><td>{team_deals}</td></tr>')
+    return ''.join(output)
 
 def panel(period):
     months=MONTHS if period=='Quarter' else [period]
@@ -68,7 +99,7 @@ def panel(period):
        <article><span>AE Closed MRR</span><strong>{money(closed)}</strong><small>{pct:.1f}% attainment</small><div class="bar"><i style="width:{min(pct,100):.1f}%"></i></div></article>
        <article><span>Remaining Gap</span><strong>{money(gap)}</strong><small>{money(max(gap/len(months),0))} average per month shown</small></article>
       </div>
-      <div class="tablewrap"><table><thead><tr>{cols}</tr></thead><tbody>{''.join(row(r,period) for r in ROSTER)}</tbody></table></div>
+      <div class="tablewrap"><table><thead><tr>{cols}</tr></thead><tbody>{team_rows(period)}</tbody></table></div>
       <p class="note">Rev.io combines New Rev.io and Classic Rev.io. Targets are team targets; the table shows each AE’s contribution to closed MRR.</p>
     </section>'''
 
@@ -77,7 +108,7 @@ DATA.write_text(json.dumps(payload,indent=2)+'\n')
 buttons=''.join(f'<button data-tab="{p.lower()}" class="{ "active" if p=="October" else ""}">{p if p!="Quarter" else "Q4 Total"}</button>' for p in MONTHS+['Quarter'])
 html=f'''<!doctype html><html><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Q4 AE Target Dashboard</title><style>
 :root{{--bg:#07111f;--panel:#0d1a2b;--line:#20334a;--text:#f4f7fb;--muted:#91a4bb;--green:#c6f178;--blue:#34bde5}}
-*{{box-sizing:border-box}}body{{margin:0;background:radial-gradient(circle at 85% 0,#17314a 0,transparent 32%),var(--bg);color:var(--text);font:15px Inter,system-ui,sans-serif}}main{{max-width:1500px;margin:auto;padding:30px}}header{{display:flex;justify-content:space-between;gap:20px;align-items:end;border-bottom:1px solid var(--line);padding-bottom:20px}}h1{{font-size:38px;margin:5px 0}}.eyebrow,.stamp,.note,small{{color:var(--muted)}}.tabs{{display:flex;gap:8px;margin:22px 0}}button{{background:#0c1929;border:1px solid var(--line);color:var(--muted);padding:11px 18px;border-radius:999px;font-weight:800;cursor:pointer}}button.active{{background:var(--green);color:#07111f;border-color:var(--green)}}.panel{{display:none}}.panel.active{{display:block}}.cards{{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;margin-bottom:18px}}article,.tablewrap{{background:linear-gradient(145deg,#101f32,#0a1625);border:1px solid var(--line);border-radius:16px}}article{{padding:22px}}article span{{display:block;color:var(--muted);font-weight:800;text-transform:uppercase;letter-spacing:.08em;font-size:12px}}article strong{{display:block;font-size:35px;margin:8px 0}}.bar,.split{{height:7px;background:#1c2c40;border-radius:10px;margin-top:16px;overflow:hidden}}.bar i,.split b{{display:block;height:100%;background:var(--green)}}.bar.blue i{{background:var(--blue)}}.split b{{background:linear-gradient(90deg,var(--green),var(--blue))}}.tablewrap{{overflow:hidden}}table{{width:100%;border-collapse:collapse}}th,td{{padding:17px 20px;border-bottom:1px solid var(--line);text-align:right}}th:first-child,td:first-child{{text-align:left}}th{{font-size:11px;color:var(--muted);text-transform:uppercase;letter-spacing:.08em}}td.money{{font-variant-numeric:tabular-nums;font-size:17px}}td.new{{color:var(--green)}}td.classic{{color:var(--blue)}}td.total{{font-weight:900}}.att{{display:inline-block;width:90px;height:6px;background:#1c2c40;border-radius:5px;margin-right:8px;vertical-align:middle;overflow:hidden}}.att span{{display:block;height:100%;background:var(--green)}}.note{{font-size:12px;margin:12px 4px}}footer{{margin-top:25px;color:var(--muted);font-size:12px}}@media(max-width:850px){{main{{padding:18px}}header{{display:block}}h1{{font-size:29px}}.cards{{grid-template-columns:1fr}}.tablewrap{{overflow:auto}}table{{min-width:850px}}}}
+*{{box-sizing:border-box}}body{{margin:0;background:radial-gradient(circle at 85% 0,#17314a 0,transparent 32%),var(--bg);color:var(--text);font:15px Inter,system-ui,sans-serif}}main{{max-width:1500px;margin:auto;padding:30px}}header{{display:flex;justify-content:space-between;gap:20px;align-items:end;border-bottom:1px solid var(--line);padding-bottom:20px}}h1{{font-size:38px;margin:5px 0}}.eyebrow,.stamp,.note,small{{color:var(--muted)}}.tabs{{display:flex;gap:8px;margin:22px 0}}button{{background:#0c1929;border:1px solid var(--line);color:var(--muted);padding:11px 18px;border-radius:999px;font-weight:800;cursor:pointer}}button.active{{background:var(--green);color:#07111f;border-color:var(--green)}}.panel{{display:none}}.panel.active{{display:block}}.cards{{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;margin-bottom:18px}}article,.tablewrap{{background:linear-gradient(145deg,#101f32,#0a1625);border:1px solid var(--line);border-radius:16px}}article{{padding:22px}}article span{{display:block;color:var(--muted);font-weight:800;text-transform:uppercase;letter-spacing:.08em;font-size:12px}}article strong{{display:block;font-size:35px;margin:8px 0}}.bar,.split{{height:7px;background:#1c2c40;border-radius:10px;margin-top:16px;overflow:hidden}}.bar i,.split b{{display:block;height:100%;background:var(--green)}}.bar.blue i{{background:var(--blue)}}.split b{{background:linear-gradient(90deg,var(--green),var(--blue))}}.tablewrap{{overflow:hidden}}table{{width:100%;border-collapse:collapse}}th,td{{padding:17px 20px;border-bottom:1px solid var(--line);text-align:right}}th:first-child,td:first-child{{text-align:left}}th{{font-size:11px;color:var(--muted);text-transform:uppercase;letter-spacing:.08em}}.teamhead td{{background:#142840;color:var(--green);font-size:12px;font-weight:900;text-transform:uppercase;letter-spacing:.1em;padding-top:13px;padding-bottom:13px}}.teamsub td{{background:#0b1929;font-weight:900;border-bottom:2px solid var(--line)}}td.money{{font-variant-numeric:tabular-nums;font-size:17px}}td.new{{color:var(--green)}}td.classic{{color:var(--blue)}}td.total{{font-weight:900}}.att{{display:inline-block;width:90px;height:6px;background:#1c2c40;border-radius:5px;margin-right:8px;vertical-align:middle;overflow:hidden}}.att span{{display:block;height:100%;background:var(--green)}}.note{{font-size:12px;margin:12px 4px}}footer{{margin-top:25px;color:var(--muted);font-size:12px}}@media(max-width:850px){{main{{padding:18px}}header{{display:block}}h1{{font-size:29px}}.cards{{grid-template-columns:1fr}}.tablewrap{{overflow:auto}}table{{min-width:850px}}}}
 </style></head><body><main><header><div><div class="eyebrow">REV.IO · Q4 2026 FORECAST</div><h1>AE Rev.io Targets & Closed MRR</h1><div class="stamp">New Rev.io + Classic Rev.io combined · rep-level accountability</div></div><div class="stamp">Salesforce refreshed {datetime.now(ZoneInfo('America/New_York')).strftime('%b %d, %Y · %I:%M %p ET')}</div></header><nav class="tabs">{buttons}</nav>{''.join(panel(p) for p in MONTHS+['Quarter'])}<footer>Rev.io combines New Rev.io and Classic Rev.io. Closed MRR uses Salesforce line-item values where available and excludes Payments, migrations, and non-AE owners.</footer></main><script>const bs=[...document.querySelectorAll('button')],ps=[...document.querySelectorAll('.panel')];function show(x){{bs.forEach(b=>b.classList.toggle('active',b.dataset.tab===x));ps.forEach(p=>p.classList.toggle('active',p.id===x));location.hash=x}}bs.forEach(b=>b.onclick=()=>show(b.dataset.tab));show((location.hash||'#october').slice(1));</script></body></html>'''
 OUT.write_text(html)
 print(f'Wrote {OUT.name} and {DATA.name}; {len(deals)} valued AE product splits')
