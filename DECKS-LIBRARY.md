@@ -1,6 +1,6 @@
 # DECKS-LIBRARY.md — Robin's Deck & Dashboard Library
 
-Last updated: 2026-11-22
+Last updated: 2026-11-27
 GitHub Pages base: `https://koontz-robin.github.io/robin-decks/`
 Repo: `git@github.com:koontz-robin/robin-decks.git`
 
@@ -17,6 +17,7 @@ Repo: `git@github.com:koontz-robin/robin-decks.git`
 | Spectrotel Workstreams Tracker | spectrotel-product-enhancement-dashboard.html | https://koontz-robin.github.io/robin-decks/spectrotel-product-enhancement-dashboard.html | Notion-sourced client workstreams with status, delivery progress, owners, due dates, and interactive milestone runways |
 | Sales Inspection Command Center | inspection-command-center.html | https://koontz-robin.github.io/robin-decks/inspection-command-center.html | Curated VP Sales launchpad for executive pulse, pipeline, team performance, customer growth, prospecting, and operating dashboards |
 | Updated Goals / 2027 Forecast Dashboard | forecast.html | https://koontz-robin.github.io/robin-decks/forecast.html | Daily (8am ET, weekdays) |
+| Forecast Accuracy Dashboard | forecast-accuracy.html | https://koontz-robin.github.io/robin-decks/forecast-accuracy.html | Wednesdays at 6pm ET; immutable rep/category snapshots scored against month-end Closed Won outcomes |
 | Q4 New Rev.io War-Room Closed Lost | q4-new-revio-war-room-closed-lost.html | https://koontz-robin.github.io/robin-decks/q4-new-revio-war-room-closed-lost.html | Q4-to-date New Rev.io opportunities verified via stage history as having reached Stage 3+ before closing lost; board-ready loss reason, owner, stage, MRR, and deal detail view |
 | Q4 AE Targets & Closed MRR | q4-ae-target-dashboard.html | https://koontz-robin.github.io/robin-decks/q4-ae-target-dashboard.html | On demand; adjusted combined Rev.io targets for October–December and Q4 AE closed MRR |
 | AE Capacity Dashboard | ae-capacity-dashboard.html | https://koontz-robin.github.io/robin-decks/ae-capacity-dashboard.html | Daily (12pm ET, weekdays) |
